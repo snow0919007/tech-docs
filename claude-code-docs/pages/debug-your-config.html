@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>调试你的配置 · Claude Code 中文文档</title>
+<meta name="description" content="诊断为什么 CLAUDE.md、settings、hooks、MCP 服务器或 skills 没有生效。使用 /context、/doctor、/hooks 和 /mcp 来查看实际加载了什么。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="debug-your-config">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/debug-your-config" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link active" href="debug-your-config.html" aria-current="page">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>使用 Claude Code 构建</span> <span class="sep">/</span> <span>故障排除</span></div>
+    <article class="prose" id="article"><h1 id="_1">调试你的配置</h1>
+<blockquote>
+<p>诊断为什么 CLAUDE.md、settings、hooks、MCP 服务器或 skills 没有生效。使用 /context、/doctor、/hooks 和 /mcp 来查看实际加载了什么。</p>
+</blockquote>
+<p>当 Claude 忽略了一条指令或你配置的功能没有出现时，通常是因为文件没有加载、从你预期之外的位置加载，或者被另一个文件覆盖了。本指南展示了如何检查 Claude Code 实际加载了什么，以便你能够缩小范围。</p>
+<p>对于安装、身份验证和连接问题，请参阅<a href="troubleshoot-install.html">故障排除安装和登录</a>。</p>
+<h2 id="see-what-loaded-into-context">查看加载到上下文中的内容</h2>
+<p><code>/context</code> 命令会显示当前会话中占用上下文窗口的所有内容，并按类别细分：系统提示词、系统工具、MCP 工具、自定义子代理（及其各自的加载来源）、记忆文件、skill 以及对话消息。请首先运行此命令，以确认您的 <code>CLAUDE.md</code>、规则或 skill 描述是否已加载。<code>/context</code> 中的 skill 部分还包括 <a href="skills.html#bundled-skills">随附 skill</a>，而 <code>/skills</code> 不会列出这些内容。</p>
+<p>如需查看特定类别的详细信息，请继续使用相应的专用命令：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">命令</th>
+<th style="text-align: left;">显示内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/memory</code></td>
+<td style="text-align: left;">用户和项目作用域中的记忆文件位置，可选择在编辑器中打开每个文件，还可访问自动记忆文件夹以及自动记忆开关</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/skills</code></td>
+<td style="text-align: left;">来自项目、用户和插件来源的可用 skill</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/hooks</code></td>
+<td style="text-align: left;">当前生效的 hook 配置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/mcp</code></td>
+<td style="text-align: left;">已连接的 MCP 服务器及其状态</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/permissions</code></td>
+<td style="text-align: left;">当前生效的已解析允许和拒绝规则</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/doctor</code></td>
+<td style="text-align: left;">设置检查：安装健康状况、无效的设置文件、未使用的扩展、同一目录中重复的<a href="sub-agents.html">子代理</a>名称，以及已签入的、Claude 可以从代码库中推导出的 <code>CLAUDE.md</code> 内容，并提供建议的修复方案</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/debug [issue]</code></td>
+<td style="text-align: left;">为会话启用调试日志，并提示 Claude 利用日志输出和设置路径进行诊断</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/status</code></td>
+<td style="text-align: left;">当前生效的设置来源，包括托管设置是否生效</td>
+</tr>
+</tbody>
+</table>
+<p>如果某个记忆文件未出现在 <code>/context</code> 的细分列表中，请对照<a href="memory.html#how-claude-md-files-load">CLAUDE.md 文件的加载方式</a>检查其位置。子目录中的 <code>CLAUDE.md</code> 文件是按需加载的，而不是在会话开始时加载，因此它们不会出现在该细分列表中。</p>
+<p>如果 <code>/context</code> 确认文件已加载，但 Claude 仍未遵循某条特定指令，那么问题很可能在于指令的编写方式，而非是否已加载。CLAUDE.md 非常适合用于提供您会给新团队成员的那类指导，例如项目约定、构建命令以及文件应放置的位置。</p>
+<p>当指令含糊到可以有多种理解方式、两个文件给出相互冲突的指示，或者文件变得过长以致单条规则得到的关注减少时，遵循度就会下降。<a href="memory.html#write-effective-instructions">编写有效的指令</a>介绍了有助于保持高遵循度的具体性、篇幅和结构模式。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>CLAUDE.md 和权限解决的是不同的问题。CLAUDE.md 告诉 Claude 您的项目如何运作，以便其做出良好的决策。<a href="permissions.html">权限</a>和 <a href="hooks.html">hook</a> 则无论 Claude 做出何种决定都会强制执行限制。请将 CLAUDE.md 用于"我们这里是这样做的"这类内容。对于安全边界以及任何绝不能发生的事情，即您需要的是保证而非指导的情况，请使用权限或 hook。</p></div></div>
+<h2 id="check-resolved-settings">检查已解析的设置</h2>
+<p>设置在托管、用户、项目和本地范围内合并。当存在时，托管设置总是优先。在其余的中，更接近的范围按本地、项目、用户的顺序覆盖更广泛的范围。某些设置也可以由命令行标志或<a href="env-vars.html">环境变量</a>设置，它们充当另一个覆盖层。当设置似乎不适用时，你设置的值通常被另一个范围或环境变量覆盖。</p>
+<p>要查找无效的设置文件，请从终端运行 <code>claude doctor</code>。它打印只读安装和设置诊断，而不启动会话。要进行完整检查，同时提议修复并在应用前询问，请在会话内运行 <a href="commands.html#all-commands"><code>/doctor</code></a>。</p>
+<p>运行 <code>/status</code> 来查看哪些设置源是活跃的，包括是否启用了托管设置。要了解 Claude Code 对给定键使用哪个范围，请参阅<a href="settings.html#settings-precedence">设置优先级</a>。</p>
+<h2 id="check-mcp-servers">检查 MCP 服务器</h2>
+<p>运行 <code>/mcp</code> 可查看每个已配置的服务器、其连接状态，以及您是否已为当前项目批准该服务器。服务器即使定义正确，也可能因以下几个常见原因而无法提供工具：</p>
+<ul>
+<li><code>.mcp.json</code> 中项目作用域的服务器需要一次性批准。如果该提示被关闭，服务器将保持禁用状态，直到您从 <code>/mcp</code> 中批准它。</li>
+<li>启动失败的服务器在 <code>/mcp</code> 中会显示为失败。<code>command</code> 或 <code>args</code> 中的相对文件路径是常见原因，因为它们是相对于您启动 Claude Code 的目录解析的，而不是相对于 <code>.mcp.json</code> 所在的位置。</li>
+<li>显示为已连接但工具数量为零的服务器已成功启动，但没有返回工具列表。请从 <code>/mcp</code> 中选择 <strong>Reconnect</strong>。如果数量仍为零，请运行 <code>claude --debug=mcp</code>，并在 <code>~/.claude/debug/&lt;session-id&gt;.txt</code> 的调试日志中查看该服务器的 stderr 输出。</li>
+</ul>
+<p>有关配置位置和作用域规则，请参阅 <a href="mcp.html">MCP</a>。</p>
+<h2 id="check-hooks">检查 hook</h2>
+<p>运行 <code>/hooks</code> 来列出当前会话注册的每个 hook，按事件分组。如果您定义的 hook 没有出现，说明 Claude Code 没有加载它。请检查以下原因：</p>
+<ul>
+<li>该 hook 定义在独立文件中。hook 应位于<a href="settings.html#settings-files">设置文件</a>中的 <code>"hooks"</code> 键下。</li>
+<li><code>matcher</code> 值是数组而不是单个字符串。在您启动交互式会话时以及在 <code>claude doctor</code> 中，Claude Code 会将该条目列为无效设置。如果该数组位于 <code>PreToolUse</code> 或 <code>PermissionRequest</code> 下，该文件中的其他 hook 也都不会加载。</li>
+<li>该 hook 位于某个 skill 的 frontmatter 中，而在本次会话中您和 Claude 都尚未调用该 skill。请调用它或让 Claude 调用它，然后再次运行 <code>/hooks</code>。如果该 hook 仍未出现，请检查其他原因，例如<a href="skills.html#skill-not-triggering">未能解析的 frontmatter</a> 或某项 <a href="hooks.html#limits-on-skill-hooks">skill hook 的限制</a>。</li>
+</ul>
+<p>如果 hook 出现但没有触发，匹配器通常是原因。检查它是否有这些错误：</p>
+<ul>
+<li><code>matcher</code> 字段是一个使用 <code>|</code> 来匹配多个工具名称的单个字符串，例如 <code>"Edit|Write"</code>。<code>,</code> 分隔符是等效的，所以 <code>"Edit,Write"</code> 匹配相同的工具。在 v2.1.191 之前，逗号会进入正则表达式评估，匹配器永远不会匹配，所以如果您尚未使用 v2.1.191，请使用 <code>|</code>。</li>
+<li>拼写错误的工具名称会产生一个不匹配任何内容的匹配器，所以 hook 会无声地失败。</li>
+</ul>
+<p>当您编辑 <code>settings.json</code> 时，更改在短暂的文件稳定延迟后在运行的会话中生效，即使您在会话启动后创建了文件或项目的 <code>.claude/</code> 文件夹。您不需要重新启动。在 v2.1.257 之前，Claude Code 没有检测到在会话启动后创建的 <code>.claude/</code> 文件夹中的编辑。</p>
+<p>如果保存后几秒钟 <code>/hooks</code> 仍然显示旧定义，再次运行 <code>/hooks</code> 来刷新视图。</p>
+<p>如果 <code>/hooks</code> 显示 hook 但它仍然没有触发，下一步是实时观察 hook 评估。使用 <code>claude --debug</code> 启动会话并触发工具调用。调试日志记录每个事件、检查了哪些匹配器以及 hook 的退出码和输出。有关日志格式，请参阅<a href="hooks.html#debug-hooks">调试 hook</a>，有关常见失败模式，请参阅<a href="hooks-guide.html#limitations-and-troubleshooting">hook 故障排除</a>。</p>
+<h2 id="test-against-a-clean-configuration">针对干净配置进行测试</h2>
+<p>首先使用 <a href="cli-reference.html#cli-flags"><code>claude --safe-mode</code></a>，它会启动一个禁用您的自定义内容的会话，包括：</p>
+<ul>
+<li><code>CLAUDE.md</code></li>
+<li>Skill、插件和 hook</li>
+<li>MCP 服务器</li>
+<li>自定义命令和 Agent</li>
+<li>自定义输出样式</li>
+<li>自定义快捷键</li>
+</ul>
+<p>身份验证、模型选择、内置工具和权限正常工作。如果问题在安全模式下消失，则说明原因已缩小到您关闭的某一项。要找出具体是哪一项，请使用该项对应的检查，例如<a href="#see-what-loaded-into-context">查看加载到上下文中的内容</a>、<a href="#check-mcp-servers">检查 MCP 服务器</a>或<a href="#check-hooks">检查 hook</a>。</p>
+<p>安全模式仍然应用来自您组织的托管 hook 和设置策略。托管插件、skill、<code>CLAUDE.md</code> 和 MCP 服务器会被关闭。</p>
+<p>如果问题在安全模式下仍然存在，或您的设置本身可疑，请启动一个不包含您任何自有配置的会话，检查问题是否仍然出现。</p>
+<p><strong>1. 创建一个空目录并切换到该目录</strong></p>
+<p>在没有运行 Claude Code 会话的 shell 中，创建该目录并进入其中：</p>
+<blockquote>
+<p>[tab] Bash or Zsh</p>
+<p><code>bash theme={null}
+mkdir -p ~/claude-clean/empty &amp;&amp; cd ~/claude-clean/empty</code></p>
+<p>[tab] PowerShell</p>
+<p><code>powershell theme={null}
+New-Item -ItemType Directory -Force "$HOME/claude-clean/empty" | Out-Null
+Set-Location "$HOME/claude-clean/empty"</code></p>
+</blockquote>
+<p><strong>2. 使用干净的配置目录启动 Claude Code</strong></p>
+<p>在同一个 shell 中，将 <a href="env-vars.html"><code>CLAUDE_CONFIG_DIR</code></a> 设置为一个新目录以替代 <code>~/.claude</code>，并传入 <a href="cli-reference.html#cli-flags"><code>--setting-sources user</code></a> 以关闭项目配置，例如 <code>.claude/settings.json</code>、<code>CLAUDE.md</code> 和 <code>.mcp.json</code>：</p>
+<blockquote>
+<p>[tab] Bash or Zsh</p>
+<p>该变量仅对本次启动生效。</p>
+<p><code>bash theme={null}
+CLAUDE_CONFIG_DIR=~/claude-clean/config claude --setting-sources user</code></p>
+<p>[tab] PowerShell</p>
+<p>该变量在此 PowerShell 会话的剩余时间内保持设置，因此之后在同一窗口中启动的 <code>claude</code> 会继续使用这个干净目录。要恢复使用您的常用目录，请在下次启动前运行 <code>Remove-Item Env:CLAUDE_CONFIG_DIR</code>。</p>
+<p><code>powershell theme={null}
+$env:CLAUDE_CONFIG_DIR = "$HOME/claude-clean/config"
+claude --setting-sources user</code></p>
+</blockquote>
+<p>首次启动时，您会再次经历首次运行设置屏幕，这表明干净配置目录已生效。托管设置仍然适用；如果您使用 claude.ai 账户登录，<a href="mcp.html#use-mcp-servers-from-claude-ai">连接器</a>仍会加载。</p>
+<p><strong>3. 重现问题</strong></p>
+<p>在干净会话中重复触发问题的操作：</p>
+<ul>
+<li><strong>问题消失</strong>：原因在您的用户或项目配置中。将 <code>~/.claude.json</code> 和 <code>~/.claude</code> 中的文件逐个复制到 <code>~/claude-clean/config</code>。如果没有任何文件使问题重新出现，请在同一个 shell 中进入您的项目目录，并在不带 <code>--setting-sources user</code> 的情况下启动 Claude Code。在 Bash 或 Zsh 中，运行 <code>CLAUDE_CONFIG_DIR=~/claude-clean/config claude</code>。在 PowerShell 中，该变量仍处于设置状态，因此运行 <code>claude</code> 即可。</li>
+<li><strong>问题仍然存在</strong>：原因在您的用户和项目配置之外。在会话中运行 <code>/status</code> 以检查托管设置，检查您的 shell 中的<a href="env-vars.html">环境变量</a>，然后参阅<a href="troubleshooting.html">故障排除</a>。</li>
+</ul>
+<h2 id="check-common-causes">检查常见原因</h2>
+<p>大多数配置意外可以追溯到一小组位置和语法规则。在假设存在错误之前检查这些：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">症状</th>
+<th style="text-align: left;">原因</th>
+<th style="text-align: left;">修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Hook 永远不触发</td>
+<td style="text-align: left;"><code>matcher</code> 是 JSON 数组而不是字符串</td>
+<td style="text-align: left;">使用单个字符串，其中 <code>\|</code> 匹配多个工具，例如 <code>"Edit\|Write"</code>。请参阅<a href="hooks.html#matcher-patterns">匹配器模式</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hook 永远不触发</td>
+<td style="text-align: left;"><code>matcher</code> 在 v2.1.191 之前的版本中使用 <code>,</code> 作为分隔符</td>
+<td style="text-align: left;">Claude Code v2.1.191 或更高版本将 <code>,</code> 视为列表分隔符，如 <code>\|</code>。早期版本将逗号评估为字面字符，因此 <code>"Edit,Write"</code> 不匹配任何内容。改用 <code>\|</code>，或升级 Claude Code。</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hook 永远不触发</td>
+<td style="text-align: left;"><code>matcher</code> 值是小写的，例如 <code>"bash"</code></td>
+<td style="text-align: left;">匹配是区分大小写的。工具名称是大写的：<code>Bash</code>、<code>Edit</code>、<code>Write</code>、<code>Read</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hook 永远不触发</td>
+<td style="text-align: left;">Hooks 在独立文件而不是 <code>settings.json</code> 中定义</td>
+<td style="text-align: left;">项目或用户配置没有独立的 hooks 文件。在 <code>settings.json</code> 中的 <code>"hooks"</code> 键下定义 hooks。只有<a href="plugins-components.html#hooks">plugins</a>加载单独的 <code>hooks/hooks.json</code>。请参阅<a href="hooks.html">hook 配置</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">全局设置的权限、hooks 或 env 被忽略</td>
+<td style="text-align: left;">配置被添加到 <code>~/.claude.json</code></td>
+<td style="text-align: left;"><code>~/.claude.json</code> 保存应用状态和 UI 切换。<code>permissions</code>、<code>hooks</code> 和 <code>env</code> 属于 <code>~/.claude/settings.json</code>。这是两个不同的文件。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>settings.json</code> 值似乎被忽略</td>
+<td style="text-align: left;">相同的键在 <code>settings.local.json</code> 中设置</td>
+<td style="text-align: left;"><code>settings.local.json</code> 覆盖 <code>settings.json</code>，两者都覆盖 <code>~/.claude/settings.json</code>。请参阅<a href="settings.html#settings-precedence">设置优先级</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">Skill 没有出现在 <code>/skills</code> 中</td>
+<td style="text-align: left;">Skill 文件在 <code>.claude/skills/name.md</code> 而不是在文件夹中</td>
+<td style="text-align: left;">使用包含 <code>SKILL.md</code> 的文件夹：<code>.claude/skills/name/SKILL.md</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">Skill 出现在 <code>/skills</code> 中但 Claude 从不调用它</td>
+<td style="text-align: left;">Skill 在其 frontmatter 中有 <code>disable-model-invocation: true</code>，或其描述与你表述请求的方式不匹配</td>
+<td style="text-align: left;">检查 <code>/skills</code> 中的徽章：一个"user-only"标签意味着 Claude 不会自动触发它。请参阅<a href="skills.html">skill 调用</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">子目录 <code>CLAUDE.md</code> 指令似乎被忽略</td>
+<td style="text-align: left;">子目录文件按需加载，而不是在会话开始时加载</td>
+<td style="text-align: left;">要加载子目录的 <code>CLAUDE.md</code>，请让 Claude 读取该子目录中的另一个文件。请参阅<a href="memory.html#how-claude-md-files-load">子目录文件何时加载</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">子代理忽略 <code>CLAUDE.md</code> 指令</td>
+<td style="text-align: left;">内置的 Explore 和 Plan Agent 在启动时跳过 <code>CLAUDE.md</code>。自定义子代理以与主对话相同的方式加载它，除非其定义设置了 <a href="sub-agents.html#supported-frontmatter-fields"><code>omitClaudeMd</code></a></td>
+<td style="text-align: left;">对于 Explore 或 Plan，在您的委派提示词中重新陈述指令。对于设置 <code>omitClaudeMd</code> 的子代理，删除该字段。对于任何其他自定义子代理，将关键指令放在 Agent 文件正文中，它将成为 Agent 的系统提示词。请参阅<a href="sub-agents.html#what-loads-at-startup">启动时加载的内容</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">清理逻辑在会话结束时永远不运行</td>
+<td style="text-align: left;">没有配置 <code>SessionEnd</code> hook</td>
+<td style="text-align: left;">在 <code>settings.json</code> 中添加 <code>SessionEnd</code> hook。请参阅<a href="hooks.html#hook-events">hook 事件列表</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.mcp.json</code> 中的 MCP 服务器永远不加载</td>
+<td style="text-align: left;">文件在 <code>.claude/</code> 下，或其服务器位于顶级 <code>servers</code> 键下，如 VS Code 的 <code>mcp.json</code> 中那样，而不是 <code>mcpServers</code></td>
+<td style="text-align: left;">项目 MCP 配置在存储库根目录下作为 <code>.mcp.json</code>，而不是在 <code>.claude/</code> 内，服务器位于 <code>mcpServers</code> 键下。请参阅<a href="mcp.html">MCP 配置</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">在 <code>settings.json</code> 中的 <code>mcpServers</code> 下添加的 MCP 服务器永远不出现</td>
+<td style="text-align: left;"><code>settings.json</code> 不读取 <code>mcpServers</code> 键</td>
+<td style="text-align: left;">在存储库根目录的 <code>.mcp.json</code> 中定义项目服务器，或运行 <code>claude mcp add --scope user</code> 来添加用户范围的服务器。请参阅<a href="mcp.html">MCP 配置</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">添加的项目 MCP 服务器没有出现</td>
+<td style="text-align: left;">一次性批准提示被关闭</td>
+<td style="text-align: left;">项目范围的服务器需要批准。运行 <code>/mcp</code> 来查看状态并批准。</td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP 服务器从某些目录启动失败</td>
+<td style="text-align: left;"><code>command</code> 或 <code>args</code> 使用相对文件路径</td>
+<td style="text-align: left;">对本地脚本使用绝对路径。你的 <code>PATH</code> 上的可执行文件如 <code>npx</code> 或 <code>uvx</code> 可以按原样工作。</td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP 服务器启动时没有预期的环境变量</td>
+<td style="text-align: left;">服务器的配置条目没有设置它们，它们不在 Claude Code 传递给 stdio 服务器的环境中：它自己的环境，减去<a href="monitoring-usage.html#administrator-configuration">它从子进程中剥离的变量</a></td>
+<td style="text-align: left;">在服务器的 <code>.mcp.json</code> 条目内设置每个服务器的 <code>env</code>，这不依赖于启动环境或工作区信任。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(rm *)</code> 拒绝规则不阻止 <code>/bin/rm</code> 或 <code>find -delete</code></td>
+<td style="text-align: left;">Bash 规则匹配字面命令字符串，而不是底层可执行文件；请参阅<a href="permissions.html#bash-rule-limits">Bash 规则不匹配的内容</a></td>
+<td style="text-align: left;">使用<a href="hooks-guide.html">PreToolUse hook</a>或<a href="sandboxing.html">sandbox</a>来获得硬保证。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related-resources">相关资源</h2>
+<p>有关每个配置表面的完整参考，请参阅专用页面：</p>
+<ul>
+<li><strong><a href="claude-directory.html"><code>.claude</code> 目录参考</a></strong>：每个配置文件位置及其读取方式</li>
+<li><strong><a href="settings.html">Settings</a></strong>：使用哪个文件以及 Claude Code 使用哪个值；<a href="settings-reference.html">settings 参考</a>包含完整的键列表</li>
+<li><strong><a href="hooks.html">Hooks 参考</a></strong>：事件名称、有效负载和 <code>--debug</code> 输出格式</li>
+<li><strong><a href="mcp.html">MCP</a></strong>：服务器配置、批准和 <code>/mcp</code> 输出</li>
+<li><strong><a href="troubleshoot-install.html">故障排除安装和登录</a></strong>：<code>command not found</code>、PATH 和身份验证问题</li>
+<li><strong><a href="troubleshooting.html">故障排除</a></strong>：性能、挂起和搜索问题</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="troubleshooting.html"><span class="pager-dir">← 上一页</span><span class="pager-name">故障排除</span></a><a class="pager-link next" href="errors.html"><span class="pager-dir">下一页 →</span><span class="pager-name">错误参考</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#see-what-loaded-into-context">查看加载到上下文中的内容</a><a class="toc-l2" href="#check-resolved-settings">检查已解析的设置</a><a class="toc-l2" href="#check-mcp-servers">检查 MCP 服务器</a><a class="toc-l2" href="#check-hooks">检查 hook</a><a class="toc-l2" href="#test-against-a-clean-configuration">针对干净配置进行测试</a><a class="toc-l2" href="#check-common-causes">检查常见原因</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>测试 mod · Claude Code 中文文档</title>
+<meta name="description" content="为 Claude Code mod 编写自动化测试，该测试可以触发事件、存根 Claude Code 的答案、按下按钮，无需会话、登录或网络。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/mods/test">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/mods/test" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link active" href="plugins-mods-test.html" aria-current="page">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>mod</span> <span class="sep">/</span> <span>测试与故障排除</span></div>
+    <article class="prose" id="article"><h1 id="mod">测试 mod</h1>
+<blockquote>
+<p>为 Claude Code mod 编写自动化测试，该测试可以触发事件、存根 Claude Code 的答案、按下按钮，无需会话、登录或网络。</p>
+</blockquote>
+<p>您可以为 mod 编写自动化测试，并使用 <a href="plugins-mods-reference.html#commands"><code>claude plugin test</code></a> 从您的 shell 运行它们。测试会触发您的 hook 处理的事件并检查 hook 做了什么，这样您可以在问题到达会话之前捕获它。第一个示例测试来自 <a href="plugins-mods-create.html">创建 mod</a> 的 mod。</p>
+<h2 id="write-a-test">编写测试</h2>
+<p>测试加载您的 mod，通过其 hooks 发送事件，就像 Claude Code 会做的那样，并检查 hooks 做了什么，无需会话、登录或网络。您可以使用 <code>claude plugin test</code> 从 shell 运行测试，每个测试文件都导入测试工具包，这是 <code>claude-code/testing</code> 模块中的测试库。</p>
+<p>给每个测试文件一个以 <code>.test.ts</code> 结尾的名称，例如 <code>first-mod.test.ts</code>，并将其保存在插件目录中的任何位置。每个测试文件至少需要一个 <code>test()</code>，否则运行会失败并显示 <code>declares no test(): nothing ran</code>。测试文件可以导入您的 mod 自己的文件和兄弟 <code>.ts</code> 帮助程序，因此您可以对纯函数（例如游戏的规则）进行单元测试，而无需使用工具包。</p>
+<p>此测试触发两个工具调用，从 <a href="plugins-mods-create.html">Create a mod</a> 运行 <code>/tally</code> 命令，并检查回复是否计算了两者。其第一行是一个 <a href="#stub-what-claude-code-would-answer">stub</a>，它代替 Claude Code 回答工具调用。将其保存为 <code>first-mod/tests/first-mod.test.ts</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">expect</span><span class="p">,</span><span class="w"> </span><span class="nx">test</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'claude-code/testing'</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="s1">'/tally reports the tool calls the mod has seen'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Answer each tool call in Claude Code's place, so no tool runs</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">result</span><span class="o">:</span><span class="w"> </span><span class="s1">'ok'</span><span class="w"> </span><span class="p">}))</span>
+
+<span class="w">  </span><span class="c1">// Fire two tool calls, which the mod's tool.call hook counts</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">tool</span><span class="p">.</span><span class="nx">call</span><span class="p">({</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="s1">'Bash'</span><span class="p">,</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'ls'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">tool</span><span class="p">.</span><span class="nx">call</span><span class="p">({</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="s1">'Read'</span><span class="p">,</span><span class="w"> </span><span class="nx">file_path</span><span class="o">:</span><span class="w"> </span><span class="s1">'README.md'</span><span class="w"> </span><span class="p">})</span>
+
+<span class="w">  </span><span class="c1">// Run /tally and check the text its hook returns</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">answer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">command</span><span class="p">.</span><span class="nx">run</span><span class="p">({</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'tally'</span><span class="p">,</span><span class="w"> </span><span class="nx">args</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="w"> </span><span class="p">})</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">answer</span><span class="p">.</span><span class="nx">text</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">'Claude has made 2 tool calls since this mod loaded'</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>在您的 shell 中，从 <code>first-mod</code> 目录运行测试：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
+<p>输出列出每个测试及其是否通过，时间从一次运行到另一次运行会有所不同：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">tests/first-mod.test.ts:
+(pass) /tally reports the tool calls the mod has seen [22.87ms]
+
+ 1 pass
+ 0 fail
+Ran 1 test across 1 file. [0.19s]
+</code></pre></div>
+<p>每个 <code>$.tool.call</code> 都通过了 mod 的 <a href="plugins-mods-reference.html#tools"><code>tool.call</code></a> hook，该 hook 将其计数加一并将调用传递给 stub。没有 <code>ls</code> 运行，也没有文件被读取。然后 <code>$.command.run</code> 进入 mod 的 <a href="plugins-mods-reference.html#commands-and-configuration"><code>command.run</code></a> hook，<code>answer</code> 是该 hook 返回的对象。</p>
+<p>当测试失败时，命令以状态 1 退出，因此它在 CI 中有效。如果您自己的 mods 无法在运行它的 shell 中加载，它会打印一行以 <code>claude plugin test: hooks modules are turned off</code> 开头的行，说明原因，并以状态 1 退出。</p>
+<h3 id="stub-what-claude-code-would-answer">Stub Claude Code 会回答的内容</h3>
+<p>在测试中没有模型、存储或工具运行，因此无论您的 mod 期望 Claude Code 回答什么，测试都会使用 stub 提供答案。测试函数为此接收两个参数：</p>
+<ul>
+<li><strong><code>$</code></strong>：测试自己的 <code>$</code>，它代替 Claude Code。它不是 hook 接收的 <a href="plugins-mods-reference.html#mods-api-methods">mods API</a>。它的每个方法都会触发同名事件，通过您的 mod 的 hooks 发送它，并解析为结果：<code>$.tool.call({ tool: 'Bash', command: 'ls' })</code> 触发 <code>tool.call</code>。<code>$.command.run</code>、<code>$.prompt.submit</code>、<code>$.session.start</code> 和 <code>$.turn.complete</code> 的工作方式相同，<code>$.classic.Stop</code> 和其他 <code>$.classic</code> 方法触发 <a href="plugins-mods-events.html#hook-the-settings-hook-events">settings hook 事件</a>。测试无法直接触发 mods API 调用，例如 <code>ui.close</code>。通过您的 mod 触发它，例如按下关闭窗格的按钮。</li>
+<li><strong><code>on</code></strong>：调用它来注册 stubs，这些是代替 Claude Code 回答的 hooks。为 mods API 调用命名 stub 时不要使用 <code>$.</code>，因此注册为 <code>store.get</code> 的 stub 会回答您的 mod 的 <code>$.store.get</code>。当您的 mod 调用 <a href="plugins-mods-api.html#call-a-model"><code>$.model.complete</code></a> 或 <a href="plugins-mods-interface.html#keep-state"><code>$.store.get</code></a> 时，stub 会提供答案。</li>
+</ul>
+<p>此示例 stubs 一个模型调用。hook 属于一个名为 <code>grader</code> 的 mod，处理一个 <code>/grade</code> 命令，该命令将句子发送到模型并报告回复是否以 <code>PASS</code> 开头。该文件仅包含被测试的 hook，因此 mod 还需要 <code>plugin.json</code> 和 <code>hooks.json</code>，如 <a href="plugins-mods-create.html#write-a-mod-yourself">Create a mod</a> 中所示。要在会话中输入 <code>/grade</code>，mod 还必须 <a href="plugins-mods-api.html#add-a-command">注册命令</a>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">register</span><span class="p">(</span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'command.run'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'grade'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// e.args is the text typed after /grade</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">reply</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">complete</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">'haiku'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">system</span><span class="o">:</span><span class="w"> </span><span class="s1">'Grade the sentence. Start your reply with PASS or FAIL.'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">args</span><span class="p">,</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">passed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">reply</span><span class="p">.</span><span class="nx">isAnswered</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">reply</span><span class="p">.</span><span class="nx">text</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">'PASS'</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="nx">passed</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">'Passed'</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">'Try again'</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>此测试 stubs 模型调用以检查 hook 对通过回复的处理：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">expect</span><span class="p">,</span><span class="w"> </span><span class="nx">test</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'claude-code/testing'</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="s1">'a passing grade is reported'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Answer the mod's $.model.complete call with a fixed reply, so no model runs</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'model.complete'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<span class="w">    </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">isAnswered</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'PASS\nNice sentence.'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">usage</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">input_tokens</span><span class="o">:</span><span class="w"> </span><span class="kt">10</span><span class="p">,</span><span class="w"> </span><span class="nx">output_tokens</span><span class="o">:</span><span class="w"> </span><span class="kt">5</span><span class="p">,</span><span class="w"> </span><span class="nx">cache_read_input_tokens</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span><span class="w"> </span><span class="nx">cache_creation_input_tokens</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">}))</span>
+
+<span class="w">  </span><span class="c1">// Run /grade, which makes the mod call the model</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">answer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">command</span><span class="p">.</span><span class="nx">run</span><span class="p">({</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'grade'</span><span class="p">,</span><span class="w"> </span><span class="nx">args</span><span class="o">:</span><span class="w"> </span><span class="s1">'The cat sat on the mat.'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">answer</span><span class="p">.</span><span class="nx">text</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">'Passed'</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>测试通过是因为 hook 的 <code>reply</code> 是 <code>value</code> 下的对象，其 <code>text</code> 以 <code>PASS</code> 开头。要检查另一个分支，添加第二个测试，其 stub 返回以 <code>FAIL</code> 开头的 <code>text</code>，并期望 <code>Try again</code>。</p>
+<p>mods API 调用的 stub 返回一个带有 <code>value</code> 字段的对象，该字段保存调用在您的 mod 中解析的内容：<code>{ value: 7 }</code> 使 <code>$.store.get</code> 解析为 <code>7</code>。Claude Code 事件（例如 <a href="plugins-mods-reference.html#turns"><code>turn.step</code></a> 或 <code>tool.call</code>）的 stub 返回该事件自己的结果，例如 <code>{ result: 'ok' }</code>。<code>$.session.send</code> 和 <code>$.prompt.fill</code> 也采用其事件的结果，如表所示。<a href="#look-up-what-a-stub-returns">查看 stub 返回的内容</a> 显示每个常见名称采用的形式。以下错误意味着 stub 是错误的或缺失的。失败的测试的输出包括一个以 <code>the engine reported:</code> 开头的块，每个错误都出现在那里：</p>
+<ul>
+<li><code>returned neither { value } nor { deny }</code>：mods API 调用的 stub 返回了一个裸值，这会导致测试失败</li>
+<li><code>no implementation for</code> 后跟一个名称：您的 mod 进行了该调用，没有 stub 回答它</li>
+</ul>
+<p>工具包还导出现成的 mocks，用于时钟、存储、环境变量以及追加到对话中的行：</p>
+<ul>
+<li><strong><code>mock.clock(on)</code></strong>：回答 <a href="plugins-mods-api.html#run-work-in-the-background"><code>$.clock</code></a>，并返回一个您的测试可以推进的 mock 时钟，因此计时器的测试不会等待。</li>
+<li><strong><code>mock.store(on, { count: 7 })</code></strong>：从以这些条目开始的存储中回答 <code>$.store</code>。它不返回任何内容，因此要检查您的 mod 保存了什么，请自己编写两个 <code>store</code> stubs，如 <a href="#test-a-drawing">drawing test</a> 所做的那样。</li>
+<li><strong><code>mock.env(on, { CI: 'true' })</code></strong>：从这些变量中回答 <code>$.env.get</code>。</li>
+<li><strong><code>mock.session(on)</code></strong>：返回一个 mock 会话，其 <code>appended()</code> 方法按从旧到新的顺序列出您的 mod 通过 <a href="plugins-mods-reference.html#session"><code>$.session.append</code></a> 添加的行；需要 Claude Code v2.1.293 或更高版本。</li>
+</ul>
+<h3 id="follow-the-test-kit’s-rules">遵循测试工具包的规则</h3>
+<p>测试工具包有一些自己的规则，违反其中一个会产生新测试作者首先遇到的错误：</p>
+<ul>
+<li>
+<p><strong>在测试对 <code>$</code> 的第一次调用之前注册每个 stub。</strong> 在那之后调用 <code>on</code> 会抛出一个错误，例如 <code>on("ui.render") after the test first called $</code>。</p>
+</li>
+<li>
+<p><strong><a href="plugins-mods-reference.html#session"><code>session.start</code></a> 不会自己运行。</strong> 每个测试都以您的模块新加载开始，其 hooks 都没有被调用，因此模块级变量保持其初始值。如果 hook 依赖于 <code>session.start</code> 设置的内容，请先触发它：</p>
+</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="w">  </span><span class="c1">// Answer the event after your hook passes it on with next(e)</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'session.start'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">cwd</span><span class="o">:</span><span class="w"> </span><span class="s1">'/work'</span><span class="w"> </span><span class="p">}))</span>
+<span class="w">  </span><span class="c1">// Answer the $.command.register call your hook makes</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'command.register'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">undefined</span><span class="w"> </span><span class="p">}))</span>
+<span class="w">  </span><span class="c1">// Fire the event, which runs your session.start hook</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">session</span><span class="p">.</span><span class="nx">start</span><span class="p">({</span><span class="w"> </span><span class="nx">surface</span><span class="o">:</span><span class="w"> </span><span class="s1">'terminal'</span><span class="p">,</span><span class="w"> </span><span class="nx">isInteractive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">cwd</span><span class="o">:</span><span class="w"> </span><span class="s1">'/work'</span><span class="w"> </span><span class="p">})</span>
+</code></pre></div>
+<p>第二个 stub 回答 <code>session.start</code> hook（例如 <a href="plugins-mods-create.html#write-a-mod-yourself">tutorial</a> 中的那个）进行的 <code>$.command.register</code> 调用。没有它，该调用会以 <code>no implementation for command.register</code> 拒绝，工具包会跳过您的 hook，因此 hook 中调用后的任何内容都不会运行。测试在那一点不会失败。仅当稍后的检查失败时，跳过的 hook 才会在 <code>the engine reported:</code> 下列出。</p>
+<ul>
+<li><strong>返回 <code>next(e)</code> 的 hook 需要一个 stub 来回答。</strong> 例如，当您的 <a href="plugins-mods-reference.html#interface"><code>ui.render</code></a> hook 返回 <code>next(e)</code> 时，为了在 Claude 空闲时不绘制任何内容，<a href="#test-a-drawing">mounting it</a> 会失败并显示 <code>no implementation for ui.render</code>。注册一个返回元素作为纯数据的 stub：</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="w">  </span><span class="c1">// Stands for what Claude Code would draw at the site</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'ui.render'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'Text'</span><span class="p">,</span><span class="w"> </span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">'drawn by Claude Code'</span><span class="p">]</span><span class="w"> </span><span class="p">}))</span>
+</code></pre></div>
+<p>注册 stub 后，mount 成功，<code>ui.find({ type: 'Text' })</code> 在您的 hook 返回 <code>next(e)</code> 时返回该元素。</p>
+<ul>
+<li><strong><code>turn.step</code> 的 stub 是一个异步生成器</strong>，测试读取流到其末尾以获得结果：</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'turn.step'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Each yield is one piece of the model's streamed reply</span>
+<span class="w">    </span><span class="k">yield</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">kind</span><span class="o">:</span><span class="w"> </span><span class="s1">'text'</span><span class="p">,</span><span class="w"> </span><span class="nx">index</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'ok'</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// The return value is the result of the whole request</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">turnId</span><span class="o">:</span><span class="w"> </span><span class="kt">e.turnId</span><span class="p">,</span><span class="w"> </span><span class="nx">index</span><span class="o">:</span><span class="w"> </span><span class="kt">e.index</span><span class="p">,</span><span class="w"> </span><span class="nx">answer</span><span class="o">:</span><span class="w"> </span><span class="s1">'ok'</span><span class="p">,</span><span class="w"> </span><span class="nx">toolUses</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nx">stopReason</span><span class="o">:</span><span class="w"> </span><span class="s1">'end_turn'</span><span class="p">,</span><span class="w"> </span><span class="nx">usage</span><span class="o">:</span><span class="w"> </span><span class="kt">null</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="c1">// Fire one request to the model, which runs your turn.step hook</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">turn</span><span class="p">.</span><span class="nx">step</span><span class="p">({</span><span class="w"> </span><span class="nx">turnId</span><span class="o">:</span><span class="w"> </span><span class="s1">'t'</span><span class="p">,</span><span class="w"> </span><span class="nx">index</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">'claude-test'</span><span class="p">,</span><span class="w"> </span><span class="nx">messageCount</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="w"> </span><span class="p">})</span>
+<span class="w">  </span><span class="c1">// Read every piece until the stream says it's done</span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">step</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">stream</span><span class="p">.</span><span class="nx">next</span><span class="p">()</span>
+<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">step</span><span class="p">.</span><span class="nx">done</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="nx">step</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">stream</span><span class="p">.</span><span class="nx">next</span><span class="p">()</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">step</span><span class="p">.</span><span class="nx">value</span>
+</code></pre></div>
+<p>当循环结束时，<code>result</code> 是 stub 返回的对象，在您的 <code>turn.step</code> hook 有机会更改它之后。这里 <code>result.answer</code> 是 <code>'ok'</code>。</p>
+<ul>
+<li><strong>使用工具的名称和参数作为字段触发工具调用</strong>，例如 <code>await $.tool.call({ tool: 'Bash', command: 'ls' })</code>，并注册一个返回 <code>{ result }</code> 的 <code>tool.call</code> stub。</li>
+</ul>
+<h3 id="look-up-what-a-stub-returns">查看 stub 返回的内容</h3>
+<p>您的 mod 在测试中进行的每个 mods API 调用都需要一个 stub 来回答，除了工具包自己回答的少数几个：<a href="plugins-mods-interface.html#redraw-when-something-changes"><code>$.ui.invalidate</code></a>、<a href="plugins-mods-interface.html#keep-state"><code>$.state</code></a> 和 <code>$.session.append</code> 调用。对于 <code>$.clock</code> 调用，使用 <code>mock.clock(on)</code>，否则您的 mod 的 <code>$.clock.now()</code> 会失败并显示 <code>no implementation for clock.now</code>。</p>
+<p>此表列出了 mods 最常使用的。第一列是您的 mod 进行的调用或它使用 <code>next(e)</code> 传递的事件。第二列是传递给 <code>on</code> 的函数，使用该名称，因此 <code>$.store.get</code> 行变成 <code>on('store.get', ($, e) =&gt; ({ value: saved.get(e.key) }))</code>。stub 中的 <code>'...'</code> 标记您需要填写的文本：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您的 mod 调用或传递</th>
+<th style="text-align: left;">Stub</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$.command.register</code>、<code>$.tool.register</code>、<code>$.ui.toast</code>、<code>$.ui.log</code>、<code>$.ui.status</code>、<code>$.ui.close</code>、<code>$.store.set</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ value: undefined })</code>。对于 <code>ui.toast</code> 和 <code>ui.log</code>，文本是 <code>e.text</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.store.get</code></td>
+<td style="text-align: left;"><code>($, e) =&gt; ({ value: saved.get(e.key) })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.fs.read</code></td>
+<td style="text-align: left;"><code>($, e) =&gt; ({ value: e.path.endsWith('notes.md') ? '# Notes' : '' })</code>。<code>e.path</code> 作为绝对路径到达，因此与 <code>endsWith</code> 比较。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.ui.open</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ value: { isPlaced: true } })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.ui.ask</code></td>
+<td style="text-align: left;">一个 <code>tool.call</code> stub，因为问题作为对 <code>AskUserQuestion</code> 工具的调用到达它：<code>($, e) =&gt; ({ result: { answers: { [e.questions[0].question]: 'Run it' } } })</code>。如果您的 mod 传递其他工具调用，请先检查 <code>e.tool</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.model.complete</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ value: { isAnswered: true, text: '...', usage } })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.process.run</code></td>
+<td style="text-align: left;"><code>($, e) =&gt; ({ value: { exitCode: 0, stdout: '...', stderr: '' } })</code>。<code>e.argv</code> 是参数列表，<code>e.init</code> 保存 <code>cwd</code> 和 <code>timeoutMs</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">任何应该失败的 mods API 调用</td>
+<td style="text-align: left;"><code>() =&gt; ({ deny: 'the reason' })</code>，这使调用在您的 mod 中拒绝。抛出的 stub 会被跳过。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.start</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ cwd: '/work' })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>turn.start</code></td>
+<td style="text-align: left;"><code>($, e) =&gt; ({ turnId: e.turnId })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tool.call</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ result: '...' })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>turn.complete</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ text: '' })</code>。使用 <code>$.turn.complete({ turnId, answer, durationMs, isAborted: false, usage: null })</code> 触发它。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt.submit</code></td>
+<td style="text-align: left;"><code>($, e) =&gt; ({ text: e.text })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt.fill</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ isFilled: true })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.prompt.read</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ value: { text: '...', cursor: 0 } })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.ui.copy</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ value: { isCopied: true } })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.ui.notify</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ value: { isSent: true, channel: 'terminal_bell' } })</code>。文本是 <code>e.text</code>，标题是 <code>e.title</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.session.messages</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ value: [{ role: 'assistant', text: '...', toolUses: [] }] })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.session.id</code>、<code>$.agent.list</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ value: 'abc123' })</code>、<code>() =&gt; ({ value: [] })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.send</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ isDelivered: true })</code>。<code>e.to</code> 即使您的 mod 传递 <code>{ sessionId }</code>，也作为字符串到达。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.receive</code></td>
+<td style="text-align: left;"><code>($, e) =&gt; ({ text: e.text })</code>。使用 <code>$.session.receive({ origin: { kind: 'peer-send-message' }, text })</code> 触发它。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ui.render</code></td>
+<td style="text-align: left;"><code>() =&gt; ({ type: 'Text', props: {}, children: ['...'] })</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>expect</code> 有断言 <code>toBe</code>、<code>toEqual</code>、<code>toMatch</code>、<code>toMatchObject</code>、<code>toContain</code>、<code>toBeDefined</code>、<code>toBeUndefined</code> 和 <code>toThrow</code>，以及任何之前的 <code>.not</code>。</p>
+<p>当 <code>expect</code> 在您以普通函数（而非异步生成器）形式传给 <code>on</code> 的 stub 或 hook 中失败时，测试会失败。引擎会跳过该 hook，失败输出会指出其名称，例如 <code>in the test's store.set hook</code>。</p>
+<h2 id="test-a-timer">测试计时器</h2>
+<p>在计时器上运行工作的 mod 需要测试控制的时钟，因此测试可以向前移动时间而不是等待。<code>const clock = mock.clock(on)</code> 返回一个从 <code>0</code> 开始的 mock 时钟，仅在您的测试移动它时才移动。要在另一个时间开始，请以毫秒为单位传递它，如 <code>mock.clock(on, { now: 5000 })</code>。时钟有这些方法：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">方法</th>
+<th style="text-align: left;">它做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>await clock.advance(1000)</code></td>
+<td style="text-align: left;">将时间向前移动该毫秒数并运行每个到期的计时器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>await clock.set(5000)</code></td>
+<td style="text-align: left;">将时间向前移动到该值，如 <code>advance</code> 会做的那样</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>clock.now()</code></td>
+<td style="text-align: left;">返回时间，这是您的 mod 的 <code>$.clock.now()</code> 解析的内容</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>await clock.settle()</code></td>
+<td style="text-align: left;">运行已经到期的计时器，例如一系列零延迟 <code>$.clock.after</code> 调用，而不移动时间</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>await clock.sleep(2000)</code></td>
+<td style="text-align: left;">在 stub 内，使该 stub 仅在测试推进到那么远时才回答，这是您模拟缓慢模型或进程的方式</td>
+</tr>
+</tbody>
+</table>
+<p>此 hook 属于一个名为 <code>countdown</code> 的 mod，处理一个 <code>/countdown</code> 命令，该命令接受秒数，启动一个一秒的 <code>$.clock.every</code> 计时器，并在零时显示 toast。与 <code>grader</code> 一样，该文件仅包含被测试的 hook，不注册命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">register</span><span class="p">(</span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'command.run'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'countdown'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// e.args is the text typed after /countdown</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">args</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">timer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">clock</span><span class="p">.</span><span class="nx">every</span><span class="p">(</span><span class="mf">1000</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">left</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mf">1</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">left</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">timer</span><span class="p">.</span><span class="nx">cancel</span><span class="p">()</span>
+<span class="w">        </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">toast</span><span class="p">(</span><span class="s1">'Time is up'</span><span class="p">)</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="c1">// Print nothing in the transcript</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>此测试运行 <code>/countdown 3</code> 并移动 mock 时钟，因此它检查三秒的行为而不等待三秒：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">expect</span><span class="p">,</span><span class="w"> </span><span class="nx">mock</span><span class="p">,</span><span class="w"> </span><span class="nx">test</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'claude-code/testing'</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="s1">'the countdown ends with a toast'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Answer every $.clock call from a clock the test controls</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">clock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mock</span><span class="p">.</span><span class="nx">clock</span><span class="p">(</span><span class="nx">on</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// Collect the text of each toast the mod shows</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">toasts</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'ui.toast'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">toasts</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">text</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">undefined</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">command</span><span class="p">.</span><span class="nx">run</span><span class="p">({</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'countdown'</span><span class="p">,</span><span class="w"> </span><span class="nx">args</span><span class="o">:</span><span class="w"> </span><span class="s1">'3'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">  </span><span class="c1">// After two seconds the timer has fired twice, and no toast is due</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">clock</span><span class="p">.</span><span class="nx">advance</span><span class="p">(</span><span class="mf">2000</span><span class="p">)</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">toasts</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">([])</span>
+<span class="w">  </span><span class="c1">// The third second brings the count to zero</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">clock</span><span class="p">.</span><span class="nx">advance</span><span class="p">(</span><span class="mf">1000</span><span class="p">)</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">toasts</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">([</span><span class="s1">'Time is up'</span><span class="p">])</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>第一个 <code>expect</code> 显示 toast 不会提前出现，第二个显示它出现一次。每个 <code>advance</code> 在到期的计时器运行后解析，因此下一行的检查会看到它们的效果。</p>
+<h2 id="test-a-drawing">测试绘图</h2>
+<p>测试可以绘制您的 mod 的 <a href="plugins-mods-reference.html#render-sites">render sites</a> 之一，然后按下、输入和查找它绘制的元素。<code>$.ui.mount</code> 通过您的 mod 的 <code>ui.render</code> hook 绘制站点，并返回一个带有每个方法的句柄。要在一个测试中覆盖多个应用，请将 <code>surface</code> 设置为要绘制的应用。此测试打开来自 <a href="plugins-mods-interface.html#build-a-pane-with-tabs">Build a pane with tabs</a> 的窗格，切换选项卡，按下按钮，并检查终端和桌面应用中的计数：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">expect</span><span class="p">,</span><span class="w"> </span><span class="nx">test</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'claude-code/testing'</span>
+
+<span class="c1">// What Claude Code passes to a ui.render hook for this pane, apart from the app</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">PANE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">plugin</span><span class="o">:</span><span class="w"> </span><span class="s1">'hello-tabs'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s1">'Pane'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">requestId</span><span class="o">:</span><span class="w"> </span><span class="s1">'hello-tabs'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">viewport</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">columns</span><span class="o">:</span><span class="w"> </span><span class="kt">100</span><span class="p">,</span><span class="w"> </span><span class="nx">rows</span><span class="o">:</span><span class="w"> </span><span class="kt">30</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s1">'Hello tabs'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">isFocused</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">bodyColumns</span><span class="o">:</span><span class="w"> </span><span class="kt">60</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">placement</span><span class="o">:</span><span class="w"> </span><span class="s1">'inline'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">scroll</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">offset</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span><span class="w"> </span><span class="nx">bodyRows</span><span class="o">:</span><span class="w"> </span><span class="kt">10</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">view</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kd">const</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="s1">'the second tab counts presses and saves the count'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Stub $.store with a Map, so the test can read what the mod saved</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">saved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Map</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'store.get'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">saved.get</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">key</span><span class="p">)</span><span class="w"> </span><span class="p">}))</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'store.set'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">saved</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">undefined</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="c1">// Draw the pane once for each app</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">surface</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="p">[</span><span class="s1">'terminal'</span><span class="p">,</span><span class="w"> </span><span class="s1">'desktop'</span><span class="p">]</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kd">const</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">ui</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">mount</span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">PANE</span><span class="p">,</span><span class="w"> </span><span class="nx">surface</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="c1">// Press the buttons by the key the mod gave them</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">ui</span><span class="p">.</span><span class="nx">press</span><span class="p">({</span><span class="w"> </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="s1">'tab-two'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">ui</span><span class="p">.</span><span class="nx">press</span><span class="p">({</span><span class="w"> </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="s1">'more'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="c1">// The second tab's count line is in the drawing</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">ui</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'Text'</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="sr">/^Count: \d+$/</span><span class="w"> </span><span class="p">})).</span><span class="nx">toBeDefined</span><span class="p">()</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">ui</span><span class="p">.</span><span class="nx">unmount</span><span class="p">()</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// One press in each app makes two</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">saved</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'count'</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>在您的 shell 中，从 <code>hello-tabs</code> 目录运行 <code>claude plugin test</code>。当两个应用都绘制计数行且 mod 已保存 <code>2</code> 时，测试通过。计数从第一个应用转移到第二个应用，因为两个 mounts 都使用相同的加载模块。</p>
+<p><code>$.ui.mount</code> 返回的句柄有这些方法，它们通过您给它们的 <code>key</code> 来寻址元素：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">方法</th>
+<th style="text-align: left;">它做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>press({ key: 'more' })</code></td>
+<td style="text-align: left;">按下具有该 key 的 <code>Button</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>input({ key: 'new-note', text: 'buy milk' })</code></td>
+<td style="text-align: left;">将文本输入到具有该 key 的 <code>Input</code> 中并按 Enter。添加 <code>kind: 'change'</code> 以输入而不提交。对于带有 <code>rows</code> 的字段，文本中可以包含 <code>\n</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>select({ key: 'size', value: 'large' })</code></td>
+<td style="text-align: left;">在具有该 key 的 <code>Select</code> 中选择具有该值的选项</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>find({ key: 'more' })</code> 或 <code>find({ type: 'Text', text: 'Count: 2' })</code></td>
+<td style="text-align: left;">返回第一个匹配的元素作为 <code>{ type, props, children }</code>，或 <code>undefined</code>。<code>text</code> 可以是字符串或正则表达式。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>unmount()</code></td>
+<td style="text-align: left;">移除绘图</td>
+</tr>
+</tbody>
+</table>
+<p>每个方法在您的处理程序完成后解析，因此您可以在下一行检查结果。将 <code>props</code> 设置为 Claude Code 为该站点传递的内容。<a href="plugins-mods-reference.html#render-sites">render sites table</a> 列出每个站点的 props，<a href="plugins-mods-create.html#get-the-types-for-your-build">您的构建的类型</a> 有它们的类型。</p>
+<p>要捕获对您在 <code>surface</code> 中指定的应用无效的<a href="plugins-mods-interface.html#build-a-tree-from-elements">元素树</a>，请使用 <code>find</code> 检查您的 hook 添加的某个元素。测试不检查应用如何绘制树，因此也请在真实会话中查看新布局。</p>
+<h3 id="test-a-drawing-after-clear">在 <code>/clear</code> 后测试绘图</h3>
+<p>每个测试都以每个 <code>$.state</code> 值在其默认值开始，这是 <code>/clear</code> 留下它们的方式。要测试您的 mod 接下来做什么，跳过 <code>session.start</code>，使用 <code>source: 'clear'</code> 触发 <code>classic.SessionStart</code>，并检查您的 mod 绘制的内容。</p>
+<p>此测试检查来自 <a href="plugins-mods-interface.html#load-a-saved-value-again-after-clear">Load a saved value again after <code>/clear</code></a> 的模块。将其添加到来自 <a href="#test-a-drawing">Test a drawing</a> 的文件中，其中定义了 <code>PANE</code>。该文件的第一个测试期望按钮保存计数，如 <a href="plugins-mods-interface.html#save-from-more-than-one-session">Save from more than one session</a> 中的按钮所做的那样：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="nx">test</span><span class="p">(</span><span class="s1">'the saved count comes back after /clear'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// The store already holds a count of 7</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'store.get'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">7</span><span class="w"> </span><span class="p">}))</span>
+<span class="w">  </span><span class="c1">// Answer the event after your hook passes it on with next(e)</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'classic.SessionStart'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({}))</span>
+
+<span class="w">  </span><span class="c1">// Fire the event that follows /clear, which runs your hook</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">classic</span><span class="p">.</span><span class="nx">SessionStart</span><span class="p">({</span><span class="w"> </span><span class="nx">source</span><span class="o">:</span><span class="w"> </span><span class="s1">'clear'</span><span class="w"> </span><span class="p">})</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">ui</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">mount</span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">PANE</span><span class="p">,</span><span class="w"> </span><span class="nx">surface</span><span class="o">:</span><span class="w"> </span><span class="s1">'terminal'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">ui</span><span class="p">.</span><span class="nx">press</span><span class="p">({</span><span class="w"> </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="s1">'tab-two'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">  </span><span class="c1">// The pane shows the stored count, not the default of 0</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">ui</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'Text'</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'Count: 7'</span><span class="w"> </span><span class="p">})).</span><span class="nx">toBeDefined</span><span class="p">()</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>当您的 <code>classic.SessionStart</code> hook 在窗格绘制之前将存储的 <code>7</code> 复制到 <code>$.state</code> 时，测试通过。如果您的模块中没有该 hook，窗格绘制 <code>Count: 0</code>，<code>find</code> 返回 <code>undefined</code>，测试在 <code>toBeDefined</code> 处失败。</p>
+<h2 id="test-a-mod-that-judges-other-mods">测试 policy mod</h2>
+<p>您的组织在 <a href="plugins-mods-admin.html"><code>prependPlugins</code></a> 中列出的 mod 可以在另一个 mod 加载之前拒绝它。要测试一个，请设置您的 mod 的层级并给测试第二个 mod，供您的 mod 接受或拒绝：</p>
+<ul>
+<li><strong><code>tier</code></strong>：在测试文件的顶部调用它一次，如 <code>tier('prepend')</code>，以将您的 mod 加载为 <code>prepend</code>、<code>append</code> 或 <code>builtin</code>，其在 <a href="plugins-mods-events.html#the-order-mods-run-in">mods 运行的顺序</a> 中的位置。没有它，您的 mod 加载为 <code>user</code>。</li>
+<li><strong><code>plugins</code></strong>：在测试体之前将 <code>test</code> 传递一个选项对象。其 <code>plugins</code> 数组保存您内联编写的 mods，每个都有一个 <code>name</code> 和一个 <code>register</code> 函数。要在 <code>user</code> 以外的地方加载一个，请将 <code>tier</code> 添加到它。</li>
+</ul>
+<p>此测试文件首先加载 <a href="plugins-mods-admin.html#enforce-a-policy-with-a-mod-of-your-own">admin page 中的 policy mod</a>。它检查 policy mod 是否拒绝启动进程的 mod 并接受不启动的 mod：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">expect</span><span class="p">,</span><span class="w"> </span><span class="nx">test</span><span class="p">,</span><span class="w"> </span><span class="nx">tier</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'claude-code/testing'</span>
+
+<span class="c1">// Load the mod under test ahead of every other mod</span>
+<span class="nx">tier</span><span class="p">(</span><span class="s1">'prepend'</span><span class="p">)</span>
+
+<span class="c1">// A second mod whose code calls $.process.run, which the policy blocks</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">runner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'runner'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">register</span><span class="p">(</span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">process</span><span class="p">.</span><span class="nx">run</span><span class="p">([</span><span class="s1">'ls'</span><span class="p">])</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">result</span><span class="o">:</span><span class="w"> </span><span class="s1">'runner answered'</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">}</span>
+
+<span class="c1">// A second mod that calls nothing the policy blocks</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">reader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'reader'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">register</span><span class="p">(</span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">result</span><span class="o">:</span><span class="w"> </span><span class="s1">'reader answered'</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">}</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="s1">'refuses a mod that starts a process'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">runner</span><span class="p">]</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">result</span><span class="o">:</span><span class="w"> </span><span class="s1">'claude code answered'</span><span class="w"> </span><span class="p">}))</span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// The first call on $ loads the mods, so the refusal is thrown here</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">tool</span><span class="p">.</span><span class="nx">call</span><span class="p">({</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="s1">'Bash'</span><span class="p">,</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'ls'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">message</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">'runner: refused by acme-guard: Acme policy: mods may not call process.run'</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="s1">'admits a mod that starts no process'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">reader</span><span class="p">]</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">result</span><span class="o">:</span><span class="w"> </span><span class="s1">'claude code answered'</span><span class="w"> </span><span class="p">}))</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">tool</span><span class="p">.</span><span class="nx">call</span><span class="p">({</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="s1">'Bash'</span><span class="p">,</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'ls'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">  </span><span class="c1">// The answer comes from reader, which shows that it loaded</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">out</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span><span class="w"> </span><span class="nx">result</span><span class="o">:</span><span class="w"> </span><span class="s1">'reader answered'</span><span class="w"> </span><span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>在您的 shell 中，从 <code>acme-guard</code> 目录运行 <code>claude plugin test</code>。当 policy mod 如 admin page 所示时，两个测试都通过。</p>
+<p>工具包在测试对 <code>$</code> 的第一次调用时加载每个 mod。当您的 mod 拒绝一个时，该调用会抛出，消息会命名被拒绝的 mod、拒绝它的 mod 和您的原因。在第二个测试中，没有任何东西被拒绝，因此 <code>reader</code> 在到达 stub 之前回答工具调用。</p>
+<h2 id="next-steps">后续步骤</h2>
+<ul>
+<li><a href="plugins-mods-troubleshoot.html">Troubleshoot a mod</a>：找出为什么 mod 在会话中不做任何事情</li>
+<li><a href="plugins-mods-reference.html">Mods reference</a>：每个事件的输入和结果，用于编写 stubs</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-mods-api.html"><span class="pager-dir">← 上一页</span><span class="pager-name">使用 mods API</span></a><a class="pager-link next" href="plugins-mods-troubleshoot.html"><span class="pager-dir">下一页 →</span><span class="pager-name">排查 mod 问题</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#write-a-test">编写测试</a><a class="toc-l3" href="#stub-what-claude-code-would-answer">Stub Claude Code 会回答的内容</a><a class="toc-l3" href="#follow-the-test-kit’s-rules">遵循测试工具包的规则</a><a class="toc-l3" href="#look-up-what-a-stub-returns">查看 stub 返回的内容</a><a class="toc-l2" href="#test-a-timer">测试计时器</a><a class="toc-l2" href="#test-a-drawing">测试绘图</a><a class="toc-l3" href="#test-a-drawing-after-clear">在 /clear 后测试绘图</a><a class="toc-l2" href="#test-a-mod-that-judges-other-mods">测试 policy mod</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

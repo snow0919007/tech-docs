@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>在 Chrome 中使用 Claude Code · Claude Code 中文文档</title>
+<meta name="description" content="将 Claude Code 连接到 Chrome 浏览器，以测试网络应用、使用控制台日志进行调试、自动填充表单以及从网页中提取数据。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="chrome">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/chrome" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link active" href="chrome.html" aria-current="page">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>快速入门</span> <span class="sep">/</span> <span>平台与集成</span></div>
+    <article class="prose" id="article"><h1 id="chrome-claude-code">在 Chrome 中使用 Claude Code</h1>
+<blockquote>
+<p>将 Claude Code 连接到 Chrome 浏览器，以测试网络应用、使用控制台日志进行调试、自动填充表单以及从网页中提取数据。</p>
+</blockquote>
+<p>Claude Code 与 <a href="https://chromewebstore.google.com/detail/claude/fcoeoabgfenejglbffodgkkbkcdhcgfn" target="_blank" rel="noopener">Claude in Chrome 浏览器扩展程序</a> 集成，为您提供从 CLI 或 <a href="vs-code.html#automate-browser-tasks-with-chrome">VS Code 扩展程序</a> 进行浏览器自动化的功能。构建您的代码，然后在浏览器中测试和调试，无需切换上下文。</p>
+<p>Claude 为浏览器任务打开新标签页，并共享您浏览器的登录状态，因此它可以访问您已登录的任何网站。浏览器操作在实时可见的 Chrome 窗口中运行。当 Claude 遇到登录页面或 CAPTCHA 时，它会暂停并要求您手动处理。</p>
+<p>扩展程序将 Claude 打开的标签页收集到与您的会话相关联的 Chrome 标签页组中。在本地会话中，Claude Code 是否在会话结束时关闭该组取决于会话如何结束：</p>
+<ul>
+<li>当您输入 <code>/clear</code> 时，Claude Code 会关闭该组（包括打开的页面），除非仍在运行的工作在清除后仍然存在</li>
+<li>当您使用 <code>/resume</code> 等命令切换会话、退出 Claude Code 或在仍在运行的工作中运行 <code>/clear</code> 时，Claude Code 仅在该组仅包含空的新标签页时才关闭该组，因此您可能仍在阅读的页面保持打开状态</li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Chrome 集成适用于 Google Chrome 和 Microsoft Edge。Claude Code 还会检测扩展程序并在其他基于 Chromium 的浏览器中设置连接，包括 Brave、Arc、Vivaldi 和 Opera。Windows 子系统 for Linux (WSL) 不支持 Chrome 集成。</p></div></div>
+<h2 id="capabilities">功能</h2>
+<p>连接 Chrome 后，您可以在单个工作流中链接浏览器操作和编码任务：</p>
+<ul>
+<li><strong>实时调试</strong>：直接读取控制台错误和 DOM 状态，然后修复导致这些错误的代码</li>
+<li><strong>设计验证</strong>：从 Figma 模型构建 UI，然后在浏览器中打开它以验证它是否匹配</li>
+<li><strong>网络应用测试</strong>：测试表单验证、检查视觉回归或验证用户流程</li>
+<li><strong>已认证的网络应用</strong>：与 Google Docs、Gmail、Notion 或您已登录的任何应用交互，无需 API 连接器</li>
+<li><strong>数据提取</strong>：从网页中提取结构化信息并将其保存到本地</li>
+<li><strong>任务自动化</strong>：自动化重复的浏览器任务，如数据输入、表单填充或多站点工作流</li>
+<li><strong>文件上传</strong>：将您计算机中的文件附加到网页上的上传字段</li>
+<li><strong>会话录制</strong>：将浏览器交互录制为 GIF，以记录或分享发生的情况</li>
+</ul>
+<h2 id="prerequisites">前提条件</h2>
+<p>在使用 Claude Code 与 Chrome 之前，您需要：</p>
+<ul>
+<li><a href="https://www.google.com/chrome/" target="_blank" rel="noopener">Google Chrome</a>、<a href="https://www.microsoft.com/edge" target="_blank" rel="noopener">Microsoft Edge</a> 或其他基于 Chromium 的浏览器，如 Brave、Arc、Vivaldi 或 Opera</li>
+<li><a href="https://chromewebstore.google.com/detail/claude/fcoeoabgfenejglbffodgkkbkcdhcgfn" target="_blank" rel="noopener">Claude in Chrome 扩展程序</a> 版本 1.0.36 或更高版本，可在 Chrome Web Store 中获得</li>
+<li><a href="quickstart.html#step-1-install-claude-code">Claude Code</a></li>
+<li>直接 Anthropic 计划（Pro、Max、Ultra、Team 或 Enterprise）</li>
+</ul>
+<p>在已启用 HIPAA 的 Enterprise 组织中，Claude in Chrome 默认处于关闭状态，<a href="server-managed-settings.html#access-control">Owner</a> 可以在 <a href="https://claude.ai/admin-settings/browser-extension" target="_blank" rel="noopener"><strong>Organization settings &gt; Claude in Chrome</strong></a> 中将其启用。您与 Anthropic 签订的商业伙伴协议（BAA）不涵盖通过 Claude in Chrome 发送到第三方网站的数据。有关合格服务（Eligible Services）的列表，请参阅<a href="https://trust.anthropic.com/resources?s=l1wrssd9hsbi4gak0tp5a6\&amp;name=%5Banthropic%5D-hipaa-ready-offering-implementation-guide" target="_blank" rel="noopener">实施指南</a>。</p>
+<p>Chrome 集成还需要使用 <code>/login</code> 登录。如果您使用 API 密钥或来自 <a href="authentication.html#generate-a-long-lived-token"><code>claude setup-token</code></a> 的长期令牌进行身份验证，即使您传递 <code>--chrome</code>，Claude Code 也会保持 Chrome 集成处于关闭状态。浏览器扩展程序无法使用这些凭据进行身份验证。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Chrome 集成不可通过 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 等第三方提供商获得。如果您仅通过第三方提供商访问 Claude，则需要单独的 claude.ai 账户来使用此功能。</p></div></div>
+<h2 id="get-started-in-the-cli">在 CLI 中开始使用</h2>
+<p><strong>1. 使用 Chrome 启动 Claude Code</strong></p>
+<p>使用 <code>--chrome</code> 标志启动 Claude Code：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--chrome
+</code></pre></div>
+<p>首次使用 Chrome 启动时，Claude Code 会显示一个一次性对话框，介绍该集成并说明站点权限的工作方式。按 Enter 继续。</p>
+<p>如需在以后的会话中无需该标志即可启用 Chrome，请参阅<a href="#enable-chrome-by-default">默认启用 Chrome</a>。</p>
+<p><strong>2. 让 Claude 使用浏览器</strong></p>
+<p>此示例会导航到一个页面、与之交互并报告发现的内容，所有操作都可以在终端或编辑器中完成：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Go to code.claude.com/docs, click on the search box,
+type "hooks", and tell me what results appear
+</code></pre></div>
+<p>如果 Claude Code 在执行浏览器操作前请求权限，请批准。该对话框以 <code>Claude in Chrome wants to</code> 开头，并提供在本次会话中允许该站点上所有操作的选项。Claude 会打开一个新标签页并开始执行任务。</p>
+<p>随时运行 <code>/chrome</code> 可检查连接状态、管理权限、重新连接扩展程序，或选择要使用的已连接浏览器。当状态面板显示“状态：已启用”和“扩展程序：已安装”时，表示集成正常工作。</p>
+<p>如果连接了多个浏览器，您可以选择 Claude 使用哪一个。如果在您做出选择之前就开始了浏览器操作，Claude 会提示您选择一个。如需之后切换浏览器，请运行 <code>/chrome</code> 并选择 <strong>Select browser…</strong>。即使有其他浏览器连接，Claude 也会继续使用您选择的浏览器。</p>
+<p>对于 VS Code，请参阅 <a href="vs-code.html#automate-browser-tasks-with-chrome">VS Code 中的浏览器自动化</a>。</p>
+<h3 id="install-the-extension-when-claude-asks">在 Claude 询问时安装扩展程序</h3>
+<p>当 Claude 在交互式会话中需要使用您的浏览器，而 Claude Code 未检测到扩展程序时，Claude Code 会显示一个标题为“Claude wants to use your browser”的安装提示。Claude Code 每个会话最多询问一次。</p>
+<p>该提示提供三个选项：</p>
+<ul>
+<li><strong>Install extension</strong>：在浏览器中打开扩展程序安装页面并启动引导式设置。Claude Code 会等待安装完成、连接扩展程序，并在同一会话中启用浏览器工具。连接就绪后，选择“Continue with browser tools”，Claude 会在您的浏览器中继续执行任务。您可以选择“Continue without browser tools”退出设置，之后再通过 <code>/chrome</code> 完成设置。</li>
+<li><strong>Not now</strong>：在不使用浏览器工具的情况下继续执行任务。Claude Code 可能会在之后的会话中再次询问。</li>
+<li><strong>Don't ask again</strong>：在以后的会话中不再显示该提示。您仍可随时通过 <code>/chrome</code> 设置该集成。</li>
+</ul>
+<p>有两种托管 MCP 策略会关闭该提示：</p>
+<ul>
+<li>如果您的组织通过 <a href="managed-mcp.html#policy-based-control-with-allowlists-and-denylists"><code>deniedMcpServers</code> 托管设置</a>阻止了 <code>claude-in-chrome</code> MCP 服务器，Claude Code 不会显示安装提示。</li>
+<li>如果您的组织部署了 <a href="managed-mcp.html#exclusive-control-with-managed-mcp-json"><code>managed-mcp.json</code></a> 文件，但没有<a href="managed-mcp.html#allow-claude-in-chrome-alongside-the-managed-set">在托管集之外允许 Claude in Chrome</a>，Claude Code 不会显示安装提示。</li>
+</ul>
+<h3 id="enable-chrome-by-default">默认启用 Chrome</h3>
+<p>如需无需每次传递 <code>--chrome</code> 即可连接 Chrome，请在 CLI 会话中运行 <code>/chrome</code> 并选择<strong>默认启用</strong>。在 <a href="vs-code.html#automate-browser-tasks-with-chrome">VS Code 扩展</a>中，在输入框中输入 <code>/chrome</code> 并打开<strong>默认启用</strong>开关。两者共享同一个设置，因此在任一处启用后，CLI 和 VS Code 都会启用该设置。</p>
+<p>启用该设置并使用 Claude Code v2.1.287 或更高版本时，每个 VS Code 会话都会在启动时连接到您的浏览器，因此 Claude 无需您输入 <code>@browser</code> 即可使用浏览器。在更早的版本中，或者关闭该设置时，VS Code 会话会在您输入 <code>@browser</code> 时连接。</p>
+<p>Chrome 未运行时，Claude Code 会正常启动。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>默认启用 Chrome 会增加上下文使用量，因为浏览器工具及其说明会始终被加载。如果您注意到上下文消耗增加，请关闭该设置，仅在需要时连接：在 CLI 中使用 <code>--chrome</code>，或在 VS Code 输入框中输入 <a href="vs-code.html#automate-browser-tasks-with-chrome"><code>@browser</code></a>。</p></div></div>
+<h3 id="answer-the-startup-dialog">回答启动对话框</h3>
+<p>如果启动 <code>claude</code> 时出现“Claude in Chrome extension detected”对话框，您的回答会更改<a href="#enable-chrome-by-default"><strong>默认启用</strong>设置</a>：</p>
+<ul>
+<li><strong>Yes, use my browser</strong>：启用该设置并连接本次会话</li>
+<li><strong>No, keep browser tools off</strong> 或 Esc：关闭该设置，Claude Code 将不再提供设置 Chrome 的选项</li>
+</ul>
+<p>如需为以后的会话更改您的回答，请运行 <code>/chrome</code>。</p>
+<h3 id="manage-site-permissions">管理站点权限</h3>
+<p>站点级权限继承自 Chrome 扩展程序。在 Chrome 扩展程序设置中管理权限，以控制 Claude 可以在哪些站点上浏览、点击和输入。在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>下，当自动模式分类器本身批准了对某个站点的浏览器调用时，扩展程序会跳过该调用的逐站点检查，除非您的权限规则拒绝 Claude in Chrome 访问任何站点。</p>
+<h3 id="permission-prompts-in-vs-code-sessions">VS Code 会话中的权限提示</h3>
+<p>在 VS Code 会话中，当 Claude Code 在执行浏览器操作前进行询问时，提示会以卡片形式显示在聊天面板中。当操作针对您尚未允许的站点时，该卡片还会提供允许该站点的选项。</p>
+<p>在因启用了<a href="#enable-chrome-by-default">默认启用</a>而在启动时连接到浏览器的会话中，无论处于 Manual、Edit automatically、Auto 还是 Bypass permissions 模式，Claude Code 在对您尚未允许的站点执行浏览器操作前都会询问您。在 Auto 和 Bypass permissions 模式下，此行为会持续到您在该会话中输入 <code>@browser</code> 为止。</p>
+<h3 id="browser-tools-in-plan-mode">计划模式下的浏览器工具</h3>
+<p>在<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a>下，Claude 在录制 GIF、打开新标签页或运行快捷方式之前会显示权限提示。在交互式 CLI 会话中，如果<a href="permission-modes.html#skip-all-checks-with-bypasspermissions-mode">绕过权限模式可用</a>且<a href="env-vars.html#features-that-need-feature-flag-fetching">功能标志获取</a>已关闭，这些调用将在不提示的情况下运行。</p>
+<p>设置了 <code>createIfEmpty</code> 的 <code>tabs_context_mcp</code> 调用也会触发提示，包含上述任一操作的 <code>browser_batch</code> 调用同样如此。</p>
+<h2 id="example-workflows">示例工作流</h2>
+<p>以下示例展示了将浏览器操作与编码任务结合使用的常见方式。运行 <code>/mcp</code>，选择 <code>claude-in-chrome</code>，然后选择 <strong>View tools</strong>，即可查看可用浏览器工具的完整列表。</p>
+<h3 id="test-a-local-web-application">测试本地 Web 应用程序</h3>
+<p>开发 Web 应用时，可以让 Claude 验证您的更改是否正常工作：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">I just updated the login form validation. Can you open localhost:3000,
+try submitting the form with invalid data, and check if the error
+messages appear correctly?
+</code></pre></div>
+<p>Claude 会导航到您的本地服务器，与表单进行交互，并报告其观察到的情况。</p>
+<h3 id="debug-with-console-logs">使用控制台日志进行调试</h3>
+<p>Claude 可以读取控制台输出来帮助诊断问题。由于日志可能非常冗长，请告诉 Claude 需要查找哪些模式，而不是要求获取全部控制台输出：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Open the dashboard page and check the console for any errors when
+the page loads.
+</code></pre></div>
+<p>Claude 会读取控制台消息，并可以筛选特定模式或错误类型。</p>
+<h3 id="automate-form-filling">自动填写表单</h3>
+<p>加快重复性数据录入任务：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">I have a spreadsheet of customer contacts in contacts.csv. For each row,
+go to the CRM at crm.example.com, click "Add Contact", and fill in the
+name, email, and phone fields.
+</code></pre></div>
+<p>Claude 会读取您的本地文件，在 Web 界面中导航，并为每条记录输入数据。</p>
+<h3 id="upload-files-to-web-pages">向网页上传文件</h3>
+<p>Claude 可以将您计算机上的文件附加到页面上的上传字段中。Claude Code 会读取文件并将其内容发送到浏览器，因此上传在本地会话和远程会话中均可正常工作。</p>
+<p>以下示例将一个日志文件附加到表单：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Open the bug tracker at bugs.example.com, create a new issue,
+and attach logs/session.log to it
+</code></pre></div>
+<p>如果 Claude 拒绝附加文件或上传失败，请检查以下原因：</p>
+<ul>
+<li><strong>权限</strong>：只有当会话被允许读取某个文件时，Claude 才能上传该文件，因此拒绝对文件进行 <code>Read</code> 访问的<a href="settings-reference.html#permission-settings">权限规则</a>也会阻止上传该文件。</li>
+<li><strong>大小</strong>：单次上传的文件总大小最多为 10 MB。</li>
+<li><strong>硬链接</strong>：Claude 会拒绝具有多个硬链接的文件，这种情况在 <code>node_modules</code> 等包管理器存储中很常见。请复制该文件并上传副本。</li>
+<li><strong>凭据名称</strong>：如果文件的名称或所在文件夹属于通常用于存放凭据的位置，例如 <code>.env</code>、<code>.pem</code> 或 <code>.key</code> 文件，或 <code>.ssh</code> 下的任何内容，Claude 会拒绝该文件。需要 Claude Code v2.1.293 或更高版本。</li>
+</ul>
+<h3 id="draft-content-in-google-docs">在 Google Docs 中起草内容</h3>
+<p>使用 Claude 直接在您的文档中撰写内容，无需进行 API 设置：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Draft a project update based on the recent commits and add it to my
+Google Doc at docs.google.com/document/d/abc123
+</code></pre></div>
+<p>Claude 会打开文档，点击进入编辑器并输入内容。这适用于您已登录的任何 Web 应用：Gmail、Notion、Sheets 等。</p>
+<h3 id="extract-data-from-web-pages">从网页中提取数据</h3>
+<p>从网站中提取结构化信息：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Go to the product listings page and extract the name, price, and
+availability for each item. Save the results as a CSV file.
+</code></pre></div>
+<p>Claude 会导航到该页面，读取内容，并将数据整理为结构化格式。</p>
+<h3 id="run-multi-site-workflows">运行多站点工作流</h3>
+<p>跨多个网站协调任务：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Check my calendar for meetings tomorrow, then for each meeting with
+an external attendee, look up their company website and add a note
+about what they do.
+</code></pre></div>
+<p>Claude 会在多个标签页之间工作，以收集信息并完成工作流。</p>
+<h3 id="record-a-demo-gif">录制演示 GIF</h3>
+<p>创建可分享的浏览器交互录制：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Record a GIF showing how to complete the checkout flow, from adding
+an item to the cart through to the confirmation page.
+</code></pre></div>
+<p>Claude 会录制交互过程并将其保存为 GIF 文件。录制内容会捕获浏览器中可见的所有内容，包括已登录页面上的账户详细信息，因此在与团队以外的人员分享之前，请先进行检查。</p>
+<h3 id="save-screenshots-to-disk">将屏幕截图保存到磁盘</h3>
+<p>让 Claude 将屏幕截图保存为文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Take a screenshot of the checkout page and save it to disk
+</code></pre></div>
+<p>Claude 会将图像保存到磁盘并报告文件路径。</p>
+<h2 id="troubleshooting">故障排除</h2>
+<h3 id="extension-not-detected">未检测到扩展程序</h3>
+<p>如果 Claude Code 无法检测到 Chrome 扩展程序：</p>
+<ol>
+<li>验证 Chrome 扩展程序已安装并在 <code>chrome://extensions</code> 中启用</li>
+<li>通过运行 <code>claude --version</code> 验证 Claude Code 是最新的</li>
+<li>检查 Chrome 是否正在运行</li>
+<li>运行 <code>/chrome</code> 并选择"重新连接扩展程序"以重新建立连接</li>
+<li>如果问题仍然存在，请重新启动 Claude Code 和 Chrome</li>
+</ol>
+<p>第一次启用 Chrome 集成时，Claude Code 会安装本机消息传递主机配置文件。Chrome 在启动时读取此文件，因此如果扩展程序在您的第一次尝试中未被检测到，请重新启动 Chrome 以获取新配置。</p>
+<p>Claude Code 在首次安装时会打开一个浏览器标签页，提示您连接扩展程序。稍后重写配置文件的会话（例如在切换构建或配置目录后）不会重新打开它。</p>
+<p>如果连接仍然失败，请验证主机配置文件是否存在于：</p>
+<p>对于 Chrome：</p>
+<ul>
+<li><strong>macOS</strong>：<code>~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.anthropic.claude_code_browser_extension.json</code></li>
+<li><strong>Linux</strong>：<code>~/.config/google-chrome/NativeMessagingHosts/com.anthropic.claude_code_browser_extension.json</code></li>
+<li><strong>Windows</strong>：检查 Windows 注册表中的 <code>HKCU\Software\Google\Chrome\NativeMessagingHosts\</code></li>
+</ul>
+<p>对于 Edge：</p>
+<ul>
+<li><strong>macOS</strong>：<code>~/Library/Application Support/Microsoft Edge/NativeMessagingHosts/com.anthropic.claude_code_browser_extension.json</code></li>
+<li><strong>Linux</strong>：<code>~/.config/microsoft-edge/NativeMessagingHosts/com.anthropic.claude_code_browser_extension.json</code></li>
+<li><strong>Windows</strong>：检查 Windows 注册表中的 <code>HKCU\Software\Microsoft\Edge\NativeMessagingHosts\</code></li>
+</ul>
+<p>其他基于 Chromium 的浏览器从其自己的配置目录读取相同的文件，该目录以浏览器命名。例如，macOS 上的 Brave 使用 <code>~/Library/Application Support/BraveSoftware/Brave-Browser/NativeMessagingHosts/</code>，在 Windows 上每个浏览器都有自己的注册表项，例如 <code>HKCU\Software\BraveSoftware\Brave-Browser\NativeMessagingHosts\</code>。</p>
+<h3 id="project-settings-can’t-turn-on-chrome">项目设置无法启用 Chrome</h3>
+<p>终端中出现以下警告，表示您正在使用的项目尝试启用 Chrome 集成，但 Claude Code 未允许：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Claude Code ignored CLAUDE_CODE_ENABLE_CFC in this project's settings: a project can't turn on Claude in Chrome. To turn it on yourself, run /chrome or start with --chrome.
+</code></pre></div>
+<p>该项目的 <code>.claude/settings.json</code> 或 <code>.claude/settings.local.json</code> 在其 <code>env</code> 块中将 <a href="env-vars.html#variables"><code>CLAUDE_CODE_ENABLE_CFC</code></a> 设置为 <code>1</code>，以启用 Chrome 集成。Claude Code 未应用该设置，因此本会话中 Chrome 集成处于关闭状态，Claude 没有浏览器工具。</p>
+<p>Claude Code 会跳过该设置，因为这些文件存储在项目目录中，而您检出的仓库不得能够将 Claude 连接到您的浏览器。</p>
+<p>您可以照常继续工作。如果您需要浏览器工具，或希望消除该警告，请执行以下操作之一：</p>
+<ul>
+<li><strong>立即获取浏览器工具</strong>：退出，然后在 shell 中使用 <code>claude --chrome</code> 重新启动。</li>
+<li><strong>在后续会话中获取浏览器工具</strong>：在 Claude Code 输入框中运行 <code>/chrome</code> 并选择<a href="#enable-chrome-by-default"><strong>默认启用</strong></a>。这适用于之后启动的会话，而不是当前正在运行的会话。</li>
+<li><strong>在不使用浏览器工具的情况下停止警告</strong>：从项目的设置文件中删除 <code>CLAUDE_CODE_ENABLE_CFC</code> 这一行。</li>
+</ul>
+<h3 id="browser-not-responding">浏览器无响应</h3>
+<p>如果 Claude 的浏览器命令停止工作：</p>
+<ol>
+<li>检查是否有模态对话框（alert、confirm、prompt）阻止页面。JavaScript 对话框阻止浏览器事件并防止 Claude 接收命令。手动关闭对话框，然后告诉 Claude 继续。</li>
+<li>要求 Claude 创建新标签页并重试</li>
+<li>通过在 <code>chrome://extensions</code> 中禁用并重新启用来重新启动 Chrome 扩展程序</li>
+</ol>
+<h3 id="connection-drops-during-long-sessions">长会话期间连接断开</h3>
+<p>Chrome 扩展程序的 service worker 在扩展会话期间可能会进入空闲状态，这会破坏连接。如果浏览器工具在一段时间不活动后停止工作，请运行 <code>/chrome</code> 并选择"重新连接扩展程序"。</p>
+<p>运行 <code>/chrome</code> 时，请查看其 <code>Status</code> 行。如果显示"未连接"，则表示正在运行的会话自身与 Chrome 的连接已失败。选择"重新连接扩展程序"以重新启动该连接。连接成功后，扩展程序的重新连接页面会在 Chrome 中打开。在 v2.1.290 之前，"重新连接扩展程序"仅会打开该页面，而不会重新启动失败的连接，因此如果在较早版本上浏览器工具未恢复，请更新 Claude Code。</p>
+<h3 id="extension-signed-in-to-a-different-organization">扩展程序登录到了不同的组织</h3>
+<p>如果您属于多个 claude.ai 组织，扩展程序必须登录到与 Claude Code 相同的组织。如果两者不同，即使两者使用相同的 claude.ai 账户，Claude 的浏览器工具也会返回"Browser extension is not connected"。</p>
+<p>要查看 Claude Code 登录的是哪个组织，请在 Claude Code 输入框中运行 <a href="commands.html"><code>/status</code></a> 并查看 <code>Organization</code> 行。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>如果您从扩展程序中注销，将丢失其中保存的快捷方式和定时任务。请先尝试<a href="#common-error-messages">常见错误消息</a>下的其他修复方法。</p></div></div>
+<p>要更改扩展程序的组织，请在扩展程序的设置中注销，然后重新登录并选择 <code>/status</code> 显示的组织。</p>
+<h3 id="windows-specific-issues">Windows 特定问题</h3>
+<p>在 Windows 上，您可能会遇到：</p>
+<ul>
+<li><strong>命名管道冲突 (EADDRINUSE)</strong>：如果另一个进程正在使用相同的命名管道，请重新启动 Claude Code。关闭任何可能使用 Chrome 的其他 Claude Code 会话。</li>
+<li><strong>本机消息传递主机错误</strong>：如果本机消息传递主机在启动时崩溃，请尝试重新安装 Claude Code 以重新生成主机配置。</li>
+<li><strong>设置页面无法打开</strong>：更新 Claude Code。在 v2.1.211 之前，提示您连接扩展程序的浏览器标签页在 Windows 上可能无法打开。</li>
+</ul>
+<h3 id="common-error-messages">常见错误消息</h3>
+<p>这些是最常见的错误及其解决方法：</p>
+<table>
+<thead>
+<tr>
+<th>错误</th>
+<th>原因</th>
+<th>修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"浏览器扩展程序未连接"</td>
+<td>扩展程序未在 Chrome 中安装并运行，扩展程序登录的 claude.ai 账户或组织与 Claude Code 不同，或您的组织的 IP 允许列表拒绝了到 <code>bridge.claudeusercontent.com</code> 的连接</td>
+<td>检查扩展程序登录的 claude.ai 账户和<a href="#extension-signed-in-to-a-different-organization">组织</a>是否与 Claude Code 相同，重新启动 Chrome 和 Claude Code，然后运行 <code>/chrome</code> 以重新连接。如果您的组织使用 IP 允许列表且错误仍然存在，请参阅<a href="network-config.html#organization-ip-allowlists-and-proxy-egress">组织 IP 允许列表和代理出口</a></td>
+</tr>
+<tr>
+<td>扩展程序在 <code>/chrome</code> 中显示"未检测到"</td>
+<td>Chrome 扩展程序未安装或已禁用</td>
+<td>在 <code>chrome://extensions</code> 中安装或启用扩展程序</td>
+</tr>
+<tr>
+<td>"没有可用的标签页"</td>
+<td>Claude 在标签页准备好之前尝试操作</td>
+<td>要求 Claude 创建新标签页并重试</td>
+</tr>
+<tr>
+<td>"接收端不存在"</td>
+<td>扩展程序 service worker 进入空闲状态</td>
+<td>运行 <code>/chrome</code> 并选择"重新连接扩展程序"</td>
+</tr>
+<tr>
+<td>"没有已连接的浏览器"</td>
+<td>Chrome 未打开，或扩展程序登录的 claude.ai 账户和组织与 Claude Code 不同，或 Claude Code 无法访问 <code>bridge.claudeusercontent.com</code></td>
+<td>确认 Chrome 已打开，且扩展程序登录的 claude.ai 账户和<a href="#extension-signed-in-to-a-different-organization">组织</a>与 Claude Code 相同。如果是这样，请检查您的网络是否允许 Claude Code 访问 <code>bridge.claudeusercontent.com</code>，该地址列于<a href="network-config.html#network-access-requirements">网络访问要求</a>中</td>
+</tr>
+</tbody>
+</table>
+<h2 id="see-also">另请参阅</h2>
+<ul>
+<li><a href="computer-use.html">计算机使用</a>：当任务无法在浏览器中完成时控制本机 macOS 应用</li>
+<li><a href="vs-code.html#automate-browser-tasks-with-chrome">在 VS Code 中使用 Claude Code</a>：VS Code 扩展程序中的浏览器自动化</li>
+<li><a href="cli-reference.html">CLI 参考</a>：命令行标志，包括 <code>--chrome</code></li>
+<li><a href="common-workflows.html">常见工作流</a>：更多使用 Claude Code 的方式</li>
+<li><a href="data-usage.html">数据和隐私</a>：Claude Code 如何处理您的数据</li>
+<li><a href="https://support.claude.com/en/articles/12012173-getting-started-with-claude-in-chrome" target="_blank" rel="noopener">Claude in Chrome 入门</a>：Chrome 扩展程序的完整文档，包括快捷键、计划和权限</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="mobile.html"><span class="pager-dir">← 上一页</span><span class="pager-name">Claude Code 移动版</span></a><a class="pager-link next" href="computer-use.html"><span class="pager-dir">下一页 →</span><span class="pager-name">让 Claude 从 CLI 使用您的计算机</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#capabilities">功能</a><a class="toc-l2" href="#prerequisites">前提条件</a><a class="toc-l2" href="#get-started-in-the-cli">在 CLI 中开始使用</a><a class="toc-l3" href="#install-the-extension-when-claude-asks">在 Claude 询问时安装扩展程序</a><a class="toc-l3" href="#enable-chrome-by-default">默认启用 Chrome</a><a class="toc-l3" href="#answer-the-startup-dialog">回答启动对话框</a><a class="toc-l3" href="#manage-site-permissions">管理站点权限</a><a class="toc-l3" href="#permission-prompts-in-vs-code-sessions">VS Code 会话中的权限提示</a><a class="toc-l3" href="#browser-tools-in-plan-mode">计划模式下的浏览器工具</a><a class="toc-l2" href="#example-workflows">示例工作流</a><a class="toc-l3" href="#test-a-local-web-application">测试本地 Web 应用程序</a><a class="toc-l3" href="#debug-with-console-logs">使用控制台日志进行调试</a><a class="toc-l3" href="#automate-form-filling">自动填写表单</a><a class="toc-l3" href="#upload-files-to-web-pages">向网页上传文件</a><a class="toc-l3" href="#draft-content-in-google-docs">在 Google Docs 中起草内容</a><a class="toc-l3" href="#extract-data-from-web-pages">从网页中提取数据</a><a class="toc-l3" href="#run-multi-site-workflows">运行多站点工作流</a><a class="toc-l3" href="#record-a-demo-gif">录制演示 GIF</a><a class="toc-l3" href="#save-screenshots-to-disk">将屏幕截图保存到磁盘</a><a class="toc-l2" href="#troubleshooting">故障排除</a><a class="toc-l3" href="#extension-not-detected">未检测到扩展程序</a><a class="toc-l3" href="#project-settings-can’t-turn-on-chrome">项目设置无法启用 Chrome</a><a class="toc-l3" href="#browser-not-responding">浏览器无响应</a><a class="toc-l3" href="#connection-drops-during-long-sessions">长会话期间连接断开</a><a class="toc-l3" href="#extension-signed-in-to-a-different-organization">扩展程序登录到了不同的组织</a><a class="toc-l3" href="#windows-specific-issues">Windows 特定问题</a><a class="toc-l3" href="#common-error-messages">常见错误消息</a><a class="toc-l2" href="#see-also">另请参阅</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

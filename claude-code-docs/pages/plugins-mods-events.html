@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用 mod 响应事件 · Claude Code 中文文档</title>
+<meta name="description" content="从 mod 处理 Claude Code 事件：观察、重写或回答工具调用、提示和轮次，过滤 hook 处理的事件，并为其他 mod 做计划。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/mods/events">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/mods/events" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link active" href="plugins-mods-events.html" aria-current="page">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>mod</span> <span class="sep">/</span> <span>构建</span></div>
+    <article class="prose" id="article"><h1 id="mod">使用 mod 响应事件</h1>
+<blockquote>
+<p>从 mod 处理 Claude Code 事件：观察、重写或回答工具调用、提示和轮次，过滤 hook 处理的事件，并为其他 mod 做计划。</p>
+</blockquote>
+<p>hook 是一个事件处理程序：Claude Code 在命名事件发生时运行的函数。Claude Code 在即将采取行动的每个点触发事件，例如当它运行工具、提交提示、向模型发送请求或启动或结束会话时。你的 hook 在 Claude Code 采取行动之前运行，因此它可以观察事件、重写事件或代替 Claude Code 回答事件。你使用 <a href="plugins-mods-reference.html#the-hook-function"><code>on(eventName, handler)</code></a> 注册 hook。</p>
+<p>在开始之前，请构建你的<a href="plugins-mods-create.html">第一个 mod</a>。对于每个事件及其确切字段，请参阅<a href="plugins-mods-reference.html#events">参考</a>或阅读<a href="plugins-mods-create.html#get-the-types-for-your-build">你的构建的类型</a>。</p>
+<h2 id="how-a-hook-handles-an-event">hook 如何处理事件</h2>
+<p>hook 位于事件和 Claude Code 对其采取的行动之间，因此它可以观察事件、重写事件或自己回答事件。它接收三个参数：<a href="plugins-mods-api.html">mods API</a> 作为 <code>$</code>、事件作为 <code>e</code> 和下一个处理程序作为 <code>next</code>。事件的处理程序形成中间件链。<code>next(e)</code> 调用下一个处理程序，这是另一个 mod 的 hook 或链末端的 Claude Code 自己的行为，它解析为结果。你的 hook 对 <code>next</code> 做什么决定了它做以下三件事中的哪一件。</p>
+<h3 id="observe-an-event">观察事件</h3>
+<p>要观察事件而不改变它，请执行你的工作并返回 <code>next(e)</code>。此 hook 记录 Claude 即将使用的每个工具：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 在工具运行之前运行</span>
+<span class="w">  </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Claude is about to use '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">tool</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// 原样传递事件</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>在每个工具运行之前，转录中会出现一条暗线，例如 <code>● my-mod: Claude is about to use Bash</code>，其中 <code>my-mod</code> 是你的插件的名称。工具的运行方式与没有 mod 时相同。</p>
+<p>要在事件后采取行动，请 <code>await next(e)</code>、执行你的工作并返回结果。此 hook 在每个工具运行后记录它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 让工具运行，并等待其结果</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// 在工具运行后运行</span>
+<span class="w">  </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">tool</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">' finished'</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// 原样返回结果</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">result</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>该行现在出现在每个工具完成后。Claude 读取相同的结果，因为 hook 返回 <code>next(e)</code> 解析的内容。</p>
+<h3 id="rewrite-an-event">重写事件</h3>
+<p>要更改 Claude Code 作用的内容，例如提示词的文本，请使用修改后的事件副本调用 <code>next</code>。事件本身是不可变的：它被深度冻结，对字段赋值会抛出错误。此 hook 在发送前修剪每个提示词：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'prompt.submit'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 传递事件的副本，其文本已更改</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">text</span><span class="p">.</span><span class="nx">trim</span><span class="p">()</span><span class="w"> </span><span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>后续处理程序和 Claude Code 接收修剪后的提示，永远看不到原始提示。你也可以更改结果：<code>await next(e)</code>，然后返回替换了字段的结果副本。</p>
+<h3 id="answer-an-event">回答事件</h3>
+<p>要自己处理事件，请返回结果而不调用 <code>next</code>。这会短路链，因此后续 mod 和 Claude Code 自己的行为不会运行。此 hook 拒绝每个 Bash 命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="s1">'Bash'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 没有调用 next，所以命令永远不会运行</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">deny</span><span class="o">:</span><span class="w"> </span><span class="s1">'Bash is turned off in this project. Use the file tools.'</span><span class="w"> </span><span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>当 Claude 尝试 Bash 命令时，命令不会运行，Claude 将 <code>deny</code> 文本读作工具的结果。每个事件都有自己的结果形状，<a href="plugins-mods-reference.html#events">事件参考</a>列出了这些。</p>
+<h3 id="filter-which-events-a-hook-handles">过滤 hook 处理的事件</h3>
+<p>要仅为某些事件运行 hook，请将过滤器作为第二个参数传递给 <code>on</code>。Claude Code 将过滤器称为 matcher。它是一个对象，其字段与事件的字段进行比较，只有当每个字段都匹配时，hook 才会运行。字段可以是值、允许值的数组或正则表达式。</p>
+<p>此示例中的每一行都为更窄的工具调用集合注册相同的函数 <code>hook</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="c1">// 字符串匹配一个值：仅 Bash 调用</span>
+<span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="s1">'Bash'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">hook</span><span class="p">)</span>
+<span class="c1">// 数组匹配其中任何值：Edit 调用和 Write 调用</span>
+<span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">'Edit'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Write'</span><span class="p">]</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">hook</span><span class="p">)</span>
+<span class="c1">// 正则表达式按模式匹配：来自一个 MCP 服务器的每个工具</span>
+<span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="sr">/^mcp__github__/</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">hook</span><span class="p">)</span>
+</code></pre></div>
+<p><code>hook</code> 为 Bash、Edit 或 Write 调用各运行一次，为名称以 <code>mcp__github__</code> 开头的工具调用运行一次。对任何其他工具（如 Read）的调用都不匹配这三个中的任何一个，因此 <code>hook</code> 不会为它运行。</p>
+<p>事件名称可以是通配符。<code>'classic.*'</code> 匹配每个<a href="#hook-the-settings-hook-events">设置 hook 事件</a>。<code>'*'</code> 匹配除<a href="plugins-mods-reference.html#telemetry">遥测事件</a>之外的每个事件，遥测事件需使用其自身的名称和 <code>{ to: 'collector' }</code> 过滤器。</p>
+<p>为每个 matcher 注册一次事件。如果你为 <code>session.start</code> 调用 <code>on</code> 两次而没有 matcher，模块将无法加载，错误为 <code>on("session.start") is registered twice without a matcher</code>。将你的 mod 在会话启动时执行的所有操作放在一个 hook 中。</p>
+<h2 id="hook-what-claude-is-doing">对 Claude 正在执行的操作设置 hook</h2>
+<p>处理这些事件，可以在工具调用、提示词、轮次或设置读取发生时查看或更改它们。有关每个事件以及 hook 可以返回的内容，请参阅<a href="plugins-mods-reference.html#events">事件参考</a>。</p>
+<h3 id="guard-or-change-a-tool-call">拦截或更改工具调用</h3>
+<p><code>tool.call</code> hook 会看到 Claude 即将使用的每个工具，因此可以拒绝调用、更改其参数或放行。<code>tool.call</code> 在 Claude Code 即将运行某个工具时触发，包括子代理发起的调用以及对 MCP 工具的调用。<code>e.tool</code> 是工具名称，工具的参数是 <code>e</code> 的字段，例如 Bash 的 <code>e.command</code>。调用 <code>next(e)</code> 时，Claude Code 会先运行权限检查，然后运行该工具。</p>
+<p>以下 hook 会拒绝执行强制推送的 Bash 命令，并告诉 Claude 原因：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="c1">// The matcher limits the hook to Bash calls, so e.command is the shell command</span>
+<span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="s1">'Bash'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="sr">/git push .*--force/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">command</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Returning without calling next answers the event, so the command never runs</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">deny</span><span class="o">:</span><span class="w"> </span><span class="s1">'Force pushes are not allowed in this repository. Push to a new branch instead.'</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// Every other command goes on to the permission check and then to Bash</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>当 Claude 尝试执行 <code>git push --force</code> 时，该命令不会运行，也不会出现权限提示，因为该 hook 从未调用 <code>next</code>。Claude 会将 <code>deny</code> 文本作为工具的结果读取，因此请将其写成 Claude 可以据此采取行动的指令。其他所有 Bash 命令的运行方式与没有该 mod 时相同。</p>
+<p>如果此 hook 抛出异常或超时，Claude Code 会跳过它，命令会像没有该 mod 时一样继续执行。若要改为拒绝该命令，请为该 hook <a href="#handle-a-hook-that-fails">添加 <code>.catch</code> 处理程序</a>。</p>
+<p>要在工具运行之后执行操作，请 <code>await next(e)</code>，完成您的工作，然后返回 <code>next</code> 给您的结果。以下 hook 使用 <a href="plugins-mods-api.html#show-something-without-starting-a-turn"><code>$.ui.log</code></a> 记录 Claude 更改的每个 <code>.mdx</code> 文件，该方法会在会话记录中添加一行 Claude 不会读取的暗色文本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">'Edit'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Write'</span><span class="p">]</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Wait for the permission check and the tool, and keep what they produced</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// A refused call comes back as { deny }, and a failed one has isError set</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">changed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="nx">result</span><span class="p">.</span><span class="nx">deny</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">result</span><span class="p">.</span><span class="nx">isError</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">changed</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">file_path</span><span class="p">.</span><span class="nx">endsWith</span><span class="p">(</span><span class="s1">'.mdx'</span><span class="p">))</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Claude changed '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">file_path</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// Return the result as it came, so Claude reads what the tool returned</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">result</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>在 Claude 编辑或写入 <code>.mdx</code> 文件后，会话记录中会出现一行暗色文本，注明该文件名。对于其他类型的文件，或者被拒绝或失败的调用，不会记录任何内容。Claude 对该调用的认知不会改变，因为该 hook 返回的是它收到的结果。</p>
+<p>您的 hook 还可以更改调用、重试调用、自行响应调用或扣留其结果：</p>
+<ul>
+<li><strong>更改调用</strong>：将更改后的参数传给 <code>next</code>。</li>
+<li><strong>重试调用</strong>：再次调用 <code>next(e)</code>。如果 hook 在第一次结果中看到 <code>isError</code>，可以再次运行该工具并返回那次的结果。</li>
+<li><strong>自行响应调用</strong>：在不调用 <code>next</code> 的情况下返回一个带有 <code>result</code> 字段的对象；对于内置工具，请让 <code>result</code> 的结构与该工具自身结果在<a href="plugins-mods-create.html#get-the-types-for-your-build">适用于您构建版本的类型</a>中的结构一致。不会出现权限提示，工具也不会运行，因此您返回的结果就是 Claude 对所发生情况的全部了解。</li>
+<li><strong>向 Claude 扣留结果</strong>：在 <code>await next(e)</code> 之后返回 <code>{ deny: reason }</code>。Claude 读取的是您的原因，而不是 <code>next</code> 返回的内容。如果工具已运行，deny 会阻止 Claude 看到其结果，但不会撤销工具所做的任何操作。如果工具已运行并成功，原因会跟在诸如 <code>Bash ran, and a plugin withheld its result:</code> 的说明之后。</li>
+</ul>
+<p>您组织的<a href="server-managed-settings.html">托管设置</a>中的 hook 会在任何 mod 的 <code>tool.call</code> hook 之前运行。当托管 hook 阻止该调用时，任何 mod 的 <code>tool.call</code> hook 都不会针对该调用运行。</p>
+<h4 id="hold-a-tool-call-until-the-user-decides">暂缓工具调用，直到用户做出决定</h4>
+<p>hook 可以暂停工具调用，并在其继续之前询问用户如何处理。<code>tool.call</code> hook 可以在调用 <code>next</code> 或返回之前执行 <code>await</code>，在此之前工具调用会一直处于挂起状态。要向用户提出问题，请调用 <code>$.ui.ask</code>。它会在 Claude 向您提问时使用的对话框中，将您的问题显示在您的选项编号列表上方，并解析为用户选择的标签。在您的选项之后，对话框会添加一行用于输入其他答案，以及一行 <strong>Chat about this</strong>。</p>
+<p>此示例中的 <code>RISKY</code> 模式匹配 <code>rm -r</code>、<code>rm -rf</code>、<code>git reset --hard</code> 以及带有 <code>--force</code> 的 <code>git push</code>，但不匹配其他写法，例如 <code>git push -f</code>。此模块会在运行与该模式匹配的 Bash 命令之前进行询问：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="kd">const</span><span class="w"> </span><span class="nx">RISKY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sr">/\brm\s+-rf?\b|\bgit\s+reset\s+--hard\b|\bgit\s+push\b.*--force/</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">register</span><span class="p">(</span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="s1">'Bash'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Let every other command through without a question</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">RISKY</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">command</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">    </span><span class="c1">// Start from the safe answer, so a question nobody answers refuses the command</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">answer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Refuse'</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// The tool call waits here until the user picks one of the two labels</span>
+<span class="w">      </span><span class="nx">answer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">ask</span><span class="p">(</span><span class="s1">'Run this command? '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">command</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s1">'Run it'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Refuse'</span><span class="p">])</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// The user dismissed the question, or this is a claude -p run with nobody to ask</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">answer</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">'Run it'</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Answer without calling next, so the command doesn't run</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">deny</span><span class="o">:</span><span class="w"> </span><span class="s1">'The user declined this command. Ask before trying a different approach.'</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>当 Claude 尝试执行诸如 <code>rm -rf build</code> 之类的命令时，会出现包含该命令的问题，命令会等待回答：</p>
+<ul>
+<li><strong>用户选择 Run it</strong>：hook 调用 <code>next(e)</code>，之后仍会运行常规的权限检查</li>
+<li><strong>用户选择 Refuse</strong>：命令不会运行，Claude 会读取 <code>deny</code> 文本</li>
+<li><strong>用户输入答案</strong>：<code>$.ui.ask</code> 解析为输入的文本。hook 会将其与 <code>Run it</code> 比较，因此任何其他文本都会拒绝该命令。</li>
+<li><strong>无人回答</strong>：当用户关闭问题或选择 <strong>Chat about this</strong> 时，以及在 <code>claude -p</code> 运行中，<code>$.ui.ask</code> 会 reject，因此 <code>catch</code> 块会将答案保留为 <code>Refuse</code></li>
+</ul>
+<p>请将等待保持在诸如 <code>$.ui.ask</code> 之类的 mods API 调用内部，因为这段时间不计入 hook 的<a href="plugins-mods-reference.html#limits">时间限制</a>。等待您自己的 promise 所花费的时间则会计入。</p>
+<p>Claude Code 会跳过超时的 hook，因此被暂缓的命令将会运行。若要改为拒绝该命令，请在 <code>on</code> 返回的注册对象上链式添加<a href="#handle-a-hook-that-fails">一个 <code>.catch</code> 处理程序</a>。该处理程序与 hook 内部的 <code>catch</code> 块是分开的。</p>
+<h4 id="approve-or-refuse-a-tool-call-before-the-user-is-asked">在询问用户之前批准或拒绝工具调用</h4>
+<p>要决定某个工具调用是否可以运行，请处理 <a href="plugins-mods-reference.html#tools"><code>tool.check</code></a>，这是 Claude Code 做出该决定的事件。</p>
+<p>对于固定的命令或路径，请使用诸如 <code>Bash(npm test)</code> 之类的<a href="permissions.html#permission-rule-syntax">权限规则</a>，无需编写代码。当决定取决于当下的实际情况（例如当前的 Git 分支或另一个 hook 记录的值）时，请处理 <code>tool.check</code>。</p>
+<ul>
+<li><strong>返回什么</strong>：要自行决定该调用，请返回您自己的对象，例如 <code>{ decision: 'allow' }</code> 或 <code>{ decision: 'deny', reason }</code>。要保持该决定不变，请返回 <code>await next(e)</code> 给您的结果。</li>
+<li><strong><code>await next(e)</code> 给您什么</strong>：Claude Code 自身的决定，形式为一个对象，其 <code>decision</code> 为 <code>allow</code>、<code>ask</code> 或 <code>deny</code>。<code>next(e)</code> 运行期间不会出现权限提示。</li>
+<li><strong>参数</strong>：<code>e.input</code> 保存工具的参数，例如 Bash 的 <code>command</code></li>
+<li><strong><code>tool.check</code> 何时触发</strong>：在 <a href="hooks.html#pretooluse"><code>PreToolUse</code> hook</a> 运行之后，并在权限提示、<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>的分类器或 <a href="hooks.html#permissionrequest"><code>PermissionRequest</code></a> hook 之前</li>
+</ul>
+<p>以下 hook 会在当前分支为 <code>main</code> 时拒绝 <code>git push</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.check'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="s1">'Bash'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Claude Code's own decision</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">decided</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">e</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">command</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s1">'git push'</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">decided</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">branch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">process</span><span class="p">.</span><span class="nx">run</span><span class="p">([</span><span class="s1">'git'</span><span class="p">,</span><span class="w"> </span><span class="s1">'branch'</span><span class="p">,</span><span class="w"> </span><span class="s1">'--show-current'</span><span class="p">])</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">branch</span><span class="p">.</span><span class="nx">stdout</span><span class="p">.</span><span class="nx">trim</span><span class="p">()</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">'main'</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">decided</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">decision</span><span class="o">:</span><span class="w"> </span><span class="s1">'deny'</span><span class="p">,</span><span class="w"> </span><span class="nx">reason</span><span class="o">:</span><span class="w"> </span><span class="s1">'Push from a branch other than main'</span><span class="w"> </span><span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>该 hook 会在 <code>main</code> 上拒绝 <code>git push</code>，并放行其他所有调用：</p>
+<ul>
+<li><strong>在 <code>main</code> 上</strong>：即使有规则允许 <code>git push</code>，该 hook 也会返回 <code>deny</code></li>
+<li><strong>在其他分支上以及对于其他命令</strong>：调用会得到与没有该 mod 时相同的决定</li>
+<li><strong>hook 抛出异常或超时</strong>：调用同样会得到与没有该 mod 时相同的决定。若要改为拒绝该调用，请<a href="#handle-a-hook-that-fails">添加一个 <code>.catch</code> 处理程序</a>，使其返回 <code>{ decision: 'deny', reason: 'the reason' }</code>。</li>
+</ul>
+<p>该 hook 匹配的是命令文本，因此请将其视为对 Claude 的提醒。要为所有人阻止向 <code>main</code> 推送，请在您的 Git 托管平台上保护该分支。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><code>tool.check</code> hook 也可以返回 <code>allow</code> 或 <code>ask</code>。在<a href="permissions.html#hook-approvals-in-plan-mode">计划模式</a>下，对于非只读的调用（例如文件编辑），您的 hook 可以收紧 <code>next(e)</code> 返回的决定，但不能放宽它。有关您的 hook 的 <code>allow</code> 无法覆盖的权限规则和 <code>PreToolUse</code> hook 决定，请参阅<a href="permissions.html#precedence-among-rules-hooks-and-mods">使用 hook 扩展权限</a>。</p></div></div>
+<h4 id="check-whether-a-tool-call-is-read-only">检查工具调用是否为只读</h4>
+<p>在 <a href="#approve-or-refuse-a-tool-call-before-the-user-is-asked"><code>tool.check</code></a> hook 中，当工具将该调用报告为只读时，<code>e.isReadOnly</code> 为 <code>true</code>。否则该字段不存在，而不是 <code>false</code>。<code>e.isReadOnly</code> 需要 Claude Code v2.1.304 或更高版本。</p>
+<p>某些工具（例如 Read、Grep、Glob 和 WebSearch）会将每次调用都报告为只读。Bash 和 MCP 工具在以下情况下将调用报告为只读：</p>
+<ul>
+<li><strong>Bash</strong>：命令通过 Claude Code 内置的<a href="permissions.html#read-only-commands">只读命令检查</a></li>
+<li><strong>MCP 工具</strong>：服务器将该工具的 <code>readOnlyHint</code> 注解设置为 <code>true</code></li>
+</ul>
+<p>该值是工具自身的报告，因此不要仅凭此字段批准调用。例如，WebFetch 和 Agent 调用会报告为只读，但 <a href="tools-reference.html#webfetch-tool-behavior">WebFetch</a> 会请求一个 URL，而 <a href="tools-reference.html#agent-tool-behavior">Agent</a> 会启动一个运行其自身工具的子代理。</p>
+<p>以下 hook 会为每个非只读且尚未被拒绝的 <code>mcp__github__</code> 调用返回 <code>ask</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.check'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="sr">/^mcp__github__/</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">decided</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// Read-only calls and denied calls pass through unchanged</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">isReadOnly</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">decided</span><span class="p">.</span><span class="nx">decision</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'deny'</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">decided</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">decision</span><span class="o">:</span><span class="w"> </span><span class="s1">'ask'</span><span class="p">,</span><span class="w"> </span><span class="nx">reason</span><span class="o">:</span><span class="w"> </span><span class="s1">'This tool can change the GitHub repository'</span><span class="w"> </span><span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+<h4 id="filter-a-tool-check-hook-by-whether-the-call-is-read-only">按调用是否为只读筛选 <code>tool.check</code> hook</h4>
+<p>要按 <a href="#check-whether-a-tool-call-is-read-only"><code>e.isReadOnly</code></a> 限制您的 hook 处理哪些调用，请对只读调用使用<a href="#filter-which-events-a-hook-handles">匹配器</a>，对其余调用使用 hook 主体：</p>
+<ul>
+<li><strong>仅只读调用</strong>：在匹配器中添加 <code>isReadOnly: true</code>，例如 <code>on('tool.check', { tool: 'Bash', isReadOnly: true }, hook)</code></li>
+<li><strong>非只读调用</strong>：在 hook 主体中测试 <code>e.isReadOnly</code>，如 <a href="#check-whether-a-tool-call-is-read-only"><code>mcp__github__</code> 示例</a>所示。如果您在匹配器中写入 <code>isReadOnly: false</code>，您的 hook 将永远不会运行。</li>
+</ul>
+<h3 id="rewrite-or-add-to-a-prompt">改写或补充提示词</h3>
+<p><code>prompt.submit</code> hook 会在轮次开始之前看到每个提示词，因此可以改写文本或向其中添加内容。<code>e.text</code> 是输入的内容。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">要执行的操作</th>
+<th style="text-align: left;">返回的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">改写提示词。会话记录和您的<a href="interactive-mode.html#command-history">提示词历史</a>会显示新文本。</td>
+<td style="text-align: left;"><code>next({ ...e, text: newText })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">在提示词之后添加只有 Claude 读取的文本</td>
+<td style="text-align: left;"><code>next({ ...e, context: [...(e.context ?? []), extraText] })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">阻止发送提示词</td>
+<td style="text-align: left;"><code>{ drop: 'the reason' }</code></td>
+</tr>
+</tbody>
+</table>
+<p>以下 hook 会在提示词提及 Pull Request 时，为 Claude 添加当前分支名称：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'prompt.submit'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Pass on a prompt that doesn't mention a pull request as it is</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="sr">/\bPR\b|pull request/i</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">text</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">git</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">process</span><span class="p">.</span><span class="nx">run</span><span class="p">([</span><span class="s1">'git'</span><span class="p">,</span><span class="w"> </span><span class="s1">'branch'</span><span class="p">,</span><span class="w"> </span><span class="s1">'--show-current'</span><span class="p">])</span>
+<span class="w">  </span><span class="c1">// Outside a git repository the command fails, so there's no branch to add</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">git</span><span class="p">.</span><span class="nx">exitCode</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// Keep any context an earlier hook added, and add one more line for Claude</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="p">[...(</span><span class="nx">e</span><span class="p">.</span><span class="nx">context</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">[]),</span><span class="w"> </span><span class="s1">'Current branch: '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">git</span><span class="p">.</span><span class="nx">stdout</span><span class="p">.</span><span class="nx">trim</span><span class="p">()]</span><span class="w"> </span><span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>当您发送诸如 <code>open a PR for this change</code> 之类的提示词时，您的消息在会话记录中看起来不变，而 Claude 还会在其后读取诸如 <code>Current branch: feature/auth</code> 的一行。未提及 Pull Request 的提示词会原样通过，且不会运行 <code>git</code>。</p>
+<p>要阻止提示词，请在不调用 <code>next</code> 的情况下返回 <code>{ drop: 'the reason' }</code>。文本会返回到用户的提示词输入框中，用户会看到 <code>Prompt dropped by a hook:</code> 后跟您的原因，因此请以用户为对象撰写原因。在以下情况下，提示词仍会被发送：</p>
+<ul>
+<li><strong>您的 hook 在其 <code>next(e)</code> 调用已放行提示词之后返回 <code>drop</code></strong>：轮次仍会运行，并且该 hook 会<a href="#handle-a-hook-that-fails">失败</a>，错误消息中包含 <code>a drop after its next() was answered</code></li>
+<li><strong>您的 hook 抛出异常或超时</strong>：Claude Code 会跳过它并发送提示词。请<a href="#handle-a-hook-that-fails">添加 <code>.catch</code> 处理程序</a>，以免失败时发送了本应被该 hook 阻止的提示词。</li>
+</ul>
+<p><a href="plugins-mods-reference.html#prompts-and-what-claude-reads">其他事件</a>涵盖了 Claude 读取的其余内容：<code>prompt.section</code> 用于系统提示词的每个部分，<code>prompt.context</code> 用于随第一条消息发送的上下文，<code>skill.prompt</code> 用于 skill 的文本。这些 hook 产生的文本如果在请求之间发生变化，会<a href="prompt-caching.html">使提示缓存失效</a>。在 <code>skill.prompt</code> hook 中，您还可以读取<a href="plugins-mods-reference.html#skill-prompt-fields">该 skill 来自哪个插件或文件</a>。</p>
+<h3 id="follow-a-turn">跟踪轮次</h3>
+<p>轮次是 Claude 为回应一个提示词所做的全部工作。处理 <code>turn.start</code>、<code>turn.step</code> 和 <code>turn.complete</code> 来跟踪一个轮次：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">触发时机</th>
+<th style="text-align: left;">hook 可以执行的操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>turn.start</code></td>
+<td style="text-align: left;">轮次开始</td>
+<td style="text-align: left;">观察。<code>e.turnId</code> 在另外两个事件中标识该轮次。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>turn.step</code></td>
+<td style="text-align: left;">Claude Code 即将向模型发送一个请求。包含工具调用的轮次会有多个请求。子代理的请求会设置 <code>e.agentId</code>。</td>
+<td style="text-align: left;">读取每个请求的 token 用量、通过 <code>next({ ...e, model })</code> 将其发送到不同的模型，或在不调用模型的情况下直接响应</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>turn.complete</code></td>
+<td style="text-align: left;">轮次结束，包括用户中断的轮次，此时 <code>e.isAborted</code> 为 <code>true</code>。<code>e.answer</code> 是 Claude 的最终文本，<code>e.durationMs</code> 是所用时间，<code>e.usage</code> 是该轮次的 token 总量。子代理的轮次触发该事件时会设置 <code>e.agentId</code>。</td>
+<td style="text-align: left;">观察，或返回一个带有 <code>text</code> 字段的对象（例如 <code>{ text: 'Done in 12 seconds' }</code>），以在回答下方显示一行</td>
+</tr>
+</tbody>
+</table>
+<p>请将 <code>turn.step</code> hook 编写为异步生成器，因为该事件是流式的。<code>yield* next(e)</code> 会在响应流式传输时将其转发，并求值为完成后的结果。以下 hook 会记录 Claude API 从<a href="prompt-caching.html">提示缓存</a>中为每个请求提供了多少内容：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="c1">// function* makes the hook a generator, which can pass the response on piece by piece</span>
+<span class="nx">on</span><span class="p">(</span><span class="s1">'turn.step'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Send the request, forward each piece as it arrives, and keep the finished result</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">yield</span><span class="o">*</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// Skip a result that reports no token counts</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">usage</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'cache read '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">usage</span><span class="p">.</span><span class="nx">cache_read_input_tokens</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">' · wrote '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">usage</span><span class="p">.</span><span class="nx">cache_creation_input_tokens</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// Return the result unchanged, so the turn continues as usual</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">result</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>Claude 的回复会像没有该 mod 时一样以流式方式显示在屏幕上。每个请求完成后，会话记录中会出现一行暗色文本，给出从缓存读取的 token 数和写入缓存的 token 数。包含工具调用的轮次会有多个请求，因此会添加多行。</p>
+<p><code>result.usage</code> 保存 Claude API 为某个请求报告的 token 计数，以及作出回答的 <code>model</code>：<code>input_tokens</code>、<code>output_tokens</code>、<code>cache_read_input_tokens</code> 和 <code>cache_creation_input_tokens</code>。该 hook 也会针对子代理的请求运行，因此如果您只想处理主对话，请检查 <code>e.agentId</code>。</p>
+<p>要查看 API 在请求期间自行运行的工具调用（例如对 <a href="advisor.html">advisor 工具</a>的调用），请读取 <code>result.serverToolUses</code>。Claude Code 不会运行这些调用，因此不会为它们触发任何 <code>tool.call</code> 或 <code>tool.check</code> hook。当响应中没有此类调用时，该字段不存在；该字段需要 Claude Code v2.1.290 或更高版本。</p>
+<h4 id="send-a-request-to-a-different-model">将请求发送到不同的模型</h4>
+<p>如果在 <code>model</code> 为别名（例如 <code>haiku</code>）时 <code>turn.step</code> 请求因模型错误而失败，请更新到 Claude Code v2.1.309 或更高版本，或使用完整的模型 ID。在 v2.1.309 之前，别名会按原样发出。</p>
+<p>要将请求发送到不同的模型，请将更改了 <code>model</code> 的事件传给 <code>next</code>，例如 <code>yield* next({ ...e, model: 'haiku' })</code>。</p>
+<h3 id="settings-read-hook">更改或拒绝设置读取</h3>
+<p>使用 <code>settings.read</code> hook 可以更改或拒绝设置读取，无论是 mod 的读取还是 Claude Code 自身的读取：</p>
+<ul>
+<li><strong>mod 的读取</strong>：某个 mod 调用 <a href="plugins-mods-api.html#read-one-source-or-one-key"><code>$.settings.read</code></a>。</li>
+<li><strong>Claude Code 自身的读取</strong>：您的 hook 首次运行于 Claude Code 合并会话设置时，此时会话的 mod 已加载完毕。当设置或已加载的插件发生变化时，您的 hook 会再次运行。</li>
+</ul>
+<p>请检查哪些 mod 会收到此事件以及您的 Claude Code 版本：</p>
+<ul>
+<li><strong>内置守卫</strong>：存在托管设置时，或者以 Team 或 Enterprise <a href="authentication.html#authentication-precedence"><code>/login</code></a> 作为会话的凭据时，<a href="plugins-mods-admin.html#know-what-happens-by-default">内置守卫</a>可能会跳过您安装或通过 <code>--plugin-dir</code> 加载的 mod 中的此 hook。要进行检查，请在<a href="plugins-mods-troubleshoot.html#read-the-debug-log">调试日志</a>中搜索 <code>settings.read bypassed by cc-plugin-sec-default</code>。如果包含该文本的行指明了您的 mod，请让您组织的管理员<a href="plugins-mods-admin.html#install-your-organizations-mods">将该 mod 安装为组织的 mod 之一</a>。</li>
+<li><strong>版本</strong>：该事件在 Claude Code 自身的读取上触发，以及 <code>e.layers</code> 字段，都需要 Claude Code v2.1.304 或更高版本。</li>
+</ul>
+<h4 id="settings-read-receives"><code>settings.read</code> hook 接收的内容</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">保存的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>e.layers</code></td>
+<td style="text-align: left;">array</td>
+<td style="text-align: left;">每个正在使用且包含设置的来源对应一个 <code>{ source, settings }</code> 对象，<a href="settings.html#settings-precedence">优先级</a>最低的排在最前：<code>plugin</code>、<code>user</code>、<code>project</code>、<code>local</code>、<code>flag</code>、<code>policy</code>。在 <code>claude plugin test</code> 中为空。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>e.source</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">mod 请求的单个来源，例如 <code>$.settings.read({ source: 'policy' })</code>。此时 <code>e.layers</code> 仅包含该层。在 Claude Code 自身的读取以及任何其他对合并设置的读取中不存在。</td>
+</tr>
+</tbody>
+</table>
+<p>在 <code>e.layers</code> 中，<code>plugin</code> 保存已启用插件提供的设置，它只是一个层名称，而不是可以传给 <code>$.settings.read</code> 的 <code>source</code>。<code>flag</code> 保存通过 <code>--settings</code> 传入的设置，<code>policy</code> 保存托管设置。</p>
+<h4 id="settings-read-origin">区分 Claude Code 自身的读取与 mod 的读取</h4>
+<p>检查 <a href="plugins-mods-reference.html#the-hook-function"><code>next.origin</code></a>：</p>
+<ul>
+<li><strong>Claude Code 自身的读取</strong>：<code>{ plugin: 'engine', tier: 'core' }</code></li>
+<li><strong>mod 的读取</strong>：<code>plugin</code> 为发起调用的 mod 的名称</li>
+</ul>
+<h4 id="settings-read-returns"><code>settings.read</code> hook 可以返回的内容</h4>
+<p>原样返回 <a href="#settings-read-next"><code>next(e)</code></a> 的结果以保持读取不变，或返回以下内容之一：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">返回</th>
+<th style="text-align: left;">在 <a href="#settings-read-hook">Claude Code 自身的读取</a>中</th>
+<th style="text-align: left;">在 mod 的读取中</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>{ value }</code></td>
+<td style="text-align: left;">对于每个被更改的键，如果您的值<a href="plugins-mods-troubleshoot.html#settings-read-key-refused">符合该键的 schema</a>，您将替换会话合并设置中该键的整个值</td>
+<td style="text-align: left;">该 mod 的调用将解析为您的 <code>value</code>，或解析为从您的 <code>value</code> 中取出的它所请求的 <code>key</code>，因此请返回一个完整的对象，而不是数组</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>{ deny: reason }</code></td>
+<td style="text-align: left;">会话保留在任何 hook 作出响应之前合并得到的设置，并且<a href="plugins-mods-troubleshoot.html#settings-read-refused">调试日志会记录您的 <code>reason</code></a></td>
+<td style="text-align: left;">该 mod 的调用会以 <code>&lt;calling mod&gt;: $.settings.read: &lt;reason&gt;</code> reject</td>
+</tr>
+</tbody>
+</table>
+<p>在 Claude Code 自身的读取中，请基于 <a href="#settings-read-next"><code>next(e)</code> 的 <code>value</code></a> 构建您的 <code>{ value }</code>，因为您遗漏的键会变为未设置。对于 Claude Code 从每个来源分别读取的键（例如 <code>env</code>），在您的 <code>value</code> 中更改它<a href="plugins-mods-troubleshoot.html#settings-read-key-no-effect">不会产生效果</a>。</p>
+<h4 id="settings-read-next"><code>next(e)</code> 提供给 <code>settings.read</code> hook 的内容</h4>
+<p><code>next(e)</code> 会解析为 <code>{ value }</code> 或 <code>{ deny }</code>：</p>
+<ul>
+<li><strong><code>{ value }</code></strong>：<code>value</code> 是合并后的设置；当设置了 <a href="#settings-read-receives"><code>e.source</code></a> 时，则是单个来源的设置。如果<a href="#the-order-mods-run-in">在您的 hook 之后运行</a>的某个 hook 返回了自己的 <code>{ value }</code>，您得到的将是该 hook 的 <code>value</code>。</li>
+<li><strong><code>{ deny }</code></strong>：在您的 hook 之后运行的某个 hook 拒绝了该读取。请原样返回该 <code>{ deny }</code>。</li>
+</ul>
+<h4 id="settings-read-example">从 <code>settings.read</code> hook 更改一项设置</h4>
+<p>首先检查<a href="#settings-read-hook">哪些 mod 会收到此事件，以及从哪个版本开始</a>。</p>
+<p>要更改一个键，请展开 <a href="plugins-mods-reference.html#the-hook-function"><code>next(e)</code></a> 中的 <code>value</code> 并设置该键，如下面这个针对 <a href="settings-reference.html#spinnertipsenabled"><code>spinnerTipsEnabled</code></a> 的 hook 所示。该 hook 不检查 <a href="#settings-read-origin"><code>next.origin</code></a>，因此它会在 <a href="#settings-read-hook">Claude Code 自身的读取</a>和 mod 对合并设置的读取中同样更改该键：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'settings.read'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// Pass through a read of one source, so that only the merged settings change.</span>
+<span class="w">  </span><span class="c1">// Pass through a { deny } from a later hook too: it has no value.</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="nx">read</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">read</span>
+<span class="w">  </span><span class="c1">// Keep every other key and change this one</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">read</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">spinnerTipsEnabled</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>在 Claude Code 自身的读取中，如果您的 hook 返回了超出该键 schema 的值（例如字符串），则仅该键会保留在任何 hook 作出响应之前合并得到的值。调试日志随后会显示 <a href="plugins-mods-troubleshoot.html#settings-read-key-refused"><code>the answer for &lt;key&gt; is no value the key can hold</code></a>。如果您的值符合要求但该键仍未更改，请参阅<a href="plugins-mods-troubleshoot.html#settings-read-key-no-effect">某个键为何不生效</a>。</p>
+<h3 id="hook-the-settings-hook-events">处理设置 hook 事件</h3>
+<p>设置 hook 是您在设置文件中配置的命令、HTTP、提示词和 Agent hook。每个<a href="hooks.html#hook-events">设置 hook 事件</a>（例如 <code>Stop</code>、<code>SessionEnd</code> 或 <code>PostToolUse</code>）同时也是一个名为 <code>classic.</code> 后跟该设置 hook 事件名称的事件，例如 <code>classic.Stop</code>。<code>e</code> 是设置 hook 在 stdin 上接收的 JSON，包括 <code>transcript_path</code>。在加载了<a href="plugins-mods-admin.html#know-what-happens-by-default">内置守卫</a>的环境中，<a href="plugins-mods-admin.html#hooks-the-guard-passes-over">您安装的 mod 中针对这些事件的 hook 不会运行</a>。</p>
+<p>以下 hook 使用 <code>Stop</code>（在 Claude 完成回复时触发）来记录会话的会话记录保存位置：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'classic.Stop'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// e has the same fields a Stop hook in a settings file reads from stdin</span>
+<span class="w">  </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Transcript saved at '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">transcript_path</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// Pass the event on, so Stop hooks in your settings files still run</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>每次 Claude 完成回复时，会话记录中会出现一行暗色文本，给出会话记录文件的路径。该 hook 返回 <code>next(e)</code>，因此它只观察该事件，不会改变轮次结束的方式。</p>
+<h2 id="run-alongside-other-mods">与其他 mod 一起运行</h2>
+<p>多个 mod 可以处理同一事件，其中任何一个都可能失败。如果您的 mod 阻止工具调用，请检查它在链中的位置以及当其 hook 失败时会发生什么。</p>
+<h3 id="the-order-mods-run-in">mod 运行的顺序</h3>
+<p>同一事件上的 hook 形成一个中间件链。每个 mod 的 <code>next</code> 调用下一个 mod 的 hook，最后的 <code>next</code> 到达 Claude Code 自己的行为。第一个 mod 是最外层的：它在其他 mod 之前看到事件，在它们之后看到结果，并决定其他 mod 是否运行。后续 mod 无法阻止早期 mod 看到事件。</p>
+<p>Claude Code 按每个 mod 的来源对链进行排序：</p>
+<ol>
+<li>内置守卫 <code>sec-default@builtin</code>（一个内置于 Claude Code 的 mod，<code>/plugin</code> 将其列为 <code>cc-plugin-sec-default</code>，在<a href="plugins-mods-admin.html#know-what-happens-by-default">它加载</a>的位置）、您的组织在 <a href="plugins-mods-admin.html#install-your-organizations-mods"><code>prependPlugins</code></a> 中列出的 mod，然后是任何其他算作您的组织的、且不在 <code>appendPlugins</code> 中的 mod</li>
+<li>您安装的 mod</li>
+<li>您的组织在 <code>appendPlugins</code> 中列出的 mod</li>
+<li>其他内置于 Claude Code 的 mod</li>
+</ol>
+<p>在您安装的 mod 中，mod 在它在清单中的 <code>dependencies</code> 下列出的 mod 之前运行。在一个模块中，hook 按 <code>register</code> 调用 <code>on</code> 的顺序运行。</p>
+<h4 id="where-settings-hooks-run-in-the-order">设置 hook 在顺序中运行的位置</h4>
+<p>在设置文件中配置的 <code>PreToolUse</code> hook 也在工具调用期间运行，位于 mod 链中的固定点：</p>
+<ul>
+<li><strong>来自托管设置的 <code>PreToolUse</code> hook</strong>：在第一个 mod 的 <code>tool.call</code> hook 之前运行。当托管 hook 阻止调用时，该调用不会运行任何 mod 的 <code>tool.call</code> hook。</li>
+<li><strong>来自每个其他设置文件和插件的 <code>hooks/hooks.json</code> 的 <code>PreToolUse</code> hook</strong>：在最后一个 mod 调用 <code>next</code> 后运行，作为 Claude Code 自己的行为的一部分。回答 <code>tool.call</code> 而不调用 <code>next</code> 的 mod 会阻止它们运行，调用 <code>next</code> 的 mod 在它返回的结果中看到它们的决定。</li>
+</ul>
+<p><a href="#approve-or-refuse-a-tool-call-before-the-user-is-asked"><code>tool.check</code></a> 在 <code>PreToolUse</code> hook 运行之后触发。要了解 <code>tool.check</code> hook 的 <code>allow</code> 无法替代哪些权限规则和 <code>PreToolUse</code> hook 决定，请参阅<a href="permissions.html#precedence-among-rules-hooks-and-mods">使用 hook 扩展权限</a>。</p>
+<h3 id="handle-a-hook-that-fails">处理失败的 hook</h3>
+<p>失败的 hook 不会破坏会话，您可以决定接下来会发生什么。当没有 <code>.catch</code> 处理程序的 hook 抛出、超时或返回错误形状的结果时，接下来会发生什么取决于它是否调用了 <code>next</code>：</p>
+<ul>
+<li><strong>它在调用 <code>next</code> 之前失败</strong>：Claude Code 跳过它，下一个处理程序代替运行</li>
+<li><strong>它在 <code>next</code> 解析后失败</strong>：该结果成立，没有任何东西运行第二次</li>
+</ul>
+<p>一行内容会指明 mod、事件和原因，例如 <code>my-mod: tool.call hook skipped: threw Error: boom</code>。您读取它的位置取决于会话，如<a href="plugins-mods-troubleshoot.html#find-out-why-a-mod-does-nothing">找出 mod 为什么不做任何事</a>所列。<a href="plugins-mods-interface.html#build-a-tree-from-elements">树未通过验证</a>的 <code>ui.render</code> hook 视为返回了错误形状结果的 hook。</p>
+<p>要使阻止调用的 hook 失败关闭，请添加一个 <code>.catch</code> 错误处理程序来代替回答。这里，<code>guard</code> 是您的 hook 函数，处理程序检查 <a href="plugins-mods-reference.html#the-hook-function"><code>next.called</code></a> 来判断 <code>guard</code> 在失败时是否已经调用了 <code>next</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="c1">// on 返回一个注册，.catch 将处理程序附加到该 hook</span>
+<span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="s1">'Bash'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">guard</span><span class="p">).</span><span class="k">catch</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// guard 已经调用了 next，因此返回得到的结果</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">next</span><span class="p">.</span><span class="nx">called</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// next.error.kind 说明调用处理程序的原因，例如 'throw' 或 'timeout'</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">deny</span><span class="o">:</span><span class="w"> </span><span class="s1">'The command guard failed, so this command was not run: '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">next</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">kind</span><span class="w"> </span><span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>当 <code>guard</code> 在 Bash 调用上抛出或超时时，Claude Code 使用相同的事件调用处理程序：</p>
+<ul>
+<li><strong><code>guard</code> 在调用 <code>next</code> 之前失败</strong>：命令不会运行，Claude 读取末尾带有该类型的 <code>deny</code> 文本</li>
+<li><strong><code>guard</code> 在调用 <code>next</code> 之后失败</strong>：处理程序的 <code>next(e)</code> 解析为 <code>guard</code> 的调用所产生的结果，而不会再次运行命令，Claude 读取该结果</li>
+</ul>
+<p>处理程序自身有更短的<a href="plugins-mods-reference.html#limits">时间限制</a>。如果处理程序本身抛出或超时，Claude Code 会像该 hook 没有处理程序一样跳过它。如果 <code>guard</code> 尚未调用 <code>next</code>，命令随后会像没有该 mod 时一样继续执行。</p>
+<p>同样的处理程序形式也适用于 <code>prompt.submit</code> 或 <code>config.set</code> 上的守卫。当 <code>next.called</code> 为 false 时，返回<a href="plugins-mods-reference.html#events">事件参考</a>为该事件列出的拒绝：<code>prompt.submit</code> 使用 <code>{ drop: 'the reason' }</code>，<code>config.set</code> 使用 <code>{ deny: 'the reason' }</code>。</p>
+<p>在 <code>tool.check</code> 和 <code>plugin.register</code> 中，在 <code>next</code> 解析后返回的拒绝仍然有效，因此无需检查 <code>next.called</code>，直接返回即可：</p>
+<ul>
+<li><strong><code>tool.check</code></strong>：返回 <code>{ decision: 'deny', reason: 'the reason' }</code></li>
+<li><strong><code>plugin.register</code></strong>：返回 <code>{ refuse: 'the reason' }</code>，如<a href="plugins-mods-admin.html#refuse-mods-when-your-check-fails">在检查失败时拒绝 mod</a> 所示</li>
+</ul>
+<p>在 <code>tool.call</code> 中，在 <code>next</code> 解析后返回的 <code>deny</code> 会<a href="#guard-or-change-a-tool-call">向 Claude 隐瞒该结果</a>。</p>
+<h2 id="next-steps">后续步骤</h2>
+<ul>
+<li><a href="plugins-mods-api.html">使用 mods API</a>：添加命令和工具、调用模型并在计时器上运行工作</li>
+<li><a href="plugins-mods-interface.html">在界面中绘制</a>：在窗格中或提示上方显示你的 hooks 收集的内容</li>
+<li><a href="plugins-mods-test.html">测试 mod</a>：从测试中触发这些事件中的任何一个</li>
+<li><a href="plugins-mods-reference.html">Mods 参考</a>：每个事件、每个 mods API 方法和限制</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-mods-gallery.html"><span class="pager-dir">← 上一页</span><span class="pager-name">mod 界面元素图库</span></a><a class="pager-link next" href="plugins-mods-api.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用 mods API</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#how-a-hook-handles-an-event">hook 如何处理事件</a><a class="toc-l3" href="#observe-an-event">观察事件</a><a class="toc-l3" href="#rewrite-an-event">重写事件</a><a class="toc-l3" href="#answer-an-event">回答事件</a><a class="toc-l3" href="#filter-which-events-a-hook-handles">过滤 hook 处理的事件</a><a class="toc-l2" href="#hook-what-claude-is-doing">对 Claude 正在执行的操作设置 hook</a><a class="toc-l3" href="#guard-or-change-a-tool-call">拦截或更改工具调用</a><a class="toc-l3" href="#rewrite-or-add-to-a-prompt">改写或补充提示词</a><a class="toc-l3" href="#follow-a-turn">跟踪轮次</a><a class="toc-l3" href="#settings-read-hook">更改或拒绝设置读取</a><a class="toc-l3" href="#hook-the-settings-hook-events">处理设置 hook 事件</a><a class="toc-l2" href="#run-alongside-other-mods">与其他 mod 一起运行</a><a class="toc-l3" href="#the-order-mods-run-in">mod 运行的顺序</a><a class="toc-l3" href="#handle-a-hook-that-fails">处理失败的 hook</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

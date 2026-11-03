@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>从零创建一个 Sites 项目 · Workers 文档（中文版）</title>
+<meta name="description" content="克隆官方模板，五步把 HTML 站点部署到 Workers Sites。">
+<link rel="stylesheet" href="../../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>从零创建一个 Sites 项目</h1>
+      <p class="lead">克隆官方模板，五步把 HTML 站点部署到 Workers Sites。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-04-23</span>
+        <span>对应页面：configuration/sites/start-from-scratch</span>
+      </div>
+
+<div class="warn-box">
+        <span class="box-title">请改用 Workers 静态资源</span>
+        <p>托管全栈应用请用 <a href="../../../sections/static-assets.html">Workers 静态资源</a>，而不是 Workers Sites。Workers Sites 在 Wrangler v4 中已被废弃，<a href="../../../sections/vite-plugin.html">Cloudflare Vite 插件</a>也不支持它。新项目不要使用 Workers Sites。</p>
+      </div>
+
+      <p>本指南演示如何从零快速开一个 Workers Sites 项目。</p>
+
+      <h2>开始</h2>
+      <ol>
+        <li>确认已安装最新版本的 <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git ↗</a> 与 <a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">Node.js ↗</a>。</li>
+        <li>在终端里克隆 <code>worker-sites-template</code> 起始仓库。下面的例子会创建一个叫 <code>my-site</code> 的项目：
+<pre data-lang="sh"><code>git clone --depth=1 --branch=wrangler2 https://github.com/cloudflare/worker-sites-template my-site</code></pre>
+        </li>
+        <li>运行 <code>npm install</code> 安装全部依赖。</li>
+        <li>运行 <a href="../../../sections/wrangler.html"><code>wrangler dev</code></a> 预览站点：
+<pre data-lang="sh"><code>wrangler dev</code></pre>
+        </li>
+        <li>部署到 Cloudflare：
+<pre data-lang="sh"><code>npx wrangler deploy</code></pre>
+        </li>
+      </ol>
+
+      <h2>项目结构</h2>
+      <p>模板项目包含这些文件与目录：</p>
+      <ul>
+        <li><code>public</code>：项目的静态资源，默认包含一个 <code>index.html</code> 与一个 <code>favicon.ico</code>。</li>
+        <li><code>src</code>：为提供这些资源而配置的 Worker。通常不必改动；若想看它如何工作或给 Worker 加功能，可以编辑 <code>src/index.ts</code>。</li>
+        <li><code>wrangler.jsonc</code>：项目配置。其中 <code>bucket</code> 属性告诉 Wrangler 去哪儿找静态资源（例如 <code>site = { bucket = "./public" }</code>）。</li>
+        <li><code>package.json</code> / <code>package-lock.json</code>：定义所需的 Node.js 依赖。</li>
+      </ul>
+
+      <h2>定制 <code>wrangler.jsonc</code></h2>
+      <ul>
+        <li>把 <code>name</code> 改成你的项目名：
+<pre data-lang="jsonc"><code>{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "my-site"
+}</code></pre>
+<pre data-lang="toml"><code>"$schema" = "./node_modules/wrangler/config-schema.json"
+name = "my-site"</code></pre>
+        </li>
+        <li>建议把 <code>compatibility_date</code> 更新为当天日期，以使用最新的 Workers 特性：
+<pre data-lang="jsonc"><code>{
+  "compatibility_date": "yyyy-mm-dd"
+}</code></pre>
+<pre data-lang="toml"><code>compatibility_date = "yyyy-mm-dd"</code></pre>
+        </li>
+        <li>把站点部署到你自己拥有、且已接入 Cloudflare 区域的<a href="../routing/custom-domains.html">自定义域名</a>：
+<pre data-lang="jsonc"><code>{
+  "route": "https://example.com/*"
+}</code></pre>
+<pre data-lang="toml"><code>route = "https://example.com/*"</code></pre>
+        </li>
+      </ul>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>如何正确配置 <code>route</code>，见<a href="../routing/routes.html">路由</a>文档。</p>
+      </div>
+      <p>进一步了解<a href="../../../sections/wrangler.html">项目配置</a>。</p>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/sites/start-from-scratch/" target="_blank" rel="noopener">configuration/sites/start-from-scratch</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../../assets/nav-data-1.js"></script>
+<script src="../../../assets/nav-data-2.js"></script>
+<script src="../../../assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>通过 MCP 将 Claude Code 连接到工具 · Claude Code 中文文档</title>
+<meta name="description" content="了解如何使用 Model Context Protocol 将 Claude Code 连接到您的工具。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="mcp">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/mcp" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link active" href="mcp.html" aria-current="page">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>使用 Claude Code 构建</span> <span class="sep">/</span> <span>MCP</span></div>
+    <article class="prose" id="article"><h1 id="mcp-claude-code">通过 MCP 将 Claude Code 连接到工具</h1>
+<blockquote>
+<p>了解如何使用 Model Context Protocol 将 Claude Code 连接到您的工具。</p>
+</blockquote>
+<p>Claude Code 可以通过 <a href="https://modelcontextprotocol.io/introduction" target="_blank" rel="noopener">Model Context Protocol (MCP)</a>（一个用于 AI 工具集成的开源标准）连接到数百个外部工具和数据源。MCP 服务器为 Claude Code 提供对您的工具、数据库和 API 的访问权限。</p>
+<p>当您发现自己从另一个工具（如问题跟踪器或监控仪表板）复制数据到聊天中时，请连接一个服务器。连接后，Claude 可以直接读取和操作该系统，而不是从您粘贴的内容中工作。</p>
+<p>如果您是第一次连接服务器，请从 <a href="mcp-quickstart.html">MCP 快速入门</a> 开始，获取分步演练。本页面是完整参考。</p>
+<h2 id="what-you-can-do-with-mcp">使用 MCP 可以做什么</h2>
+<p>连接 MCP 服务器后，您可以要求 Claude Code：</p>
+<ul>
+<li><strong>从问题跟踪器实现功能</strong>："添加 JIRA 问题 ENG-4521 中描述的功能，并在 GitHub 上创建 PR。"</li>
+<li><strong>分析监控数据</strong>："检查 Sentry 和 Statsig 以检查 ENG-4521 中描述的功能的使用情况。"</li>
+<li><strong>查询数据库</strong>："根据我们的 PostgreSQL 数据库，查找使用功能 ENG-4521 的 10 个随机用户的电子邮件。"</li>
+<li><strong>集成设计</strong>："根据在 Slack 中发布的新 Figma 设计更新我们的标准电子邮件模板"</li>
+<li><strong>自动化工作流</strong>："创建 Gmail 草稿，邀请这 10 个用户参加关于新功能的反馈会议。"</li>
+<li><strong>对外部事件做出反应</strong>：MCP 服务器也可以充当<a href="channels.html">频道</a>，将消息推送到您的会话中，因此当您不在时，Claude 可以对 Telegram 消息、Discord 聊天或 webhook 事件做出反应。</li>
+</ul>
+<h2 id="find-and-build-mcp-servers">查找和构建 MCP 服务器</h2>
+<p>在 <a href="https://claude.ai/directory" target="_blank" rel="noopener">Anthropic Directory</a> 中浏览已审核的连接器。Directory 连接器使用与 Claude Code 相同的 MCP 基础设施，因此您可以使用 <code>claude mcp add</code> 添加列出的任何远程服务器。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>在连接每个服务器之前，请验证您信任该服务器。获取外部内容的服务器可能会使您面临 <a href="security.html#protect-against-prompt-injection">提示注入风险</a>。</p></div></div>
+<p>要构建您自己的服务器，请参阅 <a href="https://modelcontextprotocol.io/docs/develop/build-server" target="_blank" rel="noopener">MCP 服务器指南</a> 了解协议基础知识，以及 <a href="https://claude.com/docs/connectors/building" target="_blank" rel="noopener">Claude 连接器构建文档</a> 了解身份验证、测试和 Directory 提交。</p>
+<p>您也可以使用官方的 <a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/mcp-server-dev" target="_blank" rel="noopener"><code>mcp-server-dev</code> plugin</a> 让 Claude 为您搭建服务器。</p>
+<p><strong>1. 安装插件</strong></p>
+<p>在 VS Code 扩展或桌面应用中，请按照 <a href="plugins-install.html#install-a-plugin">安装插件</a> 操作，而不是执行此步骤。在终端中，运行 <code>claude</code> 启动 Claude Code，然后在其提示符处输入以下内容：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/plugin install mcp-server-dev@claude-plugins-official
+</code></pre></div>
+<p>如果安装失败，请匹配 Claude Code 报告的消息：</p>
+<ul>
+<li><code>Marketplace "claude-plugins-official" not found</code>：使用 <code>/plugin marketplace add anthropics/claude-plugins-official</code> 添加该市场，然后重试安装。</li>
+<li><code>Plugin "&lt;name&gt;" not found in marketplace "claude-plugins-official"</code>：您本地的市场目录副本可能已过期。使用 <code>/plugin marketplace update claude-plugins-official</code> 刷新它，然后重试安装。如果重试后显示相同的消息，请参阅 <a href="plugins-troubleshooting.html#plugin-not-found-in-marketplace">Plugin not found in marketplace</a>。</li>
+</ul>
+<p>如果安装摘要报告 <code>Run /reload-plugins to apply.</code>，Claude Code 会为您运行该重新加载。如果重新加载警告您的下一条消息会重新读取对话，请运行 <code>/reload-plugins --force</code>。</p>
+<p><strong>2. 运行构建 skill</strong></p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/mcp-server-dev:build-mcp-server
+</code></pre></div>
+<p>Claude 会询问您的用例，并搭建一个远程 HTTP 或本地 stdio 服务器。</p>
+<h2 id="installing-mcp-servers">安装 MCP 服务器</h2>
+<p>MCP 服务器可以根据您的需求以多种方式进行配置：</p>
+<h3 id="option-1-add-a-remote-http-server">选项 1：添加远程 HTTP 服务器</h3>
+<p>HTTP 服务器是连接到远程 MCP 服务器的推荐选项。这是云服务最广泛支持的传输方式。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 基本语法</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>&lt;name&gt;<span class="w"> </span>&lt;url&gt;
+
+<span class="c1"># 真实示例：连接到 Notion</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>notion<span class="w"> </span>https://mcp.notion.com/mcp
+
+<span class="c1"># 带有 Bearer 令牌的示例</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>secure-api<span class="w"> </span>https://api.example.com/mcp<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--header<span class="w"> </span><span class="s2">"Authorization: Bearer your-token"</span>
+</code></pre></div>
+<p>通过 <code>.mcp.json</code>、<code>~/.claude.json</code> 或 <code>claude mcp add-json</code> 中的 JSON 配置 MCP 服务器时，<code>type</code> 字段接受 <code>streamable-http</code> 作为 <code>http</code> 的别名。MCP 规范对此传输使用名称 <code>streamable-http</code>，因此从服务器文档复制的配置无需修改即可工作。</p>
+<p>具有 <code>url</code> 但没有 <code>type</code> 的 JSON 条目是配置错误，因为 Claude Code 将没有 <code>type</code> 的条目读取为 stdio 服务器。Claude Code 跳过该服务器并报告 <code>MCP server "&lt;name&gt;" has a "url" but no "type"; add "type": "http" (or "sse" / "ws") to this entry</code>。</p>
+<p>只有 SDK 主机应用程序（例如 <a href="agent-sdk-mcp.html">Agent SDK</a> 应用程序或 <a href="desktop.html">桌面应用</a>）可以注册进程内 <code>"type": "sdk"</code> 服务器。Claude Code 跳过 <code>.mcp.json</code>、<code>~/.claude.json</code> 或设置中的 <code>"type": "sdk"</code> 条目，并报告 <code>Skipped — MCP server "&lt;name&gt;" declares type "sdk", which only an SDK host application can register</code>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>在 <code>--output-format stream-json</code> 运行中，Claude Code 还会在 <code>system/init</code> 事件的 <a href="headless.html#stream-responses"><code>mcp_server_errors</code> 字段</a>中报告被跳过的 <code>--mcp-config</code> 条目，以便脚本检测到该服务器从未加载。</p></div></div>
+<h3 id="option-2-add-a-remote-sse-server">选项 2：添加远程 SSE 服务器</h3>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>SSE（Server-Sent Events）传输已弃用。请在可用的地方使用 HTTP 服务器。</p></div></div>
+<p>某些服务仍然仅公开 SSE 端点。使用与 <a href="#option-1-add-a-remote-http-server">HTTP 服务器</a> 相同的 <code>claude mcp add --transport http &lt;name&gt; &lt;url&gt;</code> 命令添加这些。Claude Code 首先尝试 HTTP 传输，当服务器不接受时切换到 SSE。自动切换需要 Claude Code v2.1.265 或更高版本。</p>
+<p>在较早的版本上，或直接通过 SSE 连接，请改为传递 <code>--transport sse</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 基本语法</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>sse<span class="w"> </span>&lt;name&gt;<span class="w"> </span>&lt;url&gt;
+
+<span class="c1"># 真实示例：连接到 Asana</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>sse<span class="w"> </span>asana<span class="w"> </span>https://mcp.asana.com/sse
+
+<span class="c1"># 带有身份验证标头的示例</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>sse<span class="w"> </span>private-api<span class="w"> </span>https://api.company.com/sse<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--header<span class="w"> </span><span class="s2">"X-API-Key: your-key-here"</span>
+</code></pre></div>
+<h3 id="option-3-add-a-local-stdio-server">选项 3：添加本地 stdio 服务器</h3>
+<p>Stdio 服务器作为本地进程在您的机器上运行。它们非常适合需要直接系统访问或自定义脚本的工具。</p>
+<p>Claude Code 在生成的服务器的环境中设置 <code>CLAUDE_PROJECT_DIR</code> 为项目根目录，以便您的服务器可以解析项目相对路径，而不依赖于工作目录。这与 hook 在其 <code>CLAUDE_PROJECT_DIR</code> 变量中接收的目录相同。从服务器进程内读取它，例如 Node 中的 <code>process.env.CLAUDE_PROJECT_DIR</code> 或 Python 中的 <code>os.environ["CLAUDE_PROJECT_DIR"]</code>。</p>
+<p><code>CLAUDE_PROJECT_DIR</code> 是稳定的项目根目录，在会话中添加或删除工作目录时不会更改。限制自己的文件系统访问到一组允许目录的服务器应该改为实现 MCP <code>roots/list</code> 请求。Claude Code 使用会话的启动目录加上您通过 <code>--add-dir</code>、<code>/add-dir</code> 或 <code>additionalDirectories</code> 设置授予的每个 <a href="permissions.html#working-directories">额外工作目录</a> 来回答 <code>roots/list</code>。当该集合更改时，Claude Code 发送 <code>notifications/roots/list_changed</code>。</p>
+<p>此变量在服务器的环境中设置，而不是在 Claude Code 自己的环境中，因此通过项目作用域的 <code>.mcp.json</code> 条目或 <code>~/.claude.json</code> 中的本地或用户作用域服务器条目中的 <code>command</code> 或 <code>args</code> 中的 <code>${VAR}</code> 扩展来引用它需要默认值，例如 <code>${CLAUDE_PROJECT_DIR:-.}</code>。插件提供的 MCP 配置直接替换 <code>${CLAUDE_PROJECT_DIR}</code> 并且不需要默认值。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 基本语法</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span><span class="o">[</span>options<span class="o">]</span><span class="w"> </span>&lt;name&gt;<span class="w"> </span>--<span class="w"> </span>&lt;command&gt;<span class="w"> </span><span class="o">[</span>args...<span class="o">]</span>
+
+<span class="c1"># 真实示例：添加 Airtable 服务器</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--env<span class="w"> </span><span class="nv">AIRTABLE_API_KEY</span><span class="o">=</span>YOUR_KEY<span class="w"> </span>--transport<span class="w"> </span>stdio<span class="w"> </span>airtable<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--<span class="w"> </span>npx<span class="w"> </span>-y<span class="w"> </span>airtable-mcp-server
+</code></pre></div>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>对于 stdio 服务器，<code>--</code>（双破折号）将 Claude 自己的选项（例如 <code>--transport</code>、<code>--env</code> 和 <code>--scope</code>）与运行服务器的命令和参数分开。<code>--</code> 之后的所有内容都原封不动地传递给服务器。</p>
+<p>例如：</p>
+<ul>
+<li><code>claude mcp add --transport stdio myserver -- npx server</code> → 运行 <code>npx server</code></li>
+<li><code>claude mcp add --env KEY=value --transport stdio myserver -- python server.py --port 8080</code> → 使用环境中的 <code>KEY=value</code> 运行 <code>python server.py --port 8080</code></li>
+</ul>
+<p>没有 <code>--</code>，Claude Code 会尝试将服务器的标志（如上面的 <code>--port</code>）解析为自己的选项。</p>
+<p><code>--env</code> 接受多个 <code>KEY=value</code> 对。如果服务器名称直接跟在 <code>--env</code> 之后，CLI 会将该名称读取为另一对并拒绝它，因此在 <code>--env</code> 和服务器名称之间至少放置一个其他选项，例如 <code>--transport stdio</code>。</p></div></div>
+<h4 id="how-claude-code-stops-a-stdio-server">Claude Code 如何停止 stdio 服务器</h4>
+<p>当 Claude Code 断开 stdio 服务器时（例如您的会话结束时），它会向服务器进程发送信号，并短暂等待其退出，然后再强制停止它。如果您的服务器在关闭时保存状态或删除锁文件，请针对您的平台处理该信号，并在该时间内完成：</p>
+<ul>
+<li><strong>在 macOS 和 Linux 上</strong>：Claude Code 发送 <code>SIGINT</code>，如果进程在 100 毫秒后仍在运行，则发送 <code>SIGTERM</code>，再过 400 毫秒后发送 <code>SIGKILL</code>。</li>
+<li><strong>在 Windows 上</strong>：Claude Code 关闭服务器的 stdin，如果进程在 300 毫秒后仍在运行，则结束服务器的进程树。</li>
+</ul>
+<p>在 v2.1.296 之前，Windows 上的 Claude Code 会立即结束服务器的进程树，而不先关闭 stdin 或等待。</p>
+<h3 id="option-4-add-a-remote-websocket-server">选项 4：添加远程 WebSocket 服务器</h3>
+<p>WebSocket 服务器保持持久的双向连接，适合主动向 Claude 推送事件的远程 MCP 服务器。当您的服务器仅响应请求时，请改用 HTTP，因为 HTTP 支持 OAuth 和 <code>claude mcp add --transport</code> 标志，而 WebSocket 都不支持。</p>
+<p>在 <code>.mcp.json</code> 中或使用 <code>claude mcp add-json</code> 配置 WebSocket 服务器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>mcp<span class="w"> </span>add-json<span class="w"> </span>events-server<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">'{"type":"ws","url":"wss://mcp.example.com/socket","headers":{"Authorization":"Bearer YOUR_TOKEN"}}'</span>
+</code></pre></div>
+<p><code>type: "ws"</code> 条目接受与 <code>http</code> 相同的 <code>url</code>、<code>headers</code>、<code>headersHelper</code>、<code>timeout</code> 和 <code>alwaysLoad</code> 字段。身份验证仅限标头，因此在 <code>headers</code> 中传递静态令牌或在连接时使用 <a href="#use-dynamic-headers-for-custom-authentication"><code>headersHelper</code></a> 生成一个。<code>claude mcp add --transport</code> 标志不接受 <code>ws</code>。</p>
+<h3 id="add-a-server-from-setup-instructions-written-for-another-client">从为另一个客户端编写的设置说明添加服务器</h3>
+<p>MCP 服务器不特定于 Claude Code，因此服务器的设置说明可能是为 Claude Desktop、Cursor 或另一个 MCP 客户端编写的，并且不提供 <code>claude mcp add</code> 命令。要添加服务器，请在这些说明中查找 URL、启动命令或 JSON 块：</p>
+<ul>
+<li><strong>URL</strong>，例如 <code>https://mcp.example.com/mcp</code>：服务器是远程的。</li>
+<li><strong>启动命令</strong>，例如 <code>npx -y @example/mcp-server</code>：服务器在您的机器上运行。</li>
+<li><strong><code>mcpServers</code> JSON 块</strong>：为另一个客户端的设置文件编写的配置。</li>
+</ul>
+<p>每一个都是 <a href="#installing-mcp-servers">安装 MCP 服务器</a> 中四个选项之一接受的输入。找到您下面拥有的形状，将其转换为 Claude Code 接受的命令。除非您添加 <code>--scope project</code> 或 <code>--scope user</code>，否则每个命令都写入 <a href="#local-scope">本地作用域</a>。</p>
+<h4 id="add-a-server-from-a-url">从 URL 添加服务器</h4>
+<p>URL 表示服务器是远程的。对于 <code>https://</code> 端点，使用 <code>--transport http</code> 添加它，或在说明说端点使用 SSE 时遵循 <a href="#option-2-add-a-remote-sse-server">选项 2</a>。对于 <code>wss://</code> 端点，改为使用 <a href="#option-4-add-a-remote-websocket-server">选项 4</a>，因为 <code>--transport</code> 不接受 <code>ws</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>example<span class="w"> </span>https://mcp.example.com/mcp
+</code></pre></div>
+<p>如果说明还提供 API 密钥或令牌标头，请使用 <code>--header</code> 传递它，如 <a href="#option-1-add-a-remote-http-server">选项 1</a> 所示。</p>
+<h4 id="add-a-server-from-an-npx-uvx-or-binary-command">从 <code>npx</code>、<code>uvx</code> 或二进制命令添加服务器</h4>
+<p>启动命令表示服务器作为本地 stdio 进程运行。将整个命令放在 <code>--</code> 之后，以便 Claude Code 将标志（如 <code>-y</code>）传递给启动服务器的命令，而不是将它们读取为自己的选项。使用 <code>--env</code> 传递说明要求的任何环境变量，在服务器名称之后和 <code>--</code> 之前：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>example<span class="w"> </span>--env<span class="w"> </span><span class="nv">API_KEY</span><span class="o">=</span>your-key<span class="w"> </span>--<span class="w"> </span>npx<span class="w"> </span>-y<span class="w"> </span>@example/mcp-server
+</code></pre></div>
+<p><a href="#option-3-add-a-local-stdio-server">选项 3</a> 完整涵盖 <code>--</code> 分隔符。</p>
+<h4 id="add-a-server-from-an-mcpservers-json-block">从 <code>mcpServers</code> JSON 块添加服务器</h4>
+<p>为另一个 MCP 客户端（例如 Claude Desktop）编写的 <code>mcpServers</code> 块使用 Claude Code 读取的包装器键和条目形状。将 <code>mcpServers</code> 内的对象（而不是包装器）传递给 <code>claude mcp add-json</code>。两种条目需要先修复：</p>
+<ul>
+<li><strong><code>url</code> 没有 <code>type</code></strong>：添加 <code>"type": "http"</code>、<code>"type": "sse"</code> 或 <code>"type": "ws"</code> 以匹配端点。Claude Code 将没有 <code>type</code> 的条目读取为 stdio 服务器，因此没有 <code>type</code> 的 <code>url</code> 条目会失败。</li>
+<li><strong>键包含除字母、数字、连字符和下划线以外的字符</strong>：选择仅使用这些字符的服务器名称。否则键就是服务器名称。</li>
+</ul>
+<p>例如，此块：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"example"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"@example/mcp-server"</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>变成此命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>mcp<span class="w"> </span>add-json<span class="w"> </span>example<span class="w"> </span><span class="s1">'{"command":"npx","args":["-y","@example/mcp-server"]}'</span>
+</code></pre></div>
+<p><a href="#add-mcp-servers-from-json-configuration">从 JSON 配置添加 MCP 服务器</a> 涵盖 <code>add-json</code> 的 shell 转义和 <code>--scope</code> 标志。要与您的团队共享服务器，请改为添加 <code>--scope project</code>，或在项目根目录的 <code>.mcp.json</code> 中的 <code>mcpServers</code> 下添加条目并提交它。<a href="#project-scope">项目作用域</a> 涵盖 Claude Code 如何加载和批准该文件。</p>
+<p>每个 <code>claude mcp add</code> 和 <code>claude mcp add-json</code> 命令在成功时打印 <code>Added ...</code> 行。要检查 Claude Code 是否已连接，请运行 <code>claude mcp get &lt;name&gt;</code>；<a href="#server-status">服务器状态</a> 涵盖它显示的状态和 <code>.mcp.json</code> 服务器的批准步骤。</p>
+<h3 id="managing-your-servers">管理您的服务器</h3>
+<p>配置后，您可以使用这些命令管理您的 MCP 服务器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 列出所有配置的服务器</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>list
+
+<span class="c1"># 获取特定服务器的详细信息</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>get<span class="w"> </span>notion
+
+<span class="c1"># 删除服务器</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>remove<span class="w"> </span>notion
+
+<span class="c1"># （在 Claude Code 中）检查服务器状态</span>
+/mcp
+</code></pre></div>
+<p>移除远程服务器时，Claude Code 还会删除它为该服务器存储的 OAuth 令牌和客户端注册信息。Claude Code 不会在签发这些令牌的授权服务器上撤销令牌。如果授权服务器支持撤销，要撤销令牌，请在运行 <code>claude mcp remove &lt;name&gt;</code> 之前，先在 shell 中运行 <a href="#authenticate-from-the-command-line"><code>claude mcp logout &lt;name&gt;</code></a>。</p>
+<h4 id="server-status">服务器状态</h4>
+<p><code>claude mcp add</code> 通过打印 <code>Added ...</code> 行确认成功添加，这意味着配置已写入。如果命令改为打印 <code>was not saved</code> 消息，请参阅 <a href="errors.html#mcp-server-was-not-saved-or-removed">MCP 服务器未保存或删除</a>；对于 <code>may not have been saved</code> 消息，请参阅 <a href="errors.html#mcp-server-may-not-have-been-saved-or-removed">MCP 服务器可能未保存或删除</a>。</p>
+<p><code>claude mcp list</code> 在它列出的每个服务器旁边显示健康状态，例如 <code>✔ Connected</code>、<code>! Needs authentication</code> 或 <code>✘ Failed to connect</code>。失败状态意味着 Claude Code 无法连接到该服务器，而不是列表命令失败。</p>
+<p>此列表中的状态报告配置决策而不是连接尝试，因此 Claude Code 在不连接到服务器的情况下打印它们：</p>
+<ul>
+<li><code>⏸ Pending approval (run `claude` to approve)</code>：来自 <code>.mcp.json</code> 且您尚未批准的项目作用域服务器。Claude Code 会在 <code>claude mcp list</code> 和 <code>claude mcp get &lt;name&gt;</code> 中都显示它。以交互方式运行 <code>claude</code> 以审查并批准它。</li>
+<li><code>✘ Rejected (see disabledMcpjsonServers in settings)</code>：由 <a href="settings-reference.html#disabledmcpjsonservers"><code>disabledMcpjsonServers</code></a> 条目拒绝的 <code>.mcp.json</code> 服务器。Claude Code 仅在 <code>claude mcp get &lt;name&gt;</code> 中显示它。</li>
+<li><code>⊘ Disabled for this project (re-enable via /mcp)</code>：项目的 <a href="#disable-a-server-without-removing-it"><code>disabledMcpServers</code></a> 列表命名的服务器。Claude Code 在 <code>claude mcp list</code> 和 <code>claude mcp get &lt;name&gt;</code> 中都显示它。从 <code>/mcp</code> 面板重新打开服务器。</li>
+<li><code>✘ Blocked by enterprise managed policy</code>：被您组织的某项策略拒绝的服务器。Claude Code 会在 <code>claude mcp list</code> 和 <code>claude mcp get &lt;name&gt;</code> 中都显示它。被<a href="managed-mcp.html#how-restrictions-appear-to-users">托管 MCP 配置</a>中的允许列表、拒绝列表或其他限制阻止的服务器，会在这两个命令中都被隐藏，而不是以此状态显示。请询问您的管理员是哪项策略阻止了该服务器。</li>
+</ul>
+<h4 id="project-server-approvals-and-workspace-trust">项目服务器批准和工作区信任</h4>
+<p><code>claude mcp list</code> 和 <code>claude mcp get</code> 仅从未签入仓库的设置文件中读取 <code>.mcp.json</code> 批准，直到您通过在其中运行 <code>claude</code> 并接受工作区信任对话框来信任工作区。克隆的仓库无法批准自己的服务器：提交到项目的 <code>.claude/settings.json</code> 的 <a href="settings-reference.html#enableallprojectmcpservers"><code>enableAllProjectMcpServers</code></a> 或 <a href="settings-reference.html#enabledmcpjsonservers"><code>enabledMcpjsonServers</code></a> 在不受信任的文件夹中被忽略，服务器保持在 <code>⏸ Pending approval</code> 而不是被连接和健康检查。</p>
+<p>这些来源的批准仍然适用于不受信任的文件夹：</p>
+<ul>
+<li>您的用户 <code>~/.claude/settings.json</code></li>
+<li>托管设置</li>
+<li>使用 <code>--settings</code> 传递的设置</li>
+</ul>
+<p>Claude Code 也应用来自未跟踪的 <code>.claude/settings.local.json</code> 的批准，但它运行 git 来检查文件是否被跟踪，并且仅在 <a href="permissions.html#project-allow-rules-and-workspace-trust">受信任的文件夹</a> 中运行该检查。在您从未信任的文件夹中，Claude Code 等待信任对话框后才应用文件的批准，除非该文件夹是您自己的配置主目录：您的主目录，或其 <code>.claude</code> 您已设置为 <a href="env-vars.html"><code>CLAUDE_CONFIG_DIR</code></a> 的目录。在 v2.1.207 之前，Claude Code 即使在您从未信任的文件夹中也应用来自未跟踪的 <code>.claude/settings.local.json</code> 的批准。</p>
+<p>任何设置文件中的 <code>disabledMcpjsonServers</code> 条目仍然拒绝服务器。</p>
+<h4 id="server-status-detail">服务器状态详情</h4>
+<p>在 <code>/mcp</code> 中（包括服务器的菜单）和 <a href="plugins-install.html"><code>/plugin</code></a> 管理器中，您之前使用过的远程 HTTP 或 SSE 服务器可以显示 <code>cached</code> 状态，例如 <code>cached 2h ago · connects on first use · 5 tools</code>。Claude Code 从发现缓存加载了服务器的工具列表，该缓存保存在上一个会话中，而不是在启动时连接，Claude Code 在 Claude 首次调用服务器的工具之一时连接服务器。工具从您的第一条消息开始可用，因此您无需执行任何操作。发现缓存及其 <code>cached</code> 状态需要 Claude Code v2.1.221 或更高版本。</p>
+<p>发现缓存默认关闭，除非逐步推出已为您的帐户启用它。设置 <a href="env-vars.html"><code>MCP_DISCOVERY_CACHE=1</code></a> 打开它，或设置为 <code>0</code> 即使推出已启用它也保持关闭。在 v2.1.238 之前，缓存默认打开。</p>
+<p>当您从 <code>/mcp</code> 中的服务器菜单选择 <strong>Disable</strong> 或 <strong>Clear authentication</strong> 时，Claude Code 也会丢弃该服务器的缓存条目。<strong>Reconnect</strong> 在已连接或失败的服务器上也会丢弃它；在 <code>cached</code> 服务器上，<strong>Reconnect</strong> 会立即连接服务器并保留条目。丢弃条目后，Claude Code 下次连接到服务器时，会从服务器而不是从缓存获取工具列表。</p>
+<h5 id="connection-failures-and-unconfigured-servers">连接失败与未配置的服务器</h5>
+<p>当服务器状态为 <code>✘ Failed to connect</code> 时，<code>claude mcp list</code> 会在该状态行后附加失败详情，而 <code>claude mcp get &lt;name&gt;</code> 会在 <code>Issue:</code> 行中显示它。详情包括 HTTP 状态或错误代码，以及服务器返回的任何错误文本。<code>/mcp</code> 中服务器的详情视图会在其 <code>Issue:</code> 行中包含同样由服务器报告的文本。</p>
+<p>Claude Code 会从这些详情中删除类似凭据的文本，并且绝不包含展开后的服务器 URL，因为它可能携带机密信息。Claude Code 不会在 <code>✘ Connection error</code> 状态后附加任何详情，因为它在那里打印的异常文本可能嵌入该 URL。</p>
+<p>当您从 <code>/mcp</code> 完成身份验证且连接仍然因 HTTP 状态或传输错误代码失败时，Claude Code 在尝试后打印的消息中添加该代码和服务器 URL 的来源。来源是方案和主机，加上 URL 命名的端口（如果有），例如 <code>https://mcp.example.com</code>。</p>
+<ul>
+<li>路径和查询永远不会出现在该消息中。</li>
+<li>对于本地、项目或用户 <a href="#mcp-installation-scopes">作用域</a> 中的服务器或托管 MCP 配置中的服务器，来源显示该配置中写入的主机，因此主机中的 <code>${VAR}</code> 引用在消息中不会展开。</li>
+<li>对于没有状态或错误代码的失败，Claude Code 显示错误文本而不显示来源。</li>
+</ul>
+<p>配置为空 <code>url</code> 的远程服务器在 <code>/mcp</code>、<code>claude mcp list</code> 和 <a href="plugins-install.html"><code>/plugin</code></a> 管理器中显示为 <code>not configured</code>，Claude Code 不尝试连接到它。插件可以包含这样的占位符条目，用于您稍后配置的连接器，因此 Claude Code 不将其报告为错误或设置问题。<code>/mcp</code> 中的服务器详情视图显示 <code>No URL configured for this server</code>；设置条目的 <code>url</code> 以连接它。</p>
+<h4 id="configuration-warnings">配置警告</h4>
+<p>Claude Code 警告以下配置问题。每个条目说明 Claude Code 检查什么以及如何清除警告：</p>
+<ul>
+<li><strong>隐藏的空格</strong>：当 MCP 配置值携带隐藏的前导或尾随空格时，Claude Code 发出警告，这通常来自粘贴带有尾随换行符的令牌。Claude Code 检查 <code>command</code>、<code>url</code>、每个 <code>args</code> 条目以及 <code>env</code> 和 <code>headers</code> 下的值和键名称。Claude Code 在 <code>claude mcp list</code> 输出和 <code>/mcp</code> 中显示警告，命名受影响的字段而不回显其值，例如 <code>Leading or trailing whitespace in: headers.Authorization</code>。Claude Code 不修剪空格并完全按照写入的方式使用值，因此请编辑配置以删除它。</li>
+<li><strong>在多个作用域中使用相同名称</strong>：如果您在多个 <a href="#mcp-installation-scopes">作用域</a> 中定义相同的服务器名称，具有不同的端点，Claude Code 在 <code>claude mcp list</code> 输出和 <code>/mcp</code> 中警告冲突。Claude Code 按端点存储 OAuth 登录，因此当您在一个项目中对加载的定义进行身份验证时，您仍然需要在加载不同定义的项目中单独登录。保留您想要的端点并使用 <code>claude mcp remove &lt;name&gt; --scope &lt;scope&gt;</code> 删除其他端点。在警告中，Claude Code 按您的配置中所写的形式引用每个作用域的端点，<a href="#environment-variable-expansion-in-mcp-json"><code>${VAR}</code> 引用</a> 保持未展开，因此它永远不显示已解析的值，例如 API 密钥。</li>
+<li><strong>保留名称</strong>：Claude Code 保留其内置服务器的名称，包括 <code>workspace</code>、<code>claude-in-chrome</code>、<code>computer-use</code>、<code>Claude Preview</code> 和 <code>Claude Browser</code>。如果您的配置定义具有保留名称的服务器，Claude Code 在加载时跳过它并显示警告，要求您重命名它。<code>claude mcp add</code> 拒绝保留名称并出现错误。<code>Claude Preview</code> 和 <code>Claude Browser</code> 都命名 <a href="desktop.html#preview-your-app">Claude Code 桌面应用的预览窗格</a> 使用的内置服务器。</li>
+<li><strong>缺少环境变量</strong>：如果服务器配置中的 <a href="#environment-variable-expansion-in-mcp-json"><code>${VAR}</code> 引用</a> 命名未设置且没有 <code>:-default</code> 的变量，Claude Code 在 <code>claude mcp list</code> 输出和 <code>/mcp</code> 中警告，命名变量，并仍然使用 <code>${VAR}</code> 文本未展开加载服务器。设置变量或添加 <code>${VAR:-default}</code> 备用值。在远程服务器的 <code>url</code> 和 <code>headers</code> 中，某些凭据变量 <a href="#credential-variables-that-read-as-empty">读取为空</a> 而不显示警告。</li>
+</ul>
+<h4 id="tool-availability">工具可用性</h4>
+<p><code>/mcp</code> 面板在每个连接的服务器旁边显示工具计数，并标记声称工具能力但不公开工具的服务器。</p>
+<p>如果您的请求需要来自仍在后台连接的服务器的工具，Claude 会在继续之前等待该服务器。等待的方式取决于您的配置：</p>
+<ul>
+<li><strong>使用 <a href="#scale-with-mcp-tool-search">工具搜索</a>（默认）</strong>：等待发生在 <code>ToolSearch</code> 调用内。</li>
+<li><strong>不使用工具搜索</strong>：Claude 改为使用 <code>WaitForMcpServers</code> 工具。不使用工具搜索的配置包括 <code>ENABLE_TOOL_SEARCH=false</code>，以及 Google Cloud 的 Agent Platform 上早于 Claude Opus 4.5、Claude Sonnet 4.5 和 Claude Haiku 4.5 的模型。对于 <code>ANTHROPIC_BASE_URL</code> 网关，请参阅 <a href="#tool-search-through-a-gateway">通过 LLM 网关使用工具搜索</a>。</li>
+<li><strong>在 Microsoft Foundry <a href="https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options" target="_blank" rel="noopener">部署托管在 Azure 上</a></strong>：Claude 在工具搜索路径上启动而不是使用 <code>WaitForMcpServers</code>，因为 Claude Code 仅从 API 发现部署的服务器端拒绝。Claude Code 将该部署切换到 <a href="#scale-with-mcp-tool-search">前期加载</a> 后，来自完成连接的服务器的工具在 Claude 的下一个请求中变为可用。</li>
+</ul>
+<p>启用工具搜索后，当服务器在 Claude 工作时完成连接时，Claude Code 在同一轮次的下一个请求中将服务器的工具名称列出给 Claude。Claude 然后可以搜索和调用这些工具，而无需等待您的下一条消息。</p>
+<p>恢复会话后，Claude 可以在工具的 MCP 服务器仍在连接时调用已保存对话中的工具。当服务器处于首次连接尝试时，Claude Code 会将该调用保留最多 10 秒，并在工具可用后运行它。如果服务器未能及时连接，或者已在 <a href="#automatic-reconnection">失败尝试后重试</a>，调用会失败并返回 <code>No such tool available</code> <a href="errors.html#no-such-tool-available">工具错误</a>。</p>
+<h3 id="disable-a-server-without-removing-it">禁用服务器而不删除它</h3>
+<p>在 <code>/mcp</code> 面板中切换服务器关闭，以停止 Claude Code 连接到它，而不丢失其配置。Claude Code 仍然在 <code>/mcp</code> 中列出服务器，标记为禁用。</p>
+<p>当您切换服务器时，Claude Code 在 <code>~/.claude.json</code> 中按项目记录您的选择，在两个涵盖不相交服务器集的列表之一中：</p>
+<ul>
+<li><code>disabledMcpServers</code>：用户配置的服务器、插件服务器、您的组织 <a href="managed-mcp.html#provide-servers-through-managed-settings">通过托管设置提供</a> 的服务器、Claude Code <a href="#how-connectors-reach-claude-code">自己获取</a> 的 claude.ai 连接器以及默认打开的内置服务器的选择退出列表。Claude Code 不连接您在此处列出的服务器。当您使用 <a href="#disable-claude-ai-connectors">禁用 claude.ai 连接器</a> 中描述的按项目 <code>/mcp</code> 切换禁用 claude.ai 连接器时，Claude Code 在此列表下使用其显示名称（例如 <code>claude.ai Slack</code>）写入它。</li>
+<li><code>enabledMcpServers</code>：默认关闭的内置服务器（例如 <code>computer-use</code>）的选择加入列表。Claude Code 仅当您在此处列出它时才连接默认关闭的服务器。</li>
+</ul>
+<p>Claude Code 为每个服务器查询恰好两个列表之一，因此两个列表都不会覆盖另一个。如果您将常规服务器添加到 <code>enabledMcpServers</code>，或将默认关闭的内置服务器添加到 <code>disabledMcpServers</code>，Claude Code 会忽略该条目。</p>
+<p><code>disabledMcpServers</code> 和 <code>enabledMcpServers</code> 与 <a href="settings-reference.html#enabledmcpjsonservers"><code>enabledMcpjsonServers</code></a> 和 <a href="settings-reference.html#disabledmcpjsonservers"><code>disabledMcpjsonServers</code></a> 无关，后者控制项目的 <code>.mcp.json</code> 文件中定义的服务器的批准。</p>
+<h3 id="mcp-client-runtimes">MCP 客户端运行时</h3>
+<p>Claude Code 通过两个客户端运行时之一连接到 MCP 服务器。v1 运行时基于 MCP TypeScript SDK 1.x。v2 运行时是 <a href="https://ts.sdk.modelcontextprotocol.io/v2/" target="_blank" rel="noopener">MCP TypeScript SDK 2.0</a> 上的相同代码，它添加了 MCP 协议修订版 2026-07-28。本页的其余部分适用于两个运行时，除非某个部分指明 v2 运行时。</p>
+<p>Claude Code 在每次启动时选择一个运行时，并在您退出前保持它。在 <a href="env-vars.html#features-that-need-feature-flag-fetching">获取功能标志</a> 的会话中，它在 Claude Code v2.1.232 或更高版本上使用 v2 运行时。</p>
+<p>在不获取功能标志的会话中，Claude Code 在 Claude Code v2.1.274 或更高版本上默认使用 v2 运行时：</p>
+<ul>
+<li>Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 或 Microsoft Foundry 上的会话，除非嵌入 Claude Code 的主机平台设置 <a href="env-vars.html"><code>CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST</code></a></li>
+<li>通过 <a href="claude-apps-gateway.html">Claude 应用网关</a> 登录的会话</li>
+<li>您关闭遥测或功能标志获取的会话，例如使用 <code>DISABLE_TELEMETRY</code></li>
+</ul>
+<p>在 v2 上，Claude Code 还会：</p>
+<ul>
+<li>询问 HTTP、stdio 和 claude.ai 连接器服务器是否支持较新的修订版，并与支持的服务器一起使用它。这包括云端会话和 <a href="remote-control.html">Remote Control</a> 会话的连接器。Claude Code 与 v1 一样连接到其他所有服务器。</li>
+<li>通过 <a href="#notification-streams-on-the-v2-runtime">它保持打开的流</a> 从使用较新修订版的服务器接收 <code>list_changed</code> 通知。</li>
+<li>不注册在较新修订版上连接的 <a href="#push-messages-with-channels">频道</a> 服务器，因为该修订版无法携带频道消息。</li>
+<li>当授权响应指明意外的发行者时，使 <a href="#authenticate-with-remote-mcp-servers">MCP OAuth 登录</a> 失败。</li>
+<li>仅将 <a href="#authenticate-with-remote-mcp-servers">MCP OAuth</a> 凭据发送到通过 HTTPS 或在 <code>localhost</code>、<code>127.0.0.1</code> 或 <code>::1</code> 上提供的令牌端点。对于令牌端点在其他任何地方为纯 <code>http://</code> 的服务器（例如本地网络上的设备），登录失败。请参阅 <a href="errors.html#refusing-to-send-credentials-to-non-https-token-endpoint">拒绝向非 https 令牌端点发送凭据</a>。</li>
+</ul>
+<p>Anthropic 可以通过 Claude Code 获取的功能标志，将特定服务器保持在较早的协议上，或不使用该流。</p>
+<p>要自己选择运行时，请设置 <a href="env-vars.html"><code>MCP_SDK_GENERATION</code></a> 为 <code>v1</code> 或 <code>v2</code>。要决定 Claude Code 是否询问，请设置 <a href="env-vars.html"><code>MCP_PROTOCOL_NEGOTIATION</code></a> 为 <code>auto</code> 或 <code>legacy</code>。</p>
+<h3 id="dynamic-tool-updates">动态工具更新</h3>
+<p>MCP 服务器可以在连接期间更改其提供的工具、提示词或资源，并发送 <code>list_changed</code> 通知。收到通知时：</p>
+<ul>
+<li><strong>在交互式终端会话中</strong>，Claude Code 从该服务器获取更新后的列表，因此您无需重新连接它。</li>
+<li><strong>在使用 <code>-p</code> 标志的 <a href="headless.html">非交互模式</a> 和 <a href="agent-sdk-overview.html">Agent SDK</a> 中</strong>，Claude Code 在收到这些通知时仅刷新工具列表。</li>
+</ul>
+<p>如果刷新请求失败，Claude Code 保留服务器之前发现的工具、提示词和资源，直到稍后的刷新成功。</p>
+<h4 id="notification-streams-on-the-v2-runtime">v2 运行时上的通知流</h4>
+<p>在 <a href="#mcp-client-runtimes">v2 运行时</a> 上，Claude Code 通过它保持打开的流从使用较新协议修订版的服务器接收 <code>list_changed</code> 通知。当流关闭时，Claude Code 重新打开它，有两个限制：</p>
+<ul>
+<li><strong>流在 10 秒内再次关闭</strong>：Claude Code 最多重新打开三次，然后停止该连接。</li>
+<li><strong>流保持打开超过 10 秒，然后关闭</strong>，连接到无服务器主机的流通常如此：在一小时内五次重新打开后，Claude Code 在下一次之前等待约六小时。</li>
+</ul>
+<p>在流重新打开之前，您保留服务器最后获取的工具、提示词和资源。要更快地获取其更改，请从 <code>/mcp</code> 重新连接服务器。</p>
+<h3 id="automatic-reconnection">自动重新连接</h3>
+<p>Claude Code 重新连接在会话中途断开的远程服务器，并在瞬时错误后重试 HTTP 或 SSE 服务器的首次连接。对于 stdio 服务器，请参阅 <a href="#stdio-servers-that-exit-or-fail-to-start">退出或无法启动的 stdio 服务器</a>。</p>
+<h4 id="mid-session-drops-of-a-remote-server">远程服务器的会话中途断开</h4>
+<p>Claude Code 首先使用指数退避尝试重新连接断开的远程服务器，最多五次，从一秒延迟开始，每次加倍：</p>
+<ul>
+<li><strong>在交互式会话中</strong>：<code>/mcp</code> 在 Claude Code 重新连接时显示服务器为待处理。在五次失败尝试后，Claude Code 将服务器标记为失败，或在服务器需要再次授权时标记为需要身份验证。当它将服务器标记为失败时，您会看到 <code>MCP server "&lt;name&gt;" disconnected · open /mcp to reconnect</code> 通知。您可以从 <code>/mcp</code> 手动重试。</li>
+<li><strong>在 <a href="headless.html"><code>claude -p</code></a> 运行和 <a href="agent-sdk-overview.html">Agent SDK</a> 会话中</strong>：Claude Code 进行相同的五次尝试，没有 <code>/mcp</code> 面板显示这些尝试。如果五次尝试全部失败，运行会在没有该服务器工具的情况下继续：</li>
+<li><strong>在瞬时错误（例如 5xx 响应或超时）之后</strong>：Claude Code 在后台继续重试 HTTP 或 SSE 服务器。重试最多持续约半小时，当某次重试连接成功时，服务器的工具会再次可用。在此之前，Agent SDK 会话报告 <a href="agent-sdk-mcp.html#error-handling">状态</a> <code>failed</code>，您的代码可以 <a href="agent-sdk-mcp.html#error-handling">重新连接服务器</a>。要在 <code>claude -p</code> 中重新连接它，请重新开始运行。</li>
+<li><strong>当服务器 <a href="#authenticate-with-remote-mcp-servers">需要您重新登录</a> 时</strong>：Claude Code 停止重试，Agent SDK 会话将服务器的状态报告为 <code>needs-auth</code>。在您的 shell 中使用 <a href="#authenticate-from-the-command-line"><code>claude mcp login &lt;name&gt;</code></a> 登录。然后重新开始运行，或者在 Agent SDK 会话中改为 <a href="agent-sdk-mcp.html#error-handling">重新连接服务器</a>。</li>
+</ul>
+<h4 id="failed-first-connections">失败的首次连接</h4>
+<p>当 HTTP 或 SSE 服务器的首次连接因瞬时错误（例如 5xx 响应、连接被拒绝或超时）失败时，Claude Code 最多重试三次。如果连接仍然失败，Claude Code 将服务器标记为失败。</p>
+<p>这些重试在以下情况下不适用：</p>
+<ul>
+<li>stdio 服务器的首次连接。要再次尝试，请参阅 <a href="#stdio-servers-that-exit-or-fail-to-start">退出或无法启动的 stdio 服务器</a></li>
+<li>WebSocket 服务器的首次连接。要在交互式终端会话中再次尝试，请从 <code>/mcp</code> 中该服务器的菜单选择 <strong>Reconnect</strong></li>
+<li>身份验证或未找到错误，因为它需要配置更改来解决。当 <a href="#use-dynamic-headers-for-custom-authentication"><code>headersHelper</code></a> 是服务器唯一的 <code>Authorization</code> 标头来源时，Claude Code 仍然重试身份验证错误，因为它在每次尝试时重新运行助手并可以获取新凭据</li>
+</ul>
+<h4 id="stdio-servers-that-exit-or-fail-to-start">退出或无法启动的 stdio 服务器</h4>
+<p>要重新启动 stdio 服务器，请阅读与其所发生情况相符的列。根据您运行 Claude Code 的方式找到对应的行：交互式会话、<code>claude -p</code> 运行或 Agent SDK 会话。</p>
+<table>
+<thead>
+<tr>
+<th>您运行 Claude Code 的方式</th>
+<th>服务器进程在会话中途退出</th>
+<th>服务器的首次连接失败</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>交互式会话</td>
+<td>Claude Code 将服务器标记为失败。要重新启动它，请从 <code>/mcp</code> 中该服务器的菜单选择 <strong>Reconnect</strong></td>
+<td>Claude Code 将服务器标记为失败。要重新启动它，请从 <code>/mcp</code> 中该服务器的菜单选择 <strong>Reconnect</strong></td>
+</tr>
+<tr>
+<td><code>claude -p</code> 运行</td>
+<td>Claude Code 在 Claude 下次调用该服务器的某个工具时重新启动服务器，调用会在服务器连接后运行</td>
+<td>运行会在没有该服务器工具的情况下继续。要让 Claude Code 再次尝试连接，请重新开始运行。当插件提供该服务器时，新的运行会在失败后 15 分钟内跳过连接，因此请先等待这段时间，或 <a href="errors.html#skipping-connection-recent-failure-cached">更早重试</a></td>
+</tr>
+<tr>
+<td>Agent SDK 会话</td>
+<td>Claude Code 在 Claude 下次调用该服务器的某个工具时重新启动服务器，调用会在服务器连接后运行</td>
+<td>会话会在没有该服务器工具的情况下继续。您的代码可以 <a href="agent-sdk-mcp.html#error-handling">重新连接服务器</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="failed-discovery-requests">失败的发现请求</h4>
+<p>服务器连接后，Claude Code 向其发送能力发现请求，例如 <code>tools/list</code>、<code>prompts/list</code> 和 <code>resources/list</code>。Claude Code 在瞬时网络或服务器错误后最多重试这些请求三次，短退避。它不重试身份验证错误、4xx 响应或请求超时。</p>
+<h4 id="retry-failed-servers-yourself">自行重试失败的服务器</h4>
+<p>要重试每个失败或需要身份验证的服务器，请在交互式终端会话中的 Claude Code 输入框运行 <code>/mcp reconnect all</code>。这需要 Claude Code v2.1.284 或更高版本。较早的版本会打印 <code>MCP server "all" not found</code>。</p>
+<h4 id="how-claude-learns-that-a-server-failed">Claude 如何了解服务器失败</h4>
+<p>Claude Code 是否告诉 Claude 配置的服务器未能连接取决于 <a href="#scale-with-mcp-tool-search">工具搜索</a>，默认打开：</p>
+<ul>
+<li>使用工具搜索，Claude Code 告诉 Claude 哪个服务器失败及其连接错误，因此 Claude 在其回复中报告连接失败。Claude Code 在找不到匹配工具的 <code>ToolSearch</code> 结果中包含相同的信息。</li>
+<li>在任何 <a href="#configure-tool-search">不使用工具搜索的配置</a> 中，Claude Code 不向 Claude 报告失败的服务器连接。</li>
+</ul>
+<h3 id="push-messages-with-channels">使用频道推送消息</h3>
+<p>MCP 服务器也可以直接将消息推送到您的会话中，以便 Claude 可以对外部事件（如 CI 结果、监控警报或聊天消息）做出反应。要启用此功能，您的服务器声明 <code>claude/channel</code> 能力，您在启动时使用 <code>--channels</code> 标志选择加入。请参阅 <a href="channels.html">频道</a> 以使用官方支持的频道，或 <a href="channels-reference.html">频道参考</a> 以构建您自己的。</p>
+<p>在 <a href="#mcp-client-runtimes">v2 运行时</a> 上，协商 MCP 协议修订版 2026-07-28 的频道服务器无法传递频道消息，因此 Claude Code 不将其注册为频道。不支持该修订版的频道服务器会在较早的握手上连接，并像以前一样注册。</p>
+<p>Claude Code 默认会向 stdio 服务器询问该修订版。要将 stdio 频道服务器保持在较早的握手上，请将 <a href="env-vars.html"><code>MCP_PROTOCOL_NEGOTIATION</code></a> 设置为 <code>legacy</code>，这会将所有服务器都保持在较早的握手上。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>提示：</p>
+<ul>
+<li>使用 <code>-s</code> 或 <code>--scope</code> 标志指定配置的存储位置：</li>
+<li><code>local</code>（默认）：仅在当前项目中对您可用</li>
+<li><code>project</code>：通过 <code>.mcp.json</code> 文件与项目中的每个人共享</li>
+<li><code>user</code>：在所有项目中对您可用</li>
+<li>使用 <code>-e</code> 或 <code>--env</code> 标志设置环境变量（例如 <code>-e KEY=value</code>）</li>
+<li><code>--transport</code> 和 <code>--header</code> 标志也接受 <code>-t</code> 和 <code>-H</code> 短形式</li>
+<li>使用 <code>MCP_TIMEOUT</code> 环境变量配置 MCP 服务器启动超时（例如 <code>MCP_TIMEOUT=10000 claude</code> 设置 10 秒超时）</li>
+<li>通过在该服务器的 <code>.mcp.json</code> 条目中添加 <code>timeout</code> 字段（以毫秒为单位）来设置按服务器工具执行超时，例如 <code>"timeout": 600000</code> 表示十分钟。这仅对该服务器覆盖 <code>MCP_TOOL_TIMEOUT</code> 环境变量</li>
+<li>当 MCP 工具输出超过 10,000 个 token 时，Claude Code 显示警告，默认限制输出为 25,000 个 token。要更改 token 限制，请设置 <code>MAX_MCP_OUTPUT_TOKENS</code> 环境变量，例如 <code>MAX_MCP_OUTPUT_TOKENS=50000</code>。警告阈值是固定的。除非服务器提高了某个工具自身的限制，否则超过 50,000 个字符的成功文本结果会被保存到文件中，不受此变量影响。请参阅 <a href="#mcp-output-limits-and-warnings">MCP 输出限制和警告</a></li>
+<li>使用 <code>/mcp</code> 与需要 OAuth 2.0 身份验证的远程服务器进行身份验证</li>
+</ul></div></div>
+<h3 id="time-limits-on-mcp-tool-calls">MCP 工具调用的时间限制</h3>
+<p>要限制 MCP 工具调用可以运行的时长：</p>
+<ul>
+<li><strong>按服务器</strong>：在该服务器的配置条目中添加以毫秒为单位的 <code>timeout</code> 字段</li>
+<li><strong>跨服务器</strong>：设置 <a href="env-vars.html"><code>MCP_TOOL_TIMEOUT</code></a></li>
+</ul>
+<p>按服务器的 <code>timeout</code> 是每个工具调用的硬性墙钟时间限制，来自服务器的进度通知不会延长它。低于 1000 的值被忽略并回退到 <code>MCP_TOOL_TIMEOUT</code>，或在该变量未设置时回退到其约 28 小时的默认值。对于 HTTP、SSE 或 <a href="mcp.html#use-mcp-servers-from-claude-ai">claude.ai 连接器</a> 服务器，还有第二个按请求计时器，覆盖每个请求直到服务器的第一个响应字节。Claude Code 将该计时器设置为三个值中最大的：60 秒、适用于服务器的工具超时和 <code>MCP_TIMEOUT</code>。未设置的 <code>MCP_TOOL_TIMEOUT</code> 的 28 小时默认值不参与该比较，低于 60 秒的值不会缩短计时器。Stdio 和 WebSocket 服务器没有按请求计时器。</p>
+<p>至少 1000 的按服务器 <code>timeout</code> 也充当下面描述的空闲超时的下限：Claude Code 永远不会早于按服务器 <code>timeout</code> 因空闲而中止该服务器的工具调用。</p>
+<p>对 MCP 服务器的工具调用，如果在空闲窗口内既没有响应也没有进度通知，会以错误中止，而不是等待墙钟时间限制。空闲超时适用于除 IDE 服务器和 SDK 进程内服务器外的每种服务器类型。空闲窗口对 HTTP、SSE、WebSocket 和 <a href="#use-mcp-servers-from-claude-ai">claude.ai 连接器</a> 服务器默认为五分钟，对 stdio 服务器默认为 30 分钟。</p>
+<p>设置 <a href="env-vars.html"><code>CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT</code></a> 环境变量（以毫秒为单位）来更改空闲窗口，或将其设置为 <code>0</code> 以禁用检查。</p>
+<p>这些超时限制调用可以运行多长时间，但不一定是它阻塞会话多长时间：运行超过两分钟的主对话调用会先移到后台任务。请参阅 <a href="#automatic-backgrounding-of-long-tool-calls">长工具调用的自动后台处理</a>。</p>
+<h3 id="automatic-backgrounding-of-long-tool-calls">长工具调用的自动后台处理</h3>
+<p>如果某个后台调用在 <a href="commands.html#all-commands"><code>/tasks</code></a> 中的详情视图显示 <code>runs on the server; survives exiting this session</code>，请参阅<a href="#mcp-tasks-that-run-on-the-server">在服务器上运行的 MCP 任务</a>。</p>
+<p>主对话中的 MCP 工具调用在两分钟后仍在运行时会移到后台任务，而不是阻塞会话。Claude 立即收到任务 ID 并继续工作，结果在调用完成时作为任务通知到达。</p>
+<p>任务出现在 <a href="commands.html#all-commands"><code>/tasks</code></a> 中，您也可以在其中停止它，退出会话后它不会保留。任务的条目显示服务器报告的最新进度。如果您停止任务，Claude Code 会取消调用并告知 Claude 不会有结果返回。停止并不保证服务器停止：服务器可能已经完成了部分工作，或者仍可能完成它。</p>
+<p>调用在后台运行时，每次调用的限制仍然适用：由按服务器 <code>timeout</code> 或 <a href="env-vars.html"><code>MCP_TOOL_TIMEOUT</code></a> 设置的墙钟时间限制，以及由 <a href="env-vars.html"><code>CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT</code></a> 设置的空闲超时。</p>
+<p>要更改或关闭自动后台化：</p>
+<ul>
+<li>设置以毫秒为单位的 <a href="env-vars.html"><code>CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS</code></a> 环境变量以更改阈值，或设置为 <code>0</code> 以关闭自动后台化。设置为 <code>0</code> 时，Claude 在交互式会话中也会<a href="#make-claude-wait-for-the-result-of-an-mcp-task">等待 MCP 任务</a></li>
+<li>将 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_BACKGROUND_TASKS</code></a> 设置为 <code>1</code>，以关闭自动后台化和<a href="tools-reference.html#background-commands">后台命令</a></li>
+</ul>
+<p>某些调用永远不会移到后台：</p>
+<ul>
+<li>来自 <a href="sub-agents.html">子代理</a> 的调用；Claude Code 仅后台处理主对话调用</li>
+<li>对 IDE 服务器的调用</li>
+<li><a href="headless.html">非交互模式</a> 中的调用，除非 <code>CLAUDE_AUTO_BACKGROUND_TASKS</code> 设置为 <code>1</code>，因为一次性运行可能在结果到达前结束</li>
+</ul>
+<p>等待已打开的 <a href="#respond-to-mcp-elicitation-requests">引出对话框</a> 的调用在对话框打开期间不会后台处理；服务器是在等待您的输入，而不是运行缓慢，因此 Claude Code 将移动推迟到对话框关闭。</p>
+<h3 id="mcp-tasks-that-run-on-the-server">在服务器上运行的 MCP 任务</h3>
+<p>MCP 任务是指 MCP 服务器使用 <a href="https://modelcontextprotocol.io/extensions/tasks/overview" target="_blank" rel="noopener">MCP tasks 扩展</a>自行运行的长时间作业，例如报告导出或构建。服务器接受该作业后，Claude 的工具调用即返回，因此 Claude 会继续工作，除非您<a href="#make-claude-wait-for-the-result-of-an-mcp-task">让 Claude 等待</a>。作业结束时，会话记录中会注明这一点，Claude 会获得结果。您可以向 Claude 询问结果。</p>
+<p>在此期间，页脚会显示诸如 <code>1 MCP task</code> 的计数，Claude Code 会通过向服务器检查任务状态来跟踪该任务。远程服务器上的任务在您退出后会继续运行。要再次跟踪它，请<a href="#exit-clear-or-resume-while-an-mcp-task-runs">恢复同一会话</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>MCP 任务在 Claude Code CLI 中处于公开测试版阶段，需要 Claude Code v2.1.304 或更高版本。<a href="#requirements-for-mcp-tasks">调用成为 MCP 任务的条件</a>列出了可以使用该功能的会话和服务器。</p></div></div>
+<h4 id="stop-an-mcp-task-or-get-its-result">停止 MCP 任务或获取其结果</h4>
+<p>要停止正在运行的任务，请在 <a href="commands.html#all-commands"><code>/tasks</code></a> 中选择它并按 <code>x</code>，或者让 Claude 停止它。Claude Code 会停止跟踪该任务并请求服务器取消它，但服务器仍可能完成它。请先从 <code>/mcp</code> 重新连接已断开的服务器，否则不会发出取消请求，Claude Code 会忘记该任务且无法再次跟踪它。按 <code>Esc</code> 不会停止后台任务。</p>
+<p>任务结束时，会话记录中会出现类似这样的一行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">MCP task &lt;server task id&gt; (&lt;server&gt;/&lt;tool&gt;) completed.
+</code></pre></div>
+<p>结果会发送给 Claude，而不是写入会话记录，因此请向 Claude 询问结果。如果结果到达时 Claude 处于空闲状态，Claude 会主动开始处理它。</p>
+<h4 id="answer-a-question-from-an-mcp-task">回答来自 MCP 任务的问题</h4>
+<p>正在运行的任务可以打开 <a href="#respond-to-mcp-elicitation-requests">elicitation 对话框</a>向您请求输入。在 <code>/tasks</code> 打开期间，该对话框会保持隐藏，因此请关闭 <code>/tasks</code> 以作答。拒绝或按 <code>Esc</code> 也是对服务器的一种回答，服务器随后会决定任务是否继续。</p>
+<p>在<a href="headless.html">非交互</a>会话中，对于请求输入的任务，Claude Code 会请求服务器取消它，而不会运行您的 <a href="hooks.html#elicitation"><code>Elicitation</code> hook</a>，也不会调用 Agent SDK 的 <code>onElicitation</code> 回调。</p>
+<h4 id="exit-clear-or-resume-while-an-mcp-task-runs">在 MCP 任务运行时退出、清除或恢复</h4>
+<p>远程服务器上的任务在您退出后会继续运行。stdio 服务器的进程会在 Claude Code 退出时停止，尽管其任务在 <code>/tasks</code> 中显示 <code>runs on the server; survives exiting this session</code>。除非该服务器的文档说明工作会在进程结束后继续，否则请先让这些任务完成，或在 <code>/tasks</code> 中停止它们。</p>
+<table>
+<thead>
+<tr>
+<th>情况</th>
+<th>任务会怎样</th>
+<th>您可以做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>您运行 <code>/clear</code> 或 <code>/branch</code>，或 <code>/resume</code> 另一个会话</td>
+<td>在 Claude Code 保持打开期间，结果会送达您当前的对话</td>
+<td>退出后，使用 <code>claude --resume</code> 恢复任务启动时所在的会话</td>
+</tr>
+<tr>
+<td>您退出 Claude Code</td>
+<td>任何退出选项都不会取消远程服务器的任务，即使退出对话框将其列在 <code>The following will stop when you exit:</code> 下</td>
+<td>先在 <code>/tasks</code> 中停止它，或稍后恢复同一会话</td>
+</tr>
+<tr>
+<td>您以交互方式返回任务所在的会话：<code>claude --resume</code>、<code>claude --continue</code> 或 <code>/resume</code></td>
+<td>服务器连接后，Claude Code 会再次跟踪该任务；如果任务在此期间已完成且服务器仍知道它，Claude 会获得结果</td>
+<td>保持服务器的名称和连接设置不变</td>
+</tr>
+<tr>
+<td>您在一次性 <code>claude -p "&lt;prompt&gt;"</code> 运行中使用 <code>--resume</code> 或 <code>--continue</code> 恢复任务所在的会话</td>
+<td>该运行不会跟踪该任务</td>
+<td>以交互方式恢复，或使用 <code>--input-format stream-json</code> 恢复</td>
+</tr>
+<tr>
+<td>您启动新会话或使用 <code>--fork-session</code></td>
+<td>新会话不会跟踪该任务</td>
+<td>恢复启动该任务的会话</td>
+</tr>
+</tbody>
+</table>
+<h4 id="requirements-for-mcp-tasks">调用成为 MCP 任务的条件</h4>
+<p>只有当以下所有条件都满足时，工具调用才会成为 MCP 任务：</p>
+<ul>
+<li>服务器支持任务</li>
+<li>服务器是以<a href="#mcp-client-runtimes">协议修订版 2026-07-28</a> 连接的 HTTP、stdio 或 claude.ai 连接器服务器。设置 <a href="env-vars.html"><code>MCP_SDK_GENERATION=v1</code> 或 <code>MCP_PROTOCOL_NEGOTIATION=legacy</code></a> 会排除这一情况</li>
+<li>会话会<a href="env-vars.html#features-that-need-feature-flag-fetching">获取功能标志</a>，因此不能在 Amazon Bedrock 等第三方提供商上，也不能关闭遥测或标志获取</li>
+<li>Anthropic 已为您的会话类型启用了 MCP 任务。在 v2.1.304 或更高版本上，这包括终端 CLI 会话、<a href="agent-sdk-overview.html">Agent SDK</a> 会话和 <a href="github-actions.html">GitHub Actions</a> 运行。其他使用入口（例如 <a href="vs-code.html">VS Code 扩展</a>和<a href="desktop.html">桌面应用</a>）没有 MCP 任务</li>
+<li>调用来自主对话，而不是来自<a href="sub-agents.html">子代理</a></li>
+<li>会话是交互式的，或者 <a href="agent-sdk-overview.html">Agent SDK</a> 会话或读取 <code>--input-format stream-json</code> 的 <code>claude -p</code> 运行满足：</li>
+<li><a href="env-vars.html"><code>CLAUDE_AUTO_BACKGROUND_TASKS</code></a> 为 <code>1</code></li>
+<li><code>CLAUDE_CODE_DISABLE_MCP_TASK_BACKGROUND</code> 不为 <code>1</code></li>
+<li><code>CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS</code> 不为 <code>0</code></li>
+</ul>
+<p>其他任何调用都是普通工具调用，<a href="#automatic-backgrounding-of-long-tool-calls">长时间工具调用的自动后台化</a>说明了其中哪些会转入后台。</p>
+<p>请保持 Agent SDK 或 stream-json 会话的输入处于打开状态，因为输入关闭后，运行<a href="headless.html#mcp-work-when-a-non-interactive-run-ends">不会等待 MCP 任务</a>。一次性 <code>claude -p "&lt;prompt&gt;"</code> 运行不会获得 MCP 任务。</p>
+<h4 id="status-messages-on-an-mcp-task">MCP 任务的状态消息</h4>
+<p>这些消息出现在任务的 <code>/tasks</code> 条目或其结束时的会话记录行中，表示 Claude Code 无法连接到服务器或任务。当 <code>/tasks</code> 中显示其中一条消息时，作业可能仍在运行：Claude Code 不会干预它并会继续检查。<code>300s</code> 消息和配置相关消息即使在恢复联系后也会保留在条目上。</p>
+<table>
+<thead>
+<tr>
+<th>消息</th>
+<th>发生了什么</th>
+<th>您可以做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reconnecting…</code></td>
+<td>自恢复以来服务器尚未应答，或状态检查没有得到应答</td>
+<td>如果一直显示，请从 <code>/mcp</code> 重新连接</td>
+</tr>
+<tr>
+<td><code>needs a sign-in to &lt;server&gt;</code></td>
+<td>服务器拒绝了状态检查</td>
+<td>从 <code>/mcp</code> 登录</td>
+</tr>
+<tr>
+<td><code>status requests come back with errors; retrying…</code></td>
+<td>服务器或其前面的代理以错误应答状态检查</td>
+<td>等待 Claude Code 重试</td>
+</tr>
+<tr>
+<td><code>server '&lt;name&gt;' did not reconnect within 300s</code></td>
+<td>五分钟内没有得到应答的检查，例如连接中断或服务器被禁用</td>
+<td>从 <code>/mcp</code> 重新连接</td>
+</tr>
+<tr>
+<td><code>server '&lt;name&gt;' asked for a sign-in, and none was accepted within 300s</code></td>
+<td>五分钟后服务器仍要求登录</td>
+<td>从 <code>/mcp</code> 登录</td>
+</tr>
+<tr>
+<td><code>status requests to server '&lt;name&gt;' came back with errors, and none succeeded in 300s</code></td>
+<td>五分钟内都是错误应答</td>
+<td>检查服务器自身的健康状况或日志</td>
+</tr>
+<tr>
+<td><code>server '&lt;name&gt;' is not configured in this session; the task may still be running on it</code></td>
+<td>会话中没有该名称的服务器，例如它已被移除、重命名或未包含在 <code>--mcp-config</code> 中，或者某个 claude.ai 连接器仍在加载</td>
+<td>以相同名称恢复该服务器，然后再次恢复会话。对于正在加载的连接器，无需操作：连接器出现后 Claude Code 会跟踪该任务</td>
+</tr>
+<tr>
+<td>以 <code>server '&lt;name&gt;' was reconfigured to a different transport since this task was created</code> 开头的消息</td>
+<td>存在该名称的服务器，但其连接设置自任务开始后已更改，例如 URL、command、args、env、headers 或 timeout</td>
+<td>恢复之前的设置，然后再次恢复会话</td>
+</tr>
+<tr>
+<td><code>the server rejected this task's id; asking again…</code></td>
+<td>服务器表示不认识该任务 ID。Claude Code 会继续询问最多五分钟</td>
+<td>等待：如果服务器再次识别该 ID，消息会消失，否则会出现 <code>outcome unknown.</code> 行</td>
+</tr>
+<tr>
+<td>以 <code>outcome unknown.</code> 结尾的会话记录行，其中一种形式为 <code>expired on the server: outcome unknown.</code></td>
+<td>服务器拒绝了该 ID 或以其他永久性错误拒绝，Claude Code 已停止跟踪该任务</td>
+<td>第二次调用可能会重复执行该工作。再次调用该工具之前，请从服务器了解已完成的内容，例如让 Claude 使用该服务器的其他工具</td>
+</tr>
+</tbody>
+</table>
+<h4 id="time-limits-on-mcp-tasks">MCP 任务的时间限制</h4>
+<p>默认情况下，后台任务没有 Claude Code 时间限制。<a href="#time-limits-on-mcp-tool-calls">工具调用时间限制</a>（包括挂钟时间限制和空闲超时）在服务器以任务应答该调用之前适用。如果您<a href="#make-claude-wait-for-the-result-of-an-mcp-task">让 Claude 等待</a>，这些限制会在整个任务期间适用。得到应答的状态检查会计为空闲超时中的活动。</p>
+<h4 id="make-claude-wait-for-the-result-of-an-mcp-task">让 Claude 等待 MCP 任务的结果</h4>
+<p>要在交互式会话中让 Claude 等待任务的结果，请设置以下两个环境变量之一，例如在 <a href="settings.html"><code>settings.json</code></a> 的 <code>env</code> 块中：</p>
+<ul>
+<li><strong><a href="env-vars.html"><code>CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS</code></a> 设置为 <code>0</code></strong>：Claude 会等待每个 MCP 工具调用直到调用结束</li>
+<li><strong><a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_MCP_TASK_BACKGROUND</code></a> 设置为 <code>1</code></strong>：Claude 会等待任务的结果。当<a href="#automatic-backgrounding-of-long-tool-calls">自动后台化</a>开启时，它默认会在两分钟后转移该调用，因此短任务会就地完成，长任务不会阻塞您。被转移的调用是普通后台调用，而不是 MCP 任务。它不会在退出会话后保留</li>
+</ul>
+<p>Claude 等待期间，按 <code>Esc</code> 或达到<a href="#time-limits-on-mcp-tasks">挂钟时间限制或空闲超时</a>会结束该调用，Claude Code 会请求服务器取消该任务。</p>
+<p>如果您将 <code>CLAUDE_CODE_DISABLE_BACKGROUND_TASKS</code> 设置为 <code>1</code> 或以 <a href="headless.html#start-faster-with-bare-mode">bare 模式</a>启动，仅凭这一点并不会让 Claude 等待 MCP 任务。以下示例将 <code>CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS</code> 设置为 <code>0</code>，因此 Claude 会等待每个 MCP 工具调用：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="mcp-tasks-for-server-authors">面向服务器开发者的 MCP 任务</h3>
+<p>如果您构建 MCP 服务器，可以用任务来应答长时间运行的 <code>tools/call</code>。<a href="https://modelcontextprotocol.io/extensions/tasks/overview" target="_blank" rel="noopener">MCP tasks 扩展</a>定义了您要发送的消息。在<a href="#mcp-client-runtimes">协议修订版 2026-07-28</a> 连接上，每个请求都会在 <code>params._meta["io.modelcontextprotocol/clientCapabilities"]</code> 中携带 Claude Code 的客户端能力，其中 <code>extensions</code> 下包含 <code>"io.modelcontextprotocol/tasks": {}</code>。<a href="#requirements-for-mcp-tasks">无法成为任务</a>的 <code>tools/call</code> 请求会省略该扩展。</p>
+<h4 id="answer-the-call-with-a-task">以任务应答调用</h4>
+<p>只有当请求携带该扩展时才以任务应答，否则 Claude 会收到工具错误 <code>Unsupported result type 'task' for tools/call</code>。当缺少 <code>taskId</code>、<code>status</code>、<code>createdAt</code>、<code>lastUpdatedAt</code> 或 <code>ttlMs</code> 时，Claude 也会收到相同的错误。任务对象是您的 <code>tools/call</code> 响应的 JSON-RPC <code>result</code>，不需要 <code>content</code> 数组，此处还包含可选的 <code>statusMessage</code> 和 <code>pollIntervalMs</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"resultType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"task"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"taskId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"build-7f3a9c2e"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"working"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"statusMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Compiling, 40 of 212 files done"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-10-22T14:03:07Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"lastUpdatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-10-22T14:03:07Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"ttlMs"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"pollIntervalMs"</span><span class="p">:</span><span class="w"> </span><span class="mi">5000</span>
+<span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>Claude Code 如何处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resultType</code></td>
+<td>设置为 <code>"task"</code> 以将该应答标记为任务。如果没有它，Claude Code 会将该应答视为普通结果</td>
+</tr>
+<tr>
+<td><code>taskId</code></td>
+<td>必需。最多 128 个不含空格的可打印 ASCII 字符，否则 Claude 会收到以 <code>MCP server "&lt;name&gt;" returned a malformed task handle for tool "&lt;tool&gt;"</code> 开头的工具错误。请确保该 ID 在不同连接间都能被应答，因为恢复后 Claude Code 会在新连接上询问它</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>必需。取值为 <code>working</code>、<code>input_required</code>、<code>completed</code>、<code>failed</code> 或 <code>cancelled</code> 之一。其他值会产生 <code>Unsupported result type</code> 错误</td>
+</tr>
+<tr>
+<td><code>createdAt</code>、<code>lastUpdatedAt</code>、<code>ttlMs</code></td>
+<td>必需，<code>ttlMs</code> 可以为 <code>null</code>。Claude Code 不会因为任务的 <code>ttlMs</code> 已过而丢弃该任务</td>
+</tr>
+<tr>
+<td><code>pollIntervalMs</code></td>
+<td>可选，但不能为 <code>null</code>。两次 <code>tasks/get</code> 请求之间的毫秒数，限制在 250 到 30000 之间。字段缺失时 Claude Code 使用 2000，并会从每个 <code>tasks/get</code> 响应中重新读取该值</td>
+</tr>
+<tr>
+<td><code>statusMessage</code></td>
+<td>可选。<code>/tasks</code> 显示的是您最新的 <code>tasks/get</code> 响应中的值，而不是这第一个应答中的值，省略该字段的响应会清除它。<a href="#status-messages-on-an-mcp-task">来自 Claude Code 的状态消息</a>可能会取代它</td>
+</tr>
+</tbody>
+</table>
+<p>在 HTTP 或 claude.ai 连接器服务器上，任务应答必须在<a href="#time-limits-on-mcp-tool-calls">按请求的计时器</a>内开始，因此请先接受作业并应答，然后再执行工作。</p>
+<h4 id="report-status-results-and-questions">报告状态、结果和问题</h4>
+<p>在任务应答之后，Claude Code 会立即发送带有 <code>{ "taskId": ... }</code> 的 <code>tasks/get</code>，然后每个轮询间隔重复一次。tasks 扩展要求您的响应携带 <code>"resultType": "complete"</code>，以及 <code>taskId</code>、<code>status</code>、<code>createdAt</code>、<code>lastUpdatedAt</code> 和 <code>ttlMs</code>。<code>ttlMs</code> 可以为 <code>null</code>，<code>statusMessage</code> 和 <code>pollIntervalMs</code> 是可选的。以下示例报告构建已完成：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"resultType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"complete"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"taskId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"build-7f3a9c2e"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"completed"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-10-22T14:03:07Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"lastUpdatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-10-22T14:09:41Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"ttlMs"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Build succeeded: 212 files, 0 warnings"</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>状态、方法或响应</th>
+<th>Claude Code 如何处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>working</code></td>
+<td>继续轮询</td>
+</tr>
+<tr>
+<td><code>completed</code></td>
+<td>将顶层 <code>result</code> 对象中的普通 <code>tools/call</code> 结果交给 Claude。其中的 <code>isError: true</code> 会被报告为失败</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td>将顶层 <code>error</code> 对象 <code>{ code, message, data }</code> 的 <code>message</code> 告知 Claude，tasks 扩展要求失败的任务包含该对象。如果没有该 <code>message</code>，Claude 会改为收到 <code>statusMessage</code>，否则收到 <code>Task failed</code></td>
+</tr>
+<tr>
+<td><code>cancelled</code></td>
+<td>将 <code>statusMessage</code> 告知 Claude，否则告知 <code>Task was cancelled by the server</code></td>
+</tr>
+<tr>
+<td><code>input_required</code></td>
+<td>读取 <code>inputRequests</code>，这是一个将您选择的键映射到 <code>{ method, params }</code> 的对象。Claude Code 会通过带有 <code>{ taskId, inputResponses }</code> 的 <code>tasks/update</code> 对每个键应答一次，其中 <code>inputResponses</code> 将相同的键映射到该请求的结果。每个任务超过 16 个的键会被忽略</td>
+</tr>
+<tr>
+<td><code>inputRequests</code> 中的方法</td>
+<td><code>elicitation/create</code> 仅在交互式终端会话中处理，<code>roots/list</code> 在所有地方都会处理。当 Claude Code 无法处理某个请求时，它会请求服务器取消该任务</td>
+</tr>
+<tr>
+<td>其他 <code>status</code> 值</td>
+<td>Claude Code 会请求服务器取消该任务，并将其作为失败报告给 Claude</td>
+</tr>
+<tr>
+<td>JSON-RPC 错误 <code>-32602</code></td>
+<td>视为未知的任务 ID。对于后台任务，Claude Code 会继续询问最多五分钟，然后将结果作为未知报告给 Claude</td>
+</tr>
+<tr>
+<td><code>tasks/cancel</code></td>
+<td>例如，在服务器已连接时 Claude 或用户停止该任务时发送。退出时不发送</td>
+</tr>
+<tr>
+<td><code>tasks/result</code>、<code>tasks/list</code>、<code>notifications/tasks</code></td>
+<td>不使用，因此请将结果放在您的 <code>tasks/get</code> 响应中</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plugin-provided-mcp-servers">插件提供的 MCP 服务器</h3>
+<p><a href="plugins-overview.html">插件</a> 可以捆绑 MCP 服务器，在您启用插件时提供工具和集成。</p>
+<p><strong>插件 MCP 服务器如何工作</strong>：</p>
+<ul>
+<li>插件在插件根目录的 <code>.mcp.json</code> 中或内联在 <code>plugin.json</code> 中定义 MCP 服务器</li>
+<li>当您启用插件时，Claude Code 自动启动其 MCP 服务器</li>
+<li>Claude Code 将插件 MCP 工具与手动配置的 MCP 工具一起提供</li>
+<li>您通过安装或卸载插件来添加和删除插件服务器，而不是使用 <code>/mcp</code> 命令。您仍然可以在 <code>/mcp</code> 中 <a href="#disable-a-server-without-removing-it">切换已安装的插件服务器关闭</a>，这会停止 Claude Code 连接到它而不删除插件</li>
+</ul>
+<p><strong>示例插件 MCP 配置</strong>：</p>
+<p>在插件根目录的 <code>.mcp.json</code> 中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"database-tools"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${CLAUDE_PLUGIN_ROOT}/servers/db-server"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--config"</span><span class="p">,</span><span class="w"> </span><span class="s2">"${CLAUDE_PLUGIN_ROOT}/config.json"</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"DB_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${DB_URL}"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>或内联在 <code>plugin.json</code> 中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-plugin"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"plugin-api"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${CLAUDE_PLUGIN_ROOT}/servers/api-server"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--port"</span><span class="p">,</span><span class="w"> </span><span class="s2">"8080"</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>插件 MCP 功能</strong>：</p>
+<ul>
+<li><strong>自动生命周期</strong>：服务器在这些时间点连接和断开：</li>
+<li>在会话启动时，Claude Code 自动连接已启用插件的服务器。在 <code>/mcp</code> 中，您之前使用过的远程（HTTP 或 SSE）插件服务器可能改为显示 <a href="#server-status-detail"><code>cached</code> 状态</a>；Claude Code 在 Claude 首次调用其工具之一时连接它。当 stdio 插件服务器的连接在不到 15 分钟前失败时，Claude Code 会 <a href="errors.html#skipping-connection-recent-failure-cached">跳过该连接</a></li>
+<li>如果您在会话期间启用或禁用插件，Claude Code 在更改生效时连接或断开其 MCP 服务器。<a href="plugins-cli-reference.html#reload-plugins">在不重新启动的情况下应用插件更改</a> 说明了生效时间。在没有交互式终端的会话中，<code>/reload-plugins</code> 不连接或断开插件 MCP 服务器；这些更改在您的下一个会话中生效</li>
+<li>当您重新加载时，Claude Code 保留配置未更改的插件服务器的实时连接，当您从 Agent SDK <a href="agent-sdk-typescript.html#mcpsetserversresult">替换会话的 MCP 服务器列表</a> 而未列出它们时也是如此</li>
+<li>当您在 v2.1.246 或更高版本上 <a href="permissions.html#move-the-session-to-another-directory">使用 <code>/cd</code> 移动会话</a> 时，Claude Code 连接新目录的设置所启用插件的服务器，并断开不再启用的插件的服务器，因此您无需在移动后运行 <code>/reload-plugins</code></li>
+<li>在 <a href="claude-code-on-the-web.html">云端会话</a> 中，对尚未连接的插件服务器的 MCP 调用（例如空闲会话唤醒后）会按需启动服务器并等待它连接</li>
+<li><strong>路径占位符</strong>：<code>${CLAUDE_PLUGIN_ROOT}</code> 解析为插件的安装目录，<code>${CLAUDE_PLUGIN_DATA}</code> 解析为其 <a href="plugins-components.html#path-variables-and-persistent-data">持久状态</a> 目录，<code>${CLAUDE_PROJECT_DIR}</code> 解析为稳定的项目根目录。替换适用于：</li>
+<li><code>stdio</code> 服务器：<code>command</code>、<code>args</code>、<code>env</code></li>
+<li><code>http</code>、<code>sse</code> 和 <code>ws</code> 服务器：<code>url</code>、<code>headers</code> 和 <code>headersHelper</code></li>
+<li><strong>用户环境访问</strong>：访问与手动配置的服务器相同的环境变量</li>
+<li><strong>多种传输类型</strong>：支持 stdio、SSE、HTTP 和 WebSocket 传输，尽管传输支持可能因服务器而异</li>
+</ul>
+<p>插件服务器在 <code>/mcp</code> 中出现，并带有表明它们来自插件的指示器。</p>
+<p><code>claude mcp get</code> 会隐藏为插件的 stdio 或 WebSocket 服务器配置的值，因为这些值可能携带凭据：</p>
+<ul>
+<li><strong>stdio 服务器</strong>：它打印 <code>Command: stdio</code>、空的 <code>Args:</code> 行，并将每个环境变量显示为 <code>NAME=[REDACTED]</code></li>
+<li><strong>WebSocket 服务器</strong>：它打印 <code>URL: ws</code>，并将每个标头显示为 <code>&lt;name&gt;: [REDACTED]</code>，<code>claude mcp list</code> 则显示 <code>ws</code> 来代替 URL</li>
+</ul>
+<p>要查看插件配置了什么，请 <a href="plugins-loading.html#find-plugins-on-disk">在磁盘上找到插件</a> 并阅读其 <code>.mcp.json</code> 或 <code>plugin.json</code>。</p>
+<p><strong>插件 MCP 工具名称</strong>：</p>
+<p>来自插件捆绑的 MCP 服务器的工具在其可调用名称中包含插件名称和服务器键。完整形式是 <code>mcp__plugin_&lt;plugin-name&gt;_&lt;server-name&gt;__&lt;tool-name&gt;</code>，其中 <code>A-Z</code>、<code>a-z</code>、<code>0-9</code>、<code>_</code> 和 <code>-</code> 之外的任何字符都被替换为 <code>_</code>。对于名为 <code>my-plugin</code> 的插件中捆绑的 <code>database-tools</code> 服务器，<code>query</code> 工具的可调用名称为：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">mcp__plugin_my-plugin_database-tools__query
+</code></pre></div>
+<p>在 <a href="permissions.html">权限规则</a>、skill 的 <code>allowed-tools</code> 列表、<a href="sub-agents.html#available-tools">子代理的 <code>tools</code> 字段</a> 或 <a href="hooks.html#match-mcp-tools">hook 匹配器</a> 中引用工具时使用此完整名称。针对裸服务器键编写的 hook 匹配器（例如 <code>mcp__database-tools__.*</code>）永远不会为插件捆绑的服务器触发。</p>
+<p>服务器本身以限定名称 <code>plugin:&lt;plugin-name&gt;:&lt;server-name&gt;</code> 注册，例如 <code>plugin:my-plugin:database-tools</code>。在需要配置的服务器名称的地方使用该名称，例如 <a href="hooks.html#mcp-tool-hook-fields"><code>mcp_tool</code> hook 的 <code>server</code> 字段</a>。</p>
+<p>有关使用插件捆绑 MCP 服务器的详细信息，请参阅 <a href="plugins-components.html#mcp-servers">插件组件参考</a>。</p>
+<h2 id="mcp-installation-scopes">MCP 安装作用域</h2>
+<p>MCP 服务器可以在三个作用域中进行配置。您选择的作用域决定了服务器在哪些项目中加载，以及配置是否与团队共享。管理员还可以通过<a href="#managed-mcp-configuration">托管配置</a>为所有用户部署或提供服务器。</p>
+<table>
+<thead>
+<tr>
+<th>作用域</th>
+<th>加载范围</th>
+<th>与团队共享</th>
+<th>存储位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#local-scope">Local</a></td>
+<td>仅当前项目</td>
+<td>否</td>
+<td><code>~/.claude.json</code></td>
+</tr>
+<tr>
+<td><a href="#project-scope">Project</a></td>
+<td>仅当前项目</td>
+<td>是，通过版本控制</td>
+<td>项目根目录中的 <code>.mcp.json</code></td>
+</tr>
+<tr>
+<td><a href="#user-scope">User</a></td>
+<td>您的所有项目</td>
+<td>否</td>
+<td><code>~/.claude.json</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="local-scope">Local 作用域</h3>
+<p>Local 作用域是默认作用域。Local 作用域的服务器仅在添加它的项目中加载，并且仅对您本人可见。Claude Code 将其存储在 <code>~/.claude.json</code> 中该项目的路径下，因此同一服务器不会出现在您的其他项目中。Local 作用域适用于个人开发服务器、实验性配置，或包含您不希望纳入版本控制的凭据的服务器。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>MCP 服务器的"local 作用域"一词与一般的本地设置不同。MCP local 作用域服务器存储在 <code>~/.claude.json</code>（您的主目录）中，而一般的本地设置使用 <code>.claude/settings.local.json</code>（位于项目目录中）。有关设置文件位置的详细信息，请参阅<a href="settings.html#where-settings-live">设置</a>。</p></div></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># Add a local-scoped server (default)</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>stripe<span class="w"> </span>https://mcp.stripe.com
+
+<span class="c1"># Explicitly specify local scope</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>stripe<span class="w"> </span>--scope<span class="w"> </span><span class="nb">local</span><span class="w"> </span>https://mcp.stripe.com
+</code></pre></div>
+<p>该命令会将服务器写入 <code>~/.claude.json</code> 中当前项目对应的条目。以下示例展示了从 <code>/path/to/your/project</code> 运行该命令后的结果：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"projects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"/path/to/your/project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"stripe"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://mcp.stripe.com"</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="project-scope">Project 作用域</h3>
+<p>Project 作用域的服务器通过将配置存储在项目根目录下的 <code>.mcp.json</code> 文件中来支持团队协作。添加 Project 作用域的服务器时，Claude Code 会自动创建或更新此文件，并写入相应的配置结构。请将 <code>.mcp.json</code> 提交到版本控制中，以便团队中的每个人都能获得相同的 MCP 工具和服务。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># Add a project-scoped server</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>shared-server<span class="w"> </span>--scope<span class="w"> </span>project<span class="w"> </span>https://example.com/mcp
+</code></pre></div>
+<p>生成的 <code>.mcp.json</code> 文件遵循标准化格式：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"shared-server"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/mcp"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>出于安全考虑，在交互式会话中，Claude Code 会在使用 <code>.mcp.json</code> 文件中的 Project 作用域服务器之前请求批准。要重置这些批准选择，请运行 <code>claude mcp reset-project-choices</code>。</p>
+<p>在 <code>claude -p</code> 运行、<a href="headless.html">Agent SDK</a> 会话以及<a href="claude-projects.html#what-threads-pick-up-from-your-repositories">项目</a>线程之外的<a href="claude-code-on-the-web.html">云端会话</a>中，Claude Code 无法显示该确认提示：它会直接加载 Project 作用域的服务器而不询问。如果您在用户设置或托管设置中设置了 <a href="settings-reference.html#skipdangerousmodepermissionprompt"><code>skipDangerousModePermissionPrompt</code></a>，并以 <code>bypassPermissions</code> 模式启动会话，Claude Code 也会跳过该确认提示。如果仍要排除某个服务器：</p>
+<ul>
+<li>将其添加到 <a href="settings-reference.html#disabledmcpjsonservers"><code>disabledMcpjsonServers</code></a>，这会在所有权限模式下阻止它。</li>
+<li>使用 <a href="cli-reference.html#cli-flags"><code>--setting-sources</code></a> 或 SDK 的 <code>settingSources</code> 选项完全排除项目设置。</li>
+<li>使用 <a href="cli-reference.html#cli-flags"><code>--strict-mcp-config</code></a> 启动会话。此时 Claude Code 仅使用您通过 <code>--mcp-config</code> 传入的 MCP 服务器。对于 Claude Code 未加载的 Project 作用域服务器跳过批准提示，需要 Claude Code v2.1.246 或更高版本；在 v2.1.246 之前，strict 会话仍会等待对这些服务器的批准，导致后台会话在启动时处于等待状态。有关在托管 MCP 文件下该标志的作用，请参阅<a href="managed-mcp.html#exclusive-control-with-managed-mcp-json">使用 managed-mcp.json 进行独占控制</a>。</li>
+</ul>
+<p><a href="#project-server-approvals-and-workspace-trust">项目服务器批准与工作区信任</a>介绍了提交到仓库中的批准如何与工作区信任相互作用。</p>
+<h3 id="user-scope">User 作用域</h3>
+<p>User 作用域的服务器存储在 <code>~/.claude.json</code> 中，提供跨项目的可访问性，使其在您机器上的所有项目中均可用，同时仅对您的用户账户可见。此作用域适用于个人实用工具服务器、开发工具，或您在不同项目中经常使用的服务。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># Add a user server</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>hubspot<span class="w"> </span>--scope<span class="w"> </span>user<span class="w"> </span>https://mcp.hubspot.com/anthropic
+</code></pre></div>
+<h3 id="scope-hierarchy-and-precedence">作用域层级与优先级</h3>
+<p>当同一服务器在多个位置定义时，Claude Code 只会连接一次，并使用优先级最高的来源中的定义。会使用该来源中的整个服务器条目；各作用域之间的字段不会合并。</p>
+<ol>
+<li>Local 作用域</li>
+<li>Project 作用域</li>
+<li>User 作用域</li>
+<li><a href="plugins-components.html#mcp-servers">插件提供的服务器</a></li>
+<li><a href="#use-mcp-servers-from-claude-ai">claude.ai 连接器</a></li>
+</ol>
+<p>Claude Code 在三个作用域之间按名称匹配重复项。对于插件和连接器，则按端点匹配，因此如果某个插件或连接器指向的 URL 或命令与上述某个已启用的服务器相同，则视为重复项。</p>
+<p>如果两种 URL 写法仅在以下方面不同，则视为同一端点：scheme 或 host 的字母大小写、scheme 的默认端口（例如 <code>https</code> 上的 <code>:443</code>），或末尾的斜杠。路径、查询字符串、userinfo 或非默认端口不同，则视为两个服务器。</p>
+<p>您的组织通过 <a href="managed-mcp.html#provide-servers-through-managed-settings"><code>managedMcpServers</code></a> 托管设置提供的服务器优先级高于上述所有来源，因此当上述某个服务器与之重复时，Claude Code 会连接组织的定义。需要 Claude Code v2.1.259 或更高版本。</p>
+<p>如果您在 <a href="desktop.html#mcp-servers-from-the-claude-desktop-chat-app">Desktop 应用的 Code 标签页</a>中打开本地会话，而 <code>~/.claude.json</code> 顶层（User 作用域）和 <code>.mcp.json</code> 中存在同名的 stdio 服务器，Code 标签页会使用 <code>~/.claude.json</code> 中的定义。</p>
+<h3 id="environment-variable-expansion-in-mcp-json"><code>.mcp.json</code> 中的环境变量扩展</h3>
+<p>Claude Code 支持在 <code>.mcp.json</code> 文件中进行环境变量扩展，使团队能够共享配置，同时对特定于机器的路径和 API 密钥等敏感值保持灵活性。</p>
+<p>您可以在服务器的 <code>command</code>、<code>args</code>、<code>env</code>、<code>url</code> 或 <code>headers</code> 值中引用环境变量，支持以下两种形式：</p>
+<ul>
+<li><code>${VAR}</code>：扩展为环境变量 <code>VAR</code> 的值</li>
+<li><code>${VAR:-default}</code>：如果已设置 <code>VAR</code>，则扩展为 <code>VAR</code> 的值；如果未设置，则扩展为 <code>default</code></li>
+</ul>
+<h4 id="example-with-variable-expansion">变量扩展示例</h4>
+<p>在此服务器条目中，URL 是 <code>API_BASE_URL</code> 的值后接 <code>/mcp</code>，默认值为 <code>https://api.example.com</code>，API 密钥来自 <code>API_KEY</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"api-server"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${API_BASE_URL:-https://api.example.com}/mcp"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"Authorization"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer ${API_KEY}"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="unset-variables-without-a-default">未设置且无默认值的变量</h4>
+<p>如果引用的环境变量未设置且没有默认值，配置仍会加载：Claude Code 会在 <code>claude mcp list</code> 输出中针对该服务器报告缺少变量的警告，并按原样使用未扩展的 <code>${VAR}</code> 文本。请设置该变量或添加 <code>:-default</code> 回退值，以便服务器使用您预期的值启动。在远程服务器的 <code>url</code> 和 <code>headers</code> 中，某些凭据变量则会<a href="#credential-variables-that-read-as-empty">读取为空</a>，且不会给出警告。</p>
+<h4 id="variables-set-to-an-empty-string">设置为空字符串的变量</h4>
+<p>如果您将变量设置为空字符串，它仍被视为已设置，因此 <code>${VAR:-default}</code> 引用会扩展为空字符串，而不是 <code>default</code>。以<a href="#example-with-variable-expansion">示例服务器</a>为例，如果您将 <code>API_BASE_URL</code> 设置为空字符串，其 <code>url</code> 会变为 <code>/mcp</code>，并且 <code>claude mcp list</code> 会报告 <code>'url' is not a valid URL</code>。要使用默认值，请取消设置该变量，而不是将其设置为空字符串。</p>
+<h4 id="credential-variables-that-read-as-empty">读取为空的凭据变量</h4>
+<p>在远程服务器的 <code>url</code> 和 <code>headers</code> 中，Claude Code 会将环境中的凭据变量读取为空，而不是扩展它们。这可以防止项目的 <code>.mcp.json</code> 或插件将您的 Claude Code 或云提供商凭据发送到其指定的服务器。如果您写入 <code>Bearer ${ANTHROPIC_AUTH_TOKEN}</code>，服务器会收到不含凭据的 <code>Bearer</code>，并拒绝该请求，通常返回 <code>401</code>。Claude Code 会将其报告为连接失败。</p>
+<p>涵盖的名称包括：</p>
+<ul>
+<li>Claude Code 自身的凭据，例如 <code>ANTHROPIC_API_KEY</code> 和 <code>ANTHROPIC_AUTH_TOKEN</code></li>
+<li>您的云提供商凭据，例如 <code>AWS_BEARER_TOKEN_BEDROCK</code></li>
+<li>您的环境中携带的其他凭据，例如 <code>HTTPS_PROXY</code> 和 <code>NPM_TOKEN</code></li>
+</ul>
+<p>无论您是否设置了该变量，涵盖的名称都会读取为空，并且其上的 <code>:-default</code> 回退值会被忽略。<code>ANTHROPIC_BASE_URL</code> 等提供商基础 URL 仍会扩展，因此 <code>"url": "${ANTHROPIC_BASE_URL}/mcp"</code> 可以正常工作，除非该 URL 的值本身嵌入了凭据，例如用户名和密码。</p>
+<p>此集合之外的名称（例如 <code>API_KEY</code>）会按原样扩展。要向服务器提供某个涵盖的凭据，请将其复制到您自己命名的变量中，并改为引用该名称。</p>
+<p>当远程服务器的 <code>url</code> 或 <code>headers</code> 引用了您已设置的涵盖变量时，Claude Code 会在一行调试日志中指出该变量。要查看该行，请运行 <code>claude --debug-file /tmp/claude-debug.log</code>，并在该文件中搜索 <code>never expanded toward a remote server</code>。</p>
+<h4 id="how-references-appear-in-/mcp-and-cli-output">引用在 <code>/mcp</code> 和 CLI 输出中的显示方式</h4>
+<p>对于 local、project 或 user <a href="#mcp-installation-scopes">作用域</a>中的服务器，以下使用入口会按名称显示 <code>${VAR}</code> 引用，而不是显示其解析后的值：</p>
+<ul>
+<li>服务器 <code>/mcp</code> 详情视图中的 URL 或命令行</li>
+<li><code>claude mcp list</code> 和 <code>claude mcp get</code> 的输出</li>
+</ul>
+<p>在 Claude Code v2.1.268 或更高版本中，<code>/mcp</code> 详情视图会以这种方式显示引用。</p>
+<p>对于您的组织通过 <code>managedMcpServers</code> 设置提供的服务器，这些使用入口仅显示 <a href="managed-mcp.html#what-users-can-see-and-change">URL 的主机</a>。</p>
+<p>要查看连接失败时 <code>claude mcp list</code>、<code>claude mcp get</code> 和 <code>/mcp</code> 显示的内容，请参阅<a href="#server-status-detail">服务器状态详情</a>。</p>
+<h2 id="practical-examples">实际示例</h2>
+<h3 id="example-connect-to-github-for-code-reviews">示例：连接到 GitHub 进行代码审查</h3>
+<p>GitHub 的远程 MCP 服务器使用作为标头传递的 GitHub 个人访问令牌进行身份验证。要获取一个，请打开您的 <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener">GitHub 令牌设置</a>，生成一个新的细粒度令牌，具有对您希望 Claude 使用的存储库的访问权限，然后添加服务器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>github<span class="w"> </span>https://api.githubcopilot.com/mcp/<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--header<span class="w"> </span><span class="s2">"Authorization: Bearer YOUR_GITHUB_PAT"</span>
+</code></pre></div>
+<p>将 <code>YOUR_GITHUB_PAT</code> 替换为您的个人访问令牌。<code>claude mcp add</code> 命令保存配置而不验证凭据，因此此处接受占位符值，但服务器稍后无法连接。要验证连接，请运行 <code>/mcp</code> 并检查该服务器所在行是否显示对勾。具有错误凭据的服务器会改为显示 ✘，其<a href="#server-status-detail">失败详情</a>包括服务器返回的 HTTP 状态，例如 401。</p>
+<p>然后使用 GitHub：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">审查 PR #456 并建议改进
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">为我们刚发现的错误创建新问题
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">显示分配给我的所有开放 PR
+</code></pre></div>
+<h3 id="example-query-your-postgresql-database">示例：查询您的 PostgreSQL 数据库</h3>
+<p><a href="https://github.com/bytebase/dbhub" target="_blank" rel="noopener">DBHub</a>，<code>@bytebase/dbhub</code> 包，是一个 MCP 服务器，通过您在 <code>--dsn</code> 中传递的连接字符串将 Claude 连接到关系数据库。在连接字符串中使用只读数据库用户，以便 Claude 运行的查询无法修改数据：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>stdio<span class="w"> </span>db<span class="w"> </span>--<span class="w"> </span>npx<span class="w"> </span>-y<span class="w"> </span>@bytebase/dbhub<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dsn<span class="w"> </span><span class="s2">"postgresql://readonly:pass@prod.db.com:5432/analytics"</span>
+</code></pre></div>
+<p>要确认服务器启动，请运行 <code>/mcp</code> 并检查 <code>db</code> 所在行是否显示对勾。</p>
+<p>然后自然地查询您的数据库：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">本月我们的总收入是多少？
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">显示订单表的 schema
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">查找 90 天内未进行购买的客户
+</code></pre></div>
+<h2 id="authenticate-with-remote-mcp-servers">使用远程 MCP 服务器进行身份验证</h2>
+<p>许多基于云的 MCP 服务器需要身份验证。Claude Code 支持 OAuth 2.0 以实现安全连接。</p>
+<p>当服务器响应 <code>401 Unauthorized</code> 或 <code>403 Forbidden</code> 时，Claude Code 会将远程服务器标记为需要身份验证。Claude Code 显示的内容取决于服务器：</p>
+<ul>
+<li>对于您尚未登录的服务器，任一状态代码都会在 <code>/mcp</code> 中标记它，以便您可以完成 OAuth 流程。</li>
+<li>对于 <a href="#use-mcp-servers-from-claude-ai">claude.ai 连接器</a>，由 claude.ai 拒绝您的会话令牌导致的 <code>401</code> 不会标记连接器，因为重新授权连接器无法修复您的登录。Claude Code 改为显示 <a href="errors.html#claude-ai-rejected-the-session-token">会话令牌被拒绝状态</a>。</li>
+<li>对于您在 <code>headers</code> 中配置了 <code>Authorization</code> 标头的服务器，或通过 <a href="#use-dynamic-headers-for-custom-authentication"><code>headersHelper</code></a> 配置的服务器，连接时的 <code>401</code> 或 <code>403</code> 不会标记服务器，因为要修复的凭据是您配置的凭据。Claude Code 改为报告连接失败。如果您从 <code>${VAR}</code> 引用设置该标头，请检查该变量是否是 Claude Code <a href="#credential-variables-that-read-as-empty">读取为空</a> 的变量之一。</li>
+<li>对于 <a href="#how-connectors-reach-claude-code">传递到云端会话的连接器</a>，Claude Code 不运行登录流程，因为会话的代理使用您在 claude.ai 中授予的授权向连接器进行身份验证。当那里的连接器需要再次授权时，请在 <a href="https://claude.ai/customize/connectors" target="_blank" rel="noopener">claude.ai/customize/connectors</a> 重新连接它，而不是从会话中连接。</li>
+</ul>
+<p>当您已登录的 OAuth 服务器以 <code>401 Unauthorized</code> 拒绝您存储的令牌时，Claude Code 会刷新令牌、重新连接并重试请求一次。只有在该重试也失败时，它才会在 <code>/mcp</code> 中标记服务器。在 macOS 上的 <code>claude -p</code> 或 Agent SDK 运行中，Claude Code 在无法读取您存储的令牌时发送的请求会改为以 <a href="errors.html#couldnt-read-the-stored-credentials-for-mcp-server">存储凭据错误</a> 失败。</p>
+<p>当服务器拒绝存储的刷新令牌时，Claude Code 会立即显示一条指向 <code>/mcp</code> 的通知。打开 <code>/mcp</code> 并在服务器上选择 <strong>Re-authenticate</strong> 以在下一个工具调用失败之前再次登录。</p>
+<p>返回指向其授权服务器的 <code>WWW-Authenticate</code> 标头的自定义服务器会获得与任何其他远程服务器相同的自动发现。</p>
+<p>当一个或多个配置的服务器需要身份验证时，Claude Code 也会显示启动通知，因此您不必打开 <code>/mcp</code> 来发现哪些服务器需要登录。该通知仅计算您可以从 Claude Code 登录的服务器。在 v2.1.218 之前，它还计算了在 claude.ai 中未连接的 <a href="#use-mcp-servers-from-claude-ai">claude.ai 连接器</a>，您只能从 claude.ai 设置中连接这些连接器。</p>
+<p>该通知每次宣布每个服务器一次，并在后续启动时将其排除在计数之外，直到该服务器已连接并再次需要登录。<code>/mcp</code> 仍然列出每个需要登录的服务器。</p>
+<p><code>claude -p</code> 或 Agent SDK 运行没有 <code>/mcp</code> 面板，因此 Claude Code 无法在其中运行 OAuth 流程。要使用需要身份验证的服务器，请先在交互式会话中完成登录：在会话中运行 <code>/mcp</code>，或在 shell 中运行 <code>claude mcp login &lt;name&gt;</code>。当配置的服务器在启用了 <a href="#scale-with-mcp-tool-search">工具搜索</a> 的 <code>claude -p</code> 或 Agent SDK 运行期间需要身份验证时，Claude Code 会告诉 Claude 该服务器的工具在您授权之前不可用。</p>
+<p>如果您为服务器配置了 <code>headers.Authorization</code>，而服务器拒绝了该标头，Claude Code 会报告连接失败，而不是回退到 OAuth。检查令牌对 MCP 端点是否有效，或删除标头以使用 OAuth 流程。</p>
+<p><strong>1. 添加需要身份验证的服务器</strong></p>
+<p>如果您已在 <a href="mcp-quickstart.html#connect-a-server-that-requires-sign-in">MCP 快速入门</a> 中添加了 <code>sentry</code> 服务器，请跳过此步骤：使用相同的服务器名称在相同的作用域内再次运行 <code>claude mcp add</code> 会失败，并显示 <code>MCP server sentry already exists in local config</code>。否则，运行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>sentry<span class="w"> </span>https://mcp.sentry.dev/mcp
+</code></pre></div>
+<p><strong>2. 在 Claude Code 中使用 /mcp 命令</strong></p>
+<p>在 Claude Code 中，使用命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/mcp
+</code></pre></div>
+<p>然后按照浏览器中的步骤登录。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>提示：</p>
+<ul>
+<li>身份验证令牌存储安全且自动刷新</li>
+<li>使用 <code>/mcp</code> 菜单中的"Clear authentication"撤销访问权限</li>
+<li>如果浏览器未自动打开，请复制提供的 URL 并手动打开</li>
+<li>如果浏览器重定向在身份验证后失败并出现连接错误，请将浏览器地址栏中的完整回调 URL 粘贴到 Claude Code 中出现的 URL 提示中</li>
+<li>OAuth 身份验证适用于 HTTP 服务器</li>
+</ul></div></div>
+<h3 id="authenticate-from-the-command-line">从命令行进行身份验证</h3>
+<p><code>claude mcp login &lt;name&gt;</code> 命令直接从您的 shell 运行配置的服务器的 OAuth 流程，因此您不需要在会话内打开 <code>/mcp</code> 面板。对于 claude.ai 连接器，请按照 <a href="remote-control.html#authorize-a-connector-again-from-your-shell">从 shell 再次授权连接器</a> 操作。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>mcp<span class="w"> </span>login<span class="w"> </span>sentry
+</code></pre></div>
+<p>要稍后清除存储的凭据，请运行 <code>claude mcp logout &lt;name&gt;</code>。</p>
+<p><code>claude mcp login</code> 检测何时没有本地浏览器可用，例如在 SSH 会话期间或在没有显示服务器的 Linux 上，并打印授权 URL 而不是尝试打开浏览器。在您的本地计算机上打开 URL，然后将浏览器地址栏中的完整重定向 URL 粘贴回提示符。该命令需要交互式终端来执行粘贴步骤，因此请使用 <code>ssh -t</code> 连接。传递 <code>--no-browser</code> 以强制 URL 提示，即使检测到本地浏览器。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>mcp<span class="w"> </span>login<span class="w"> </span>sentry<span class="w"> </span>--no-browser
+</code></pre></div>
+<h3 id="use-a-fixed-oauth-callback-port">使用固定的 OAuth 回调端口</h3>
+<p>某些 MCP 服务器需要预先注册的特定重定向 URI。默认情况下，Claude Code 为 OAuth 回调选择随机可用端口。使用 <code>--callback-port</code> 固定端口，使其与 <code>http://localhost:PORT/callback</code> 形式的预注册重定向 URI 匹配。如果在 Claude Code v2.1.229 上登录失败并出现重定向 URI 不匹配，请参阅 <a href="#use-pre-configured-oauth-credentials">使用预配置的 OAuth 凭据</a> 下的版本说明。</p>
+<p>您可以单独使用 <code>--callback-port</code>（使用动态客户端注册）或与 <code>--client-id</code> 一起使用（使用预配置的凭据）。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># Fixed callback port with dynamic client registration</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--callback-port<span class="w"> </span><span class="m">8080</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>my-server<span class="w"> </span>https://mcp.example.com/mcp
+</code></pre></div>
+<h3 id="use-pre-configured-oauth-credentials">使用预配置的 OAuth 凭据</h3>
+<p>某些 MCP 服务器不支持通过动态客户端注册进行自动 OAuth 设置。如果您看到类似"Incompatible auth server: does not support dynamic client registration"的错误，服务器需要预配置的凭据。Claude Code 也支持使用客户端 ID 元数据文档 (CIMD) 而不是动态客户端注册的服务器，并自动发现这些服务器。如果自动发现失败，请先通过服务器的开发者门户注册 OAuth 应用，然后在添加服务器时提供凭据。</p>
+<p><strong>1. 向服务器注册 OAuth 应用</strong></p>
+<p>通过服务器的开发者门户创建应用并记下您的客户端 ID 和客户端密钥。</p>
+<p>如果注册表单要求重定向 URI，请选择任何可用端口并输入 <code>http://localhost:PORT/callback</code>，其中包含该端口。您将在下一步中使用相同的端口。</p>
+<p>在 v2.1.229 中，Claude Code 改为发送 <code>http://127.0.0.1:PORT/callback</code>，而精确匹配注册重定向 URI 的服务器会以重定向 URI 不匹配拒绝登录。Claude Code v2.1.231 恢复了 <code>localhost</code> 形式。要在 v2.1.229 上恢复，请升级 Claude Code，或临时将 <code>http://127.0.0.1:PORT/callback</code> 形式添加到服务器的注册重定向 URI。</p>
+<p><strong>2. 使用您的凭据添加服务器</strong></p>
+<p>这些选项卡涵盖两个命令：<code>claude mcp add</code> 将您的客户端 ID 和回调端口作为标志，<code>claude mcp add-json</code> 在 <code>oauth</code> 对象中获取它们。如果您注册了重定向 URI，请将回调端口设置为该 URI 中的端口。</p>
+<blockquote>
+<p>[tab] claude mcp add</p>
+<p>使用 <code>--client-id</code> 传递您的应用的客户端 ID。<code>--client-secret</code> 标志使用掩码输入提示输入密钥：</p>
+<p><code>bash theme={null}
+claude mcp add --transport http \
+  --client-id your-client-id --client-secret --callback-port 8080 \
+  my-server https://mcp.example.com/mcp</code></p>
+<p>[tab] claude mcp add-json</p>
+<p>在 JSON 配置中包含 <code>oauth</code> 对象，并将 <code>--client-secret</code> 作为单独的标志传递：</p>
+<p><code>bash theme={null}
+claude mcp add-json my-server \
+  '{"type":"http","url":"https://mcp.example.com/mcp","oauth":{"clientId":"your-client-id","callbackPort":8080}}' \
+  --client-secret</code></p>
+<p>[tab] claude mcp add-json (仅回调端口)</p>
+<p>要仅固定回调端口并让 Claude Code 自动注册客户端，请单独设置 <code>callbackPort</code>：</p>
+<p><code>bash theme={null}
+claude mcp add-json my-server \
+  '{"type":"http","url":"https://mcp.example.com/mcp","oauth":{"callbackPort":8080}}'</code></p>
+<p>[tab] CI / 环境变量</p>
+<p>通过环境变量设置密钥以跳过交互式提示：</p>
+<p><code>bash theme={null}
+MCP_CLIENT_SECRET=your-secret claude mcp add --transport http \
+  --client-id your-client-id --client-secret --callback-port 8080 \
+  my-server https://mcp.example.com/mcp</code></p>
+</blockquote>
+<p><strong>3. 在 Claude Code 中进行身份验证</strong></p>
+<p>在 Claude Code 中运行 <code>/mcp</code> 并按照浏览器登录流程。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>提示：</p>
+<ul>
+<li>客户端密钥安全地存储在您的系统钥匙链 (macOS) 或凭据文件中，而不是在您的配置中</li>
+<li>您只能在添加服务器时设置客户端密钥。当您使用 <code>claude mcp login</code> 或从 <code>/mcp</code> 进行身份验证时，Claude Code 使用存储的密钥，不会提示输入密钥或读取 <code>MCP_CLIENT_SECRET</code></li>
+<li>要稍后添加或更改密钥，请使用 <code>claude mcp remove &lt;name&gt;</code> 删除服务器，然后使用 <code>--client-secret</code> 和相同的 <code>--scope</code> 再次添加它</li>
+<li>如果服务器使用没有密钥的公共 OAuth 客户端，请仅使用 <code>--client-id</code> 而不使用 <code>--client-secret</code></li>
+<li>这些标志仅适用于 HTTP 和 SSE 传输。它们对 stdio 服务器没有影响</li>
+<li>使用 <code>claude mcp get &lt;name&gt;</code> 验证为服务器配置了 OAuth 凭据</li>
+</ul></div></div>
+<h3 id="override-oauth-metadata-discovery">覆盖 OAuth 元数据发现</h3>
+<p>将 Claude Code 指向特定的 OAuth 授权服务器元数据 URL 以绕过默认发现链。当 MCP 服务器的标准端点出错时，或当您想通过内部代理路由发现时，设置 <code>authServerMetadataUrl</code>。默认情况下，Claude Code 首先检查 <code>/.well-known/oauth-protected-resource</code> 处的 RFC 9728 受保护资源元数据，然后回退到 <code>/.well-known/oauth-authorization-server</code> 处的 RFC 8414 授权服务器元数据。</p>
+<p>在 <code>.mcp.json</code> 中您的服务器配置的 <code>oauth</code> 对象中设置 <code>authServerMetadataUrl</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"my-server"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://mcp.example.com/mcp"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"oauth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"authServerMetadataUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://auth.example.com/.well-known/openid-configuration"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>URL 必须使用 <code>https://</code>。元数据 URL 的 <code>scopes_supported</code> 覆盖上游服务器宣传的作用域。</p>
+<h3 id="restrict-oauth-scopes">限制 OAuth 作用域</h3>
+<p>设置 <code>oauth.scopes</code> 以固定 Claude Code 在授权流程期间请求的作用域。这是当上游授权服务器宣传的作用域超过您想要授予的作用域时，将 MCP 服务器限制为安全团队批准的子集的受支持方式。该值是单个空格分隔的字符串，与 RFC 6749 §3.3 中的 <code>scope</code> 参数格式匹配。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"slack"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://mcp.slack.com/mcp"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"oauth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"scopes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"channels:read chat:write search:read"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>oauth.scopes</code> 优先于 <code>authServerMetadataUrl</code> 和服务器在 <code>/.well-known</code> 处发现的作用域。将其保留为未设置以让 MCP 服务器确定请求的作用域集。</p>
+<p>当未设置 <code>oauth.scopes</code> 时，Claude Code 不会从自动发现的授权服务器元数据中请求完整的 <code>scopes_supported</code> 目录。从配置的 <code>authServerMetadataUrl</code> 获取的元数据仍会将其 <code>scopes_supported</code> 作为请求的作用域提供。</p>
+<p>如果授权服务器在 <code>scopes_supported</code> 中宣传 <code>offline_access</code>，Claude Code 会将其附加到固定作用域，以便可以在没有新浏览器登录的情况下刷新访问令牌。</p>
+<p>如果服务器稍后为工具调用返回 403 <code>insufficient_scope</code>，调用会失败并显示 <a href="errors.html#mcp-server-needs-you-to-sign-in-again"><code>needs additional permissions</code></a> 消息，该消息命名服务器要求的作用域。该服务器在 <code>/mcp</code> 中显示为需要身份验证。</p>
+<p>如果该作用域不在您的固定 <code>oauth.scopes</code> 中，请添加它，然后运行 <code>/mcp</code> 并再次对服务器进行身份验证。Claude Code 请求固定作用域而不是服务器命名的作用域，因此如果您在不添加它的情况下再次进行身份验证，您获得的令牌仍然缺少它。</p>
+<h3 id="use-oauth-with-a-server-behind-an-authenticating-proxy">对位于需要身份验证的代理后面的服务器使用 OAuth</h3>
+<p>如果您的 MCP 服务器在一个会检查其自身标头的代理或网关后面使用 OAuth，当 OAuth 请求到达时不带该标头，登录就会失败。通过该代理登录需要 Claude Code v2.1.299 或更高版本，并且需要同时配置该标头和登录：</p>
+<ul>
+<li><strong>代理的标头</strong>：使用 <a href="#option-1-add-a-remote-http-server"><code>--header</code></a>、<code>headers</code> 字段或 <a href="#use-dynamic-headers-for-custom-authentication"><code>headersHelper</code></a>，以代理读取的名称传递它</li>
+<li><strong>OAuth 登录</strong>：不要在配置的标头中包含 <code>Authorization</code>，然后在 shell 中使用 <code>claude mcp login &lt;name&gt;</code> 登录。如果您配置了 <code>Authorization</code> 标头，Claude Code 会将其用作服务器的凭据，并且不会为该服务器回退到 OAuth。</li>
+</ul>
+<h3 id="use-dynamic-headers-for-custom-authentication">使用动态标头进行自定义身份验证</h3>
+<p>当 Kerberos、短期令牌或内部 SSO 等身份验证需要在连接时生成标头时，请将服务器的 <code>headersHelper</code> 设置为一个命令。Claude Code 在连接时运行该命令，并将其输出合并到它发送的标头中。此示例使用脚本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"internal-api"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://mcp.internal.example.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"headersHelper"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/opt/bin/get-mcp-auth-headers.sh"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>该命令也可以是内联的：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"internal-api"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://mcp.internal.example.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"headersHelper"</span><span class="p">:</span><span class="w"> </span><span class="s2">"echo '{\"Authorization\": \"Bearer '\"$(get-token)\"'\"}'"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>要求：</strong></p>
+<ul>
+<li>该命令必须将字符串键值对的 JSON 对象写入 stdout</li>
+<li>Claude Code 在 shell 中运行该命令，并在 10 秒后放弃</li>
+<li>Claude Code 根据 <a href="#where-the-helper-runs">您配置服务器的位置</a> 选择命令的工作目录，因此请将脚本作为绝对路径给出或将其放在 <code>PATH</code> 上</li>
+<li>动态标头覆盖任何具有相同名称的静态 <code>headers</code></li>
+</ul>
+<p>一旦 <a href="#trust-a-folder-before-its-headershelper-runs">项目和本地作用域服务器的信任规则</a> 允许助手运行，Claude Code 会在每次连接时（会话启动和重新连接时）重新运行助手。它不缓存结果，因此您的脚本负责任何令牌重用。</p>
+<p>如果工具调用返回 <code>401 Unauthorized</code> 或 <code>403 Forbidden</code>，Claude Code 会自动在相同规则下重新运行助手，使用新标头重新连接，并重试调用一次。Claude Code 仅在该重试也失败时才在 <code>/mcp</code> 中将服务器标记为需要身份验证。</p>
+<p>当助手的输出包含 <code>Authorization</code> 标头时，Claude Code 使用该凭据作为服务器的身份验证，不会回退到服务器的 OAuth。</p>
+<p>如果服务器在连接时拒绝助手的凭据，Claude Code 会报告连接失败，而不是将服务器标记为需要身份验证。修复您的助手返回的凭据，然后从 <code>/mcp</code> 重新连接以重新运行助手。</p>
+<p>Claude Code 在执行助手时设置这些环境变量：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">变量</th>
+<th style="text-align: left;">值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MCP_SERVER_NAME</code></td>
+<td style="text-align: left;">MCP 服务器的名称</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MCP_SERVER_URL</code></td>
+<td style="text-align: left;">MCP 服务器的 URL</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_PLUGIN_ROOT</code></td>
+<td style="text-align: left;">插件的根目录。仅当 <a href="plugins-components.html#mcp-servers">插件</a> 提供服务器时设置</td>
+</tr>
+</tbody>
+</table>
+<p>使用这些来编写为多个 MCP 服务器服务的单个助手脚本。</p>
+<p>插件提供的 <code>headersHelper</code> 无法引用插件的 <a href="plugins-manifest-reference.html#user-configuration"><code>${user_config.*}</code></a> 值，因为该命令通过 shell 运行。Claude Code 报告服务器配置错误并显示 <a href="errors.html#plugin-command-references-user-config">错误</a>，不替换该值。将 <code>${user_config.KEY}</code> 放在服务器的 <code>headers</code> 字段中，该字段不是 shell 解析的，或让助手脚本从配置文件读取该值。在 v2.1.207 之前，<code>headersHelper</code> 替换了 <code>${user_config.*}</code> 值。</p>
+<h4 id="where-the-helper-runs">助手运行的位置</h4>
+<p>Claude Code 从声明服务器的配置中选择 <code>headersHelper</code> 命令的工作目录。Claude 在 Bash 中运行的 <code>cd</code> 不会移动它，<a href="permissions.html#move-the-session-to-another-directory"><code>/cd</code></a> 仅对从会话主工作目录运行的服务器移动它。下面的每一行给出您的 <code>headersHelper</code> 命令中相对路径解析所依据的目录。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您配置服务器的位置</th>
+<th style="text-align: left;">工作目录</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-components.html#mcp-servers">插件</a></td>
+<td style="text-align: left;">插件的根目录</td>
+</tr>
+<tr>
+<td style="text-align: left;">项目 <code>.mcp.json</code> 或 <a href="#local-scope">本地作用域</a> 服务器</td>
+<td style="text-align: left;">声明服务器的项目目录</td>
+</tr>
+<tr>
+<td style="text-align: left;">您项目中的 Agent 文件、来自 SDK 的 <code>mcpServers</code> 选项或 <code>setMcpServers()</code> 方法的服务器，或 <a href="cli-reference.html"><code>--mcp-config</code></a></td>
+<td style="text-align: left;">会话的 <a href="permissions.html#working-directories">主工作目录</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#user-scope">用户作用域</a>、<a href="managed-mcp.html">托管 MCP</a>、<a href="#use-mcp-servers-from-claude-ai">claude.ai 连接器</a>，或来自您项目外的 Agent 文件，包括来自 <code>--add-dir</code> 目录的 Agent 文件</td>
+<td style="text-align: left;">您的配置目录，除非您设置了 <a href="env-vars.html"><code>CLAUDE_CONFIG_DIR</code></a>，否则为 <code>~/.claude</code></td>
+</tr>
+</tbody>
+</table>
+<p>在 v2.1.238 之前，Claude Code 也从您启动它的目录运行用户作用域、托管和 claude.ai 连接器服务器的助手，以及来自您项目外的 Agent 文件的助手。</p>
+<h4 id="which-variables-a-helper-can-read">助手可以读取哪些变量</h4>
+<p>仓库或插件提供的 <code>headersHelper</code> 是您没有编写的命令，因此 Claude Code 运行它时不使用来自您环境的凭据变量，例如 <code>ANTHROPIC_API_KEY</code>。您配置服务器的位置决定这是否适用：</p>
+<ul>
+<li><strong>已删除</strong>：项目 <code>.mcp.json</code> 中的服务器或插件中的服务器，以及来自您项目或 <code>--add-dir</code> 目录的 Agent 文件中的内联服务器</li>
+<li><strong>未删除</strong>：<a href="#user-scope">用户</a> 或 <a href="#local-scope">本地作用域</a> 的服务器、<a href="managed-mcp.html">托管 MCP</a> 中的服务器、来自 <a href="#use-mcp-servers-from-claude-ai">claude.ai 连接器</a> 的服务器、由 SDK 或 <a href="cli-reference.html"><code>--mcp-config</code></a> 提供的服务器，以及来自 <code>~/.claude/agents/</code>、来自托管设置或使用 <code>--agents</code> 传递的 Agent 文件中的内联服务器</li>
+</ul>
+<p>除了 Git 的 <code>GIT_CONFIG_KEY_&lt;n&gt;</code> 变量外，Claude Code 会从您的环境中删除每个名称看起来像凭据的变量，例如名称中包含 <code>TOKEN</code>、<code>SECRET</code>、<code>PASSWORD</code>、<code>KEY</code> 或 <code>AUTH</code> 的名称（无论大小写），因此 <code>ANTHROPIC_API_KEY</code> 和 <code>MY_REGISTRY_TOKEN</code> 都被删除。Claude Code 也会删除一个固定的凭据变量列表，其名称不遵循该模式，例如 <code>ANTHROPIC_CUSTOM_HEADERS</code>。</p>
+<p>当这适用于您的助手时，让脚本从文件或凭据存储读取其凭据。如果服务器的 <code>url</code> <a href="#environment-variable-expansion-in-mcp-json">携带这些变量之一的实时值</a>，例如 <code>MY_REGISTRY_TOKEN</code>，助手接收的 <code>CLAUDE_CODE_MCP_SERVER_URL</code> 值也将该部分替换为 <code>REDACTED</code>。</p>
+<h4 id="trust-a-folder-before-its-headershelper-runs">在其 headersHelper 运行之前信任文件夹</h4>
+<p>Claude Code 将 <code>headersHelper</code> 作为任意 shell 命令执行。对于项目 <code>.mcp.json</code> 中的服务器或 <a href="#local-scope">本地作用域</a> 的服务器，它仅在您接受声明服务器的项目目录的 <a href="permissions.html#project-allow-rules-and-workspace-trust">信任对话</a> 后运行助手。在 v2.1.238 之前，<code>claude -p</code> 或 SDK 会话运行这些助手而不检查信任，交互式会话在您信任父文件夹后运行它们。</p>
+<ul>
+<li><strong>不计算的信任</strong>：父文件夹的信任，以及 <code>claude -p</code> 或 SDK 会话为 <a href="permissions.html#what-runs-before-you-trust-a-folder">设置文件中的 hook</a> 获得的自动信任</li>
+<li><strong>直到您信任文件夹</strong>：Claude Code 仅使用其静态 <code>headers</code> 连接服务器。在 <code>claude -p</code> 或 SDK 会话中，它也会向 stderr 打印每个服务器一行 <a href="errors.html#headershelper-not-run"><code>headersHelper not run</code></a>，告诉您如何授予信任。</li>
+<li><strong>无对话的信任</strong>：在 <code>~/.claude.json</code> 中将 <code>projects["&lt;path&gt;"].hasTrustDialogAccepted</code> 设置为 <code>true</code>。<code>&lt;path&gt;</code> 是 <a href="permissions.html#project-allow-rules-and-workspace-trust">项目允许规则和工作区信任</a> 中所述 Claude Code 用作信任键的文件夹。</li>
+</ul>
+<p>对于在 <a href="sub-agents.html#scope-mcp-servers-to-a-subagent">Agent 文件</a> 中内联声明的服务器，Claude Code 应用相同的规则，并检查该 Agent 文件的来源：您的项目（对于其 <code>.claude/agents/</code> 目录中的文件），或 <code>--add-dir</code> 目录。直到您 <a href="permissions.html#what-runs-before-you-trust-a-folder">信任该项目或目录本身</a>，Claude Code 都不会加载该服务器，因此其助手也永远不会运行。</p>
+<h3 id="sign-in-to-an-mcp-server-behind-a-gateway-that-requires-a-header">登录位于需要标头的网关后面的 MCP 服务器</h3>
+<p>当网关要求某个标头（例如 <code>X-API-Key</code>）而 Claude Code 未发送该标头时，对 MCP 服务器的 OAuth 登录会失败。要让 Claude Code 发送该标头，请将其添加到服务器的配置中，并使用 Claude Code v2.1.299 或更高版本：</p>
+<ul>
+<li><strong>您可以编辑其<a href="#mcp-installation-scopes">配置</a>的服务器</strong>：在 <a href="#example-with-variable-expansion"><code>headers</code></a> 中设置它，或从 <a href="#use-dynamic-headers-for-custom-authentication"><code>headersHelper</code></a> 返回它</li>
+<li><strong>由<a href="managed-mcp.html">托管 MCP</a> 或<a href="#plugin-provided-mcp-servers">插件</a>提供的服务器</strong>：请您的管理员或插件作者将该标头添加到服务器的条目中</li>
+</ul>
+<p>随后，Claude Code 会将除 <code>Authorization</code> 之外的已配置标头添加到它发送到服务器源的登录、令牌刷新和令牌撤销请求中。服务器的源是其 <code>url</code> 中的协议、主机和端口。要求该标头的网关仍可能在授权页面或位于其他源的授权服务器处阻止登录：</p>
+<ul>
+<li><strong>授权页面</strong>：您在浏览器中的此页面上登录，而浏览器不会发送已配置的标头。如果您的浏览器收到的是网关的错误而不是该页面，请让网关的运维人员允许该页面在没有该标头的情况下通过。</li>
+<li><strong>位于其他源的授权服务器</strong>：如果该服务器前面的网关也要求该标头，登录会在那里失败。请让该网关的运维人员允许 OAuth 请求在没有该标头的情况下通过。</li>
+</ul>
+<h2 id="add-mcp-servers-from-json-configuration">从 JSON 配置添加 MCP 服务器</h2>
+<p>如果您有 MCP 服务器的 JSON 配置，您可以直接添加它：</p>
+<p><strong>1. 从 JSON 添加 MCP 服务器</strong></p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 基本语法</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add-json<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="s1">'&lt;json&gt;'</span>
+
+<span class="c1"># 示例：添加带有 JSON 配置的 HTTP 服务器</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add-json<span class="w"> </span>weather-api<span class="w"> </span><span class="s1">'{"type":"http","url":"https://api.weather.com/mcp","headers":{"Authorization":"Bearer token"}}'</span>
+
+<span class="c1"># 示例：添加带有 JSON 配置的 stdio 服务器</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add-json<span class="w"> </span>local-weather<span class="w"> </span><span class="s1">'{"type":"stdio","command":"/path/to/weather-cli","args":["--api-key","abc123"],"env":{"CACHE_DIR":"/tmp"}}'</span>
+
+<span class="c1"># 示例：添加带有预配置 OAuth 凭据的 HTTP 服务器</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add-json<span class="w"> </span>my-server<span class="w"> </span><span class="s1">'{"type":"http","url":"https://mcp.example.com/mcp","oauth":{"clientId":"your-client-id","callbackPort":8080}}'</span><span class="w"> </span>--client-secret
+</code></pre></div>
+<p><strong>2. 验证服务器已添加</strong></p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>mcp<span class="w"> </span>get<span class="w"> </span>weather-api
+</code></pre></div>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>提示：</p>
+<ul>
+<li>确保 JSON 在您的 shell 中正确转义</li>
+<li>JSON 必须符合 MCP 服务器配置架构</li>
+<li>您可以使用 <code>--scope user</code> 将服务器添加到您的用户配置而不是项目特定的配置</li>
+</ul></div></div>
+<h2 id="import-mcp-servers-from-claude-desktop">从 Claude Desktop 导入 MCP 服务器</h2>
+<p>如果您已在 Claude Desktop 中配置了 MCP 服务器，您可以导入它们：</p>
+<p><strong>1. 从 Claude Desktop 导入服务器</strong></p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 基本语法 </span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add-from-claude-desktop<span class="w"> </span>
+</code></pre></div>
+<p><strong>2. 选择要导入的服务器</strong></p>
+<p>运行命令后，您将看到一个交互式对话框，允许您选择要导入的服务器。</p>
+<p><strong>3. 验证服务器已导入</strong></p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>mcp<span class="w"> </span>list<span class="w"> </span>
+</code></pre></div>
+<p>通过 <code>claude mcp</code> 命令添加的服务器名称只能包含字母、数字、连字符和下划线。Claude Desktop 不应用该限制，因此名称中包含任何其他字符（如空格）的 Claude Desktop 服务器无法导入。导入会报告它拒绝的每个名称，并仍然导入您选择的其他服务器。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>提示：</p>
+<ul>
+<li>此功能仅在 macOS 和 Windows Subsystem for Linux (WSL) 上有效</li>
+<li>它从这些平台上的标准位置读取 Claude Desktop 配置文件</li>
+<li>使用 <code>--scope user</code> 标志将服务器添加到您的用户配置</li>
+<li>导入的服务器将保持与 Claude Desktop 中相同的名称，当名称仅包含字母、数字、连字符和下划线时。Claude Code 会报告名称中包含任何其他字符的服务器并跳过它</li>
+<li>如果具有相同名称的服务器已存在，它们将获得数字后缀（例如，<code>server_1</code>）</li>
+</ul></div></div>
+<h2 id="use-mcp-servers-from-claude-ai">使用来自 claude.ai 的 MCP 服务器</h2>
+<p>如果您已使用 <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> 账户登录 Claude Code，您在 claude.ai 中添加的 MCP 服务器（称为 <a href="https://claude.com/docs/connectors" target="_blank" rel="noopener">connectors</a>）会自动在 Claude Code 中可用：</p>
+<p><strong>1. 在 claude.ai 中配置 MCP 服务器</strong></p>
+<p>在 <a href="https://claude.ai/customize/connectors" target="_blank" rel="noopener">claude.ai/customize/connectors</a> 添加服务器。在 Team 和 Enterprise 计划中，只有管理员可以添加服务器。</p>
+<p><strong>2. 对 MCP 服务器进行身份验证</strong></p>
+<p>在 claude.ai 中完成任何必需的身份验证步骤。</p>
+<p><strong>3. 在 Claude Code 中查看和管理服务器</strong></p>
+<p>在 Claude Code 中，使用命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/mcp
+</code></pre></div>
+<p>来自 claude.ai 的服务器会出现在列表中，并带有指示符显示它们来自 claude.ai。</p>
+<p>Anthropic 本身也提供一些 connectors，无需您或管理员添加。在 <a href="artifacts.html#write-a-document-with-claude-docs">Claude Docs</a> 可用的账户上，<code>/mcp</code> 列出 <code>claude.ai Claude Docs</code>，无需设置，当您要求创建供他人使用的文档时，Claude 会使用它。要仅关闭此 connector，请参阅<a href="#disable-claude-ai-connectors">禁用 claude.ai connectors</a>。</p>
+<p>当您的组织在 claude.ai 中管理其身份验证时，Claude Code 在 <code>/mcp</code> 和 <a href="plugins-install.html"><code>/plugin</code></a> 管理器中将 connector 标记为 <code>managed</code>。Managed 状态不会改变 Claude Code 连接到 connector 的方式或应用您组织的 <a href="#organization-controls-on-connector-tools">工具控制</a>。</p>
+<p>您从未登录过的 Connectors 会折叠在 claude.ai 部分末尾的 <code>Show unused connectors</code> 行后面，因此组织预配的列表不会填满面板。选择该行以展开它们。您之前登录过的 connector 即使当前需要重新身份验证，也会保持可见。</p>
+<p>Connectors 来自 claude.ai 仅在您的活跃 <a href="authentication.html#authentication-precedence">身份验证方法</a> 是 claude.ai 订阅登录时才会获取。即使您之前运行过 <code>/login</code>，在以下情况下也不会加载：</p>
+<ul>
+<li><code>ANTHROPIC_API_KEY</code>、<code>ANTHROPIC_AUTH_TOKEN</code> 或 <code>apiKeyHelper</code> 处于活跃状态</li>
+<li>第三方提供商（如 Amazon Bedrock 或 Google Cloud 的 Agent Platform）处于活跃状态</li>
+<li><code>ANTHROPIC_PROFILE</code>、联合变量或活跃的 <a href="authentication.html#anthropic-profiles-and-federation-credentials">Anthropic 配置文件</a> 提供凭据</li>
+<li><code>CLAUDE_CODE_OAUTH_TOKEN</code> 持有来自 <a href="authentication.html#generate-a-long-lived-token"><code>claude setup-token</code></a> 的令牌，该令牌只能进行模型请求</li>
+</ul>
+<p>如果 <code>/mcp</code> 没有列出您添加的 connector，请运行 <code>/status</code> 以确认哪个身份验证方法处于活跃状态。取消设置该环境变量，删除 <code>apiKeyHelper</code> 设置，或 <a href="authentication.html#anthropic-profiles-and-federation-credentials">关闭配置文件</a>，然后运行 <code>/login</code> 以选择您的 claude.ai 账户。</p>
+<p>如果临时网络问题导致您的会话启动时 connector 列表无法加载，Claude Code 会在后台重试最多三次，一旦重试成功，connectors 就会出现。如果它们仍未出现，请重启 Claude Code 以再次获取列表。</p>
+<p>如果 <code>/mcp</code> 显示 connector 为 <code>session token rejected</code>，或其详细视图显示 <a href="errors.html#claude-ai-rejected-the-session-token"><code>claude.ai rejected the session token</code></a>，则 claude.ai 拒绝了您的 Claude Code 登录中的令牌。再次授权 connector 不会清除此状态，因为被拒绝的不是 connector 在 claude.ai 中的自身授权。要清除它：</p>
+<ol>
+<li>运行 <code>/login</code> 以重新登录。</li>
+<li>从 <code>/mcp</code> 重新连接 connector。</li>
+</ol>
+<p>在 v2.1.222 之前，Claude Code 将 connectors 标记为需要身份验证，授权它们无法解决此问题。</p>
+<p>您在 Claude Code 中添加的服务器<a href="#scope-hierarchy-and-precedence">优先于</a>指向相同 URL 的 claude.ai connector。发生这种情况时，<code>/mcp</code> 将 connector 列为隐藏，并显示如何删除重复项（如果您更希望使用 connector）。</p>
+<p>某些 Anthropic 托管的 connectors（如 Microsoft 365、Gmail 和 Google Calendar）不支持来自 Claude Code 的本地 OAuth，因为上游身份提供商仅接受 claude.ai 注册的重定向 URL。当您使用 <code>claude mcp add</code> 或在 <code>.mcp.json</code> 中添加的服务器指向这些主机之一，并且您从 <code>/mcp</code> 或使用 <code>claude mcp login</code> 登录时，Claude Code 会显示 <a href="errors.html#anthropic-hosted-and-doesnt-support-local-oauth"><code>is Anthropic-hosted and doesn't support local OAuth</code></a>，指导您改为在 <a href="https://claude.ai/customize/connectors" target="_blank" rel="noopener">claude.ai/customize/connectors</a> 连接该服务。</p>
+<p>在您使用 <code>claude mcp remove &lt;name&gt;</code> 删除您的条目并在 claude.ai 上连接该服务后，connector 会自动出现在 Claude Code 中。</p>
+<h3 id="how-connectors-reach-claude-code">Connectors 如何到达 Claude Code</h3>
+<p>哪些设置管理 claude.ai 连接器取决于您的会话在哪里运行，因为只有某些会话从 claude.ai 本身获取连接器。下表中的每一行命名连接器在一种会话中的到达方式以及在那里控制它们的内容。桌面应用的 WSL 会话没有对应的行，因为连接器<a href="desktop-wsl.html#check-for-the-terminal-and-connectors">仍在逐步向其推出</a>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">会话运行的位置</th>
+<th style="text-align: left;">Connectors 如何到达</th>
+<th style="text-align: left;">什么管理它们</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">终端、<a href="vs-code.html">VS Code</a>、<a href="jetbrains.html">JetBrains</a> 和 <a href="agent-sdk-claude-code-features.html">Agent SDK</a> 会话</td>
+<td style="text-align: left;">Claude Code 从 claude.ai 获取它们</td>
+<td style="text-align: left;">本部分中的设置和 <a href="managed-mcp.html">managed MCP 配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="claude-code-on-the-web.html">云端会话</a></td>
+<td style="text-align: left;">云主机传入它们</td>
+<td style="text-align: left;">您的 claude.ai 组织设置，加上到达会话的 <a href="managed-mcp.html#policy-based-control-with-allowlists-and-denylists">允许列表和拒绝列表</a> 设置以及运行它的主机上的任何 <code>managed-mcp.json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="desktop.html">桌面应用</a> 的本地和 SSH 会话</td>
+<td style="text-align: left;">桌面应用在进程中传入它们</td>
+<td style="text-align: left;">您组织的 <a href="#organization-controls-on-connector-tools">connector 工具控制</a> 中的 <code>blocked</code> 条目</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#disable-claude-ai-connectors"><code>disableClaudeAiConnectors</code></a>、<code>ENABLE_CLAUDEAI_MCP_SERVERS</code> 和 <a href="settings-reference.html#allowallclaudeaimcps"><code>allowAllClaudeAiMcps</code></a> 仅作用于第一行，即 Claude Code 自身获取的 connectors。其他两行在这些方面与它不同：</p>
+<ul>
+<li><strong>云端会话</strong>：到达会话的 <code>allowedMcpServers</code> 和 <code>deniedMcpServers</code> 条目（例如通过 <a href="server-managed-settings.html">server-managed 设置</a>）也会过滤传入的 connectors。会话的代理重写每个 connector 的 URL，因此为 connector 自身 URL 编写的 <code>serverUrl</code> 模式不会匹配它。要在自托管环境中的 URL 允许列表旁边允许传入的 connectors，请添加 <a href="self-hosted-environments-deploy.html#connector-traffic-leaves-your-network">Connector 流量离开您的网络</a> 下列出的 <code>serverUrl</code> 条目。当运行会话的主机上存在 <code>managed-mcp.json</code> 时（例如 <a href="self-hosted-environments-configuration.html#mcp-servers">self-hosted runner 主机</a>），Claude Code 会删除传入的 connectors，无论您是否设置 <code>allowAllClaudeAiMcps</code>。</li>
+<li><strong>桌面应用本地和 SSH 会话</strong>：桌面应用将 connectors 注册为进程内 <code>type: "sdk"</code> 服务器，没有 MCP 设置或 <code>managed-mcp.json</code> 到达它们。用户通过在 <a href="https://claude.ai/customize/connectors" target="_blank" rel="noopener">claude.ai/customize/connectors</a> 断开连接来将 connector 排除在自己的会话之外。组织阻止 connector 的 <a href="#organization-controls-on-connector-tools">工具</a> 或完全关闭 <a href="desktop.html#admin-console-controls">桌面应用中的 Claude Code</a>。</li>
+</ul>
+<h3 id="organization-controls-on-connector-tools">组织对 connector 工具的控制</h3>
+<p>您的组织可以在 <a href="https://claude.com/docs/connectors" target="_blank" rel="noopener">claude.ai connectors</a> 上设置每个工具的控制。Claude Code 在启动时读取这些设置并在本地强制执行它们，除了桌面应用的 <a href="#how-connectors-reach-claude-code">本地和 SSH 会话</a>。在那里，桌面应用在传入 connector 之前扣留 <code>blocked</code> 工具，<code>ask</code> 设置不会到达 Claude Code，因此它将会话的普通 <a href="permissions.html">权限规则</a> 应用于这些工具，而不是在每次调用时提示。在 Claude Code 自身获取 connectors 的会话中，运行 <code>/mcp</code> 以查看哪个设置适用于 connector 上的每个工具。</p>
+<ul>
+<li><strong>工具设置为 <code>ask</code></strong>：Claude Code 在每次调用时提示，原因是 <code>Your organization requires approval for this tool</code>。即使在 <code>acceptEdits</code>、<code>auto</code> 和 <code>bypassPermissions</code> <a href="permissions.html#permission-modes">权限模式</a>中，提示也会出现。在终端中，该提示不提供记住您选择的选项。匹配该工具的 <a href="permissions.html">Allow 规则</a>也不会跳过提示。在 <code>dontAsk</code> 模式中（从不提示），Claude Code 会改为拒绝调用。</li>
+<li><strong>工具设置为 <code>blocked</code></strong>：Claude Code 在 Claude 看到它之前过滤掉该工具，因此它从不出现在 Claude 的工具列表中。在 Claude Code 自身获取 connectors 的会话中，<code>/mcp</code> 工具列表仍然显示该工具，标记为 <code>disabled by your organization</code>。</li>
+</ul>
+<p>桌面应用和 claude.ai 聊天应用相同的 <code>blocked</code> 设置，因此 Claude 也无法在那里使用被阻止的工具，您无法从桌面应用的会话中扣留工具，同时在聊天中保持其可用。桌面应用跳过其所有工具都被阻止的 connector。</p>
+<h3 id="disable-claude-ai-connectors">禁用 claude.ai connectors</h3>
+<p>Claude Code 仅将 <a href="settings-reference.html#disableclaudeaiconnectors"><code>disableClaudeAiConnectors</code></a> 应用于它 <a href="#how-connectors-reach-claude-code">自身获取</a> 的 connectors，而不是云主机或桌面应用传入的 connectors。要关闭它获取的 connectors，请在任何设置作用域中将该设置项设置为 <code>true</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"disableClaudeAiConnectors"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>此设置使用任何源为真的语义：任何设置源中的 <code>true</code> 优先。已检入的项目 <code>.claude/settings.json</code> 可以选择退出 Claude Code 自身获取的 connectors，但项目级别的 <code>false</code> 无法重新启用用户或策略级别的 <code>true</code> 已禁用的 connectors。通过 <code>--mcp-config</code> 显式传递的服务器不受影响。</p>
+<p>您也可以将 <code>ENABLE_CLAUDEAI_MCP_SERVERS</code> 环境变量设置为 <code>false</code>，这对当前 shell 会话具有相同的效果：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nv">ENABLE_CLAUDEAI_MCP_SERVERS</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span>claude
+</code></pre></div>
+<p>要阻止单个 claude.ai connectors 而不是全部，请按名称或 URL 模式将它们添加到 <a href="managed-mcp.html"><code>deniedMcpServers</code></a> 中。例如，<code>"claude.ai Slack"</code> 的 <code>serverName</code> 条目会阻止 Slack connector。您也可以运行 <code>/mcp</code> 以仅为当前项目切换 Claude Code 获取的任何 connector。</p>
+<h2 id="use-claude-code-as-an-mcp-server">将 Claude Code 用作 MCP 服务器</h2>
+<p>您可以将 Claude Code 本身用作 MCP 服务器，其他应用程序可以连接到它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 启动 Claude 作为 stdio MCP 服务器</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>serve
+</code></pre></div>
+<p>该命令启动时不会打印任何内容。stdio MCP 服务器通过 stdin 和 stdout 进行通信，因此沉默的、被阻止的终端意味着服务器正在运行并等待客户端连接。</p>
+<p>您可以通过将此配置添加到 claude_desktop_config.json 在 Claude Desktop 中使用它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"claude-code"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claude"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p><strong>配置可执行文件路径</strong>：<code>command</code> 字段必须引用 Claude Code 可执行文件。如果 <code>claude</code> 命令不在您系统的 PATH 中，您需要指定可执行文件的完整路径。</p>
+<p>要查找完整路径：</p>
+<p>```bash theme={null}<br />
+which claude</p>
+<pre><code>
+然后在您的配置中使用完整路径：
+
+```json theme={null}
+{
+  &quot;mcpServers&quot;: {
+    &quot;claude-code&quot;: {
+      &quot;type&quot;: &quot;stdio&quot;,
+      &quot;command&quot;: &quot;/full/path/to/claude&quot;,
+      &quot;args&quot;: [&quot;mcp&quot;, &quot;serve&quot;],
+      &quot;env&quot;: {}
+    }
+  }
+}
+</code></pre>
+<p>如果没有正确的可执行文件路径，您会遇到类似 <code>spawn claude ENOENT</code> 的错误。</p>
+<p>[!TIP]</p>
+<p>提示：</p>
+<ul>
+<li>在 Claude Desktop 中，尝试要求 Claude 读取目录中的文件、进行编辑等操作。</li>
+<li>此 MCP 服务器仅向您的 MCP 客户端公开 Claude Code 的工具，因此您自己的客户端负责为各个工具调用实现用户确认。</li>
+</ul></div></div>
+<h3 id="read-a-background-command’s-output-as-an-mcp-client">作为 MCP 客户端读取后台命令的输出</h3>
+<p>当 <code>claude mcp serve</code> 返回的 Bash 或 PowerShell 结果中包含 <code>backgroundOutputPath</code> 字段时，表示该调用使其命令<a href="tools-reference.html#background-commands">在后台</a>继续运行。当您的客户端在调用中设置 <code>run_in_background: true</code> 时，命令会在后台运行。前台命令在达到超时时也可能<a href="tools-reference.html#foreground-commands-that-move-to-the-background">转入后台</a>。</p>
+<p>该字段位于结果的 JSON 文本中，保存命令输出文件的路径。</p>
+<ul>
+<li><strong>读取截至目前的输出</strong>：从您的客户端打开该路径下的文件，或将该路径作为 <code>file_path</code> 传递给服务器的 <a href="tools-reference.html#read-tool-behavior"><code>Read</code></a> 工具</li>
+<li><strong>判断命令何时完成</strong>：在 <code>command</code> 值末尾附加一个输出固定字符串的 <code>echo</code>，例如 <code>npm test; echo DONE</code>。一旦该字符串出现在文件中，即表示命令已完成。如果没有该字符串，则没有任何内容标记结束，因为 Claude Code 不会向文件添加结束行，也不会通知您的客户端。</li>
+<li><strong>读取长输出的末尾部分</strong>：仅传入 <code>file_path</code> 的 <code>Read</code> 会返回<a href="tools-reference.html#large-files">第一页</a>，或在文件超出大小限制时失败。请同时传入 <code>offset</code> 和 <code>limit</code>，这种方式适用于任何文件大小：<br />
+  1. 调用 <code>Read</code>，将 <code>offset</code> 和 <code>limit</code> 都设置为 <code>1</code>，并从结果中获取 <code>totalLines</code><br />
+  2. 再次调用 <code>Read</code>，将 <code>offset</code> 设置为 <code>totalLines</code> 减九，将 <code>limit</code> 设置为 <code>10</code><br />
+  3. 在第二次调用返回的最后十行中查找您的 <code>echo</code> 字符串</li>
+</ul>
+<p><code>backgroundOutputPath</code> 字段需要 Claude Code v2.1.295 或更高版本。</p>
+<h2 id="mcp-output-limits-and-warnings">MCP 输出限制和警告</h2>
+<p>当 MCP 工具产生大量输出时，Claude Code 会帮助管理 token 使用情况，以防止压倒您的对话上下文：</p>
+<ul>
+<li><strong>输出警告阈值</strong>：当任何 MCP 工具输出超过 10,000 个 token 时，Claude Code 会显示警告</li>
+<li><strong>可配置限制</strong>：您可以使用 <code>MAX_MCP_OUTPUT_TOKENS</code> 环境变量调整允许的最大 MCP 输出 token 数</li>
+<li><strong>默认限制</strong>：默认最大值为 25,000 个 token</li>
+<li><strong>范围</strong>：环境变量适用于未声明自己限制的工具。设置了 <a href="#raise-the-limit-for-a-specific-tool"><code>anthropic/maxResultSizeChars</code></a> 的工具会对文本内容使用该值，而不管 <code>MAX_MCP_OUTPUT_TOKENS</code> 设置为什么。返回图像数据的工具仍然受 <code>MAX_MCP_OUTPUT_TOKENS</code> 限制</li>
+<li><strong>超过限制</strong>：当没有图像内容的成功结果超过 token 限制时，Claude Code 会将其保存到文件中，并在对话中用一条消息替换它，该消息指定文件路径，以便 Claude 在需要内容时读取该文件。该文件位于会话的 <code>tool-results</code> 目录中，在 <a href="claude-directory.html#cleaned-up-automatically"><code>~/.claude/projects/</code></a> 下。</li>
+<li><strong>来自 HTTP 和 SSE 服务器的响应大小</strong>：当来自 <a href="#option-1-add-a-remote-http-server">HTTP</a> 或 <a href="#option-2-add-a-remote-sse-server">SSE</a> 服务器的响应超过 16 MiB 时，Claude Code 会停止读取该响应，并且请求会失败。该限制在解压后适用于单个 JSON 响应体或事件流中的单个事件。如果您负责维护该服务器，请减少每个响应返回的数据量以保持在限制之内，例如对结果进行分页</li>
+<li><strong>来自 WebSocket 服务器的消息大小</strong>：当 <a href="#option-4-add-a-remote-websocket-server">WebSocket</a> 服务器发送的单条消息超过 16 MiB 时，Claude Code 会<a href="#mid-session-drops-of-a-remote-server">关闭连接</a>，该服务器上正在进行的调用都会失败。如果您负责维护该服务器，请减少每条消息返回的数据量以保持在限制之内</li>
+</ul>
+<p>已被 Claude Code <a href="#automatic-backgrounding-of-long-tool-calls">移至后台任务</a>的调用会通过任务通知报告其结果。对于在前台完成的调用，还有另外两项限制：</p>
+<ul>
+<li><strong>文本结果的字符限制</strong>：对于未声明 <a href="#raise-the-limit-for-a-specific-tool"><code>anthropic/maxResultSizeChars</code></a> 的工具，当没有图像内容的成功结果长度超过 50,000 个字符时，无论其 token 数是多少，Claude Code 都会将其保存到文件中。设置 <code>MAX_MCP_OUTPUT_TOKENS</code> 不会改变此阈值</li>
+<li><strong>错误结果</strong>：当工具返回标记为 <code>isError: true</code> 的结果时，Claude 会将该结果的文本作为工具的错误消息接收。超过约 11,000 个字符的错误文本只会保留其前 5,000 个和后 5,000 个字符，中间带有一个标记，说明删除了多少个字符</li>
+</ul>
+<p>要更改 token 限制，请在启动 Claude Code 之前在您的 shell 中设置 <code>MAX_MCP_OUTPUT_TOKENS</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">MAX_MCP_OUTPUT_TOKENS</span><span class="o">=</span><span class="m">50000</span>
+claude
+</code></pre></div>
+<h3 id="raise-the-limit-for-a-specific-tool">为特定工具提高限制</h3>
+<p>如果您正在构建 MCP 服务器，可以通过在工具的 <code>tools/list</code> 响应条目中设置 <code>_meta["anthropic/maxResultSizeChars"]</code> 来允许单个工具返回超过默认持久化到磁盘阈值（50,000 个字符）的结果。Claude Code 会将该工具的阈值提高到注释值，最高可达 500,000 个字符的硬上限。</p>
+<p>这对于返回本质上很大但必要的输出的工具很有用，例如数据库 schema 或完整文件树。如果没有注释，超过默认阈值的成功结果会被持久化到磁盘，并在对话中被替换为文件引用。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"get_schema"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Returns the full database schema"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"_meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"anthropic/maxResultSizeChars"</span><span class="p">:</span><span class="w"> </span><span class="mi">200000</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>该注释对文本内容独立于 <code>MAX_MCP_OUTPUT_TOKENS</code> 应用，因此用户不需要为声明它的工具提高环境变量。返回图像数据的工具仍然受 token 限制。</p>
+<h3 id="images-in-tool-results">工具结果中的图像</h3>
+<p>当 MCP 工具返回 PNG、JPEG、GIF 或 WebP 图像时，Claude 会在对话中内联看到该图像。内联副本可能会缩小或压缩以适应模型的图像大小限制。Claude Code 还会将原始字节保存到会话的 <code>tool-results</code> 目录中的文件中，该目录位于 <a href="claude-directory.html#cleaned-up-automatically"><code>~/.claude/projects/</code></a> 下，并向 Claude 提供路径。Claude 随后可以使用 Bash 等工具裁剪、转换或重新使用完整分辨率的文件。</p>
+<p>如果您使用 <a href="cli-reference.html#cli-flags"><code>--no-session-persistence</code></a> 或 <a href="env-vars.html"><code>CLAUDE_CODE_SKIP_PROMPT_HISTORY</code></a> 禁用会话持久化，Claude Code 将不会写入图像文件，Claude 仅接收内联副本。</p>
+<p>将 MCP 图像结果保存到文件需要 Claude Code v2.1.283 或更高版本。</p>
+<h2 id="tool-input-schemas-with-a-root-level-combinator">具有根级组合器的工具输入模式</h2>
+<p>某些 MCP 服务器将工具的输入模式声明为 JSON Schema 联合，在模式的顶级使用 <code>anyOf</code>、<code>oneOf</code> 或 <code>allOf</code>。Claude API 不接受这些关键字在模式根部。它接受嵌套在 <code>properties</code> 内的组合器，Claude Code 会原样发送这些组合器。</p>
+<p>具有根级组合器的工具保持可用。在将工具发送到 API 之前，Claude Code 将模式展平为单个对象，并在工具描述前面添加一句话，告诉 Claude 哪些参数组属于一起：</p>
+<ul>
+<li><code>allOf</code>：来自每个分支的属性被合并，每个分支的 <code>required</code> 列表仍然适用</li>
+<li><code>anyOf</code> 和 <code>oneOf</code>：来自每个分支的属性被合并，每个分支的 <code>required</code> 列表在工具描述中描述，而不是由模式强制执行</li>
+</ul>
+<p>您的服务器接收 Claude 选择的任何参数，因此请继续在服务器端验证组合。</p>
+<p>当 Claude Code 无法生成 API 接受的模式，或在未收到启用重写的远程配置的部署上时，它会跳过该工具，在服务器日志中记录原因，并保持服务器的其他工具可用。</p>
+<h2 id="tools-with-invalid-input-schemas">具有无效输入架构的工具</h2>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>如果会话因按位置指明某个工具的 400 错误而失败，请按照<a href="errors.html#tool-input-schema-is-invalid">工具输入 schema 无效</a>中的步骤操作。</p></div></div>
+<p>如果 MCP 服务器的某个工具的输入 schema 违反了 API 强制执行的两条规则中的任意一条，Claude Code 会排除该工具。服务器的其他工具不受影响。Claude Code 在加载服务器的工具时会检查这两条规则：</p>
+<ul>
+<li>顶级属性名称必须为 1 到 64 个字符长，并且只能使用 ASCII 字母和数字、<code>_</code>、<code>.</code> 和 <code>-</code></li>
+<li>架构必须对 JSON Schema draft 2020-12 元架构有效。Claude Code 对未声明 <code>$schema</code> 的架构和声明 draft 2020-12 的架构应用此检查。声明任何其他方言的架构会跳过此检查，尽管上面的属性名称检查仍然适用</li>
+</ul>
+<p>当 Claude Code 排除一个工具时，它会在服务器的日志中记录原因，并告诉 Claude 它排除了哪些工具以及原因，这样你可以询问 Claude 为什么工具缺失。如果你修复了服务器上的架构，下次 Claude Code 加载服务器的工具时该工具就会回来。</p>
+<p>当<a href="env-vars.html#features-that-need-feature-flag-fetching">功能标志获取</a>处于关闭状态或标志从未到达时（例如在隔离的机器上），违反规则的工具不会被排除：</p>
+<ul>
+<li>Claude 会获得未经更改的工具，服务器的日志会为其记录 <code>input schema would be rejected by the Anthropic API</code></li>
+<li>如果 API 随后拒绝了该 schema，请参阅 <a href="#tools-whose-input-schema-the-api-refuses">API 拒绝其输入 schema 的工具</a></li>
+</ul>
+<p>在 v2.1.216 之前，没有部署运行这些检查。</p>
+<p><a href="#tool-input-schemas-with-a-root-level-combinator">根级组合器处理</a> 是独立的，当标志获取关闭或标志从未到达时保持其自己的行为。</p>
+<h3 id="tools-whose-input-schema-the-api-refuses">API 拒绝其输入 schema 的工具</h3>
+<p>如果调试日志中的某一行包含 <code>the API refused this tool's input schema</code>，则该行指明了一个在请求中被 API 拒绝其 schema 的工具。Claude Code 会重新发送该请求，并将该工具声明为不带参数。</p>
+<ul>
+<li><strong>如果会话因按位置指明某个工具的 400 错误而失败</strong>：请按照<a href="errors.html#tool-input-schema-is-invalid">工具输入 schema 无效</a>中的步骤操作</li>
+<li><strong>如果您使用该服务器</strong>：无需执行任何操作。Claude 仍然可以调用该工具，但看不到其参数</li>
+<li><strong>如果您维护该服务器</strong>：在服务器上修复该工具的输入 schema。该日志行以 <code>The API said:</code> 以及 API 拒绝该 schema 的原因结尾。请验证服务器收到的参数，因为 Claude 在调用该工具时看不到其参数</li>
+</ul>
+<p>在 v2.1.300 之前，每个包含被拒绝 schema 的轮次都会因<a href="errors.html#tool-input-schema-is-invalid">按位置指明该工具的 400 错误</a>而失败。</p>
+<h2 id="tools-with-names-longer-than-128-characters">名称超过 128 个字符的工具</h2>
+<p>如果 <code>/mcp</code> 列出了某个 Claude 无法调用的工具，请检查该工具的完整名称是否超过 128 个字符。在会话中运行 <code>/mcp</code> 并选择该工具，即可查看其完整名称，例如 <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>。当 MCP 工具的完整名称超过 128 个字符时，Claude Code 会将其从发送给 Claude 的工具中排除。Claude API 会拒绝包含此类工具的请求，因此排除该工具可以确保服务器的其他工具正常工作。</p>
+<p>有关指明该工具的消息以及缩短其完整名称的方法，请参阅 <a href="errors.html#mcp-tool-name-over-128-characters">MCP tool name over 128 characters</a>。</p>
+<h2 id="require-approval-for-a-specific-tool">要求对特定工具进行批准</h2>
+<p>如果您正在构建 MCP 服务器，可以通过在工具的 <code>tools/list</code> 响应条目中将 <code>_meta["anthropic/requiresUserInteraction"]</code> 设置为 <code>true</code> 来标记工具需要在每次调用时获得明确批准。该值必须是 JSON 布尔值 <code>true</code>；任何其他值都会被忽略。</p>
+<p>Claude Code 会在每次调用时显示该工具的权限提示，即使在 <code>acceptEdits</code>、<code>auto</code> 和 <code>bypassPermissions</code> <a href="permissions.html#permission-modes">权限模式</a>中也是如此，并且不会为其提供"不再询问"选项。与该工具匹配的 <a href="permissions.html#permission-rule-syntax">允许规则</a>也不会跳过提示。在 <code>dontAsk</code> 模式中（从不提示），Claude Code 会拒绝该调用。</p>
+<p>提示必须到达一个人。在非交互模式下使用 <a href="cli-reference.html#cli-flags"><code>--permission-prompt-tool</code></a>，来自提示工具的标记工具的 <code>allow</code> 结果会被转换为拒绝，消息为 <code>MCP tool requires user interaction; not supported via --permission-prompt-tool</code>。Agent SDK 的 <a href="agent-sdk-permissions.html"><code>canUseTool</code> 回调</a>确实会接收这些调用并可以批准它们，因为您的 SDK 应用程序应该将它们显示给用户。</p>
+<p>将此用于权限提示本身就是目的的工具，例如同意或访问授予步骤，其中自动批准意味着没有人类曾经同意。来自同一服务器的其他工具保持其正常的权限行为。</p>
+<p>以下 <code>tools/list</code> 条目将一个工具标记为始终需要批准。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"grant_access"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Requests access to a protected resource"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"_meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"anthropic/requiresUserInteraction"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>某些使用入口，例如 <a href="remote-control.html">Remote Control</a> 和基于 <a href="agent-sdk-overview.html">Agent SDK</a> 构建的应用程序，通常允许您通过一次点击来批准工具调用。对于使用此注解标记的工具，Claude Code 会禁用一次点击操作并显示工具的完整权限提示，因此批准仍然来自回答提示的人，而不是点击。</p>
+<p>Claude Code 对任何只有终端对话框才能完整呈现的权限请求（例如带有安全警告或远程使用入口无法显示的始终允许选项的请求）也会以相同方式禁用一次点击批准。您需要在终端对话框中回答该请求，而不是从 Remote Control 中回答。</p>
+<h2 id="tool-calls-pending-when-a-connection-closes">标记可安全调用两次的工具</h2>
+<p>如果您构建 MCP 服务器，请标记可以安全调用两次的工具，以便 Claude Code 能够重复在连接关闭时仍处于待处理状态的调用。对于 HTTP 服务器或 <a href="#use-mcp-servers-from-claude-ai">claude.ai 连接器</a>，Claude Code 可以在新连接上重复此类调用一次。Claude Code 不重复的调用可能会失败，并显示 <a href="errors.html#connection-closed-before-the-tool-call-was-answered"><code>connection closed before the tool call was answered</code></a>。</p>
+<p>要标记某个工具，请在其 <code>tools/list</code> 条目中将以下 <code>annotations</code> 之一设置为 <code>true</code>：</p>
+<ul>
+<li><strong><code>idempotentHint</code></strong>：该工具可以更改内容，并且使用相同参数再次调用是安全的</li>
+<li><strong><code>readOnlyHint</code></strong>：该工具不更改任何内容。Claude Code 还会将该工具的调用与其他只读调用并行运行。</li>
+</ul>
+<p>例如，<code>tools/list</code> 条目中的以下字段将 <code>set_issue_status</code> 工具标记为可安全重复：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"set_issue_status"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"annotations"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"idempotentHint"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="respond-to-mcp-elicitation-requests">响应 MCP 引出请求</h2>
+<p>MCP 服务器可以在任务进行中使用引出功能向你请求结构化输入。当服务器需要无法自行获取的信息时，Claude Code 会显示一个交互式对话框，并将你的响应传回服务器。你无需进行任何配置：当服务器请求引出对话框时，它们会自动出现。</p>
+<p>服务器可以通过两种方式请求输入：</p>
+<ul>
+<li><strong>表单模式</strong>：Claude Code 显示一个对话框，其中包含由服务器定义的表单字段（例如，用户名和密码提示）。填写字段并提交。</li>
+<li><strong>URL 模式</strong>：Claude Code 询问是否在浏览器中打开链接。服务器使用此模式处理在终端外完成的流程，例如登录。</li>
+</ul>
+<p>在 URL 模式中，Claude Code 将 URL 作为命令行参数传递给系统的 URL 处理程序，并限制该参数的长度。当 URL 在为命令行转义后超过该限制时，你只能拒绝该请求。每个需要转义的字符，例如 <code>%</code> 或 <code>&amp;</code>，都会计为上限的四倍：其自身字符加上三个转义字符。没有这些字符的 URL 在大约 8,000 个字符处达到上限。主要由百分比转义组成的 URL，其中每三个字符中有一个是 <code>%</code>，在大约 4,000 处达到上限。</p>
+<p>要在不显示对话框的情况下自动响应引出请求，请使用 <a href="hooks.html#elicitation"><code>Elicitation</code> hook</a>。</p>
+<p>如果你正在构建使用引出功能的 MCP 服务器，请参阅 <a href="https://modelcontextprotocol.io/docs/learn/client-concepts#elicitation" target="_blank" rel="noopener">MCP 引出规范</a> 了解协议详情和架构示例。</p>
+<h3 id="elicitation-modes-claude-code-declares">Claude Code 声明的引出模式</h3>
+<p>如果您构建 MCP 服务器，Claude Code 在连接时发送的客户端功能会告知您的服务器可以请求哪些引出模式。Claude Code 在以下连接上声明 <code>elicitation: {form: {}, url: {}}</code>，因此其中任何连接上的服务器都可以请求这两种模式：</p>
+<ul>
+<li>使用 <a href="#mcp-client-runtimes">protocol revision 2026-07-28</a> 的连接</li>
+<li>在较早的协议修订版（2025-11-25 及更早版本）上，与用户 Claude Code MCP 配置中的 stdio、<code>sse</code>、<code>http</code> 和 <code>ws</code> 服务器建立的连接。需要 Claude Code v2.1.287 或更高版本</li>
+</ul>
+<p>在较早修订版上的其他连接中，例如与 <a href="#use-mcp-servers-from-claude-ai">claude.ai 连接器</a>的连接，Claude Code 声明的是不带内容的 <code>elicitation: {}</code>，这仅允许表单模式的引出请求。</p>
+<p>基于 Java MCP SDK 0.17.0 或更早版本构建的服务器可能会拒绝包含 <code>form</code> 和 <code>url</code> 的声明。请参阅 <a href="errors.html#mcp-server-rejected-the-elicitation-capability">MCP server rejected the elicitation capability</a>。</p>
+<h2 id="use-mcp-resources">使用 MCP 资源</h2>
+<p>MCP 服务器可以公开资源，您可以使用 @ 提及来引用这些资源，类似于引用文件的方式。</p>
+<h3 id="reference-mcp-resources">引用 MCP 资源</h3>
+<p><strong>1. 列出可用资源</strong></p>
+<p>在您的提示中键入 <code>@</code> 以查看来自所有连接的 MCP 服务器的可用资源。资源与文件一起出现在自动完成菜单中。</p>
+<p><strong>2. 引用特定资源</strong></p>
+<p>使用格式 <code>@server:protocol://resource/path</code> 来引用资源：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Can you analyze @github:issue://123 and suggest a fix?
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Please review the API documentation at @docs:file://api/authentication
+</code></pre></div>
+<p><strong>3. 多个资源引用</strong></p>
+<p>您可以在单个提示中引用多个资源：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Compare @postgres:schema://users with @docs:file://database/user-model
+</code></pre></div>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>提示：</p>
+<ul>
+<li>引用资源时，资源会自动获取并作为附件包含</li>
+<li>资源路径在 @ 提及自动完成中可进行模糊搜索</li>
+<li>Claude Code 在服务器支持时自动提供列出和读取 MCP 资源的工具</li>
+<li>资源可以包含 MCP 服务器提供的任何类型的内容（文本、JSON、结构化数据等）</li>
+</ul></div></div>
+<p>MCP Apps UI 资源是具有 <code>ui://</code> URI 或 <code>text/html;profile=mcp-app</code> 媒体类型的条目：这些是供主机应用程序呈现的页面，而不是供 Claude 读取的内容。它们不会出现在 <code>@</code> 建议中或资源列表工具的结果中，仅提供 UI 资源的服务器会显示空资源列表。通过其 URI 读取 UI 资源仍然有效。</p>
+<h2 id="scale-with-mcp-tool-search">使用 MCP 工具搜索进行扩展</h2>
+<p>工具搜索通过延迟加载工具定义直到 Claude 需要时，来保持 MCP 上下文使用量较低。只有工具名称和服务器说明在会话开始时加载，因此添加更多 MCP 服务器对您的上下文窗口的影响最小。Claude Code 不会对每个服务器施加固定的工具上限；实际限制是您的上下文窗口预算。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>工具搜索在 Microsoft Foundry <a href="https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options" target="_blank" rel="noopener">部署在 Azure 上的部署</a>上不受支持，这些部署在服务器端拒绝它：Claude Code 检测到拒绝并为该部署改为预先加载 MCP 工具。<a href="#configure-tool-search"><code>ENABLE_TOOL_SEARCH</code></a> 无法覆盖此设置，因为拒绝来自部署本身。</p></div></div>
+<h3 id="tool-search-for-mcp-server-authors">面向 MCP 服务器作者的工具搜索</h3>
+<p>如果您正在构建 MCP 服务器，启用工具搜索后，服务器说明字段会变得更加有用。服务器说明帮助 Claude 理解何时搜索您的工具，类似于 <a href="skills.html">skills</a> 的工作方式。</p>
+<p>添加清晰、描述性的服务器说明，说明：</p>
+<ul>
+<li>您的工具处理的任务类别</li>
+<li>Claude 应该何时搜索您的工具</li>
+<li>您的服务器提供的关键功能</li>
+</ul>
+<p>当工具描述或服务器说明超过以下默认限制时，Claude Code 会将其截断，Claude 只能看到截断点之前的文本：</p>
+<ul>
+<li><strong>服务器说明，以及预先加载的工具的描述</strong>：4,096 个字符</li>
+<li><strong>Claude 通过工具搜索加载的工具的描述</strong>：16,384 个字符</li>
+</ul>
+<p>保持描述和说明简洁，并将关键细节放在开头。当工具搜索将 Claude 的查询与工具描述进行匹配时，它只读取较短限制范围内的部分，因此也要将 Claude 会搜索的词语放在开头附近。只要工具未被延迟，它就会预先加载并沿用较短的限制，例如当<a href="#configure-tool-search">工具搜索关闭</a>时、当该工具被<a href="#per-tool-alwaysload">标记为预先加载</a>时，或当其服务器<a href="#exempt-a-server-from-deferral">豁免延迟</a>时。</p>
+<p>在 v2.1.296 之前，较短的限制为 2,048 个字符；在 v2.1.295 之前，该限制适用于每个工具描述，包括通过工具搜索加载的工具描述。</p>
+<h4 id="change-the-description-length-limits">更改描述长度限制</h4>
+<p>要更改会话中 MCP 服务器的 4,096 和 16,384 个字符的<a href="#for-mcp-server-authors">默认限制</a>，请将 <a href="env-vars.html#variables"><code>CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH</code></a> 设置为字符数。Claude Code 会将该数值同时用于这两个限制。例如，设置为 <code>8192</code> 时，会提高服务器说明和预先加载的工具描述的 4,096 个字符限制，并降低通过工具搜索加载的工具描述的 16,384 个字符限制。此变量需要 Claude Code v2.1.280 或更高版本。</p>
+<p>Anthropic 在 <code>api.anthropic.com</code> 托管的部分 MCP 服务器，其描述和说明会完整地传达给 Claude，设置此变量不会截断它们。</p>
+<h4 id="per-tool-alwaysload">将工具标记为预先加载或保持延迟</h4>
+<p>要控制服务器中某个工具的加载方式，请在该工具的 <code>_meta</code> 对象中设置 <code>"anthropic/alwaysLoad"</code>。将您的服务器添加到 Claude Code 的人也可以在其配置中为整个服务器设置 <a href="#exempt-a-server-from-deferral"><code>alwaysLoad</code></a>，并且其设置可以覆盖您的设置：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您的工具的值</th>
+<th style="text-align: left;">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">该工具预先加载。启动不会因为此值而等待您的服务器。配置您的服务器的人仍然可以<a href="#defer-a-servers-tools">延迟其所有工具</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>false</code></td>
+<td style="text-align: left;">当其配置设置了 <code>"alwaysLoad": true</code> 时，该工具保持延迟。这适用于通过 <a href="cli-reference.html#cli-flags"><code>--mcp-config</code></a> 传入、由 <a href="agent-sdk-mcp.html#in-code">Agent SDK 应用程序</a>提供或由<a href="#plugin-provided-mcp-servers">插件</a>提供的服务器。在其他服务器上，该工具预先加载。需要 Claude Code v2.1.285 或更高版本</td>
+</tr>
+</tbody>
+</table>
+<p>以下 <code>tools/list</code> 条目请求预先加载一个工具：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"search_tickets"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Searches the ticket tracker by keyword"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"_meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"anthropic/alwaysLoad"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="configure-tool-search">配置工具搜索</h3>
+<p>工具搜索默认启用：MCP 工具被延迟并按需发现。</p>
+<p>设置 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS</code></a> 保持工具搜索关闭。您无法通过自己设置 <code>ENABLE_TOOL_SEARCH</code> 来覆盖它。在 Claude Code v2.1.227 或更高版本上，您的组织可以通过<a href="managed-settings.html">托管设置</a>在设置此变量的情况下保持工具搜索开启。在<a href="hipaa-setup.html#check-how-developers-sign-in-and-connect">获得 HIPAA 配置</a>的会话中，工具搜索处于关闭状态，<code>ENABLE_TOOL_SEARCH</code> 和托管设置都无法将其重新开启。<a href="llm-gateway-protocol.html#disable-pre-release-capabilities">禁用预发布功能</a> 涵盖了覆盖应用的位置以及变量剥离的内容。</p>
+<p>Claude Code 在 Claude Opus 4、Claude Sonnet 4、Claude Haiku 4.5 及更高版本的模型上使用工具搜索；在 Google Cloud 的 Agent Platform 上，则在 Opus 4.5、Sonnet 4.5、Haiku 4.5 及更高版本的模型上使用。在更早的模型上，Claude Code 预先加载所有 MCP 工具，且 <code>ENABLE_TOOL_SEARCH=true</code> 不会覆盖此行为。</p>
+<p>在 Google Cloud 的 Agent Platform 上，Claude Code 按模型代数决定：</p>
+<ul>
+<li><strong>Claude Opus 4.5、Sonnet 4.5、Haiku 4.5 及更高版本</strong>：工具搜索默认开启，与 Anthropic API 上相同。</li>
+<li><strong>早期 Agent Platform 模型</strong>：Claude Code 预先加载所有 MCP 工具，因为它们的服务堆栈拒绝所需的 beta 标头。<code>ENABLE_TOOL_SEARCH=true</code> 不会覆盖此设置。</li>
+</ul>
+<p>在 v2.1.221 之前，Claude Code 在 Google Cloud 的 Agent Platform 上为所有模型禁用工具搜索，除非您设置 <code>ENABLE_TOOL_SEARCH=true</code>。</p>
+<p>使用 <code>ENABLE_TOOL_SEARCH</code> 环境变量控制工具搜索行为：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">值</th>
+<th style="text-align: left;">行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">(未设置)</td>
+<td style="text-align: left;">所有 MCP 工具延迟并按需加载。在早于 Opus 4 和 Sonnet 4 的模型上、在<a href="#configure-tool-search">早期 Agent Platform 模型</a>上，以及在部署在 Azure 上的 Microsoft Foundry 部署上，改为预先加载</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">MCP 工具延迟，回退情况与（未设置）相同</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>auto</code></td>
+<td style="text-align: left;">阈值模式。原本会被延迟的工具在其定义总计少于上下文窗口的 10% 时预先加载。达到 10% 或更多时，工具搜索会开启，即使总量之后降至 10% 以下，这些工具也可能<a href="#tools-that-stay-deferred-below-the-threshold">保持延迟</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>auto:N</code></td>
+<td style="text-align: left;">具有自定义百分比的阈值模式，其中 <code>N</code> 是 0-100。例如，<code>auto:5</code> 表示 5%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>false</code></td>
+<td style="text-align: left;">所有 MCP 工具预先加载，无延迟</td>
+</tr>
+</tbody>
+</table>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 使用自定义 5% 阈值</span>
+<span class="nv">ENABLE_TOOL_SEARCH</span><span class="o">=</span>auto:5<span class="w"> </span>claude
+
+<span class="c1"># 完全禁用工具搜索</span>
+<span class="nv">ENABLE_TOOL_SEARCH</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span>claude
+</code></pre></div>
+<p>或在您的 <a href="settings-reference.html#env">settings.json <code>env</code> 字段</a> 中设置该值。</p>
+<p>您也可以特别禁用 <code>ToolSearch</code> 工具：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"deny"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ToolSearch"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>如果您拒绝 <code>ToolSearch</code> 或未将其包含在 <a href="cli-reference.html#cli-flags"><code>--tools</code></a> 中，MCP 工具会改为预先加载，但请求仍可能携带一个占位的 <code>defer_loading</code> 条目。如果网关拒绝该条目，请参阅<a href="#tool-search-through-a-gateway">通过 LLM 网关使用工具搜索</a>。</p>
+<h4 id="tool-search-through-a-gateway">通过 LLM 网关使用工具搜索</h4>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>以下情况在其他地方介绍：</p>
+<ul>
+<li><strong>您已设置 <code>CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS</code></strong>：请参阅<a href="#configure-tool-search">它如何影响工具搜索</a></li>
+<li><strong>请求失败，且错误中提到 <code>defer_loading</code> 或 <code>tool_reference</code></strong>：请参阅 <a href="errors.html#extra-inputs-are-not-permitted">Extra inputs are not permitted</a></li>
+</ul></div></div>
+<p>当 <code>ANTHROPIC_BASE_URL</code> 指向网关时，工具搜索默认开启，因此请求会包含 <code>defer_loading</code> 工具字段和 <code>tool_reference</code> 块，供网关转发。工具搜索开启时，MCP 工具会被<a href="#scale-with-mcp-tool-search">延迟</a>。如需改为预先加载所有工具，请在 shell 或您的 <a href="settings-reference.html#env">settings <code>env</code></a> 中设置 <code>ENABLE_TOOL_SEARCH=false</code>。在 v2.1.304 之前，在网关后面工具搜索处于关闭状态，除非 <code>ENABLE_TOOL_SEARCH</code> 为 <code>true</code>、<code>auto</code> 或 <code>auto:N</code>。</p>
+<p>在 v2.1.305 或更高版本上，当出现原因无法识别的 <code>400</code> 或 <code>422</code> 时，Claude Code 可以<a href="llm-gateway-protocol.html#retry-without-tool-search">在不使用工具搜索的情况下重试请求</a>。重试成功时，屏幕上不会显示任何内容，您也无需执行任何操作：MCP 工具会改为预先加载。Claude Code 稍后会再次尝试工具搜索，代价是再产生一次被拒绝的请求。要跳过这些请求，请设置 <code>ENABLE_TOOL_SEARCH=false</code>。</p>
+<h4 id="tools-that-stay-deferred-below-the-threshold">低于 <code>ENABLE_TOOL_SEARCH=auto</code> 阈值时仍保持延迟的工具</h4>
+<p>如果 <a href="commands.html#all-commands"><code>/context</code></a> 将工具标记为 <code>(deferred)</code> 或 <code>(loaded on-demand)</code>，尽管它们的定义总计低于 <code>auto</code> 阈值，这说明工具搜索在此对话中已经开启并保持开启。总量之后可能会下降，例如在您恢复会话后 MCP 服务器重新连接期间。您无需执行任何操作：当任务需要时，Claude 会加载其中的每个工具。</p>
+<h3 id="exempt-a-server-from-deferral">豁免服务器不延迟</h3>
+<p>如果服务器的工具应该始终对 Claude 可见而无需搜索步骤，请在该服务器的配置中将 <code>alwaysLoad</code> 设置为 <code>true</code>。之后，该服务器的工具会加载到上下文中，无论 <code>ENABLE_TOOL_SEARCH</code> 设置如何。对于 Claude 在每一轮都需要的少量工具使用此选项，因为每个预先加载的工具会消耗本来可用于您的对话的上下文。</p>
+<p>以下 <code>.mcp.json</code> 条目豁免一个 HTTP 服务器，同时保持其他服务器延迟：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"core-tools"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://mcp.example.com/mcp"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"alwaysLoad"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>alwaysLoad</code> 字段在所有服务器类型上都可用。</p>
+<p>设置 <code>alwaysLoad: true</code> 也会使启动等待服务器的工具，上限为标准 5 秒连接超时，因为它们必须在构建第一个提示词时存在。具有有效 <a href="#server-status-detail"><code>cached</code> 条目</a> 的远程服务器从缓存提供其工具而无需连接，因此它不会延迟启动。其他服务器默认在后台连接；设置 <a href="env-vars.html"><code>MCP_CONNECTION_NONBLOCKING=0</code></a> 也使启动等待它们。</p>
+<h3 id="defer-a-servers-tools">延迟服务器的工具</h3>
+<p>要让服务器的所有工具都保持在工具搜索之后，请在 MCP 配置中该服务器的条目里设置 <code>"alwaysLoad": false</code>。这包括服务器作者已<a href="#per-tool-alwaysload">标记为预先加载</a>的工具。如果您省略 <code>alwaysLoad</code>，这些已标记的工具会预先加载。需要 Claude Code v2.1.287 或更高版本。</p>
+<h2 id="use-mcp-prompts-as-commands">将 MCP 提示用作命令</h2>
+<p>MCP 服务器可以公开提示，这些提示在 Claude Code 中作为命令可用。</p>
+<p>来自名为 <code>anthropic-skills</code> 的服务器的提示不会出现，因为 Claude Code <a href="skills.html#names-reserved-for-synced-skills">保留该名称</a>用于从 claude.ai 同步的 skills。该服务器的工具仍然有效。在您的 MCP 配置中重命名服务器以列出其提示。</p>
+<h3 id="execute-mcp-prompts">执行 MCP 提示</h3>
+<p><strong>1. 发现可用的提示</strong></p>
+<p>输入 <code>/</code> 以查看可用的命令，包括来自 MCP 服务器的命令。Claude Code 将每个 MCP 提示列为 <code>/servername:promptname (MCP)</code>。输入 <code>/mcp__servername__promptname</code> 也可以运行它。</p>
+<p><strong>2. 执行没有参数的提示</strong></p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/mcp__github__list_prs
+</code></pre></div>
+<p><strong>3. 执行带有参数的提示</strong></p>
+<p>许多提示接受参数。在命令后面用空格分隔传递它们。Claude Code 在空格处分割参数，因此每个参数是单个令牌：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/mcp__github__pr_review 456
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/mcp__jira__create_issue login-bug high
+</code></pre></div>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>提示：</p>
+<ul>
+<li>MCP 提示从连接的服务器动态发现</li>
+<li>参数根据提示的定义参数进行解析</li>
+<li>提示结果直接注入到对话中</li>
+<li>在 <code>/mcp__servername__promptname</code> 形式中，Claude Code 将服务器名称中 <code>A-Z</code>、<code>a-z</code>、<code>0-9</code>、<code>_</code> 和 <code>-</code> 之外的任何字符替换为 <code>_</code>，并使用服务器声明的提示名称</li>
+</ul></div></div>
+<h2 id="managed-mcp-configuration">托管 MCP 配置</h2>
+<p>对于需要集中控制用户可以连接到哪些 MCP 服务器的组织，请参阅<a href="managed-mcp.html">托管 MCP 配置</a>。它涵盖使用 <code>managed-mcp.json</code> 部署固定服务器集、使用 <code>managedMcpServers</code> 为每个用户提供服务器、使用 <code>allowedMcpServers</code> 和 <code>deniedMcpServers</code> 限制服务器，以及当服务器被阻止时用户看到的内容。</p></article>
+    <div class="pager"><a class="pager-link prev" href="mcp-quickstart.html"><span class="pager-dir">← 上一页</span><span class="pager-name">连接到 MCP 服务器</span></a><a class="pager-link next" href="skills.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用 skills 扩展 Claude</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#what-you-can-do-with-mcp">使用 MCP 可以做什么</a><a class="toc-l2" href="#find-and-build-mcp-servers">查找和构建 MCP 服务器</a><a class="toc-l2" href="#installing-mcp-servers">安装 MCP 服务器</a><a class="toc-l3" href="#option-1-add-a-remote-http-server">选项 1：添加远程 HTTP 服务器</a><a class="toc-l3" href="#option-2-add-a-remote-sse-server">选项 2：添加远程 SSE 服务器</a><a class="toc-l3" href="#option-3-add-a-local-stdio-server">选项 3：添加本地 stdio 服务器</a><a class="toc-l3" href="#option-4-add-a-remote-websocket-server">选项 4：添加远程 WebSocket 服务器</a><a class="toc-l3" href="#add-a-server-from-setup-instructions-written-for-another-client">从为另一个客户端编写的设置说明添加服务器</a><a class="toc-l3" href="#managing-your-servers">管理您的服务器</a><a class="toc-l3" href="#disable-a-server-without-removing-it">禁用服务器而不删除它</a><a class="toc-l3" href="#mcp-client-runtimes">MCP 客户端运行时</a><a class="toc-l3" href="#dynamic-tool-updates">动态工具更新</a><a class="toc-l3" href="#automatic-reconnection">自动重新连接</a><a class="toc-l3" href="#push-messages-with-channels">使用频道推送消息</a><a class="toc-l3" href="#time-limits-on-mcp-tool-calls">MCP 工具调用的时间限制</a><a class="toc-l3" href="#automatic-backgrounding-of-long-tool-calls">长工具调用的自动后台处理</a><a class="toc-l3" href="#mcp-tasks-that-run-on-the-server">在服务器上运行的 MCP 任务</a><a class="toc-l3" href="#mcp-tasks-for-server-authors">面向服务器开发者的 MCP 任务</a><a class="toc-l3" href="#plugin-provided-mcp-servers">插件提供的 MCP 服务器</a><a class="toc-l2" href="#mcp-installation-scopes">MCP 安装作用域</a><a class="toc-l3" href="#local-scope">Local 作用域</a><a class="toc-l3" href="#project-scope">Project 作用域</a><a class="toc-l3" href="#user-scope">User 作用域</a><a class="toc-l3" href="#scope-hierarchy-and-precedence">作用域层级与优先级</a><a class="toc-l3" href="#environment-variable-expansion-in-mcp-json">.mcp.json 中的环境变量扩展</a><a class="toc-l2" href="#practical-examples">实际示例</a><a class="toc-l3" href="#example-connect-to-github-for-code-reviews">示例：连接到 GitHub 进行代码审查</a><a class="toc-l3" href="#example-query-your-postgresql-database">示例：查询您的 PostgreSQL 数据库</a><a class="toc-l2" href="#authenticate-with-remote-mcp-servers">使用远程 MCP 服务器进行身份验证</a><a class="toc-l3" href="#authenticate-from-the-command-line">从命令行进行身份验证</a><a class="toc-l3" href="#use-a-fixed-oauth-callback-port">使用固定的 OAuth 回调端口</a><a class="toc-l3" href="#use-pre-configured-oauth-credentials">使用预配置的 OAuth 凭据</a><a class="toc-l3" href="#override-oauth-metadata-discovery">覆盖 OAuth 元数据发现</a><a class="toc-l3" href="#restrict-oauth-scopes">限制 OAuth 作用域</a><a class="toc-l3" href="#use-oauth-with-a-server-behind-an-authenticating-proxy">对位于需要身份验证的代理后面的服务器使用 OAuth</a><a class="toc-l3" href="#use-dynamic-headers-for-custom-authentication">使用动态标头进行自定义身份验证</a><a class="toc-l3" href="#sign-in-to-an-mcp-server-behind-a-gateway-that-requires-a-header">登录位于需要标头的网关后面的 MCP 服务器</a><a class="toc-l2" href="#add-mcp-servers-from-json-configuration">从 JSON 配置添加 MCP 服务器</a><a class="toc-l2" href="#import-mcp-servers-from-claude-desktop">从 Claude Desktop 导入 MCP 服务器</a><a class="toc-l2" href="#use-mcp-servers-from-claude-ai">使用来自 claude.ai 的 MCP 服务器</a><a class="toc-l3" href="#how-connectors-reach-claude-code">Connectors 如何到达 Claude Code</a><a class="toc-l3" href="#organization-controls-on-connector-tools">组织对 connector 工具的控制</a><a class="toc-l3" href="#disable-claude-ai-connectors">禁用 claude.ai connectors</a><a class="toc-l2" href="#use-claude-code-as-an-mcp-server">将 Claude Code 用作 MCP 服务器</a><a class="toc-l3" href="#read-a-background-command’s-output-as-an-mcp-client">作为 MCP 客户端读取后台命令的输出</a><a class="toc-l2" href="#mcp-output-limits-and-warnings">MCP 输出限制和警告</a><a class="toc-l3" href="#raise-the-limit-for-a-specific-tool">为特定工具提高限制</a><a class="toc-l3" href="#images-in-tool-results">工具结果中的图像</a><a class="toc-l2" href="#tool-input-schemas-with-a-root-level-combinator">具有根级组合器的工具输入模式</a><a class="toc-l2" href="#tools-with-invalid-input-schemas">具有无效输入架构的工具</a><a class="toc-l3" href="#tools-whose-input-schema-the-api-refuses">API 拒绝其输入 schema 的工具</a><a class="toc-l2" href="#tools-with-names-longer-than-128-characters">名称超过 128 个字符的工具</a><a class="toc-l2" href="#require-approval-for-a-specific-tool">要求对特定工具进行批准</a><a class="toc-l2" href="#tool-calls-pending-when-a-connection-closes">标记可安全调用两次的工具</a><a class="toc-l2" href="#respond-to-mcp-elicitation-requests">响应 MCP 引出请求</a><a class="toc-l3" href="#elicitation-modes-claude-code-declares">Claude Code 声明的引出模式</a><a class="toc-l2" href="#use-mcp-resources">使用 MCP 资源</a><a class="toc-l3" href="#reference-mcp-resources">引用 MCP 资源</a><a class="toc-l2" href="#scale-with-mcp-tool-search">使用 MCP 工具搜索进行扩展</a><a class="toc-l3" href="#tool-search-for-mcp-server-authors">面向 MCP 服务器作者的工具搜索</a><a class="toc-l3" href="#configure-tool-search">配置工具搜索</a><a class="toc-l3" href="#exempt-a-server-from-deferral">豁免服务器不延迟</a><a class="toc-l3" href="#defer-a-servers-tools">延迟服务器的工具</a><a class="toc-l2" href="#use-mcp-prompts-as-commands">将 MCP 提示用作命令</a><a class="toc-l3" href="#execute-mcp-prompts">执行 MCP 提示</a><a class="toc-l2" href="#managed-mcp-configuration">托管 MCP 配置</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

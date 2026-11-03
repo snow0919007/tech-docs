@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent SDK 故障排除 · Claude Code 中文文档</title>
+<meta name="description" content="当 Claude Code CLI 无法启动、CLI 进程退出或成功结果到达但没有结构化输出时，修复 Agent SDK 错误。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-sdk/troubleshooting">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-sdk/troubleshooting" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link active" href="agent-sdk-troubleshooting.html" aria-current="page">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>Agent SDK</span> <span class="sep">/</span> <span>Agent SDK</span></div>
+    <article class="prose" id="article"><h1 id="agent-sdk">Agent SDK 故障排除</h1>
+<blockquote>
+<p>当 Claude Code CLI 无法启动、CLI 进程退出或成功结果到达但没有结构化输出时，修复 Agent SDK 错误。</p>
+</blockquote>
+<p>本页面涵盖 CLI 启动、CLI 进程退出和结构化输出中的 Agent SDK 错误。本页面上的条目按您看到的错误进行分类。每个条目说明了原因和解决方法。</p>
+<p>与特定功能相关的症状，例如 hook 未触发或 skill 未被使用，在该功能的页面上有故障排除部分。该表列出了涵盖每个症状的部分或页面：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">症状</th>
+<th style="text-align: left;">转到</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">找不到 Skills、skill 未被使用、<code>Invalid skill name</code> 错误</td>
+<td style="text-align: left;"><a href="agent-sdk-skills.html#troubleshooting">Skills 故障排除</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP 服务器显示 <code>failed</code> 状态、工具未被调用、SDK MCP 服务器中缺少某个工具、连接超时、工具输出超过允许的最大 token 数</td>
+<td style="text-align: left;"><a href="agent-sdk-mcp.html#troubleshooting">MCP 故障排除</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Plugin 未加载、plugin skills 未出现</td>
+<td style="text-align: left;"><a href="agent-sdk-plugins.html#troubleshooting">Plugins 故障排除</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude 未委派给子代理、基于文件系统的代理未加载</td>
+<td style="text-align: left;"><a href="agent-sdk-subagents.html#troubleshooting">Subagents 故障排除</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Checkpointing 选项未被识别、没有 UUID 的用户消息、<code>No file checkpoint found</code>、<code>File rewinding is not enabled</code>、<code>ProcessTransport is not ready for writing</code></td>
+<td style="text-align: left;"><a href="agent-sdk-file-checkpointing.html#troubleshooting">文件 checkpointing 故障排除</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Hook 未触发、matcher 未按预期过滤、hook 超时、工具被意外阻止、修改的输入未应用、Python 中不可用的会话 hooks、子代理权限提示倍增、与子代理的递归 hook 循环、<code>systemMessage</code> 未出现在输出中</td>
+<td style="text-align: left;"><a href="agent-sdk-hooks.html#fix-common-issues">修复常见问题</a>（在 hooks 页面上）</td>
+</tr>
+<tr>
+<td style="text-align: left;">在您的机器上工作的代理在已部署的服务或容器中失败</td>
+<td style="text-align: left;"><a href="agent-sdk-hosting.html#troubleshoot-deployment-failures">故障排除部署失败</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Not logged in</code>、<code>Invalid API key</code>、<code>API Error</code>、<code>429</code>、<code>There's an issue with the selected model</code></td>
+<td style="text-align: left;"><a href="errors.html#find-your-error">错误参考</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLINotFoundError</code>、<code>CLIConnectionError</code>、<code>ProcessError</code>、<code>Claude Code process exited with code N</code>、<code>Claude Code returned an error result</code>、<code>structured_output</code> 为 <code>None</code></td>
+<td style="text-align: left;">本页面上的 <a href="#cli-startup">CLI 启动</a>、<a href="#cli-process-exit">CLI 进程退出</a> 和 <a href="#structured-outputs">结构化输出</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="cli-startup">CLI 启动</h2>
+<h3 id="clinotfounderror-claude-code-not-found">CLINotFoundError: Claude Code not found</h3>
+<p>Python SDK 将 Claude Code CLI 作为子进程启动。当它找不到 <code>claude</code> 可执行文件时，连接会失败并显示 <code>CLINotFoundError</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Claude Code not found at: /your/configured/path
+</code></pre></div>
+<p>当您设置 <code>ClaudeAgentOptions(cli_path=...)</code> 并且它指向一个不存在的文件时，消息会包含配置的路径。如果没有 <code>cli_path</code>，SDK 会搜索您的 <code>PATH</code> 和常见安装位置，消息会包含您平台的安装说明。</p>
+<p>要修复它：</p>
+<ul>
+<li>如果尚未安装 Claude Code，请安装它。请参阅 <a href="setup.html#install-claude-code">安装 Claude Code</a> 了解您平台上的命令。</li>
+<li>如果您设置了 <code>cli_path</code>，请确认该文件存在且是 <code>claude</code> 可执行文件。</li>
+<li>如果您依赖 <code>PATH</code> 解析，请确认 <code>claude --version</code> 在您的应用程序运行的同一环境中有效。您从 IDE 或服务管理器等外部启动的进程通常使用不同的 <code>PATH</code>。</li>
+</ul>
+<p>TypeScript SDK 在其捆绑的平台包和您在 <code>pathToClaudeCodeExecutable</code> 中设置的路径中查找 CLI。匹配您看到的消息：</p>
+<ul>
+<li><code>Native CLI binary for &lt;platform&gt;-&lt;arch&gt; not found</code>：捆绑的平台包缺失，最常见的原因是安装跳过了可选依赖项。重新安装 <code>@anthropic-ai/claude-agent-sdk</code> 而不跳过可选依赖项，或将 <code>pathToClaudeCodeExecutable</code> 指向 <a href="setup.html#install-claude-code">原生安装</a>。在使用 <code>bun build --compile</code> 构建的单文件可执行文件中，同一消息有不同的原因和修复方法。请参阅 <a href="agent-sdk-typescript.html#compile-to-a-single-executable">编译为单个可执行文件</a>。</li>
+<li><code>Claude Code native binary not found at &lt;path&gt;</code> 或 <code>Claude Code executable not found at &lt;path&gt;. Is options.pathToClaudeCodeExecutable set?</code>：已解析路径处的文件缺失，或进程无法访问它。确认该文件存在于该路径处，并且进程可以访问它。</li>
+</ul>
+<h3 id="cliconnectionerror-refusing-to-execute-batch-script">CLIConnectionError: Refusing to execute batch script</h3>
+<p>在 Windows 上，当 Python SDK 使用的 CLI 路径是 <code>.bat</code> 或 <code>.cmd</code> 批处理脚本（包括 npm 安装创建的 <code>claude.cmd</code> 垫片）时，连接会失败并显示 <code>CLIConnectionError</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Refusing to execute batch script 'C:\\Users\\you\\AppData\\Roaming\\npm\\claude.cmd': Windows runs .bat/.cmd files via cmd.exe, which can execute commands injected through CLI arguments, and no reliable escaping for cmd.exe exists. Use a native claude executable instead: install Claude Code natively (irm https://claude.ai/install.ps1 | iex), point ClaudeAgentOptions(cli_path=...) at a claude.exe, or install the claude-agent-sdk wheel for a platform that bundles claude.exe (e.g. Windows x64).
+</code></pre></div>
+<p>这种拒绝是有意的安全加固，而不是破损的安装。Windows 通过将生成重写为 <code>cmd.exe /c</code> 调用来运行批处理脚本，而 <code>cmd.exe</code> 在执行时重新解析整个命令行，因此参数值可以执行注入的命令。</p>
+<p>大多数 Windows 安装永远不会遇到此错误。Windows x64 版本的 <code>claude-agent-sdk</code> 捆绑了 <code>claude.exe</code>，SDK 优先使用捆绑的 CLI，然后是它可以发现的任何原生 <code>claude.exe</code>，最后才回退到批处理垫片。您在两种情况下会看到拒绝：</p>
+<ul>
+<li>您将 <code>ClaudeAgentOptions(cli_path=...)</code> 设置为 <code>.bat</code> 或 <code>.cmd</code> 文件，例如 npm 的 <code>claude.cmd</code> 垫片。</li>
+<li>您的安装没有捆绑或原生 <code>claude.exe</code>，例如 ARM64 Windows 上的源代码安装，其中您的 <code>PATH</code> 上唯一的 <code>claude</code> 是 npm 垫片。</li>
+</ul>
+<p>要修复它，请给 SDK 一个原生可执行文件而不是批处理脚本：</p>
+<ul>
+<li>如果您设置了 <code>ClaudeAgentOptions(cli_path=...)</code>，请将其指向 <code>claude.exe</code> 或删除该选项。当设置了 <code>cli_path</code> 时，SDK 会跳过发现，因此仅原生安装无法生效。</li>
+<li>在 PowerShell 中原生安装 Claude Code：<code>irm https://claude.ai/install.ps1 | iex</code></li>
+<li>在 x64 Windows 上，安装捆绑 <code>claude.exe</code> 的 <code>claude-agent-sdk</code> wheel。</li>
+</ul>
+<p>在 <code>claude-agent-sdk</code> 0.2.124 之前，Python SDK 通过 <code>cmd.exe</code> 生成批处理脚本而没有此检查。</p>
+<h3 id="cliconnectionerror-failed-to-start-claude-code">CLIConnectionError: Failed to start Claude Code</h3>
+<p>SDK 在已解析的路径处找到了一个文件，但无法启动它。Python 将这些失败作为 <code>CLIConnectionError</code> 引发。TypeScript 拒绝消息迭代并显示没有 SDK 类的错误。下表将每条消息映射到它告诉您的内容。匹配您看到的消息：</p>
+<table>
+<thead>
+<tr>
+<th>消息</th>
+<th>SDK</th>
+<th>它告诉您什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Failed to start Claude Code: &lt;detail&gt;</code></td>
+<td>Python</td>
+<td>消息的其余部分是操作系统自己的错误</td>
+</tr>
+<tr>
+<td><code>Claude Code executable at &lt;path&gt; exists but failed to launch</code></td>
+<td>TypeScript</td>
+<td>配置路径处的脚本无法运行</td>
+</tr>
+<tr>
+<td><code>Claude Code native binary at &lt;path&gt; exists but failed to launch</code></td>
+<td>TypeScript</td>
+<td>二进制文件无法运行，消息后附加了 libc 建议</td>
+</tr>
+<tr>
+<td><code>Failed to spawn Claude Code process: &lt;detail&gt;</code></td>
+<td>TypeScript</td>
+<td>任何其他启动失败</td>
+</tr>
+</tbody>
+</table>
+<p>在两个 SDK 中，通常的原因是已解析的路径指向无法运行的内容，例如文本文件、目录或没有执行权限的文件。将原生二进制消息的 libc 建议作为一个可能的原因来阅读。</p>
+<p>要在任一 SDK 中修复它：</p>
+<ul>
+<li>确认配置的路径指向 <code>claude</code> 可执行文件本身，并且该文件具有执行权限。</li>
+<li>如果您不需要自定义路径，请在 Python 中删除 <code>cli_path</code> 或在 TypeScript 中删除 <code>pathToClaudeCodeExecutable</code>，以便 SDK 自己找到 CLI，优先使用其捆绑的副本。</li>
+<li>当失败的二进制文件是容器镜像中 SDK 的捆绑副本时，在镜像构建期间重新安装 SDK，以便捆绑的二进制文件与容器的平台匹配，或为其运行的架构重建镜像。通常的原因是与容器架构或 libc 不匹配的二进制文件，或在镜像构建中失去执行权限的二进制文件。</li>
+</ul>
+<h3 id="cliconnectionerror-not-connected">CLIConnectionError: Not connected</h3>
+<p>在客户端连接之前或断开连接之后，在 Python 中调用 <code>ClaudeSDKClient</code> 方法会引发带有此消息的 <code>CLIConnectionError</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Not connected. Call connect() first.
+</code></pre></div>
+<p>按照消息所说的做。要么在任何其他客户端方法之前调用 <code>await client.connect()</code>，要么使用 <code>async with ClaudeSDKClient() as client:</code> 打开客户端，它在进入时连接。</p>
+<h2 id="cli-process-exit">CLI 进程退出</h2>
+<p>本部分中的条目意味着 Claude Code 进程在您的应用程序使用它时结束。您看到的错误取决于 SDK 语言以及 CLI 在退出前是否报告了错误结果。</p>
+<h3 id="processerror-command-failed-with-exit-code">ProcessError: Command failed with exit code</h3>
+<p>当 Claude Code 进程以非零代码退出时，Python SDK 会引发 <code>ProcessError</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Command failed with exit code 1 (exit code: 1)
+Error output: Check stderr output for details
+</code></pre></div>
+<p>消息两次说明了退出代码，<code>Error output</code> 行是固定文本而不是您进程的错误输出。相同的固定文本填充异常的 <code>stderr</code> 属性。异常的 <code>exit_code</code> 属性携带代码。要捕获 CLI 实际写入 stderr 的内容，请在 <code>ClaudeAgentOptions</code> 中传递 <code>stderr</code> 回调并记录它接收的内容。</p>
+<p>裸 <code>ProcessError</code> 意味着 CLI 退出时没有报告错误结果。当 CLI 确实报告了一个时，SDK 会改为引发 <a href="agent-sdk-python.html#resulterror"><code>ResultError</code></a>，在 <a href="#claude-code-returned-an-error-result">Claude Code returned an error result</a> 中介绍。<code>ResultError</code> 是 <code>ProcessError</code> 的子类，所以 <code>except ProcessError</code> 会捕获两者。要以不同方式处理它们，请先放置 <code>except ResultError</code> 子句。</p>
+<p>在 <code>claude-agent-sdk</code> 0.2.140 之前，Python SDK 将错误结果退出作为普通 <code>Exception</code> 而不是 <code>ResultError</code> 引发。</p>
+<h3 id="claude-code-process-exited-with-code-n">Claude Code process exited with code N</h3>
+<p>IDE 包装器也会打印此消息，<a href="errors.html#claude-code-process-exited-with-code-n">错误参考</a> 为 VS Code 和其他启动器介绍了它。此条目介绍了您的 TypeScript SDK 代码接收的内容。SDK 将非零 CLI 退出作为普通 <code>Error</code> 显示，该错误拒绝 <code>query()</code> 消息上的 <code>for await</code> 循环。没有 SDK 错误类可以捕获，所以将循环包装在 <code>try</code>/<code>catch</code> 中并匹配消息：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Claude Code process exited with code 1. stderr: &lt;tail of the CLI's stderr&gt;
+</code></pre></div>
+<p>当 CLI 写入 stderr 时，消息以其尾部结尾。要捕获完整流，请在查询选项中传递 <code>stderr</code> 回调。被信号杀死的进程以相同的形式报告 <code>Claude Code process terminated by signal &lt;name&gt;</code>。</p>
+<h3 id="claude-code-returned-an-error-result">Claude Code returned an error result</h3>
+<p>当 CLI 在退出前报告错误结果时，两个 SDK 都用此消息替换进程退出错误：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Claude Code returned an error result: &lt;the CLI's own error report&gt;
+</code></pre></div>
+<p>冒号后的文本是 CLI 对出错原因的报告，所以从那里开始而不是从退出本身开始。Python 将其作为 <a href="agent-sdk-python.html#resulterror"><code>ResultError</code></a> 引发，其 <code>data</code> 属性携带完整的错误结果。TypeScript 拒绝消息循环并显示携带相同消息形状的普通 <code>Error</code>。</p>
+<h2 id="structured-outputs">结构化输出</h2>
+<h3 id="structured_output-is-none-but-the-result-says-success">structured_output is None but the result says success</h3>
+<p>结果消息可以以 <code>subtype: "success"</code> 结尾，而在 Python 中 <code>structured_output</code> 是 <code>None</code> 或在 TypeScript 中是 <code>undefined</code>。运行完成，但不存在经过验证的输出。</p>
+<p>在应用程序代码中将此结果视为失败。在使用 <code>structured_output</code> 之前，检查 <code>subtype</code> 是否为 <code>success</code> 以及 <code>structured_output</code> 是否存在。<a href="agent-sdk-structured-outputs.html#error-handling">错误处理</a> 部分为两个 SDK 显示了此模式。然后检查以下原因：</p>
+<ul>
+<li><strong>Claude 拒绝的请求</strong>：要在代码中检测这种情况，请检查结果消息的 <code>stop_reason</code> 是否为 <code>"refusal"</code>。有关接下来可以尝试的操作，请参阅<a href="errors.html#usage-policy-refusal">使用政策拒绝</a>。</li>
+<li><strong>任何输出都无法满足的 schema</strong>：例如，一个 <code>minLength</code> 大于其 <code>maxLength</code> 的字符串。如果在使用您认为正确的 schema 时 <code>structured_output</code> 反复缺失，请查找相互矛盾的约束。如果没有找到，请简化 schema 直到输出通过验证，然后一次重新引入一个约束。</li>
+</ul>
+<h2 id="report-a-new-issue">报告新问题</h2>
+<p>如果您的错误未在此处介绍，请检查开放问题或在 SDK 存储库中提交新问题：<a href="https://github.com/anthropics/claude-agent-sdk-typescript/issues" target="_blank" rel="noopener">claude-agent-sdk-typescript</a> 或 <a href="https://github.com/anthropics/claude-agent-sdk-python/issues" target="_blank" rel="noopener">claude-agent-sdk-python</a>。包括完整的错误文本和您的 SDK 版本。</p></article>
+    <div class="pager"><a class="pager-link prev" href="agent-sdk-migration-guide.html"><span class="pager-dir">← 上一页</span><span class="pager-name">迁移到 Claude Agent SDK</span></a><a class="pager-link next" href="agent-sdk-configuration.html"><span class="pager-dir">下一页 →</span><span class="pager-name">配置你的代理</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#cli-startup">CLI 启动</a><a class="toc-l3" href="#clinotfounderror-claude-code-not-found">CLINotFoundError: Claude Code not found</a><a class="toc-l3" href="#cliconnectionerror-refusing-to-execute-batch-script">CLIConnectionError: Refusing to execute batch script</a><a class="toc-l3" href="#cliconnectionerror-failed-to-start-claude-code">CLIConnectionError: Failed to start Claude Code</a><a class="toc-l3" href="#cliconnectionerror-not-connected">CLIConnectionError: Not connected</a><a class="toc-l2" href="#cli-process-exit">CLI 进程退出</a><a class="toc-l3" href="#processerror-command-failed-with-exit-code">ProcessError: Command failed with exit code</a><a class="toc-l3" href="#claude-code-process-exited-with-code-n">Claude Code process exited with code N</a><a class="toc-l3" href="#claude-code-returned-an-error-result">Claude Code returned an error result</a><a class="toc-l2" href="#structured-outputs">结构化输出</a><a class="toc-l3" href="#structured_output-is-none-but-the-result-says-success">structured_output is None but the result says success</a><a class="toc-l2" href="#report-a-new-issue">报告新问题</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

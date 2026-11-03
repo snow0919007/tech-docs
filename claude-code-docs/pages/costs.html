@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>有效管理成本 · Claude Code 中文文档</title>
+<meta name="description" content="跟踪令牌使用情况，设置团队支出限制，并通过上下文管理、模型选择、扩展思考设置和预处理 hooks 来降低 Claude Code 成本。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="costs">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/costs" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link active" href="costs.html" aria-current="page">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>管理</span> <span class="sep">/</span> <span>用量与费用</span></div>
+    <article class="prose" id="article"><h1 id="_1">有效管理成本</h1>
+<blockquote>
+<p>跟踪令牌使用情况，设置团队支出限制，并通过上下文管理、模型选择、扩展思考设置和预处理 hooks 来降低 Claude Code 成本。</p>
+</blockquote>
+<p>Claude Code 按 API token 消耗收费。有关订阅套餐定价（Pro、Max、Ultra、Team、Enterprise），请参阅 <a href="https://claude.com/pricing" target="_blank" rel="noopener">claude.com/pricing</a>。每个开发者的成本差异很大，取决于模型选择、代码库大小和使用模式，例如运行多个实例或自动化。</p>
+<p>在企业部署中，平均成本约为每个开发者每个活跃日 $13，每个开发者每月 $150-250，90% 的用户每个活跃日成本保持在 \$30 以下。要估计您自己团队的支出，请从一个小的试点团体开始，并使用下面的跟踪工具建立基线，然后再进行更广泛的推出。</p>
+<p>本页面仅涵盖 Claude Code 的使用：如何<a href="#track-your-costs">跟踪成本</a>、<a href="#manage-costs-for-your-organization">管理组织成本</a>和<a href="#reduce-token-usage">减少 token 使用</a>。有关其他 Claude 产品的用量限制，请参阅 <a href="https://support.claude.com" target="_blank" rel="noopener">Claude 帮助中心</a>。</p>
+<h2 id="track-your-costs">跟踪成本</h2>
+<h3 id="using-the-/usage-command">使用 <code>/usage</code> 命令</h3>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><code>/usage</code> 中的 Session 块显示 API token 使用情况，适用于 API 用户。Claude Pro、Max 和 Ultra 订阅者的使用量包含在订阅中，因此会话成本数据与计费无关。订阅者会在同一屏幕上看到套餐使用条、活动统计以及使用情况明细。</p></div></div>
+<p><code>/usage</code> 顶部的 Session 块显示当前会话的详细令牌使用统计。Claude Code 从令牌计数本地计算美元数字，按列表价格计算，除非 <a href="settings-reference.html#modelpricing"><code>modelPricing</code></a> 表生效。管理员在您组织的托管设置中设置一个表，以便该数字使用您的合同费率，当表生效时，<code>Total cost</code> 行会带有注释 <code>at your organization's configured rates</code>。该数字是估计值，有关权威计费，请参阅 <a href="https://platform.claude.com/usage" target="_blank" rel="noopener">Claude Console</a> 中的使用情况页面。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Total cost:            $0.55
+Total duration (API):  6m 20s
+Total duration (wall): 6h 33m 10s
+Total code changes:    0 lines added, 0 lines removed
+Usage by model:
+   claude-sonnet-4-6:  1.2k input, 5.3k output, 940.0k cache read, 50.0k cache write ($0.55)
+</code></pre></div>
+<p>这些总计在 <code>/clear</code> 启动新会话时重置，因此下一个会话的总成本从 \$0 开始。在 v2.1.211 之前，它们在 <code>/clear</code> 后继续累积，直到 Claude Code 进程的生命周期结束。</p>
+<p>对于以 1.1× <a href="https://platform.claude.com/docs/en/about-claude/pricing#data-residency-pricing" target="_blank" rel="noopener">数据驻留费率</a> 计费的 Claude API 响应，Claude Code 在会话成本数字中将该响应 token 的列表价格乘以 1.1。相同的总计也会出现在<a href="statusline.html#cost-and-duration-tracking">状态栏的成本字段</a>中，并且乘以后的数字同样计入 <a href="cli-reference.html#cli-flags"><code>--max-budget-usd</code></a>。</p>
+<h4 id="prompt-cache-statistics">Prompt cache 统计</h4>
+<p>在主对话的第一个 API 响应之后，Claude Code 还会向 Session 块添加一个 <code>Prompt cache (main)</code> 行，总结会话的 <a href="prompt-caching.html">prompt cache</a> 使用情况：请求计数、从缓存提供的输入令牌份额、缓存未命中，以及缓存现在是否处于热状态。需要 Claude Code v2.1.251 或更高版本。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Prompt cache (main):   14 requests · 91% of input tokens from cache · 2 misses (last 6m 10s ago, 310.2k tokens re-cached) · 1 expected rebuild (compaction or tool-result clearing) · warm (1h TTL, last activity 40s ago)
+</code></pre></div>
+<p>该行中的未命中、预期重建以及热或冷部分的含义如下：</p>
+<ul>
+<li><strong>Misses（未命中）</strong>：重新处理缓存已保存内容的请求，包括最后一次未命中的时间以及这些请求写回缓存的令牌数。<a href="prompt-caching.html#actions-that-invalidate-the-cache">使缓存失效的操作</a>列出了常见原因。当 Claude Code 能够识别最后一次未命中的可能原因时，该行也会命名它，例如 <code>likely cause: tool definitions changed</code>。可能原因文本需要 Claude Code v2.1.260 或更高版本。</li>
+<li><strong>Expected rebuilds（预期重建）</strong>：当 Claude Code 本身刚刚重写对话时，通过<a href="prompt-caching.html#compacting-the-conversation">压缩</a>或从上下文中清除旧工具结果，它会将相同类型的未命中计为预期重建。此部分仅在至少发生过一次预期重建后出现。</li>
+<li><strong>Warm or cold（热或冷）</strong>：缓存的前缀是否仍在其<a href="prompt-caching.html#cache-lifetime">缓存生命周期</a>内，以及生效的 TTL。当缓存冷时，该行显示会话已空闲多长时间。当没有响应报告缓存令牌时，该行以 <code>no prompt caching reported by the API</code> 结尾。</li>
+</ul>
+<p>计数来自 API 响应中的缓存令牌字段，因此该行适用于每个提供商和网关。它仅覆盖主对话，不包括子代理。<code>/clear</code> 与 Session 块的其余部分一起重置它。</p>
+<p>状态行脚本可以从 <a href="statusline.html#prompt-cache-fields"><code>prompt_cache</code> 对象</a>读取相同的数字。</p>
+<h4 id="plan-usage-breakdown">计划使用情况明细</h4>
+<p>在 Pro、Max、Ultra、Team 或 Enterprise 套餐上，<code>/usage</code> 还显示计入您的套餐限制的内容明细，并附带建议：</p>
+<ul>
+<li><strong>Attribution（归属）</strong>：最近使用情况归属于 skills、subagents、plugins 和各个 MCP 服务器，每个都显示为总数的百分比。MCP 服务器的份额仅计算消耗其工具结果之一的请求。在 v2.1.222 之前，在调用 MCP 服务器一次后，Claude Code 将每个后续请求归属于该服务器，高估了其份额。</li>
+<li><strong>Recommendations（建议）</strong>：建议的更改，每行一项。每行开头是您最近使用情况的一个份额（至少 10%），例如 <code>25%  Trim ~/code/api/CLAUDE.md · 49k tokens per request</code>。</li>
+<li><strong>如何解读份额</strong>：它表示该行适用于您多少使用量，而不是该更改能节省多少。一个请求可以计入多行，因此各份额相加可能超过 100%。</li>
+<li><strong>如何应用建议</strong>：要让 Claude Code 应用其能够应用的建议，请参阅<a href="#apply-recommendations-with-the-fix-shortcut">使用 fix 快捷键应用建议</a></li>
+<li><strong>Loops（循环）</strong>：最近运行的每个最重的 <a href="scheduled-tasks.html"><code>/loop</code> 或其他会话范围的定时任务</a>各占一行，按总 token 排序，其余的显示计数。需要 Claude Code v2.1.242 或更高版本。</li>
+<li><strong>每行报告的内容</strong>：任务触发的频率、运行次数、其总 token 和每次运行 token，以及最后一次运行的时间</li>
+<li><strong>停止并重新创建的循环</strong>：Claude Code 以任务的提示词作为行的键，因此您停止并重新创建的循环保持为一行</li>
+</ul>
+<p>按 <code>d</code> 或 <code>w</code> 在过去 24 小时和过去 7 天之间切换。这些数据是近似值，从此机器上的本地会话历史记录计算，因此不包括来自其他设备或 claude.ai 的使用情况。</p>
+<p>在 <a href="vs-code.html#check-account-and-usage">VS Code 扩展</a>中，归属份额和建议显示在"账户和使用情况"对话框中，带有"日"和"周"切换，不包括"循环"行。</p>
+<h4 id="apply-recommendations-with-the-fix-shortcut">使用 fix 快捷键应用建议</h4>
+<p>当 <code>/usage</code> 页脚显示 <code>f to fix 2 of 3</code> 之类的提示时，按 <code>f</code> 可让 Claude Code 处理其能够处理的建议。<code>f</code> 快捷键需要 Claude Code v2.1.305 或更高版本。</p>
+<ol>
+<li>在任何进行中的轮次结束后，Claude Code 会运行各行中显示的、前面不带 <code>run</code> 的每条 <a href="model-config.html#adjust-effort-level"><code>/effort</code></a> 命令。</li>
+<li>然后 Claude 会收到一条提示词，其中为它能够处理的其他每一行各包含一个步骤。该提示词要求 Claude 在做出每项更改之前先向您展示该更改。</li>
+</ol>
+<p>要了解按 <code>f</code> 会如何处理您的每一行，请在第一列中找到该行的形式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">行的形式</th>
+<th style="text-align: left;">示例行</th>
+<th style="text-align: left;">按 <code>f</code> 时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">以前面不带 <code>run</code> 的 <code>/effort</code> 命令结尾</td>
+<td style="text-align: left;"><code>40%  Switch from max to high effort · /effort high</code></td>
+<td style="text-align: left;">Claude Code 运行该命令</td>
+</tr>
+<tr>
+<td style="text-align: left;">以 <code>run</code> 加一条命令结尾</td>
+<td style="text-align: left;"><code>30%  Compact before you step away · run /compact</code></td>
+<td style="text-align: left;">此行不会有任何操作。请您自己在 Claude Code 提示符处运行该命令</td>
+</tr>
+<tr>
+<td style="text-align: left;">以其他任何内容结尾</td>
+<td style="text-align: left;"><code>25%  Trim ~/code/api/CLAUDE.md · 49k tokens per request</code></td>
+<td style="text-align: left;">对于其中部分行，Claude 会在提示词中获得一个步骤，其余行则不会有任何操作。如果 Claude 没有针对某一行向您展示任何更改，请您自己按照该建议操作</td>
+</tr>
+</tbody>
+</table>
+<p>在 <code>f to fix 2 of 3</code> 中，第一个数字表示按 <code>f</code> 时 Claude Code 会处理的行数，第二个数字表示显示的行数。不含 <code>of</code> 的提示（例如 <code>f to fix both</code>）表示 Claude Code 会处理显示的每一行。</p>
+<p>当 <a href="remote-control.html">Remote Control</a> 已连接时，页脚不显示 <code>f</code> 提示。如果按 <code>f</code> 后 <code>/usage</code> 关闭并显示 <code>Nothing was sent. Turn off Remote Control to use fixes.</code>，说明在 <code>/usage</code> 打开期间 Remote Control 建立了连接。要再次使用 <code>f</code>，请<a href="remote-control.html#check-connection-status">断开 Remote Control</a>，然后在 Claude Code 提示符处运行 <code>/usage</code> 并再次按 <code>f</code>。</p>
+<h4 id="check-your-usage-credits-spend">检查您的使用额度支出</h4>
+<p><code>/usage</code> 还在<a href="#add-usage-credits-to-your-subscription">使用额度</a>开启时显示使用额度行。该行显示的内容取决于您的计划：</p>
+<ul>
+<li><strong>Pro、Max 和 Ultra</strong>：当前月份的支出，与您设置的每月支出限制进行比较（如果您设置了一个）。当您未设置限制时，该行显示 <code>Unlimited</code>，没有支出数字。</li>
+<li><strong>Team 和 Enterprise</strong>：当前月份的您自己的支出，与您的组织设置的任何<a href="#claude-for-teams-and-enterprise">限制</a>进行比较，该限制适用于您。覆盖整个组织的限制不会出现在该行中。当您没有自己的限制时，该行显示您的支出，旁边没有限制。当使用额度对您关闭时，<code>/usage</code> 不显示使用额度行。</li>
+</ul>
+<p>当您有支出限制时，该行在使用额度开启后立即出现，并显示 0%，直到您首次支出使用额度。在 v2.1.236 之前，<code>/usage</code> 仅在 Pro、Max 和 Ultra 套餐上显示该行，带有支出限制的行在您支出某些内容之前保持隐藏。</p>
+<h4 id="when-the-usage-request-fails">当使用情况请求失败时</h4>
+<p>当您的计划限制请求失败时（通常是因为使用情况端点受到速率限制），<code>/usage</code> 会显示它在过去 60 分钟内在此机器上加载的最后一个使用情况条，以及一个 <code>Showing last-known usage</code> 注释，说明该数据是多久前获取的。按 <code>r</code> 重试；成功重试会用新数据替换最后已知的条。如果没有过去 60 分钟内的快照，<code>/usage</code> 会报告使用情况端点受到速率限制，并提供相同的重试快捷方式。在 v2.1.208 之前，在尚未加载使用情况的会话中受速率限制的请求始终显示错误，没有条。</p>
+<p><code>/usage</code> 中出现 <code>rate limited until 3:14am</code> 之类的消息，表示 Claude Code 在该时间之前无法再次获取您的套餐限制，而不是表示您与 Claude 的工作受到限制。如果您在该时间之前按 <code>r</code>，预计会看到相同的消息。请在该时间之后按 <code>r</code> 获取新数据。</p>
+<h3 id="read-the-token-count-beside-the-spinner">读取加载指示器旁的 token 计数</h3>
+<p>当 Claude 在主对话中工作时，加载指示器旁的行末尾可能显示已用时间和 token 计数，例如 <code>Deciphering… (10m 27s · ↓ 5.5k tokens)</code>。这是当前轮次迄今为止所产生输出的实时近似计数。在输出到达或工具运行时，计数旁的箭头指向下方。</p>
+<ul>
+<li><strong>涵盖的内容</strong>：该轮次生成的输出，例如 Claude 流式返回的文本和工具调用、其思考，以及在<a href="sub-agents.html#run-subagents-in-foreground-or-background">前台</a>运行的子代理的输出</li>
+<li><strong>不包括的内容</strong>：Claude Code 发送给模型的内容，因此您的提示词、对话历史记录以及上下文的其余部分不会使其变化</li>
+<li><strong>何时重置</strong>：在每个轮次开始时，以及 Claude Code <a href="prompt-caching.html#compacting-the-conversation">压缩对话</a>时</li>
+<li><strong>何时保持隐藏</strong>：在输出开始到达之前、该行过窄无法容纳时，以及在<a href="accessibility.html">屏幕阅读器模式</a>中</li>
+</ul>
+<p>它不会与 <code>/usage</code> Session 块中 <code>Usage by model</code> 的输出数字一致，后者累加的是整个会话而非单个轮次。它也不同于<a href="statusline.html#notifications-share-the-status-line-row">详细模式添加</a>的 token 计数，因为后者衡量的是您上下文的大小，而非单个轮次的输出。</p>
+<h3 id="analyze-your-usage-patterns">分析您的使用情况模式</h3>
+<p>运行 <a href="commands.html#all-commands"><code>/insights</code></a> 以获取关于您如何工作而不是您使用了多少令牌的报告。它分析此机器上的最近会话，并编写一份 HTML 报告，涵盖您处理的内容、摩擦点（例如误解的请求或有缺陷的代码）以及有关更有效地使用 Claude Code 的建议。单次运行分析最多 200 个它之前未见过的会话，并跳过非常短的会话。当会话被遗漏时，报告标题显示分析的计数，括号中显示总数，例如 <code>200 sessions (412 total)</code>。</p>
+<p>当<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>对会话可用且您最近的会话大多在没有它的情况下运行时，报告还可以包括自动模式在这些会话中可以处理多少权限提示的估计。</p>
+<p>Claude Code 将最新报告写入 <code>~/.claude/usage-data/report.html</code>，并在同一目录中保存每次运行的时间戳副本，因此早期报告不会被覆盖。Claude Code 按与其余会话数据相同的计划删除报告：在启动时，它删除早于 <a href="claude-directory.html#cleaned-up-automatically"><code>cleanupPeriodDays</code></a> 的文件，默认为 30 天。</p>
+<p>您可以在任何计划和任何提供商上运行 <code>/insights</code>。分析通过与您的常规会话相同的提供商和账户运行，令牌计入您的计划或 API 使用情况。不包括来自其他设备和 claude.ai 的会话。</p>
+<h3 id="add-usage-credits-to-your-subscription">向您的订阅添加使用额度</h3>
+<p><a href="https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans" target="_blank" rel="noopener">使用额度</a>让您可以在计划的使用限制之外继续工作。要管理它们，请在通过 <code>/login</code> 使用您的 claude.ai 订阅登录后运行 <code>/usage-credits</code>；该命令不适用于 API 密钥身份验证。在自助服务 Enterprise 组织、Enterprise 试用版和通过 AWS Marketplace 计费的 Enterprise 组织中，该命令需要 Claude Code v2.1.248 或更高版本；早期版本会以 <a href="errors.html#unknown-command"><code>Unknown command: /usage-credits</code></a> 拒绝它。它打开的内容取决于您的角色：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您的角色</th>
+<th style="text-align: left;"><code>/usage-credits</code> 的作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Pro、Max 或 Ultra 订阅者</td>
+<td style="text-align: left;">在浏览器中打开 claude.ai 上的 <a href="https://claude.ai/settings/usage" target="_blank" rel="noopener"><strong>Settings &gt; Usage</strong></a>。在其 <strong>Usage credits</strong> 部分中，您可以打开或关闭使用额度，并检查您的额度余额、本月支出和每月支出限制</td>
+</tr>
+<tr>
+<td style="text-align: left;">具有计费访问权限的 Team 或 Enterprise 成员</td>
+<td style="text-align: left;">在浏览器中打开您组织的用量设置 <a href="https://claude.ai/admin-settings/usage" target="_blank" rel="noopener"><strong>Organization settings &gt; Usage</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: left;">没有计费访问权限的 Team 或 Enterprise 成员</td>
+<td style="text-align: left;">要求您确认，然后向您的组织管理员发送请求。在 v2.1.211 之前，Claude Code 在没有确认步骤的情况下发送请求</td>
+</tr>
+</tbody>
+</table>
+<p>对于没有计费访问权限的 Team 和 Enterprise 成员，确认仅在交互式会话中出现：在使用 <code>-p</code> 标志的非交互式模式和从<a href="remote-control.html">远程控制</a>中，该命令不发送请求，并告诉您在交互式会话中运行它。</p>
+<p>如果您在早期请求等待管理员时再次运行 <code>/usage-credits</code>，Claude Code 会告诉您已经发送了请求，而不是发送重复请求。在管理员驳回您的请求后，再次运行该命令会发送新请求。在 v2.1.222 之前，被驳回的请求也会阻止新请求。</p>
+<p>在 Pro 和 Max 计划上，当您达到支出限制且仍有使用额度可用时，Claude Code 会提示您提高或移除限制，而无需离开 CLI。如果服务器拒绝更改，请参阅<a href="errors.html#could-not-update-your-spend-limit">无法更新您的支出限制</a>。</p>
+<h2 id="manage-costs-for-your-organization">管理组织的成本</h2>
+<p>您拥有哪些控制手段，取决于您的组织访问 Claude Code 的方式：Claude for Teams 或 Enterprise 套餐、Claude Console，或云服务提供商。在 Teams 和 Enterprise 套餐中，用量从每位成员的席位额度中扣除。在 Console 和云服务提供商上，用量按 token 向您的组织计费。如果您的组织混合使用多种登录方式，每位开发者将按其进行身份验证时所用的方式计量。</p>
+<p>下表列出了每种设置下在哪里查看支出、在哪里设置支出上限，以及如何获取按用户统计的数据。在个人 Pro、Max 或 Ultra 套餐中，您没有需要管理的组织，因此请在<a href="#add-usage-credits-to-your-subscription">为您的订阅添加使用额度</a>下跟踪您自己的使用额度支出，包括<a href="fast-mode.html#see-where-fast-mode-spend-appears">快速模式</a>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您的设置</th>
+<th style="text-align: left;">查看支出</th>
+<th style="text-align: left;">限制支出</th>
+<th style="text-align: left;">按用户报告</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="#claude-for-teams-and-enterprise">Claude for Teams 或 Enterprise</a></td>
+<td style="text-align: left;"><a href="https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans" target="_blank" rel="noopener">组织分析中的支出报告</a></td>
+<td style="text-align: left;">管理设置中的支出限制</td>
+<td style="text-align: left;"><a href="https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans" target="_blank" rel="noopener">支出报告 CSV</a>；Enterprise 套餐可使用 <a href="https://platform.claude.com/docs/en/api/admin/analytics" target="_blank" rel="noopener">Enterprise Analytics API</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#claude-console">Claude Console (API)</a></td>
+<td style="text-align: left;"><a href="https://platform.claude.com/usage" target="_blank" rel="noopener">Console 用量页面</a></td>
+<td style="text-align: left;">工作区支出限制</td>
+<td style="text-align: left;"><a href="https://platform.claude.com/claude-code" target="_blank" rel="noopener">Console 仪表板</a>、<a href="https://platform.claude.com/docs/en/build-with-claude/claude-code-analytics-api" target="_blank" rel="noopener">Claude Code Analytics API</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#cloud-providers">Amazon Bedrock、Google Cloud's Agent Platform 或 Microsoft Foundry</a></td>
+<td style="text-align: left;">您的云计费控制台</td>
+<td style="text-align: left;">您的云预算控制</td>
+<td style="text-align: left;"><a href="monitoring-usage.html">OpenTelemetry</a> 或 <a href="llm-gateway.html">LLM 网关</a></td>
+</tr>
+</tbody>
+</table>
+<p><a href="monitoring-usage.html">OpenTelemetry 导出</a>适用于所有设置，并且是唯一能将按用户统计的 token 和成本指标近乎实时地流式传输到您自己的可观测性平台的选项。</p>
+<h3 id="report-spend-at-your-contracted-rates">按您的合同费率报告支出</h3>
+<p>默认情况下，Claude Code 向开发者显示的每个成本数字都按标价计算，因此如果您的组织支付的是合同费率，<code>/usage</code>、状态栏和 OpenTelemetry 中的数字将与您的账单不符。要使其一致，请将 <a href="settings-reference.html#modelpricing"><code>modelPricing</code></a> 托管设置设为您的费率。该设置改变的是 Claude Code 报告的内容，而不是 Anthropic 收取的费用。需要 Claude Code v2.1.242 或更高版本。</p>
+<p><strong>1. 从合同中获取费率</strong></p>
+<p>输入合同中的每百万 token 费率。Claude Code 不会从 Claude Console 获取这些费率，因此合同变更时请更新该设置。</p>
+<p><strong>2. 编写设置</strong></p>
+<p>将 <code>multiplier</code> 设为小于 1 的值以获得统一折扣，或设为大于 1 的值以进行加价；也可以在 <code>overrides</code> 下列出每个模型的四项按 token 费率，或两者同时使用。加价需要 Claude Code v2.1.271 或更高版本。<a href="settings-reference.html#modelpricing"><code>modelPricing</code> 条目</a>中提供了结构说明和可直接粘贴的示例。</p>
+<p><strong>3. 通过托管设置部署</strong></p>
+<p>将其作为<a href="managed-settings.html">托管设置</a>下发：服务器托管设置、MDM 策略、<code>managed-settings.json</code> 或<a href="managed-settings.html#compute-the-policy-with-a-helper-program">策略辅助程序</a>。Claude Code 会忽略用户、项目和本地设置以及 <code>--settings</code> 中的该键。</p>
+<p>要确认费率已生效，请在<a href="managed-settings.html#read-the-source-in-%2Fstatus">已收到托管设置</a>的会话中运行 <code>/usage</code>：Session 区块的 <code>Total cost</code> 行会附带注释 <code>at your organization's configured rates</code>。这些数字仍是估算值，而非发票。<code>/model</code> 选择器中的每百万 token 价格仍保持标价。</p>
+<h3 id="claude-for-teams-and-enterprise">Claude for Teams 和 Enterprise</h3>
+<p>在 Claude for Teams 和 Enterprise 套餐中，每位成员的 Claude Code 用量从按席位分配的额度中扣除，该额度按滚动的五小时窗口和每周窗口重置。该额度与 Claude 聊天和 Cowork 共享，其大小取决于成员的<a href="https://support.claude.com/en/articles/11845131-use-claude-code-with-your-team-or-enterprise-plan" target="_blank" rel="noopener">席位等级</a>（Standard 或 Premium）。您的控制手段位于 claude.ai 管理控制台中，而不是 Claude Console 中。</p>
+<ul>
+<li><strong>查看支出</strong>：<a href="https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans" target="_blank" rel="noopener">组织分析中的支出报告</a>按用户和按模型显示估算支出，支持 CSV 导出，每日更新。该报告涵盖使用额度支出，并在启用使用额度后显示。席位额度内的用量不以美元计量。</li>
+<li><strong>查看采用情况</strong>：<a href="https://claude.ai/analytics/claude-code" target="_blank" rel="noopener">分析仪表板</a>显示每日活跃用户、会话和贡献指标，并支持以 CSV 导出贡献数据。请参阅<a href="analytics.html">使用分析跟踪团队用量</a>。</li>
+<li><strong>限制支出</strong>：席位额度是默认上限。要让成员在超出额度后继续使用，请启用<a href="https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans" target="_blank" rel="noopener">使用额度</a>，并在组织、群组或单个成员级别设置支出限制。</li>
+<li><strong>获取按用户统计的数据</strong>：在 Enterprise 套餐中，<a href="https://platform.claude.com/docs/en/api/admin/analytics" target="_blank" rel="noopener">Enterprise Analytics API</a> 返回跨各 Claude 使用入口（包括 Claude Code）的按用户用量和成本报告。Primary Owner 可在 <a href="https://claude.ai/analytics/api-keys" target="_blank" rel="noopener">claude.ai/analytics/api-keys</a> 创建具有 <code>read:analytics</code> 作用域的密钥。在 Teams 套餐中，请导出<a href="https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans" target="_blank" rel="noopener">支出报告 CSV</a>，其中列出了按用户和按模型的 token 用量及估算支出。</li>
+</ul>
+<p><a href="https://support.claude.com/en/articles/14782391-claude-enterprise-consumption-guide" target="_blank" rel="noopener">Claude Enterprise 消耗指南</a>是供管理员进行规划的参考资料。它说明了 Claude 聊天、Claude Code 和 Cowork 之间的消耗差异，并提供了用于预算编制的按用户美元起始参考值。为编码席位编制的预算应多于聊天席位：每个 Claude Code 轮次都携带文件内容、工具调用和多步推理，因此一次调试会话的消耗可能超过一整天的聊天。</p>
+<h3 id="claude-console">Claude Console</h3>
+<p>API 组织通过<a href="https://platform.claude.com/docs/en/build-with-claude/workspaces" target="_blank" rel="noopener">工作区</a>管理 Claude Code 支出。您可以针对 Claude Code 的总支出<a href="https://platform.claude.com/docs/en/build-with-claude/workspaces#workspace-limits" target="_blank" rel="noopener">设置工作区支出限制</a>，并在 Console 中<a href="https://platform.claude.com/docs/en/build-with-claude/workspaces#usage-and-cost-tracking" target="_blank" rel="noopener">查看成本和用量报告</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>当您首次使用 Claude Console 账户对 Claude Code 进行身份验证时，系统会自动为您创建一个名为"Claude Code"的工作区。该工作区为您组织中所有 Claude Code 用量提供集中的成本跟踪和管理。您无法为该工作区创建 API 密钥；它专门用于 Claude Code 的身份验证和使用。</p>
+<p>对于具有自定义速率限制的组织，该工作区中的 Claude Code 流量会计入您组织的整体 API 速率限制。您可以在 Claude Console 中该工作区的 Limits 页面上设置<a href="https://platform.claude.com/docs/en/api/rate-limits#setting-lower-limits-for-workspaces" target="_blank" rel="noopener">工作区速率限制</a>，以限制 Claude Code 的占用份额并保护其他生产工作负载。</p></div></div>
+<p>对于按用户报告，<a href="https://platform.claude.com/claude-code" target="_blank" rel="noopener">Console 仪表板</a>显示每位成员的支出和已接受的代码行数，<a href="https://platform.claude.com/docs/en/build-with-claude/claude-code-analytics-api" target="_blank" rel="noopener">Claude Code Analytics API</a> 则可通过 <a href="https://platform.claude.com/settings/admin-keys" target="_blank" rel="noopener">Admin API 密钥</a>以编程方式返回相同的每日按用户指标。请参阅<a href="analytics.html#access-analytics-for-api-customers">面向 API 客户的分析</a>。</p>
+<h4 id="rate-limit-recommendations">速率限制建议</h4>
+<p>为团队设置 Claude Code 时，请根据您的组织规模参考以下每用户每分钟 token 数（TPM）和每分钟请求数（RPM）建议：</p>
+<table>
+<thead>
+<tr>
+<th>团队规模</th>
+<th>每用户 TPM</th>
+<th>每用户 RPM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1-5 名用户</td>
+<td>200k-300k</td>
+<td>5-7</td>
+</tr>
+<tr>
+<td>5-20 名用户</td>
+<td>100k-150k</td>
+<td>2.5-3.5</td>
+</tr>
+<tr>
+<td>20-50 名用户</td>
+<td>50k-75k</td>
+<td>1.25-1.75</td>
+</tr>
+<tr>
+<td>50-100 名用户</td>
+<td>25k-35k</td>
+<td>0.62-0.87</td>
+</tr>
+<tr>
+<td>100-500 名用户</td>
+<td>15k-20k</td>
+<td>0.37-0.47</td>
+</tr>
+<tr>
+<td>500+ 名用户</td>
+<td>10k-15k</td>
+<td>0.25-0.35</td>
+</tr>
+</tbody>
+</table>
+<p>例如，如果您有 200 名用户，您可以为每位用户申请 20k TPM，即总计 400 万 TPM（200*20,000 = 400 万）。</p>
+<p>每用户 TPM 随团队规模增大而降低，因为在较大的组织中，同时使用 Claude Code 的用户比例往往较低。这些速率限制作用于组织级别，而不是针对单个用户，这意味着当其他人未在积极使用该服务时，单个用户可以暂时消耗超过其计算份额的量。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>如果您预计会出现并发用量异常高的场景（例如大型团体的现场培训），您可能需要为每位用户分配更高的 TPM。</p></div></div>
+<h3 id="cloud-providers">云服务提供商</h3>
+<p>在 Amazon Bedrock、Google Cloud's Agent Platform 和 Microsoft Foundry 上，Claude Code 按 token 向您的云账户计费，支出控制位于您的云服务提供商的计费控制台中。Claude Code 不会将您云端的指标发送回 Anthropic，因此<a href="analytics.html">分析仪表板</a>和 Claude Code Analytics API 不涵盖这部分用量。</p>
+<p>对于按用户的成本归属，您有三种选择：</p>
+<ul>
+<li><strong>OpenTelemetry</strong>：从每位开发者的机器<a href="monitoring-usage.html">导出指标</a>到您自己的可观测性平台。无论使用哪家提供商，这都能为您提供按用户统计的 token 数、成本和工具活动。</li>
+<li><strong>Claude apps 网关</strong>：自托管的 <a href="claude-apps-gateway.html">Claude apps gateway</a> 在这些提供商上提供按用户的用量归属、包含 token 数的 OTLP 指标以及<a href="claude-apps-gateway-spend-limits.html">按用户的支出限制</a>。</li>
+<li><strong>LLM 网关</strong>：将所有 Claude Code 流量通过一个按密钥跟踪支出的代理进行路由。多家大型企业报告称使用了 <a href="llm-gateway.html">LiteLLM</a>，这是一个可以<a href="https://docs.litellm.ai/docs/proxy/virtual_keys#tracking-spend" target="_blank" rel="noopener">按密钥跟踪支出</a>的开源工具。该项目与 Anthropic 无关，且未经过安全审计。</li>
+</ul>
+<h3 id="when-a-developer-asks-about-a-limit">当开发者询问限制问题时</h3>
+<p>开发者通常会向管理员咨询限制问题，因此了解他们触及的是哪种上限会很有帮助。以下几种情况含义各不相同：</p>
+<ul>
+<li><strong>"You've hit your session limit"或"You've hit your weekly limit"</strong>：订阅套餐中基于席位的用量窗口，由所有模型共享，因此开发者无法通过 <code>/model</code> 切换模型来恢复访问。该消息会显示窗口的重置时间。在出现特定于模型的"You've hit your Opus limit"或"You've hit your Sonnet limit"消息后，使用 <code>/model</code> 切换到该系列以外的模型确实可以让开发者继续工作。请参阅<a href="errors.html#youve-hit-your-session-limit">用量限制错误</a>。在此期间开发者可以：</li>
+<li>如果您已启用<a href="https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans" target="_blank" rel="noopener">使用额度</a>，运行 <code>/usage-credits</code> 申请超出额度的用量。</li>
+<li>在 Claude Code v2.1.234 或更高版本中，<a href="interactive-mode.html#wait-for-a-usage-limit-to-reset">等待重置后自动继续被中断的任务</a>；该部分列出了 Claude Code 何时会自行开始等待，以及开发者何时需要从 <code>/rate-limit-options</code> 中选择等待。要为您的所有设备控制 Claude Code 是否自行开始该等待，请在<a href="settings.html#settings-precedence">托管设置</a>中设置 <a href="settings-reference.html#autocontinueatusagelimit"><code>autoContinueAtUsageLimit</code></a>。</li>
+<li><strong>"You've hit your individual spend limit"、"org's monthly spend limit"或"team's shared budget"</strong>：开发者的请求本应计入使用额度，而这些额度已达到您设置的支出限制。要让开发者继续使用，请前往 <a href="https://claude.ai/admin-settings/usage" target="_blank" rel="noopener"><strong>Organization settings &gt; Usage</strong></a> 并提高消息中提到的限制。如果消息中还指明了套餐重置时间，开发者也可以等到那时。各种变体请参阅<a href="errors.html#youve-hit-your-monthly-spend-limit">错误参考</a>。</li>
+<li><strong>来自 <a href="claude-apps-gateway.html">Claude apps gateway</a> 的支出限制消息</strong>：开发者超出了您在自托管网关上设置的支出上限，网关会阻止其请求，直到周期重置或您提高上限。有关上限、重置计划以及开发者看到的消息，请参阅<a href="claude-apps-gateway-spend-limits.html">网关支出限制</a>。</li>
+<li><strong>上下文或自动压缩警告</strong>：这不是用量限制。对话已接近会话的<a href="model-config.html#set-the-auto-compact-window">自动压缩窗口</a>，即 Claude Code 汇总较早历史记录以释放空间的阈值。请引导开发者参阅<a href="#reduce-token-usage">减少 token 用量</a>。</li>
+<li><strong>API 或云服务提供商套餐上的意外高额支出</strong>：通常源于从未清除的长会话，或将 Opus 保留为默认模型。最值得分享的高影响习惯是在不相关的任务之间进行清除，以及根据工作选择合适的模型，这两点都在<a href="#reduce-token-usage">减少 token 用量</a>中有介绍。</li>
+</ul>
+<h3 id="agent-team-token-costs">Agent team 的 token 成本</h3>
+<p><a href="agent-teams.html">Agent team</a> 会启动多个 Claude Code 实例，每个实例都有自己的上下文窗口。token 用量随活跃队友的数量以及每个队友的运行时长而增长。</p>
+<p>要使 agent team 的成本保持在可控范围内：</p>
+<ul>
+<li>为队友使用 Sonnet。它在协调任务的能力与成本之间取得了平衡。</li>
+<li>保持团队规模较小。每个队友都运行自己的上下文窗口，因此 token 用量大致与团队规模成正比。</li>
+<li>保持启动提示词简洁聚焦。队友会自动加载 CLAUDE.md、MCP 服务器和 skill，但启动提示词中的所有内容都会从一开始就增加其上下文。</li>
+<li>在队友完成工作后将其关闭。每个活跃的队友都会持续消耗 token，直到其退出或会话结束。</li>
+<li>Agent team 默认处于禁用状态。在您的 <a href="settings.html">settings.json</a> 或环境中设置 <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> 以启用它们。请参阅<a href="agent-teams.html#enable-agent-teams">启用 agent team</a>。</li>
+</ul>
+<h2 id="reduce-token-usage">减少 token 使用</h2>
+<p>token 成本随上下文大小而扩展：Claude 处理的上下文越多，您使用的 token 就越多。Claude Code 通过<a href="prompt-caching.html">提示缓存</a>（减少重复内容（如系统提示词）的成本）和自动压缩（在接近上下文限制时总结对话历史）自动优化成本。</p>
+<p>以下策略可帮助您保持上下文较小并降低每条消息的成本。</p>
+<h3 id="manage-context-proactively">主动管理上下文</h3>
+<p>使用 <code>/usage</code> 检查您当前的 token 使用情况，或<a href="statusline.html#context-window-usage">配置您的状态栏</a>以持续显示它。</p>
+<ul>
+<li><strong>在任务之间清除</strong>：在切换到不相关的工作时，使用 <code>/clear</code> 重新开始。陈旧的上下文会在随后的每条消息上浪费 token。在清除之前使用 <code>/rename</code>，以便您稍后可以找到该会话，然后使用 <code>/resume</code> 返回到它。</li>
+<li><strong>添加自定义压缩指令</strong>：<code>/compact Focus on code samples and API usage</code> 告诉 Claude 在总结期间保留什么。</li>
+</ul>
+<p>您还可以在项目根目录的 CLAUDE.md 文件中自定义压缩行为：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown"><span class="gh"># Compact instructions</span>
+
+When you are using compact, please focus on test output and code changes
+</code></pre></div>
+<h3 id="choose-the-right-model">选择正确的模型</h3>
+<p>Sonnet 处理大多数编码任务效果很好，成本低于 Opus。为复杂的架构决策或多步推理保留 Opus。使用 <code>/model</code> 在会话中途切换模型，或在 <code>/config</code> 中设置默认值。对 Opus 的切换也适用于<a href="model-config.html#setting-your-model">继承您会话模型的子代理</a>。对于简单的子代理任务，在您的<a href="sub-agents.html#choose-a-model">子代理配置</a>中指定 <code>model: haiku</code>。</p>
+<h3 id="reduce-mcp-server-overhead">减少 MCP 服务器开销</h3>
+<p>MCP 工具定义<a href="mcp.html#scale-with-mcp-tool-search">默认被延迟</a>，因此只有工具名称和服务器指令进入上下文，直到 Claude 使用特定工具。运行 <code>/context</code> 查看占用空间的内容。</p>
+<ul>
+<li><strong>在可用时优先使用 CLI 工具</strong>：<code>gh</code>、<code>aws</code>、<code>gcloud</code> 和 <code>sentry-cli</code> 等工具仍比 MCP 服务器更节省上下文，因为它们不添加任何每工具列表。Claude 可以直接运行 CLI 命令。</li>
+<li><strong>禁用未使用的服务器</strong>：运行 <code>/mcp</code> 查看已配置的服务器，并禁用您未积极使用的任何服务器。</li>
+</ul>
+<h3 id="install-code-intelligence-plugins-for-typed-languages">为类型化语言安装代码智能插件</h3>
+<p><a href="plugins-code-intelligence.html">代码智能插件</a>为 Claude 提供精确的符号导航，而不是基于文本的搜索，减少在探索不熟悉的代码时不必要的文件读取。单个"转到定义"调用替代了可能需要的 grep 后跟读取多个候选文件。已安装的语言服务器还会在编辑后自动报告类型错误，因此 Claude 无需运行编译器即可捕获错误。</p>
+<h3 id="offload-processing-to-hooks-and-skills">将处理卸载到 hook 和 skill</h3>
+<p>自定义 <a href="hooks.html">hook</a> 可以在 Claude 看到数据之前对其进行预处理。Claude 不是读取 10,000 行日志文件来查找错误，hook 可以 grep <code>ERROR</code> 并仅返回匹配的行，将上下文从数万个 token 减少到数百个。</p>
+<p><a href="skills.html">skill</a> 可以为 Claude 提供领域知识，这样它就不必进行探索。例如，"codebase-overview" skill 可以描述您的项目架构、关键目录和命名约定。当 Claude 调用该 skill 时，它会立即获得此上下文，而不是花费 token 读取多个文件来理解结构。</p>
+<p>例如，此 PreToolUse hook 过滤测试输出以仅显示失败：</p>
+<blockquote>
+<p>[tab] settings.json</p>
+<p>将此添加到您的 <a href="settings.html#where-settings-live">settings.json</a>，以在每个 Bash 命令之前运行 hook：</p>
+<p><code>json theme={null}
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/filter-test-output.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></p>
+<p>[tab] filter-test-output.sh</p>
+<p>hook 调用此脚本。使用 <code>mkdir -p ~/.claude/hooks</code> 创建文件夹，将下面的脚本保存为 <code>~/.claude/hooks/filter-test-output.sh</code>，并使用 <code>chmod +x ~/.claude/hooks/filter-test-output.sh</code> 使其可执行。它检查命令是否为测试运行器并修改它以仅显示失败：</p>
+<p>```bash theme={null}</p>
+<h1 id="binbash">!/bin/bash</h1>
+<p>input=$(cat)<br />
+cmd=$(echo "$input" | jq -r '.tool_input.command')</p>
+<h1 id="if-running-tests-filter-to-show-only-failures">If running tests, filter to show only failures</h1>
+<p>pattern='^(npm test|pytest|go test)( [^;&amp;|&lt;&gt;<code>\\[:cntrl:]]*)?$'
+if [[ "$cmd" =~ $pattern ]]; then
+  filtered_cmd="$cmd 2&gt;&amp;1 | grep -A 5 -E '(FAIL|ERROR|error:)' | head -100"
+  echo "$input" | jq --arg filtered "$filtered_cmd" \
+    '{hookSpecificOutput: {hookEventName: "PreToolUse", updatedInput: (.tool_input + {command: $filtered})}}'
+else
+  echo "{}"
+fi</code></p>
+</blockquote>
+<p>要验证设置，运行 <code>/hooks</code> 并检查 hook 是否出现在 PreToolUse 下。您也可以使用 <code>claude --debug-file ./claude-debug.txt</code> 启动 Claude Code 并要求 Claude 运行 <code>npm test</code>。当 hook 重写命令时，该日志文件包含一个 <code>modified tool input keys</code> 行，列出 <code>command</code> 和其他 Bash 输入字段。</p>
+<h3 id="move-instructions-from-claude-md-to-skills">将指令从 CLAUDE.md 移动到 skill</h3>
+<p>您的 <a href="memory.html">CLAUDE.md</a> 文件在会话开始时加载到上下文中。如果它包含特定工作流的详细指令（如 PR 审查或数据库迁移），即使您在做不相关的工作时，这些 token 也会存在。<a href="skills.html">Skills</a> 仅在调用时按需加载，因此将专门指令移动到 skill 中可以保持您的基础上下文较小。目标是通过仅包含必要内容来将 CLAUDE.md 保持在 200 行以下。</p>
+<h3 id="adjust-extended-thinking">调整扩展思考</h3>
+<p>扩展思考默认启用，因为它显著改进了复杂规划和推理任务的性能。思考 token 作为输出 token 计费，默认预算可能是每个请求数万个 token，具体取决于模型。</p>
+<p>对于不需要深度推理的更简单任务，您可以通过使用 <code>/effort</code> 或在 <code>/model</code> 中降低 <a href="model-config.html#adjust-effort-level">effort 级别</a>、或在 <code>/config</code> 中禁用思考来降低成本。您无法在 Opus 5.5、Sonnet 5.5、Haiku 5.5 或 Fable 模型上关闭思考，它们始终使用扩展思考。</p>
+<p>在具有<a href="model-config.html#adaptive-reasoning-and-fixed-thinking-budgets">固定思考预算</a>的模型上，您也可以通过设置 <code>MAX_THINKING_TOKENS</code> <a href="env-vars.html">环境变量</a>（例如 <code>MAX_THINKING_TOKENS=8000</code>）来降低预算。自适应推理模型忽略非零预算，因此请改用 effort 级别。</p>
+<h3 id="delegate-verbose-operations-to-subagents">将冗长的操作委托给子代理</h3>
+<p>运行测试、获取文档或处理日志文件可能会消耗大量上下文。将这些委托给<a href="sub-agents.html#isolate-high-volume-operations">子代理</a>，以便冗长的输出保留在子代理的上下文中，而只有摘要返回到您的主对话。</p>
+<p>子代理自己的请求仍然会消耗您的使用量。为了在这些请求上花费更少，<a href="sub-agents.html#choose-a-model">为子代理选择更小的模型</a>或<a href="sub-agents.html#run-every-subagent-on-one-model">在一个模型上运行每个子代理</a>。</p>
+<h3 id="manage-agent-team-costs">管理 agent team 成本</h3>
+<p>当队友在计划模式中运行时，agent team 使用的 token 大约是标准会话的 7 倍，因为每个队友维护自己的上下文窗口并作为单独的 Claude 实例运行。保持团队任务小且独立，以限制每个队友的 token 使用。有关详细信息，请参阅 <a href="agent-teams.html">agent team</a>。</p>
+<h3 id="write-specific-prompts">编写具体的提示词</h3>
+<p>模糊的请求（如"改进此代码库"）会触发广泛扫描。具体的请求（如"向 auth.ts 中的登录函数添加输入验证"）让 Claude 能够以最少的文件读取高效地工作。</p>
+<h3 id="work-efficiently-on-complex-tasks">高效处理复杂任务</h3>
+<p>对于较长或更复杂的工作，这些习惯有助于避免因走错路而浪费的 token：</p>
+<ul>
+<li><strong>对复杂任务使用计划模式</strong>：在实现之前，按 Shift+Tab 切换到<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a>。Claude 探索代码库并提出一个方法供您批准，防止当初始方向错误时的昂贵返工。</li>
+<li><strong>尽早纠正方向</strong>：如果 Claude 开始朝错误的方向发展，按 Escape 立即停止。使用 <code>/rewind</code> 或双击 Escape 将对话和代码恢复到之前的检查点。</li>
+<li><strong>给出验证目标</strong>：在您的提示词中包含测试用例、粘贴屏幕截图或定义预期输出。当 Claude 可以验证自己的工作时，它会在您需要请求修复之前捕获问题。</li>
+<li><strong>增量测试</strong>：编写一个文件，测试它，然后继续。这样可以尽早发现问题。</li>
+</ul>
+<h2 id="background-token-usage">后台令牌使用</h2>
+<p>会话回顾和空闲压缩可能会在您空闲时使用 token。有关各自的运行时机以及如何关闭，请参阅<a href="interactive-mode.html#session-recap">会话回顾</a>和<a href="settings-reference.html#idlecompaction">空闲压缩</a>。</p>
+<p>启用提示建议时，Claude Code 在 Claude 响应后还会向您的会话使用的模型发送一个简短请求，以<a href="interactive-mode.html#prompt-suggestions">建议您的下一个提示</a>。该请求重用对话的提示缓存，因此主要是缓存读取加上少量输出令牌。当您的账户接近或达到使用限制时，Claude Code <a href="interactive-mode.html#when-claude-code-skips-suggestions">会跳过这些请求</a>。要停止这些请求，<a href="interactive-mode.html#turn-prompt-suggestions-off">关闭提示建议</a>。</p>
+<h2 id="why-usage-climbs-in-a-long-session">为什么长时间会话中使用量会增加</h2>
+<p>一个已经打开数小时的会话可能会使用远超你的活动量所暗示的计划限额，通常是由于以下原因之一：</p>
+<ul>
+<li><strong>长上下文</strong>：Claude Code 在每个请求中发送你与它的完整对话，每当 Claude 使用工具时，它会发送另一个请求，其中包含该批工具结果。使用 <a href="prompt-caching.html">prompt caching</a>，Claude Code 以 <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">缓存令牌速率</a> 重新读取该历史记录，因此即使在已打开一整天的会话中提出一行问题，仍然会为整个对话消耗使用量。请参阅 <a href="#manage-context-proactively">主动管理上下文</a> 了解保持上下文较小的方法</li>
+<li><strong>缓存未命中</strong>：在超过 <a href="prompt-caching.html#cache-lifetime">缓存生命周期</a> 的中断后，您的第一条消息会错过缓存并重新处理您的完整上下文。请参阅 <a href="prompt-caching.html#which-ttl-each-request-gets">您的请求使用哪种生命周期</a> 以及 <a href="prompt-caching.html#choose-the-ttl-yourself">设置生命周期的控制方式</a></li>
+<li><strong>定时任务</strong>：<a href="scheduled-tasks.html">会话范围的定时任务</a>即使在会话处于空闲状态时也会按其间隔触发，每次都发送您的完整上下文</li>
+<li><strong>跨会话消息</strong>：当此会话处于空闲状态时，Claude Code 将 <a href="cross-session-messaging.html">来自你另一个会话的消息</a> 作为新轮次传递，每次都发送你的完整上下文。要保留入站消息而不是传递它们，请将 <a href="settings-reference.html#crosssessioninbound"><code>crossSessionInbound</code></a> 设置为 <code>hold</code></li>
+<li><strong>目标检查</strong>：当后台工作使活跃的 <a href="goal.html">目标</a> 保持等待时，Claude Code <a href="goal.html#background-work-defers-evaluation">要求 Claude 检查该工作</a>，即使会话处于空闲状态，启动发送你完整上下文的新轮次。Claude Code 在你的提示之间每个目标最多启动三个空闲检查。在 v2.1.246 之前，空闲检查是无限制的。要关闭检查，请将 <a href="env-vars.html"><code>CLAUDE_CODE_GOAL_CHECKIN_MINUTES</code></a> 设置为 <code>0</code>。空闲检查需要 Claude Code v2.1.236 或更高版本</li>
+<li><strong>子代理和工作流</strong>：每个子代理，以及每个 <a href="workflows.html#cost">动态工作流</a> 生成的代理，都会在主对话的基础上发送自己的请求。<a href="#plan-usage-breakdown">属性分解</a> 显示子代理份额</li>
+<li><strong>代理队友</strong>：每个活跃的 <a href="#agent-team-token-costs">队友</a> 会继续消耗令牌，直到它退出</li>
+<li><strong>压缩</strong>：<code>/compact</code> 读取它总结的对话，因此 <a href="prompt-caching.html#compacting-the-conversation">压缩大型上下文</a> 本身就是一个大型请求。当你想要全新开始而不是连续性时，<code>/clear</code> 不消耗任何成本</li>
+</ul>
+<p>要了解在 Pro、Max、Ultra、Team 或 Enterprise 计划上应做哪些调整，请在 Claude Code 输入框中运行 <a href="#plan-usage-breakdown"><code>/usage</code></a>。其明细会针对占您最近使用量 10% 或更多的行为建议相应的调整。这些行为包括长上下文和缓存未命中。</p>
+<h2 id="understanding-changes-in-claude-code-behavior">了解 Claude Code 行为的变化</h2>
+<p>Claude Code 定期接收更新，这些更新可能会改变功能的工作方式，包括成本报告。运行 <code>claude --version</code> 来检查您当前的版本。</p>
+<p>有关您特定账户的计费问题，请通过产品内信使联系 Anthropic 支持：</p>
+<ul>
+<li><strong>订阅套餐</strong>（Pro、Max、Ultra、Team、Enterprise）：在 <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> 登录，点击左下角的您的首字母缩写，然后选择<strong>获取帮助</strong></li>
+<li><strong>Console（API）计费</strong>：在 <a href="https://platform.claude.com" target="_blank" rel="noopener">platform.claude.com</a> 登录，点击您的首字母缩写，然后选择<strong>获取帮助</strong></li>
+</ul>
+<p>请参阅<a href="https://support.claude.com/en/articles/9015913-how-to-get-support" target="_blank" rel="noopener">如何获取支持</a>了解完整流程，包括每个计划中谁可以联系人工代理。</p></article>
+    <div class="pager"><a class="pager-link prev" href="monitoring-usage.html"><span class="pager-dir">← 上一页</span><span class="pager-name">监控</span></a><a class="pager-link next" href="analytics.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用分析跟踪团队使用情况</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#track-your-costs">跟踪成本</a><a class="toc-l3" href="#using-the-/usage-command">使用 /usage 命令</a><a class="toc-l3" href="#read-the-token-count-beside-the-spinner">读取加载指示器旁的 token 计数</a><a class="toc-l3" href="#analyze-your-usage-patterns">分析您的使用情况模式</a><a class="toc-l3" href="#add-usage-credits-to-your-subscription">向您的订阅添加使用额度</a><a class="toc-l2" href="#manage-costs-for-your-organization">管理组织的成本</a><a class="toc-l3" href="#report-spend-at-your-contracted-rates">按您的合同费率报告支出</a><a class="toc-l3" href="#claude-for-teams-and-enterprise">Claude for Teams 和 Enterprise</a><a class="toc-l3" href="#claude-console">Claude Console</a><a class="toc-l3" href="#cloud-providers">云服务提供商</a><a class="toc-l3" href="#when-a-developer-asks-about-a-limit">当开发者询问限制问题时</a><a class="toc-l3" href="#agent-team-token-costs">Agent team 的 token 成本</a><a class="toc-l2" href="#reduce-token-usage">减少 token 使用</a><a class="toc-l3" href="#manage-context-proactively">主动管理上下文</a><a class="toc-l3" href="#choose-the-right-model">选择正确的模型</a><a class="toc-l3" href="#reduce-mcp-server-overhead">减少 MCP 服务器开销</a><a class="toc-l3" href="#install-code-intelligence-plugins-for-typed-languages">为类型化语言安装代码智能插件</a><a class="toc-l3" href="#offload-processing-to-hooks-and-skills">将处理卸载到 hook 和 skill</a><a class="toc-l3" href="#move-instructions-from-claude-md-to-skills">将指令从 CLAUDE.md 移动到 skill</a><a class="toc-l3" href="#adjust-extended-thinking">调整扩展思考</a><a class="toc-l3" href="#delegate-verbose-operations-to-subagents">将冗长的操作委托给子代理</a><a class="toc-l3" href="#manage-agent-team-costs">管理 agent team 成本</a><a class="toc-l3" href="#write-specific-prompts">编写具体的提示词</a><a class="toc-l3" href="#work-efficiently-on-complex-tasks">高效处理复杂任务</a><a class="toc-l2" href="#background-token-usage">后台令牌使用</a><a class="toc-l2" href="#why-usage-climbs-in-a-long-session">为什么长时间会话中使用量会增加</a><a class="toc-l2" href="#understanding-changes-in-claude-code-behavior">了解 Claude Code 行为的变化</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

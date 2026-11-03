@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>对接第三方 API · Workers 文档（中文版）</title>
+<meta name="description" content="用 fetch API 调第三方接口，把返回数据接进你的响应。">
+<link rel="stylesheet" href="../../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>对接第三方 API</h1>
+      <p class="lead">用 fetch API 调第三方接口，把返回数据接进你的响应。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-04-23</span>
+        <span>对应页面：configuration/integrations/apis</span>
+      </div>
+
+<p>在 Cloudflare Workers 里对接第三方 API，就是用 <a href="../../../sections/runtime-apis.html">fetch API</a> 向该 API 端点发 HTTP 请求，再用返回的数据改写或加工你的内容。</p>
+      <p>举例来说，想接入一个天气 API，就向它的端点发 fetch 请求取回当前天气数据，再用这些数据在网站上显示当前天气。</p>
+      <p>发起 <code>fetch()</code> 请求，把下面的代码加到项目的 <code>src/index.js</code>：</p>
+<pre data-lang="js"><code>async function handleRequest(request) {
+	// Make the fetch request to the third party API endpoint
+	const response = await fetch("https://weather-api.com/endpoint", {
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+
+	// Retrieve the data from the response
+	const data = await response.json();
+
+	// Use the data to modify or manipulate your content as needed
+	return new Response(data);
+}</code></pre>
+
+      <h2>认证</h2>
+      <p>如果该 API 需要认证，用 Wrangler 的密钥功能安全存放凭据。在你的 Workers 项目里执行：</p>
+<pre data-lang="sh"><code>wrangler secret put SECRET_NAME</code></pre>
+      <p>然后在代码里这样取值：</p>
+<pre data-lang="js"><code>const secretValue = env.SECRET_NAME;</code></pre>
+      <p>接着用这个密钥值向外部服务做认证。例如外部服务用 API key 认证，就把它放进请求头。</p>
+      <p>对要求 mTLS 认证的服务，用 <a href="../../../sections/runtime-apis.html">mTLS 证书</a>出示客户端证书。</p>
+
+      <h2>提示</h2>
+      <ul>
+        <li>用 <a href="../../../sections/runtime-apis.html">Cache API</a> 缓存第三方 API 的数据，从而优化那些可缓存的请求。对接第三方 API，能为你的应用增添功能与特性。</li>
+        <li>与外部 API 通信时使用<a href="../routing/custom-domains.html">自定义域名</a>——它把你的 Worker 视作核心应用。</li>
+      </ul>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/integrations/apis/" target="_blank" rel="noopener">configuration/integrations/apis</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../../assets/nav-data-1.js"></script>
+<script src="../../../assets/nav-data-2.js"></script>
+<script src="../../../assets/site.js"></script>
+</body>
+</html>

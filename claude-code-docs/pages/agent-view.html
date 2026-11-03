@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用 agent view 管理多个代理 · Claude Code 中文文档</title>
+<meta name="description" content="从一个屏幕调度和管理多个 Claude Code 会话。Agent view 显示每个会话正在做什么以及哪些会话需要你的输入。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-view">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-view" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link active" href="agent-view.html" aria-current="page">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>使用 Claude Code 构建</span> <span class="sep">/</span> <span>Agent 与并行工作</span></div>
+    <article class="prose" id="article"><h1 id="agent-view">使用 agent view 管理多个代理</h1>
+<blockquote>
+<p>从一个屏幕调度和管理多个 Claude Code 会话。Agent view 显示每个会话正在做什么以及哪些会话需要你的输入。</p>
+</blockquote>
+<p>Agent view 通过 <code>claude agents</code> 打开，是所有后台会话的一个屏幕：什么正在运行、什么需要你的输入、什么已完成。调度新会话，一目了然地查看它们的状态而不是滚动浏览记录，只在需要时才介入。每个后台会话都是一个完整的 Claude Code 对话，在没有终端连接的情况下继续运行，所以你可以随时打开它、回复并离开。</p>
+<p><img alt="终端中的 Agent view。顶部的一行计算等待输入、正在工作和已完成的会话。四个会话分组在'需要输入'、'正在工作'和'已完成'下。每行显示会话的名称、其最新状态或问题以及时间。底部是用于描述新任务的输入和一行键盘提示。" src="../assets/img/50563eb9cf53.png" /></p>
+<p>当你有多个独立任务 Claude 可以在不需要你观看每一步的情况下处理时，使用 agent view。调度一个 bug 修复、一个拉取请求审查和一个不稳定测试调查作为三行，在另一个窗口中继续工作，当一行显示它需要你或有结果时检查回来。</p>
+<p>当你想在任何代理的会话中更直接地工作时，附加到该行以进入完整对话。</p>
+<p>要比较 agent view 与 subagents、agent teams 和 worktrees，请参阅 <a href="agents.html">并行运行代理</a>。Agent view 在你的机器上运行会话，你调度每一个；要让 Claude 从一个对话中在云端启动和跟踪并行会话，请参阅 <a href="claude-projects.html">Projects</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Agent view 处于研究预览阶段。随着功能的发展，界面和快捷键可能会改变。</p></div></div>
+<h2 id="quick-start">快速开始</h2>
+<p>本演练涵盖 agent view 的核心循环：调度一个任务，在 Claude 工作时观察其所在行的更新，窥视以查看进展并回复，以及附加以查看完整对话。您调度的会话在关闭 agent view 后会继续运行，因此您可以离开并稍后再回来。</p>
+<p><strong>1. 打开 agent view</strong></p>
+<p>在您的 shell 中运行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>agents
+</code></pre></div>
+<p>如果您尚未接受该目录的<a href="permissions.html#project-allow-rules-and-workspace-trust">工作区信任对话框</a>，Claude Code 会在 agent view 打开前显示该对话框，与 <code>claude</code> 显示的对话框相同。接受即可保存对该工作区的信任并继续。如果您拒绝，Claude Code 会直接退出，不会打开 agent view。</p>
+<p>Agent view 打开后，底部有一个输入框，表格会随着会话启动而逐步填充。按 <code>Esc</code> 返回您的 shell；如果您是通过按 <code>←</code> 将会话转入后台来打开 agent view 的，<code>Esc</code> 则会返回到该对话。您离开期间会话会继续运行，并会在您下次打开 agent view 时重新出现。</p>
+<p><strong>2. 调度一个会话</strong></p>
+<p>输入描述任务的提示词并按 <code>Enter</code>。一个新的后台会话会针对该任务启动，并显示为一行，标明它是正在工作、正在等待您，还是已完成。新会话使用 agent view 标题中显示的模型。<a href="#permission-mode-model-and-effort">它以哪种权限模式启动</a>取决于您打开 agent view 的方式。</p>
+<p>您在此输入的每个提示词都会启动各自的新会话。输入另一个提示词并按 <code>Enter</code> 会启动第二个会话，与第一个会话并行运行，而不是向第一个会话发送后续消息。您可以通过这种方式并行运行多个会话。</p>
+<p>每个会话独立消耗您的订阅配额，因此在一次调度多个会话之前，请先查看<a href="#limitations">限制</a>。</p>
+<p><strong>3. 窥视和回复</strong></p>
+<p>使用箭头键选择一行，然后按 <code>Space</code> 打开窥视面板。它显示会话的最新输出或会话正在等待回答的问题，而不是完整的会话记录。输入回复并按 <code>Enter</code> 即可发送，无需离开 agent view。</p>
+<p><strong>4. 附加和分离</strong></p>
+<p>当您想查看完整对话时，在某一行上按 <code>Enter</code> 或 <code>→</code> 进行附加。该会话会接管终端，成为一个完整的交互式 Claude Code 会话。在空输入框中按 <code>←</code> 即可分离并返回表格。</p>
+<p><strong>5. 引入现有会话</strong></p>
+<p>此步骤需要一个正在运行的会话。如果您按照前面的步骤操作，此终端中并没有打开的会话，因此请先在另一个终端中打开一个常规 <code>claude</code> 会话并向其发送一条消息。</p>
+<p>要将已打开的会话移入 agent view，请在该会话中运行 <code>/bg</code>，或在空输入框中按 <code>←</code>，一步完成将会话转入后台并打开 agent view。在尚无任何消息的新会话中，<code>/bg</code> 会要求您先发送一条消息，而 <code>←</code> 可立即生效。该会话会继续运行，并与您调度的会话一起显示为一行。</p>
+<p>在常规 <code>claude</code> 会话中，在空输入框中按 <code>←</code> 会打开 agent view，页脚中的 <code>←</code> 提示会报告您的后台会话情况：</p>
+<ul>
+<li><strong>提示</strong>：会话打开后的十秒内，页脚显示 <code>← for agents</code>。提示消失后，按 <code>←</code> 仍然有效</li>
+<li><strong>等待计数</strong>：当有后台会话等待您输入时，同一位置会统计其数量，例如 <code>← 2 agents</code>；当超过 99 个会话等待时显示 <code>← 99+ agents</code>。终端处于焦点状态时，计数大约每十秒刷新一次，焦点返回时会立即刷新</li>
+<li><strong>完成计数</strong>：当后台会话成功完成且没有会话等待您输入时，页脚会短暂显示已完成的数量，例如两个会话完成时显示 <code>← 2 done</code></li>
+</ul>
+<p>等待计数增加或减少时，以及某个后台会话成功完成时，它会短暂改变颜色。如果您启用 <a href="settings-reference.html#prefersreducedmotion"><code>prefersReducedMotion</code></a>，则既不会看到颜色变化，也不会看到 <code>done</code> 计数。在<a href="accessibility.html">屏幕阅读器模式</a>下，<code>←</code> 提示及其计数会被隐藏。</p>
+<h3 id="open-agent-view-by-default">默认打开 agent view</h3>
+<p>要让不带参数的 <code>claude</code> 打开 agent view 而不是新对话，请启用一项 <code>/config</code> 设置。</p>
+<p><strong>1. 启用设置</strong></p>
+<p>在常规 <code>claude</code> 会话中，运行 <code>/config</code> 并启用 <strong>Open agents view by default</strong>。要跳过菜单，可直接设置 <a href="settings-reference.html#defaulttoagentsview"><code>defaultToAgentsView</code></a> 键：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/config defaultToAgentsView=true
+</code></pre></div>
+<p><strong>2. 启动 Claude Code</strong></p>
+<p>退出会话，然后不带参数运行 <code>claude</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude
+</code></pre></div>
+<p>此时将打开 agent view，而不是新对话。</p>
+<p>要在启用该设置的情况下启动常规会话，请传入提示词：<code>claude "fix the login test"</code>。要关闭该设置，请在常规会话中或在从 agent view 附加的会话中运行 <code>/config defaultToAgentsView=false</code>。</p>
+<h2 id="monitor-sessions-with-agent-view">使用 agent view 监控会话</h2>
+<p>运行 <code>claude agents</code> 打开 agent view。它接管整个终端并列出按状态分组的每个会话，固定的会话和需要您处理的会话位于顶部。每行显示会话的名称、当前活动和存在时长，时长从会话创建时开始计算；已完成会话的时长会定格在运行所花费的时间。</p>
+<p>名称使用该会话中由 <a href="commands.html"><code>/color</code></a> 设置的颜色着色，包括您用 <code>←</code> 或 <code>/background</code> <a href="#from-inside-a-session">将会话转入后台</a>时。</p>
+<p>默认情况下，列表显示您启动的每个后台会话，涵盖您的所有项目。在一个仓库中工作的会话和在另一个 worktree 中工作的会话都会出现在这里，无论您从哪个目录打开 agent view。要将列表限定到一个项目，请传递 <code>--cwd</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>agents<span class="w"> </span>--cwd<span class="w"> </span>~/projects/my-app
+</code></pre></div>
+<p>这只显示在该目录下启动的会话。已<a href="#how-file-edits-are-isolated">移入 worktree</a>（位于 <code>~/projects/my-app/.claude/worktrees/</code> 下）的会话仍会列出。</p>
+<p>您在其他终端中打开的交互式会话不会出现，直到您<a href="#from-inside-a-session">将其转入后台</a>。会话生成的<a href="sub-agents.html">子代理</a>和<a href="agent-teams.html">队友</a>不会作为单独的行列出。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Pinned
+  ✽ clawd walk cycle          Drawing the walk-cycle sprite frames          3m
+
+Ready for review
+  ∙ jump physics              Opened PR with collision fix                 #2048  2h
+
+Needs input
+  ✻ power-up design           double jump or wall climb?                    1m
+
+Working
+  ✽ collision detection       Adding swept-AABB checks to CollisionSystem   2m
+  ✢ playtest level 3          all checkpoints cleared ×12                in 4m
+
+Completed
+  ✻ title screen              menu, options, and credits done               9m
+  ∙ sound effects             14 SFX exported to assets/audio               4h
+  … 6 more
+</code></pre></div>
+<h3 id="read-session-state">读取会话状态</h3>
+<p>每行以一个图标开头，其颜色和动画显示会话的状态：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">状态</th>
+<th style="text-align: left;">图标显示为</th>
+<th style="text-align: left;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">工作中</td>
+<td style="text-align: left;">动画</td>
+<td style="text-align: left;">Claude 正在运行工具或生成回复</td>
+</tr>
+<tr>
+<td style="text-align: left;">需要输入</td>
+<td style="text-align: left;">黄色</td>
+<td style="text-align: left;">Claude 正在等待只有您能提供的内容：问题的答案、权限决定，或其他只有您能回答的提示，例如允许某个网络主机的<a href="sandboxing.html">沙箱</a>提示，或 MCP 服务器的<a href="mcp.html#respond-to-mcp-elicitation-requests">输入请求</a>。需要已附加终端的命令，例如 <code>/install-github-app</code> 或 <code>/mcp</code> 设置列表，<a href="#attach-to-a-session">也会让无人值守的会话停留在这里</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">空闲</td>
+<td style="text-align: left;">暗淡</td>
+<td style="text-align: left;">会话没有任何事情要做，已准备好接收您的下一个提示词</td>
+</tr>
+<tr>
+<td style="text-align: left;">已完成</td>
+<td style="text-align: left;">绿色</td>
+<td style="text-align: left;">任务成功完成</td>
+</tr>
+<tr>
+<td style="text-align: left;">失败</td>
+<td style="text-align: left;">红色</td>
+<td style="text-align: left;">任务以错误结束</td>
+</tr>
+<tr>
+<td style="text-align: left;">已停止</td>
+<td style="text-align: left;">灰色</td>
+<td style="text-align: left;">您用 <code>Ctrl+X</code> 或 <code>claude stop</code> 停止了会话，<a href="#the-supervisor-process">其进程从 Claude Code 外部被结束</a>，或<a href="#sessions-show-as-failed-after-shutdown">它在后台服务关闭时结束</a></td>
+</tr>
+</tbody>
+</table>
+<p>另外，图标的形状有其自身的含义：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">形状</th>
+<th style="text-align: left;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>✻</code> 或动画 <code>✽</code></td>
+<td style="text-align: left;">会话进程正在运行，或会话需要您的输入</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>∙</code></td>
+<td style="text-align: left;">进程已退出。您仍然可以窥视该行，当您回复或附加时，Claude 会根据其保存的对话重新启动它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>✢</code></td>
+<td style="text-align: left;">一个 <a href="scheduled-tasks.html"><code>/loop</code></a> 会话正在迭代之间休眠。该行显示其运行次数和倒计时</td>
+</tr>
+</tbody>
+</table>
+<p>行右边缘可能出现的 <code>#N</code> 或 <code>!N</code> 标签是指向会话的<a href="#pull-request-status">拉取请求或合并请求</a>的链接，不是状态图标的一部分。</p>
+<p>agent view 打开时，终端标签页标题会显示等待输入的数量：有会话需要输入时显示 <code>2 awaiting input · claude agents</code>，没有时显示 <code>claude agents</code>。</p>
+<p>要从脚本或其他程序读取会话状态，请使用 <a href="#read-session-state-from-a-script"><code>claude agents --json</code></a>，而不是 <code>~/.claude/jobs/</code> 下的文件。</p>
+<p>agent view 打开时，当本地后台会话开始需要您的输入、完成或失败时，Claude Code 还会通过您配置的<a href="terminal-config.html#get-a-terminal-bell-or-notification">终端通知频道</a>发送通知。按计划运行的会话，例如 <a href="scheduled-tasks.html"><code>/loop</code></a> 会话，仅在需要您的输入时通知。通知使用与 Claude Code 其余部分相同的 <a href="settings-reference.html#preferrednotifchannel"><code>preferredNotifChannel</code> 设置</a>，并以 <code>agent_needs_input</code> 或 <code>agent_completed</code> 类型触发 <a href="hooks.html#notification"><code>Notification</code> hook</a>。</p>
+<p>后台会话不需要打开任何终端即可继续工作。一个单独的<a href="#the-supervisor-process">监督进程</a>运行它们，因此您可以关闭 agent view、关闭 shell 或启动新的交互式会话，已分派的工作会继续进行。</p>
+<p>会话状态会在磁盘上持久保存，不受自动更新和监督进程重启的影响。机器休眠时会话也会被保留。它们的进程在唤醒时恢复，监督进程会重新连接到它们，而不是将这段时间间隔视为空闲。关机仍然会停止正在运行的会话；请参阅<a href="#sessions-show-as-failed-after-shutdown">关机后会话显示为失败或已停止</a>了解如何恢复它们。</p>
+<p>如果机器休眠时会话正在生成回复，会话恢复后可能无响应。当您打开一个已停止响应的会话时，监督进程会重启其进程，会话会从中断处继续被打断的回复。</p>
+<h3 id="row-summaries">行摘要</h3>
+<p>每行中的单行摘要由 <a href="model-config.html">Haiku-class 模型</a>生成，因此无需打开会话记录，该行就能告诉您会话正在做什么、需要什么或产出了什么。会话正在工作时，行文本最多每 15 秒根据会话自身的最近输出更新一次，不发送模型请求；每个轮次结束时，模型会写入新的摘要。</p>
+<p>工作中的行显示会话自述正在做的事情，被阻塞的行显示它提出的问题。在较长的轮次中，模型还会每隔几分钟重写一次摘要，因此繁忙的行不会一直显示过时的摘要。摘要文本会填满行的剩余宽度；打开<a href="#peek-and-reply">窥视面板</a>可阅读被终端边缘截断的句子。</p>
+<p>当列表<a href="#organize-the-list">按目录分组</a>时，摘要以彩色文字显示的会话状态开头，例如 <code>Needs input · double jump or wall climb?</code>。在默认的按状态分组中，组标题已经指明了状态，因此行只显示摘要。</p>
+<p>轮次结束时的摘要和每次轮次中途的重写，都是通过您的常规提供商发送的一个简短 Haiku-class 请求，按与会话本身相同的<a href="data-usage.html">数据使用条款</a>计费和处理。两次模型重写之间每 15 秒的更新复用会话自身的输出，不发送请求。在未配置 Haiku-class 模型的第三方提供商或网关上，请求改用会话的主模型；设置 <a href="model-config.html#environment-variables"><code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code></a> 可选择一个模型。</p>
+<h3 id="pull-request-status">拉取请求状态</h3>
+<p>当会话<a href="#how-file-edits-are-isolated">创建拉取请求</a>时，Claude Code 会在行的右边缘添加一个链接到该拉取请求的标签：</p>
+<ul>
+<li>Claude Code 对拉取请求将标签写为 <code>#1234</code>，对 GitLab 合并请求写为 <code>!1234</code>。</li>
+<li>即使无法检测到超链接支持（例如通过 SSH 或 tmux），Claude Code 也会输出链接。设置 <a href="env-vars.html"><code>FORCE_HYPERLINK=0</code></a> 可将标签呈现为纯文本。</li>
+<li>在您向会话发送后续消息后，Claude Code 会保留该标签，同时行恢复显示实时进度。</li>
+</ul>
+<p>处理现有拉取请求的会话也会以相同方式链接到它。Claude Code 查找拉取请求的方式取决于 Claude 运行的命令：</p>
+<ul>
+<li>当 Claude 使用 <code>gh</code> 编辑、评论、关闭拉取请求或将其标记为就绪时，Claude Code 会链接该命令自身输出中指明的拉取请求。捕获的输出中未指明拉取请求的 <code>gh</code> 命令不会创建链接；<code>gh pr merge</code> 是常见情况，因为它只将结果打印到交互式终端。</li>
+<li>当 Claude 使用 <code>gh pr checkout</code> 检出拉取请求或推送到分支时，Claude Code 会用 <code>gh pr view</code> 查找该分支，并链接其打开的拉取请求。</li>
+<li>Claude 推送时拉取请求不必已经存在：在同一目录中后续最多五个 <code>git</code>、<code>gh</code>、<code>glab</code> 或 <code>curl</code> 命令运行后，Claude Code 会重试分支查找，因此在推送之后创建的拉取请求，包括 Claude 通过 GitHub REST API 创建的拉取请求，会在重试找到它时被链接。</li>
+</ul>
+<p>当会话链接到多个拉取请求时，标签改为显示数量，例如 <code>3 PRs</code>，并按最需要关注的打开拉取请求着色。打开<a href="#peek-and-reply">窥视面板</a>可查看全部拉取请求。</p>
+<p>拉取请求编号按其状态着色：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">颜色</th>
+<th style="text-align: left;">拉取请求状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">黄色</td>
+<td style="text-align: left;">等待检查或审查，或检查失败</td>
+</tr>
+<tr>
+<td style="text-align: left;">绿色</td>
+<td style="text-align: left;">检查通过且没有审查阻止</td>
+</tr>
+<tr>
+<td style="text-align: left;">紫色</td>
+<td style="text-align: left;">已合并</td>
+</tr>
+<tr>
+<td style="text-align: left;">灰色</td>
+<td style="text-align: left;">草稿或已关闭</td>
+</tr>
+</tbody>
+</table>
+<p>对于以拉取请求结束的任务，请查看此标签了解结果：当编号变为绿色时，审查并合并该拉取请求。</p>
+<h3 id="peek-and-reply">窥视和回复</h3>
+<p>在选中的行上按 <code>Space</code> 打开窥视面板。面板打开时会显示该行在终端边缘被截断的句子，具体是哪个句子取决于会话的状态：</p>
+<ul>
+<li>正在等待您的会话：它提出的确切问题，显示在回复输入框上方</li>
+<li>已完成的会话：其结果</li>
+<li>工作中的会话：其完整的状态句子</li>
+</ul>
+<p>接下来列出与该会话链接的所有拉取请求。对于正在等待您或以安全模式运行的会话，其下方还会多出一行：</p>
+<ul>
+<li>类似 <code>waiting 3m</code> 的行：会话已等待您多长时间。行右边缘的时长是另一个数字：它从会话启动时开始计算</li>
+<li><code>safe mode · customizations are off</code>：此会话在<a href="debug-your-config.html#test-against-a-clean-configuration">关闭您的自定义配置</a>的情况下运行，因为您是从 shell 用 <code>claude --bg --safe-mode</code> 启动它的。您可以保持原样。要在重新启用自定义配置的情况下继续对话，请在 shell 中依次运行 <a href="#manage-sessions-from-the-shell"><code>claude stop &lt;id&gt;</code></a> 和 <a href="sessions.html#resume-a-session"><code>claude --resume</code></a></li>
+</ul>
+<p>大多数时候窥视面板就足够了，您无需打开完整的会话记录。</p>
+<p>在窥视面板中输入回复并按 <code>Enter</code> 将其发送到该会话。在回复前加上 <code>!</code> 可改为发送 Bash 命令。回复的处理方式取决于会话以及您发送的内容：</p>
+<ul>
+<li>正在工作的会话：<code>/model</code>、<code>/effort</code>、<code>/rename</code> 和 <code>/usage</code> 会立即运行。其他回复会加入会话的<a href="interactive-mode.html#queue-messages-while-claude-works">消息队列</a>而不是打断回复，并<a href="interactive-mode.html#when-claude-code-sends-what-you-queued">在排队输入生效时</a>生效。其他<a href="commands.html">命令</a>会等待当前轮次结束，即使是在会话自身的提示符处输入后会立即运行的命令</li>
+<li>恰好为 <code>/stop</code> 的回复：立即停止会话，而不是发送给会话，无论会话正在工作还是在等待您</li>
+<li><a href="#run-a-shell-command">shell 作业</a>：回复（包括 <code>/stop</code>）会作为键入的输入发送到该命令的终端</li>
+</ul>
+<p>当会话正在等待您时，在窥视面板中如何回答取决于它在等待什么：</p>
+<ul>
+<li>带有预定义选项的问题：面板按编号列出选项。在回复输入框为空时，按某个选项的编号将其填入，然后按 <code>Enter</code> 发送，或者改为输入您自己的答案</li>
+<li>没有预定义选项的问题：输入您的答案。当空输入框显示建议的回复时，按 <code>Tab</code> 将其填入，并可在发送前编辑</li>
+<li>权限提示或其他对话框，例如<a href="sandboxing.html">沙箱</a>提示或 MCP 服务器的<a href="mcp.html#respond-to-mcp-elicitation-requests">输入请求</a>：回复并不会回答它。您的回复会在队列中等待。要回答该对话框，请用 <code>→</code> 附加</li>
+</ul>
+<p>当 <a href="hooks.html#permissionrequest"><code>PermissionRequest</code></a> 或 <a href="hooks.html#pretooluse"><code>PreToolUse</code></a> hook 针对会话正在询问的调用返回了 Claude Code 无法验证的输出时，该行会在待处理请求的文本之前显示 hook 事件以及 <code>hook output invalid:</code> 和验证错误。对于以其他方式失败的 hook，该行会说明 hook 失败。会话仍在等待同一个请求。</p>
+<p>当回复无法送达时，错误消息会说明它是否已保存。以 <code>!</code> 或 <code>/</code> 开头的回复永远不会被保存。下次您重启会话时，Claude Code 会将已保存的回复作为会话的下一个提示词发送；其他回复请重新发送。</p>
+<p>在<a href="voice-dictation.html#hold-to-record">按住模式</a>下启用<a href="voice-dictation.html">语音听写</a>后，在回复输入框获得焦点时按住您的按键通话键，即可通过听写而非键入来回复。agent view 底部的分派输入框中也同样适用。</p>
+<p>使用 <code>↑</code> 和 <code>↓</code> 窥视相邻会话而无需关闭面板，或按 <code>→</code> 附加。</p>
+<h3 id="attach-to-a-session">附加到会话</h3>
+<p>在选中的行上按 <code>Enter</code> 或 <code>→</code> 即可附加。agent view 会被完整的交互式会话取代。附加时，Claude 会发布一段简短回顾，说明您离开期间发生了什么。</p>
+<p>附加后，会话的行为与任何其他 Claude Code 会话相同：<a href="commands.html">命令</a>、快捷键和功能都可正常使用，但以下情况除外。</p>
+<p>附加后，<code>/install-github-app</code> 和 <a href="mcp.html"><code>/mcp</code></a> 设置列表可正常使用，因为终端前有人可以完成它们的对话框。没有人附加时，这些命令无法打开对话框，因此会话会出现在 agent view 的 <code>Needs input</code> 下，行中显示类似 <code>open this session to manage MCP servers</code> 的内容，会话记录中的回复也会说明同样的情况。附加并再次运行该命令即可继续；附加时需要输入的行会被清除。<code>/mcp reconnect &lt;server&gt;</code>、<code>/mcp enable</code> 和 <code>/mcp disable</code> 无论是否附加都可使用。</p>
+<p>附加的会话始终以<a href="fullscreen.html">全屏模式</a>呈现，不受您的 <code>tui</code> 设置影响，因为后台会话没有可追加内容的终端回滚缓冲区。使用 <code>PgUp</code>、<code>PgDn</code> 或鼠标滚轮滚动，按 <code>Ctrl+O</code> 进入会话记录模式。终端的原生滚动和 tmux 复制模式仅显示当前视口，与运行任何全屏应用程序时相同。</p>
+<p>附加的会话不会<a href="terminal-config.html#see-session-status-in-your-terminal">向您的终端报告其状态</a>。</p>
+<p>在空提示符上按 <code>←</code> 或运行 <code>/exit</code> 即可分离并返回 agent view，无论您是从 agent view 打开会话，还是从 shell 用 <code>claude attach &lt;id&gt;</code> 打开的。</p>
+<p><a href="interactive-mode.html#side-questions-with-%2Fbtw"><code>/btw</code> overlay</a> 打开时，<code>←</code> 也可以分离。需要 Claude Code v2.1.257 或更高版本。仍在回答中的旁支问题会在您离开期间继续运行。下次附加时，overlay 会重新打开并显示该问题或其答案。</p>
+<p>在 Windows 上，如果您在附加后约半秒内按 <code>←</code>，Claude Code 会显示 <code>Ambiguous ←, press again to detach</code>，因为在这段时间内终端可能会重新传递附加之前的按键。再按一次 <code>←</code> 即可分离。</p>
+<p><code>Ctrl+Z</code> 也会分离，但会返回到您开始的地方：如果您从 agent view 附加则返回 agent view，如果您运行的是 <code>claude attach</code> 则返回 shell。当对话框获得焦点且不响应 <code>←</code> 时，请使用 <code>Ctrl+Z</code>。</p>
+<p>附加时 <code>Ctrl+C</code> 保持其标准中断行为：它会取消正在进行的回复或 <code>!</code> shell 命令，而不是分离。在空提示符上按两次 <code>Ctrl+C</code> 会分离。</p>
+<p>分离永远不会停止后台会话：<code>←</code>、<code>Ctrl+Z</code>、<code>/exit</code> 以及连按两次 <code>Ctrl+C</code> 或 <code>Ctrl+D</code> 都会让它继续运行。如果您在 <code>/loop</code> 等待下一次迭代时分离，循环会继续运行，该次迭代会在您不在时按计划开始。要在分离前停止循环，请参阅<a href="scheduled-tasks.html#stop-a-loop">停止循环</a>。要从会话内部结束会话，请运行 <code>/stop</code>。</p>
+<h4 id="switch-sessions-without-leaving-the-terminal">在不离开终端的情况下切换会话</h4>
+<p>在前台运行的会话中（即您在终端中启动、而非从 agent view 附加的会话），在空提示符上按 <code>←</code> 会将其转入后台并打开 agent view，同时选中该会话的行，因此您无需离开终端即可切换会话。对于已附加的会话，同样按一次即可分离。</p>
+<p>如果您在删除提示符中最后的文本或浏览提示历史后立即按 <code>←</code>，Claude Code 会要求您确认：第一次按下显示 <code>Press ← again to open agents</code>（在已附加的会话中显示 <code>Press ← again to go back to agents</code>），第二次按下才会切换。</p>
+<p>当 <code>←</code> 将前台会话转入后台时，agent view 会在列表上方显示 <code>Your conversation moved to the background</code>，并已选中该会话的行。接下来：</p>
+<ul>
+<li>按 <code>Enter</code> 重新打开对话。</li>
+<li>按 <code>Esc</code> 撤销切换并返回对话。如果 <code>Esc</code> 显示 <code>Still starting — try again in a moment</code>，说明后台会话尚未就绪，请稍后再按一次 <code>Esc</code>。</li>
+<li>按两次 <code>Ctrl+C</code> 退出到 shell。</li>
+</ul>
+<p>当 Claude Code 无法重新打开对话时，它会退出并打印一条可恢复该对话的 <code>claude --resume</code> 命令。</p>
+<p><a href="interactive-mode.html#task-list">Claude 的任务列表</a>会随对话移到后台会话，因此当您返回该行时，清单保持完整。</p>
+<p>在您用方向键或鼠标移动选择后，您按下 <code>←</code> 时所在的行仍会保持粗体、不暗淡的名称，便于您辨认自己来自哪个会话。</p>
+<p>如果按 <code>←</code> 时有工具正在运行，Claude Code 会等待其完成后再转入后台，Claude 会在后台会话中继续回复。再按一次 <code>←</code> 可立即转入后台而不等待。当进行中的后台工作无法转移到后台会话时，Claude Code 会先显示 <code>Background this session?</code> 对话框，与 <a href="#from-inside-a-session"><code>/background</code></a> 相同。</p>
+<p>大约十秒后，Claude Code 会不再等待，直接将会话转入后台，但以下情况等除外：</p>
+<ul>
+<li><strong>前台子代理仍在运行</strong>：Claude Code 会继续等待，以便 Claude 启动的<a href="sub-agents.html#run-subagents-in-foreground-or-background">前台子代理</a>的工作得以延续，并显示 <code>Still backgrounding after the current tool</code>。再次按 <code>←</code> 可不等待直接转入后台，这会使这些子代理从头重新开始。</li>
+<li><strong>有权限提示或问题在等待您的回答</strong>：当权限提示或 Claude 提出的问题处于等待状态时，Claude Code 会继续等待并显示 <code>Still backgrounding after the current tool — a question is waiting for your answer.</code> 如果您的回答让当前轮次得以继续，例如在权限提示上选择 <strong>Yes</strong>，Claude Code 会在当前工具完成时将会话转入后台。</li>
+<li><strong>您在提示输入框中输入内容</strong>：Claude Code 会取消切换，因为未发送的文本会留在终端的输入框中，不会移到后台会话。它会显示 <code>Backgrounding cancelled — you have unsent text in the input. Send it or clear it, then press ← again.</code> Claude 会继续在前台工作。</li>
+<li><strong>您停止了当前轮次</strong>：Claude Code 会取消切换并显示 <code>Backgrounding cancelled — the turn was stopped.</code> 例如，当您<a href="interactive-mode.html#general-controls">用 <code>Esc</code> 中断 Claude</a>，在主对话的权限提示上<a href="permissions.html#add-a-comment-when-you-answer-a-permission-prompt">不添加评论</a>而选择 <strong>No</strong>，或在主对话中 Claude 提出的问题上按 <code>Esc</code> 时，当前轮次会停止。再按一次 <code>←</code> 即可将会话转入后台。</li>
+<li><strong>排队的消息无法移动</strong>：您<a href="interactive-mode.html#queue-messages-while-claude-works">在 Claude 工作时排队的消息</a>会随对话移到后台会话。当其中某条消息无法移动时，会话会留在前台，Claude Code 会显示类似 <code>Cannot open agents — 1 queued message can't move to the background. Press ← again once Claude has read it.</code> 的通知。</li>
+</ul>
+<p>当 Claude Code 将会话转入后台时（无论是大约十秒后，还是在您再按一次 <code>←</code> 之后），它会停止 Claude 仍在前台运行的 shell 命令。Claude Code 不会针对该命令显示 <code>Background this session?</code> 对话框。在后台会话中，Claude 没有该命令已启动的记录，因此 Claude 可能会再次运行该命令。要在会话移动时让该命令继续运行，请在 Claude Code 仍在等待时按 <code>Ctrl+B</code> <a href="interactive-mode.html#background-bash-commands">将其转为后台命令</a>。</p>
+<p>即使对话还没有任何消息，按 <code>←</code> 也会创建该会话的行，因此 <code>→</code> 仍可返回该会话。</p>
+<p>您可以在 <code>/config</code> 中通过 <a href="settings-reference.html#leftarrowopensagents"><code>leftArrowOpensAgents</code></a> 设置为前台会话关闭此快捷键。</p>
+<h5 id="prompts-sent-as-the-session-moves-to-the-background">会话移到后台时发送的提示词</h5>
+<p>如果您在会话移到后台的那一刻输入提示词或 <code>!</code> shell 命令，它会被停止或保持未发送状态：</p>
+<ul>
+<li><strong>在对话关闭时发送</strong>：回复或命令会在对话关闭、agent view 打开时停止</li>
+<li><strong>此时仍在等待 <a href="hooks.html">hook</a></strong>：提示词不会被发送，屏幕上也不会有任何说明。这包括在 <a href="hooks.html#sessionstart"><code>SessionStart</code> hook</a> 仍在运行时输入的提示词</li>
+</ul>
+<p>在这两种情况下，您输入的文本都会保留在<a href="interactive-mode.html#command-history">提示历史</a>中。要再次发送，请打开已转入后台的会话，在其提示符处按 <code>↑</code> 找回该文本。</p>
+<h3 id="organize-the-list">组织列表</h3>
+<p>agent view 对会话进行分组，使需要输入的会话位于顶部，<code>Ready for review</code> 和 <code>Needs input</code> 位于 <code>Working</code> 和 <code>Completed</code> 之上。这些组名与上面的<a href="#read-session-state">状态</a>并非一一对应：会话有需要审查或检查失败的打开拉取请求时会移到 <code>Ready for review</code>，而 <code>Completed</code> 会同时收纳已完成、失败和已停止的会话。</p>
+<p>按 <code>Ctrl+S</code> 可改为按目录分组。您的选择会在多次运行之间保留。</p>
+<p>在一个组内：</p>
+<ul>
+<li>按 <code>Ctrl+T</code> 将会话固定到顶部，并<a href="#the-supervisor-process">在空闲时保持其进程运行</a></li>
+<li>按 <code>Shift+↑</code> 或 <code>Shift+↓</code> 重新排序会话</li>
+<li>按 <code>Ctrl+R</code> 重命名会话</li>
+<li>在组标题上按 <code>Enter</code> 将其折叠，但<a href="#filter-sessions">过滤器</a>处于活动状态时除外，此时所有组都保持展开</li>
+<li>按 <code>Ctrl+X</code> 停止会话，并在两秒内再按一次 <code>Ctrl+X</code> 将其从列表中删除，或按 <code>Esc</code> 关闭确认而不删除。即使停止尝试失败（例如因为<a href="#agent-view-says-the-background-service-did-not-respond">后台服务没有响应</a>），第二次按下也会删除会话。在这种情况下，确认状态会再保持两秒，删除操作会自行结束会话的进程</li>
+</ul>
+<p>在组标题上按 <code>Ctrl+X</code> 会在确认后删除该组中的所有会话。除了<a href="#what-deleting-a-session-removes">删除会话会移除什么</a>中所述的保留情况外，删除会将会话从列表中移除。Claude 为其创建的 worktree 会被移除、保留或留在原处，具体取决于您的删除方式以及 worktree 中的内容。对话会话记录保留在您的本地机器上，可通过 <code>claude --resume</code> 访问。</p>
+<p>屏幕容纳不下的已完成会话会折叠成一行 <code>… N more</code>。<code>Completed</code> 组会填满活跃组之后剩余的垂直空间。在较矮的终端上，标题会压缩为单行摘要，以便正在工作或需要输入的会话保持可见。</p>
+<h4 id="bring-back-a-past-session">恢复过往会话</h4>
+<p>要恢复会话，请在<a href="#dispatch-an-agent-from-agent-view">分派输入框</a>中输入 <code>/resume</code>。此时会打开一个选择器，按从新到旧的顺序列出您打开 agent view 所在仓库的过往会话，包括您从列表中删除的会话。已有行的会话不会列出。按 <code>Enter</code> 将选中的会话作为后台会话恢复，使其以行的形式重新加入列表。</p>
+<p>在以下情况下，<code>/resume</code> 会失败并显示 <code>isn't available in agent view</code>：</p>
+<ul>
+<li><code>/resume</code> 指定了 id 或搜索词</li>
+<li>视图通过 <code>--cwd</code> 限定了范围</li>
+<li>视图以 <a href="cli-reference.html#cli-flags"><code>--safe-mode</code></a> 启动</li>
+<li>视图以 <code>--permission-mode</code> 或 <code>--settings</code> 等标志打开</li>
+</ul>
+<p>如果您在 <code>/resume</code> 后输入了任何内容，请去掉这些内容后重新输入。如果您使用了上述某个标志，请在 shell 中不带该标志运行 <code>claude agents</code>，然后单独输入 <code>/resume</code>。</p>
+<h3 id="filter-sessions">过滤会话</h3>
+<p>在分派输入框开头输入以下过滤器之一，即可在输入时缩小列表范围：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">过滤器</th>
+<th style="text-align: left;">显示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>a:&lt;name&gt;</code></td>
+<td style="text-align: left;">运行指定 Agent 的会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>s:&lt;state&gt;</code></td>
+<td style="text-align: left;">处于给定状态的会话，例如 <code>s:working</code>，或位于给定组标题下的会话，例如 <code>s:ready</code> 对应 <code>Ready for review</code>。<code>s:blocked</code> 列出所有正在等待您的会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>n:&lt;text&gt;</code></td>
+<td style="text-align: left;">名称或第一个提示词包含该文本的会话，例如 <code>n:login</code>。需要 Claude Code v2.1.287 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>o:&lt;text&gt;</code></td>
+<td style="text-align: left;">结果包含该文本的会话，例如 <code>o:merged</code>。单独的 <code>o:</code> 会列出所有已报告结果的会话</td>
+</tr>
+<tr>
+<td style="text-align: left;">拉取请求或合并请求编号（例如 <code>#1234</code>）或其 URL</td>
+<td style="text-align: left;">正在处理该拉取请求或合并请求的会话</td>
+</tr>
+<tr>
+<td style="text-align: left;">任何其他 URL</td>
+<td style="text-align: left;">第一个提示词包含该 URL 的会话</td>
+</tr>
+</tbody>
+</table>
+<p>要组合过滤器，请以 <code>a:</code>、<code>s:</code>、<code>n:</code> 或 <code>o:</code> 开头，再添加更多过滤器，以空格分隔。列表会显示同时匹配所有过滤器的会话。例如，<code>s:blocked a:reviewer</code> 会列出正在等待您的 <code>reviewer</code> 会话。</p>
+<p>过滤器处于活动状态时，您折叠的组会展开以显示匹配项，并且会选中一个匹配项，因此按 <code>Enter</code> 即可打开它。清空输入框即可移除过滤器，这些组会再次折叠。</p>
+<h3 id="keyboard-shortcuts">快捷键</h3>
+<p>在 agent view 中按 <code>?</code> 可在上下文中查看快捷键。下表对其进行了汇总。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">快捷键</th>
+<th style="text-align: left;">操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>↑</code> / <code>↓</code></td>
+<td style="text-align: left;">在行之间移动</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PgUp</code> / <code>PgDn</code></td>
+<td style="text-align: left;">按一屏的行数向上或向下移动</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Home</code> / <code>End</code></td>
+<td style="text-align: left;">跳到第一行或最后一行</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Enter</code></td>
+<td style="text-align: left;">附加到选定的会话；如果输入框中的文本不是<a href="#filter-sessions">过滤器</a>，则提交该文本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Space</code></td>
+<td style="text-align: left;">打开或关闭选定会话的窥视面板</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Shift+Enter</code></td>
+<td style="text-align: left;">在分派输入框中插入换行符，<a href="terminal-config.html#enter-multiline-prompts">与主提示输入框相同</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Ctrl+Enter</code></td>
+<td style="text-align: left;">分派并立即附加，适用于 <code>?</code> overlay 中列出 <code>ctrl+enter to start and open</code> 的终端</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>→</code></td>
+<td style="text-align: left;">附加到选定的会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Alt+1</code>..<code>Alt+9</code></td>
+<td style="text-align: left;">附加到焦点会话所在目录中的第 1–9 个会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Tab</code></td>
+<td style="text-align: left;">输入框为空时，浏览所有子代理。否则应用突出显示的建议</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Ctrl+S</code></td>
+<td style="text-align: left;">在按状态和按目录分组之间切换</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Ctrl+T</code></td>
+<td style="text-align: left;">固定或取消固定选定的会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Ctrl+F</code></td>
+<td style="text-align: left;">使用 <a href="#filter-sessions"><code>n:</code> 过滤器</a>按名称查找会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Alt+↑</code> / <code>Alt+↓</code></td>
+<td style="text-align: left;">跳到上一个或下一个组标题</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Ctrl+R</code></td>
+<td style="text-align: left;">重命名选定的会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Ctrl+G</code></td>
+<td style="text-align: left;">在您的 <code>$VISUAL</code> 或 <code>$EDITOR</code> 中打开分派提示词</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Ctrl+J</code></td>
+<td style="text-align: left;">在分派输入框中插入换行符</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Ctrl+X</code></td>
+<td style="text-align: left;">停止会话；在两秒内再按一次即可删除</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Shift+↑</code> / <code>Shift+↓</code></td>
+<td style="text-align: left;">重新排序选定的会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Esc</code></td>
+<td style="text-align: left;">关闭窥视面板、清空输入框或退出。当您通过用 <code>←</code> 将会话转入后台而打开 agent view 时，最后一次 <code>Esc</code> 会返回该对话而不是退出。启用 <a href="interactive-mode.html#vim-editor-mode">vim 编辑器模式</a>时，在输入框中按 <code>Esc</code> 会从 INSERT 模式切换到 NORMAL 模式并保留您的文本，与主提示输入框相同</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Ctrl+C</code></td>
+<td style="text-align: left;">清空输入框；按两次退出。当屏幕上有选中的文本时，按下该键会改为清除选区；除非<a href="settings-reference.html#copyonselect">选中时已自动复制</a>，否则会先复制选区</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>?</code></td>
+<td style="text-align: left;">显示快捷键</td>
+</tr>
+</tbody>
+</table>
+<p>在 <a href="keybindings.html#agents-actions"><code>Agents</code> 上下文</a>中有对应操作的快捷键遵循您的 <a href="keybindings.html"><code>keybindings.json</code></a>。<code>Ctrl+G</code> 也是如此，它通过 <code>Chat</code> 上下文的 <code>chat:externalEditor</code> 绑定进行配置。</p>
+<h2 id="dispatch-new-agents">分派新的 Agent</h2>
+<p>您可以从 Agent 视图分派新的后台会话，将现有的交互式会话发送或复制到后台，或直接从 shell 启动一个。</p>
+<h3 id="dispatch-an-agent-from-agent-view">从 Agent 视图分派 Agent</h3>
+<p>在 Agent 视图底部的输入框中输入提示词，然后按 <code>Enter</code> 启动新的后台会话。会话会根据提示词自动命名；稍后可以使用 <code>Ctrl+R</code> 重命名。</p>
+<p>自动名称是由 <a href="model-config.html">Haiku 级模型</a> 生成的简短标签。会话稍后获得的名称也会显示在其行上，包括当您在该会话中 <a href="permission-modes.html#review-and-approve-a-plan">接受计划</a> 时会话获得的 <a href="sessions.html#name-your-sessions">生成的标题</a>。</p>
+<p>将图像粘贴到提示词中，即可随任务附上屏幕截图或图表。</p>
+<p>粘贴的文本超过 800 个字符或超过三行时会折叠为 <code>[Pasted text #N]</code> 占位符，以便输入保持在一行；完整文本在您分派时发送。要在分派前查看或编辑折叠的文本，请再次粘贴相同的文本，占位符会展开回输入框。</p>
+<p>通过为提示词添加前缀或在其中提及特定内容来控制会话如何启动：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">输入</th>
+<th style="text-align: left;">效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>&lt;agent-name&gt; &lt;prompt&gt;</code></td>
+<td style="text-align: left;">如果第一个单词与自定义 <a href="sub-agents.html">子代理</a> 名称匹配，该子代理将作为会话的主 Agent 运行，使用其 frontmatter 中的配置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>@&lt;agent-name&gt;</code></td>
+<td style="text-align: left;">在提示词中的任何位置提及自定义子代理，以将其作为主 Agent 运行</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>@&lt;repo&gt;</code></td>
+<td style="text-align: left;">提及一个仓库以在该处运行会话。请参阅 <a href="#dispatch-to-a-specific-directory">分派到特定目录</a> 了解会列出哪些仓库</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/&lt;command&gt;</code></td>
+<td style="text-align: left;">建议可作为提示词分派的 <a href="skills.html">skill</a> 和 <a href="commands.html">命令</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>! &lt;command&gt;</code></td>
+<td style="text-align: left;">将 shell 命令作为后台作业运行，而不是启动 Claude 会话。该作业显示为一行，您可以附加到它、观察它并从中分离</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>#&lt;number&gt;</code> 或 Pull Request/merge request URL</td>
+<td style="text-align: left;">如果已有会话在处理该 Pull Request 或 merge request，Claude Code 会选中其行，而不是分派新会话</td>
+</tr>
+</tbody>
+</table>
+<p>有一小组命令在 Agent 视图本身中运行，而不是分派：</p>
+<ul>
+<li><code>/exit</code> 和 <code>/quit</code> 关闭 Agent 视图</li>
+<li><code>/logout</code> 将您注销</li>
+<li><code>/model</code>、<code>/effort</code> 和 <code>/fast</code> 设置 <a href="#set-the-model-effort-and-fast-mode">您接下来分派的会话启动时使用的配置</a>。<code>/effort</code> 和 <code>/fast</code> 需要 Claude Code v2.1.299 或更高版本。</li>
+<li><code>/login</code> 打开登录对话框，以便您无需附加到会话即可重新登录</li>
+<li>不带参数的 <code>/resume</code> 或其别名 <code>/continue</code> 会打开该仓库过去会话的选择器，以将其中一个作为后台会话 <a href="#bring-back-a-past-session">恢复</a></li>
+</ul>
+<p>Skill、您自己的命令以及会展开为提示词的内置命令（如 <code>/init</code>）会作为第一条提示词发送到新的后台会话。<code>isn't available in agent view</code> 提示表示您输入的内置命令没有运行。要运行它，请 <a href="#attach-to-a-session">附加到会话</a> 并在其中输入。您输入的所有内容都会保留在该提示旁边的输入框中，以便您进行编辑。</p>
+<p>将重复任务打包为 <a href="skills.html">skill</a>，即可从 Agent 视图反复启动相同的工作流，而无需重新输入提示词。</p>
+<p>当同一个 <code>@name</code> 同时匹配子代理和同级仓库时，子代理优先。不带 <code>@</code> 的第一个单词匹配同样适用，因此恰好以您某个子代理名称开头的提示词会分派该子代理，而不是将该单词视为纯文本。想要明确指定时请使用 <code>@</code> 形式，或以其他单词开头来避免匹配。</p>
+<h4 id="dispatch-to-a-specific-directory">分派到特定目录</h4>
+<p>新会话在您打开 Agent 视图的目录中运行。要指定其他目录，请使用以下任一方式：</p>
+<ul>
+<li>在该目录中打开 <code>claude agents</code>。</li>
+<li>
+<p>在父目录中打开 <code>claude agents</code>，并在提示词中使用 <code>@&lt;repo&gt;</code> 提及子仓库。输入 <code>@</code> 会列出这些目标：</p>
+</li>
+<li>
+<p>启动目录下一级的 Git 仓库</p>
+</li>
+<li>您启动时所在仓库已注册的、位于其目录树内的 <a href="worktrees.html">git worktree</a>，例如 Claude 在 <code>.claude/worktrees/</code> 下创建的 worktree，并标注其检出的分支。在仓库外添加的 worktree（例如使用 <code>git worktree add ../feature</code> 添加的）不会列出</li>
+<li>列表中已有会话的任何目录</li>
+</ul>
+<p>名称包含空格的目录不会列出。<br />
+* 从 shell 中 <code>cd</code> 进入该目录并运行 <code>claude --bg "&lt;prompt&gt;"</code>。</p>
+<p>当 Agent 视图按目录分组时，分派会将提示词发送到所选行的目录，因此您可以选择一个分组并分派到其中，而无需重新输入路径。</p>
+<h3 id="send-or-copy-a-session-to-the-background">将会话发送或复制到后台</h3>
+<p>有两个命令可将工作从您所在的会话移到后台：<code>/background</code> 将当前对话发送到后台并释放您的终端，<code>/fork</code> 则发送一个副本，同时您继续在原处工作。</p>
+<h4 id="send-the-session-to-the-background">将会话发送到后台</h4>
+<p>运行 <code>/background</code> 或其别名 <code>/bg</code> 将当前对话移到后台会话。传递一个提示词，例如 <code>/bg run the test suite and fix any failures</code>，可以先再给出一条指令。如果您运行 <code>/bg</code> 时 Claude 正在回复，回复会在后台会话中继续。</p>
+<p>退出仍有后台工作运行的会话（例如子代理、后台 shell 命令、工作流或 <a href="tools-reference.html#monitor-tool">monitor</a>）时，会显示 <code>Background work is running</code> 对话框，而不是立即退出。选择 <code>Move to background and exit</code> 可以像 <code>/background</code> 一样将会话移到后台并返回到您的 shell。当 Agent 视图 <a href="#turn-off-agent-view">已关闭</a> 时不显示该选项。</p>
+<p>如果列表上的后台会话已使用该对话的名称，Claude Code 会为新行的名称编号，例如 <code>my-session (2)</code>，并保持现有行的名称不变。要重命名新行，请在 Agent 视图中选择它并按 <code>Ctrl+R</code>。</p>
+<h4 id="copy-the-session-with-/fork">使用 /fork 复制会话</h4>
+<p>运行 <code>/fork</code> 将当前对话复制到新的后台会话，同时原始会话继续运行。副本包含截至该时刻对话中的所有内容；副本运行的位置请参阅下面的列表。它还会继承模型、权限模式、effort 级别，以及您在会话期间添加的任何目录或"不再询问"权限授予。副本在 Agent 视图中显示为独立的一行。</p>
+<p>fork 之后，两个对话彼此独立：副本所做的任何事情都不会自行进入原始对话，不过在启用了 <a href="cross-session-messaging.html">跨会话消息</a> 的会话中，任一会话的 Claude 都可以显式地向另一个发送消息。</p>
+<p>当 <a href="#turn-off-agent-view">Agent 视图已关闭</a> 时，<code>/fork</code> 会启动一个 <a href="sub-agents.html#fork-the-current-conversation">fork 出的子代理</a>，而不是复制会话。</p>
+<h5 id="prompt-the-copy-and-open-its-session">向副本发送提示词并打开其会话</h5>
+<p>传递一个提示词，例如 <code>/fork open a draft pull request with the work so far</code>，副本会立即开始处理。不带提示词时，副本会等待第一条指令：在 <code>claude agents</code> 中选择其行并按 <code>Space</code> 发送一条，或运行 <code>claude attach &lt;id&gt;</code>。等待期间，所选行会显示 <code>space to send it a prompt</code>。</p>
+<p><code>/fork</code> 的确认信息只有一行，显示副本的状态（例如 <code>session running</code>）、其在 Agent 视图中的行名称，以及用于 <code>claude attach</code> 的会话 ID。单击名称即可切换到副本：此会话会移到后台（与按 <code>←</code> 相同），Agent 视图随即打开副本的会话。</p>
+<h5 id="where-the-copy-runs">副本运行的位置</h5>
+<p>除非副本 <a href="#how-file-edits-are-isolated">就地编辑</a>，Claude Code 会指示它在进行代码更改前创建自己的 worktree。在 git 仓库外，只有从 hook 创建的 worktree 移出的副本才会获得该指令；没有 <a href="hooks.html#worktreecreate"><code>WorktreeCreate</code> hook</a> 时，副本就地编辑。无论隔离设置如何，从您的 worktree 移出的副本还会被告知绝不要编辑该 worktree、在其中运行命令或进入该 worktree。</p>
+<p>副本启动的位置取决于当前会话运行的位置：</p>
+<ul>
+<li>与任何分派的会话一样，副本会 <a href="#how-file-edits-are-isolated">在编辑文件前移入自己的 worktree</a>。这种情况下，确认信息不会提及副本运行的位置。</li>
+<li>当您的会话在启动后移入其链接的 <a href="worktrees.html">worktree</a> 时，副本会回到会话移动前的位置启动，并且除非它 <a href="#how-file-edits-are-isolated">就地编辑</a>，否则会在那里自己的 worktree 中进行代码更改。当您的 worktree 检出在某个分支上时，该指令还会告诉任务建立在您工作之上的副本将其新分支基于您的分支，因为您的分支仍检出在您的 worktree 中。确认信息以 <code>runs in the origin tree</code> 结尾。</li>
+<li>当您在拥有主工作树的仓库的链接 worktree 内启动会话时，副本会在该主工作树中启动，同样遵循使用自己 worktree 的规则，但没有分支指令。此时确认信息同样以 <code>runs in the origin tree</code> 结尾。</li>
+<li>在裸仓库布局的 worktree 内启动的会话没有可返回的主工作树，因此副本留在原处，确认信息以 <code>edits this checkout</code> 结尾。当在不位于链接 worktree 内的会话中 <a href="#how-file-edits-are-isolated">关闭了</a> worktree 隔离时，也会出现相同的说明，因为此时副本会编辑您打开的文件。</li>
+</ul>
+<h5 id="sessions-that-cant-be-forked">无法 fork 的会话</h5>
+<p>使用副本无法继承的启动标志（例如替换的系统提示词或 <code>--tools</code> 允许列表）启动的会话无法 fork；Claude Code 会说明这一点，而不是创建不完整的副本。从 Agent 视图分派的会话可以正常 fork：副本会使用与来源会话相同的 <a href="sub-agents.html">Agent 定义</a> 和附加指令启动。</p>
+<h4 id="what-carries-over-when-you-background">后台处理时的继承内容</h4>
+<p>当您将会话转入后台时，每种进行中的后台工作要么继承到后台会话，要么仅在 Claude 于那里重新启动它时才继续，要么停止：</p>
+<ul>
+<li><strong>继承</strong>：正在运行的后台 shell 命令、已转入后台的子代理、您使用 <a href="scheduled-tasks.html"><code>/loop</code></a> 创建的定时任务，以及 Claude 对 <a href="artifacts.html#let-claude-reply-to-comments-on-its-own">Artifact 评论的自动回复</a> 会在后台会话中继续运行。子代理会与其启动的所有内容一起移动，因此只有当所有这些工作也都能移动时它才会被继承。</li>
+<li><strong>仅在 Claude 重新启动时继续</strong>：正在运行的 <a href="workflows.html">动态工作流</a>。如果您查看后台会话时该工作流尚未继续，请 <a href="#dynamic-workflows-when-you-background">让 Claude 重新启动它</a>。</li>
+<li><strong>停止</strong>：无法移到后台会话的工作，例如正在运行的 <a href="tools-reference.html#monitor-tool">monitor</a>。当有任何此类工作正在运行时，Claude Code 会显示 <code>Background this session?</code> 对话框，以便您在它停止工作前确认。拥有 monitor 的已转入后台的子代理会随 monitor 一起停止。</li>
+</ul>
+<p>进入后台后，会话可以启动新的子代理、monitor 和后台命令，这些在之后的分离和重新附加过程中会持续运行。</p>
+<p>原始启动时的配置标志会传递到后台会话，因此其 MCP 服务器、设置和备用模型保持有效：</p>
+<ul>
+<li><code>--mcp-config</code> 和 <code>--strict-mcp-config</code></li>
+<li><code>--settings</code></li>
+<li><code>--setting-sources</code></li>
+<li><code>--add-dir</code></li>
+<li><code>--plugin-dir</code></li>
+<li><code>--fallback-model</code></li>
+<li><code>--allow-dangerously-skip-permissions</code></li>
+</ul>
+<p>您在会话期间使用 <a href="permissions.html#additional-directories-grant-file-access-not-configuration"><code>/add-dir</code></a> 添加的目录也会继承。继承 <code>--allow-dangerously-skip-permissions</code> 会使 <code>bypassPermissions</code> 在后台会话中保持可用，但不会授予任何新权限：该模式仍需要有您 <a href="permission-modes.html#skip-all-checks-with-bypasspermissions-mode">接受绕过免责声明</a> 的记录。</p>
+<h5 id="dynamic-workflows-when-you-background">后台处理时的动态工作流</h5>
+<p>如果 <a href="workflows.html">动态工作流</a> 在您将其会话转入后台后没有继续，请让 Claude <a href="workflows.html#resume-after-you-leave-the-session">重新启动该工作流</a>。只有当 Claude 在后台会话中重新启动它时，该运行才会继续，并且 Claude Code 可能会先请您批准该重新启动。会话的对话中会显示一条通知，说明该工作流 <code>could not be resumed</code>。</p>
+<p>当 Claude 重新启动工作流时，在您将会话转入后台时仍在运行的任何子代理都会从头开始，并再次消耗其 token。如果您在仍有子代理运行时按 <code>←</code> 或运行 <code>/background</code>，<code>Background this session?</code> 对话框会说明有多少个。要让它们先完成，请选择 <code>Stay</code>。</p>
+<h3 id="dispatch-an-agent-from-your-shell">从您的 shell 分派 Agent</h3>
+<p>传递 <code>--bg</code> 或其长形式 <code>--background</code> 可启动直接进入后台的会话：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--bg<span class="w"> </span><span class="s2">"investigate the flaky SettingsChangeDetector test"</span>
+</code></pre></div>
+<p>提示词是位置参数，而不是 <code>-p</code> 的值。Claude Code 会在创建任何会话前拒绝 <code>--bg</code> 与 <code>-p</code> 或 <code>--print</code> 的组合，因为 <code>--print</code> 永远不会启动 <code>claude agents</code> 所附加的交互式会话。</p>
+<p>如果您在未 <a href="permissions.html#project-allow-rules-and-workspace-trust">信任</a> 的目录中从终端运行 <code>claude --bg</code>，会先出现工作区信任对话框，会话在您接受后启动。如果您拒绝，Claude Code 会退出而不启动会话。在无法显示对话框的环境中（例如脚本中），命令会以 <a href="errors.html#workspace-not-trusted-when-dispatching-a-background-session"><code>Workspace not trusted</code></a> 错误退出。</p>
+<p>要将您定义的特定 <a href="sub-agents.html">子代理</a>（例如 <code>code-reviewer</code>）作为会话的主 Agent 运行，请将 <code>--bg</code> 与 <code>--agent</code> 组合使用：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--agent<span class="w"> </span>code-reviewer<span class="w"> </span>--bg<span class="w"> </span><span class="s2">"address review comments on PR 1234"</span>
+</code></pre></div>
+<p>如果名称与您的任何子代理都不匹配，启动会失败：Claude Code 会打印 <code>no agent named</code> 警告，并仍报告会话已转入后台，但会话会立即以 <code>--agent '&lt;name&gt;' not found</code> 错误退出。</p>
+<p>当后台会话之后恢复或重新启动时，Claude Code 会恢复该 Agent 及其工具限制；关于其系统提示词，请参阅 <a href="cli-reference.html#system-prompt-flags-in-resumed-conversations">恢复的对话中的系统提示词标志</a>。它会先在会话自己的目录中搜索该 Agent（前提是您已 <a href="permissions.html#project-allow-rules-and-workspace-trust">信任该工作区</a>），因此从其他目录恢复会话时，项目范围的 Agent 仍会加载。如果该 Agent 已不存在，会话会使用默认工具继续运行，其会话记录打开时会带有一条 <a href="errors.html#session-agent-no-longer-available">指明该 Agent 的警告</a>。</p>
+<p>要在后台继续现有对话，请使用 <code>--resume</code> 传递其完整会话 ID：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--resume<span class="w"> </span>1f0e2c9a-6d0b-4c11-9f39-2a77c1d4e8b5<span class="w"> </span>--bg<span class="w"> </span><span class="s2">"pick up where you left off and finish the migration"</span>
+</code></pre></div>
+<p>在 Claude Code v2.1.257 或更高版本上，Claude Code 要么以相同 ID 继续该会话，要么以新 ID 启动一个副本并打印 <code>note:</code> 行，说明为何无法就地继续。当会话就地继续时，<code>claude agents</code> 只为其显示一行。</p>
+<p>当您将 <code>--bg</code> 与 <code>--continue</code>、不带参数的 <code>--resume</code> 或带名称或文件路径的 <code>--resume</code> 组合使用时，Claude Code 总是会启动这样的副本。添加 <code>--fork-session</code> 可有意启动副本，且不显示该说明。</p>
+<p>传递 <code>--name</code> 可在 Agent 视图中设置会话的显示名称，而不使用自动生成的名称：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--bg<span class="w"> </span>--name<span class="w"> </span><span class="s2">"flaky-test-fix"</span><span class="w"> </span><span class="s2">"investigate the flaky SettingsChangeDetector test"</span>
+</code></pre></div>
+<p>转入后台后，Claude 会打印会话的短 ID 和用于管理它的命令。当托管后台会话的服务尚未运行时，<code>--bg</code> 可能会先在此输出上方打印 <code>Starting background service…</code>。当您传递 <code>--name</code> 时，名称会显示在短 ID 之后：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">backgrounded · 7c5dcf5d · flaky-test-fix
+  claude agents             list sessions
+  claude attach 7c5dcf5d    open in this terminal
+  claude logs 7c5dcf5d      show recent output
+  claude stop 7c5dcf5d      stop this session
+</code></pre></div>
+<h4 id="prompts-that-contain-bg">包含 <code>--bg</code> 的提示词</h4>
+<p>提及 <code>--bg</code> 或 <code>--background</code> 的提示词会按输入原样传递，您发送给后台会话的 <code>--bg</code> 回复也是如此。例如，以下命令会启动一个后台会话，第二个 <code>--bg</code> 是其提示词的一部分：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--bg<span class="w"> </span><span class="s2">"find out why --bg sessions are slow to start on this machine"</span>
+</code></pre></div>
+<p>Claude Code 仅在可以出现标志的位置将整个参数读取为该标志：位于任何单独的 <code>--</code> 分隔符之前，且不在另一个标志期望其值的位置。请将该标志放在最前面，如 <code>claude --bg "&lt;prompt&gt;"</code>。</p>
+<p>在位置存在歧义的情况下（例如在一串组合的短标志之后），Claude Code 不会启动任何内容，而是以 <a href="errors.html#couldnt-tell-whether-bg-is-a-flag-or-text"><code>Couldn't tell whether --bg is a flag or text here</code></a> 错误退出。</p>
+<h4 id="run-a-shell-command">运行 shell 命令</h4>
+<p>要将 shell 命令作为后台作业而不是 Claude 会话运行，请传递 <code>--exec</code>。以下示例将 <code>pytest -x</code> 作为后台作业运行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--bg<span class="w"> </span>--exec<span class="w"> </span><span class="s1">'pytest -x'</span>
+</code></pre></div>
+<p>在 Agent 视图中，将 <code>!</code> 作为分派输入的第一个字符即可分派同类作业：<code>!</code> 显示为前缀，其后的所有内容为命令，按 <code>Enter</code> 启动作业。</p>
+<p>该命令作为基于 PTY 的作业运行，并在 Agent 视图中显示为一行，以最近一行输出作为其状态。shell 作业以命令代替 Claude 运行，因此不会调用任何模型，输出也不会发送到任何会话。</p>
+<p>要查看输出，请附加到该行、按 <code>Space</code> 在不附加的情况下预览，或从您的 shell 运行 <code>claude logs &lt;id&gt;</code>。捕获的输出保存在内存中，不会写入磁盘。该行及其输出会在命令退出约五分钟后自动清理，因此如果您需要结果，请在此之前读取。</p>
+<h3 id="how-file-edits-are-isolated">文件编辑如何隔离</h3>
+<p>当您从 Agent 视图分派后台会话或使用 <code>claude --bg</code> 启动一个后台会话时，会话在您的工作目录中启动。在编辑文件前，Claude 会将会话移入 <code>.claude/worktrees/</code> 下的隔离 <a href="worktrees.html">git worktree</a> 中，因此并行会话可以读取同一个检出，但各自写入自己的 worktree。一旦会话进入其 worktree，Claude Code 就会为该会话及其生成的任何子代理 <a href="worktrees.html#how-claude-code-enforces-isolation">强制执行 worktree 隔离</a>。</p>
+<p>Claude 在以下情况下跳过 worktree：</p>
+<ul>
+<li>您使用 <code>←</code> 或 <code>/background</code> <a href="#from-inside-a-session">将已打开的会话移到后台</a>。该会话会继续在其原本工作的位置编辑文件</li>
+<li>会话已位于链接的 git worktree 内，无论该 worktree 是 Claude 在 <code>.claude/worktrees/</code> 下创建的，还是您使用 <code>git worktree add</code> 在其他位置创建的</li>
+<li>Claude 正在编辑的文件位于链接的 git worktree 内，例如会话或其子代理使用 <code>git worktree add</code> 创建的 worktree</li>
+<li>工作目录不是 git 仓库，且没有配置 <a href="hooks.html#worktreecreate"><code>WorktreeCreate</code> hook</a></li>
+<li>写入位置在工作目录之外</li>
+</ul>
+<p>要为不适合使用 git worktree 的仓库关闭 worktree 隔离，请将 <a href="settings-reference.html#worktree-bgisolation"><code>worktree.bgIsolation</code></a> 设置为 <code>"none"</code>。后台会话随后会直接编辑您的工作副本，而不会先移入 worktree。将该设置添加到项目的 <code>.claude/settings.json</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"worktree"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"bgIsolation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"none"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>在 git 仓库外，会话直接写入工作目录，彼此之间不隔离，因此请避免分派会编辑相同文件的并行会话。如果您使用其他版本控制系统，请配置 <a href="worktrees.html#non-git-version-control"><code>WorktreeCreate</code> hook</a>，Claude 会以与 git 相同的方式隔离编辑。</p>
+<p>当 hook 在非 git 仓库的目录中失败时，Claude 会跳过该目录的隔离，并就地编辑工作目录。在 git 仓库内，Claude 在编辑前会将其移入 worktree 的会话，在该移动完成之前无法对共享检出使用 <code>Edit</code>、<code>Write</code> 或 <code>NotebookEdit</code> 工具。</p>
+<p>要查找会话的 worktree 路径，请附加到会话并查看其工作目录。</p>
+<p>后台会话生成的 <a href="sub-agents.html">子代理</a> 会继承会话的工作目录。一旦会话进入 worktree，子代理的文件编辑就会落在该 worktree 中，而不是您的工作副本中。要改为给子代理分配单独的 worktree，请在其 frontmatter 中设置 <a href="sub-agents.html#supported-frontmatter-fields"><code>isolation: worktree</code></a>，或在生成它时传递 <code>isolation: "worktree"</code>。</p>
+<p>当后台会话在 Claude 进入的 worktree 中进行了代码更改时，Claude Code 会指示 Claude 在完成前保存这些工作，这样即使您删除会话及其 worktree，工作也不会丢失：</p>
+<ul>
+<li><strong>提交并推送</strong>：Claude 无需询问即可提交，并在仓库有远程时推送分支。</li>
+<li><strong>草稿 Pull Request</strong>：Claude 会在任务需要时打开一个，该行上会显示 <a href="#pull-request-status"><code>#N</code> 标签</a>。</li>
+<li><strong>绝不</strong>：推送到 <code>main</code> 或 <code>master</code>、强制推送以及合并。</li>
+<li><strong>您的 git 指令优先</strong>：如果任务、<code>CLAUDE.md</code> 或 <a href="memory.html">记忆</a> 表明由您自己处理提交或推送，Claude 会将 git 操作留给您。</li>
+</ul>
+<p>编辑并非由其自身隔离的检出的会话，在提交或切换分支前仍会询问。这适用于隔离设置为 <code>"none"</code>、worktree 移动失败，或会话在已存在的 worktree 内启动的情况。</p>
+<p>无论任务是什么，Claude 都会以一份报告结束作业，说明它做了什么以及工作成果在哪里：路径、分支、Pull Request 或答案本身。</p>
+<h4 id="what-deleting-a-session-removes">删除会话会移除什么</h4>
+<p>在 <a href="#organize-the-list">Agent 视图</a> 中按两次 <code>Ctrl+X</code>，或使用 <a href="#manage-sessions-from-the-shell"><code>claude rm</code></a> 删除会话。除下述保留的情况外，会话会从列表中移除。其会话记录仍保留在您的机器上，可通过 <code>claude --resume</code> 访问，且该移除在主管进程重新启动后依然有效。</p>
+<p>Claude 为会话创建的 worktree 会如何处理：</p>
+<ul>
+<li>Agent 视图会移除它，包括未提交的更改，因此请先提交您想保留的内容。</li>
+<li>当它有未提交的更改时，<code>claude rm</code> 会保留它以及会话行。</li>
+<li>Agent 视图和 <code>claude rm</code> 都不会移除另一个正在运行的会话正在使用或已锁定的 worktree，再次删除也不会改变这一点。Claude Code 会保留 worktree 和会话，并指明保留的目录及原因；在 Agent 视图中，该会话的行会显示 <code>not deleted</code>。请关闭另一个会话，然后再次删除。</li>
+<li>当您删除的会话的 worktree 中有 Claude Code 无法确认已保存到其他位置的提交时，Claude Code 会保留 worktree 和会话，消息会指明 worktree 的分支以及有多少未推送的提交。消息还提供两种后续做法：推送这些提交，或再次删除以丢弃它们。</li>
+</ul>
+<p>远程上的提交不会阻止删除。您的 <code>origin</code> 远程默认分支的本地副本上的提交也不会阻止删除，前提是该分支检出在您的主检出中（即仓库目录本身，而不是 worktree）。</p>
+<p>在该拒绝之后，您可以选择：</p>
+<ul>
+<li>要保留这些提交，请推送它们，或将它们合并到该默认分支，然后再次删除会话。</li>
+<li>要丢弃它们，请不推送而直接再次删除会话：在 Agent 视图中该会话的行上按两次 <code>Ctrl+X</code>，或运行拒绝消息中打印的 <code>claude rm &lt;id&gt; --discard-unpushed</code> 命令。这会移除会话和 worktree 及其分支，丢弃未推送的提交和任何未提交的更改。</li>
+</ul>
+<p>当您再次删除时，Claude Code 只会丢弃拒绝消息中显示的内容：如果此后 worktree 又有了新的提交，Claude Code 会再次保留它并显示更新后的状态。</p>
+<p>当另一个已完成会话的记录也指向该 worktree 时，再次删除时它仍会被保留；请推送这些提交，然后再次删除。<br />
+* git 已不再识别的 worktree（例如在执行 <code>git worktree prune</code> 之后）不会阻止删除。Claude Code 会删除会话，并将目录留在磁盘上。<br />
+* 当 git 或您的 <a href="hooks.html#worktreeremove"><code>WorktreeRemove</code> hook</a> 未能移除 worktree 时，Claude Code 会保留 worktree 和会话，消息会指明原因。对于 hook，消息会说明它是如何结束的（例如 <code>exited 1</code>），并引用其 stderr 的开头部分。消息还会告诉您接下来执行以下哪项操作：</p>
+<ul>
+<li>
+<p>再次删除会话以强制移除目录：在 Agent 视图中该会话的行上按两次 <code>Ctrl+X</code>，或运行 <code>claude rm</code> 拒绝消息中打印的 <code>claude rm &lt;id&gt; --force-remove-worktree &lt;worktree-id&gt;</code> 命令。worktree 的分支会保留在仓库中。</p>
+<p>只有当 Claude Code 能确认以下所有条件时才会提供此选项：</p>
+<ul>
+<li>该目录是仓库在 <code>.claude/worktrees/</code> 下的链接 worktree 之一</li>
+<li>worktree 及其已检出的子模块都没有对已跟踪文件的未提交更改</li>
+<li>没有其他会话的记录指向它</li>
+</ul>
+<p>当 Claude Code 无法验证子模块检出的状态时（例如该子模块被一个单独的 git 仓库替换），也不会提供此选项。<br />
+  * 解决阻碍因素，例如提交或储藏未提交的更改、将单独的 git 仓库移出 worktree、关闭正在使用该目录的程序或修复 hook，然后再次删除会话。<br />
+  * 自行移除该目录，然后再次删除会话。</p>
+</li>
+</ul>
+<p>您自己创建并在其中启动会话的 worktree 在任何情况下都会保留。</p>
+<p>如果会话的 worktree 目录不属于任何 git 仓库（因为仓库已被删除，或 <a href="hooks.html#worktreecreate"><code>WorktreeCreate</code> hook</a> 在其他位置创建了该目录），该会话仍然可以删除。当目录中仍有文件时：</p>
+<ul>
+<li>Agent 视图在丢弃这些文件前会要求同样按两次 <code>Ctrl+X</code>。对于由 hook 创建的目录，它会改为运行您的 <a href="hooks.html#worktreeremove"><code>WorktreeRemove</code> hook</a>；如果没有该 hook，它会拒绝删除并保留会话。</li>
+<li><code>claude rm</code> 会保留会话和 worktree，并指明原因。</li>
+</ul>
+<p>两种方式都会保留另一个已完成会话的记录所指向的目录。</p>
+<h3 id="set-the-model-effort-and-fast-mode">设置模型、effort 和快速模式</h3>
+<p>在 Agent 视图中，在 <a href="#dispatch-an-agent-from-agent-view">分派输入框</a> 中输入 <code>/model</code>、<code>/effort</code> 或 <code>/fast</code> 并按 <code>Enter</code>，之后您分派的会话就会以您设置的内容启动。您的选择仅保留在该 Agent 视图窗口中，不会保存到设置文件。<code>/effort</code> 和 <code>/fast</code> 需要 Claude Code v2.1.299 或更高版本，不带任何内容输入的 <code>/model</code> 也是如此。</p>
+<p>在命令后给出值，或仅输入命令以从列表中选择：</p>
+<ul>
+<li><strong>模型</strong>：<code>/model &lt;name&gt;</code>，例如 <code>/model opus</code></li>
+<li><strong><a href="model-config.html#adjust-effort-level">Effort 级别</a></strong>：<code>/effort</code> 加 <code>low</code>、<code>medium</code>、<code>high</code>、<code>xhigh</code> 或 <code>max</code>，例如 <code>/effort high</code>。要以 <a href="workflows.html#let-claude-decide-with-ultracode">ultracode</a> 启动会话，请改为从 shell 使用 <a href="#dispatch-defaults"><code>claude agents --effort ultracode</code></a> 打开 Agent 视图；分派输入框不接受 <code>/effort ultracode</code></li>
+<li><strong>快速模式</strong>：<code>/fast on</code> 或 <code>/fast off</code>。只有当快速模式 <a href="fast-mode.html#requirements">对您可用</a> 且会话的模型支持快速模式时，会话才会以快速模式启动。在不支持快速模式的模型上，会话会以关闭快速模式的状态启动，因此请先使用 <code>/model</code> 选择一个 <a href="fast-mode.html">支持快速模式的模型</a>。新会话是否启用快速模式，以输入框下方的提示为准，而不是标题栏。</li>
+</ul>
+<p>要撤销某个选择，请将 <code>default</code> 作为值，例如 <code>/effort default</code>。</p>
+<p>以下示例在 Opus 上分派一个会话，在 Sonnet 上分派下一个：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/model opus
+refactor auth
+/model sonnet
+run the test suite
+</code></pre></div>
+<p>每个后台会话可以在不同的模型上运行。要为单个会话覆盖模型：</p>
+<ul>
+<li>从 shell 中使用 <code>claude --bg</code> 时传递 <code>--model</code>。</li>
+<li>附加到正在运行的会话并运行 <code>/model</code> 进行切换。在选择器中选择，或输入 <code>/model &lt;name&gt;</code>，都会保存为新会话的默认值，除非您在选择器中按 <code>s</code> 进行仅限当前会话的切换。仅限当前会话的切换在会话重新生成后依然有效。</li>
+<li>通过以子代理名称开头或提及 <code>@name</code>，分派一个在 frontmatter 中设置了 <code>model</code> 的 <a href="sub-agents.html">子代理</a>。当分派输入框中的 <code>/model</code> 选择生效时，不会使用该子代理的 <code>model</code>，因此请在那里输入 <code>/model default</code>。如果您使用 <a href="#dispatch-defaults"><code>claude agents --model</code></a> 启动，同样不会使用该子代理的模型，因此请在 shell 中不带 <code>--model</code> 运行 <code>claude agents</code>。</li>
+</ul>
+<h3 id="permission-mode-model-and-effort">权限模式、模型和 effort</h3>
+<p>后台会话会根据您分派它的位置和方式获取其设置、提供商、权限模式、模型和 effort。下面的小节介绍每个来源，以及主管进程重新启动会话时哪些内容会保留。</p>
+<h4 id="settings-and-provider">设置和提供商</h4>
+<p>后台会话从其运行的目录读取 <a href="settings.html">设置</a>，就像您在该目录中使用 <a href="#what-carries-over-when-you-background">它继承的配置标志</a> 启动 <code>claude</code> 一样。这包括项目设置中的 <a href="settings-reference.html#env"><code>env</code> 值</a>，因此在那里设置的 <code>ANTHROPIC_MODEL</code> 或提供商变量适用于该目录中的每个后台会话。</p>
+<p>后台会话还会使用您分派它时所在 shell 的 <code>PATH</code> 运行，因此它运行的命令能找到与您终端相同的工具。它也会保留该 shell 的云提供商选择（例如 <code>CLAUDE_CODE_USE_BEDROCK</code> 或 <code>CLAUDE_CODE_USE_VERTEX</code>），以及其 <code>ANTHROPIC_DEFAULT_*_MODEL</code> 别名和您在那里导出的任何 <a href="env-vars.html"><code>CLAUDE_CODE_EXTRA_BODY</code></a> 覆盖。</p>
+<h4 id="llm-gateway">LLM 网关</h4>
+<p>如果您通过 <a href="llm-gateway.html">LLM 网关</a> 路由 Claude Code，请将网关变量放在设置文件的 <code>env</code> 块中，而不是在 shell 中导出，这样后台会话会随其余设置一起读取它们。<a href="llm-gateway-connect.html#set-in-a-settings-file">在设置文件中设置</a> 展示了该块以及凭据应使用哪个设置文件。</p>
+<p>如果您改为仅在 shell 中导出网关 <code>ANTHROPIC_BASE_URL</code>，那么它连同您一起导出的 <code>ANTHROPIC_CUSTOM_HEADERS</code> 和凭据，只有在 <a href="#the-supervisor-process">主管进程</a> 本身是从导出了相同网关的 shell 启动时才会传递到后台会话，并且仅限以下情况：</p>
+<ul>
+<li>您使用 <code>←</code> 或 <code>/background</code> 将自己的会话转入后台</li>
+<li>您将会话分派到您当前所在的目录</li>
+<li>您通过附加或回复来唤醒当前所在目录中已停止的会话</li>
+<li>您使用 <a href="#manage-sessions-from-the-shell"><code>claude respawn</code></a> 重新启动当前所在目录中的会话</li>
+</ul>
+<p>Claude Code 会转发位于云提供商前面的网关。如果您分派时所在的 shell 选择了该提供商，并导出了其网关端点及其身份验证绕过标志，Claude Code 会在适用于 <code>ANTHROPIC_BASE_URL</code> 的条件下，将该端点与标志组合连同 <code>ANTHROPIC_CUSTOM_HEADERS</code> 一起转发给会话。例如，导出 <code>CLAUDE_CODE_USE_VERTEX=1</code> 以及 <code>ANTHROPIC_VERTEX_BASE_URL</code> 和 <code>CLAUDE_CODE_SKIP_VERTEX_AUTH=1</code>，Claude Code 就会转发该端点和标志。</p>
+<p>Claude Code 仅将转发的网关应用于该会话正在运行的进程，绝不会将其写入磁盘。</p>
+<h4 id="permission-mode">权限模式</h4>
+<ul>
+<li><strong>使用 <code>/bg</code> 或 <code>←</code> 转入后台</strong>：Claude Code 保留会话原有的 <a href="permissions.html">权限模式</a>，因此您已切换到 <code>acceptEdits</code> 或 <code>auto</code> 的会话在分离后仍保持该模式</li>
+<li><strong>从在 shell 中启动的 <code>claude agents</code> 分派，或使用 <code>claude --bg</code> 分派</strong>：新会话的启动方式与在该目录中启动新的 <code>claude</code> 会话相同，除非您是从使用 <a href="#dispatch-defaults">分派默认值</a> 打开的 Agent 视图分派的。<a href="permission-modes.html#which-mode-a-session-starts-in">会话以哪种权限模式启动</a> 列出了优先顺序</li>
+</ul>
+<p>对于您从使用 <code>←</code> 打开的 Agent 视图分派的会话，Claude Code 会从以下第一个适用的来源获取权限模式：</p>
+<ol>
+<li>目标目录的 <a href="settings-reference.html#permissions-defaultmode"><code>permissions.defaultMode</code></a>。<code>auto</code> 和 <code>bypassPermissions</code> <a href="settings-reference.html#permissions-defaultmode">仅在来自托管设置、<code>--settings</code> 文件或 <code>~/.claude/settings.json</code> 时生效</a>。如果项目的 <code>.claude/settings.json</code> 或 <code>.claude/settings.local.json</code> 中的 <code>defaultMode</code> 选择了比您来源会话更宽松的模式，Claude Code 会拒绝它。</li>
+<li>您来源会话的权限模式。</li>
+</ol>
+<p>如果该会话处于 <code>bypassPermissions</code> 模式，新会话可能会改为以手动模式启动，并显示通知 <code>Bypass permissions was requested at launch and ignored</code>。当您对绕过免责声明的接受记录仅存在于 <code>.claude/settings.local.json</code> 或 <code>--settings</code> 文件中时，就会发生这种情况。您可以继续使用手动模式，或 <a href="permission-modes.html#bypass-permissions-ignored-in-a-background-session">将该接受记录添加到 <code>~/.claude/settings.json</code></a>。</p>
+<p>当 Claude Code 因某个来源的模式过于宽松而拒绝它时，由列表中的下一个来源决定。例如，如果您从计划模式会话分派到一个其已签入设置要求 <code>acceptEdits</code> 的目录，新会话会以计划模式启动。如果您将该 <code>defaultMode</code> 移到 <code>~/.claude/settings.json</code>，则无论您来源会话的权限模式如何，它都会生效。</p>
+<p>宽松程度从低到高依次为：计划模式，然后是手动和 <code>dontAsk</code>，然后是 <code>acceptEdits</code> 和 auto（二者均视为比对方更宽松），最后是 <code>bypassPermissions</code>。</p>
+<h4 id="dispatch-defaults">分派默认值</h4>
+<p>要为从 Agent 视图分派的每个会话设置默认值，请在打开 Agent 视图时传递 <code>--permission-mode</code>、<code>--model</code>、<code>--effort</code> 或 <code>--agent</code> 中的任意一个：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>agents<span class="w"> </span>--permission-mode<span class="w"> </span>plan<span class="w"> </span>--model<span class="w"> </span>opus<span class="w"> </span>--effort<span class="w"> </span>high
+</code></pre></div>
+<p>此处的 <code>--effort</code> 接受与 <a href="cli-reference.html#cli-flags">顶层 <code>--effort</code> 标志</a> 相同的值，包括 <code>ultracode</code>。</p>
+<p><code>--agent</code> 设置分派提示词未指定子代理（无论是通过 <code>@name</code> 还是作为第一个单词）时使用的 <a href="sub-agents.html">子代理</a>。如果设置了 <a href="settings-reference.html#agent"><code>agent</code> 设置</a>，则默认使用该设置，否则使用内置的通用 <code>claude</code> Agent。在分派输入中指定子代理会覆盖两者。</p>
+<p><code>claude agents</code> 还接受 <code>--dangerously-skip-permissions</code> 作为 <code>--permission-mode bypassPermissions</code> 的简写，以及 <code>--allow-dangerously-skip-permissions</code>，使 <code>bypassPermissions</code> 在每个分派会话的 <code>Shift+Tab</code> 循环中可用，而不以该模式启动。两者都与 <a href="cli-reference.html">顶层 CLI 标志</a> 一致。</p>
+<p>传递 <code>--restricted</code> 可使您从该视图分派的每个会话都以 <a href="cli-reference.html#cli-flags">受限模式</a> 启动，如同每个会话都使用顶层 <code>--restricted</code> 标志启动一样。需要 Claude Code v2.1.248 或更高版本。</p>
+<p>当前生效的默认值会显示在分派输入框下方的页脚中。</p>
+<p>以 <code>bypassPermissions</code> 模式启动的后台会话需要有您 <a href="permission-modes.html#skip-all-checks-with-bypasspermissions-mode">接受绕过免责声明</a> 的记录，因为该模式允许一个您未在观察的会话无需批准即可执行操作。如果您之前未接受过，将 <code>--dangerously-skip-permissions</code> 或 <code>--permission-mode bypassPermissions</code> 传递给 <code>claude agents</code> 会显示相同的免责声明，接受后会将 <code>bypassPermissions</code> 应用于您从该视图启动的会话。传递 <code>--allow-dangerously-skip-permissions</code> 同样会显示该免责声明，接受后会使 <code>bypassPermissions</code> 在这些会话的 <code>Shift+Tab</code> 循环中可用，但不会以该模式启动它们。</p>
+<h4 id="what-persists-across-restarts">重新启动后保留的内容</h4>
+<p>您为后台会话选择的权限模式、模型和 effort，以及 <a href="#what-carries-over-when-you-background">它继承的配置标志</a>，在主管进程之后 <a href="#the-supervisor-process">停止并重新启动</a> 其进程时都会保留。您在会话中途使用 <code>/model</code> 或 <code>/effort</code> 更改的模型或 effort 也会保留。</p>
+<p>如果会话的 effort 来自您的设置，而不是 <code>--effort</code> 或 <code>/effort</code>，Claude Code 每次为该会话启动进程时都会重新读取您的设置。在您编辑 <code>settings.json</code> 中保存的 effort 后，更改会作用于您使用 <code>←</code> 或 <code>/bg</code> 转入后台的会话及其之后的重新启动。保存的 effort 是 <a href="settings-reference.html#effortlevel"><code>effortLevel</code></a> 键或 <a href="settings-reference.html#modelsettings"><code>modelSettings</code></a> 条目。</p>
+<p>Claude Code 还会在重新启动后保留您使用 <a href="commands.html"><code>/rename</code></a> 或 <code>Ctrl+R</code> 设置的名称，因此您仍可以运行 <a href="sessions.html#name-your-sessions"><code>claude --resume &lt;name&gt;</code></a> 来访问该会话。</p>
+<p>您在附加状态下使用 <a href="interactive-mode.html#general-controls"><code>Ctrl+S</code></a> 暂存的提示词也会随会话保留。在会话进程停止或重新启动后重新打开会话，按 <code>Ctrl+S</code> 即可恢复暂存的文本。暂存内容中的粘贴内容在重新启动后不会保留。</p>
+<h3 id="settings-plugins-and-mcp-servers">设置、插件和 MCP 服务器</h3>
+<p>Agent 视图接受与 <code>claude</code> 相同的配置标志，用于加载设置、插件、MCP 服务器和附加目录。Agent 视图会将 <code>--settings</code>、<code>--setting-sources</code> 和 <code>--plugin-dir</code> 应用于自身，并将每个配置标志传递给您从中分派的会话，因此以这种方式加载的插件或 MCP 服务器在这些会话中可用。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">标志</th>
+<th style="text-align: left;">效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="settings.html"><code>--settings &lt;file-or-json&gt;</code></a></td>
+<td style="text-align: left;">覆盖 Agent 视图和分派会话的设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="cli-reference.html#cli-flags"><code>--setting-sources &lt;sources&gt;</code></a></td>
+<td style="text-align: left;">在 Agent 视图和分派会话中仅加载指定的设置来源</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="permissions.html#additional-directories-grant-file-access-not-configuration"><code>--add-dir &lt;path&gt;</code></a></td>
+<td style="text-align: left;">授予对附加目录的文件访问权限</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-create.html#load-a-directory-or-archive-for-one-session"><code>--plugin-dir &lt;path&gt;</code></a></td>
+<td style="text-align: left;">从本地目录加载插件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="mcp.html"><code>--mcp-config &lt;file-or-json&gt;</code></a></td>
+<td style="text-align: left;">从配置文件或 JSON 字符串加载 MCP 服务器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--strict-mcp-config</code></td>
+<td style="text-align: left;">仅使用来自 <code>--mcp-config</code> 的 MCP 服务器，忽略其他 MCP 配置。请参阅 <a href="managed-mcp.html#exclusive-control-with-managed-mcp-json">使用 managed-mcp.json 进行独占控制</a> 了解该标志在托管 MCP 文件下的作用</td>
+</tr>
+</tbody>
+</table>
+<p>每个值需重复一次 <code>--add-dir</code>、<code>--plugin-dir</code> 或 <code>--mcp-config</code>。<code>claude agents</code> 不支持空格分隔的形式，例如 <code>--add-dir a b c</code>。</p>
+<p>您可以将 <code>--settings</code>、<code>--setting-sources</code> 和 <code>--plugin-dir</code> 放在 <code>agents</code> 之前或之后。请将 <code>--add-dir</code> 和 <code>--mcp-config</code> 放在 <code>agents</code> 之后：如果将其中任一个放在 <code>agents</code> 之前，<a href="#manage-sessions-from-the-shell"><code>claude agents --json</code></a> 会因 <code>unknown option</code> 错误而失败。</p>
+<p>以下示例使用设置覆盖和一个额外目录打开 Agent 视图：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>agents<span class="w"> </span>--settings<span class="w"> </span>./ci-settings.json<span class="w"> </span>--add-dir<span class="w"> </span>../shared-lib
+</code></pre></div>
+<p><code>--settings</code> 接受文件路径或内联 JSON 字符串。文件路径必须指向已存在的文件；如果文件不存在，Claude Code 会以 <code>Settings file not found</code> 错误退出。</p>
+<h2 id="manage-sessions-from-the-shell">从 shell 管理会话</h2>
+<p>每个后台会话有一个短 ID，您可以从 shell 使用。当您使用 <code>claude --bg</code> 启动会话时会打印该 ID，每个会话的 ID 是其在 <code>~/.claude/jobs/</code> 下的目录名。这些命令对于脚本编写或当您不想打开 agent view 时很有用。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">命令</th>
+<th style="text-align: left;">目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>claude agents</code></td>
+<td style="text-align: left;">打开 agent view</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude agents --cwd &lt;path&gt;</code></td>
+<td style="text-align: left;">打开 agent view，范围限定为在 <code>&lt;path&gt;</code> 下启动的会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude agents --json</code></td>
+<td style="text-align: left;">将会话打印为 JSON 数组并退出。参见 <a href="#list-sessions-as-json">将会话列为 JSON</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude attach &lt;id\|name&gt;</code></td>
+<td style="text-align: left;">在此终端附加到会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude logs &lt;id\|name&gt;</code></td>
+<td style="text-align: left;">打印会话的最近输出</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude stop &lt;id&gt;</code></td>
+<td style="text-align: left;">停止会话。也接受 <code>claude kill</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude respawn &lt;id&gt;</code></td>
+<td style="text-align: left;">重新启动会话，运行中或已停止，例如用于获取更新的 Claude Code 二进制文件。具有已保存对话的会话会恢复该对话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude respawn --all</code></td>
+<td style="text-align: left;">重新启动每个运行中的会话，例如一次性将所有会话移至更新的 Claude Code 二进制文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude rm &lt;id&gt;</code></td>
+<td style="text-align: left;">从列表中删除会话，以及 Claude 为其创建的 worktree（当安全删除时）；参见 <a href="#what-deleting-a-session-removes">删除会话会删除什么</a>。会话记录保存在您的本地机器上，并且仍然可以通过 <code>claude --resume</code> 访问</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude rm &lt;id&gt; --discard-unpushed &lt;commit&gt;@&lt;worktree-id&gt;</code></td>
+<td style="text-align: left;">删除因未推送提交而删除被拒绝的会话，丢弃 worktree 及其分支和提交。传递拒绝打印的确切值；参见 <a href="#what-deleting-a-session-removes">删除会话会删除什么</a>。需要 v2.1.260 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude rm &lt;id&gt; --force-remove-worktree &lt;worktree-id&gt;</code></td>
+<td style="text-align: left;">删除因 git 或 <code>WorktreeRemove</code> hook 无法删除其 worktree 而删除被拒绝的会话，无论如何删除 worktree 目录并在仓库中保留其分支。传递拒绝打印的确切值；参见 <a href="#what-deleting-a-session-removes">删除会话会删除什么</a>。需要 v2.1.268 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude daemon status</code></td>
+<td style="text-align: left;">打印 <a href="#the-supervisor-process">supervisor</a> 的状态、版本、socket 目录和 worker 数量</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude daemon logs</code></td>
+<td style="text-align: left;">跟踪 supervisor 的日志文件 <a href="#where-state-is-stored"><code>~/.claude/daemon.log</code></a>，在新行到达时将其打印出来，直到您按下 <code>Ctrl+C</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude daemon stop --any</code></td>
+<td style="text-align: left;">停止 supervisor 进程及其托管的后台会话。传递 <code>--keep-workers</code> 以保持后台会话运行，以便<a href="#the-supervisor-process">下一个 supervisor</a> 重新连接到它们。下一个 <code>claude agents</code> 或 <code>claude --bg</code> 启动一个新的 supervisor</td>
+</tr>
+</tbody>
+</table>
+<p><code>claude attach</code> 和 <code>claude logs</code> 可以使用会话名称的一部分代替 ID，例如 <code>claude logs "auth refactor"</code>。<code>claude attach</code> 仅在会话进程运行时才能按名称打开会话，因此要重新启动已停止的会话，请改为传递 ID。传递名称需要 Claude Code v2.1.290 或更高版本。</p>
+<h3 id="list-sessions-as-json">将会话列为 JSON</h3>
+<p><code>claude agents --json</code> 将活跃会话打印为 JSON 数组并退出：每个活跃会话，加上仍在工作或被阻止的后台会话，即使其进程已退出。添加 <code>--all</code> 以也包括已完成的后台会话，添加 <code>--cwd &lt;path&gt;</code> 以将列表限制为在该目录下启动的会话。</p>
+<p>每个条目描述一个会话：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">出现时机</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>cwd</code>、<code>kind</code>、<code>startedAt</code></td>
+<td style="text-align: left;">总是</td>
+<td style="text-align: left;">工作目录、<code>interactive</code> 或 <code>background</code>，以及 Unix 毫秒为单位的启动时间</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;">后台会话</td>
+<td style="text-align: left;">短 ID，可与 <code>claude attach</code>、<code>claude logs</code> 和 <code>claude stop</code> 一起使用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>state</code></td>
+<td style="text-align: left;">后台会话</td>
+<td style="text-align: left;"><code>working</code>、<code>blocked</code>、<code>done</code>、<code>failed</code> 或 <code>stopped</code> 之一。参见 <a href="#read-session-state-from-a-script">从脚本读取会话状态</a> 了解每个值的含义</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pid</code>、<code>status</code></td>
+<td style="text-align: left;">进程活跃时</td>
+<td style="text-align: left;">进程 ID 和 <code>busy</code>、<code>waiting</code> 或 <code>idle</code> 之一</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>waitingFor</code></td>
+<td style="text-align: left;">当 <code>status</code> 为 <code>waiting</code> 时</td>
+<td style="text-align: left;">会话被阻止的原因：<code>permission prompt</code> 表示需要批准，<code>input needed</code> 表示来自 Claude 的问题或 MCP 服务器的输入请求，<code>sandbox request</code>、<code>worker request</code> 或 <code>dialog open</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sessionId</code>、<code>name</code></td>
+<td style="text-align: left;">当设置时</td>
+<td style="text-align: left;"><code>sessionId</code> 是完整的会话 UUID，可与 <a href="sessions.html"><code>claude --resume</code></a> 一起使用。交互式会话的 <code>name</code> 是其 <a href="sessions.html#name-your-sessions">默认显示名称</a>，直到您命名会话或在其中接受计划</td>
+</tr>
+</tbody>
+</table>
+<h3 id="read-session-state-from-a-script">从脚本读取会话状态</h3>
+<p><code>claude agents --json</code> 是从 Claude Code 外部读取会话状态的受支持方式，例如从状态栏、调度程序或监督后台工作的另一个 Claude 会话。轮询 <code>claude agents --json --all</code>，它会继续列出进程已退出的会话，并读取每个条目的 <code>state</code>、<code>status</code> 和 <code>waitingFor</code>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><code>state</code></th>
+<th style="text-align: left;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>working</code></td>
+<td style="text-align: left;">一个轮次正在运行，或会话在其自己驱动的工作步骤之间，例如 <a href="scheduled-tasks.html"><code>/loop</code></a> 迭代或对 CI 的等待。<code>status</code> 告诉您其进程现在是否 <code>busy</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>blocked</code></td>
+<td style="text-align: left;">会话在等待您：它提出的问题、权限或沙箱决定、只有您能清除的错误（例如过期的登录），或如果您在没有提示词的情况下启动它，则为其第一个提示词。当等待是活跃进程中的开放提示时，<code>waitingFor</code> 会命名它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>done</code></td>
+<td style="text-align: left;">最后一个轮次完成了您要求的内容，会话已准备好接收您的下一个提示词，无论其进程是否仍然活跃</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>failed</code>、<code>stopped</code></td>
+<td style="text-align: left;">任务以错误结束，或会话被停止</td>
+</tr>
+</tbody>
+</table>
+<p>完成其轮次并等待您的下一条指令的会话读取 <code>done</code>，而不是 <code>blocked</code>。<code>blocked</code> 总是意味着会话在继续之前需要您提供的东西。</p>
+<p><code>~/.claude/jobs/&lt;id&gt;/</code> 下的文件不是稳定的接口。会话或其他程序写入 <code>state</code>、<code>detail</code>、<code>tempo</code> 或 <code>needs</code> 的值会在下一次更新时被替换。</p>
+<p>如果您想让会话用自己的话报告进度，让它写一个自己的文件，例如在 <code>$CLAUDE_JOB_DIR/tmp</code> 下，而不是编辑 <code>state.json</code>。</p>
+<h2 id="how-background-sessions-are-hosted">后台会话如何被托管</h2>
+<p>Claude Code 将 agent view 中列出的每个会话都视为后台会话，无论您当前是否连接到它。相比之下，通过直接运行 <code>claude</code> 启动的会话与该终端绑定，并在终端关闭时结束，除非您<a href="#from-inside-a-session">将其发送到后台</a>。</p>
+<p>要检查您所在的会话类型，请运行 <a href="commands.html"><code>/status</code></a>。在后台会话中，<code>Session kind</code> 行显示 <code>background job · attached</code> 或 <code>background job · unattended</code>，具体取决于是否连接了终端，在任何其他会话中显示 <code>interactive</code>。</p>
+<h3 id="the-supervisor-process">监督进程</h3>
+<p>监督进程是一个后台服务，运行您的后台会话，使其在您关闭 agent view 或终端后继续工作。Claude Code 在您第一次后台化会话或打开 agent view 时启动它，您不需要自己管理它。</p>
+<p>每个会话都是监督进程下的独立 Claude Code 进程，该进程发生的情况取决于会话的状态：</p>
+<ul>
+<li><strong>工作中、暂停在权限提示或其他对话框上，或已连接</strong>：进程继续运行。运行中的子代理、工作流或监视器计为工作中，待执行的<a href="scheduled-tasks.html">会话范围定时任务</a>（例如 <code>/loop</code> 唤醒）也同样计为工作中。</li>
+<li><strong>已完成或等待您的下一条消息，且未连接约一小时</strong>：监督进程停止该进程以释放资源。以向您提问结束其轮次的会话计为等待您的下一条消息。对话保存在磁盘上，下次您连接或回复时，会话从中断处恢复。使用 <code>Ctrl+T</code> 固定会话以保持其进程运行。</li>
+<li><strong>在监督进程运行时意外退出</strong>：监督进程重新启动该进程。如果通过 <code>kill</code> 等方式结束您自己使用 <code>←</code> 或 <code>/background</code> 后台化的会话，该会话会被标记为已停止，而不是重新启动。对于以关闭结束的会话，请参阅<a href="#sessions-show-as-failed-after-shutdown">会话在关闭后显示为失败或已停止</a>。</li>
+<li><strong>自动更新后</strong>：监督进程重新启动自身到新版本，并在后台移动空闲会话。工作中、等待您或已连接的会话不会被中断。</li>
+<li><strong>监督进程本身停止</strong>，例如因为其进程被 Claude Code 外部结束：在 macOS 和 Linux 上，除非新的监督进程在约一分钟内连接，否则您的会话会停止。要启动新的监督进程，请在 shell 中运行 <code>claude agents</code>。超过这一分钟后，请参阅<a href="#keep-sessions-running-after-the-supervisor-stops">在监督进程停止后保持会话运行</a>。</li>
+</ul>
+<p>当会话的进程停止或重新启动时，Claude 在其中启动的后台 shell 命令和后台子代理会转移到其下一个进程。动态工作流<a href="#dynamic-workflows-when-you-background">仅在 Claude 重新启动它时才会继续</a>。运行中的监视器和子代理启动的 shell 命令会随进程停止。如果您删除该会话，它转移的所有内容都会停止。要改为让所有内容随进程一起停止，请将 <a href="env-vars.html#variables"><code>CLAUDE_CODE_DISABLE_BG_EXIT_HANDOFF</code></a> 设置为 <code>1</code>。</p>
+<p>监督进程及其会话使用与您的交互式会话相同的存储凭据进行身份验证。关于哪些设置和 shell 变量到达会话（包括 <code>PATH</code>），请参阅<a href="#settings-and-provider">设置和提供商</a>。关于网关端点，请参阅 <a href="#llm-gateway">LLM 网关</a>。</p>
+<h4 id="keep-sessions-running-after-the-supervisor-stops">在监督进程停止后保持会话运行</h4>
+<p>如果 agent view 在退出时打印以下通知，说明没有<a href="#the-supervisor-process">监督进程</a>在运行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Background sessions still running will stop in about a minute. Run 'claude agents' to keep them.
+</code></pre></div>
+<p>在这一分钟内于 shell 中运行 <code>claude agents</code>，即可启动新的监督进程并保持会话运行。</p>
+<p>如果这一分钟先过去，会话会停止，但其保存的对话仍保留在磁盘上。要从保存的对话重新启动某个会话，请<a href="#attach-to-a-session">连接</a>或<a href="#peek-and-reply">回复</a>该会话，如<a href="#sessions-show-as-failed-after-shutdown">会话在关闭后显示为失败或已停止</a>中所述。</p>
+<h3 id="where-state-is-stored">状态存储位置</h3>
+<p>会话状态存储在您的 Claude Code 配置目录下。如果您设置了 <a href="env-vars.html"><code>CLAUDE_CONFIG_DIR</code></a>，监督进程使用该目录而不是 <code>~/.claude</code>，并作为单独的实例运行，具有其自己的会话。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">路径</th>
+<th style="text-align: left;">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>~/.claude/daemon.log</code></td>
+<td style="text-align: left;">监督进程日志</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>~/.claude/daemon/roster.json</code></td>
+<td style="text-align: left;">运行中的后台会话列表，用于在重新启动后重新连接</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>~/.claude/jobs/&lt;id&gt;/state.json</code></td>
+<td style="text-align: left;">在 agent view 中显示的每会话状态。通过 <a href="#read-session-state-from-a-script"><code>claude agents --json</code></a> 读取它，而不是解析文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>~/.claude/jobs/&lt;id&gt;/tmp/</code></td>
+<td style="text-align: left;">每会话临时目录。Claude 在此处的 <code>Write</code> 和 <code>Edit</code> 调用不会提示权限。会话删除时移除</td>
+</tr>
+</tbody>
+</table>
+<p>每个后台会话都设置了 <code>CLAUDE_JOB_DIR</code> 环境变量指向其 <code>~/.claude/jobs/&lt;id&gt;</code> 目录，因此会话运行的 shell 命令可以将临时文件写入 <code>$CLAUDE_JOB_DIR/tmp</code> 而不会与并行会话冲突。</p>
+<p>要在不直接读取文件的情况下检查此状态，请运行 <code>claude daemon status</code>。它报告监督进程是否可达、其进程 ID 和版本、套接字目录以及有多少后台会话处于活跃状态。</p>
+<p>该命令还会在运行的监督进程版本与您调用的 <code>claude</code> 版本不同时发出警告，这发生在监督进程尚未重新启动到新版本的更新之后。警告显示两个版本，并告诉您运行 <code>claude daemon stop --any</code> 以获取新版本。</p>
+<p>会话在该版本不匹配时完好无损：更新会话 <code>state.json</code> 的较旧 Claude Code 版本会保留它不识别的字段并保持会话列出。<code>roster.json</code> 中的会话列表遵循相同的规则，因此由较新版本启动的会话保持可达并在监督进程重新启动后继续接受输入。</p>
+<h3 id="turn-off-agent-view">关闭 agent view</h3>
+<p>要完全关闭后台 Agent 和 agent view，请将 <code>disableAgentView</code> <a href="settings.html">设置</a>设为 <code>true</code> 或设置 <code>CLAUDE_CODE_DISABLE_AGENT_VIEW</code> 环境变量。管理员可以通过<a href="managed-settings.html">托管设置</a>强制执行此项。</p>
+<h2 id="troubleshooting">故障排除</h2>
+<h3 id="claude-agents-lists-subagents-instead-of-opening-agent-view"><code>claude agents</code> 列出子代理而不是打开 Agent 视图</h3>
+<p>如果 <code>claude agents</code> 打印一个计数，然后是您配置的子代理，然后退出，说明 Agent 视图在您的环境中不可用。运行 <code>claude update</code> 来安装最新版本。</p>
+<p>如果更新后 Agent 视图仍然没有打开，请检查它是否已被设置或环境变量<a href="#turn-off-agent-view">关闭</a>。</p>
+<h3 id="agent-view-opens-with-no-sessions">Agent 视图打开时没有会话</h3>
+<p>在您分派第一个会话之前，Agent 视图显示空的部分标题，每个标题下有一个描述，以及在输入框上方有一行说明，代替会话列表。在底部的输入框中输入提示词，然后按 <code>Enter</code> 来分派您的第一个会话。</p>
+<h3 id="backgrounding-shows-a-background-this-session-dialog">后台处理显示 <code>Background this session?</code> 对话框</h3>
+<p>当您按 <code>←</code> 来后台处理某个会话时，如果出现 <code>Background this session?</code> 对话框，说明该会话有正在进行的后台工作，这些工作会被停止、被中断或在无人值守的情况下继续运行：</p>
+<ul>
+<li><strong>无法移动的工作</strong>：该会话有无法移动到后台会话的工作，例如正在运行的<a href="tools-reference.html#monitor-tool">监视器</a>。对话框列出 Claude Code 会停止的后台工作，并另外计算会转移的任务数。</li>
+<li><strong>具有运行子代理的工作流</strong>：<a href="workflows.html">动态工作流</a>仍然有子代理在运行。如果您仍然进行后台处理，这些子代理会停止，对话框会说明有多少个。当 Claude <a href="#dynamic-workflows-when-you-background">在后台会话中重新启动该工作流</a>时，它们会从头开始。</li>
+<li><strong>自动 Artifact 回复</strong>：Claude <a href="artifacts.html#let-claude-reply-to-comments-on-its-own">自动回复 Artifact 上的评论</a>。这些回复在后台会话中继续，对话框会说明这一点。</li>
+</ul>
+<p>运行 <code>/tasks</code> 来查看正在运行的所有内容，然后确认后台处理或选择 <code>Stay</code> 来让工作先完成。请参阅<a href="#what-carries-over-when-you-background">后台处理时转移的内容</a>，了解哪些类型的工作会转移，哪些 Claude Code 会停止。</p>
+<h3 id="carried-into-this-session-and-not-resumed">对话显示某个后台 Agent <code>was carried into this session and not resumed</code></h3>
+<p>此通知指明了一个未在此会话中运行的后台<a href="sub-agents.html">子代理</a>。</p>
+<p>Claude 会看到此通知并自行回复，因此您无需提示它。如果阅读 Claude 的回复后您仍需要该子代理的工作成果，请向 Claude 提出。</p>
+<h3 id="prompt-rejected-as-too-short">提示词被拒绝为过短</h3>
+<p>分派输入框期望一个任务描述，而不是对话开场白。短于四个字符的提示词会被拒绝，并显示 <code>Too short</code> 提示，以防止误触发启动会话。描述您希望会话执行的操作，例如 <code>investigate the flaky checkout test</code>。</p>
+<h3 id="sessions-show-as-failed-after-shutdown">会话在关闭后显示为失败或已停止</h3>
+<p>关闭或重新启动您的机器会停止运行的后台会话。等待您输入的会话在您返回时仍会显示在 <code>Needs input</code> 下。对于任何其他运行的会话，Agent 视图显示的内容取决于它上次取得进展的时间：</p>
+<ul>
+<li>在 48 小时内，会话显示为失败。附加或回复它，它会从其保存的对话重新启动。要继续被中断的工作，请向它发送一条回复，要求它继续。</li>
+<li>超过 48 小时，例如机器关闭数天后，会话显示为已停止，并显示 <code>ended while the background service was off</code>。在该行上按 <code>Enter</code>，页脚会显示 <code>Press enter again to resume this session (it ended while the background service was off), or ctrl+x to delete it.</code> 在同一行上再次按 <code>Enter</code> 来恢复其保存的对话。回复或 <code>claude attach &lt;id&gt;</code> 会在没有该页脚提示的情况下恢复它。</li>
+</ul>
+<p>当<a href="settings-reference.html#cleanupperioddays">会话记录清理</a>删除了已停止会话的保存对话时，Claude Code 拒绝打开该行：消息说没有可恢复的内容。<code>claude rm &lt;id&gt;</code> 删除该行，除了上文<a href="#what-deleting-a-session-removes">保留的情况</a>中描述的情况，<code>claude respawn &lt;id&gt;</code> 再次运行其原始提示词。请参阅<a href="errors.html#this-sessions-saved-conversation-is-no-longer-on-disk">此会话的保存对话不再在磁盘上</a>。</p>
+<p>仅睡眠不会停止会话。会话在睡眠中被保留，主管在唤醒时重新连接到它们。</p>
+<h3 id="opening-a-session-says-the-conversation-is-already-open">打开会话说对话已经打开</h3>
+<p>两个进程不能写入同一个会话记录。当已停止会话的保存对话已在另一个活跃的 Claude Code 进程中打开时，Claude Code 拒绝启动该会话自己的进程。您看到的内容取决于什么持有对话：</p>
+<ul>
+<li>您恢复对话的终端，例如使用 <code>claude --resume</code> 或 <code>/resume</code>：该行显示 <code>Open in a terminal</code>，并提示在那里继续，打开该行显示 <code>Can't open — this session is running in another terminal</code>。在该终端中继续，或退出它并再次打开该行。</li>
+<li>另一个非交互式 Claude Code 进程，例如同一对话的后台会话进程，尚未退出：打开该行显示 <code>This conversation is already open in another running Claude session</code>。使用该进程，或等待它退出并再次打开该行。</li>
+</ul>
+<p>Claude Code 保存您在被拒绝的尝试中输入的回复（以 <code>!</code> 或 <code>/</code> 开头的回复除外），并在会话下次启动时发送它。</p>
+<h3 id="opening-a-session-says-it-has-no-saved-transcript">打开会话说它没有保存的会话记录</h3>
+<p>当您打开一个<a href="#from-inside-a-session">从另一个对话后台处理</a>的会话，且该会话在运行自己的轮次之前就已停止时，Claude Code 会恢复那个对话。如果 Claude Code 找不到该对话，则会拒绝打开该会话：</p>
+<ul>
+<li><code>claude attach</code> 打印 <code>This session has no saved transcript</code>。</li>
+<li>Agent 视图在列表下方显示 <code>Press enter again to restart this session fresh</code>。</li>
+</ul>
+<p>在同一行上再次按 <code>Enter</code> 来使用空对话重新启动会话，或从 shell 运行 <code>claude respawn &lt;id&gt;</code>。</p>
+<p>有关详细信息，请参阅<a href="errors.html#this-session-has-no-saved-transcript">错误参考</a>。</p>
+<h3 id="the-terminal-host-died-or-the-session-stopped-responding">终端主机已死亡或会话停止响应</h3>
+<p><a href="#the-supervisor-process">主管</a>在其自己的主机进程中运行每个后台会话的终端。当该进程死亡或停止响应时，Claude Code 显示原因并提供重新启动；在两种情况下，对话都被保存，重新启动会恢复它。<a href="errors.html#terminal-host-process-died">错误参考</a>引用完整消息。</p>
+<p>Claude Code 永远不会重新启动运行<a href="#run-a-shell-command">shell 命令</a>的行，无论是从 <code>Enter</code> 还是从 <code>claude attach</code>，因为那样会再次运行该命令；该行的消息和 <code>claude attach</code> 都说该命令不会再次运行。</p>
+<h3 id="a-session-fails-before-starting-with-a-possibly-low-memory-note">会话在启动前失败，并显示 <code>possibly low memory</code> 注释</h3>
+<p>当后台会话的进程在完成启动之前退出，且主机内存不足时，该行的状态命名退出并添加 <code>possibly low memory — free some up and retry</code>。</p>
+<p>该注释是一个假设，而不是确认的原因。Claude Code 仅在进程无声退出时添加它，没有写入错误，也没有被信号停止，且主机在那一刻报告内存不足。当进程在退出前确实写入了错误时，该行显示该错误。</p>
+<p>释放机器上的内存，然后附加或回复该行，主管为会话启动新进程。当内存保持不足时，主管也会<a href="#the-supervisor-process">停止空闲会话</a>来自行释放资源，如果停止其他会话没有释放任何内容，也会停止空闲的固定会话。</p>
+<h3 id="agent-view-says-the-background-service-did-not-respond">Agent 视图说后台服务没有响应</h3>
+<p>如果附加、查看或 <code>claude logs</code> 报告后台服务没有响应，主管进程可能已停滞。停止它并让下一个 <code>claude agents</code> 启动新的。要在重新启动期间保持后台会话运行，请传递 <code>--keep-workers</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>daemon<span class="w"> </span>stop<span class="w"> </span>--any<span class="w"> </span>--keep-workers
+</code></pre></div>
+<p>然后在 shell 中运行 <code>claude agents</code> 来启动新的主管。在 macOS 和 Linux 上，请在旧主管结束后大约一分钟内执行此操作，否则这些会话会<a href="#the-supervisor-process">在没有主管的情况下停止</a>。如果您看到了 <code>stopped</code>，但同样的错误再次出现，并且您在 macOS 或 Linux 上使用的 Claude Code 版本早于 v2.1.300，请运行 <code>claude update</code>，然后再次运行这两个命令。</p>
+<p>如果停止命令改为打印了以下四条消息之一，说明旧进程没有被停止。请在 shell 中执行对应行所述的操作，然后运行 <code>claude agents</code>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">消息包含</th>
+<th style="text-align: left;">平台</th>
+<th style="text-align: left;">操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>could not be verified as the daemon, so it was not signalled</code></td>
+<td style="text-align: left;">全部</td>
+<td style="text-align: left;">查明哪个程序拥有该进程 ID。如果它是您自己的主管，请停止它；不要动任何其他程序。然后删除 <code>~/.claude/daemon.lock</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>is still running after SIGKILL</code></td>
+<td style="text-align: left;">macOS、Linux</td>
+<td style="text-align: left;">等待该进程退出。如果它一直不退出，请重新启动计算机。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>was not sent SIGKILL</code></td>
+<td style="text-align: left;">macOS、Linux</td>
+<td style="text-align: left;">再次运行停止命令。如果该进程仍然存在，请使用 <code>ps -ww -o args= -p &lt;pid&gt;</code> 检查它：以 <code>daemon</code> 启动的 Claude Code 是主管，因此请运行 <code>kill -9 &lt;pid&gt;</code>。不要动其他任何进程；如果 <code>claude agents</code> 随后无法启动主管，请删除 <code>~/.claude/daemon.lock</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>supervisor (pid=&lt;pid&gt;) is still running</code></td>
+<td style="text-align: left;">Windows</td>
+<td style="text-align: left;">使用 <code>taskkill /PID &lt;pid&gt;</code> 结束该进程</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dispatch-fails-with-could-not-resolve-authentication-method">分派失败，显示 <code>Could not resolve authentication method</code></h3>
+<p>如果后台分派失败，显示 <code>Could not resolve authentication method</code>，而交互式会话正常进行身份验证，说明接收分派的工作进程没有获取凭据。后台会话从<a href="#the-supervisor-process">主管</a>获取其凭据，所以此错误意味着主管进程本身没有可用的存储凭据。确认您已运行 <code>/login</code> 或配置了 API 密钥，然后停止主管：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>daemon<span class="w"> </span>stop<span class="w"> </span>--any<span class="w"> </span>--keep-workers
+</code></pre></div>
+<p>在<a href="#the-supervisor-process">大约一分钟</a>内，在 shell 中运行 <code>claude agents</code> 或 <code>claude --bg</code>，以启动读取您存储凭据的新主管。如果您使用环境变量（如 <code>ANTHROPIC_API_KEY</code>）而不是 <code>/login</code> 进行身份验证，请从设置了该变量的 shell 运行该下一个命令。</p>
+<p>有关原因和修复的完整列表，请参阅<a href="errors.html#could-not-resolve-authentication-method">错误参考</a>。</p>
+<h3 id="a-background-session-shows-no-llm-gateway">后台会话显示 <code>No LLM gateway</code></h3>
+<p>如果后台会话显示 <a href="errors.html#no-llm-gateway-opened-from-another-folder"><code>No LLM gateway</code></a>，说明它没有获得您的网关 <code>ANTHROPIC_BASE_URL</code>，因此其请求会失败。Claude Code 之所以没有提供它，是因为您是从消息中指明的文件夹以外的目录分派、唤醒或重新启动该会话的。</p>
+<p>例如，当您使用 <a href="#dispatch-to-a-specific-directory"><code>@&lt;repo&gt;</code></a> 分派到某个仓库，或从另一个目录运行 <code>claude attach</code> 唤醒已停止的会话后，就会看到此消息。要让会话获得您的网关，请根据网关的设置位置选择相应的修复方法：</p>
+<ul>
+<li><strong>您在终端中导出了网关</strong>：在已导出网关变量的终端中，<code>cd</code> 到消息中指明的文件夹，然后运行消息中的 <a href="#manage-sessions-from-the-shell"><code>claude respawn &lt;id&gt;</code></a> 命令。</li>
+<li>只有当<a href="#the-supervisor-process">主管</a>本身是从导出了相同网关的 shell 启动时，网关才会传递到会话。如果主管不是这样启动的，请按照<a href="#dispatch-fails-with-could-not-resolve-authentication-method">分派失败，显示 <code>Could not resolve authentication method</code></a> 中的说明，从您运行 respawn 命令的终端重新启动主管，然后再次运行该命令。</li>
+<li><strong>您在一个通过设置配置了网关的项目中使用了 Agent 视图</strong>：将 <code>ANTHROPIC_BASE_URL</code> 及其凭据放入<a href="llm-gateway-connect.html#set-in-a-settings-file">设置文件的 <code>env</code> 块</a>中。请使用 <code>~/.claude/settings.json</code>，或会话所在项目中的 <code>.claude/settings.local.json</code>，重新启动的会话会读取这两个文件。然后在 shell 中从任意目录运行 <a href="#manage-sessions-from-the-shell"><code>claude respawn &lt;id&gt;</code></a>，以在网关上重新启动此会话。</li>
+</ul>
+<h3 id="background-sessions-can’t-read-desktop-documents-or-downloads-on-macos">后台会话无法在 macOS 上读取 Desktop、Documents 或 Downloads</h3>
+<p>在 macOS 上，后台会话主机作为其自己的进程运行，并与您的终端分别请求对受保护文件夹的访问。如果后台会话在读取 <code>~/Desktop</code>、<code>~/Documents</code>、<code>~/Downloads</code> 或其他受保护位置时报告 <code>Operation not permitted</code>，请在系统设置中的隐私和安全 &gt; 文件和文件夹下授予访问权限，或为该条目启用完全磁盘访问。</p>
+<p>使用本机安装程序，该条目显示为 Claude Code，授予在更新中持续。使用其他安装方法（如 Homebrew 或 npm），该条目显示二进制路径，更新后可能需要再次授予。</p>
+<h3 id="background-sessions-can’t-reach-local-network-hosts-on-macos">后台会话无法在 macOS 上访问本地网络主机</h3>
+<p>在 macOS 15 及更高版本上，系统会阻止进程访问本地网络上的设备，直到您授予本地网络权限，因此针对 LAN 地址的命令可能在后台会话中失败，显示 <code>connect: no route to host</code>，即使它在前台终端中有效。后台会话中连接到本地网络地址的第一个命令会触发 Claude Code 的 macOS 本地网络权限提示。授予一次，这些命令就能像在前台终端中一样访问 LAN 主机。</p>
+<h3 id="a-session-is-slow-to-respond-after-attaching">附加后会话响应缓慢</h3>
+<p>当已完成或等待您下一条消息的会话保持未附加约一小时时，主管停止其进程以释放资源。附加从中断的地方启动新进程，并在进程重新启动时立即切换到会话。正在工作、暂停在权限提示或其他对话框上的会话，或<a href="#organize-the-list">固定</a>的会话不会以这种方式停止，所以使用 <code>Ctrl+T</code> 固定会话以保持其响应性。</p>
+<p>进程启动时，Claude Code 显示会话记录的尾部，格式化为实时会话呈现的方式，带有 markdown、突出显示的代码块和作为暗淡行的工具调用，上方是带有 <code>Session is starting</code> 注释的暗淡提示区域。实时会话在准备好后立即替换它。</p>
+<h3 id="claude/worktrees/-is-filling-up"><code>.claude/worktrees/</code> 正在填满</h3>
+<p>在 Agent 视图中删除会话会删除 Claude 为其创建的 worktree，但<a href="#what-deleting-a-session-removes">某些删除会保留 worktree 或在磁盘上留下其目录</a>，所以剩余目录可能会累积。Git 不再识别的目录不会出现在 <code>git worktree list</code> 中，所以手动删除这些目录。</p>
+<p>在项目目录中使用 <code>git worktree list</code> 列出剩余条目，并使用 <code>git worktree remove &lt;path&gt;</code> 删除每一个。请参阅<a href="worktrees.html#clean-up-worktrees">清理 worktrees</a>。</p>
+<h2 id="limitations">限制</h2>
+<p>Agent view 处于研究预览阶段，存在以下限制：</p>
+<ul>
+<li><strong>速率限制适用</strong>：后台会话消耗你的订阅使用量，与交互式会话相同，因此并行运行十个代理的配额消耗速度大约是运行一个代理的十倍。</li>
+<li><strong>会话是本地的</strong>：后台会话在你的机器上运行。它们在机器睡眠时保留，但在机器关闭时停止。</li>
+<li><strong>Claude 创建的 worktrees 在 agent view 中随会话删除</strong>：在删除在其自己的 worktree 中编辑文件的会话之前，请提交更改。<a href="#what-deleting-a-session-removes">某些删除会保留 worktree</a>。</li>
+</ul>
+<h2 id="related-resources">相关资源</h2>
+<p>有关以并行方式运行 Claude 的其他方法，以及在运行的会话之间传递发现的方法，请参阅：</p>
+<ul>
+<li><a href="agents.html">并行运行代理</a>：比较 agent view 与 subagents、agent teams 和 worktrees</li>
+<li><a href="cross-session-messaging.html">跨会话消息传递</a>：让您的会话相互传递发现</li>
+<li><a href="agent-teams.html">Agent teams</a>：协调相互发送消息的多个会话</li>
+<li><a href="claude-code-on-the-web.html">在云端使用 Claude Code</a>：在托管的云环境中运行会话而不是本地</li>
+<li><a href="claude-projects.html">Projects</a>：让 Claude 从一个对话中协调并行云会话，并告诉您哪些需要您</li>
+</ul>
+<h2 id="version-history">版本历史</h2>
+<p>Agent view 在研究预览期间发展迅速。如果您使用的是较旧的 Claude Code 版本，本页上的某些行为可能会有所不同；特别是，<code>claude agents</code> 会以 <code>unknown option</code> 错误拒绝它尚不支持的标志。下表列出了每个标志和行为的添加时间。</p>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>更改</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v2.1.299</td>
+<td><a href="#set-the-model-effort-and-fast-mode">调度输入框中的 <code>/effort</code> 和 <code>/fast</code></a> 会为您接下来调度的会话设置 effort 级别和快速模式。键入不带值的 <code>/model</code>、<code>/effort</code> 或 <code>/fast</code> 会打开选择器。</td>
+</tr>
+<tr>
+<td>v2.1.299</td>
+<td>Claude Code 仅在任何单独的 <code>--</code> 分隔符之前、且不在其他标志的值中时，才<a href="#from-your-shell">将 <code>--bg</code> 和 <code>--background</code> 识别为该标志</a>，对于位置有歧义的情况会拒绝而不是猜测。在此版本之前，发送给后台会话的内容为 <code>--bg</code> 或 <code>--background</code> 的提示词或回复可能会被当作该标志。这可能会反复启动新的后台会话，而不是投递该文本。</td>
+</tr>
+<tr>
+<td>v2.1.296</td>
+<td>您<a href="#switch-sessions-without-leaving-the-terminal">在会话移到后台时</a>输入的提示词或 <code>!</code> shell 命令会被停止或保持未发送状态，其文本会保留在提示词历史中。在此版本之前，回复或命令会在您看不到的地方继续运行，并且在 <code>←</code> 之后立即发送的提示词可能会在您看不到的情况下运行第二次。在 <code>SessionStart</code> hook 仍在运行时键入的提示词会丢失：既不会发送，也不会出现在提示词历史中。</td>
+</tr>
+<tr>
+<td>v2.1.295</td>
+<td>在<a href="#attach-to-a-session">附加的后台会话</a>的空闲输入框中按 <code>Ctrl+C</code> 不会影响<a href="scheduled-tasks.html#let-claude-choose-the-interval">自定节奏的 <code>/loop</code></a> 的待处理唤醒，因此按两次会分离，而循环会继续运行。在该输入框中按 <code>Esc</code> 会<a href="scheduled-tasks.html#stop-a-loop">停止自定节奏的循环</a>并显示 <code>Pending wakeup cancelled</code> 通知。在此版本之前，第一次按 <code>Ctrl+C</code> 可能会在不提示的情况下结束自定节奏的循环，而 <code>Esc</code> 无法停止已随会话移到后台的循环。</td>
+</tr>
+<tr>
+<td>v2.1.295</td>
+<td>在 macOS 和 Linux 上，当 <code>claude agents</code> 在没有<a href="#keep-sessions-running-after-the-supervisor-stops">监督进程</a>运行时退出，它不会自行启动新的监督进程。此后正在运行的会话会在大约一分钟后停止，除非您再次运行 <code>claude agents</code>，agent view 在退出时可能会打印一条说明此情况的通知。在此版本之前，退出的 <code>claude agents</code> 会启动新的监督进程。</td>
+</tr>
+<tr>
+<td>v2.1.295</td>
+<td>在使用原生安装程序的 macOS 上，更新后一起重启的后台会话会在持有您所授予的<a href="#background-sessions-can’t-read-desktop-documents-or-downloads-on-macos">受保护文件夹访问权限</a>的同一 Claude Code 条目下运行。在此版本之前，这些会话可能会改为在二进制文件自身的路径下运行。macOS 会将该路径列为单独的条目，因此更新后可能会再次出现文件夹访问提示。</td>
+</tr>
+<tr>
+<td>v2.1.290</td>
+<td><a href="#manage-sessions-from-the-shell"><code>claude attach</code> 和 <code>claude logs</code></a> 可以使用会话名称的一部分来代替 ID。</td>
+</tr>
+<tr>
+<td>v2.1.290</td>
+<td><code>/model</code>、<code>/effort</code>、<code>/rename</code> 和 <code>/usage</code> 作为<a href="#peek-and-reply">窥视回复</a>发送给正在工作的会话时会立即运行。</td>
+</tr>
+<tr>
+<td>v2.1.290</td>
+<td>无法投递的<a href="#peek-and-reply">窥视回复</a>如果以 <code>/</code> 开头，或者在会话进程运行期间回答的是带有预定义选项的问题，则不再被保存以待下次重启时发送。</td>
+</tr>
+<tr>
+<td>v2.1.288</td>
+<td><code>Ctrl+F</code> 按名称查找会话，<code>Alt+↑</code> / <code>Alt+↓</code> 在组标题之间跳转。这两者以及 <code>Ctrl+R</code> 都可以<a href="keybindings.html#agents-actions">重新绑定</a>。</td>
+</tr>
+<tr>
+<td>v2.1.287</td>
+<td><a href="#filter-sessions"><code>n:&lt;text&gt;</code> 筛选器</a>按名称或第一个提示词查找会话。当任何筛选器处于活动状态时，您折叠的组会展开以显示其匹配项，并且第一个匹配项被选中，因此 <code>Enter</code> 会打开它。</td>
+</tr>
+<tr>
+<td>v2.1.287</td>
+<td>作为<a href="#peek-and-reply">窥视回复</a>发送的命令会在会话当前轮次结束时运行，包括在会话自身的输入框中一键入就立即运行的命令。内容恰好为 <code>/stop</code> 的回复会立即停止会话。</td>
+</tr>
+<tr>
+<td>v2.1.281</td>
+<td><a href="cli-reference.html#cli-flags"><code>--setting-sources</code></a> 限制会<a href="#what-carries-over-when-you-background">转移</a>到您使用 <code>←</code> 或 <code>/bg</code> 移到后台的会话，以及您从 agent view 调度的会话。在此版本之前，生成的会话会加载每个设置源。</td>
+</tr>
+<tr>
+<td>v2.1.281</td>
+<td><code>claude --bg</code> 以及重启会话的命令会首先检查会话目录的工作区信任。从该目录中的终端运行时，如果您尚未接受，<a href="#from-your-shell">会出现信任对话框</a>；在无法出现对话框的地方，例如在脚本中，命令会以 <a href="errors.html#workspace-not-trusted-when-dispatching-a-background-session"><code>Workspace not trusted</code></a> 错误退出。</td>
+</tr>
+<tr>
+<td>v2.1.274</td>
+<td>自动更新后，您离开约一小时的 agent view 可以将自己重新启动到新的构建版本上。这样做时，它会保留您打开它时使用的<a href="#dispatch-defaults">调度默认值</a>：<code>--model</code>、<code>--effort</code>、<code>--permission-mode</code>、<code>--allow-dangerously-skip-permissions</code> 和 <code>--agent</code>。在此版本之前，重新启动的 view 仅保留 <code>--cwd</code> 和配置标志，例如 <code>--settings</code> 和 <code>--mcp-config</code>，因此您之后调度的会话启动时没有这些默认值。</td>
+</tr>
+<tr>
+<td>v2.1.274</td>
+<td>当因为 git 或您的 <code>WorktreeRemove</code> hook 无法删除 worktree 而<a href="#what-deleting-a-session-removes">删除被拒绝</a>时，经 Claude Code 验证对跟踪文件没有未提交更改的已检出子模块，不会阻止再次删除并强制删除目录的提议。已检出子模块内的未提交工作计为未提交更改，消息会指出该子模块。在此版本之前，worktree 中的任何子模块检出都会阻止该提议，消息称 worktree 包含嵌套仓库。</td>
+</tr>
+<tr>
+<td>v2.1.268</td>
+<td>当因为 git 或您的 <code>WorktreeRemove</code> hook 无法删除 worktree 而<a href="#what-deleting-a-session-removes">删除被拒绝</a>时，消息会说明原因，包括 hook 如何结束以及其 stderr 的开头部分。对于位于仓库的 <code>.claude/worktrees/</code> 下、对跟踪文件没有未提交更改、其中没有嵌套仓库、且没有其他会话的记录指向它的链接 worktree，从 agent view 或使用 <code>claude rm &lt;id&gt; --force-remove-worktree &lt;worktree-id&gt;</code> 再次删除会话会强制删除该目录。在此版本之前，该行仅显示 <code>worktree could not be removed (WorktreeRemove hook failed)</code> 或 git 的错误，hook 的 stderr 仅进入调试日志，再次删除也会以相同方式被拒绝。</td>
+</tr>
+<tr>
+<td>v2.1.268</td>
+<td>在第一次按 <code>←</code> 显示 <code>Press ← again to open agents</code>（在附加的会话中为 <code>Press ← again to go back to agents</code>）后，<a href="#switch-sessions-without-leaving-the-terminal">至少一秒后的第一次按键会切换</a>，即使中间更快的按键被忽略。在此版本之前，每次被忽略的按键都会重新开始等待，因此以稳定的节奏再次按 <code>←</code> 时，直到您暂停超过一秒才会切换。</td>
+</tr>
+<tr>
+<td>v2.1.260</td>
+<td>当您<a href="#from-inside-a-session">将会话移到后台</a>时，您的其他会话的 <a href="cross-session-messaging.html#see-which-sessions-claude-can-reach">Agent 列表</a>仅显示该对话一次，即作为其后台会话，它们发送给它的消息也不再到达您将其移出的终端。在此版本之前，该终端可能仍作为对话名称下的第二个交互式会话被列出，而在移动之前已向该对话发送过消息的会话会继续向该终端投递消息。</td>
+</tr>
+<tr>
+<td>v2.1.260</td>
+<td>当<a href="#what-deleting-a-session-removes">删除因未推送的提交被拒绝</a>时，消息会说明 worktree 的分支以及有多少提交未推送，再次删除会话会丢弃 worktree 及其提交。在此版本之前，拒绝消息仅显示 <code>worktree has commits that are not pushed anywhere</code>，再次删除也会以相同方式被拒绝，删除会话需要推送提交或手动删除 worktree。</td>
+</tr>
+<tr>
+<td>v2.1.257</td>
+<td><code>←</code> <a href="#attach-to-a-session">在 <code>/btw</code> 覆盖层打开时也会从附加的会话分离</a>，即使在回答中途也是如此，覆盖层会在您下次附加时重新打开。在此版本之前，覆盖层打开时 <code>←</code> 不会分离。</td>
+</tr>
+<tr>
+<td>v2.1.257</td>
+<td>当您运行 <a href="#from-your-shell"><code>claude --resume &lt;session-id&gt; --bg</code></a> 时，Claude Code 会以该会话自己的 ID 继续它，或以新 ID 启动一个副本并打印一行 <code>note:</code> 说明原因。<code>--continue</code>、不带参数的 <code>--resume</code> 以及带名称或路径的 <code>--resume</code> 会启动副本并显示相同的说明。在此版本之前，<code>--resume</code> 与 <code>--bg</code> 一起使用时总是以新 ID 启动副本，且不做任何说明。</td>
+</tr>
+<tr>
+<td>v2.1.257</td>
+<td>当您从使用 <code>←</code> 打开的 agent view 调度会话时，Claude Code 会以<a href="#permission-mode">目标目录通过 <code>permissions.defaultMode</code> 配置的权限模式</a>启动它。当目录未设置时，使用您来源会话的权限模式。在此版本之前，调度的会话总是以您来源会话的权限模式启动，覆盖目录的设置。</td>
+</tr>
+<tr>
+<td>v2.1.257</td>
+<td>agent view 中的 <code>Ctrl+S</code>、<code>Ctrl+T</code> 和 <code>Ctrl+G</code> <a href="#keyboard-shortcuts">遵循您的 <code>keybindings.json</code></a>：<code>Ctrl+S</code> 和 <code>Ctrl+T</code> 通过 <code>Agents</code> 上下文的 <code>agents:switchView</code> 和 <code>agents:togglePin</code> 操作，<code>Ctrl+G</code> 通过 <code>Chat</code> 上下文的 <code>chat:externalEditor</code> 绑定。在此版本之前，agent view 忽略 <code>keybindings.json</code>，这些键是固定的。</td>
+</tr>
+<tr>
+<td>v2.1.257</td>
+<td>启动<a href="#the-supervisor-process">后台服务</a>时可以从两种失败原因中恢复。在 macOS 的 npm 安装上，自更新期间的启动会<a href="errors.html#eacces-when-starting-a-background-session">等待安装完成</a>，而不是运行 npm 在替换二进制文件时放置的占位文件。在 Windows 上，在机器上次启动之前写入的陈旧 <code>daemon.lock</code>，或其记录的进程 ID 现在属于其他进程的 <code>daemon.lock</code>，会被替换。在此版本之前，macOS 上的启动在安装窗口期间会失败并显示 <code>Error: claude native binary not installed.</code>，而 Windows 上的锁会使每次启动都失败并显示 <a href="errors.html#background-service-exited-before-it-became-reachable"><code>exited before it became reachable</code></a>，直到您删除 <code>~/.claude/daemon.lock</code>。</td>
+</tr>
+<tr>
+<td>v2.1.257</td>
+<td>当您在另一个 Claude Code 进程下载 npm 更新时打开或调度后台会话，Claude Code 会在安装运行期间<a href="errors.html#eacces-when-starting-a-background-session">持续等待最多两分钟</a>，然后失败并显示 <code>Claude Code is being updated by npm on this machine</code>。在此版本之前，等待在十秒时停止，因此在下载仍在进行时打开就会失败并显示 <code>Couldn't start the background service</code>。</td>
+</tr>
+<tr>
+<td>v2.1.257</td>
+<td>持有等待您批准的<a href="cross-session-messaging.html#control-inbound-messages">跨会话消息</a>的后台会话，会在其 <code>Needs input</code> 行上显示 <code>approve message from</code>，以及发送者的地址和发送者声称的名称。在此版本之前，该行会移到 <code>Needs input</code>，但保留之前的文本，因此 <code>claude agents</code> 中没有任何内容指明等待中的消息或其发送者。</td>
+</tr>
+<tr>
+<td>v2.1.257</td>
+<td>在打开的后台会话中使用 <code>Ctrl+S</code> 暂存的提示词<a href="#what-persists-across-restarts">会随会话一起保留</a>，因此在会话的进程停止并再次启动后，<code>Ctrl+S</code> 仍可将其恢复。在此版本之前，暂存内容仅存在于运行中的进程里，当会话空闲足够长时间导致其进程停止，或会话被停止后重新打开时，暂存内容会丢失。</td>
+</tr>
+<tr>
+<td>v2.1.251</td>
+<td>在尚未<a href="#how-file-edits-are-isolated">移入 worktree</a> 的后台会话中，Claude 及其生成的子代理可以编辑链接 git worktree 内的文件。</td>
+</tr>
+<tr>
+<td>v2.1.251</td>
+<td>Claude Code 会将您调度时所在 shell 中导出的云提供商网关（例如 <code>ANTHROPIC_VERTEX_BASE_URL</code> 或 <code>ANTHROPIC_BEDROCK_BASE_URL</code> 及其身份验证绕过标志），在与 <code>ANTHROPIC_BASE_URL</code> 相同的条件下转发到<a href="#llm-gateway">会话的工作进程</a>。在此版本之前，如果您从仅通过此类网关进行身份验证的 shell 将会话移到后台或调度会话，会话发出的每个请求都会失败，因为端点和标志已从其环境中被删除。</td>
+</tr>
+<tr>
+<td>v2.1.251</td>
+<td>当后台会话在另一个 Claude Code 进程刷新<a href="plugins-overview.html">插件市场</a>时启动（例如某个同级会话正在运行<a href="plugins-install.html#keep-plugins-updated">市场自动更新</a>），Claude Code 会保持该市场的插件可用。在此版本之前，此类会话启动时可能缺少该市场的任何 skill、Agent、hook 和 MCP 服务器，并在整个运行期间一直如此。</td>
+</tr>
+<tr>
+<td>v2.1.248</td>
+<td>在<a href="#keyboard-shortcuts">调度输入框</a>中，<code>Shift+Enter</code> 插入换行符，与主输入框一致；在 <code>?</code> 覆盖层列出 <code>ctrl+enter to start and open</code> 的终端中，<code>Ctrl+Enter</code> 会立即调度并附加。在此版本之前，<code>Shift+Enter</code> 会调度并附加。</td>
+</tr>
+<tr>
+<td>v2.1.248</td>
+<td>当 worktree 的提交已在您 <code>origin</code> 远程默认分支的本地副本上，且您的主检出已检出该分支时，<a href="#what-deleting-a-session-removes">删除会话</a>会成功；在此版本之前，删除会被拒绝并显示 <code>has commits that are not pushed anywhere</code>。</td>
+</tr>
+<tr>
+<td>v2.1.248</td>
+<td>使用 <code>←</code> 或 <code>/background</code> 移到后台的会话在运行期间会在其 worktree 上持有 <a href="worktrees.html#clean-up-subagent-and-background-session-worktrees"><code>git worktree lock</code></a>；在此版本之前，移到后台会释放该锁，清理或 <code>git worktree remove</code> 可能会在会话运行时删除其 worktree。</td>
+</tr>
+<tr>
+<td>v2.1.248</td>
+<td>未在等待您输入、且在最后一次活动超过 48 小时后被发现已终止的后台会话（例如机器关闭数天后），会<a href="#sessions-show-as-failed-after-shutdown">显示为已停止</a>并附带 <code>ended while the background service was off</code>，在其上按 <code>Enter</code> 会先询问再恢复其保存的对话。在此版本之前，此类会话会作为新的失败重新出现并排在列表顶部，按一次 <code>Enter</code> 就会把数周前的对话拉到前台。</td>
+</tr>
+<tr>
+<td>v2.1.248</td>
+<td>打开一个已停止的行，而其对话<a href="#opening-a-session-says-the-conversation-is-already-open">已被您在另一个终端中恢复</a>时，会被拒绝并显示 <code>Can't open — this session is running in another terminal</code>，该行会显示 <code>Open in a terminal</code>，而不是显示在 <code>Working</code> 下。在此版本之前，打开该行会启动第二个写入同一对话的进程。</td>
+</tr>
+<tr>
+<td>v2.1.248</td>
+<td>等待权限决定的后台会话，如果 <code>PermissionRequest</code> 或 <code>PreToolUse</code> hook 输出了无效答案，会<a href="#peek-and-reply">在其行上指明 hook 事件和 schema 错误</a>。在此版本之前，该行仅显示待处理的请求。</td>
+</tr>
+<tr>
+<td>v2.1.248</td>
+<td>在 Windows 上，当 <code>claude agents</code> 在被之前的程序置于 win32-input-mode 的终端标签页中启动时，能够响应键盘。在此版本之前，Claude Code 无法解码此类标签页发送的按键记录。</td>
+</tr>
+<tr>
+<td>v2.1.247</td>
+<td>在 Linux 和 WSL 上，<a href="#the-terminal-host-died-or-the-session-stopped-responding">终端主机进程已终止</a>的会话会在几秒内失败并显示原因。没有产生输出的打开操作会在约十秒后结束并提供重启选项，在该行上按 <code>Enter</code> 会使用其对话重启会话；<code>claude attach &lt;id&gt;</code> 会报告原因并退出。在此版本之前，打开此类会话会无限期显示 <code>opening… · esc to cancel</code>，<code>claude attach &lt;id&gt;</code> 会一直等待而不报告错误。</td>
+</tr>
+<tr>
+<td>v2.1.246</td>
+<td>在 npm 安装上，当<a href="#the-supervisor-process">后台服务</a>在 <code>npm install -g @anthropic-ai/claude-code</code> 替换二进制文件期间启动失败时，Claude Code 会等待最多十秒让安装完成并重试，然后才报告 <a href="errors.html#eacces-when-starting-a-background-session"><code>EACCES: permission denied</code></a>。</td>
+</tr>
+<tr>
+<td>v2.1.246</td>
+<td>当<a href="#the-supervisor-process">后台服务</a>进程在输出错误后终止时，Claude Code 会报告失败并<a href="errors.html#background-service-exited-before-it-became-reachable">引用服务的第一行错误</a>。</td>
+</tr>
+<tr>
+<td>v2.1.246</td>
+<td>如果您的机器在<a href="#the-supervisor-process">后台服务</a>启动期间进入睡眠，Claude Code 会重试启动一次，而不是直接失败。</td>
+</tr>
+<tr>
+<td>v2.1.246</td>
+<td>对于新启动的、仍在运行但接受连接缓慢的<a href="#the-supervisor-process">后台服务</a>，Claude Code 会等待约两分钟，而不是 45 秒。</td>
+</tr>
+<tr>
+<td>v2.1.246</td>
+<td><a href="#the-supervisor-process">后台服务</a>从您的主目录启动，因此在 macOS 和 Linux 上，已被删除或移动的启动目录不再阻止启动。</td>
+</tr>
+<tr>
+<td>v2.1.246</td>
+<td><code>/fork</code> 会从本身作为副本启动且此后未记录新提示词的会话中<a href="#copy-the-session-with-%2Ffork">复制完整对话</a>：您附加到的 <code>/fork</code> 副本、在 <code>←</code> 或 <code>/background</code> 将其移到后台后重新附加的会话，或使用 <code>claude --resume &lt;id&gt; --fork-session</code> 启动的会话。在此版本之前，如果您在向此类会话发送新提示词之前运行 <code>/fork</code>，Claude Code 会打印正常的确认信息，但以空对话启动副本。使用 <code>←</code> 或 <code>/background</code> 将此类会话移到后台也会以同样方式丢失对话。</td>
+</tr>
+<tr>
+<td>v2.1.246</td>
+<td>当您在刚调度的会话的工作进程仍在启动时打开它（例如在其行上按 <code>Enter</code>），Claude Code 会等待进程启动后再附加。在此版本之前，如果您在进程仍在启动时按 <code>Enter</code>，Claude Code 可能会停止会话并显示 <a href="errors.html#session-was-stopped-while-the-respawn-was-in-flight"><code>Session &lt;id&gt; was stopped while the respawn was in flight</code></a>。</td>
+</tr>
+<tr>
+<td>v2.1.246</td>
+<td>当您将已命名的会话<a href="#from-inside-a-session">移到后台</a>时，Claude Code 只列出它一次；当您再次将同一对话移到后台时，它会为新行的名称编号，例如 <code>my-session (2)</code>，现有行保留其名称。在此版本之前，您按 <code>←</code> 的终端可能会在 <code>claude agents --json</code> 中显示为同名的第二个会话，如果您再次将同一对话移到后台，Claude Code 会以完全相同的名称添加另一行。</td>
+</tr>
+<tr>
+<td>v2.1.239</td>
+<td>启用 <a href="interactive-mode.html#vim-editor-mode">vim 编辑器模式</a>时，在 agent view 的输入框中按 <code>Esc</code> 会从 INSERT 切换到 NORMAL 模式并保留您的文本，与主输入框一致；在 NORMAL 模式下输入框中仍有文本时，按 <code>Esc</code> 会清除文本，在空输入框上按 <code>Esc</code> 会退出，如 <a href="#keyboard-shortcuts"><code>Esc</code> 快捷键</a>所述。在此版本之前，<code>Esc</code> 会清除输入框。</td>
+</tr>
+<tr>
+<td>v2.1.233</td>
+<td>对于链接到 GitLab 合并请求的会话，Claude Code 会以 GitLab 的 <code>!1234</code> 引用语法写入该行的标签。您也可以将合并请求的 URL 粘贴到<a href="#filter-sessions">调度输入框</a>中以选择该会话。在此版本之前，标签显示为 <code>#1234</code>，并且粘贴的合并请求 URL 仅在会话的第一个提示词包含该 URL 时才能匹配到会话。</td>
+</tr>
+<tr>
+<td>v2.1.227</td>
+<td>当另一个活跃的 Claude Code 会话正在某个 worktree 目录内运行时，<a href="#what-deleting-a-session-removes">删除会话</a>会保留该会话及其 worktree。Agent view 会在行上显示 <code>not deleted</code> 并在页脚中显示原因，<code>claude rm</code> 会打印 <code>kept &lt;id&gt;</code> 及原因，其中会指明另一个会话的进程 ID。在此版本之前，即使另一个会话仍在其中工作，删除会话也会删除 worktree。</td>
+</tr>
+<tr>
+<td>v2.1.225</td>
+<td>在您尚未信任的目录中运行 <code>claude agents</code> 时，会在 agent view 打开之前显示与 <code>claude</code> 启动时相同的<a href="permissions.html#project-allow-rules-and-workspace-trust">工作区信任对话框</a>。接受会保存该工作区的信任；拒绝则退出而不打开 agent view。在此版本之前，<code>claude agents</code> 会在不询问的情况下打开，因此您从中调度的会话会在您从未被要求信任的目录中运行。 列表按目录分组时，将鼠标悬停在某行上会突出显示该行，而不会更改<a href="#dispatch-to-a-specific-directory">调度目标</a>；使用箭头键或点击选择行仍会更改目标。在此版本之前，将鼠标移到另一个项目中的会话上，会在不提示的情况下更改下一个调度会话的启动目录。</td>
+</tr>
+<tr>
+<td>v2.1.221</td>
+<td><code>/status</code> 会显示 <code>Session kind</code> 行：在后台会话中，根据是否附加了终端显示 <code>background job · attached</code> 或 <code>background job · unattended</code>，在其他任何会话中显示 <code>interactive</code>。在此版本之前，<code>/status</code> 不报告会话类型。 <code>/fork</code>：Claude Code 会指示<a href="#from-inside-a-session">副本</a>将其工作与原始会话隔离：副本在进行代码更改前会创建自己的 worktree，不进入原始会话的 worktree，并在其任务基于原始会话的工作时，以原始会话的分支为基础创建新分支。确切条件请参阅链接的章节。在此版本之前，副本不会收到隔离指令，可能最终编辑原始会话仍在其中工作的 worktree 或检出。 启用 <a href="interactive-mode.html#vim-editor-mode">vim 编辑器模式</a>时，在使用 <code>u</code> 将提示词撤销为空后立即按 <code>←</code>，会要求与删除文本或浏览提示词历史相同的确认，并且只在第二次按键时切换；在此版本之前，按键会立即切换。</td>
+</tr>
+<tr>
+<td>v2.1.219</td>
+<td>启用 <a href="interactive-mode.html#vim-editor-mode">vim 编辑器模式</a>时，在空输入框上按 <code>←</code> 在 NORMAL 模式和 INSERT 模式下都会打开 agent view，页脚的 <code>←</code> 提示在 NORMAL 模式下也会显示；在此版本之前，该手势和提示仅限 INSERT 模式，在 NORMAL 模式下于空输入框按 <code>←</code> 不起作用。在 Claude Code 等待将会话移到后台期间向输入框中键入内容，会取消切换并显示 <code>Backgrounding cancelled — you have unsent text in the input. Send it or clear it, then press ← again.</code>，因此键入的草稿不会丢失。</td>
+</tr>
+<tr>
+<td>v2.1.218</td>
+<td>在清空输入框的删除操作或浏览提示词历史后两秒内按 <code>←</code>，会显示 <code>Press ← again to open agents</code>（在附加的会话中为 <code>Press ← again to go back to agents</code>），并且只在至少一秒后的第二次按键时切换；在此版本之前，按键会立即切换。在粘贴或脚本输入中出现的 <code>←</code> 不再触发切换。使用 <code>←</code> 将前台会话移到后台时，会在列表上方显示 <code>Your conversation moved to the background</code>，在 agent view 根层级按 <code>Esc</code> 会返回该对话，而不是退出到 shell，连按两次 <code>Ctrl+C</code> 仍为退出；如果该对话无法重新打开，Claude Code 会退出并为其打印 <code>claude --resume</code> 命令。在 Windows 上，附加后约半秒内按下的 <code>←</code> 会显示 <code>Ambiguous ←, press again to detach</code>，并在第二次按键时分离。</td>
+</tr>
+<tr>
+<td>v2.1.217</td>
+<td>即使 Claude Code 无法检测到终端超链接支持（例如通过 SSH 或 tmux），会话行上的 Pull Request 徽章也会显示为超链接；设置 <a href="env-vars.html"><code>FORCE_HYPERLINK=0</code></a> 可将其显示为纯文本。在此版本之前，未检测到支持时徽章显示为纯文本。</td>
+</tr>
+<tr>
+<td>v2.1.216</td>
+<td><code>/fork</code>：<a href="#from-inside-a-session">确认信息</a>只有一行，显示副本的状态、其 agent view 行的名称以及用于 <code>claude attach</code> 的会话 ID，仅当副本在主工作树中运行或编辑您打开的检出时，才以 <code>runs in the origin tree</code> 或 <code>edits this checkout</code> 结尾。点击该名称会将此会话移到后台，并在副本的会话中打开 agent view。确认信息不再重复说明副本继承的权限模式；早期版本会打印多行确认信息，且名称不可点击。 需要输入：在没有人附加时运行的 <code>/install-github-app</code> 和 <code>/mcp</code> 设置列表，会将会话显示在 <code>Needs input</code> 下，并有一行指明该命令，附加后重新运行该命令即可继续；从 v2.1.208 到 v2.1.215，它们在该状态下会被直接拒绝。 <code>--agent</code> 恢复：当工作区受信任时，恢复或重启<a href="#from-your-shell">移到后台的 <code>--agent</code> 会话</a>会恢复该 Agent 的系统提示词和工具限制，并优先在会话自己的目录中查找该 Agent；如果会话的 Agent 已不存在，会话会使用默认工具和系统提示词继续运行，并在打开时显示可见警告，而不是在不提示的情况下恢复为默认 Agent。 <code>Ctrl+X</code>：即使停止尝试失败，按两次也会删除会话，而不是因停止失败而取消待处理的删除；工作进程已终止的已删除会话不再在下次刷新时重新出现。 Worktree 删除：worktree 目录不属于任何 git 仓库的会话现在可以删除；在此版本之前，删除此类会话的每次尝试都会被拒绝。已不存在的目录会立即清除。agent view 中的双击删除会删除仍有文件的目录，对于由 hook 创建的目录会运行您的 <code>WorktreeRemove</code> hook，除非另一个会话的记录也指向该目录。只要仍有文件，<code>claude rm</code> 就会保留此类目录。</td>
+</tr>
+<tr>
+<td>v2.1.214</td>
+<td>使用 <code>←</code> 或 <code>/background</code> 移到后台、且处于空闲状态没有任何运行内容的会话，其进程会像任何其他空闲会话一样被停止，而不是无限期地保持其进程和后台服务运行。后台服务空闲后，可以使用 <code>claude rm</code> 或从 agent view 删除已完成的会话；从非 git 仓库的目录（例如多仓库工作区文件夹）调度后又进入 worktree 的会话，当 worktree 本身属于 git 仓库时，可以从 agent view 删除，因为清理操作是根据 worktree 而不是会话调度时所在的目录来解析的；在此之前，这两种删除的每次尝试都会被拒绝。重新打开已停止的会话会恢复其保存的对话，即使会话记录存储中的某个文件夹无法读取。</td>
+</tr>
+<tr>
+<td>v2.1.213</td>
+<td><code>/install-github-app</code>、<a href="mcp.html"><code>/mcp</code></a> 设置列表和 MCP 身份验证操作在附加了终端的后台会话中可以使用，仅在没有人附加时才会被拒绝，并显示提示您附加后再次运行该命令的消息；从 v2.1.208 到 v2.1.212，即使附加了终端它们也会被拒绝。</td>
+</tr>
+<tr>
+<td>v2.1.212</td>
+<td><a href="#from-inside-a-session">交互式会话中的 <code>/fork</code></a> 会将对话复制到一个新的后台会话中，同时原始会话继续运行；<code>/fork</code> 早期的 forked-subagent 行为已移至 <code>/subtask</code>。在<a href="#turn-off-agent-view">关闭 agent view</a> 的情况下，<code>/fork</code> 保留 forked-subagent 行为。</td>
+</tr>
+<tr>
+<td>v2.1.212</td>
+<td><a href="#bring-back-a-past-session">在 agent view 中键入不带参数的 <code>/resume</code></a> 会打开一个选择器，列出您打开 agent view 时所在仓库的过去会话。</td>
+</tr>
+<tr>
+<td>v2.1.211</td>
+<td>通过附加或从其运行目录回复来唤醒已停止的会话时，会再次转发您 shell 中的网关 <code>ANTHROPIC_BASE_URL</code>，条件与全新调度相同，因此通过网关 <code>ANTHROPIC_AUTH_TOKEN</code> 进行身份验证的会话会在网关上恢复，而不是报告 <code>Not logged in</code>。附加到在第一个回复完成前就从另一个对话中移到后台的已停止会话时，会被拒绝并显示 <code>This session has no saved transcript</code>，而不是在不提示的情况下以相同会话 ID 启动空白对话；从 agent view 打开同一行时，会在页脚中显示该拒绝信息。从 Claude Code 外部结束 <code>←</code> 或 <code>/background</code> 会话的进程会将其标记为已停止，而不是由监督进程重启它；已记录在磁盘上的停止会被遵守，除非您发送的回复仍在等待投递；崩溃后重启的会话会被告知它已被重启；重启的 <code>←</code> 或 <code>/background</code> 会话不会恢复超过约一小时的中断回复。会话命名回复如果回答或拒绝了提示词而不是为其加标签（例如针对主要内容是链接的提示词），会被丢弃，该行会保留从提示词文本中提取的名称。删除 git 已无法识别其 worktree 的会话会成功，worktree 目录会保留在磁盘上并指明其路径，而不是每次尝试都被拒绝。被拒绝的删除会在会话行上显示原因，包括 worktree 无法删除时底层的 git 错误，而不是该行在不提示的情况下重新出现。</td>
+</tr>
+<tr>
+<td>v2.1.210</td>
+<td><code>claude attach</code> 在后台服务启动或重新连接期间会等待，而不是因 <code>job not found</code> 或 <code>still starting</code> 错误而失败；它会将在附加过程中完成的会话报告为已退出，并在附加完成时应用在缓慢附加期间发生的终端尺寸调整。输入框页脚的 <code>←</code> 需要输入计数会在所有提供商上显示，包括此前显示普通 <code>← for agents</code> 形式的第三方提供商。使用 <code>←</code> 将会话移到后台时，会将 Claude 的任务列表带到后台会话，而不是将其丢弃。您按 <code>←</code> 时所在的行在选择移动后仍保留加粗、未变暗的名称。<code>claude agents --effort</code> 接受 <code>ultracode</code>，而不是在不提示的情况下将其丢弃。</td>
+</tr>
+<tr>
+<td>v2.1.208</td>
+<td>附加到进程已停止的会话时，会在进程启动期间显示其会话记录的最后一屏内容，而不是仅显示 <code>Session is starting</code> 说明。因后台服务无法访问或发送失败而无法投递的回复会被保存，并在会话进程再次启动时作为其下一个提示词发送；在此版本之前，后台服务无法访问时丢失的回复会被丢弃。自身二进制文件已被更新替换的进程仍然可以从已安装的 <code>claude</code> 启动器或磁盘上的最新版本启动监督进程，而不是在 Claude Code 重启之前一直失败。运行较旧版本的监督进程永远不会将由较新版本启动的空闲会话重启到其自身的较旧二进制文件上。即使会话已将 worktree 切换到不同的分支，删除会话也会删除其 worktree；当 worktree 有未推送到任何地方的提交或被另一个会话占用时，会将 worktree 与会话行一起保留，而不是销毁提交或让 worktree 成为孤立项。<code>/install-github-app</code> 以及 <code>/mcp</code> 设置列表及其身份验证操作在后台会话中会被拒绝，并显示指明替代方法的消息；仅在 v2.1.208 中，<code>/model</code> 选择器也以相同方式被拒绝，而键入的 <code>/model &lt;name&gt;</code> 仅切换该会话，而不会同时保存您的默认模型。</td>
+</tr>
+<tr>
+<td>v2.1.207</td>
+<td>窥视面板打开时会显示该行被截断的句子，例如等待您的会话的确切问题，并以单独一行 <code>waiting 3m</code> 显示被阻塞的会话已等待多长时间，而不是在状态句子和问题前都加上相同的时间戳。在调度输入框中再次粘贴相同的文本会展开已折叠的 <code>[Pasted text #N]</code> 占位符，而不是添加第二个。通过接受计划而命名的后台会话会在其行上显示该名称。已移入 worktree 的后台会话在从 agent view 重启其进程时会保留其对话。</td>
+</tr>
+<tr>
+<td>v2.1.206</td>
+<td>行摘要会填满该行的剩余宽度，仅在终端右边缘截断，而不是在 64 列处截断。监督进程重启到新的 Claude Code 版本后，会在后台将剩余的空闲后台会话重启到该版本，而不是每分钟只重启几个。使用 <code>Ctrl+X</code> 或 <code>claude rm</code> 删除会话也会将其从监督进程的会话列表中清除，因此该行在监督进程重启后不再重新出现。在调度 shell 中导出的 <code>CLAUDE_CODE_EXTRA_BODY</code> 请求体覆盖会传递到后台会话，而不是被忽略。</td>
+</tr>
+<tr>
+<td>v2.1.205</td>
+<td>在常规 <code>claude</code> 会话中，输入框页脚的 <code>←</code> 提示会统计等待您的后台 Agent 数量，例如 <code>← 2 agents</code>。行摘要会显示会话自己的单行报告，在 64 列处截断，而不是原始的工具调用或 <code>done/total</code> 计数；按目录分组的行以彩色状态词开头。窥视面板打开时会显示完整的状态句子，对于等待您的会话，还会在回复输入框上方显示其确切的问题。使用 <code>gh</code> 编辑、评论、关闭 Pull Request 或将其标记为就绪的会话都会与该 Pull Request 关联，而不仅仅是创建或检出 Pull Request 的会话；即使本地分支名称不匹配，推送也会关联 Pull Request；创建命令的输出超出内联限制的 Pull Request 也会被关联。没有可读文本的轮次会保持会话之前的状态，而不是将其切换回 <code>Working</code>。<code>claude attach</code> 会为正在重启的会话等待最多约 60 秒，并显示一行说明原因的状态，而不是直接失败。</td>
+</tr>
+<tr>
+<td>v2.1.203</td>
+<td>当监督进程共享该网关环境时，在调度 shell 中导出的网关 <code>ANTHROPIC_BASE_URL</code> 会传递到从该 shell 调度到同一目录的会话，而不是在保留随之导出的 API 密钥的同时将其丢弃。调度 shell 的 <code>PATH</code> 会应用于每个会话的工作进程。在子代理运行时按 <code>←</code> 会等待它们，而不是在十秒后重启它们。空列表始终显示各部分标题，并在每个标题下显示说明。在调度输入框中键入 <code>@</code> 也会列出启动仓库中位于其目录树内的已注册 git worktree。从 <code>effortLevel</code> 设置继承的工作量会跟随该设置之后的修改，而不是在调度时固定。打开一个已停止的会话（其对话已在另一个运行中的会话中打开）会被拒绝并显示消息，而不是导致该行失败。在 agent view 中不可用的命令会将已键入的文本保留在输入框中。在 git 仓库外失败的 <code>WorktreeCreate</code> hook 不再阻止会话编辑文件。</td>
+</tr>
+<tr>
+<td>v2.1.202</td>
+<td>使用 <code>/rename</code> 或 <code>Ctrl+R</code> 为后台会话设置的名称，在监督进程停止并重启其进程时会保留，而不是恢复为会话调度时的名称。</td>
+</tr>
+<tr>
+<td>v2.1.200</td>
+<td>重写 <code>roster.json</code> 中会话列表的较旧 Claude Code 版本会保留由较新版本写入的字段，与现有的 <code>state.json</code> 保证一致，因此由较新版本启动的会话在监督进程重启后仍能继续接受输入。当您打开已停止响应的会话时，监督进程会重启其进程，会话会从中断处继续被中断的回复。Agent view 会将放在 <code>agents</code> 之后的 <code>--plugin-dir</code> 标志应用于其自身在调度输入框中的子代理和 skill 自动补全，以及所调度的会话。</td>
+</tr>
+<tr>
+<td>v2.1.199</td>
+<td>在低内存主机上，后台会话的进程在完成启动前退出时，其行状态会显示 <code>possibly low memory — free some up and retry</code>，而不仅仅是简单的退出原因。使用 <code>←</code> 或 <code>/background</code> 将会话移到后台时，会将其 <code>/color</code> 带到新行。</td>
+</tr>
+<tr>
+<td>v2.1.198</td>
+<td>当后台会话需要输入、完成或失败时，Agent view 会通过 <code>preferredNotifChannel</code> 发送通知，并以 <code>agent_needs_input</code> 或 <code>agent_completed</code> 类型触发 <code>Notification</code> hook。在 <code>claude attach &lt;id&gt;</code> 中，<code>←</code> 和 <code>/exit</code> 会返回 agent view，而不是退出到 shell；<code>Ctrl+Z</code> 会返回 shell。在 worktree 中隔离其工作的后台会话完成时，会提交、推送其自己的隔离分支（绝不会推送 <code>main</code> 或 <code>master</code>），并打开一个草稿 Pull Request，而不是先询问。<code>/login</code> 可在 agent view 中运行并打开登录对话框。<code>Background work is running</code> 退出对话框提供 <code>Move to background and exit</code>。退出交接也涵盖后台子代理，它们会在下次唤醒时从其会话记录恢复，而不是被报告为失败。<code>claude --bg</code> 与 <code>-p</code> 或 <code>--print</code> 组合使用时会被拒绝并报错。后台会话主机会在首次访问局域网时请求 macOS 本地网络权限，而不是以 <code>connect: no route to host</code> 失败。</td>
+</tr>
+<tr>
+<td>v2.1.196</td>
+<td>按一次 <code>←</code> 即可将前台会话移到后台；早期版本需要按两次，并带有页脚提示和确认。传递给 <code>claude agents</code> 的 <code>--dangerously-skip-permissions</code> 会显示绕过免责声明，而不是在不提示的情况下被丢弃。您从未命名的交互式会话在会话列表和 <code>claude agents --json</code> 中会带有默认名称，例如 <code>my-app-3f</code>。后台 shell 命令在会话进程被停止、重启或更新时仍能继续存在，包括在 Windows 上；设置 <code>CLAUDE_CODE_DISABLE_BG_EXIT_HANDOFF=1</code> 可关闭此交接。在重启时被误读为空的会话记录会被重命名并加上 <code>.orphaned-</code> 后缀，而不是被删除。</td>
+</tr>
+<tr>
+<td>v2.1.195</td>
+<td>在 Windows 上将会话移到后台时，进行中的后台工作也会转移。<code>Completed</code> 组会填满剩余的垂直空间，标题在较矮的终端上会压缩显示。较旧的 Claude Code 版本不再丢弃较新会话的 <code>state.json</code> 字段，也不再在 <code>claude agents</code> 中隐藏这些会话。附加到已停止的会话会立即切换，而不是显示最多五秒的空白屏幕。无法接受连接的监督进程会自行退出并释放其锁。</td>
+</tr>
+<tr>
+<td>v2.1.191</td>
+<td>如果 <code>claude --bg</code> 使用的 <code>--agent</code> 名称与您的任何子代理都不匹配，启动会失败：会话会立即退出并显示 <code>--agent '&lt;name&gt;' not found</code> 错误，而不是使用默认 Agent 运行。</td>
+</tr>
+<tr>
+<td>v2.1.174</td>
+<td>后台会话不再从监督进程的启动 shell 继承 <code>ANTHROPIC_BASE_URL</code> 等网关端点变量；监督进程会向预热的工作进程提供新的凭据快照，修复了虚假的 <code>Could not resolve authentication method</code> 错误。</td>
+</tr>
+<tr>
+<td>v2.1.172</td>
+<td>调度输入框中的 <code>/model</code> 会设置仅限当前会话的调度模型覆盖。</td>
+</tr>
+<tr>
+<td>v2.1.161</td>
+<td>行摘要会显示并行工作项的 <code>done/total</code> 计数；窥视面板会指明运行时间最长的并行工作项。</td>
+</tr>
+<tr>
+<td>v2.1.157</td>
+<td><code>claude agents</code> 接受 <code>--agent</code>；调度的会话会遵循 <code>agent</code> 设置。</td>
+</tr>
+<tr>
+<td>v2.1.145</td>
+<td>窥视面板的回复输入框和调度输入框支持语音听写。</td>
+</tr>
+<tr>
+<td>v2.1.143</td>
+<td>添加了 <code>worktree.bgIsolation</code> 设置；<code>claude agents</code> 接受 <code>--allow-dangerously-skip-permissions</code>。</td>
+</tr>
+<tr>
+<td>v2.1.142</td>
+<td><code>claude agents</code> 接受 <code>--permission-mode</code>、<code>--model</code>、<code>--effort</code>、<code>--dangerously-skip-permissions</code>、<code>--settings</code>、<code>--add-dir</code>、<code>--plugin-dir</code>、<code>--mcp-config</code> 和 <code>--strict-mcp-config</code>。</td>
+</tr>
+<tr>
+<td>v2.1.141</td>
+<td><code>claude agents</code> 接受 <code>--cwd</code>，用于将列表限定到一个项目。</td>
+</tr>
+<tr>
+<td>v2.1.139</td>
+<td>Agent view 作为研究预览版引入。</td>
+</tr>
+</tbody>
+</table></article>
+    <div class="pager"><a class="pager-link prev" href="sub-agents.html"><span class="pager-dir">← 上一页</span><span class="pager-name">创建自定义 subagents</span></a><a class="pager-link next" href="agent-teams.html"><span class="pager-dir">下一页 →</span><span class="pager-name">协调 Claude Code 会话团队</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#quick-start">快速开始</a><a class="toc-l3" href="#open-agent-view-by-default">默认打开 agent view</a><a class="toc-l2" href="#monitor-sessions-with-agent-view">使用 agent view 监控会话</a><a class="toc-l3" href="#read-session-state">读取会话状态</a><a class="toc-l3" href="#row-summaries">行摘要</a><a class="toc-l3" href="#pull-request-status">拉取请求状态</a><a class="toc-l3" href="#peek-and-reply">窥视和回复</a><a class="toc-l3" href="#attach-to-a-session">附加到会话</a><a class="toc-l3" href="#organize-the-list">组织列表</a><a class="toc-l3" href="#filter-sessions">过滤会话</a><a class="toc-l3" href="#keyboard-shortcuts">快捷键</a><a class="toc-l2" href="#dispatch-new-agents">分派新的 Agent</a><a class="toc-l3" href="#dispatch-an-agent-from-agent-view">从 Agent 视图分派 Agent</a><a class="toc-l3" href="#send-or-copy-a-session-to-the-background">将会话发送或复制到后台</a><a class="toc-l3" href="#dispatch-an-agent-from-your-shell">从您的 shell 分派 Agent</a><a class="toc-l3" href="#how-file-edits-are-isolated">文件编辑如何隔离</a><a class="toc-l3" href="#set-the-model-effort-and-fast-mode">设置模型、effort 和快速模式</a><a class="toc-l3" href="#permission-mode-model-and-effort">权限模式、模型和 effort</a><a class="toc-l3" href="#settings-plugins-and-mcp-servers">设置、插件和 MCP 服务器</a><a class="toc-l2" href="#manage-sessions-from-the-shell">从 shell 管理会话</a><a class="toc-l3" href="#list-sessions-as-json">将会话列为 JSON</a><a class="toc-l3" href="#read-session-state-from-a-script">从脚本读取会话状态</a><a class="toc-l2" href="#how-background-sessions-are-hosted">后台会话如何被托管</a><a class="toc-l3" href="#the-supervisor-process">监督进程</a><a class="toc-l3" href="#where-state-is-stored">状态存储位置</a><a class="toc-l3" href="#turn-off-agent-view">关闭 agent view</a><a class="toc-l2" href="#troubleshooting">故障排除</a><a class="toc-l3" href="#claude-agents-lists-subagents-instead-of-opening-agent-view">claude agents 列出子代理而不是打开 Agent 视图</a><a class="toc-l3" href="#agent-view-opens-with-no-sessions">Agent 视图打开时没有会话</a><a class="toc-l3" href="#backgrounding-shows-a-background-this-session-dialog">后台处理显示 Background this session? 对话框</a><a class="toc-l3" href="#carried-into-this-session-and-not-resumed">对话显示某个后台 Agent was carried into this session and not resumed</a><a class="toc-l3" href="#prompt-rejected-as-too-short">提示词被拒绝为过短</a><a class="toc-l3" href="#sessions-show-as-failed-after-shutdown">会话在关闭后显示为失败或已停止</a><a class="toc-l3" href="#opening-a-session-says-the-conversation-is-already-open">打开会话说对话已经打开</a><a class="toc-l3" href="#opening-a-session-says-it-has-no-saved-transcript">打开会话说它没有保存的会话记录</a><a class="toc-l3" href="#the-terminal-host-died-or-the-session-stopped-responding">终端主机已死亡或会话停止响应</a><a class="toc-l3" href="#a-session-fails-before-starting-with-a-possibly-low-memory-note">会话在启动前失败，并显示 possibly low memory 注释</a><a class="toc-l3" href="#agent-view-says-the-background-service-did-not-respond">Agent 视图说后台服务没有响应</a><a class="toc-l3" href="#dispatch-fails-with-could-not-resolve-authentication-method">分派失败，显示 Could not resolve authentication method</a><a class="toc-l3" href="#a-background-session-shows-no-llm-gateway">后台会话显示 No LLM gateway</a><a class="toc-l3" href="#background-sessions-can’t-read-desktop-documents-or-downloads-on-macos">后台会话无法在 macOS 上读取 Desktop、Documents 或 Downloads</a><a class="toc-l3" href="#background-sessions-can’t-reach-local-network-hosts-on-macos">后台会话无法在 macOS 上访问本地网络主机</a><a class="toc-l3" href="#a-session-is-slow-to-respond-after-attaching">附加后会话响应缓慢</a><a class="toc-l3" href="#claude/worktrees/-is-filling-up">.claude/worktrees/ 正在填满</a><a class="toc-l2" href="#limitations">限制</a><a class="toc-l2" href="#related-resources">相关资源</a><a class="toc-l2" href="#version-history">版本历史</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

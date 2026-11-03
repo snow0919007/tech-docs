@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Code GitLab CI/CD · Claude Code 中文文档</title>
+<meta name="description" content="了解如何将 Claude Code 集成到您的 GitLab CI/CD 开发工作流中">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="gitlab-ci-cd">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/gitlab-ci-cd" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link active" href="gitlab-ci-cd.html" aria-current="page">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>快速入门</span> <span class="sep">/</span> <span>代码审查与 Pull Request</span> <span class="sep">/</span> <span>在您自己的 CI 中运行 Claude</span></div>
+    <article class="prose" id="article"><h1 id="claude-code-gitlab-cicd">Claude Code GitLab CI/CD</h1>
+<blockquote>
+<p>了解如何将 Claude Code 集成到您的 GitLab CI/CD 开发工作流中</p>
+</blockquote>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Claude Code for GitLab CI/CD 目前处于测试阶段。随着我们完善体验，功能和特性可能会发生变化。</p>
+<p>此集成由 GitLab 维护。如需支持，请参阅以下 <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/573776" target="_blank" rel="noopener">GitLab issue</a>。</p>
+<p>[!NOTE]</p>
+<p>此集成基于 <a href="agent-sdk-overview.html">Claude Code CLI and Agent SDK</a> 构建，可在您的 CI/CD 作业和自定义自动化工作流中以编程方式使用 Claude。</p></div></div>
+<h2 id="why-use-claude-code-with-gitlab">为什么在 GitLab 中使用 Claude Code？</h2>
+<ul>
+<li><strong>即时 MR 创建</strong>：描述您的需求，Claude 会提议一个完整的 MR，包含更改和说明</li>
+<li><strong>自动化实现</strong>：使用单个命令或提及将问题转化为可工作的代码</li>
+<li><strong>项目感知</strong>：Claude 遵循您的 <code>CLAUDE.md</code> 指南和现有代码模式</li>
+<li><strong>简单设置</strong>：向 <code>.gitlab-ci.yml</code> 添加一个作业和一个掩码 CI/CD 变量</li>
+<li><strong>企业就绪</strong>：选择 Claude API、Amazon Bedrock 或 Google Cloud 的 Agent Platform 以满足数据驻留和采购需求</li>
+<li><strong>默认安全</strong>：在您的 GitLab runners 中运行，具有您的分支保护和批准</li>
+</ul>
+<h2 id="how-it-works">工作原理</h2>
+<p>Claude Code 使用 GitLab CI/CD 在隔离的作业中运行 AI 任务，并通过 MR 将结果提交回来：</p>
+<ol>
+<li>
+<p><strong>事件驱动的编排</strong>：GitLab 监听您选择的触发器（例如，在问题、MR 或审查线程中提及 <code>@claude</code> 的评论）。该作业从线程和存储库收集上下文，从该输入构建提示，并运行 Claude Code。</p>
+</li>
+<li>
+<p><strong>提供商抽象</strong>：使用适合您环境的提供商：<br />
+   * Claude API (SaaS)<br />
+   * Amazon Bedrock（基于 IAM 的访问、跨区域选项）<br />
+   * Google Cloud 的 Agent Platform（GCP 原生、Workload Identity Federation）</p>
+</li>
+<li>
+<p><strong>沙箱执行</strong>：每次交互都在具有严格网络和文件系统规则的容器中运行。Claude Code 强制执行工作区范围的权限以限制写入。每项更改都通过 MR 流动，以便审查者可以看到差异，批准仍然适用。</p>
+</li>
+</ol>
+<p>选择区域端点以降低延迟并满足数据主权要求，同时使用现有的云协议。</p>
+<h2 id="what-can-claude-do">Claude 可以做什么？</h2>
+<p>在 GitLab 管道中，Claude Code 可以：</p>
+<ul>
+<li>从问题描述或评论创建和更新 MR</li>
+<li>分析性能回归并提出优化建议</li>
+<li>直接在分支中实现功能，然后打开 MR</li>
+<li>修复由测试或评论识别的错误和回归</li>
+<li>回复后续评论以迭代所请求的更改</li>
+</ul>
+<h2 id="setup">设置</h2>
+<h3 id="quick-setup">快速设置</h3>
+<p>开始使用的最快方式是在 <code>.gitlab-ci.yml</code> 中添加一个最小化的任务，并将您的 API 密钥设置为掩码变量。</p>
+<ol>
+<li>
+<p><strong>添加掩码 CI/CD 变量</strong><br />
+   * 转到 <strong>Settings</strong> → <strong>CI/CD</strong> → <strong>Variables</strong><br />
+   * 添加 <code>ANTHROPIC_API_KEY</code>（掩码，根据需要保护）</p>
+</li>
+<li>
+<p><strong>将 Claude 任务添加到 <code>.gitlab-ci.yml</code></strong></p>
+</li>
+</ol>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ai</span>
+
+<span class="nt">claude</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ai</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:24-alpine3.21</span>
+<span class="w">  </span><span class="c1"># 调整规则以适应您想要触发任务的方式：</span>
+<span class="w">  </span><span class="c1"># - 手动运行</span>
+<span class="w">  </span><span class="c1"># - 合并请求事件</span>
+<span class="w">  </span><span class="c1"># - 当评论包含 '@claude' 时的 web/API 触发</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">'$CI_PIPELINE_SOURCE</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">"web"'</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">'$CI_PIPELINE_SOURCE</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">"merge_request_event"'</span>
+<span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">GIT_STRATEGY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch</span>
+<span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apk update</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apk add --no-cache git curl bash</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curl -fsSL https://claude.ai/install.sh | bash</span>
+<span class="w">    </span><span class="c1"># 安装程序将 claude 放在 ~/.local/bin 中，在此镜像中不在 PATH 上</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export PATH="$HOME/.local/bin:$PATH"</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># 可选：如果您的设置提供了 GitLab MCP 服务器，请启动它</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/bin/gitlab-mcp-server || true</span>
+<span class="w">    </span><span class="c1"># 通过带有上下文负载的 web/API 触发时使用 AI_FLOW_* 变量</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "$AI_FLOW_INPUT for $AI_FLOW_CONTEXT on $AI_FLOW_EVENT"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">claude</span>
+<span class="w">      </span><span class="no">-p "${AI_FLOW_INPUT:-'Review this MR and implement the requested changes'}"</span>
+<span class="w">      </span><span class="no">--permission-mode acceptEdits</span>
+<span class="w">      </span><span class="no">--allowedTools "Bash Read Edit Write mcp__gitlab"</span>
+<span class="w">      </span><span class="no">--debug</span>
+</code></pre></div>
+<p>添加任务和 <code>ANTHROPIC_API_KEY</code> 变量后，通过从 <strong>CI/CD</strong> → <strong>Pipelines</strong> 手动运行任务进行测试，或从 MR 触发它以让 Claude 在分支中提议更新并在需要时打开 MR。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>要在 Amazon Bedrock 或 Google Cloud 的 Agent Platform 上运行而不是 Claude API，请参阅下面的 <a href="#using-with-amazon-bedrock-and-google-cloud">Using with Amazon Bedrock and Google Cloud</a> 部分了解身份验证和环境设置。</p></div></div>
+<h3 id="manual-setup-recommended-for-production">手动设置（建议用于生产环境）</h3>
+<p>如果您更喜欢更受控的设置或需要企业提供商：</p>
+<ol>
+<li>
+<p><strong>配置提供商访问</strong>：<br />
+   * <strong>Claude API</strong>：创建 <code>ANTHROPIC_API_KEY</code> 并将其存储为掩码 CI/CD 变量<br />
+   * <strong>Amazon Bedrock</strong>：<strong>Configure GitLab</strong> → <strong>AWS OIDC</strong> 并为 Amazon Bedrock 创建 IAM 角色<br />
+   * <strong>Google Cloud 的 Agent Platform</strong>：<strong>Configure Workload Identity Federation for GitLab</strong> → <strong>GCP</strong></p>
+</li>
+<li>
+<p><strong>为 GitLab API 操作添加项目凭证</strong>：<br />
+   * 默认使用 <code>CI_JOB_TOKEN</code>，或创建具有 <code>api</code> 范围的项目访问令牌<br />
+   * 如果使用 PAT，将其存储为 <code>GITLAB_ACCESS_TOKEN</code>（掩码）</p>
+</li>
+<li>
+<p><strong>将 Claude 任务添加到 <code>.gitlab-ci.yml</code></strong>：对于 Claude API 使用 <a href="#quick-setup">Quick setup</a> 任务，或从 <a href="#configuration-examples">Configuration examples</a> 使用提供商任务</p>
+</li>
+<li>
+<p><strong>（可选）启用提及驱动的触发器</strong>：<br />
+   * 为"Comments (notes)"添加项目 webhook 到您的事件监听器（如果您使用的话）<br />
+   * 当评论包含 <code>@claude</code> 时，让监听器使用 <code>AI_FLOW_INPUT</code> 和 <code>AI_FLOW_CONTEXT</code> 等变量调用管道触发 API</p>
+</li>
+</ol>
+<h2 id="example-use-cases">示例用例</h2>
+<h3 id="turn-issues-into-mrs">将问题转换为 MR</h3>
+<p>在问题评论中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">@claude implement this feature based on the issue description
+</code></pre></div>
+<p>Claude 分析问题和代码库，在分支中编写更改，并打开 MR 供审查。</p>
+<h3 id="get-implementation-help">获取实现帮助</h3>
+<p>在 MR 讨论中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">@claude suggest a concrete approach to cache the results of this API call
+</code></pre></div>
+<p>Claude 提出更改建议，添加具有适当缓存的代码，并更新 MR。</p>
+<h3 id="fix-bugs-quickly">快速修复错误</h3>
+<p>在问题或 MR 评论中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">@claude fix the TypeError in the user dashboard component
+</code></pre></div>
+<p>Claude 定位错误，实现修复，并更新分支或打开新的 MR。</p>
+<h2 id="using-with-amazon-bedrock-and-google-cloud">与 Amazon Bedrock 和 Google Cloud 配合使用</h2>
+<p>对于企业环境，您可以在自己的云基础设施上完全运行 Claude Code，并获得相同的开发者体验。</p>
+<blockquote>
+<p>[tab] Amazon Bedrock</p>
+<h3 id="_1">前置条件</h3>
+<p>在使用 Amazon Bedrock 设置 Claude Code 之前，您需要：</p>
+<ol>
+<li>一个 AWS 账户，具有对所需 Claude 模型的 Amazon Bedrock 访问权限</li>
+<li>在 AWS IAM 中配置为 OIDC 身份提供商的 GitLab</li>
+<li>一个具有 Amazon Bedrock 权限的 IAM 角色和限制为您的 GitLab 项目/引用的信任策略</li>
+<li>用于角色假设的 GitLab CI/CD 变量：<br />
+   * <code>AWS_ROLE_TO_ASSUME</code>（角色 ARN）<br />
+   * <code>AWS_REGION</code>（Amazon Bedrock 区域）</li>
+</ol>
+<h3 id="_2">设置说明</h3>
+<p>配置 AWS 以允许 GitLab CI 作业通过 OIDC 假设 IAM 角色（无静态密钥）。</p>
+<p><strong>必需的设置：</strong></p>
+<ol>
+<li>启用 Amazon Bedrock 并请求访问您的目标 Claude 模型</li>
+<li>为 GitLab 创建 IAM OIDC 提供商（如果尚未存在）</li>
+<li>创建由 GitLab OIDC 提供商信任的 IAM 角色，限制为您的项目和受保护的引用</li>
+<li>为 Amazon Bedrock 调用 API 附加最小权限</li>
+</ol>
+<p>使用 <a href="#configuration-examples">Amazon Bedrock 作业示例</a> 在运行时将作业的 OIDC 令牌交换为临时 AWS 凭证。</p>
+<p>[tab] Google Cloud's Agent Platform</p>
+<h3 id="_3">前置条件</h3>
+<p>在使用 Google Cloud's Agent Platform 设置 Claude Code 之前，您需要：</p>
+<ol>
+<li>一个 Google Cloud 项目，具有：<br />
+   * 启用的 Google Cloud's Agent Platform API<br />
+   * 配置为信任 GitLab OIDC 的工作负载身份联合</li>
+<li>一个仅具有所需 Google Cloud's Agent Platform 角色的专用服务账户</li>
+<li>GitLab CI/CD 变量：<br />
+   * <code>GCP_WORKLOAD_IDENTITY_PROVIDER</code>（提供商资源名称，不包括 <code>//iam.googleapis.com/</code> 前缀，例如 <code>projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider</code>）<br />
+   * <code>GCP_SERVICE_ACCOUNT</code>（服务账户电子邮件）<br />
+   * <code>GCP_PROJECT_ID</code>（Google Cloud 项目 ID）</li>
+</ol>
+<h3 id="_4">设置说明</h3>
+<p>配置 Google Cloud 以允许 GitLab CI 作业通过工作负载身份联合模拟服务账户。</p>
+<p><strong>必需的设置：</strong></p>
+<ol>
+<li>启用 IAM Credentials API、STS API 和 Google Cloud's Agent Platform API</li>
+<li>为 GitLab OIDC 创建工作负载身份池和提供商</li>
+<li>创建具有 Google Cloud's Agent Platform 角色的专用服务账户</li>
+<li>授予 WIF 主体权限以模拟服务账户</li>
+</ol>
+<p>使用 <a href="#configuration-examples">Agent Platform 作业示例</a> 进行身份验证，无需存储密钥。</p>
+</blockquote>
+<h2 id="configuration-examples">配置示例</h2>
+<p>以下是可以适配到您的管道中的现成代码片段。</p>
+<h3 id="amazon-bedrock-job-example-oidc">Amazon Bedrock 任务示例 (OIDC)</h3>
+<p><strong>前置条件：</strong></p>
+<ul>
+<li>Amazon Bedrock 已启用并可访问您选择的 Claude 模型</li>
+<li>GitLab OIDC 在 AWS 中已配置，具有信任您的 GitLab 项目和 refs 的角色</li>
+<li>具有 Amazon Bedrock 权限的 IAM 角色（建议使用最小权限）</li>
+</ul>
+<p><strong>必需的 CI/CD 变量：</strong></p>
+<ul>
+<li><code>AWS_ROLE_TO_ASSUME</code>：用于 Amazon Bedrock 访问的 IAM 角色的 ARN</li>
+<li><code>AWS_REGION</code>：Amazon Bedrock 区域（例如，<code>us-west-2</code>）</li>
+</ul>
+<p>GitLab 从 <code>id_tokens:</code> 块中生成任务的 OIDC 令牌，并将其公开为 <code>GITLAB_OIDC_TOKEN</code>。将 <code>aud</code> 设置为您在 AWS 的 IAM OIDC 身份提供商上配置的受众值，例如您的 GitLab 实例 URL。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ai</span>
+
+<span class="nt">claude-bedrock</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ai</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:24-alpine3.21</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">'$CI_PIPELINE_SOURCE</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">"web"'</span>
+<span class="w">  </span><span class="nt">id_tokens</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">GITLAB_OIDC_TOKEN</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">aud</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://gitlab.example.com</span>
+<span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apk add --no-cache bash curl jq git aws-cli</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curl -fsSL https://claude.ai/install.sh | bash</span>
+<span class="w">    </span><span class="c1"># The installer places claude in ~/.local/bin, which isn't on PATH in this image</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export PATH="$HOME/.local/bin:$PATH"</span>
+<span class="w">    </span><span class="c1"># Exchange the job's OIDC token for AWS credentials</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export AWS_WEB_IDENTITY_TOKEN_FILE="/tmp/oidc_token"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">printf "%s" "$GITLAB_OIDC_TOKEN" &gt; "$AWS_WEB_IDENTITY_TOKEN_FILE"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">aws sts assume-role-with-web-identity</span>
+<span class="w">      </span><span class="no">--role-arn "$AWS_ROLE_TO_ASSUME"</span>
+<span class="w">      </span><span class="no">--role-session-name "gitlab-claude-$(date +%s)"</span>
+<span class="w">      </span><span class="no">--web-identity-token "file://$AWS_WEB_IDENTITY_TOKEN_FILE"</span>
+<span class="w">      </span><span class="no">--duration-seconds 3600 &gt; /tmp/aws_creds.json</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export AWS_ACCESS_KEY_ID="$(jq -r .Credentials.AccessKeyId /tmp/aws_creds.json)"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export AWS_SECRET_ACCESS_KEY="$(jq -r .Credentials.SecretAccessKey /tmp/aws_creds.json)"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export AWS_SESSION_TOKEN="$(jq -r .Credentials.SessionToken /tmp/aws_creds.json)"</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/bin/gitlab-mcp-server || true</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">claude</span>
+<span class="w">      </span><span class="no">-p "${AI_FLOW_INPUT:-'Implement the requested changes and open an MR'}"</span>
+<span class="w">      </span><span class="no">--permission-mode acceptEdits</span>
+<span class="w">      </span><span class="no">--allowedTools "Bash Read Edit Write mcp__gitlab"</span>
+<span class="w">      </span><span class="no">--debug</span>
+<span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">AWS_REGION</span><span class="p">:</span><span class="w"> </span><span class="s">"us-west-2"</span>
+<span class="w">    </span><span class="nt">CLAUDE_CODE_USE_BEDROCK</span><span class="p">:</span><span class="w"> </span><span class="s">"1"</span>
+</code></pre></div>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Amazon Bedrock 的模型 ID 包含特定于区域的前缀（例如，<code>us.anthropic.claude-sonnet-4-6</code>）。通过您的任务配置或提示传递所需的模型，如果您的工作流支持的话。</p></div></div>
+<h3 id="agent-platform-job-example-workload-identity-federation">Agent Platform 任务示例 (Workload Identity Federation)</h3>
+<p><strong>前置条件：</strong></p>
+<ul>
+<li>Google Cloud 的 Agent Platform API 在您的 GCP 项目中已启用</li>
+<li>Workload Identity Federation 已配置为信任 GitLab OIDC</li>
+<li>具有 Google Cloud 的 Agent Platform 权限的服务账户</li>
+</ul>
+<p><strong>必需的 CI/CD 变量：</strong></p>
+<ul>
+<li><code>GCP_WORKLOAD_IDENTITY_PROVIDER</code>：提供商资源名称，不包括 <code>//iam.googleapis.com/</code> 前缀，例如 <code>projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider</code></li>
+<li><code>GCP_SERVICE_ACCOUNT</code>：服务账户电子邮件</li>
+<li><code>GCP_PROJECT_ID</code>：Google Cloud 项目 ID</li>
+<li><code>CLOUD_ML_REGION</code>：Google Cloud 的 Agent Platform 区域（例如，<code>us-east5</code>）</li>
+</ul>
+<p>GitLab 从 <code>id_tokens:</code> 块中生成任务的 OIDC 令牌，并将其公开为 <code>GITLAB_OIDC_TOKEN</code>。将 <code>aud</code> 设置为您在 Workload Identity Pool 提供商上配置的受众值，例如您的 GitLab 实例 URL。任务将令牌写入文件，凭证配置的 <code>credential_source</code> 条目告诉 Google 的身份验证库从那里读取它。将 <code>GOOGLE_APPLICATION_CREDENTIALS</code> 设置为凭证配置文件使其可通过<a href="google-vertex-ai.html#3-configure-gcp-credentials">应用默认凭证</a>供 Claude Code 使用。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ai</span>
+
+<span class="nt">claude-vertex</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ai</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcr.io/google.com/cloudsdktool/google-cloud-cli:slim</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">'$CI_PIPELINE_SOURCE</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">"web"'</span>
+<span class="w">  </span><span class="nt">id_tokens</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">GITLAB_OIDC_TOKEN</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">aud</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://gitlab.example.com</span>
+<span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apt-get update &amp;&amp; apt-get install -y git &amp;&amp; apt-get clean</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curl -fsSL https://claude.ai/install.sh | bash</span>
+<span class="w">    </span><span class="c1"># The installer places claude in ~/.local/bin, which isn't on PATH in this image</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export PATH="$HOME/.local/bin:$PATH"</span>
+<span class="w">    </span><span class="c1"># Write the job's OIDC token where credential_source expects it</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">printf "%s" "$GITLAB_OIDC_TOKEN" &gt; /tmp/oidc_token</span>
+<span class="w">    </span><span class="c1"># Write the WIF credential configuration to a file (no downloaded keys)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">cat &gt; /tmp/cred.json &lt;&lt;EOF</span>
+<span class="w">      </span><span class="no">{</span>
+<span class="w">        </span><span class="no">"type": "external_account",</span>
+<span class="w">        </span><span class="no">"audience": "//iam.googleapis.com/${GCP_WORKLOAD_IDENTITY_PROVIDER}",</span>
+<span class="w">        </span><span class="no">"subject_token_type": "urn:ietf:params:oauth:token-type:jwt",</span>
+<span class="w">        </span><span class="no">"token_url": "https://sts.googleapis.com/v1/token",</span>
+<span class="w">        </span><span class="no">"credential_source": {</span>
+<span class="w">          </span><span class="no">"file": "/tmp/oidc_token"</span>
+<span class="w">        </span><span class="no">},</span>
+<span class="w">        </span><span class="no">"service_account_impersonation_url": "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${GCP_SERVICE_ACCOUNT}:generateAccessToken"</span>
+<span class="w">      </span><span class="no">}</span>
+<span class="w">      </span><span class="no">EOF</span>
+<span class="w">    </span><span class="c1"># Expose the credentials to Claude Code via Application Default Credentials</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export GOOGLE_APPLICATION_CREDENTIALS=/tmp/cred.json</span>
+<span class="w">    </span><span class="c1"># Authenticate the gcloud CLI with the same credential configuration</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcloud auth login --cred-file=/tmp/cred.json</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcloud config set project "$GCP_PROJECT_ID"</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/bin/gitlab-mcp-server || true</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">CLOUD_ML_REGION="${CLOUD_ML_REGION:-us-east5}"</span>
+<span class="w">      </span><span class="no">claude</span>
+<span class="w">      </span><span class="no">-p "${AI_FLOW_INPUT:-'Review and update code as requested'}"</span>
+<span class="w">      </span><span class="no">--permission-mode acceptEdits</span>
+<span class="w">      </span><span class="no">--allowedTools "Bash Read Edit Write mcp__gitlab"</span>
+<span class="w">      </span><span class="no">--debug</span>
+<span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">CLOUD_ML_REGION</span><span class="p">:</span><span class="w"> </span><span class="s">"us-east5"</span>
+<span class="w">    </span><span class="nt">CLAUDE_CODE_USE_VERTEX</span><span class="p">:</span><span class="w"> </span><span class="s">"1"</span>
+<span class="w">    </span><span class="nt">ANTHROPIC_VERTEX_PROJECT_ID</span><span class="p">:</span><span class="w"> </span><span class="s">"$GCP_PROJECT_ID"</span>
+</code></pre></div>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>使用 Workload Identity Federation，您无需存储服务账户密钥。使用特定于存储库的信任条件和最小权限服务账户。</p></div></div>
+<h2 id="best-practices">最佳实践</h2>
+<h3 id="claude-md-configuration">CLAUDE.md 配置</h3>
+<p>在存储库根目录创建一个 <code>CLAUDE.md</code> 文件，以定义编码标准、审查标准和项目特定的规则。Claude 在运行期间读取此文件，并在提议更改时遵循您的约定。</p>
+<h3 id="security-considerations">安全考虑</h3>
+<p><strong>永远不要将 API 密钥或云凭证提交到您的存储库</strong>。始终使用 GitLab CI/CD 变量：</p>
+<ul>
+<li>将 <code>ANTHROPIC_API_KEY</code> 添加为掩码变量（如果需要，请保护它）</li>
+<li>尽可能使用提供商特定的 OIDC（无长期密钥）</li>
+<li>限制作业权限和网络出口</li>
+<li>像审查任何其他贡献者一样审查 Claude 的 MR</li>
+</ul>
+<h3 id="optimizing-performance">优化性能</h3>
+<ul>
+<li>保持 <code>CLAUDE.md</code> 专注且简洁</li>
+<li>提供清晰的问题/MR 描述以减少迭代</li>
+<li>在可能的情况下在运行器中缓存 npm 和包安装</li>
+</ul>
+<h3 id="ci-costs">CI 成本</h3>
+<p>使用 Claude Code 与 GitLab CI/CD 时，请注意相关成本：</p>
+<ul>
+<li><strong>GitLab Runner 时间</strong>：</li>
+<li>Claude 在您的 GitLab 运行器上运行并消耗计算分钟数</li>
+<li>
+<p>有关详细信息，请参阅您的 GitLab 计划的运行器计费</p>
+</li>
+<li>
+<p><strong>API 成本</strong>：</p>
+</li>
+<li>每次 Claude 交互根据提示和响应大小消耗令牌</li>
+<li>令牌使用量因任务复杂性和代码库大小而异</li>
+<li>
+<p>有关详细信息，请参阅 <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Anthropic 定价</a></p>
+</li>
+<li>
+<p><strong>成本优化提示</strong>：</p>
+</li>
+<li>使用特定的 <code>@claude</code> 命令以减少不必要的轮次</li>
+<li>设置适当的 <code>--max-turns</code> 和作业 <code>timeout</code> 值</li>
+<li>限制并发以控制并行运行</li>
+</ul>
+<h2 id="troubleshooting">故障排除</h2>
+<h3 id="claude-not-responding-to-claude-commands">Claude 不响应 @claude 命令</h3>
+<ul>
+<li>验证您的管道是否被触发（手动、MR 事件或通过注释事件监听器/webhook）</li>
+<li>确保您的 <code>ANTHROPIC_API_KEY</code> 或云提供商变量存在</li>
+<li>检查注释是否包含 <code>@claude</code>（不是 <code>/claude</code>）以及您的提及触发器是否已配置</li>
+</ul>
+<h3 id="job-can’t-write-comments-or-open-mrs">作业无法写入注释或打开 MR</h3>
+<ul>
+<li>确保 <code>CI_JOB_TOKEN</code> 对项目具有足够的权限，或使用具有 <code>api</code> 范围的项目访问令牌</li>
+<li>检查 <code>mcp__gitlab</code> 工具是否在 <code>--allowedTools</code> 中启用</li>
+<li>确认作业在 MR 的上下文中运行或通过 <code>AI_FLOW_*</code> 变量具有足够的上下文</li>
+</ul>
+<h3 id="authentication-errors">身份验证错误</h3>
+<ul>
+<li><strong>对于 Claude API</strong>：确认 <code>ANTHROPIC_API_KEY</code> 有效且未过期</li>
+<li><strong>对于 Amazon Bedrock 或 Google Cloud 的 Agent Platform</strong>：验证 OIDC/WIF 配置、角色模拟和密钥名称；确认区域和模型可用性</li>
+</ul>
+<h2 id="advanced-configuration">高级配置</h2>
+<h3 id="common-parameters-and-variables">常见参数和变量</h3>
+<p>使用这些 CLI 标志、GitLab 关键字和变量来控制你的作业中的 Claude Code 运行：</p>
+<ul>
+<li><code>-p</code>：内联提供指令，例如 <code>claude -p "Review this MR"</code></li>
+<li><code>--max-turns</code>：限制往返迭代的次数</li>
+<li><code>timeout</code>：使用 GitLab 的作业级 <code>timeout</code> 关键字限制总作业执行时间，例如 <code>timeout: 30m</code></li>
+<li><code>ANTHROPIC_API_KEY</code>：Claude API 所需（不用于 Amazon Bedrock 或 Google Cloud 的 Agent Platform）</li>
+<li>提供商特定环境：<code>AWS_REGION</code>、Google Cloud 的 Agent Platform 的项目/区域变量</li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>确切的标志和参数可能因 <code>@anthropic-ai/claude-code</code> 的版本而异。在你的作业中运行 <code>claude --help</code> 以查看支持的选项。</p></div></div>
+<h3 id="customizing-claude’s-behavior">自定义 Claude 的行为</h3>
+<p>你可以通过两种主要方式指导 Claude：</p>
+<ol>
+<li><strong>CLAUDE.md</strong>：定义编码标准、安全要求和项目约定。Claude 在运行期间读取此文件并遵循你的规则。</li>
+<li><strong>自定义提示</strong>：通过作业中的 <code>-p</code> 传递特定任务的指令。为不同的作业使用不同的提示（例如，审查、实现、重构）。</li>
+</ol></article>
+    <div class="pager"><a class="pager-link prev" href="github-actions-cloud-providers.html"><span class="pager-dir">← 上一页</span><span class="pager-name">通过云提供商使用 Claude Code GitHub Actions</span></a><a class="pager-link next" href="agents.html"><span class="pager-dir">下一页 →</span><span class="pager-name">并行运行代理</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#why-use-claude-code-with-gitlab">为什么在 GitLab 中使用 Claude Code？</a><a class="toc-l2" href="#how-it-works">工作原理</a><a class="toc-l2" href="#what-can-claude-do">Claude 可以做什么？</a><a class="toc-l2" href="#setup">设置</a><a class="toc-l3" href="#quick-setup">快速设置</a><a class="toc-l3" href="#manual-setup-recommended-for-production">手动设置（建议用于生产环境）</a><a class="toc-l2" href="#example-use-cases">示例用例</a><a class="toc-l3" href="#turn-issues-into-mrs">将问题转换为 MR</a><a class="toc-l3" href="#get-implementation-help">获取实现帮助</a><a class="toc-l3" href="#fix-bugs-quickly">快速修复错误</a><a class="toc-l2" href="#using-with-amazon-bedrock-and-google-cloud">与 Amazon Bedrock 和 Google Cloud 配合使用</a><a class="toc-l3" href="#_1">前置条件</a><a class="toc-l3" href="#_2">设置说明</a><a class="toc-l3" href="#_3">前置条件</a><a class="toc-l3" href="#_4">设置说明</a><a class="toc-l2" href="#configuration-examples">配置示例</a><a class="toc-l3" href="#amazon-bedrock-job-example-oidc">Amazon Bedrock 任务示例 (OIDC)</a><a class="toc-l3" href="#agent-platform-job-example-workload-identity-federation">Agent Platform 任务示例 (Workload Identity Federation)</a><a class="toc-l2" href="#best-practices">最佳实践</a><a class="toc-l3" href="#claude-md-configuration">CLAUDE.md 配置</a><a class="toc-l3" href="#security-considerations">安全考虑</a><a class="toc-l3" href="#optimizing-performance">优化性能</a><a class="toc-l3" href="#ci-costs">CI 成本</a><a class="toc-l2" href="#troubleshooting">故障排除</a><a class="toc-l3" href="#claude-not-responding-to-claude-commands">Claude 不响应 @claude 命令</a><a class="toc-l3" href="#job-can’t-write-comments-or-open-mrs">作业无法写入注释或打开 MR</a><a class="toc-l3" href="#authentication-errors">身份验证错误</a><a class="toc-l2" href="#advanced-configuration">高级配置</a><a class="toc-l3" href="#common-parameters-and-variables">常见参数和变量</a><a class="toc-l3" href="#customizing-claude’s-behavior">自定义 Claude 的行为</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>控制组织的 MCP 服务器访问权限 · Claude Code 中文文档</title>
+<meta name="description" content="使用托管配置文件、托管设置、允许列表和拒绝列表，限制用户可以添加或连接的 MCP 服务器，或为每个用户提供服务器。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="managed-mcp">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/managed-mcp" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link active" href="managed-mcp.html" aria-current="page">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>管理</span> <span class="sep">/</span> <span>设置与访问</span></div>
+    <article class="prose" id="article"><h1 id="mcp">控制组织的 MCP 服务器访问权限</h1>
+<blockquote>
+<p>使用托管配置文件、托管设置、允许列表和拒绝列表，限制用户可以添加或连接的 MCP 服务器，或为每个用户提供服务器。</p>
+</blockquote>
+<p>默认情况下，任何运行 Claude Code 的人都可以连接他们选择的任何 <a href="mcp.html">MCP 服务器</a>。Anthropic 在将连接器添加到 <a href="https://claude.ai/directory" target="_blank" rel="noopener">Anthropic 目录</a>之前会根据其<a href="https://claude.com/docs/connectors/building/review-criteria" target="_blank" rel="noopener">列表标准</a>审查连接器，但不会对任何 MCP 服务器进行安全审计或管理。作为管理员，您可以限制在组织中运行的服务器，从部署固定的批准集到完全禁用 MCP，并且您可以为每个用户提供服务器。</p>
+<p>这些限制涵盖 Claude Code 自身加载的服务器，包括它从 claude.ai 获取的连接器。桌面应用程序向其本地和 SSH 会话提供的连接器以进程内方式到达，并由您的 claude.ai 组织设置进行管理；<a href="mcp.html#how-connectors-reach-claude-code">连接器如何到达 Claude Code</a> 显示了哪些控制适用于每种会话类型中的连接器，包括云会话。</p>
+<p>本页面涵盖以下内容：</p>
+<ul>
+<li><a href="#choose-a-pattern">选择一个模式</a>，该模式与您需要的控制程度相匹配</li>
+<li><a href="#exclusive-control-with-managed-mcp-json">使用 <code>managed-mcp.json</code> 部署固定服务器集</a>，包括如何<a href="#disable-mcp-entirely">完全禁用 MCP</a></li>
+<li><a href="#provide-servers-through-managed-settings">通过托管设置提供服务器</a>，同时用户保留他们自己的服务器</li>
+<li><a href="#policy-based-control-with-allowlists-and-denylists">使用允许列表和拒绝列表控制服务器</a></li>
+<li><a href="#how-restrictions-appear-to-users">告诉用户当限制阻止服务器时会发生什么</a></li>
+<li><a href="#monitor-mcp-usage">监控您的组织实际使用的服务器</a></li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><a href="security.html">安全</a>页面涵盖 MCP 威胁模型以及如何在批准服务器之前对其进行评估。<a href="admin-setup.html#decide-what-to-enforce">决定要强制执行的内容</a>涵盖 MCP 限制以及其他管理控制。</p></div></div>
+<h2 id="choose-a-pattern">选择一个模式</h2>
+<p>Claude Code 支持一系列限制级别。每个模式使用以下一个或多个机制：用于部署固定集合的 <code>managed-mcp.json</code>、用于提供服务器以及用户添加的服务器的 <code>managedMcpServers</code> 托管设置，以及用于过滤用户配置内容的 <code>allowedMcpServers</code>/<code>deniedMcpServers</code>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">模式</th>
+<th style="text-align: left;">功能</th>
+<th style="text-align: left;">配置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>禁用 MCP</strong></td>
+<td style="text-align: left;">不加载任何服务器，除了<a href="#exclusive-control-with-managed-mcp-json">在独占控制下加载</a>的少数几个</td>
+<td style="text-align: left;">使用空服务器映射的 <code>managed-mcp.json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>固定部署</strong></td>
+<td style="text-align: left;">每个用户获得相同的服务器，无法添加其他服务器</td>
+<td style="text-align: left;">包含你想要的服务器的 <code>managed-mcp.json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>提供的服务器</strong></td>
+<td style="text-align: left;">每个用户获得你列出的远程服务器，并保留他们自己的服务器</td>
+<td style="text-align: left;">托管设置中的 <code>managedMcpServers</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>批准的目录</strong></td>
+<td style="text-align: left;">发布批准的服务器列表；用户添加他们想要的服务器，其他任何内容都被阻止</td>
+<td style="text-align: left;"><code>allowedMcpServers</code> + <code>allowManagedMcpServersOnly: true</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>仅插件服务器</strong></td>
+<td style="text-align: left;">用户无法通过 <code>~/.claude.json</code> 或 <code>.mcp.json</code> 添加服务器；<a href="plugins-loading.html#skills-directory-plugins-blocked-by-managed-settings">技能目录插件</a>不再作为插件加载，来自其他插件的服务器仍然加载</td>
+<td style="text-align: left;"><a href="settings-reference.html#strictpluginonlycustomization"><code>strictPluginOnlyCustomization</code></a> 列表中包含 <code>mcp</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>软允许列表</strong></td>
+<td style="text-align: left;">强制执行允许列表，用户可以在他们自己的设置中扩展</td>
+<td style="text-align: left;">不带 <code>allowManagedMcpServersOnly</code> 的 <code>allowedMcpServers</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>仅拒绝列表</strong></td>
+<td style="text-align: left;">阻止已知的坏服务器，允许其他所有服务器</td>
+<td style="text-align: left;"><code>deniedMcpServers</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>无限制</strong></td>
+<td style="text-align: left;">用户添加任何内容</td>
+<td style="text-align: left;">不部署任何托管 MCP 配置</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Claude Code 没有内置的 MCP 服务器注册表供用户浏览和安装。对于批准的目录模式，在用户会找到的地方（例如内部 wiki）共享批准的列表及其 <code>claude mcp add</code> 命令，或通过<a href="plugins-org.html#restrict-what-users-can-install">托管插件市场</a>将服务器作为插件分发，以便用户可以从 <code>/plugin</code> 浏览和安装它们。</p></div></div>
+<h2 id="exclusive-control-with-managed-mcp-json">使用 managed-mcp.json 进行独占控制</h2>
+<p>当你部署 <code>managed-mcp.json</code> 文件时，Claude Code 仅加载这些 MCP 服务器：</p>
+<ul>
+<li>该文件定义的服务器</li>
+<li>你<a href="#provide-servers-through-managed-settings">通过 <code>managedMcpServers</code> 提供的服务器</a></li>
+<li>启动会话的应用程序注册的进程内服务器，例如 VS Code 扩展自己的服务器或<a href="mcp.html#how-connectors-reach-claude-code">桌面应用程序提供的连接器</a></li>
+<li>内置的<a href="chrome.html">Chrome 中的 Claude</a> 服务器，如果你<a href="#allow-claude-in-chrome-alongside-the-managed-set">允许它与托管集合一起使用</a></li>
+</ul>
+<p>用户无法添加、修改或使用任何其他 MCP 服务器，包括插件提供的服务器和通过 <a href="cli-reference.html#cli-flags"><code>--mcp-config</code> CLI 标志</a>传递的服务器。该文件还会禁止 Claude Code 自身获取的 claude.ai 连接器，除非你<a href="#allow-claude-ai-connectors-alongside-the-managed-set">允许它们与托管集合一起使用</a>。</p>
+<h3 id="deploy-managed-mcp-json">部署 managed-mcp.json</h3>
+<p><code>managed-mcp.json</code> 是一个独立文件，因此无法通过<a href="server-managed-settings.html">服务器管理的设置</a>交付。要通过托管设置交付服务器而不进行独占控制，请使用 <a href="#provide-servers-through-managed-settings"><code>managedMcpServers</code></a>。</p>
+<p>任何可以以管理员权限写入系统路径的进程都可以部署该文件。在整个机队中，这通常通过设备管理工具完成，例如 macOS 上的 Jamf 或配置文件、Windows 上的组策略或 Intune，或 Linux 上你选择的机队管理工具。Claude Code 在以下路径之一查找该文件：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">平台</th>
+<th style="text-align: left;">路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">macOS</td>
+<td style="text-align: left;"><code>/Library/Application Support/ClaudeCode/managed-mcp.json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Linux 和 WSL</td>
+<td style="text-align: left;"><code>/etc/claude-code/managed-mcp.json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Windows</td>
+<td style="text-align: left;"><code>C:\Program Files\ClaudeCode\managed-mcp.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>该文件使用与项目 <a href="mcp.html#project-scope"><code>.mcp.json</code></a> 文件相同的格式：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"github"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.githubcopilot.com/mcp/"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"sentry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://mcp.sentry.dev/mcp"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"company-internal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/usr/local/bin/company-mcp-server"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--config"</span><span class="p">,</span><span class="w"> </span><span class="s2">"/etc/company/mcp-config.json"</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"COMPANY_API_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://internal.example.com"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="authenticate-with-per-user-credentials">使用按用户凭证进行身份验证</h3>
+<p>机器上的任何用户都可以读取此文件，因此不要在 <code>env</code> 块中存储 API 密钥或其他凭证。改为使用以下方式之一传递按用户凭证：</p>
+<ul>
+<li><a href="mcp.html#environment-variable-expansion-in-mcp-json"><code>${VAR}</code> 扩展</a>从每个用户的环境中读取机密。</li>
+<li><a href="mcp.html#authenticate-with-remote-mcp-servers">OAuth 或按用户标头</a>使每个用户以自己的身份进行身份验证。</li>
+<li><a href="mcp.html#use-dynamic-headers-for-custom-authentication"><code>headersHelper</code></a>在连接时生成凭证。</li>
+</ul>
+<h3 id="servers-passed-with-mcp-config-or-strict-mcp-config">通过 <code>--mcp-config</code> 或 <code>--strict-mcp-config</code> 传递的服务器</h3>
+<p>当会话通过 <code>--mcp-config</code> 接收服务器，同时部署了 Claude Code 可以读取和解析的 <code>managed-mcp.json</code> 时，用户看到的内容在工作站和云会话之间有所不同：</p>
+<ul>
+<li>在工作站上，Claude Code 在启动时退出，显示 <code>You cannot dynamically configure MCP servers when an enterprise MCP config is present</code>。</li>
+<li>在<a href="claude-code-on-the-web.html">云会话</a>中，在部署了该文件的主机上，例如<a href="self-hosted-environments-configuration.html#mcp-servers">自托管运行器</a>，Claude Code 仅使用托管服务器启动，并跳过 claude.ai 连接器和云主机通过 <code>--mcp-config</code> 交付的其他服务器。会话中没有任何内容告诉用户哪些服务器被遗漏了。Claude Code 在其 stderr 上以警告的形式命名它们，自托管运行器在 <code>debug</code> 日志级别记录这些警告。</li>
+</ul>
+<p><code>--strict-mcp-config</code> 标志要求替换托管集合。如果用户在部署了这样的文件时传递它，Claude Code 在工作站和云会话中都会在启动时退出。</p>
+<h3 id="how-allowlists-and-denylists-apply-to-the-managed-set">允许列表和拒绝列表如何应用于托管集合</h3>
+<p>拒绝列表可以进一步过滤 <code>managed-mcp.json</code> 中的服务器：</p>
+<ul>
+<li><code>deniedMcpServers</code> 也适用于托管服务器，因此与条目匹配的托管服务器将不会加载。</li>
+<li>用户自己的 <code>deniedMcpServers</code> 从他们的设置中合并，因此用户可以为自己阻止托管服务器。</li>
+</ul>
+<p><code>managed-mcp.json</code> 中的服务器不需要 <code>allowedMcpServers</code> 条目，但有一个例外：当服务器在 <code>env</code> 之外使用 <a href="mcp.html#environment-variable-expansion-in-mcp-json"><code>${VAR}</code> 扩展</a>时，Claude Code 会针对允许列表检查该服务器。在 v2.1.305 之前，它还会检查仅在 <code>env</code> 中使用 <code>${VAR}</code> 扩展的服务器；在 v2.1.259 之前，只要设置了允许列表，它就会检查每个托管服务器。有关哪些字段触发 <code>${VAR}</code> 检查和完整检查顺序，请参阅<a href="#how-a-server-is-evaluated">如何评估服务器</a>。</p>
+<p>如果您使用 <code>allowedMcpServers</code> 来防止某些 <code>managed-mcp.json</code> 服务器加载，请在用户升级之前为它们添加 <code>deniedMcpServers</code> 条目，或为每个组部署单独的 <code>managed-mcp.json</code>。除非这些服务器在 <code>env</code> 之外使用 <code>${VAR}</code> 扩展，否则它们将在每个用户首次启动不检查它们的版本时开始加载，且没有任何提示或通知。</p>
+<h3 id="validate-the-configuration">验证配置</h3>
+<p>要确认文件生效，请在托管机器上运行两项检查：</p>
+<ol>
+<li><code>claude mcp list</code> 仅显示 <code>managed-mcp.json</code> 中的服务器，加上你通过 <code>managedMcpServers</code> 提供的任何服务器。另外两个结果意味着出现了问题：<br />
+   * 如果用户自己的服务器仍然出现，Claude Code 没有读取该文件，因此请检查其路径和父目录的权限。<br />
+   * 如果文件的服务器没有出现，且 <code>MCP config diagnostics</code> 部分将企业配置标记为解析失败，Claude Code 无法读取或解析该文件。修复该部分命名的错误，然后让用户重新启动 Claude Code。</li>
+<li><code>claude mcp add --transport http test https://example.com/mcp</code> 失败，显示 <code>Cannot add MCP server: enterprise MCP configuration is active and has exclusive control over MCP servers</code>。URL 不需要是真实服务器，因为策略检查在联系任何内容之前拒绝该命令。</li>
+</ol>
+<h3 id="disable-mcp-entirely">完全禁用 MCP</h3>
+<p>部署包含空服务器映射的 <code>managed-mcp.json</code> 以阻止除<a href="#exclusive-control-with-managed-mcp-json">在独占控制下加载</a>的服务器之外的每个 MCP 服务器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>claude mcp add</code> 失败，显示上述企业策略错误。用户之前配置的服务器在下次启动会话时停止加载，没有警告说明策略是原因。你通过 <code>managedMcpServers</code> 提供的服务器以及你允许与托管集合一起使用的任何其他内容仍然在空映射下加载，因此保持这些键未设置以完全关闭 MCP。</p>
+<h3 id="allow-claude-ai-connectors-alongside-the-managed-set">允许 claude.ai 连接器与托管集合一起使用</h3>
+<p>默认情况下，部署 <code>managed-mcp.json</code> 会禁止 Claude Code 自身获取的 <a href="mcp.html#use-mcp-servers-from-claude-ai">claude.ai 连接器</a>，包括管理员在 claude.ai 管理控制台中为组织配置的连接器。要将这些连接器与 <code>managed-mcp.json</code> 中的服务器一起加载，请在<a href="admin-setup.html#decide-how-settings-reach-devices">托管设置源</a>中设置 <code>"allowAllClaudeAiMcps": true</code>。</p>
+<p>启用该设置后，Claude Code 加载与未部署 <code>managed-mcp.json</code> 时相同的 claude.ai 连接器。<a href="#policy-based-control-with-allowlists-and-denylists">允许列表和拒绝列表</a>仍然适用于这些连接器，因此你可以使用 <code>deniedMcpServers</code> 阻止特定的连接器。该设置仅影响 Claude Code 自身获取的 claude.ai 连接器；插件提供的服务器保持禁止。</p>
+<p>云会话和桌面应用程序的本地和 SSH 会话以另一种方式接收连接器，如<a href="mcp.html#how-connectors-reach-claude-code">连接器如何到达 Claude Code</a> 中所述。运行云会话的主机上的 <code>managed-mcp.json</code>，例如<a href="self-hosted-environments-configuration.html#mcp-servers">自托管运行器主机</a>，无论你是否设置 <code>allowAllClaudeAiMcps</code>，都会禁止该会话的连接器。没有 <code>managed-mcp.json</code> 到达桌面应用程序交付给其本地和 SSH 会话的连接器。</p>
+<p>Claude Code 仅从管理员控制的策略层读取 <code>allowAllClaudeAiMcps</code>：服务器管理的设置、MDM 部署的 plist 或 HKLM 注册表项，或系统 <code>managed-settings.json</code> 文件。将其放在用户或项目设置中无效，因此用户无法重新启用独占控制禁止的连接器。</p>
+<h3 id="allow-claude-in-chrome-alongside-the-managed-set">允许 Chrome 中的 Claude 与托管集合一起使用</h3>
+<p>默认情况下，当您部署 <code>managed-mcp.json</code> 时，Claude Code 在终端会话中阻止内置的<a href="chrome.html">Chrome 中的 Claude</a> 服务器。用户不会获得<a href="chrome.html#install-the-extension-when-claude-asks">扩展安装提示</a>，而用户<a href="chrome.html#enable-chrome-by-default">默认启用 Chrome</a> 的会话启动时不包含 Chrome 且不打印警告。如果原本可以运行 Chrome 中的 Claude 的用户启动 <code>claude --chrome</code>，Claude Code 会在启动时退出，并显示一条指明 <code>allowClaudeInChromeWithManagedMcp</code> 设置的错误。</p>
+<p>要让用户在托管集合之外同时运行 Chrome 中的 Claude，请在设备自己的托管设置中设置 <code>"allowClaudeInChromeWithManagedMcp": true</code>。将其放在 MDM 部署的 plist、HKLM 注册表项或系统 <code>managed-settings.json</code> 文件中，以 Claude Code 在该设备上<a href="managed-settings.html#precedence-within-the-managed-tier">选择</a>的那一个为准。需要 Claude Code v2.1.282 或更高版本。Claude Code 仅从这些设备源读取该设置，即使<a href="server-managed-settings.html">服务器管理的设置</a>交付您的其余策略也是如此。即使启用了该设置，针对 <code>claude-in-chrome</code> 的 <a href="#policy-based-control-with-allowlists-and-denylists"><code>deniedMcpServers</code></a> 条目仍然会阻止该服务器。</p>
+<h2 id="provide-servers-through-managed-settings">通过托管设置提供服务器</h2>
+<p>要为每个用户提供一组远程 MCP 服务器而不独占 MCP 的控制权，请在<a href="admin-setup.html#decide-how-settings-reach-devices">托管设置源</a>中的 <code>managedMcpServers</code> 下列出它们：服务器托管设置、<a href="claude-apps-gateway-config.html#what-goes-in-cli">Claude 应用网关</a>策略、MDM 配置文件或注册表策略，或 <code>managed-settings.json</code>。用户保留他们自己添加的服务器，并额外接收您的服务器。需要 Claude Code v2.1.259 或更高版本。早期客户端会忽略此密钥。</p>
+<p>该值是一个以服务器名称为键的对象。每个条目的形状与项目 <a href="mcp.html#project-scope"><code>.mcp.json</code></a> 文件中的 HTTP 或 SSE 服务器相同，包括<a href="mcp.html#authenticate-with-remote-mcp-servers">使用远程 MCP 服务器进行身份验证</a>中描述的可选 <code>headers</code> 和 <code>oauth</code> 成员。此示例提供了一个搜索服务器，每个用户使用 OAuth 登录，以及一个记录服务器，它发送您的组织颁发的标头：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"managedMcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"search"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://search.example.com/mcp"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"records"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://records.example.com/mcp"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"X-Records-Key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"key-issued-for-all-claude-code-users"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>任何能够读取机器上托管设置的人（包括用户）都可以读取您在此处设置的标头值。使用为整个受众颁发的凭证，或省略 <code>headers</code> 并让每个用户使用 OAuth 登录。</p>
+<h3 id="what-an-entry-can-contain">条目可以包含的内容</h3>
+<p>Claude Code 仅在通过以下每项检查时才加载条目。它会丢弃失败的条目，记录您可以使用 <code>/status</code> 读取的通知，并仍然加载其他条目：</p>
+<ul>
+<li><code>type</code> 是 <code>http</code> 或 <code>sse</code>。与 <code>.mcp.json</code> 中一样，<code>streamable-http</code> 被接受为 <code>http</code> 的别名。</li>
+<li><code>url</code> 是 <code>https://</code> URL。Claude Code 拒绝纯 <code>http://</code> URL，包括指向 <code>localhost</code> 的 URL。</li>
+<li>该条目没有 <code>command</code>、<code>args</code>、<code>env</code> 或 <code>headersHelper</code> 成员，因此托管设置文档永远不会命名要在用户机器上运行的程序。</li>
+<li>没有值包含 <code>${VAR}</code> 引用。Claude Code 不会在这些条目中展开环境变量，因此请写入字面值。</li>
+<li>服务器名称仅包含字母、数字、连字符和下划线，没有键或值包含控制或不可见的格式字符。</li>
+</ul>
+<p>Claude Desktop 有一个同名的托管设置，其值是不同条目形状的数组，因此不要将一个复制到另一个。Claude Code 不接受数组形式，而是记录通知而不是加载它。</p>
+<p>Claude 应用网关在启动时运行相同的检查；请参阅<a href="claude-apps-gateway-config.html#mcp-servers-in-a-policy">策略中的 MCP 服务器</a>。</p>
+<h3 id="how-provided-servers-load">提供的服务器如何加载</h3>
+<p>这些规则决定当提供的服务器与另一个服务器定义或此页面上的另一个设置重叠时会加载什么：</p>
+<ul>
+<li>提供的服务器优先于本地、项目或用户范围内同名的服务器，以及指向相同 URL 的插件服务器或 claude.ai 连接器。</li>
+<li>如果您还部署 <code>managed-mcp.json</code>，Claude Code 会加载其服务器和提供的服务器，当两者都定义一个名称时，该文件的条目优先。</li>
+<li>当 <a href="settings-reference.html#strictpluginonlycustomization"><code>strictPluginOnlyCustomization</code></a> 锁定 <code>mcp</code> 表面时，提供的服务器继续加载。</li>
+<li><code>deniedMcpServers</code> 适用于提供的服务器，包括来自用户自己设置的条目，因此用户可以为自己阻止一个。提供的服务器不需要 <code>allowedMcpServers</code> 条目。</li>
+</ul>
+<p>当您还没有部署 <code>managed-mcp.json</code> 时，每次运行的标志保持其含义：</p>
+<ul>
+<li>用户使用同一名称下的 <code>--mcp-config</code> 传递的服务器替换该运行的提供的服务器，并针对 <code>allowedMcpServers</code> 进行检查。</li>
+<li><code>--strict-mcp-config</code> 将提供的服务器与所有其他配置的服务器一起排除。</li>
+</ul>
+<p>部署 <code>managed-mcp.json</code> 后，两个标志的行为如<a href="#exclusive-control-with-managed-mcp-json">使用 managed-mcp.json 的独占控制</a>所述。</p>
+<h3 id="what-users-can-see-and-change">用户可以看到和更改的内容</h3>
+<p>用户无法编辑或删除提供的服务器：</p>
+<ul>
+<li><code>claude mcp remove</code> 报告服务器由组织提供。</li>
+<li>当您还没有部署 <code>managed-mcp.json</code> 时，用户在同一名称下添加的条目会被保存但在您的条目存在时不会被使用。</li>
+<li>用户仍然可以在 <a href="mcp.html#disable-a-server-without-removing-it"><code>/mcp</code></a> 中为自己关闭提供的服务器，该服务器在<strong>托管 MCPs</strong> 下列出提供的服务器。</li>
+</ul>
+<p><code>claude mcp get</code> 和 <code>/mcp</code> 将提供的服务器的 URL 仅显示为其主机，例如 <code>https://mcp.example.com/…</code>，<code>claude mcp get</code> 显示其标头名称而不显示其值。</p>
+<h3 id="where-managedmcpservers-applies"><code>managedMcpServers</code> 适用的位置</h3>
+<p>Claude Code 从它在<a href="managed-settings.html#how-claude-code-combines-managed-sources">Claude Code 如何组合托管源</a>下选择的托管源读取 <code>managedMcpServers</code>。当该源将 <a href="settings-reference.html#managedsourcesbehavior"><code>managedSourcesBehavior</code></a> 设置为 <code>"merge"</code> 时，Claude Code 改为提供来自每个管理员源的服务器，当两个源定义相同的名称时，排名较高的源的条目整体适用。它永远不会从用户可写的 HKCU 注册表、从<a href="managed-settings.html#parent-settings-from-embedding-hosts">嵌入主机提供的父设置</a>或从用户、项目或本地设置文件中读取密钥，它会在那里使用警告丢弃密钥。</p>
+<p>Claude Code 不会在第三方部署中的 Claude Desktop 应用的 Code 选项卡中或在应用的 Cowork 会话中读取密钥，因为 Claude Desktop 自己提供并锁定这些会话的 MCP 服务器。当您的托管设置在那里携带密钥时，<code>/status</code> 和 <code>claude doctor</code> 会说明这一点。</p>
+<h3 id="when-provided-servers-connect">提供的服务器何时连接</h3>
+<p>当 <code>managedMcpServers</code> 通过服务器托管设置到达时，其时序遵循<a href="server-managed-settings.html#fetch-and-caching-behavior">获取和缓存行为</a>：</p>
+<ul>
+<li>在具有缓存设置的机器上，Claude Code 会保留此密钥的缓存副本，直到服务器确认会话的设置，并等待该确认后再加载 MCP 服务器。如果确认失败，会话将继续而不使用提供的服务器，<code>/status</code> 会说它们被保留。</li>
+<li>在机器的首次启动时，还没有缓存任何内容，在设置到达之前启动的交互式会话会在它们到达时立即连接提供的服务器，而已经启动的 <code>claude -p</code> 运行可以在没有它们的情况下完成。</li>
+</ul>
+<p>使用<a href="claude-apps-gateway-config.html#precedence-with-other-managed-sources">网关登录</a>，Claude Code 在会话启动前加载策略，因此两种情况都不会延迟或跳过提供的服务器。</p>
+<p>已在运行的交互式会话应用您对密钥的编辑：</p>
+<ul>
+<li><strong>添加服务器</strong>：Claude Code 在更新的设置到达时连接它，无需重启。</li>
+<li><strong>更改服务器的条目</strong>：这些会话使用新定义重新连接到它。</li>
+<li><strong>删除服务器</strong>：运行中的交互式会话在读取更改的设置后断开连接。非交互式（<code>-p</code>）运行会保留它直到结束。</li>
+</ul>
+<h2 id="policy-based-control-with-allowlists-and-denylists">使用允许列表和拒绝列表进行基于策略的控制</h2>
+<p>允许列表和拒绝列表过滤哪些已配置的服务器可以加载。它们不是注册表：服务器仍然必须由用户、插件或您的组织添加，然后任一列表才能应用于它。</p>
+<p>您的组织通过 <code>managedMcpServers</code> 提供的服务器无需允许列表条目即可加载，<a href="#servers-that-skip-the-allowlist-check">跳过允许列表检查的服务器</a>涵盖 <code>managed-mcp.json</code> 服务器。拒绝列表适用于每个服务器，无论它来自何处，除了进程内 <code>type: "sdk"</code> 条目。</p>
+<p>要将服务器部署给用户，请使用 <a href="#exclusive-control-with-managed-mcp-json"><code>managed-mcp.json</code></a> 或 <a href="#provide-servers-through-managed-settings"><code>managedMcpServers</code></a>。两个列表也过滤通过 <a href="cli-reference.html#cli-flags"><code>--mcp-config</code> CLI 标志</a>传递的服务器，除了进程内 <code>type: "sdk"</code> 条目；<code>--strict-mcp-config</code> 限制哪些配置文件加载，不会绕过任一列表。</p>
+<p>要使允许列表具有权威性，请在<a href="admin-setup.html#decide-how-settings-reach-devices">托管设置源</a>（如服务器托管设置或已部署的 <code>managed-settings.json</code> 文件）中同时设置 <code>allowedMcpServers</code> 和 <code>allowManagedMcpServersOnly: true</code>。</p>
+<p>该锁定从每个管理员控制的托管源应用，因此已部署文件中的锁定在同时使用不提及 MCP 的服务器托管设置时仍然适用。当锁定打开时，托管允许列表来自设置该列表的最高排名管理员源。跨源读取锁定和允许列表需要 Claude Code v2.1.273 或更高版本。</p>
+<p><a href="#restrict-the-allowlist-to-managed-settings-only">将允许列表限制为仅托管设置</a>显示配置。</p>
+<p>如果没有 <code>allowManagedMcpServersOnly</code>，来自每个设置范围的允许列表会合并，包括用户自己的 <code>~/.claude/settings.json</code>，因此用户可以扩展您的允许列表允许的内容。拒绝列表无论如何都会从每个范围合并。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><code>allowManagedMcpServersOnly</code> 与 <code>allowManagedPermissionRulesOnly</code> 分开，后者锁定<a href="permissions.html#managed-settings">权限规则</a>。设置该标志不会强制执行 MCP 允许列表。</p></div></div>
+<h3 id="match-servers-by-url-command-or-name">按 URL、命令或名称匹配服务器</h3>
+<p><code>allowedMcpServers</code> 和 <code>deniedMcpServers</code> 是条目列表。每个条目是一个对象，具有单个键，用于按 URL、命令或名称标识服务器：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">键</th>
+<th style="text-align: left;">匹配</th>
+<th style="text-align: left;">用于</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>serverUrl</code></td>
+<td style="text-align: left;">远程服务器 URL，精确或带有 <code>*</code> 通配符</td>
+<td style="text-align: left;">HTTP 和 SSE 服务器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>serverCommand</code></td>
+<td style="text-align: left;">启动 stdio 服务器的确切命令和参数</td>
+<td style="text-align: left;">Stdio 服务器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>serverName</code></td>
+<td style="text-align: left;">用户分配的标签。仅精确匹配；通配符不展开</td>
+<td style="text-align: left;">任一类型，但请参阅<a href="#how-servername-entries-match"><code>serverName</code> 条目如何匹配</a></td>
+</tr>
+</tbody>
+</table>
+<p>将 <code>allowedMcpServers</code> 保留未设置与将其设置为空数组不同：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">设置</th>
+<th style="text-align: left;">未设置（默认）</th>
+<th style="text-align: left;">空数组 <code>[]</code></th>
+<th style="text-align: left;">已填充</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>allowedMcpServers</code></td>
+<td style="text-align: left;">允许所有服务器</td>
+<td style="text-align: left;">不允许任何服务器，除了<a href="#servers-that-skip-the-allowlist-check">那些跳过允许列表检查的</a></td>
+<td style="text-align: left;">仅允许匹配的服务器，除了<a href="#servers-that-skip-the-allowlist-check">那些跳过允许列表检查的</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>deniedMcpServers</code></td>
+<td style="text-align: left;">不阻止任何服务器</td>
+<td style="text-align: left;">不阻止任何服务器</td>
+<td style="text-align: left;">阻止匹配的服务器</td>
+</tr>
+</tbody>
+</table>
+<p>有关条目未通过架构验证时会发生什么，请参阅<a href="managed-settings.html#invalid-entries-in-managed-settings">托管设置中的无效条目</a>。</p>
+<h4 id="how-servername-entries-match"><code>serverName</code> 条目如何匹配</h4>
+<p><code>serverName</code> 条目精确匹配用户分配的标签，不支持通配符。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>任一列表中的 <code>serverName</code> 条目不是安全控制。该名称是用户在运行 <code>claude mcp add</code> 或编辑配置文件时分配的标签，而不是底层服务器，因此用户可以将任何服务器称为 <code>github</code>。对于 claude.ai 连接器，名称是 claude.ai 返回的显示名称，可能会更改。要强制执行实际运行的服务器，请添加 <code>serverCommand</code> 或 <code>serverUrl</code> 条目。</p></div></div>
+<p><code>serverName</code> 验证在两个列表之间有所不同：</p>
+<ul>
+<li>在 <code>deniedMcpServers</code> 中，<code>serverName</code> 接受任何非空字符串，因此您可以按显示名称阻止 <a href="mcp.html#use-mcp-servers-from-claude-ai">claude.ai 连接器</a>。例如，<code>{ "serverName": "claude.ai Slack" }</code> 阻止 Slack 连接器。当您需要拒绝对重命名具有鲁棒性时，或当连接器名称冲突并获得 <code>(N)</code> 后缀时，更倾向于使用 <code>serverUrl</code> 条目。</li>
+<li>在 <code>allowedMcpServers</code> 中，<code>serverName</code> 仅限于字母、数字、连字符和下划线。使用 <code>serverUrl</code> 将 Claude Code 自身获取的 claude.ai 连接器列入允许列表；对于云主机提供给自托管会话的连接器，请改用<a href="self-hosted-environments-deploy.html#connector-traffic-leaves-your-network">连接器流量离开您的网络</a>下列出的条目。</li>
+</ul>
+<p>要关闭 Claude Code 自身获取的所有 claude.ai 连接器，请参阅 <a href="mcp.html#disable-claude-ai-connectors"><code>disableClaudeAiConnectors</code></a>。</p>
+<h4 id="how-servercommand-entries-match"><code>serverCommand</code> 条目如何匹配</h4>
+<p><code>serverCommand</code> 条目将命令及其参数保存为一个数组，如 <code>{ "serverCommand": ["npx", "-y", "server"] }</code>。Claude Code 将该数组与服务器配置中的命令和参数进行比较：</p>
+<ul>
+<li><strong>命令精确匹配。</strong> 每个参数，按顺序。<code>["npx", "-y", "server"]</code> 不匹配 <code>["npx", "server"]</code> 或 <code>["npx", "-y", "server", "--flag"]</code>。</li>
+<li><strong>不比较 <code>env</code> 块。</strong> <code>["node", "server.js"]</code> 匹配以任何 <code>env</code> 值运行该命令的服务器。某些环境变量会改变 <code>node</code> 在启动时加载的内容。要自行设置 <code>env</code> 值，请在 <a href="#exclusive-control-with-managed-mcp-json"><code>managed-mcp.json</code></a> 中定义该服务器。</li>
+</ul>
+<h4 id="how-serverurl-entries-match"><code>serverUrl</code> 条目如何匹配</h4>
+<p>URL 支持 <code>*</code> 通配符，包括以 <code>*</code> 作为整个方案。主机名匹配不区分大小写，忽略尾部 FQDN 点，因此 <code>https://Mcp.Example.com/*</code> 匹配 <code>https://mcp.example.com/api</code>。路径保持区分大小写。如果未指定端口，主机名的写法决定该模式仅匹配方案的默认端口还是所有端口：</p>
+<ul>
+<li><strong>完整写出的主机名</strong>：仅默认端口，<code>https</code> 为 443，<code>http</code> 为 80</li>
+<li><strong>包含 <code>*</code> 的主机名</strong>：所有端口</li>
+</ul>
+<p>下表显示常见模式允许的内容：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">模式</th>
+<th style="text-align: left;">允许</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>https://mcp.example.com/*</code></td>
+<td style="text-align: left;">特定域上的所有路径，仅限端口 443</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>https://mcp.example.com</code></td>
+<td style="text-align: left;">也允许该域上的所有路径，仅限端口 443。没有路径的模式匹配任何路径</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>https://mcp.example.com:8443/*</code></td>
+<td style="text-align: left;">该域上的所有路径，仅限端口 8443</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>https://mcp.example.com:*/*</code></td>
+<td style="text-align: left;">该域上任何端口（包括 443）的所有路径</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>https://*.example.com/*</code></td>
+<td style="text-align: left;"><code>example.com</code> 的任何子域，任何端口</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>http://localhost:*/*</code></td>
+<td style="text-align: left;">localhost 上的任何端口</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>*://mcp.example.com/*</code></td>
+<td style="text-align: left;">到特定域的任何方案，每个方案仅限其默认端口</td>
+</tr>
+</tbody>
+</table>
+<p><code>deniedMcpServers</code> 中的条目以相同方式匹配端口，因此请根据需要阻止的端口和方案为 <code>staging.example.com</code> 选择条目：</p>
+<ul>
+<li><code>https://staging.example.com/*</code>：仅阻止该主机上端口 443 的 <code>https</code> 服务器，因此不会阻止位于 <code>https://staging.example.com:8443/api</code> 的服务器</li>
+<li><code>https://staging.example.com:*/*</code>：阻止该主机上所有端口的 <code>https</code> 服务器</li>
+<li><code>*://staging.example.com:*/*</code>：阻止该主机的任何方案和任何端口</li>
+</ul>
+<h4 id="how-policy-entries-expand"><code>serverCommand</code> 和 <code>serverUrl</code> 条目中的环境变量</h4>
+<p><code>serverCommand</code> 和 <code>serverUrl</code> 值在匹配前展开。策略条目和服务器的配置值都通过 <a href="mcp.html#environment-variable-expansion-in-mcp-json"><code>${VAR}</code> 和 <code>${VAR:-default}</code> 展开</a>，因此写成 <code>["${HOME}/bin/server"]</code> 的条目与使用相同引用或展开路径的服务器配置匹配。<code>serverName</code> 值按字面匹配，永不展开。</p>
+<p>两边读取不同的环境：</p>
+<ul>
+<li><strong>服务器的配置值</strong>：从实时进程环境展开，就像 <code>.mcp.json</code> 的其余部分一样</li>
+<li><strong>策略条目</strong>：从固定环境展开，因此由项目或用户设置文件设置的变量无法更改允许列表条目的含义</li>
+</ul>
+<p>因为策略条目仍然取决于启动 shell 对其引用的任何变量的值，对于您依赖的条目以进行强制执行，请使用字面 URL 和命令。</p>
+<p>在 Windows 上，引用在那里设置的环境变量，例如 <code>${USERPROFILE}</code> 而不是 <code>${HOME}</code>。</p>
+<p>两个列表的展开方式不同：</p>
+<table>
+<thead>
+<tr>
+<th>条目列表</th>
+<th>展开自</th>
+<th>会改变 URL 条目的方案、主机或路径范围的展开</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allowedMcpServers</code></td>
+<td>Claude Code 启动时的环境，加上来自托管设置的 <code>env</code> 值</td>
+<td>Claude Code 忽略该条目</td>
+</tr>
+<tr>
+<td><code>deniedMcpServers</code></td>
+<td>相同，以及没有启动值且没有 <code>:-default</code> 的变量从存储库外的设置文件（如用户或托管设置）填充，这只会扩大条目匹配的内容</td>
+<td>该条目仍然匹配</td>
+</tr>
+</tbody>
+</table>
+<p>固定环境和此表中的规则需要 Claude Code v2.1.219 或更高版本。</p>
+<h3 id="how-a-server-is-evaluated">服务器如何被评估</h3>
+<p>在加载服务器之前，包括来自 <code>managed-mcp.json</code> 的服务器，Claude Code 按顺序运行以下三个检查。当用户重新连接服务器或在 <code>/mcp</code> 中打开已禁用的服务器时，它会再次运行它们。进程内 <code>type: "sdk"</code> 服务器（<a href="mcp.html#how-connectors-reach-claude-code">启动会话的应用程序注册</a>）跳过全部三个。</p>
+<ol>
+<li><strong>合并列表。</strong> 来自每个设置作用域的允许列表和拒绝列表条目合并为一个允许列表和一个拒绝列表。当 <code>allowManagedMcpServersOnly</code> 为 <code>true</code> 时，仅保留托管允许列表；拒绝列表始终从每个作用域合并。当存在多个托管源时，<a href="managed-settings.html#keys-read-from-every-admin-source">从每个管理员源读取的键</a>说明其中哪些提供托管作用域的列表。</li>
+<li><strong>检查拒绝列表。</strong> 与任何拒绝列表条目匹配的服务器（按 URL、命令或名称）被阻止。没有任何东西可以覆盖拒绝列表匹配。</li>
+<li><strong>检查允许列表。</strong> <a href="#servers-that-skip-the-allowlist-check">某些服务器跳过此检查</a>。如果 <code>allowedMcpServers</code> 未在任何地方设置，每个通过拒绝列表的服务器都会加载。如果已设置，服务器必须匹配的内容取决于其类型，如下表所示。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">服务器类型</th>
+<th style="text-align: left;">匹配时允许</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">远程（HTTP 或 SSE）</td>
+<td style="text-align: left;">一个 <code>serverUrl</code> 条目。仅当允许列表不包含 <code>serverUrl</code> 条目时，<code>serverName</code> 匹配才计数</td>
+</tr>
+<tr>
+<td style="text-align: left;">Stdio</td>
+<td style="text-align: left;">一个 <code>serverCommand</code> 条目。仅当允许列表不包含 <code>serverCommand</code> 条目时，<code>serverName</code> 匹配才计数</td>
+</tr>
+</tbody>
+</table>
+<h4 id="servers-that-skip-the-allowlist-check">跳过允许列表检查的服务器</h4>
+<p>除了跳过<a href="#how-a-server-is-evaluated">全部三个检查</a>的进程内 <code>type: "sdk"</code> 服务器之外，还有三组服务器跳过允许列表检查：</p>
+<ul>
+<li>组织自己的服务器：每个 <code>managedMcpServers</code> 条目，以及任何其值在 <code>env</code> 之外不使用 <code>${VAR}</code> 展开的 <code>managed-mcp.json</code> 条目。</li>
+<li>内置服务器，例如 Chrome 中的 Claude、Claude Code 在运行的 VS Code 或 JetBrains IDE 中连接的 <code>ide</code> 服务器，以及 CLI 本身配置的服务器。</li>
+<li><a href="claude-tag.html">Claude Tag</a> 会话的 Slack 工具：它用来读取线程和发布回复的服务器无需允许列表条目即可加载。</li>
+</ul>
+<p>在其命令、参数、URL 或标头中使用 <code>${VAR}</code> 展开的 <code>managed-mcp.json</code> 服务器仍会被检查。Claude Code 还会检查用户、插件或 claude.ai 添加的每个服务器，以及用户通过 <code>--mcp-config</code> 传递的每个服务器。有关哪些版本改变了 <code>managed-mcp.json</code> 服务器的检查范围，以及如何阻止某个服务器加载，请参阅<a href="#how-allowlists-and-denylists-apply-to-the-managed-set">允许列表和拒绝列表如何应用于托管集</a>。</p>
+<h3 id="example-configuration">示例配置</h3>
+<p>下面的配置设置了一个硬允许列表和一个拒绝列表。突出显示的行改变了列表其余部分的评估方式，块后的标注解释了每一行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"allowedMcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"serverUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.githubcopilot.com/*"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"serverUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://mcp.sentry.dev/*"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"serverCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"npx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"@modelcontextprotocol/server-filesystem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"."</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"serverCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"python"</span><span class="p">,</span><span class="w"> </span><span class="s2">"/usr/local/bin/approved-server.py"</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"serverUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://mcp.example.com/*"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"serverUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://*.internal.example.com/*"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"deniedMcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"serverName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dangerous-server"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"serverCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"npx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unapproved-package"</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"serverUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://*.untrusted.example.com/*"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li><strong>第 3 行</strong>：第一个 <code>serverUrl</code> 条目。一旦存在，每个远程服务器必须匹配 URL 模式，因此用户无法通过给它一个允许的名称来获得未列出的远程服务器。</li>
+<li><strong>第 5 行</strong>：第一个 <code>serverCommand</code> 条目。对 stdio 服务器的效果相同，因此每个本地服务器必须精确匹配列出的命令。</li>
+<li><strong>第 11 行</strong>：拒绝列表中的 <code>serverName</code> 条目。拒绝列表条目始终适用，因此任何名为 <code>dangerous-server</code> 的服务器都被阻止，无论其 URL 或命令如何。</li>
+</ul>
+<p>此允许列表中的 <code>serverName</code> 条目永远不会匹配任何内容，因为两种传输类型都已有更严格的条目。</p>
+<p>下面的手风琴演示了如何针对其他允许列表和拒绝列表组合评估服务器。</p>
+<blockquote>
+<p>[accordion] 仅 URL 允许列表</p>
+<p><code>json theme={null}
+{
+  "allowedMcpServers": [
+    { "serverUrl": "https://mcp.example.com/*" },
+    { "serverUrl": "https://*.internal.example.com/*" }
+  ]
+}</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">服务器</th>
+<th style="text-align: left;">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>https://mcp.example.com/api</code> 处的 HTTP 服务器</td>
+<td style="text-align: left;">允许：匹配 URL 模式</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>https://api.internal.example.com/mcp</code> 处的 HTTP 服务器</td>
+<td style="text-align: left;">允许：匹配通配符子域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>https://external.example.com/mcp</code> 处的 HTTP 服务器</td>
+<td style="text-align: left;">阻止：不匹配任何 URL 模式</td>
+</tr>
+<tr>
+<td style="text-align: left;">具有任何命令的 Stdio 服务器</td>
+<td style="text-align: left;">阻止：没有名称或命令条目可匹配</td>
+</tr>
+</tbody>
+</table>
+<p>[accordion] 仅命令允许列表</p>
+<p><code>json theme={null}
+{
+  "allowedMcpServers": [
+    { "serverCommand": ["npx", "-y", "approved-package"] }
+  ]
+}</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">服务器</th>
+<th style="text-align: left;">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">具有 <code>["npx", "-y", "approved-package"]</code> 的 Stdio 服务器</td>
+<td style="text-align: left;">允许：匹配命令</td>
+</tr>
+<tr>
+<td style="text-align: left;">具有 <code>["node", "server.js"]</code> 的 Stdio 服务器</td>
+<td style="text-align: left;">阻止：不匹配命令</td>
+</tr>
+<tr>
+<td style="text-align: left;">名为 <code>my-api</code> 的 HTTP 服务器</td>
+<td style="text-align: left;">阻止：没有名称条目可匹配</td>
+</tr>
+</tbody>
+</table>
+<p>[accordion] 混合名称和命令允许列表</p>
+<p><code>json theme={null}
+{
+  "allowedMcpServers": [
+    { "serverName": "github" },
+    { "serverCommand": ["npx", "-y", "approved-package"] }
+  ]
+}</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">服务器</th>
+<th style="text-align: left;">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">名为 <code>local-tool</code> 的 Stdio 服务器，具有 <code>["npx", "-y", "approved-package"]</code></td>
+<td style="text-align: left;">允许：匹配命令</td>
+</tr>
+<tr>
+<td style="text-align: left;">名为 <code>local-tool</code> 的 Stdio 服务器，具有 <code>["node", "server.js"]</code></td>
+<td style="text-align: left;">阻止：命令条目存在但不匹配</td>
+</tr>
+<tr>
+<td style="text-align: left;">名为 <code>github</code> 的 Stdio 服务器，具有 <code>["node", "server.js"]</code></td>
+<td style="text-align: left;">阻止：stdio 服务器在存在命令条目时必须匹配命令</td>
+</tr>
+<tr>
+<td style="text-align: left;">名为 <code>github</code> 的 HTTP 服务器</td>
+<td style="text-align: left;">允许：匹配名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">名为 <code>other-api</code> 的 HTTP 服务器</td>
+<td style="text-align: left;">阻止：名称不匹配</td>
+</tr>
+</tbody>
+</table>
+<p>[accordion] 仅名称允许列表</p>
+<p><code>json theme={null}
+{
+  "allowedMcpServers": [
+    { "serverName": "github" },
+    { "serverName": "internal-tool" }
+  ]
+}</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">服务器</th>
+<th style="text-align: left;">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">名为 <code>github</code> 的 Stdio 服务器，具有任何命令</td>
+<td style="text-align: left;">允许：无命令限制</td>
+</tr>
+<tr>
+<td style="text-align: left;">名为 <code>internal-tool</code> 的 Stdio 服务器，具有任何命令</td>
+<td style="text-align: left;">允许：无命令限制</td>
+</tr>
+<tr>
+<td style="text-align: left;">名为 <code>github</code> 的 HTTP 服务器</td>
+<td style="text-align: left;">允许：匹配名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">任何名为 <code>other</code> 的服务器</td>
+<td style="text-align: left;">阻止：名称不匹配</td>
+</tr>
+</tbody>
+</table>
+<p>[accordion] 带拒绝列表覆盖的允许列表</p>
+<p><code>json theme={null}
+{
+  "allowedMcpServers": [
+    { "serverUrl": "https://*.example.com/*" }
+  ],
+  "deniedMcpServers": [
+    { "serverUrl": "https://staging.example.com/*" }
+  ]
+}</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">服务器</th>
+<th style="text-align: left;">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>https://mcp.example.com/api</code> 处的 HTTP 服务器</td>
+<td style="text-align: left;">允许：匹配允许列表 URL 模式，无拒绝列表匹配</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>https://staging.example.com/api</code> 处的 HTTP 服务器</td>
+<td style="text-align: left;">阻止：两者都匹配，但拒绝列表优先</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>https://staging.example.com:8443/api</code> 处的 HTTP 服务器</td>
+<td style="text-align: left;">允许：匹配允许列表 URL 模式，<a href="#how-serverurl-entries-match">此端口上无拒绝列表匹配</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>https://other.com/mcp</code> 处的 HTTP 服务器</td>
+<td style="text-align: left;">阻止：不匹配允许列表</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<h3 id="restrict-the-allowlist-to-managed-settings-only">将允许列表限制为仅托管设置</h3>
+<p>要使托管允许列表成为唯一适用的列表，请在托管设置文件中设置 <code>allowManagedMcpServersOnly</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"allowManagedMcpServersOnly"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"allowedMcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"serverUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.githubcopilot.com/*"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"serverUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://*.internal.example.com/*"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>当 <code>allowManagedMcpServersOnly</code> 为 <code>true</code> 时，来自用户、项目和本地设置的允许列表被忽略。拒绝列表仍然从每个设置范围合并，因此用户总是可以为自己阻止服务器。</p>
+<h2 id="how-restrictions-appear-to-users">限制如何向用户呈现</h2>
+<p>关于部署了 <code>managed-mcp.json</code> 且会话中同时存在 <code>--mcp-config</code> 服务器时用户在启动时看到的内容，请参阅<a href="#exclusive-control-with-managed-mcp-json">使用 managed-mcp.json 进行独占控制</a>。使用下表识别其他报告，并在推出变更之前告知用户预期会看到什么：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">限制</th>
+<th style="text-align: left;">用户看到的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">存在 <code>managed-mcp.json</code>，且用户运行 <code>claude mcp add</code></td>
+<td style="text-align: left;"><code>Cannot add MCP server: enterprise MCP configuration is active and has exclusive control over MCP servers</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">存在 <code>managed-mcp.json</code>，且原本可以运行 Claude in Chrome 的用户运行 <code>claude --chrome</code></td>
+<td style="text-align: left;">Claude Code 在启动时退出，并显示 <code>Claude in Chrome is blocked by your organization's managed MCP configuration (managed-mcp.json). An administrator can allow it with allowClaudeInChromeWithManagedMcp in device policy.</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">服务器位于拒绝列表中，且用户运行 <code>claude mcp add</code></td>
+<td style="text-align: left;"><code>Cannot add MCP server "&lt;name&gt;": server is explicitly blocked by enterprise policy</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">服务器不在允许列表中，且用户运行 <code>claude mcp add</code></td>
+<td style="text-align: left;"><code>Cannot add MCP server "&lt;name&gt;": not allowed by enterprise policy</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="settings-reference.html#strictpluginonlycustomization"><code>strictPluginOnlyCustomization</code></a> 为 <code>true</code> 或包含 <code>mcp</code>，且用户运行 <code>claude mcp add</code></td>
+<td style="text-align: left;"><a href="errors.html#cannot-add-mcp-server-when-managed-settings-allow-only-plugin-servers"><code>Cannot add MCP server: your organization's managed settings allow only MCP servers that plugins provide</code></a></td>
+</tr>
+<tr>
+<td style="text-align: left;">用户对来自 <code>managedMcpServers</code> 的服务器运行 <code>claude mcp remove</code></td>
+<td style="text-align: left;"><code>MCP server "&lt;name&gt;" is provided by your organization (managed settings) and cannot be removed locally.</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">先前已配置的服务器现在被策略阻止</td>
+<td style="text-align: left;">该服务器从 <code>/mcp</code> 和 <code>claude mcp list</code> 中消失</td>
+</tr>
+<tr>
+<td style="text-align: left;">服务器在会话运行期间被阻止，且用户在 <code>/mcp</code> 中选择 <strong>Reconnect</strong> 或将其重新启用</td>
+<td style="text-align: left;"><a href="errors.html#mcp-server-is-blocked-by-enterprise-managed-policy"><code>MCP server &lt;name&gt; is blocked by enterprise managed policy</code></a></td>
+</tr>
+</tbody>
+</table>
+<p>当服务器静默消失时，用户不会收到任何提示表明原因是策略，因此在推出新限制时，请告知受影响的用户哪些服务器被阻止。</p>
+<h2 id="monitor-mcp-usage">监控 MCP 使用情况</h2>
+<p>当<a href="monitoring-usage.html">配置 OpenTelemetry 导出</a>时，Claude Code 可以记录用户调用的 MCP 服务器和工具。设置 <code>OTEL_LOG_TOOL_DETAILS=1</code> 以在工具事件和<a href="monitoring-usage.html#cost-counter">成本和令牌计数器</a>中包含 MCP 服务器和工具名称，然后在您的收集器中聚合它们以查看用户实际连接的服务器。请参阅<a href="monitoring-usage.html">监控</a>以设置导出器和完整的事件架构。</p>
+<h2 id="configuration-summary">配置摘要</h2>
+<p>本页面涵盖的每个文件和设置、它控制的内容以及如何交付它：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">表面</th>
+<th style="text-align: left;">控制的内容</th>
+<th style="text-align: left;">位置</th>
+<th style="text-align: left;">如何交付</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>managed-mcp.json</code></td>
+<td style="text-align: left;">固定服务器集，独占控制</td>
+<td style="text-align: left;">系统路径：<code>/Library/Application Support/ClaudeCode/</code>、<code>/etc/claude-code/</code> 或 <code>C:\Program Files\ClaudeCode\</code></td>
+<td style="text-align: left;">MDM、GPO、舰队管理或任何具有管理员权限的进程。无法通过服务器管理的设置设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>managedMcpServers</code></td>
+<td style="text-align: left;">提供给每个用户的远程服务器，与他们自己的服务器一起</td>
+<td style="text-align: left;">仅托管设置源；该设置在其他地方无效</td>
+<td style="text-align: left;">一个<a href="admin-setup.html#decide-how-settings-reach-devices">托管设置源</a>：服务器管理的设置、网关策略、<code>managed-settings.json</code>、MDM 配置文件或 HKLM 注册表</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>allowedMcpServers</code></td>
+<td style="text-align: left;">允许的服务器允许列表</td>
+<td style="text-align: left;">任何<a href="settings.html#where-settings-live">设置范围</a>；<a href="#how-a-server-is-evaluated">服务器如何被评估</a>说明来自多个范围和托管源的列表如何组合</td>
+<td style="text-align: left;">为了强制执行，一个<a href="admin-setup.html#decide-how-settings-reach-devices">托管设置源</a>：服务器管理的设置、<code>managed-settings.json</code>、MDM 配置文件或注册表</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>deniedMcpServers</code></td>
+<td style="text-align: left;">被阻止的服务器拒绝列表</td>
+<td style="text-align: left;">任何设置范围；<a href="#how-a-server-is-evaluated">服务器如何被评估</a>说明来自多个范围和托管源的列表如何组合</td>
+<td style="text-align: left;">与 <code>allowedMcpServers</code> 相同</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>allowManagedMcpServersOnly</code></td>
+<td style="text-align: left;">将允许列表锁定为仅托管源</td>
+<td style="text-align: left;">仅托管设置源；<a href="managed-settings.html#keys-read-from-every-admin-source">从每个管理源读取的密钥</a>说明哪些托管源可以打开它。该设置在其他范围中无效</td>
+<td style="text-align: left;">与 <code>allowedMcpServers</code> 相同</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>allowClaudeInChromeWithManagedMcp</code></td>
+<td style="text-align: left;">让内置的 Chrome 中的 Claude 服务器与 <code>managed-mcp.json</code> 一起运行</td>
+<td style="text-align: left;">设备上的托管设置：MDM 配置文件、HKLM 注册表或 <code>managed-settings.json</code>。服务器管理的设置和用户可写源无效</td>
+<td style="text-align: left;">MDM、GPO、舰队管理或任何具有管理员权限的进程</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>allowAllClaudeAiMcps</code></td>
+<td style="text-align: left;">加载 claude.ai 连接器，Claude Code 自身与 <code>managed-mcp.json</code> 一起获取。<a href="#allow-claude-ai-connectors-alongside-the-managed-set">在运行云会话的主机上的 <code>managed-mcp.json</code> 仍然会抑制该会话的连接器</a></td>
+<td style="text-align: left;">仅托管设置源；该设置在其他地方无效</td>
+<td style="text-align: left;">与 <code>allowedMcpServers</code> 相同</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li><a href="admin-setup.html#decide-what-to-enforce">决定要强制执行的内容</a>：MCP 限制以及权限规则、沙箱和其他管理控制</li>
+<li><a href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a>：完整的 MCP 参考，包括传输、范围和身份验证</li>
+<li><a href="settings.html">设置</a>：设置层次结构以及托管设置如何优先</li>
+<li><a href="server-managed-settings.html">服务器管理的设置</a>：从 claude.ai 管理控制台交付 <code>allowedMcpServers</code> 和 <code>deniedMcpServers</code></li>
+<li><a href="security.html">安全</a>：这些控制防御的威胁模型</li>
+<li><a href="https://claude.com/resources/tutorials/claude-enterprise-administrator-guide" target="_blank" rel="noopener">Claude 企业管理员指南</a>：SSO、SCIM、座位管理和推出剧本</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="server-managed-settings.html"><span class="pager-dir">← 上一页</span><span class="pager-name">配置服务器管理的设置</span></a><a class="pager-link next" href="auto-mode-config.html"><span class="pager-dir">下一页 →</span><span class="pager-name">配置自动模式</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#choose-a-pattern">选择一个模式</a><a class="toc-l2" href="#exclusive-control-with-managed-mcp-json">使用 managed-mcp.json 进行独占控制</a><a class="toc-l3" href="#deploy-managed-mcp-json">部署 managed-mcp.json</a><a class="toc-l3" href="#authenticate-with-per-user-credentials">使用按用户凭证进行身份验证</a><a class="toc-l3" href="#servers-passed-with-mcp-config-or-strict-mcp-config">通过 --mcp-config 或 --strict-mcp-config 传递的服务器</a><a class="toc-l3" href="#how-allowlists-and-denylists-apply-to-the-managed-set">允许列表和拒绝列表如何应用于托管集合</a><a class="toc-l3" href="#validate-the-configuration">验证配置</a><a class="toc-l3" href="#disable-mcp-entirely">完全禁用 MCP</a><a class="toc-l3" href="#allow-claude-ai-connectors-alongside-the-managed-set">允许 claude.ai 连接器与托管集合一起使用</a><a class="toc-l3" href="#allow-claude-in-chrome-alongside-the-managed-set">允许 Chrome 中的 Claude 与托管集合一起使用</a><a class="toc-l2" href="#provide-servers-through-managed-settings">通过托管设置提供服务器</a><a class="toc-l3" href="#what-an-entry-can-contain">条目可以包含的内容</a><a class="toc-l3" href="#how-provided-servers-load">提供的服务器如何加载</a><a class="toc-l3" href="#what-users-can-see-and-change">用户可以看到和更改的内容</a><a class="toc-l3" href="#where-managedmcpservers-applies">managedMcpServers 适用的位置</a><a class="toc-l3" href="#when-provided-servers-connect">提供的服务器何时连接</a><a class="toc-l2" href="#policy-based-control-with-allowlists-and-denylists">使用允许列表和拒绝列表进行基于策略的控制</a><a class="toc-l3" href="#match-servers-by-url-command-or-name">按 URL、命令或名称匹配服务器</a><a class="toc-l3" href="#how-a-server-is-evaluated">服务器如何被评估</a><a class="toc-l3" href="#example-configuration">示例配置</a><a class="toc-l3" href="#restrict-the-allowlist-to-managed-settings-only">将允许列表限制为仅托管设置</a><a class="toc-l2" href="#how-restrictions-appear-to-users">限制如何向用户呈现</a><a class="toc-l2" href="#monitor-mcp-usage">监控 MCP 使用情况</a><a class="toc-l2" href="#configuration-summary">配置摘要</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

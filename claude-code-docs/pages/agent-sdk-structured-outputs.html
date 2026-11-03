@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>从代理获取结构化输出 · Claude Code 中文文档</title>
+<meta name="description" content="使用 JSON Schema、Zod 或 Pydantic 从代理工作流返回验证的 JSON。在多轮工具使用后获取类型安全的结构化数据。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-sdk/structured-outputs">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-sdk/structured-outputs" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link active" href="agent-sdk-structured-outputs.html" aria-current="page">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>Agent SDK</span> <span class="sep">/</span> <span>输入和输出</span></div>
+    <article class="prose" id="article"><h1 id="_1">从代理获取结构化输出</h1>
+<blockquote>
+<p>使用 JSON Schema、Zod 或 Pydantic 从代理工作流返回验证的 JSON。在多轮工具使用后获取类型安全的结构化数据。</p>
+</blockquote>
+<p>结构化输出让你定义从代理返回的数据的确切形状。代理可以使用任何需要的工具来完成任务，最后你仍然会获得与你的 schema 匹配的验证 JSON。定义一个 <a href="https://json-schema.org/understanding-json-schema/about" target="_blank" rel="noopener">JSON Schema</a> 来描述你需要的结构，SDK 会根据它验证输出，在不匹配时重新提示。如果验证在重试限制内没有成功，结果将是一个错误而不是结构化数据；请参阅 <a href="#error-handling">错误处理</a>。</p>
+<p>为了获得完整的类型安全，使用 <a href="#type-safe-schemas-with-zod-and-pydantic">Zod</a>（TypeScript）或 <a href="#type-safe-schemas-with-zod-and-pydantic">Pydantic</a>（Python）来定义您的 schema 并获取强类型对象。</p>
+<h2 id="why-structured-outputs">为什么使用结构化输出？</h2>
+<p>代理默认返回自由格式的文本，这适用于聊天但不适用于需要以编程方式使用输出的情况。结构化输出为你提供类型化数据，你可以直接传递给应用逻辑、数据库或 UI 组件。</p>
+<p>考虑一个食谱应用，其中代理搜索网络并返回食谱。没有结构化输出，你会得到需要自己解析的自由格式文本。有了结构化输出，你定义你想要的形状并获得可以直接在应用中使用的类型化数据。</p>
+<blockquote>
+<p>[accordion] 没有结构化输出</p>
+<p>```text theme={null}<br />
+这是一个经典的巧克力芯片饼干食谱！</p>
+<p><strong>巧克力芯片饼干</strong><br />
+准备时间：15 分钟 | 烹饪时间：10 分钟</p>
+<p>材料：<br />
+- 2 1/4 杯通用面粉<br />
+- 1 杯黄油，软化<br />
+...<br />
+```</p>
+<p>要在你的应用中使用这个，你需要解析出标题，将"15 分钟"转换为数字，将材料与说明分开，并处理响应中的不一致格式。</p>
+<p>[accordion] 有结构化输出</p>
+<p><code>jsonc theme={null}
+{
+  "name": "Chocolate Chip Cookies",
+  "prep_time_minutes": 15,
+  "cook_time_minutes": 10,
+  "ingredients": [
+    { "item": "all-purpose flour", "amount": 2.25, "unit": "cups" },
+    { "item": "butter, softened", "amount": 1, "unit": "cup" }
+    // ...
+  ],
+  "steps": ["Preheat oven to 375°F", "Cream butter and sugar" /* ... */]
+}</code></p>
+<p>你可以直接在 UI 中使用的类型化数据。</p>
+</blockquote>
+<h2 id="quick-start">快速开始</h2>
+<p>要使用结构化输出，定义一个 <a href="https://json-schema.org/understanding-json-schema/about" target="_blank" rel="noopener">JSON Schema</a> 来描述你想要的数据形状，然后通过 <code>outputFormat</code> 选项（TypeScript）或 <code>output_format</code> 选项（Python）将其传递给 <code>query()</code>。当代理完成时，结果消息包含一个 <code>structured_output</code> 字段，其中包含与你的 schema 匹配的验证数据。</p>
+<p>在运行本页上的示例之前，请按照<a href="agent-sdk-quickstart.html#setup">快速入门</a>安装 Claude Agent SDK。下面的示例要求 Agent 研究 Anthropic 并返回公司名称、成立年份和总部作为结构化输出。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="c1">// 定义你想要返回的数据形状</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">company_name</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">founded_year</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"number"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">headquarters</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"company_name"</span><span class="p">]</span>
+<span class="p">};</span>
+
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Research Anthropic and provide key company information"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">outputFormat</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"json_schema"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="kt">schema</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 结果消息包含带有验证数据的 structured_output</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"success"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">structured_output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">structured_output</span><span class="p">);</span>
+<span class="w">      </span><span class="c1">// { company_name: "Anthropic", founded_year: 2021, headquarters: "San Francisco, CA" }</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 单次 query() 在产生错误结果后抛出异常，例如</span>
+<span class="w">  </span><span class="c1">// error_max_structured_output_retries；请参阅错误处理部分。</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`Session ended with an error: </span><span class="si">${</span><span class="nx">error</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span>
+
+<span class="c1"># 定义你想要返回的数据形状</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+    <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"company_name"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">},</span>
+        <span class="s2">"founded_year"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"number"</span><span class="p">},</span>
+        <span class="s2">"headquarters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s2">"required"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"company_name"</span><span class="p">],</span>
+<span class="p">}</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+            <span class="n">prompt</span><span class="o">=</span><span class="s2">"Research Anthropic and provide key company information"</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+                <span class="n">output_format</span><span class="o">=</span><span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"json_schema"</span><span class="p">,</span> <span class="s2">"schema"</span><span class="p">:</span> <span class="n">schema</span><span class="p">}</span>
+            <span class="p">),</span>
+        <span class="p">):</span>
+            <span class="c1"># 结果消息包含带有验证数据的 structured_output</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">structured_output</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">structured_output</span><span class="p">)</span>
+                <span class="c1"># {'company_name': 'Anthropic', 'founded_year': 2021, 'headquarters': 'San Francisco, CA'}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="c1"># 单次 query() 在产生错误结果后抛出异常，例如</span>
+        <span class="c1"># error_max_structured_output_retries；请参阅错误处理部分。</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Session ended with an error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="type-safe-schemas-with-zod-and-pydantic">使用 Zod 和 Pydantic 的类型安全 schema</h2>
+<p>与其手动编写 JSON Schema，你可以使用 <a href="https://zod.dev/" target="_blank" rel="noopener">Zod</a>（TypeScript）或 <a href="https://docs.pydantic.dev/latest/" target="_blank" rel="noopener">Pydantic</a>（Python）来定义你的 schema。这些库为你生成 JSON Schema，并让你将响应解析为完全类型化的对象，你可以在整个代码库中使用，具有自动完成和类型检查。</p>
+<p>下面的示例定义了一个功能实现计划的 schema，包括摘要、步骤列表（每个步骤都有复杂度级别）和潜在风险。代理规划功能并返回一个类型化的 <code>FeaturePlan</code> 对象。然后你可以访问 <code>plan.summary</code> 等属性，并使用完整的类型安全遍历 <code>plan.steps</code>。</p>
+<p>SDK 使用 JSON Schema draft-07 验证 schema，因此声明更新版本的 schema 会被拒绝。Zod 默认针对 draft 2020-12，所以在转换你的 schema 时传递 <code>target: "draft-7"</code>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">z</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"zod"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="c1">// 使用 Zod 定义 schema</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">FeaturePlan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">feature_name</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span>
+<span class="w">  </span><span class="nx">summary</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span>
+<span class="w">  </span><span class="nx">steps</span><span class="o">:</span><span class="w"> </span><span class="kt">z.array</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">step_number</span><span class="o">:</span><span class="w"> </span><span class="kt">z.number</span><span class="p">(),</span>
+<span class="w">      </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span>
+<span class="w">      </span><span class="nx">estimated_complexity</span><span class="o">:</span><span class="w"> </span><span class="kt">z.enum</span><span class="p">([</span><span class="s2">"low"</span><span class="p">,</span><span class="w"> </span><span class="s2">"medium"</span><span class="p">,</span><span class="w"> </span><span class="s2">"high"</span><span class="p">])</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">  </span><span class="p">),</span>
+<span class="w">  </span><span class="nx">risks</span><span class="o">:</span><span class="w"> </span><span class="kt">z.array</span><span class="p">(</span><span class="nx">z</span><span class="p">.</span><span class="kt">string</span><span class="p">())</span>
+<span class="p">});</span>
+
+<span class="kr">type</span><span class="w"> </span><span class="nx">FeaturePlan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">z</span><span class="p">.</span><span class="nx">infer</span><span class="o">&lt;</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">FeaturePlan</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="c1">// 使用 SDK 期望的 draft-07 目标转换为 JSON Schema</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">z</span><span class="p">.</span><span class="nx">toJSONSchema</span><span class="p">(</span><span class="nx">FeaturePlan</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="s2">"draft-7"</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// 在查询中使用</span>
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span>
+<span class="w">      </span><span class="s2">"Plan how to add dark mode support to a React app. Break it into implementation steps."</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">outputFormat</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"json_schema"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="kt">schema</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"success"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">structured_output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 验证并获取完全类型化的结果</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">parsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">FeaturePlan</span><span class="p">.</span><span class="nx">safeParse</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">structured_output</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">parsed</span><span class="p">.</span><span class="nx">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">plan</span><span class="o">:</span><span class="w"> </span><span class="kt">FeaturePlan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">parsed</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Feature: </span><span class="si">${</span><span class="nx">plan</span><span class="p">.</span><span class="nx">feature_name</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Summary: </span><span class="si">${</span><span class="nx">plan</span><span class="p">.</span><span class="nx">summary</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">plan</span><span class="p">.</span><span class="nx">steps</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">step</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">step</span><span class="p">.</span><span class="nx">step_number</span><span class="si">}</span><span class="sb">. [</span><span class="si">${</span><span class="nx">step</span><span class="p">.</span><span class="nx">estimated_complexity</span><span class="si">}</span><span class="sb">] </span><span class="si">${</span><span class="nx">step</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 单次 query() 在产生错误结果后抛出，例如</span>
+<span class="w">  </span><span class="c1">// error_max_structured_output_retries；请参阅错误处理部分。</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`Session ended with an error: </span><span class="si">${</span><span class="nx">error</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Step</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">step_number</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">estimated_complexity</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># 'low', 'medium', 'high'</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FeaturePlan</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">feature_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Step</span><span class="p">]</span>
+    <span class="n">risks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+            <span class="n">prompt</span><span class="o">=</span><span class="s2">"Plan how to add dark mode support to a React app. Break it into implementation steps."</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+                <span class="n">output_format</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"json_schema"</span><span class="p">,</span>
+                    <span class="s2">"schema"</span><span class="p">:</span> <span class="n">FeaturePlan</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">(),</span>
+                <span class="p">}</span>
+            <span class="p">),</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">structured_output</span><span class="p">:</span>
+                <span class="c1"># 验证并获取完全类型化的结果</span>
+                <span class="n">plan</span> <span class="o">=</span> <span class="n">FeaturePlan</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">structured_output</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Feature: </span><span class="si">{</span><span class="n">plan</span><span class="o">.</span><span class="n">feature_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Summary: </span><span class="si">{</span><span class="n">plan</span><span class="o">.</span><span class="n">summary</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">step_number</span><span class="si">}</span><span class="s2">. [</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">estimated_complexity</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">"</span>
+                    <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="c1"># 单次 query() 在产生错误结果后抛出，例如</span>
+        <span class="c1"># error_max_structured_output_retries；请参阅错误处理部分。</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Session ended with an error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="output-format-configuration">输出格式配置</h2>
+<p><code>outputFormat</code>（TypeScript）或 <code>output_format</code>（Python）选项接受一个对象，包含：</p>
+<ul>
+<li><code>type</code>：设置为 <code>"json_schema"</code> 以获得结构化输出</li>
+<li><code>schema</code>：一个 <a href="https://json-schema.org/understanding-json-schema/about" target="_blank" rel="noopener">JSON Schema</a> 对象，定义你的输出结构。你可以使用 <code>z.toJSONSchema(schema, { target: "draft-7" })</code> 从 Zod schema 生成它，或使用 <code>.model_json_schema()</code> 从 Pydantic 模型生成它</li>
+</ul>
+<p>SDK 支持标准 JSON Schema 功能，包括所有基本类型（object、array、string、number、boolean、null）、<code>enum</code>、<code>const</code>、<code>required</code>、嵌套对象和 <code>$ref</code> 定义。有关支持的功能和限制的完整列表，请参阅 <a href="https://platform.claude.com/docs/zh-CN/build-with-claude/structured-outputs#json-schema-limitations" target="_blank" rel="noopener">JSON Schema 限制</a>。</p>
+<p>不是有效 JSON Schema 的 schema 在启动时会导致运行失败，并显示一条错误消息，说明问题所在。在 v2.1.205 之前，无效的 schema 会被静默忽略，代理会返回非结构化文本。</p>
+<p><code>format</code> 关键字，例如 <code>"format": "email"</code>，被接受为注释，SDK 的验证器不会强制执行它。在 v2.1.205 之前，任何包含 <code>format</code> 的 schema 都被视为无效。</p>
+<h2 id="example-todo-tracking-agent">示例：TODO 跟踪代理</h2>
+<p>此示例演示了结构化输出如何与多步工具使用配合工作。代理需要在代码库中查找 TODO 注释，然后为每个注释查找 git blame 信息。它自主决定使用哪些工具（Grep 搜索、Bash 运行 git 命令）并将结果合并为单个结构化响应。</p>
+<p>schema 包括可选字段（<code>author</code> 和 <code>date</code>），因为 git blame 信息可能不适用于所有文件。代理填充它能找到的内容并省略其余部分。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="c1">// 定义 TODO 提取的结构</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">todoSchema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">todos</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">          </span><span class="nx">file</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">          </span><span class="nx">line</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"number"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">          </span><span class="nx">author</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">          </span><span class="nx">date</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"text"</span><span class="p">,</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span><span class="w"> </span><span class="s2">"line"</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">total_count</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"number"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"todos"</span><span class="p">,</span><span class="w"> </span><span class="s2">"total_count"</span><span class="p">]</span>
+<span class="p">};</span>
+
+<span class="c1">// 代理使用 Grep 查找 TODO，使用 Bash 获取 git blame 信息</span>
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Find all TODO comments in this codebase and identify who added them"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">outputFormat</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"json_schema"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="kt">todoSchema</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"success"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">structured_output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">structured_output</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">total_count</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span><span class="w"> </span><span class="nx">todos</span><span class="o">:</span><span class="w"> </span><span class="kt">Array</span><span class="o">&lt;</span><span class="p">{</span><span class="w"> </span><span class="nx">file</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">line</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">author?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">date?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span><span class="o">&gt;</span><span class="w"> </span><span class="p">};</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Found </span><span class="si">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">total_count</span><span class="si">}</span><span class="sb"> TODOs`</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">data</span><span class="p">.</span><span class="nx">todos</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">todo</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">todo</span><span class="p">.</span><span class="nx">file</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">todo</span><span class="p">.</span><span class="nx">line</span><span class="si">}</span><span class="sb"> - </span><span class="si">${</span><span class="nx">todo</span><span class="p">.</span><span class="nx">text</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">todo</span><span class="p">.</span><span class="nx">author</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`  Added by </span><span class="si">${</span><span class="nx">todo</span><span class="p">.</span><span class="nx">author</span><span class="si">}</span><span class="sb"> on </span><span class="si">${</span><span class="nx">todo</span><span class="p">.</span><span class="nx">date</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 单次 query() 在产生错误结果后抛出异常，例如</span>
+<span class="w">  </span><span class="c1">// error_max_structured_output_retries；请参阅错误处理部分。</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`Session ended with an error: </span><span class="si">${</span><span class="nx">error</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span>
+
+<span class="c1"># 定义 TODO 提取的结构</span>
+<span class="n">todo_schema</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+    <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"todos"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"array"</span><span class="p">,</span>
+            <span class="s2">"items"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+                <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"text"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">},</span>
+                    <span class="s2">"file"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">},</span>
+                    <span class="s2">"line"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"number"</span><span class="p">},</span>
+                    <span class="s2">"author"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">},</span>
+                    <span class="s2">"date"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">},</span>
+                <span class="p">},</span>
+                <span class="s2">"required"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"text"</span><span class="p">,</span> <span class="s2">"file"</span><span class="p">,</span> <span class="s2">"line"</span><span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s2">"total_count"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"number"</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s2">"required"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"todos"</span><span class="p">,</span> <span class="s2">"total_count"</span><span class="p">],</span>
+<span class="p">}</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># 代理使用 Grep 查找 TODO，使用 Bash 获取 git blame 信息</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+            <span class="n">prompt</span><span class="o">=</span><span class="s2">"Find all TODO comments in this codebase and identify who added them"</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+                <span class="n">output_format</span><span class="o">=</span><span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"json_schema"</span><span class="p">,</span> <span class="s2">"schema"</span><span class="p">:</span> <span class="n">todo_schema</span><span class="p">}</span>
+            <span class="p">),</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">structured_output</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">structured_output</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'total_count'</span><span class="p">]</span><span class="si">}</span><span class="s2"> TODOs"</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">todo</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"todos"</span><span class="p">]:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">todo</span><span class="p">[</span><span class="s1">'file'</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">todo</span><span class="p">[</span><span class="s1">'line'</span><span class="p">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">todo</span><span class="p">[</span><span class="s1">'text'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="s2">"author"</span> <span class="ow">in</span> <span class="n">todo</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Added by </span><span class="si">{</span><span class="n">todo</span><span class="p">[</span><span class="s1">'author'</span><span class="p">]</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">todo</span><span class="p">[</span><span class="s1">'date'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="c1"># 单次 query() 在产生错误结果后抛出异常，例如</span>
+        <span class="c1"># error_max_structured_output_retries；请参阅错误处理部分。</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Session ended with an error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="recognize-the-structuredoutput-tool-call">识别 StructuredOutput 工具调用</h2>
+<p>当您在 TypeScript 中设置 <code>outputFormat</code> 或在 Python 中设置 <code>output_format</code> 时，消息流中会出现一个名为 <code>StructuredOutput</code> 的工具调用，而您从未定义过该工具。Claude Code 会将此工具添加到会话中，Agent 通过调用它来返回答案。<a href="agent-sdk-typescript.html#sdksystemmessage">系统 init 消息</a>会在 <code>tools</code> 数组中列出该工具，每次调用都以两个块的形式出现：</p>
+<ul>
+<li>一个名为 <code>StructuredOutput</code> 的 <code>tool_use</code> 块，其输入是 Agent 根据您的 schema 生成的对象</li>
+<li>一个内容为 <code>Structured output provided successfully</code> 的 <code>tool_result</code> 块</li>
+</ul>
+<p>当该对象与您的 schema 不匹配时，<code>tool_result</code> 会改为带有 <code>is_error: true</code>，Agent 会再次调用 <code>StructuredOutput</code>，因此一次查询的消息流中可能包含多次调用。请从结果消息的 <code>structured_output</code> 中读取经过验证的数据，而不是从 <code>tool_use</code> 块中读取；关于所有尝试均未成功时得到的结果，请参阅<a href="#error-handling">错误处理</a>。</p>
+<p>如果您的应用程序会显示工具调用或将其记录到日志中，请跳过名为 <code>StructuredOutput</code> 的调用，以免这一机制显示为 Agent 自行选择的步骤。<code>tool_result</code> 块不包含工具名称，只包含其所响应调用的 <code>tool_use_id</code>，因此请将其与您跳过的每个调用的 <code>id</code> 进行匹配。</p>
+<h2 id="error-handling">错误处理</h2>
+<p>结构化输出生成可能会失败，当 Agent 无法生成与您的 schema 匹配的有效 JSON 时。这通常发生在 schema 对于任务来说太复杂、任务本身不明确或 Agent 在尝试修复验证错误时达到重试限制时。它也可能在没有任何验证失败的情况下发生：<a href="model-config.html#automatic-model-fallback">模型回退</a>可以在流中途收回已完成的输出，如果没有重试替换它，运行将以相同的错误结束。在调试您的 schema 之前，检查错误结果消息上的 <code>errors</code> 列表以区分这两个原因。</p>
+<p>发生错误时，结果消息有一个 <code>subtype</code> 指示出了什么问题：</p>
+<table>
+<thead>
+<tr>
+<th>Subtype</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>success</code></td>
+<td>输出已成功生成并验证</td>
+</tr>
+<tr>
+<td><code>error_max_structured_output_retries</code></td>
+<td>多次尝试后没有有效输出存活（验证失败，或模型回退收回且没有成功重试）</td>
+</tr>
+</tbody>
+</table>
+<p>结果也可以以 <code>success</code> 的 subtype 结束，但没有 <code>structured_output</code> 值，例如当运行完成而代理没有生成结构化输出时。将该情况也视为失败。故障排除条目<a href="agent-sdk-troubleshooting.html#structured_output-is-none-but-the-result-says-success">structured_output 为 None 但结果显示 success</a>涵盖了这种情况。下面的示例仅当 <code>subtype</code> 为 <code>success</code> 且 <code>structured_output</code> 存在时才将结果视为成功，并将所有其他结果作为失败处理：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">contactSchema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span>
+<span class="p">};</span>
+
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Extract contact info from the document"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">outputFormat</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"json_schema"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="kt">contactSchema</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"success"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">msg</span><span class="p">.</span><span class="nx">structured_output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 使用验证的输出</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">structured_output</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"error_max_structured_output_retries"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">"Could not produce valid output"</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">"Run ended without a structured output"</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 单次 query() 在产生错误结果后抛出。如果失败是错误结果，</span>
+<span class="w">  </span><span class="c1">// 上面的错误 subtype 分支已经运行；连接或进程失败不会产生结果消息。</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Session ended with an error: </span><span class="si">${</span><span class="nx">error</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span>
+
+<span class="n">contact_schema</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+    <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">},</span>
+        <span class="s2">"email"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s2">"required"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+<span class="p">}</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+            <span class="n">prompt</span><span class="o">=</span><span class="s2">"Extract contact info from the document"</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+                <span class="n">output_format</span><span class="o">=</span><span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"json_schema"</span><span class="p">,</span> <span class="s2">"schema"</span><span class="p">:</span> <span class="n">contact_schema</span><span class="p">}</span>
+            <span class="p">),</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"success"</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">structured_output</span><span class="p">:</span>
+                    <span class="c1"># 使用验证的输出</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">structured_output</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"error_max_structured_output_retries"</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">"Could not produce valid output"</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">"Run ended without a structured output"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="c1"># 单次 query() 在产生错误结果后抛出。如果失败是错误结果，</span>
+        <span class="c1"># 上面的错误 subtype 分支已经运行；连接或进程失败不会产生结果消息。</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Session ended with an error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p><strong>避免错误的提示：</strong></p>
+<ul>
+<li><strong>保持 schema 专注。</strong> 具有许多必需字段的深层嵌套 schema 更难满足。从简单开始，根据需要添加复杂性。</li>
+<li><strong>匹配 schema 到任务。</strong> 如果任务可能没有你的 schema 要求的所有信息，请将这些字段设为可选。</li>
+<li><strong>使用清晰的提示。</strong> 模糊的提示使代理更难知道要生成什么输出。</li>
+</ul>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li><a href="https://json-schema.org/" target="_blank" rel="noopener">JSON Schema 文档</a>：学习 JSON Schema 语法以定义具有嵌套对象、数组、枚举和验证约束的复杂 schema</li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank" rel="noopener">API 结构化输出</a>：直接使用 Claude API 的结构化输出进行单轮请求，无需工具使用</li>
+<li><a href="agent-sdk-custom-tools.html">自定义工具</a>：在返回结构化输出之前，在执行期间给你的代理自定义工具来调用</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="agent-sdk-streaming-output.html"><span class="pager-dir">← 上一页</span><span class="pager-name">实时流式传输响应</span></a><a class="pager-link next" href="agent-sdk-custom-tools.html"><span class="pager-dir">下一页 →</span><span class="pager-name">为 Claude 提供自定义工具</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#why-structured-outputs">为什么使用结构化输出？</a><a class="toc-l2" href="#quick-start">快速开始</a><a class="toc-l2" href="#type-safe-schemas-with-zod-and-pydantic">使用 Zod 和 Pydantic 的类型安全 schema</a><a class="toc-l2" href="#output-format-configuration">输出格式配置</a><a class="toc-l2" href="#example-todo-tracking-agent">示例：TODO 跟踪代理</a><a class="toc-l2" href="#recognize-the-structuredoutput-tool-call">识别 StructuredOutput 工具调用</a><a class="toc-l2" href="#error-handling">错误处理</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

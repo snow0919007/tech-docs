@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>环境变量 · Workers 文档（中文版）</title>
+<meta name="description" content="环境变量是一类绑定，用来把文本或 JSON 值附加到 Worker 上。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>环境变量</h1>
+      <p class="lead">环境变量是一类绑定，用来把文本或 JSON 值附加到 Worker 上。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-08-21</span>
+        <span>对应页面：configuration/environment-variables</span>
+      </div>
+
+<h2>背景</h2>
+      <p>你可以添加环境变量（environment variables）——它是绑定的一种——把文本字符串或 JSON 值附加到 Worker 上。环境变量可通过传给 Worker 的 <a href="../../sections/runtime-apis.html"><code>fetch</code> 事件处理器</a>的 <a href="../../sections/runtime-apis.html"><code>env</code> 参数</a>访问。</p>
+      <p>文本字符串与 JSON 值<strong>不加密</strong>，适合存放应用配置。</p>
+
+      <h2>通过 Wrangler 添加环境变量</h2>
+      <p>在 Wrangler 文件里用 <code>[vars]</code> 配置定义文本与 JSON 值。下例中 <code>API_HOST</code>、<code>API_ACCOUNT_ID</code> 是文本值，<code>SERVICE_X_DATA</code> 是 JSON 值。</p>
+<pre data-lang="jsonc"><code>{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "my-worker-dev",
+	"vars": {
+		"API_HOST": "example.com",
+		"API_ACCOUNT_ID": "example_user",
+		"SERVICE_X_DATA": {
+			"URL": "service-x-api.dev.example",
+			"MY_ID": 123
+		}
+	}
+}</code></pre>
+<pre data-lang="toml"><code>"$schema" = "./node_modules/wrangler/config-schema.json"
+name = "my-worker-dev"
+
+[vars]
+API_HOST = "example.com"
+API_ACCOUNT_ID = "example_user"
+
+  [vars.SERVICE_X_DATA]
+  URL = "service-x-api.dev.example"
+  MY_ID = 123</code></pre>
+
+      <p>在 Worker 代码里这样访问 <code>API_HOST</code>：</p>
+<pre data-lang="js"><code>export default {
+	async fetch(request, env, ctx) {
+		return new Response(`API host: ${env.API_HOST}`);
+	},
+};</code></pre>
+<pre data-lang="ts"><code>export interface Env {
+	API_HOST: string;
+}
+
+export default {
+	async fetch(request, env, ctx): Promise&lt;Response&gt; {
+		return new Response(`API host: ${env.API_HOST}`);
+	},
+} satisfies ExportedHandler&lt;Env&gt;;</code></pre>
+<pre data-lang="python"><code>from workers import WorkerEntrypoint, Response
+
+class Default(WorkerEntrypoint):
+    async def fetch(self, request):
+        # Environment variables are accessed via attribute access on self.env
+        return Response(f"API host: {self.env.API_HOST}")</code></pre>
+
+      <h3>导入 <code>env</code> 以便全局访问</h3>
+      <p>你也可以从 <a href="../../sections/runtime-apis.html"><code>cloudflare:workers</code></a> 导入 <code>env</code>，从而在代码任何位置访问环境变量，包括请求处理器之外：</p>
+<pre data-lang="js"><code>import { env } from "cloudflare:workers";
+
+// Access environment variables at the top level
+const apiHost = env.API_HOST;
+
+export default {
+	async fetch(request) {
+		return new Response(`API host: ${apiHost}`);
+	},
+};</code></pre>
+<pre data-lang="ts"><code>import { env } from "cloudflare:workers";
+
+// Access environment variables at the top level
+const apiHost = env.API_HOST;
+
+export default {
+	async fetch(request: Request): Promise&lt;Response&gt; {
+		return new Response(`API host: ${apiHost}`);
+	},
+};</code></pre>
+      <p>这种做法适合这些场景：</p>
+      <ul>
+        <li>在 Worker 顶层初始化配置或 API 客户端。</li>
+        <li>从深层嵌套的函数里访问环境变量，而无需每次调用都传 <code>env</code>。</li>
+      </ul>
+      <p>详见<a href="../../sections/runtime-apis.html">把 <code>env</code> 作为全局导入</a>。</p>
+
+      <h3>在 Wrangler 中配置不同环境</h3>
+      <p><a href="../../sections/wrangler.html">Wrangler 的环境</a>让你为同一个 Worker 指定不同配置，包括每个环境不同的 <code>vars</code> 取值。由于 <code>vars</code> 属于<a href="../../sections/wrangler.html">不可继承的键</a>，它<strong>不会</strong>被环境继承，必须逐个环境单独指定。</p>
+      <p>下例建了 <code>staging</code> 与 <code>production</code> 两个环境，<code>API_HOST</code> 取值不同。</p>
+<pre data-lang="jsonc"><code>{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "my-worker-dev",
+	// top level environment
+	"vars": {
+		"API_HOST": "api.example.com"
+	},
+	"env": {
+		"staging": {
+			"vars": {
+				"API_HOST": "staging.example.com"
+			}
+		},
+		"production": {
+			"vars": {
+				"API_HOST": "production.example.com"
+			}
+		}
+	}
+}</code></pre>
+<pre data-lang="toml"><code>"$schema" = "./node_modules/wrangler/config-schema.json"
+name = "my-worker-dev"
+
+[vars]
+API_HOST = "api.example.com"
+
+[env.staging.vars]
+API_HOST = "staging.example.com"
+
+[env.production.vars]
+API_HOST = "production.example.com"</code></pre>
+      <p>要在特定环境里运行 Wrangler 命令，加 <code>--env</code> 或 <code>-e</code> 标志。例如在 <code>staging</code> 环境里开发用 <code>npx wrangler dev --env staging</code>，部署用 <code>npx wrangler deploy --env staging</code>。</p>
+      <p>进一步了解 <a href="../../sections/wrangler.html">Wrangler 的环境</a>。</p>
+
+      <h2>通过控制台添加环境变量</h2>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>在 <strong>Overview</strong> 中选择你的 Worker。</li>
+        <li>选择 <strong>Settings</strong>。</li>
+        <li>在 <strong>Variables and Secrets</strong> 下选择 <strong>Add</strong>。</li>
+        <li>选择 <strong>Type</strong>，填入 <strong>Variable name</strong> 与 <strong>Value</strong>。这个变量随后对 Worker 可用。</li>
+        <li>（可选）要加多个环境变量，选择 <strong>Add variable</strong>。</li>
+        <li>选择 <strong>Deploy</strong> 生效。</li>
+      </ol>
+
+      <div class="note-box">
+        <span class="box-title">明文与密钥</span>
+        <p>如果你的环境变量属于<a href="secrets.html">密钥</a>，请选择 <strong>Secret</strong> 类型。账户级密钥也可以考虑 <a href="https://developers.cloudflare.com/secrets-store/" target="_blank" rel="noopener">Cloudflare Secrets Store ↗</a>。</p>
+      </div>
+
+      <h2>密钥与环境变量的区别</h2>
+      <div class="warn-box">
+        <span class="box-title">敏感信息请用密钥</span>
+        <p>不要用明文环境变量存放敏感信息。请改用<a href="secrets.html">密钥</a>或 <a href="https://developers.cloudflare.com/secrets-store/integrations/workers/" target="_blank" rel="noopener">Secrets Store 绑定 ↗</a>。</p>
+      </div>
+      <p><a href="secrets.html">密钥</a>本质上就是<a href="environment-variables.html">环境变量</a>，区别在于：一旦定义，密钥的值在 Wrangler 或 Cloudflare 控制台里就<strong>看不到</strong>了。也就是说，密码、API 令牌等敏感数据必须加密存放，以防泄漏。对 Worker 而言，环境变量与密钥没有差别——密钥的值会按定义原样传入。</p>
+
+      <h3>本地开发中的密钥</h3>
+      <div class="warn-box">
+        <span class="box-title">谨慎</span>
+        <p>不要在 Wrangler 配置文件的 <code>vars</code> 里存放敏感信息，请改用密钥。</p>
+      </div>
+      <p>本地开发用的密钥放在 <code>.dev.vars</code> 或 <code>.env</code> 文件里，与 Wrangler 配置文件同目录。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>可以用 <a href="../../sections/wrangler.html"><code>secrets</code> 配置属性</a>声明 Worker 需要哪些密钥名。一旦声明，只有 <code>secrets.required</code> 里列出的键才会从 <code>.dev.vars</code> 或 <code>.env</code> 加载；多余的键会被排除，缺失的键会给出警告。</p>
+      </div>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p><code>.dev.vars</code> 与 <code>.env</code> 只用其一，不要同时用。如果你定义了 <code>.dev.vars</code>，本地开发时 <code>.env</code> 里的值不会进入 <code>env</code> 对象。</p>
+      </div>
+      <p>这些文件使用 <a href="https://hexdocs.pm/dotenvy/dotenv-file-format.html" target="_blank" rel="noopener">dotenv ↗</a> 语法。例如：</p>
+<pre data-lang="bash"><code>SECRET_KEY="value"
+API_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"</code></pre>
+
+      <div class="warn-box">
+        <span class="box-title">不要把密钥提交到 git</span>
+        <p><code>.dev.vars</code> 与 <code>.env</code> 不应提交到 git。把 <code>.dev.vars*</code> 和 <code>.env*</code> 加进项目的 <code>.gitignore</code>。</p>
+      </div>
+
+      <p>要为每个 Cloudflare 环境设置不同密钥，创建名为 <code>.dev.vars.&lt;environment-name&gt;</code> 或 <code>.env.&lt;environment-name&gt;</code> 的文件。</p>
+      <p>本地开发时选中某个 Cloudflare 环境后，对应的环境专属文件会先于通用的 <code>.dev.vars</code>（或 <code>.env</code>）被加载。</p>
+      <ul>
+        <li>使用 <code>.dev.vars.&lt;environment-name&gt;</code> 时，所有密钥都必须按环境定义。只要存在 <code>.dev.vars.&lt;environment-name&gt;</code>，就<strong>只</strong>加载它，<code>.dev.vars</code> 不会被加载。</li>
+        <li>相反，所有匹配的 <code>.env</code> 文件都会被加载并合并取值。每个变量取最具体的那个文件的值，优先级为：<code>.env.&lt;environment-name&gt;.local</code>（最具体）→ <code>.env.local</code> → <code>.env.&lt;environment-name&gt;</code> → <code>.env</code>（最不具体）。</li>
+      </ul>
+
+      <div class="note-box">
+        <span class="box-title">控制 <code>.env</code> 的加载行为</span>
+        <p>可以通过在运行工具的进程上设置环境变量，来控制本地开发时 <code>.env</code> 的加载方式。</p>
+        <ul>
+          <li>若没有提供 <code>.dev.vars</code>、且不想从 <code>.env</code> 加载本地开发变量，把 <code>CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV</code> 设为 <code>"false"</code>。</li>
+          <li>若想把系统进程环境里的所有环境变量都当作本地开发变量，先确保没有 <code>.dev.vars</code>，再把 <code>CLOUDFLARE_INCLUDE_PROCESS_ENV</code> 设为 <code>"true"</code>。使用 <code>secrets</code> 配置属性时不需要这么做，它会自动从 <code>process.env</code> 加载。</li>
+        </ul>
+      </div>
+
+      <h2>环境变量与 Node.js 兼容性</h2>
+      <p>同时启用 <a href="../../sections/runtime-apis.html"><code>nodejs_compat</code></a> 与 <a href="compatibility-flags.html"><code>nodejs_compat_populate_process_env</code></a> 兼容性标志（兼容性日期为 2025-04-01 及之后时默认启用）后，环境变量可通过全局 <code>process.env</code> 访问。</p>
+      <p><code>process.env</code> 会在 Worker 中首次访问 <code>process</code> 时惰性填充。</p>
+      <p>文本变量的值直接暴露。</p>
+      <p>求值为字符串值的 JSON 变量，按解析后的值暴露。</p>
+      <p>求值结果不是字符串值的 JSON 变量，按原始 JSON 字符串暴露。</p>
+      <p>例如，一个 Worker 有三个环境变量——两个文本值、一个 JSON 值：</p>
+<pre data-lang="plaintext"><code>[vars]
+FOO =  "abc"
+BAR =  "abc"
+BAZ = { "a": 123 }</code></pre>
+      <p>环境变量可以通过 <code>wrangler.{json|jsonc|toml}</code> 文件或 Cloudflare 控制台界面添加。</p>
+      <p><code>process.env.FOO</code> 与 <code>process.env.BAR</code> 的值都是 JavaScript 字符串 <code>"abc"</code>。</p>
+      <p><code>process.env.BAZ</code> 的值是 JSON 编码后的字符串 <code>"{ \"a\": 123 }"</code>。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>还要注意，因为在运行时里密钥也是环境变量的一种，所以密钥同样会通过 <code>process.env</code> 暴露。</p>
+      </div>
+
+      <h2>相关资源</h2>
+      <ul>
+        <li>从 <a href="../../pages/reference/module-workers.html">Service Worker 格式迁移到 ES modules 语法</a>时的环境变量处理。</li>
+      </ul>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/environment-variables/" target="_blank" rel="noopener">configuration/environment-variables</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amazon Bedrock 上的 Claude Code · Claude Code 中文文档</title>
+<meta name="description" content="了解如何通过 Amazon Bedrock 配置 Claude Code，包括设置、IAM 配置和故障排除。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="amazon-bedrock">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/amazon-bedrock" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link active" href="amazon-bedrock.html" aria-current="page">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>管理</span> <span class="sep">/</span> <span>部署</span></div>
+    <article class="prose" id="article"><h1 id="amazon-bedrock-claude-code">Amazon Bedrock 上的 Claude Code</h1>
+<blockquote>
+<p>了解如何通过 Amazon Bedrock 配置 Claude Code，包括设置、IAM 配置和故障排除。</p>
+</blockquote>
+<p><strong>Deploying Claude Code across your organization?</strong> Talk to sales about enterprise plans, SSO, and centralized billing.</p>
+<p>View plans<br />
+Contact sales</p>
+<h2 id="prerequisites">前置条件</h2>
+<p>在使用 Amazon Bedrock 配置 Claude Code 之前，请确保您拥有：</p>
+<ul>
+<li>启用了 Amazon Bedrock 访问权限的 AWS 账户</li>
+<li>在 Amazon Bedrock 中访问所需的 Claude 模型（例如 Claude Sonnet 4.6）</li>
+<li>已安装并配置 AWS CLI（可选 - 仅在您没有其他获取凭证的机制时需要）</li>
+<li>适当的 IAM 权限</li>
+</ul>
+<p>要使用您自己的 Amazon Bedrock 凭证登录，请按照下面的<a href="#sign-in-with-bedrock">使用 Amazon Bedrock 登录</a>进行操作。要在团队中部署 Claude Code，请使用<a href="#set-up-manually">手动设置</a>步骤并在推出前<a href="#4-pin-model-versions">固定您的模型版本</a>。</p>
+<h2 id="sign-in-with-bedrock">使用 Bedrock 登录</h2>
+<p>如果您拥有 AWS 凭据，并希望通过 Amazon Bedrock 开始使用 Claude Code，登录向导会引导您完成整个过程。每个账户只需完成一次 AWS 端的前提条件；Claude Code 端的设置由向导处理。</p>
+<p><strong>1. 在您的 AWS 账户中启用 Anthropic 模型</strong></p>
+<p>在 <a href="https://console.aws.amazon.com/bedrock/" target="_blank" rel="noopener">Amazon Bedrock 控制台</a>中，打开 Model catalog，选择一个 Anthropic 模型，然后提交用例表单。提交后即可立即获得访问权限。有关 AWS Organizations，请参阅<a href="#1-submit-use-case-details">提交用例详细信息</a>；有关您的角色所需的权限，请参阅 <a href="#iam-configuration">IAM 配置</a>。</p>
+<p><strong>2. 启动 Claude Code 并选择 Amazon Bedrock</strong></p>
+<p>运行 <code>claude</code>。在登录提示中，选择 <strong>3rd-party platform</strong>，然后选择 <strong>Amazon Bedrock</strong>。如果您已经登录并看到的是聊天输入框，请运行 <code>/setup-bedrock</code> 打开向导。在设置 <code>CLAUDE_CODE_USE_BEDROCK=1</code> 之前，Claude Code 会<a href="commands.html#how-the-command-menu-matches-what-you-type">在命令菜单中隐藏该命令</a>；请完整输入该命令。</p>
+<p><strong>3. 按照向导提示操作</strong></p>
+<p>选择您向 AWS 进行身份验证的方式：从您的 <code>~/.aws</code> 目录中检测到的 AWS 配置文件、Amazon Bedrock API 密钥、访问密钥和密钥，或环境中已有的凭据。向导会询问您的区域，验证您的账户可以调用哪些 Claude 模型，并允许您固定这些模型。它会将结果保存到您的<a href="settings.html">用户设置文件</a>的 <code>env</code> 块中，因此您无需自行导出环境变量。</p>
+<p>登录后，您可以随时运行 <code>/setup-bedrock</code> 重新打开向导，以更改您的凭据、区域或固定的模型。模型固定步骤会从您当前固定的模型开始。向导会写入 <code>~/.claude/settings.json</code>；如果设置了 <a href="env-vars.html#variables"><code>CLAUDE_CONFIG_DIR</code></a>，则写入 <code>$CLAUDE_CONFIG_DIR/settings.json</code>。</p>
+<h2 id="set-up-manually">手动设置</h2>
+<p>要通过环境变量而不是向导来配置 Amazon Bedrock，例如在 CI 或脚本化企业部署中，请按照以下步骤操作。</p>
+<h3 id="1-submit-use-case-details">提交用例详情</h3>
+<p>在首次调用 Anthropic 模型之前，请提交用例详情。每个 AWS 账户只需执行一次。</p>
+<ol>
+<li>确保您拥有下面描述的正确 IAM 权限</li>
+<li>导航到 <a href="https://console.aws.amazon.com/bedrock/" target="_blank" rel="noopener">Amazon Bedrock 控制台</a></li>
+<li>从<strong>模型目录</strong>中选择 Anthropic 模型</li>
+<li>完成用例表单。提交后立即授予访问权限。</li>
+</ol>
+<p>如果您使用 AWS Organizations，可以使用 <a href="https://docs.aws.amazon.com/bedrock/latest/APIReference/API_PutUseCaseForModelAccess.html" target="_blank" rel="noopener"><code>PutUseCaseForModelAccess</code> API</a> 从管理账户提交一次表单。此调用需要 <code>bedrock:PutUseCaseForModelAccess</code> IAM 权限。批准会自动扩展到子账户。</p>
+<h3 id="2-configure-aws-credentials">配置 AWS 凭证</h3>
+<p>Claude Code 使用默认 AWS SDK 凭据链。如果机器已经向该链提供凭据，例如 Amazon EC2 实例配置文件或 Amazon ECS 任务凭据，请直接跳到<a href="#3-configure-claude-code">第 3 步</a>。</p>
+<p>AWS <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-authentication-user.html" target="_blank" rel="noopener">不建议在开发专用软件或处理真实数据时使用 IAM 用户的访问密钥</a>。使用以下方法之一设置您的凭据：</p>
+<ul>
+<li><a href="#use-aws-configure"><code>aws configure</code></a>：将 IAM 用户的访问密钥保存到 <code>~/.aws</code> 目录中的配置文件</li>
+<li><a href="#export-an-access-key">访问密钥环境变量</a>：仅在当前 shell 中设置访问密钥，或带会话令牌的临时凭据</li>
+<li><a href="#use-an-sso-profile">SSO 配置文件</a>：在浏览器中通过 IAM Identity Center 登录并获取临时凭据。如果您通过 IAM Identity Center 访问 AWS 账户，请使用此方法。</li>
+<li><a href="#use-aws-management-console-credentials">AWS 管理控制台凭据</a>：在浏览器中使用您的 AWS 管理控制台凭据登录并获取临时凭据。如果您以根用户、IAM 用户身份或通过 IAM 联合身份访问 AWS 账户，AWS <a href="https://docs.aws.amazon.com/signin/latest/userguide/command-line-sign-in.html" target="_blank" rel="noopener">推荐此方法</a>。</li>
+<li><a href="#use-an-amazon-bedrock-api-key">Amazon Bedrock API 密钥</a>：使用仅适用于 Amazon Bedrock 的持有者令牌进行身份验证，而不是使用 AWS 凭据</li>
+</ul>
+<h4 id="use-aws-configure">使用 <code>aws configure</code></h4>
+<p>运行 <code>aws configure</code>，并在提示时输入您的访问密钥 ID、秘密访问密钥和默认区域：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">aws<span class="w"> </span>configure
+</code></pre></div>
+<p>AWS CLI 会将密钥保存到 <code>~/.aws/credentials</code> 中的 <code>default</code> 配置文件，凭据链会从那里读取它。</p>
+<h4 id="export-an-access-key">导出访问密钥</h4>
+<p>将您的访问密钥导出为环境变量。<code>AWS_SESSION_TOKEN</code> 仅在使用临时凭据时需要，因此如果您的访问密钥属于 IAM 用户，请省略该行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>your-access-key-id
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>your-secret-access-key
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_SESSION_TOKEN</span><span class="o">=</span>your-session-token
+</code></pre></div>
+<h4 id="use-an-sso-profile">使用 SSO 配置文件</h4>
+<p>如果您还没有配置文件，请使用 <code>aws configure sso</code> 创建一个。然后登录 IAM Identity Center 并设置 <code>AWS_PROFILE</code>，使凭据链使用该配置文件。在运行这些命令之前，将 <code>your-profile-name</code> 替换为您的 AWS 配置文件的名称。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">aws<span class="w"> </span>sso<span class="w"> </span>login<span class="w"> </span>--profile<span class="o">=</span>your-profile-name
+
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_PROFILE</span><span class="o">=</span>your-profile-name
+</code></pre></div>
+<p>Claude Code 从配置文件的 <code>sso_region</code> 命名的 IAM Identity Center 区域请求角色凭据，这不需要与您运行 Amazon Bedrock 的区域匹配。</p>
+<h4 id="use-aws-management-console-credentials">使用 AWS 管理控制台凭据</h4>
+<p><code>aws login</code> 命令需要 AWS CLI 2.32.0 或更高版本。有关您的身份所需的 IAM 策略，请参阅 <a href="https://docs.aws.amazon.com/signin/latest/userguide/command-line-sign-in.html" target="_blank" rel="noopener">AWS 关于 <code>aws login</code> 的说明</a>。</p>
+<p>运行以下命令，在浏览器中使用您的 AWS 管理控制台凭据登录：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">aws<span class="w"> </span>login
+</code></pre></div>
+<p>会话最长有效 12 小时，之后需要再次运行 <code>aws login</code>。</p>
+<h4 id="use-an-amazon-bedrock-api-key">使用 Amazon Bedrock API 密钥</h4>
+<p>Amazon Bedrock API 密钥是一种持有者令牌，可代替 AWS 凭据对您的请求进行身份验证。AWS 提供<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys.html" target="_blank" rel="noopener">两种类型的密钥</a>：</p>
+<ul>
+<li><strong>短期密钥</strong>：最长有效 12 小时。对于生产环境，AWS 更推荐使用短期密钥而非长期密钥。</li>
+<li><strong>长期密钥</strong>：在您设置的到期日期之前一直有效。AWS 仅建议将其用于探索。</li>
+</ul>
+<p>将密钥导出为 <code>AWS_BEARER_TOKEN_BEDROCK</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">AWS_BEARER_TOKEN_BEDROCK</span><span class="o">=</span>your-bedrock-api-key
+</code></pre></div>
+<p>设置 <code>AWS_BEARER_TOKEN_BEDROCK</code> 后，Claude Code 会使用该密钥进行身份验证，并且不会解析凭据链，即使存在其他 AWS 凭据也是如此。<a href="https://aws.amazon.com/blogs/machine-learning/accelerate-ai-development-with-amazon-bedrock-api-keys/" target="_blank" rel="noopener">了解更多关于 Amazon Bedrock API 密钥</a>。</p>
+<h4 id="credential-caching-and-resolution-timeout">凭证缓存和解析超时</h4>
+<p>Claude Code 解析 AWS 默认凭据提供程序链一次，并将解析的凭据保存在内存中。它重复使用这些凭据，直到它们过期前五分钟，或在没有过期时间时使用一小时，因此 SSO 支持的配置文件大约每个凭据生命周期从 IAM Identity Center 请求一次凭据。来自 API 的凭据错误会清除缓存，重试会解析新凭据。</p>
+<p>缓存涵盖此步骤开头列出的所有凭据方法，但 Amazon Bedrock API 密钥除外，它不使用提供程序链。要在每个请求上解析链，请改为设置 <a href="env-vars.html"><code>CLAUDE_CODE_SKIP_AWS_CRED_CACHE=1</code></a>。</p>
+<p>填充缓存的解析在 60 秒后超时。如果链中的某个步骤停滞，例如等待无法接收的输入的 <code>credential_process</code> 帮助程序，请求会失败并显示 <a href="errors.html#aws-default-chain-credential-resolve-timed-out"><code>AWS default-chain credential resolve timed out</code></a>。如果您的链运行合法需要更长时间的交互式登录，例如通过 <code>aws-vault</code> 等包装器进行基于浏览器的 SSO 和 MFA，请使用 <a href="env-vars.html"><code>CLAUDE_CODE_AWS_CHAIN_RESOLVE_TIMEOUT_MS</code></a> 以毫秒为单位提高限制。设置 <code>CLAUDE_CODE_SKIP_AWS_CRED_CACHE=1</code> 后，每个 API 请求解析链时不受此限制。</p>
+<p>除了使用 Amazon Bedrock API 密钥进行身份验证外，<a href="#sign-in-with-bedrock">设置向导</a>对它在验证您的凭证时进行的每个 AWS 调用以及每个模型检查之前的凭证查找应用相同的限制。在凭证验证期间，超过限制的检查会失败并显示 <a href="errors.html#bedrock-setup-verification-timed-out-waiting-for-aws"><code>Timed out after 60s waiting for AWS</code></a>。</p>
+<h4 id="advanced-credential-configuration">高级凭证配置</h4>
+<p>Claude Code 支持 AWS SSO 和企业身份提供程序的自动凭证刷新。将这些设置添加到您的 Claude Code 设置文件（有关文件位置，请参阅<a href="settings.html">设置</a>）。</p>
+<p>这两个设置有不同的触发条件：</p>
+<ul>
+<li><strong><code>awsAuthRefresh</code></strong>：仅当 Claude Code 检测到您的 AWS 凭证已过期时运行，可以基于其时间戳在本地检测，或者当 API 返回凭证错误时，然后使用刷新的凭证重试请求。</li>
+<li><strong><code>awsCredentialExport</code></strong>：在会话启动和每次凭证重新加载时运行，即使 AWS 默认凭证提供程序链中的凭证仍然有效。当您的 Amazon Bedrock 账户需要与默认提供程序链将解析的凭证不同的跨账户凭证时，请使用此选项。</li>
+</ul>
+<p>在运行 <code>awsAuthRefresh</code> 命令之前，Claude Code 会进行 STS <code>GetCallerIdentity</code> 调用以确认您的凭证确实已过期，并在凭证仍然有效时跳过该命令。Claude Code 通过您的<a href="network-config.html#proxy-configuration">代理配置</a>发送此检查，遵守 <code>HTTPS_PROXY</code> 和 <code>NO_PROXY</code>。在 v2.1.239 之前，Claude Code 直接发送此检查，在仅允许通过代理出站的网络上在启动时挂起。</p>
+<h5 id="example-configuration">示例配置</h5>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"awsAuthRefresh"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aws sso login --profile myprofile"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"AWS_PROFILE"</span><span class="p">:</span><span class="w"> </span><span class="s2">"myprofile"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h5 id="configuration-settings-explained">配置设置说明</h5>
+<p><strong><code>awsAuthRefresh</code></strong>：用于修改 <code>.aws</code> 目录的命令，例如更新凭证、SSO 缓存或配置文件。命令的输出显示给用户，但不支持交互式输入。这适用于基于浏览器的 SSO 流，其中 CLI 显示 URL 或代码，您在浏览器中完成身份验证。</p>
+<p><strong><code>awsCredentialExport</code></strong>：仅当您无法修改 <code>.aws</code> 且必须直接返回凭证时才使用此选项。输出被静默捕获，不显示给用户。命令必须输出以下格式的 JSON：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"Credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"AccessKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"SecretAccessKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"SessionToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"Expiration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-01T00:00:00Z"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>来自 <code>aws configure export-credentials --format process</code> 的平面输出也被接受，在顶级而不是嵌套在 <code>Credentials</code> 下具有相同的密钥。</p>
+<p><code>Expiration</code> 是可选的。当命令返回有效的 ISO 8601 <code>Expiration</code> 时，Claude Code 会缓存凭证直到该时间前五分钟。没有它，凭证被缓存一小时。</p>
+<p>当您配置 <code>awsCredentialExport</code> 而不配置 <code>awsAuthRefresh</code> 时，Claude Code 直接使用导出的凭据，不在启动时重新解析 AWS 默认凭据提供程序链。</p>
+<h3 id="3-configure-claude-code">配置 Claude Code</h3>
+<p>设置以下环境变量以启用 Amazon Bedrock：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># Enable Bedrock integration</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_USE_BEDROCK</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span>us-east-1<span class="w">  </span><span class="c1"># optional if your AWS profile already sets a region</span>
+
+<span class="c1"># Optional: Override the AWS region for the small/fast model (Bedrock and Mantle).</span>
+<span class="c1"># On Bedrock, has no effect without ANTHROPIC_DEFAULT_HAIKU_MODEL</span>
+<span class="c1"># or the deprecated ANTHROPIC_SMALL_FAST_MODEL set.</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION</span><span class="o">=</span>us-west-2
+
+<span class="c1"># Optional: Override the Bedrock endpoint URL for custom endpoints or gateways</span>
+<span class="c1"># export ANTHROPIC_BEDROCK_BASE_URL=https://bedrock-runtime.us-east-1.amazonaws.com</span>
+</code></pre></div>
+<p>为 Claude Code 启用 Amazon Bedrock 时，请记住以下几点：</p>
+<ul>
+<li>
+<p>您只需设置 <code>AWS_REGION</code> 来覆盖您的 AWS 配置文件的区域或当您的配置文件没有区域时。Claude Code 按以下顺序解析区域：</p>
+</li>
+<li>
+<p><code>AWS_REGION</code></p>
+</li>
+<li><code>AWS_DEFAULT_REGION</code></li>
+<li>在您的活跃 AWS 配置文件上设置的 <code>region</code>，首先从 AWS 共享凭证文件读取，然后从共享配置文件读取，匹配 AWS SDK 优先级</li>
+<li><code>us-east-1</code></li>
+</ul>
+<p>如果来自任何这些源的值看起来不像区域名称，Claude Code 会将其视为未设置并继续按顺序进行。例如，Claude Code 将包含斜杠、点或空格的值视为未设置。</p>
+<p>活跃配置文件是 <code>AWS_PROFILE</code>（如果已设置），否则为 <code>default</code>。设置 <code>AWS_SHARED_CREDENTIALS_FILE</code> 或 <code>AWS_CONFIG_FILE</code> 以指向非默认文件路径。</p>
+<p>运行 <code>/status</code> 以查看解析的区域。当区域来自您的 AWS 配置文件或默认回退时，Claude Code 也会在 <code>/status</code> 输出中注明源。<br />
+* 使用 Amazon Bedrock 时，<code>/logout</code> 命令不可用，因为身份验证通过 AWS 凭证处理。<br />
+* WebSearch 工具在 Amazon Bedrock 上不可用。请参阅 <a href="tools-reference.html#websearch-tool-behavior">WebSearch 工具行为</a>。<br />
+* 您可以对不想泄露给其他进程的环境变量（如 <code>AWS_PROFILE</code>）使用设置文件。有关更多信息，请参阅<a href="settings.html">设置</a>。</p>
+<h3 id="4-pin-model-versions">固定模型版本</h3>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>在部署到多个用户时固定特定模型版本。不固定的话，模型别名（如 <code>sonnet</code> 和 <code>opus</code>）会解析为 Claude Code 对 Amazon Bedrock 的内置默认值，这可能滞后于最新版本，并且可能在您的账户中尚不可用。Claude Code 在启动时当默认值不可用时会<a href="#startup-model-checks">回退</a>到较早或较低级别的模型，但固定让您可以控制用户何时迁移到新模型。</p></div></div>
+<p>将这些环境变量设置为特定的 Amazon Bedrock 模型 ID。</p>
+<p>没有 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 时，Amazon Bedrock 上的 <code>opus</code> 别名解析为 Opus 5.5，没有 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 时，<code>sonnet</code> 别名解析为 Sonnet 4.5。此示例将每个别名固定到特定版本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_OPUS_MODEL</span><span class="o">=</span><span class="s1">'us.anthropic.claude-opus-4-8'</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_SONNET_MODEL</span><span class="o">=</span><span class="s1">'us.anthropic.claude-sonnet-4-6'</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_HAIKU_MODEL</span><span class="o">=</span><span class="s1">'us.anthropic.claude-haiku-4-5-20251001-v1:0'</span>
+</code></pre></div>
+<p>这些 ID 使用 <code>us.</code> 跨区域推理配置文件前缀。如果您使用不同的区域前缀或应用程序推理配置文件，请相应调整。在 AWS GovCloud 区域中，使用 <code>us-gov.</code> 前缀。</p>
+<p>要保留内置默认模型并仅更改其首选前缀，请改为设置 <a href="#cross-region-inference-profile-prefixes"><code>ANTHROPIC_BEDROCK_REGION_PREFIX</code></a>。差异显示在 <code>opus</code> 别名解析为什么：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您设置</th>
+<th style="text-align: left;"><code>opus</code> 别名解析为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_OPUS_MODEL='us.anthropic.claude-opus-4-8'</code></td>
+<td style="text-align: left;"><code>us.anthropic.claude-opus-4-8</code>，您固定的确切 ID</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_BEDROCK_REGION_PREFIX=eu</code></td>
+<td style="text-align: left;"><code>eu.anthropic.claude-opus-5-5</code>，具有您首选前缀的内置默认值</td>
+</tr>
+</tbody>
+</table>
+<p>有关当前和旧版模型 ID，请参阅<a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noopener">模型概览</a>。有关完整的固定环境变量列表，请参阅<a href="model-config.html#pin-models-for-third-party-deployments">模型配置</a>。</p>
+<p>未设置固定变量时，Claude Code 使用这些默认模型：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">模型类型</th>
+<th style="text-align: left;">默认模型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">主要模型</td>
+<td style="text-align: left;">Opus 5.5，例如 <code>us-*</code> 区域中的 <code>us.anthropic.claude-opus-5-5</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">小型/快速模型</td>
+<td style="text-align: left;">Sonnet 4.5，例如 <code>us-*</code> 区域中的 <code>us.anthropic.claude-sonnet-4-5-20250929-v1:0</code></td>
+</tr>
+</tbody>
+</table>
+<p>在 v2.1.280 之前，Amazon Bedrock 上的主要模型默认为 Opus 5，<code>opus</code> 别名从 v2.1.219 起解析为 Opus 5。</p>
+<p>后台任务（如会话标题生成）使用小型/快速模型，通常是 Haiku 级别的模型。在 Amazon Bedrock 上，Claude Code 为后台任务使用默认 Sonnet 模型，因为 Haiku 可能不会在每个账户或区域中启用。两个选择改变哪个模型执行它们：</p>
+<ul>
+<li>当您使用 <code>--model</code>、<code>ANTHROPIC_MODEL</code> 或 <code>model</code> 设置选择主要模型时，后台任务使用该模型。当 Claude Code 在您使用 <a href="model-config.html#set-a-default-model-for-new-sessions"><code>ANTHROPIC_DEFAULT_MODEL</code></a> 设置的模型上启动会话时，后台任务也使用该模型。设置 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 而不设置 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 也算作选择，因为内置 Sonnet 模型可能在引导自己的 Opus 的账户中不启用。</li>
+<li>要为后台任务使用 Haiku，请将 <code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code> 设置为在您的账户中可用的模型 ID。</li>
+</ul>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>Opus 模型的每 token 价格高于 Sonnet 模型，因此如果您不固定主要模型，将按 Opus 费率计费。要将 Sonnet 4.5 用作主要模型，请将 <code>ANTHROPIC_MODEL</code> 设置为其完整模型 ID。使用 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 引导默认值且不设置 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 的部署保留其引导的 Sonnet 模型作为默认值。</p></div></div>
+<p>要进一步自定义模型，请使用以下方法之一：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 使用推理配置文件 ID</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_MODEL</span><span class="o">=</span><span class="s1">'us.anthropic.claude-sonnet-4-6'</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_HAIKU_MODEL</span><span class="o">=</span><span class="s1">'us.anthropic.claude-haiku-4-5-20251001-v1:0'</span>
+
+<span class="c1"># 使用应用程序推理配置文件 ARN</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_MODEL</span><span class="o">=</span><span class="s1">'arn:aws:bedrock:us-east-2:your-account-id:application-inference-profile/your-model-id'</span>
+
+<span class="c1"># 可选：如果需要禁用提示缓存</span>
+<span class="c1"># export DISABLE_PROMPT_CACHING=1</span>
+
+<span class="c1"># 可选：请求 1 小时提示缓存 TTL 而不是 5 分钟默认值</span>
+<span class="c1"># export ENABLE_PROMPT_CACHING_1H=1</span>
+</code></pre></div>
+<p>1 小时缓存 TTL 的计费费率高于 5 分钟默认值。请参阅<a href="prompt-caching.html#cache-lifetime">缓存生命周期</a>。要为您的主要对话和 Claude Code 在其外部进行的请求设置不同的 TTL，请<a href="prompt-caching.html#choose-the-ttl-yourself">自己选择 TTL</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>提示缓存可能不在所有 Amazon Bedrock 区域中可用。如果缓存令牌计数保持为零，请检查 Amazon Bedrock 文档中的<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html#prompt-caching-models" target="_blank" rel="noopener">支持的模型、区域和限制</a>。</p></div></div>
+<h4 id="map-each-model-version-to-an-inference-profile">将每个模型版本映射到推理配置文件</h4>
+<p><code>ANTHROPIC_DEFAULT_*_MODEL</code> 环境变量为每个模型系列配置一个推理配置文件。如果您的组织需要在 <code>/model</code> 选择器中公开同一系列的多个版本，每个版本路由到其自己的应用程序推理配置文件 ARN，请改为在您的<a href="settings.html#where-settings-live">设置文件</a>中使用 <code>modelOverrides</code> 设置。</p>
+<p>此示例将四个 Opus 版本映射到不同的 ARN，以便用户可以在它们之间切换，而无需绕过您的组织的推理配置文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"modelOverrides"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"claude-opus-4-7"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:bedrock:us-east-2:123456789012:application-inference-profile/opus-47-prod"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"claude-opus-4-6"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:bedrock:us-east-2:123456789012:application-inference-profile/opus-46-prod"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"claude-opus-4-5-20251101"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:bedrock:us-east-2:123456789012:application-inference-profile/opus-45-prod"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"claude-opus-4-1-20250805"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:bedrock:us-east-2:123456789012:application-inference-profile/opus-41-prod"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>当用户在 <code>/model</code> 中选择这些版本之一时，Claude Code 使用映射的 ARN 调用 Amazon Bedrock。当您通过 <code>--model</code> 或 <code>ANTHROPIC_MODEL</code> 直接传递 Anthropic 模型 ID 时，相同的映射也适用。没有覆盖的版本回退到内置 Amazon Bedrock 模型 ID 或在启动时发现的任何匹配推理配置文件。在 v2.1.200 之前，<code>--model</code> 和 <code>ANTHROPIC_MODEL</code> 值直接到达 Amazon Bedrock，不经过覆盖映射。有关覆盖如何与 <code>availableModels</code> 和其他模型设置交互的详细信息，请参阅<a href="model-config.html#override-model-ids-per-version">按版本覆盖模型 ID</a>。</p>
+<h2 id="startup-model-checks">启动模型检查</h2>
+<p>当 Claude Code 配置了 Amazon Bedrock 时，它会验证其打算使用的模型在您的账户中是否可访问。</p>
+<p>如果您已固定的模型版本比 Claude Code 当前默认版本更旧，且您的账户可以调用较新版本，Claude Code 会提示您更新该固定版本。接受会将新的模型 ID 写入您的<a href="settings.html">用户设置文件</a>并重启 Claude Code。拒绝会被记住，直到下一次默认版本更改。指向<a href="#map-each-model-version-to-an-inference-profile">应用推理配置文件 ARN</a> 的固定版本会被跳过，因为这些由您的管理员管理。</p>
+<p>如果您未固定模型且当前默认模型在您的账户中不可用，Claude Code 会为当前会话进行回退并显示通知。它首先尝试默认模型的早期版本，当默认模型是 Opus 模型且没有可用的 Opus 版本时，会回退到默认 Sonnet 模型。回退不会被保留。在您的 Amazon Bedrock 账户中启用较新的模型或<a href="#4-pin-model-versions">固定一个版本</a>以使选择永久生效。</p>
+<p>当您在特定 Sonnet 或 Opus 版本上启动会话时，例如使用 <code>--model</code>、<code>ANTHROPIC_MODEL</code> 或<a href="settings-reference.html#model"><code>model</code> 设置</a>，该版本将作为会话针对匹配的 <code>sonnet</code> 或 <code>opus</code> 别名的固定默认版本。Claude Code 会跳过对您的模型替换的内置默认版本的可用性检查，并在您配置的模型上启动，不显示回退通知。</p>
+<p>模型别名（如 <code>opus</code>）不充当固定版本，Claude Code 无法识别的模型 ID（如应用推理配置文件 ARN）也不充当固定版本。</p>
+<p>当这些检查发现您的账户无法调用的模型时，Claude Code 会在这台机器上记住该拒绝长达一天，在此期间启动时会跳过记住的模型，而不再询问 Amazon Bedrock。Claude Code 会在距离上次检查已过十分钟后再次检查当前默认模型的记住拒绝，因此您的管理员重新启用的默认模型会恢复。要关闭此记忆功能，请设置 <a href="env-vars.html"><code>CLAUDE_CODE_SKIP_MODEL_ACCESS_MEMORY=1</code></a>。</p>
+<h3 id="when-your-organization-enforces-a-model-allowlist">当您的组织强制执行模型允许列表时</h3>
+<p>如果您在托管设置中设置了 <a href="model-config.html#enforce-the-allowlist-for-the-default-model"><code>enforceAvailableModels</code></a>，启动模型检查将仅使用您的 <code>availableModels</code> 列表允许的模型。这适用于 Amazon Bedrock Invoke API，并且需要 Claude Code v2.1.287 或更高版本。未设置 <code>enforceAvailableModels</code> 的列表不会限制这些检查。</p>
+<p>检查会将每个条目与其将要发送的推理配置文件 ID（包括其<a href="#cross-region-inference-profile-prefixes">区域前缀</a>）进行比较，因此请使用这些 ID 编写列表。此示例为模型解析为 <code>us.</code> 配置文件的部署允许 Opus 4.8 和 Sonnet 4.5：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"availableModels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"us.anthropic.claude-opus-4-8"</span><span class="p">,</span><span class="w"> </span><span class="s2">"us.anthropic.claude-sonnet-4-5-20250929-v1:0"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"enforceAvailableModels"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>有关别名、版本前缀和 <code>modelOverrides</code> 条目，请参阅<a href="model-config.html#pin-models-for-third-party-deployments">为第三方部署固定模型</a>。</p>
+<h3 id="when-a-model-is-disabled-mid-session">当模型在会话中被禁用时</h3>
+<p>如果您的账户失去对会话正在运行的模型的访问权限，例如因为管理员在您的 Amazon Bedrock 账户中禁用了它，Claude Code 会将会话切换到另一个模型，而不是使每个请求都失败，并显示 <code>Switched to &lt;fallback&gt; because &lt;model&gt; is not available</code>。它尝试与启动回退相同的模型：首先尝试同一层级的早期版本，对于没有可用 Opus 版本的 Opus 会话，则使用默认 Sonnet 模型。</p>
+<p>切换仅适用于您未固定的层级，这与启动回退的条件相同。在您选择的特定版本上的会话，或在<a href="#map-each-model-version-to-an-inference-profile">应用推理配置文件 ARN</a> 上的会话，会保持其模型；如果没有备用模型链，请求会改为失败。在<a href="permission-modes.html#enable-auto-mode-on-bedrock-agent-platform-or-foundry">自动模式</a>中，Claude Code 仅切换到自动模式在 Amazon Bedrock 上支持的模型。如果这些模型中也没有可用的，请求会失败并显示 <a href="errors.html#aws-authentication-failed">AWS 身份验证失败</a>，并提示启用该模型。</p>
+<p>您配置的<a href="model-config.html#fallback-model-chains">备用模型链</a>会替换层级切换：在这些拒绝上，Claude Code 会切换到您配置的备用模型。要使被拒绝的请求失败而不是切换，请设置 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_MODEL_ACCESS_FALLBACK=1</code></a>。您配置的备用链仍会在这些拒绝上切换；如果您希望每个被拒绝的请求都失败，也请移除该链。</p>
+<h2 id="cross-region-inference-profile-prefixes">跨区域推理配置文件前缀</h2>
+<p>在 Amazon Bedrock <a href="https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModelWithResponseStream.html" target="_blank" rel="noopener">Invoke API</a> 上，Claude Code 将其内置默认模型解析为<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html" target="_blank" rel="noopener">跨区域推理配置文件</a> ID；要通过您自己的推理配置文件路由模型版本，请参阅<a href="#map-each-model-version-to-an-inference-profile">将每个模型版本映射到推理配置文件</a>。此表显示了 Claude Code 对每个已解析的 AWS 区域首选的前缀：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">AWS 区域</th>
+<th style="text-align: left;">前缀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>us-gov-*</code> (AWS GovCloud)</td>
+<td style="text-align: left;"><code>us-gov.</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>us-*</code></td>
+<td style="text-align: left;"><code>us.</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>eu-*</code></td>
+<td style="text-align: left;"><code>eu.</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ap-*</code></td>
+<td style="text-align: left;"><code>apac.</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">所有其他区域</td>
+<td style="text-align: left;"><code>global.</code></td>
+</tr>
+</tbody>
+</table>
+<p>设置 <code>ANTHROPIC_BEDROCK_REGION_PREFIX</code> 以选择 Claude Code 首先尝试的前缀；当 Claude Code 可以检查配置文件可用性并且找不到模型的匹配配置文件时，它会按照下面的解析顺序进行回退。有效值为 <code>us</code>、<code>eu</code>、<code>apac</code>、<code>jp</code>、<code>au</code> 和 <code>global</code>。例如，当您的账户启用了 <code>global.</code> 配置文件但 Claude Code 会从您的 AWS 区域派生地理位置特定的配置文件时，将其设置为 <code>global</code>。需要 Claude Code v2.1.224 或更高版本。</p>
+<p>此示例通过 <code>global.</code> 配置文件路由默认模型：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_BEDROCK_REGION_PREFIX</span><span class="o">=</span>global
+<span class="c1"># 在 us-* 区域中，主模型现在解析为</span>
+<span class="c1"># global.anthropic.claude-opus-5-5 而不是 us.anthropic.claude-opus-5-5</span>
+</code></pre></div>
+<p>首选前缀是一个偏好，而不是保证，无论它来自您的区域还是来自变量。Claude Code 如何应用它取决于它是否可以检查您账户中的配置文件可用性：</p>
+<ul>
+<li>当 Claude Code 可以<a href="#iam-configuration">列出您账户中的推理配置文件</a>时，它按以下顺序解析每个模型：<br />
+  1. 具有您首选前缀的配置文件。<br />
+  2. 任何匹配的配置文件，用于没有该前缀的配置文件的模型。<br />
+  3. 具有您首选前缀的内置模型 ID，用于根本没有匹配配置文件的模型。Claude Code 在此步骤中应用此 ID 而不检查可用性；<a href="#startup-model-checks">启动模型检查</a>仍然涵盖会话的默认模型。</li>
+<li>当配置文件发现不可用时，Claude Code 应用前缀而不检查可用性。如果您的账户没有启用该前缀的推理配置文件，请求将失败并显示 400 错误。</li>
+</ul>
+<p>Claude Code 不会重写您自己配置的 Amazon Bedrock 推理配置文件 ID 或 ARN，或 <a href="#map-each-model-version-to-an-inference-profile"><code>modelOverrides</code></a> 值；Anthropic 格式的模型 ID 通过<a href="#map-each-model-version-to-an-inference-profile">与 <code>/model</code> 选择器相同的映射</a>解析。Claude Code 在两种情况下也会忽略该变量：</p>
+<ul>
+<li>在 AWS GovCloud 区域中，Claude Code 始终使用 <code>us-gov.</code>，这是在 GovCloud 分区内路由的唯一前缀。</li>
+<li>当您设置的值不是有效值之一时，Claude Code 会回退到区域派生的首选前缀。</li>
+</ul>
+<h2 id="iam-configuration">IAM 配置</h2>
+<p>创建具有 Claude Code 所需权限的 IAM 策略：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowModelAndInferenceProfileAccess"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"bedrock:InvokeModel"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"bedrock:InvokeModelWithResponseStream"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"bedrock:ListInferenceProfiles"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"bedrock:GetInferenceProfile"</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"arn:aws:bedrock:*:*:inference-profile/*"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"arn:aws:bedrock:*:*:application-inference-profile/*"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"arn:aws:bedrock:*:*:foundation-model/*"</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowMarketplaceSubscription"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"aws-marketplace:ViewSubscriptions"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"aws-marketplace:Subscribe"</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"Condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"StringEquals"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">"aws:CalledViaLast"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bedrock.amazonaws.com"</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>为了获得更严格的权限，您可以将资源限制为特定的推理配置文件 ARN。</p>
+<p><code>bedrock:GetInferenceProfile</code> 让 Claude Code 能够将<a href="#map-each-model-version-to-an-inference-profile">应用推理配置文件 ARN</a> 解析为其支持的基础模型，该模型用于为该模型选择正确的请求形状。</p>
+<p>如果令牌缺少此权限，Claude Code 会通过使用备用形状重试一次来自动恢复，因此请求仍然会成功，但每个新模型都会增加一个额外的往返。授予该权限可以避免重试。这最常适用于 <code>AWS_BEARER_TOKEN_BEDROCK</code> 部署，其中令牌的策略通常比完整的 IAM 角色更窄。</p>
+<p>有关详情，请参阅 <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/security-iam.html" target="_blank" rel="noopener">Amazon Bedrock IAM 文档</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>为 Claude Code 创建一个专用的 AWS 账户，以简化成本跟踪和访问控制。</p></div></div>
+<h2 id="1m-token-context-window">1M 令牌上下文窗口</h2>
+<p>Fable 模型、Sonnet 5 及更高版本，以及 Opus 4.7 及更高版本在 Amazon Bedrock 上默认以 <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model" target="_blank" rel="noopener">1M token 上下文窗口</a>运行，Invoke API 和 <a href="#use-the-mantle-endpoint">Mantle 端点</a>均是如此，无需 <code>[1m]</code> 后缀。当 <a href="#map-each-model-version-to-an-inference-profile"><code>modelOverrides</code></a> 条目将其模型映射到应用程序推理配置文件 ARN 时，该 ARN 将获得 1M 窗口。如需改为保留 200K 窗口，请设置 <a href="model-config.html#turn-off-1m-context"><code>CLAUDE_CODE_DISABLE_1M_CONTEXT=1</code></a>。</p>
+<p>在 Invoke API 上，当您选择 Opus 4.6 和 Sonnet 4.6 的 <code>[1m]</code> 变体时，它们将使用 1M 窗口。<a href="#sign-in-with-bedrock">设置向导</a>在固定模型时提供 1M 上下文选项。如需改为为手动固定的模型启用它，请在模型 ID 后附加 <code>[1m]</code>。请参阅<a href="model-config.html#pin-models-for-third-party-deployments">为第三方部署固定模型</a>了解详情，包括如何在不更改固定的情况下使用 1M 窗口。</p>
+<p>在 v2.1.287 之前，Fable 模型以及 Opus 4.7 及更高版本在 Invoke API 上默认以 200K 窗口运行，需通过 <code>[1m]</code> 后缀才能在其上使用 1M 窗口。</p>
+<h2 id="service-tiers">服务层级</h2>
+<p><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/service-tiers-inference.html" target="_blank" rel="noopener">Amazon Bedrock 服务层级</a>让您在成本和延迟之间进行权衡。将 <code>ANTHROPIC_BEDROCK_SERVICE_TIER</code> 设置为 <code>default</code>、<code>flex</code> 或 <code>priority</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_BEDROCK_SERVICE_TIER</span><span class="o">=</span>priority
+</code></pre></div>
+<p>Claude Code 在每个请求上将此作为 <code>X-Amzn-Bedrock-Service-Tier</code> 标头发送。层级可用性因模型和区域而异。预留容量使用<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/prov-throughput.html" target="_blank" rel="noopener">预配吞吐量</a> ARN 作为模型 ID，而不是此设置。</p>
+<h2 id="aws-guardrails">AWS Guardrails</h2>
+<p><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html" target="_blank" rel="noopener">Amazon Bedrock Guardrails</a> 让您为 Claude Code 实现内容过滤。在 <a href="https://console.aws.amazon.com/bedrock/" target="_blank" rel="noopener">Amazon Bedrock 控制台</a>中创建 Guardrail，发布一个版本，然后将 Guardrail 标头添加到您的<a href="settings.html">设置文件</a>。如果您使用跨区域推理配置文件，请在您的 Guardrail 上启用跨区域推理。</p>
+<p>示例配置：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"ANTHROPIC_CUSTOM_HEADERS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"X-Amzn-Bedrock-GuardrailIdentifier: your-guardrail-id\nX-Amzn-Bedrock-GuardrailVersion: 1"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>如果您的组织通过 <a href="claude-apps-gateway.html">Claude apps gateway</a> 策略传递 guardrail 标头，它们将被视为<a href="server-managed-settings.html#environment-variables-and-the-approval-dialog">需要批准的设置</a>。</p>
+<p>当 guardrail 在中途阻止响应时，已流式传输的文本会保留，并且回复将以 guardrail 上为被阻止响应配置的消息结尾。</p>
+<h2 id="use-the-mantle-endpoint">使用 Mantle 端点</h2>
+<p>Mantle 是一个 Amazon Bedrock 端点，通过原生 Anthropic API 形状而不是 Amazon Bedrock Invoke API 提供 Claude 模型。它使用相同的 <a href="#2-configure-aws-credentials">AWS 凭证</a> 和 <a href="#advanced-credential-configuration"><code>awsAuthRefresh</code> 配置</a>。</p>
+<p>Mantle 在 <code>bedrock-mantle:</code> 前缀下有自己的 IAM 操作，因此 <a href="#iam-configuration">IAM 配置</a> 中的 <code>bedrock:</code> 操作不涵盖它。为推理授予您的 IAM 身份 <code>bedrock-mantle:CreateInference</code>，为令牌计数授予 <code>bedrock-mantle:CountTokens</code>。请参阅 AWS 文档中的<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/inference.html" target="_blank" rel="noopener">进行推理请求</a>和<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/count-tokens.html" target="_blank" rel="noopener">计数令牌</a>，以及<a href="https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazonbedrockpoweredbyawsmantle.html" target="_blank" rel="noopener">服务授权参考</a>了解每个 Mantle 操作。</p>
+<h3 id="enable-mantle">启用 Mantle</h3>
+<p>配置了 AWS 凭证后，设置 <code>CLAUDE_CODE_USE_MANTLE</code> 以将请求路由到 Mantle 端点：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_USE_MANTLE</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span>us-east-1
+</code></pre></div>
+<p>Claude Code 从 AWS 区域构造端点 URL，使用与<a href="#3-configure-claude-code">上面的 Amazon Bedrock</a> 相同的优先级解析。要为自定义端点或网关覆盖 URL，请设置 <code>ANTHROPIC_BEDROCK_MANTLE_BASE_URL</code>。</p>
+<p>在 Claude Code 内运行 <code>/status</code> 来确认。当 Mantle 处于活动状态时，提供者行显示 <code>Amazon Bedrock (Mantle)</code>。</p>
+<h3 id="select-a-mantle-model">选择 Mantle 模型</h3>
+<p>Mantle 使用以 <code>anthropic.</code> 为前缀且没有版本后缀的模型 ID，例如 <code>anthropic.claude-sonnet-5</code> 或 <code>anthropic.claude-haiku-4-5</code>。您的账户可用的模型取决于您的组织被授予的内容；其他模型 ID 列在您来自 AWS 的入职材料中。联系您的 AWS 账户团队以请求访问允许列表中的模型。</p>
+<p>使用 <code>--model</code> 标志或在 Claude Code 内使用 <code>/model</code> 设置模型：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--model<span class="w"> </span>anthropic.claude-haiku-4-5
+</code></pre></div>
+<h3 id="run-mantle-alongside-the-invoke-api">在 Invoke API 旁边运行 Mantle</h3>
+<p>您在 Mantle 上可用的模型可能不包括您今天使用的每个模型。设置 <code>CLAUDE_CODE_USE_BEDROCK</code> 和 <code>CLAUDE_CODE_USE_MANTLE</code> 让 Claude Code 从同一会话调用两个端点。与 Mantle 格式匹配的模型 ID 被路由到 Mantle，所有其他模型 ID 转到 Amazon Bedrock Invoke API。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_USE_BEDROCK</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_USE_MANTLE</span><span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+<p>要在 <code>/model</code> 选择器中显示 Mantle 模型，请在您的<a href="settings.html">设置文件</a>中的 <code>availableModels</code> 中列出其 ID。此设置也将选择器限制为列出的条目。列出 <code>anthropic.claude-haiku-4-5</code> 会从选择器中移除裸 <code>haiku</code> 别名，因此也要列出版本前缀或您想保持可选择的版本的完整 ID。Mantle ID 和 <code>haiku</code> 别名解析为相同的模型族，因此合并仅保留更具体的条目。请参阅<a href="model-config.html#merge-behavior">合并行为</a>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"availableModels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"opus"</span><span class="p">,</span><span class="w"> </span><span class="s2">"sonnet"</span><span class="p">,</span><span class="w"> </span><span class="s2">"claude-haiku-4-5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"anthropic.claude-haiku-4-5"</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>带有 <code>anthropic.</code> 前缀的条目被添加为自定义选择器选项，其中与 Mantle 格式匹配的条目被路由到 Mantle。将 <code>anthropic.claude-haiku-4-5</code> 替换为您的账户被授予的模型 ID。请参阅<a href="model-config.html#restrict-model-selection">限制模型选择</a>了解 <code>availableModels</code> 如何与其他模型设置交互。</p>
+<p>当两个提供商都处于活动状态时，<code>/status</code> 显示 <code>Amazon Bedrock + Amazon Bedrock (Mantle)</code>。</p>
+<h3 id="route-mantle-through-a-gateway">通过网关路由 Mantle</h3>
+<p>如果您的组织通过集中式 <a href="llm-gateway.html">LLM 网关</a>路由模型流量，该网关在服务器端注入 AWS 凭证，请禁用客户端身份验证，以便 Claude Code 发送没有 SigV4 签名或 <code>x-api-key</code> 标头的请求：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_USE_MANTLE</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_SKIP_MANTLE_AUTH</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_BEDROCK_MANTLE_BASE_URL</span><span class="o">=</span>https://your-gateway.example.com
+</code></pre></div>
+<h3 id="mantle-environment-variables">Mantle 环境变量</h3>
+<p>这些变量特定于 Mantle 端点。请参阅<a href="env-vars.html">环境变量</a>了解完整列表。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">变量</th>
+<th style="text-align: left;">目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_USE_MANTLE</code></td>
+<td style="text-align: left;">启用 Mantle 端点。设置为 <code>1</code> 或 <code>true</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_BEDROCK_MANTLE_BASE_URL</code></td>
+<td style="text-align: left;">覆盖默认 Mantle 端点 URL</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_MANTLE_AUTH</code></td>
+<td style="text-align: left;">跳过客户端身份验证以用于代理设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION</code></td>
+<td style="text-align: left;">覆盖 Haiku 类模型的 AWS 区域（与 Amazon Bedrock 共享）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="troubleshooting">故障排除</h2>
+<h3 id="authentication-loop-with-sso-and-corporate-proxies">使用 SSO 和企业代理的身份验证循环</h3>
+<p>如果在使用 AWS SSO 时浏览器登录标签页不断打开，请从您的<a href="settings.html">设置文件</a>中删除 <code>awsAuthRefresh</code> 设置。</p>
+<p>当企业 VPN 或 TLS 检查代理中断 SSO 浏览器流程时，可能会出现此循环。Claude Code 将中断的连接视为身份验证失败。当后续请求发现凭据仍处于过期状态时，Claude Code 会重新运行 <code>awsAuthRefresh</code>，从而打开另一个标签页。</p>
+<p>如果您的网络环境干扰自动基于浏览器的 SSO 流，请在启动 Claude Code 之前手动使用 <code>aws sso login</code>，而不是依赖 <code>awsAuthRefresh</code>。</p>
+<h3 id="certificate-errors-behind-a-tls-inspecting-proxy">TLS 检查代理后的证书错误</h3>
+<p>Claude Code 将您的<a href="network-config.html#ca-certificate-store">CA 证书存储</a>配置应用于其对 AWS 的请求，包括：</p>
+<ul>
+<li>模型发现</li>
+<li>令牌计数</li>
+<li>解析您的 AWS 凭证的 STS 和 SSO 角色凭证调用</li>
+<li><a href="#sign-in-with-bedrock">设置向导</a>的凭证验证和模型检查</li>
+</ul>
+<p>对于这些请求，您的 OS 信任存储或 <code>NODE_EXTRA_CA_CERTS</code> 包中的企业根证书不需要特定于 Amazon Bedrock 的设置。</p>
+<p>在 v2.1.260 之前，Claude Code 仅在这些请求通过配置的代理时才将您的 CA 配置应用于这些请求，在直接连接上，它们仅信任运行时的默认证书存储。</p>
+<p>在 v2.1.261 之前，使用<strong>使用我的环境中已有的凭证</strong>选项的设置向导的模型检查后的凭证查找仍然仅信任运行时的默认证书存储。在 TLS 检查代理后面，其根证书仅在 OS 存储中，受影响的请求失败，显示 <code>unable to get local issuer certificate</code>，或向导将模型显示为 <code>unreachable</code>，而推理请求成功。更新到 v2.1.261 或更高版本。</p>
+<h3 id="region-issues">区域问题</h3>
+<p>如果您遇到区域问题：</p>
+<ul>
+<li>检查模型可用性：<code>aws bedrock list-inference-profiles --region your-region</code></li>
+<li>切换到支持的区域：<code>export AWS_REGION=us-east-1</code></li>
+<li>考虑使用推理配置文件进行跨区域访问</li>
+</ul>
+<p>如果您收到错误"不支持按需吞吐量"：</p>
+<ul>
+<li>将模型指定为<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html" target="_blank" rel="noopener">推理配置文件</a> ID</li>
+</ul>
+<p>Claude Code 使用 Amazon Bedrock <a href="https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModelWithResponseStream.html" target="_blank" rel="noopener">Invoke API</a>，不支持 Converse API。</p>
+<h3 id="streaming-errors-behind-a-gateway-or-proxy">网关或代理后的流式传输错误</h3>
+<p>Amazon Bedrock 以二进制事件流格式流式传输 <code>InvokeModelWithResponseStream</code> 响应，标头为 <code>Content-Type: application/vnd.amazon.eventstream</code>。Claude Code 和 Amazon Bedrock 之间的网关或代理必须转发响应正文及其标头，包括 <code>Content-Type</code>，就像 Amazon Bedrock 发送的那样。</p>
+<p>如果网关将 <code>Content-Type</code> 重写为另一个值，Claude Code 会拒绝响应，错误以 <code>Bedrock streaming response has content-type</code> 开头，命名它收到的值。常见的重写是 <code>text/event-stream</code>，来自将流重新发出为服务器发送事件的集成。有关错误消息中提到的 <code>CLAUDE_CODE_DISABLE_BEDROCK_CONTENT_TYPE_GUARD</code> 变量，请参阅 <a href="errors.html#bedrock-streaming-response-has-an-unexpected-content-type">Bedrock streaming response has an unexpected content-type</a>。</p>
+<p>如果网关删除或清空标头，Claude Code 会假设正文是 Amazon Bedrock 的事件流并对其进行解码，因此网关未修改地通过的正文会继续流式传输。</p>
+<p>如果删除标头的网关也将流重新发出为服务器发送事件，Claude Code 无法解码正文，并在每个回合上回退到较慢的非流式传输路径：每个响应仅在完成后才出现，而不是流式传输。在这种情况下，设置 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_BEDROCK_CONTENT_TYPE_DEFAULT=1</code></a>，以便 Claude Code 将正文读取为服务器发送事件。</p>
+<p>要修复错误或回退，请配置网关以未修改地转发 <code>InvokeModelWithResponseStream</code> 响应正文及其 <code>Content-Type</code> 标头。</p>
+<p>将流转换为服务器发送事件的网关不再提供 Amazon Bedrock API。如果它也接受 Anthropic Messages API 请求，请使用 <code>ANTHROPIC_BASE_URL</code> 而不是 <code>CLAUDE_CODE_USE_BEDROCK</code> 将其作为 <a href="llm-gateway-connect.html">LLM 网关</a>连接。</p>
+<h3 id="zero-token-counts-in-/context">/context 中的零令牌计数</h3>
+<p><code>/context</code> 命令通过将工具架构发送到 Amazon Bedrock count-tokens API 来计算每个工具组的令牌。在 Claude Code v2.1.196 之前的版本中，Amazon Bedrock 拒绝了该请求，因为架构包含其 count-tokens API 不接受的字段，因此每个工具组显示 0 个令牌。分解中的其他行（如消息和内存文件）不受影响。</p>
+<p>更新到 v2.1.196 或更高版本。</p>
+<h3 id="mantle-endpoint-errors">Mantle 端点错误</h3>
+<p>如果在设置 <code>CLAUDE_CODE_USE_MANTLE</code> 后 <code>/status</code> 没有显示 <code>Amazon Bedrock (Mantle)</code>，则该变量没有到达进程。确认它在您启动 <code>claude</code> 的 shell 中被导出，或在您的<a href="settings.html">设置文件</a>的 <code>env</code> 块中设置它。</p>
+<p>来自 Mantle 端点的 <code>403</code> 的含义取决于错误是否命名了 IAM 操作：</p>
+<ul>
+<li>如果错误命名了 <code>bedrock-mantle:</code> 操作，请为您的 IAM 身份授予该操作。</li>
+<li>如果错误没有命名任何操作且您的凭证有效，您的 AWS 账户没有被授予访问您请求的模型的权限。联系您的 AWS 账户团队以请求访问。</li>
+</ul>
+<p>命名模型 ID 的 <code>400</code> 意味着该模型不在 Mantle 上提供。Mantle 有其自己的模型阵容，与标准 Amazon Bedrock 目录分开，因此推理配置文件 ID（如 <code>us.anthropic.claude-sonnet-4-6</code>）将不起作用。使用 Mantle 格式的 ID，或启用<a href="#run-mantle-alongside-the-invoke-api">两个端点</a>，以便 Claude Code 将每个请求路由到模型可用的端点。</p>
+<h2 id="additional-resources">其他资源</h2>
+<ul>
+<li><a href="https://docs.aws.amazon.com/bedrock/" target="_blank" rel="noopener">Amazon Bedrock 文档</a></li>
+<li><a href="https://aws.amazon.com/bedrock/pricing/" target="_blank" rel="noopener">Amazon Bedrock 定价</a></li>
+<li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html" target="_blank" rel="noopener">Amazon Bedrock 推理配置文件</a></li>
+<li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/quotas-token-burndown.html" target="_blank" rel="noopener">Amazon Bedrock 令牌消耗和配额</a></li>
+<li><a href="https://builder.aws.com/content/2tXkZKrZzlrlu0KfH8gST5Dkppq/claude-code-on-amazon-bedrock-quick-setup-guide" target="_blank" rel="noopener">Amazon Bedrock 上的 Claude Code：快速设置指南</a></li>
+<li><a href="https://github.com/aws-solutions-library-samples/guidance-for-claude-code-with-amazon-bedrock/blob/main/assets/docs/MONITORING.md" target="_blank" rel="noopener">Claude Code 监控实现 (Amazon Bedrock)</a></li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="feature-availability.html"><span class="pager-dir">← 上一页</span><span class="pager-name">功能可用性</span></a><a class="pager-link next" href="claude-platform-on-aws.html"><span class="pager-dir">下一页 →</span><span class="pager-name">AWS 上的 Claude Platform 中的 Claude Code</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#prerequisites">前置条件</a><a class="toc-l2" href="#sign-in-with-bedrock">使用 Bedrock 登录</a><a class="toc-l2" href="#set-up-manually">手动设置</a><a class="toc-l3" href="#1-submit-use-case-details">提交用例详情</a><a class="toc-l3" href="#2-configure-aws-credentials">配置 AWS 凭证</a><a class="toc-l3" href="#3-configure-claude-code">配置 Claude Code</a><a class="toc-l3" href="#4-pin-model-versions">固定模型版本</a><a class="toc-l2" href="#startup-model-checks">启动模型检查</a><a class="toc-l3" href="#when-your-organization-enforces-a-model-allowlist">当您的组织强制执行模型允许列表时</a><a class="toc-l3" href="#when-a-model-is-disabled-mid-session">当模型在会话中被禁用时</a><a class="toc-l2" href="#cross-region-inference-profile-prefixes">跨区域推理配置文件前缀</a><a class="toc-l2" href="#iam-configuration">IAM 配置</a><a class="toc-l2" href="#1m-token-context-window">1M 令牌上下文窗口</a><a class="toc-l2" href="#service-tiers">服务层级</a><a class="toc-l2" href="#aws-guardrails">AWS Guardrails</a><a class="toc-l2" href="#use-the-mantle-endpoint">使用 Mantle 端点</a><a class="toc-l3" href="#enable-mantle">启用 Mantle</a><a class="toc-l3" href="#select-a-mantle-model">选择 Mantle 模型</a><a class="toc-l3" href="#run-mantle-alongside-the-invoke-api">在 Invoke API 旁边运行 Mantle</a><a class="toc-l3" href="#route-mantle-through-a-gateway">通过网关路由 Mantle</a><a class="toc-l3" href="#mantle-environment-variables">Mantle 环境变量</a><a class="toc-l2" href="#troubleshooting">故障排除</a><a class="toc-l3" href="#authentication-loop-with-sso-and-corporate-proxies">使用 SSO 和企业代理的身份验证循环</a><a class="toc-l3" href="#certificate-errors-behind-a-tls-inspecting-proxy">TLS 检查代理后的证书错误</a><a class="toc-l3" href="#region-issues">区域问题</a><a class="toc-l3" href="#streaming-errors-behind-a-gateway-or-proxy">网关或代理后的流式传输错误</a><a class="toc-l3" href="#zero-token-counts-in-/context">/context 中的零令牌计数</a><a class="toc-l3" href="#mantle-endpoint-errors">Mantle 端点错误</a><a class="toc-l2" href="#additional-resources">其他资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

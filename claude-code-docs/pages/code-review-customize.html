@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自定义 Code Review · Claude Code 中文文档</title>
+<meta name="description" content="使用 REVIEW.md 和 CLAUDE.md 调整 Code Review 在您的 Pull Request 上标记的内容：重新校准严重程度、跳过路径、添加检查项，并查看适用的是哪个副本。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="code-review-customize">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/code-review-customize" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link active" href="code-review-customize.html" aria-current="page">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>快速入门</span> <span class="sep">/</span> <span>代码审查与 Pull Request</span> <span class="sep">/</span> <span>Code Review</span></div>
+    <article class="prose" id="article"><h1 id="code-review">自定义 Code Review</h1>
+<blockquote>
+<p>使用 REVIEW.md 和 CLAUDE.md 调整 Code Review 在您的 Pull Request 上标记的内容：重新校准严重程度、跳过路径、添加检查项，并查看适用的是哪个副本。</p>
+</blockquote>
+<p>您可以通过向仓库提交指令来更改 <a href="code-review.html">Code Review</a> 在该仓库上标记的内容。借此可以减少吹毛求疵类评论的数量、停止对生成文件发表评论，或添加团队关注的规则。请将这些指令放在以下两个文件之一中：</p>
+<ul>
+<li><strong><code>CLAUDE.md</code></strong>：Claude Code 在执行每项任务（包括审查）时都会读取的<a href="memory.html">项目指令</a>。Code Review 将其作为项目上下文读取，并标记违反这些指令的更改。</li>
+<li><strong><code>REVIEW.md</code></strong>：仅用于审查的指令。使用它来说明您的团队希望标记哪些内容、以何种严重程度标记，以及要跳过哪些内容。</li>
+</ul>
+<p>在仓库根目录添加 <code>REVIEW.md</code> 并将其合并。然后<a href="#which-branch-review-md-is-read-from">保护您的默认分支</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>如需更改审查的详尽程度或运行时机，请让 Owner 更改<a href="code-review-setup.html#set-the-default-review-level">审查级别</a>或 <a href="code-review-setup.html#set-when-reviews-run"><strong>Review runs</strong> 设置</a>。</p></div></div>
+<h2 id="use-claude-md-for-project-wide-rules">使用 CLAUDE.md 设置项目范围的规则</h2>
+<p>Code Review 将仓库中的 <code>CLAUDE.md</code> 文件作为项目上下文读取。违反其中某条规则的更改会成为一项发现，并按照与问题相符的<a href="code-review-pull-requests.html#severity-levels">严重程度级别</a>进行标记。</p>
+<p>审查会读取仓库根目录下的 <code>CLAUDE.md</code>，以及每个已更改文件的各级父目录中的 <code>CLAUDE.md</code> 文件。当 Pull Request 更改了某个子目录路径下的文件时，会读取该子目录中的 <code>CLAUDE.md</code>。</p>
+<h2 id="use-review-md-for-review-only-rules">使用 REVIEW.md 设置仅用于审查的规则</h2>
+<p><code>REVIEW.md</code> 是位于仓库根目录的文件，用于针对您的仓库定制 Code Review。您还可以在子目录中添加 <code>REVIEW.md</code>，在根文件的基础上为该路径下的更改添加检查项。</p>
+<p>负责发现问题的 Agent 和负责验证问题的 Agent 会将其内容作为您仓库的审查指令接收，同时接收 Code Review 的默认审查指导。撰写最终审查的步骤会在确定严重程度和撰写摘要之前参考该文件。</p>
+<p>以下示例布局包含一个根文件和一个子目录文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">your-repo/
+├── REVIEW.md            # Root file
+├── services/
+│   └── billing/
+│       └── REVIEW.md    # Adds checks for changes under services/billing/
+└── src/
+</code></pre></div>
+<p>在依赖子目录文件之前，请先保护您的默认分支，并查看<a href="#what-a-review-reads-for-each-branch-setup">针对您的分支设置，审查会读取哪些内容</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Code Review 服务和本地 <a href="code-review-local.html"><code>/code-review</code> 命令</a>是两个独立的工具，它们读取的文件不同。该服务会同时读取 <code>CLAUDE.md</code> 和 <code>REVIEW.md</code>。<code>/code-review</code> 命令在您自己机器上的 Claude Code 会话中运行，它读取您的 <code>CLAUDE.md</code> 文件，但不读取 <code>REVIEW.md</code>。请将希望在两处都生效的指导放在 <code>CLAUDE.md</code> 中，并将 <code>REVIEW.md</code> 留给 Pull Request 审查专用的规则。</p></div></div>
+<h3 id="example-review-md">REVIEW.md 示例</h3>
+<p>此 <code>REVIEW.md</code> 为一个后端服务重新校准了严重程度、限制了 nit 数量、跳过了生成文件，并添加了仓库特定的检查项。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown"><span class="gh"># Review instructions</span>
+
+<span class="gu">## What Important means here</span>
+
+Reserve Important for findings that would break behavior, leak data,
+or block a rollback: incorrect logic, unscoped database queries, PII
+in logs or error messages, and migrations that aren't backward
+compatible. Style, naming, and refactoring suggestions are Nit at
+most.
+
+<span class="gu">## Cap the nits</span>
+
+Report at most five Nits per review.
+
+<span class="gu">## Do not report</span>
+
+<span class="k">-</span><span class="w"> </span>Anything CI already enforces: lint, formatting, type errors
+<span class="k">-</span><span class="w"> </span>Generated files under <span class="sb">`src/gen/`</span> and any <span class="sb">`*.lock`</span> file
+<span class="k">-</span><span class="w"> </span>Test-only code that intentionally violates production rules
+
+<span class="gu">## Always check</span>
+
+<span class="k">-</span><span class="w"> </span>New API routes have an integration test
+<span class="k">-</span><span class="w"> </span>Log lines don't include email addresses, user IDs, or request bodies
+<span class="k">-</span><span class="w"> </span>Database queries are scoped to the caller's tenant
+</code></pre></div>
+<h3 id="choose-what-to-write-in-review-md">选择在 REVIEW.md 中写入的内容</h3>
+<p><code>REVIEW.md</code> 是格式自由的 Markdown，用于更改审查发现和报告的内容。它不会改变审查的格式。找到您遇到的问题，然后添加类似所示的指令。<a href="#example-review-md">示例</a>使用了前四项。</p>
+<ul>
+<li><strong>错误的内容被标记为 Important</strong>：为您的仓库重新定义 🔴 Important 的含义。默认校准以生产代码为目标，而文档仓库、配置仓库或原型可能需要更窄的定义。说明哪些类别的发现属于 Important，哪些最多属于 Nit。您也可以提高级别，例如将任何违反 <code>CLAUDE.md</code> 的情况视为 Important。</li>
+<li><strong>nit 过多</strong>：限制单次审查发布的 🟡 Nit 评论数量。诸如“最多报告五个 nit”之类的上限可以让审查保持可操作性。</li>
+<li><strong>对生成文件或 CI 已检查的内容发表评论</strong>：列出 Claude 应跳过发现的路径和发现类别。常见的候选项包括生成的代码、锁文件和 vendored 依赖，以及 CI 已强制执行的任何内容，如 lint 或拼写检查。对于值得一定程度审查但无需全面审视的路径，可改为设置更高的门槛：“在 <code>scripts/</code> 中，仅在几乎确定且严重时才报告。”</li>
+<li><strong>某条团队规则未被检查</strong>：添加您希望在每个 Pull Request 上标记的规则，例如“新的 API 路由必须有集成测试”。</li>
+<li><strong>事后证明有误的发现</strong>：要求某类发现在发布前提供证据。例如，“关于行为的断言需要在源代码中引用 <code>file:line</code>，而不是根据命名进行推断”，这可以减少误报，否则作者需要为此额外往返一次。</li>
+</ul>
+<p>其中一些指令<a href="#which-branch-review-md-is-read-from">需要根文件位于受保护的默认分支上</a>。</p>
+<p><code>REVIEW.md</code> 中只保留会改变审查行为的指令，并将一般项目上下文留在 <code>CLAUDE.md</code> 中。</p>
+<h3 id="include-other-files-in-review-md">在 REVIEW.md 中包含其他文件</h3>
+<p>您可以将审查指令拆分到多个文件中，再将它们引入根目录的 <code>REVIEW.md</code>。当 <code>REVIEW.md</code> 变得很长，或者您已经在其他文件中维护审查规则时，可以使用此方法。</p>
+<p>要包含某个文件，请在根目录的 <code>REVIEW.md</code> 中添加一行，该行仅包含 <code>@</code> 和文件名。Code Review 会用该文件的内容替换这一行，使其作为 <code>REVIEW.md</code> 的一部分生效。在此示例中，根文件给出了一条自己的指令，然后包含了两个规则文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown"><span class="gh"># Review instructions</span>
+
+Report at most five Nits per review.
+
+<span class="ni">@review-security</span>.md
+<span class="ni">@review-api</span>.md
+</code></pre></div>
+<p>将被包含的文件保存在仓库根目录，与 <code>REVIEW.md</code> 放在一起：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">your-repo/
+├── REVIEW.md
+├── review-security.md
+└── review-api.md
+</code></pre></div>
+<p>Code Review 仅在从受保护分支读取 <code>REVIEW.md</code> 时才会包含这些文件，因此请查看<a href="#what-a-review-reads-for-each-branch-setup">针对您的仓库，审查会读取哪个分支</a>：</p>
+<ul>
+<li><strong>受保护分支</strong>：Code Review 会用被包含的文件替换其 <code>@</code> 行</li>
+<li><strong>未受保护的默认分支</strong>：<code>@</code> 行会作为纯文本保留在 <code>REVIEW.md</code> 中。如果 Pull Request 更改了该行所指定的文件，则该行会被省略。</li>
+</ul>
+<p>当审查未应用被包含的文件时，请逐项检查以下内容：</p>
+<ul>
+<li><strong>位置</strong>：将文件移至仓库根目录。除 <a href="#include-a-skill-file">skill 文件</a>外，指向子目录的路径（例如 <code>@docs/review-rules.md</code>）不会被包含。</li>
+<li><strong>名称</strong>：文件名须完全匹配（包括大小写），并使用不含空格的名称。如果某行中的名称与 <code>REVIEW.md</code> 同级的任何文件都不匹配，该行会作为纯文本保留在 <code>REVIEW.md</code> 中，且检查运行不会将其报告为被跳过的包含项。</li>
+<li><strong>仅限一层</strong>：在根目录的 <code>REVIEW.md</code> 中列出所有文件。被包含文件或子目录 <code>REVIEW.md</code> 中的 <code>@</code> 行会保留为纯文本（<a href="#include-a-skill-file">skill 文件有所不同</a>），而指向其他文件的 Markdown 链接不属于包含项。</li>
+<li><strong>限制</strong>：最多包含八个不同的文件，并使 <code>REVIEW.md</code> 及其包含的文件合计小于 150,000 字节。会达到字节上限的文件将被整体跳过，而不会被截断。检查运行会报告因任一限制而跳过了多少个包含行。</li>
+<li><strong>链接</strong>：<code>REVIEW.md</code> 及其包含的文件中的 Markdown 链接总数应不超过 64 个。指向 <code>http</code>、<code>https</code> 或 <code>mailto</code> 地址以及 <code>#</code> 锚点的链接不计入，<a href="#include-a-skill-file">skill 文件</a>中的链接也不计入。超过该上限时，审查会跳过您的整个根目录 <code>REVIEW.md</code>，而不仅仅是被包含的文件。此时检查运行会<a href="code-review-troubleshooting.html#the-check-run-mentions-review-md">说明指令未被应用</a>。</li>
+<li><strong>已合并的副本</strong>：将被包含的文件合并到<a href="#which-branch-review-md-is-read-from">读取 <code>REVIEW.md</code> 的分支</a>中。审查会从同一个提交中读取两者，从不从 Pull Request 自身的更改中读取。</li>
+</ul>
+<h3 id="include-a-skill-file">包含 Skill 文件</h3>
+<p>要让审查遵循您在 <a href="skills.html">skill</a> 中维护的指导，请在根目录的 <code>REVIEW.md</code> 中包含该 skill 的 <code>SKILL.md</code>。Code Review 不会运行 skill。</p>
+<p>在单独的一行中添加 <code>@</code> 和 <code>SKILL.md</code> 的路径，格式为 <code>.claude/skills/&lt;folder&gt;/SKILL.md</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown"><span class="gh"># Review instructions</span>
+
+Report at most five Nits per review.
+
+@.claude/skills/api-review/SKILL.md
+
+Treat any change under <span class="sb">`migrations/`</span> as Important.
+</code></pre></div>
+<p>请保护<a href="#which-branch-review-md-is-read-from">读取 <code>REVIEW.md</code> 的分支</a>，因为 Code Review 仅在从受保护分支读取 <code>REVIEW.md</code> 时才会包含 skill 文件。skill 文件计入八个文件和 150,000 字节的限制，并且有其自身 30,000 字节的限制。</p>
+<h4 id="write-a-skill-line-that-code-review-includes">编写能被 Code Review 包含的 Skill 行</h4>
+<p>请使用不含空格的文件夹名称。路径中含有空格的行会作为纯文本保留在 <code>REVIEW.md</code> 中，且检查运行不会将其报告为被跳过的包含项。</p>
+<p>如果某个 skill 的 <code>@</code> 行违反了以下任一规则，Code Review 不会从该行包含该 skill：</p>
+<ul>
+<li><strong>路径</strong>：从仓库根目录以 <code>.claude/skills/&lt;folder&gt;/SKILL.md</code> 的形式写出路径，skill 的文件夹须直接位于 <code>skills/</code> 下。与根目录下的文件名不同，此形式的路径如果不匹配任何文件，会被跳过并计数。</li>
+<li><strong>来源</strong>：将 <code>.claude/</code> 下任何其他文件中的指导，或<a href="skills.html#where-skills-live">内置、个人或插件 skill</a> 中的指导，复制到与 <code>REVIEW.md</code> 同级的文件中。您无法直接包含这些内容。</li>
+<li><strong>文件</strong>：将 <code>SKILL.md</code> 作为常规文本文件提交。Code Review 不会跟随符号链接，无论该链接是文件本身还是其路径中的某个文件夹。</li>
+<li><strong>大小</strong>：使 <code>SKILL.md</code> 不超过 30,000 字节（包括 frontmatter）</li>
+<li><strong>数量</strong>：最多编写八个 skill 行。重复的行会再次计入这八个。</li>
+<li><strong><code>REVIEW.md</code> 中的块</strong>：不要将 <code>@</code> 行放在代码围栏内。关闭其上方的每个 HTML 注释以及每个 <code>&lt;pre&gt;</code>、<code>&lt;script&gt;</code>、<code>&lt;style&gt;</code> 或 <code>&lt;textarea&gt;</code> 块。</li>
+</ul>
+<p>当 Code Review 因违反文件、大小、数量或块规则而跳过某个 skill 行时，检查运行中<a href="code-review-troubleshooting.html#the-check-run-mentions-review-md">关于被跳过包含行的消息</a>会将其计入。仅当审查从受保护分支应用 <code>REVIEW.md</code> 时，才会显示该消息。</p>
+<h4 id="check-what-a-review-gets-from-a-skill">检查审查从 Skill 中获得的内容</h4>
+<p>当 skill 被包含时，审查只会获得 <code>SKILL.md</code> 的正文，而不会获得该 skill 的其他任何内容，因此请对照以下列表检查该 skill。</p>
+<ul>
+<li><strong>Frontmatter</strong>：在正文中重复审查所需的 <a href="skills.html#frontmatter-reference">frontmatter</a> 内容，例如 <code>description</code> 给出的使用该 skill 的条件</li>
+<li><strong>注入的命令</strong>：写出 <a href="skills.html#inject-dynamic-context"><code>!</code> 命令</a>本应提供的内容。Code Review 不会运行该命令，并会用占位符替换包含该命令的整行或整个块。</li>
+<li><strong>替换变量</strong>：将 <code>$ARGUMENTS</code> 和其他<a href="skills.html#available-string-substitutions">替换变量</a>替换为固定文本，因为审查不传递任何参数，并会将它们原样保留</li>
+<li><strong>支持文件</strong>：将审查所需的内容复制到 <code>SKILL.md</code> 中，因为 Code Review 不会加载脚本、链接的文件或 <code>@file</code> 引用</li>
+<li><strong>排除项和 Nit 上限</strong>：将排除发现或限制 Nit 数量的指令写在 <code>REVIEW.md</code> 或与其同级的文件中，而不是写在 skill 中。Code Review 不接受以 skill 的文本作为这两者的依据。</li>
+<li><strong>指向仓库文件的链接</strong>：用文字说明链接或 <code>@file</code> 引用所指向的内容。审查会将该路径视为纯文本或占位符。</li>
+</ul>
+<p>如果您编辑 skill 的 <code>!</code> 命令、<code>$ARGUMENTS</code> 或链接，也会改变它在 Claude Code 中的工作方式。如果您的团队依赖这些功能，请将指导复制到与 <code>REVIEW.md</code> 同级的文件中，并包含该文件来代替 skill。</p>
+<h4 id="characters-that-code-review-changes-in-skill-text">Code Review 在 Skill 文本中更改的字符</h4>
+<p>Code Review 会更改 skill 文本中的某些字符，因此您的代码示例会以下面的形式传达给审查。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">In SKILL.md:       Use `items[0]`, never `List&lt;String&gt;`.
+The review reads:  Use ˋitems(0)ˋ, never ˋList&lt; String&gt;ˋ.
+
+In SKILL.md:       Run `ps | grep api` and ask @alice.
+The review reads:  Run ˋps ¦ grep apiˋ and ask @ alice.
+</code></pre></div>
+<p>如果某条规则依赖于其中某个字符，也请用文字加以说明。</p>
+<h3 id="which-branch-review-md-is-read-from">从哪个分支读取 REVIEW.md</h3>
+<p>Code Review 从 Pull Request 的基础分支或默认分支读取 <code>REVIEW.md</code>，从不从 Pull Request 自身的更改中读取。如需更改审查行为，请先合并对 <code>REVIEW.md</code> 的更改。</p>
+<p>请将 <code>REVIEW.md</code> 保留在默认分支上，并保护该分支。当审查读取受保护默认分支上的副本时（即下表第一行的情况），它会遵循根文件中的以下指令：</p>
+<ul>
+<li>降低某项发现的严重程度</li>
+<li>排除路径、文件或问题类别</li>
+<li>限制 nit 评论数量</li>
+</ul>
+<p>请将排除项和 Nit 上限写在 <code>REVIEW.md</code> 或与其同级的文件中，而不是写在<a href="#include-a-skill-file">被包含的 skill</a> 中。</p>
+<h4 id="what-counts-as-branch-protection">哪些设置算作分支保护</h4>
+<p>Code Review 将以下设置视为保护：</p>
+<ul>
+<li><strong>默认分支</strong>：经典分支保护规则或规则集</li>
+<li><strong>任何其他分支</strong>：仅限规则集</li>
+</ul>
+<p>当规则集限制更新，或要求 Pull Request 获得至少一次审批时，该规则集才算作保护。如果它要求 Pull Request，则还必须在有新推送时撤销该审批，或要求审批发生在最后一次推送之后。</p>
+<h4 id="what-a-review-reads-for-each-branch-setup">针对每种分支设置，审查会读取哪些内容</h4>
+<p>在下表第一列中找到您仓库的情况。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">分支保护</th>
+<th style="text-align: left;">读取的副本</th>
+<th style="text-align: left;">读取的文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">默认分支受保护，且 Pull Request 以其为目标，或以未受任何规则集保护的分支为目标</td>
+<td style="text-align: left;">默认分支</td>
+<td style="text-align: left;">根文件、其包含的文件和子目录文件</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pull Request 以另一个受规则集保护的分支为目标</td>
+<td style="text-align: left;">该基础分支</td>
+<td style="text-align: left;">根文件、其包含的文件和子目录文件</td>
+</tr>
+<tr>
+<td style="text-align: left;">默认分支未受保护，且基础分支没有任何一种保护规则</td>
+<td style="text-align: left;">默认分支</td>
+<td style="text-align: left;">根文件</td>
+</tr>
+<tr>
+<td style="text-align: left;">Code Review 无法确认保护设置。这包括默认分支未受保护、而基础分支仅有经典规则的情况</td>
+<td style="text-align: left;">无</td>
+<td style="text-align: left;">无</td>
+</tr>
+</tbody>
+</table>
+<p>如果检查运行中提到了 <code>REVIEW.md</code>，请参阅<a href="code-review-troubleshooting.html#the-check-run-mentions-review-md">检查运行中提到 REVIEW.md</a>。</p>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li><a href="code-review.html">Code Review</a>：该服务是什么以及审查如何运行</li>
+<li><a href="code-review-pull-requests.html#severity-levels">在 Pull Request 上阅读和请求审查</a>：每个严重程度级别的含义以及发现的呈现方式</li>
+<li><a href="code-review-setup.html">设置 Code Review</a>：由 Owner 设置的审查级别和审查运行时机</li>
+<li><a href="code-review-local.html">使用 <code>/code-review</code> 在本地审查</a>：<code>/code-review</code> 命令、其参数和 effort 级别</li>
+<li><a href="memory.html">记忆</a>：<code>CLAUDE.md</code> 文件在 Claude Code 中的工作方式</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="code-review-setup.html"><span class="pager-dir">← 上一页</span><span class="pager-name">设置 Code Review</span></a><a class="pager-link next" href="code-review-pull-requests.html"><span class="pager-dir">下一页 →</span><span class="pager-name">阅读和请求 Pull Request 上的审查</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#use-claude-md-for-project-wide-rules">使用 CLAUDE.md 设置项目范围的规则</a><a class="toc-l2" href="#use-review-md-for-review-only-rules">使用 REVIEW.md 设置仅用于审查的规则</a><a class="toc-l3" href="#example-review-md">REVIEW.md 示例</a><a class="toc-l3" href="#choose-what-to-write-in-review-md">选择在 REVIEW.md 中写入的内容</a><a class="toc-l3" href="#include-other-files-in-review-md">在 REVIEW.md 中包含其他文件</a><a class="toc-l3" href="#include-a-skill-file">包含 Skill 文件</a><a class="toc-l3" href="#which-branch-review-md-is-read-from">从哪个分支读取 REVIEW.md</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>路由与域名 · Workers 文档（中文版）</title>
+<meta name="description" content="把 Worker 接到一个外部端点，让它能被互联网访问。">
+<link rel="stylesheet" href="../../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>路由与域名</h1>
+      <p class="lead">把 Worker 接到一个外部端点，让它能被互联网访问。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-04-23</span>
+        <span>对应页面：configuration/routing</span>
+      </div>
+
+<p>要让 Worker 接收入站 HTTP 请求，必须把它连接到一个外部端点，使其能被互联网访问。</p>
+      <p>共有三种路由方式：</p>
+      <ul>
+        <li><a href="custom-domains.html">自定义域名（Custom Domains）</a>：路由到 Cloudflare 区域内的某个域名或子域（例如 <code>example.com</code> 或 <code>shop.example.com</code>），此时 <strong>Worker 就是源站</strong>。</li>
+        <li><a href="routes.html">路由（Routes）</a>：在 Cloudflare 区域里设置的路由，如果你有源站服务器，它位于 Worker 之后，由 Worker 与它通信。</li>
+        <li><a href="workers-dev.html"><code>workers.dev</code></a>：每个 Worker 创建时会自动生成一个 <code>workers.dev</code> 子域路由，方便你快速上手。你也可以选择<a href="workers-dev.html">禁用</a>它。</li>
+      </ul>
+
+      <h2>我该用哪种</h2>
+      <p>生产环境的 Worker 建议跑在 <a href="custom-domains.html">Workers 路由或自定义域名</a>上，而不是 <code>workers.dev</code> 子域。你的 <code>workers.dev</code> 子域按 <a href="https://www.cloudflare.com/plans/" target="_blank" rel="noopener">免费网站 ↗</a>对待，定位于个人或兴趣项目，不适合承载关键业务。</p>
+      <p>当 Worker 就是你应用的源站时，推荐用<strong>自定义域名</strong>。与路由不同，自定义域名还可以在同一区域内通过 <code>fetch()</code> 调用。</p>
+      <p>当应用的源站服务器在 Cloudflare 之外时，推荐用<strong>路由</strong>。注意路由不能作为同区 <code>fetch()</code> 调用的目标。</p>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/routing/" target="_blank" rel="noopener">configuration/routing</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../../assets/nav-data-1.js"></script>
+<script src="../../../assets/nav-data-2.js"></script>
+<script src="../../../assets/site.js"></script>
+</body>
+</html>

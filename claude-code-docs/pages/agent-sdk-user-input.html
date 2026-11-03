@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>处理批准和用户输入 · Claude Code 中文文档</title>
+<meta name="description" content="向用户显示 Claude 的批准请求和澄清问题，然后将他们的决定返回给 SDK。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-sdk/user-input">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-sdk/user-input" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link active" href="agent-sdk-user-input.html" aria-current="page">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>Agent SDK</span> <span class="sep">/</span> <span>输入和输出</span></div>
+    <article class="prose" id="article"><h1 id="_1">处理批准和用户输入</h1>
+<blockquote>
+<p>向用户显示 Claude 的批准请求和澄清问题，然后将他们的决定返回给 SDK。</p>
+</blockquote>
+<p>在处理任务时，Claude 有时需要与用户进行沟通。它可能需要在删除文件前获得许可，或需要询问为新项目使用哪个数据库。您的应用程序需要向用户显示这些请求，以便 Claude 可以继续使用他们的输入。</p>
+<p>Claude 在两种情况下请求用户输入：当它需要<strong>使用工具的权限</strong>（如删除文件或运行命令）时，以及当它有<strong>澄清问题</strong>（通过 <code>AskUserQuestion</code> 工具）时。两者都会触发您的 <code>canUseTool</code> 回调，该回调会暂停执行，直到您返回响应。这与普通对话轮次不同，在普通对话轮次中 Claude 完成后等待您的下一条消息。</p>
+<p>对于澄清问题，Claude 生成问题和选项。您的角色是向用户呈现这些问题，并返回他们的选择。您不能向此流程添加自己的问题；如果您需要自己询问用户某些内容，请在应用程序逻辑中单独进行。</p>
+<p>回调可以无限期地保持待处理状态。执行保持暂停状态，直到您的回调返回。如果用户可能需要比您的进程能够合理保持运行的时间更长的时间来响应，请注册一个 <a href="agent-sdk-hooks.html"><code>PreToolUse</code> hook</a>，它返回 <a href="hooks.html#defer-a-tool-call-for-later"><code>defer</code> 决定</a>，而不是在回调中等待，以便进程可以退出并稍后从持久化会话恢复。</p>
+<p>本指南向您展示如何检测每种类型的请求并做出适当的响应。</p>
+<h2 id="detect-when-claude-needs-input">检测 Claude 何时需要输入</h2>
+<p>在您的查询选项中传递 <code>canUseTool</code> 回调。每当 Claude 需要用户输入时，回调就会触发，接收工具名称和输入作为参数：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClaudeAgentOptions</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_tool_request</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">input_data</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="c1"># 提示用户并返回允许或拒绝</span>
+    <span class="o">...</span>
+
+
+<span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span><span class="n">can_use_tool</span><span class="o">=</span><span class="n">handle_tool_request</span><span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CanUseTool</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">handleToolRequest</span><span class="o">:</span><span class="w"> </span><span class="kt">CanUseTool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">toolName</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="nx">options</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// options includes { signal: AbortSignal, suggestions?: PermissionUpdate[] }</span>
+<span class="w">  </span><span class="c1">// 在此提示用户，然后返回允许或拒绝</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="s2">"deny"</span><span class="p">,</span><span class="w"> </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">"User declined"</span><span class="w"> </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">canUseTool</span><span class="o">:</span><span class="w"> </span><span class="kt">handleToolRequest</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div>
+<p>回调在两种情况下触发：</p>
+<ol>
+<li><strong>工具需要批准</strong>：Claude 想要使用不被<a href="agent-sdk-permissions.html">权限规则</a>或权限模式自动批准的工具。检查 <code>tool_name</code> 以获取工具（例如 <code>"Bash"</code>、<code>"Write"</code>）。</li>
+<li><strong>Claude 提出问题</strong>：Claude 调用 <code>AskUserQuestion</code> 工具。检查 <code>tool_name == "AskUserQuestion"</code> 以不同方式处理它。如果您指定 <code>tools</code> 数组，请包含 <code>AskUserQuestion</code> 以使其工作。有关详细信息，请参阅<a href="#handle-clarifying-questions">处理澄清问题</a>。</li>
+</ol>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p><strong>回调永远不会对自动批准的工具触发。</strong> <a href="agent-sdk-permissions.html#how-permissions-are-evaluated">权限评估流程</a>中任何较早的批准、允许规则或 <code>acceptEdits</code> 或 <code>bypassPermissions</code> 等模式会在咨询 <code>canUseTool</code> 之前解决调用。如果您在 <code>allowed_tools</code> 中列出一个工具，仅当<a href="agent-sdk-permissions.html#how-permissions-are-evaluated">评估流程</a>将调用路由回提示（例如询问规则或 <code>plan</code> 模式）时，该工具的 <code>canUseTool</code> 检查才会运行。对于必须应用于每个工具调用的逻辑，请使用 <a href="agent-sdk-hooks.html"><code>PreToolUse</code> hook</a>，它在流程的其余部分之前执行，可以允许、拒绝或修改请求。</p>
+<p>允许规则不会预先批准<a href="permission-modes.html#actions-no-mode-auto-approves">任何模式都不会自动批准的操作</a>；有关其中哪些到达回调以及在 <code>dontAsk</code> 和 <code>auto</code> 模式下发生的情况，请参阅<a href="agent-sdk-permissions.html#how-permissions-are-evaluated">权限如何评估</a>。</p></div></div>
+<p>您还可以使用 <a href="agent-sdk-hooks.html#available-hooks"><code>PermissionRequest</code> hook</a> 在 Claude 等待批准时发送外部通知（Slack、电子邮件、推送）。</p>
+<h2 id="handle-tool-approval-requests">处理工具批准请求</h2>
+<p>一旦您在查询选项中传递了 <code>canUseTool</code> 回调，当 Claude 想要使用不被权限流中较早步骤批准的工具时，它就会触发。在某些配置中，例如 <code>dontAsk</code> 模式，Claude Code 不会调用它；<a href="agent-sdk-permissions.html#how-permissions-are-evaluated">权限如何被评估</a>的最后一步列出了它们并说明了调用会发生什么。</p>
+<p>您的回调接收三个参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>toolName</code></td>
+<td>Claude 想要使用的工具的名称（例如 <code>"Bash"</code>、<code>"Write"</code>、<code>"Edit"</code>）</td>
+</tr>
+<tr>
+<td><code>input</code></td>
+<td>Claude 传递给工具的参数。内容因工具而异。</td>
+</tr>
+<tr>
+<td><code>options</code> (TS) / <code>context</code> (Python)</td>
+<td>附加上下文，包括可选的 <code>suggestions</code>（建议的 <code>PermissionUpdate</code> 条目以避免重新提示）和取消信号。在 TypeScript 中，<code>signal</code> 是 <code>AbortSignal</code>；在 Python 中，信号字段保留供将来使用。有关 Python，请参阅 <a href="agent-sdk-python.html#toolpermissioncontext"><code>ToolPermissionContext</code></a>。</td>
+</tr>
+</tbody>
+</table>
+<p><code>input</code> 对象包含工具特定的参数。常见示例：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>输入字段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Bash</code></td>
+<td><code>command</code>、<code>description</code>、<code>timeout</code></td>
+</tr>
+<tr>
+<td><code>Write</code></td>
+<td><code>file_path</code>、<code>content</code></td>
+</tr>
+<tr>
+<td><code>Edit</code></td>
+<td><code>file_path</code>、<code>old_string</code>、<code>new_string</code></td>
+</tr>
+<tr>
+<td><code>Read</code></td>
+<td><code>file_path</code>、<code>offset</code>、<code>limit</code></td>
+</tr>
+</tbody>
+</table>
+<p>有关完整的输入架构，请参阅 SDK 参考：<a href="agent-sdk-python.html#tool-input%2Foutput-types">Python</a> | <a href="agent-sdk-typescript.html#tool-input-types">TypeScript</a>。</p>
+<p>您可以向用户显示此信息，以便他们可以决定是否允许或拒绝该操作，然后返回适当的响应。</p>
+<p>以下示例要求 Claude 创建和删除测试文件。当 Claude 尝试每个操作时，回调会将工具请求打印到终端并提示进行 y/n 批准。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">,</span> <span class="n">query</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk.types</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">HookMatcher</span><span class="p">,</span>
+    <span class="n">PermissionResultAllow</span><span class="p">,</span>
+    <span class="n">PermissionResultDeny</span><span class="p">,</span>
+    <span class="n">ToolPermissionContext</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">can_use_tool</span><span class="p">(</span>
+    <span class="n">tool_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">input_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">ToolPermissionContext</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PermissionResultAllow</span> <span class="o">|</span> <span class="n">PermissionResultDeny</span><span class="p">:</span>
+    <span class="c1"># 显示工具请求</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Tool: </span><span class="si">{</span><span class="n">tool_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tool_name</span> <span class="o">==</span> <span class="s2">"Bash"</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Command: </span><span class="si">{</span><span class="n">input_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'command'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">input_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"description"</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Description: </span><span class="si">{</span><span class="n">input_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'description'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Input: </span><span class="si">{</span><span class="n">input_data</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># 获取用户批准</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"Allow this action? (y/n): "</span><span class="p">)</span>
+
+    <span class="c1"># 根据用户的响应返回允许或拒绝</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"y"</span><span class="p">:</span>
+        <span class="c1"># 允许：工具使用原始（或修改的）输入执行</span>
+        <span class="k">return</span> <span class="n">PermissionResultAllow</span><span class="p">(</span><span class="n">updated_input</span><span class="o">=</span><span class="n">input_data</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># 拒绝：工具不执行，Claude 看到该消息</span>
+        <span class="k">return</span> <span class="n">PermissionResultDeny</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">"User denied this action"</span><span class="p">)</span>
+
+
+<span class="c1"># 必需的解决方法：虚拟 hook 保持流打开以供 can_use_tool 使用</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">dummy_hook</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"continue_"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">prompt_stream</span><span class="p">():</span>
+    <span class="k">yield</span> <span class="p">{</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
+        <span class="s2">"message"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
+            <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"Create a test file in /tmp and then delete it"</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="n">prompt_stream</span><span class="p">(),</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+            <span class="n">can_use_tool</span><span class="o">=</span><span class="n">can_use_tool</span><span class="p">,</span>
+            <span class="n">hooks</span><span class="o">=</span><span class="p">{</span><span class="s2">"PreToolUse"</span><span class="p">:</span> <span class="p">[</span><span class="n">HookMatcher</span><span class="p">(</span><span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">dummy_hook</span><span class="p">])]},</span>
+        <span class="p">),</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"success"</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">readline</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"readline"</span><span class="p">;</span>
+
+<span class="c1">// 帮助程序在终端中提示用户输入</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">prompt</span><span class="p">(</span><span class="nx">question</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">rl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readline</span><span class="p">.</span><span class="nx">createInterface</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="kt">process.stdin</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">output</span><span class="o">:</span><span class="w"> </span><span class="kt">process.stdout</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">    </span><span class="nx">rl</span><span class="p">.</span><span class="nx">question</span><span class="p">(</span><span class="nx">question</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">answer</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">rl</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+<span class="w">      </span><span class="nx">resolve</span><span class="p">(</span><span class="nx">answer</span><span class="p">);</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">  </span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Create a test file in /tmp and then delete it"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">canUseTool</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">(</span><span class="nx">toolName</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 显示工具请求</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`\nTool: </span><span class="si">${</span><span class="nx">toolName</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">toolName</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"Bash"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Command: </span><span class="si">${</span><span class="nx">input</span><span class="p">.</span><span class="nx">command</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">description</span><span class="p">)</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Description: </span><span class="si">${</span><span class="nx">input</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Input: </span><span class="si">${</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="c1">// 获取用户批准</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prompt</span><span class="p">(</span><span class="s2">"Allow this action? (y/n): "</span><span class="p">);</span>
+
+<span class="w">      </span><span class="c1">// 根据用户的响应返回允许或拒绝</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"y"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 允许：工具使用原始（或修改的）输入执行</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w"> </span><span class="nx">updatedInput</span><span class="o">:</span><span class="w"> </span><span class="kt">input</span><span class="w"> </span><span class="p">};</span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 拒绝：工具不执行，Claude 看到该消息</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="s2">"deny"</span><span class="p">,</span><span class="w"> </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">"User denied this action"</span><span class="w"> </span><span class="p">};</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s2">"result"</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">message</span><span class="p">)</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>此示例使用 y/n 流，其中除 <code>y</code> 之外的任何输入都被视为拒绝。在实践中，您可能会构建一个更丰富的 UI，让用户修改请求、提供反馈或完全重定向 Claude。有关所有响应方式，请参阅<a href="#respond-to-tool-requests">响应工具请求</a>。</p>
+<h3 id="respond-to-tool-requests">响应工具请求</h3>
+<p>您的回调返回两种响应类型之一：</p>
+<table>
+<thead>
+<tr>
+<th>响应</th>
+<th>Python</th>
+<th>TypeScript</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>允许</strong></td>
+<td><code>PermissionResultAllow(updated_input=...)</code></td>
+<td><code>{ behavior: "allow", updatedInput }</code></td>
+</tr>
+<tr>
+<td><strong>拒绝</strong></td>
+<td><code>PermissionResultDeny(message=...)</code></td>
+<td><code>{ behavior: "deny", message }</code></td>
+</tr>
+</tbody>
+</table>
+<p>允许时，工具使用 Claude 请求的输入运行，除非您返回修改的输入，TypeScript 中的 <code>updatedInput</code> 或 Python 中的 <code>updated_input</code>。在 v2.1.207 之前，Claude Code 拒绝了省略 <code>updatedInput</code> 的允许结果，并以验证错误拒绝了工具调用。</p>
+<p>拒绝时，提供说明原因的消息。Claude 会看到此消息并可能调整其方法。</p>
+<p>除了允许或拒绝之外，您还可以修改工具的输入或提供帮助 Claude 调整其方法的上下文：</p>
+<ul>
+<li><strong>批准</strong>：让工具按 Claude 请求的方式执行</li>
+<li><strong>批准并进行更改</strong>：在执行前修改输入（例如，清理路径、添加约束）</li>
+<li><strong>批准并记住</strong>：回显建议的权限规则，以便匹配的调用在下次跳过提示</li>
+<li><strong>拒绝</strong>：阻止工具并告诉 Claude 原因</li>
+<li><strong>建议替代方案</strong>：阻止但指导 Claude 朝向用户想要的方向</li>
+<li><strong>完全重定向</strong>：使用<a href="agent-sdk-streaming-vs-single-mode.html">流输入</a>向 Claude 发送全新指令</li>
+</ul>
+<p>以下代码片段中的 <code>ask_user</code> 和 <code>askUser</code> 帮助程序代表您应用程序自己的提示 UI。</p>
+<blockquote>
+<p>[tab] 批准</p>
+<p>用户按原样批准该操作。从您的回调中传递 <code>input</code> 不变，工具完全按 Claude 请求的方式执行。</p>
+<p>```python Python theme={null}<br />
+async def can_use_tool(tool_name, input_data, context):<br />
+    print(f"Claude wants to use {tool_name}")<br />
+    approved = await ask_user("Allow this action?")</p>
+<pre><code>if approved:
+    return PermissionResultAllow(updated_input=input_data)
+return PermissionResultDeny(message="User declined")
+</code></pre>
+<p>```</p>
+<p><code>``typescript TypeScript theme={null}
+canUseTool: async (toolName, input) =&gt; {
+  console.log(</code>Claude wants to use ${toolName}`);<br />
+  const approved = await askUser("Allow this action?");</p>
+<p>if (approved) {<br />
+    return { behavior: "allow", updatedInput: input };<br />
+  }<br />
+  return { behavior: "deny", message: "User declined" };<br />
+};<br />
+```</p>
+<p>[tab] 批准并进行更改</p>
+<p>用户批准但想先修改请求。您可以在工具执行前更改输入。Claude 会看到结果，但不会被告知您更改了任何内容。对于清理参数、添加约束或限制访问范围很有用。</p>
+<p><code>python Python theme={null}
+async def can_use_tool(tool_name, input_data, context):
+    if tool_name == "Bash":
+        # 用户批准，但将所有命令限制在沙箱中
+        sandboxed_input = {**input_data}
+        sandboxed_input["command"] = input_data["command"].replace(
+            "/tmp", "/tmp/sandbox"
+        )
+        return PermissionResultAllow(updated_input=sandboxed_input)
+    return PermissionResultAllow(updated_input=input_data)</code></p>
+<p><code>typescript TypeScript theme={null}
+canUseTool: async (toolName, input) =&gt; {
+  if (toolName === "Bash") {
+    // 用户批准，但将所有命令限制在沙箱中
+    const sandboxedInput = {
+      ...input,
+      command: input.command.replace("/tmp", "/tmp/sandbox")
+    };
+    return { behavior: "allow", updatedInput: sandboxedInput };
+  }
+  return { behavior: "allow", updatedInput: input };
+};</code></p>
+<p>[tab] 批准并记住</p>
+<p>用户批准并且不想再被询问此类调用。第三个回调参数携带 <code>suggestions</code>，一个现成的 <a href="agent-sdk-typescript.html#permissionupdate"><code>PermissionUpdate</code></a> 条目数组。在 <code>updatedPermissions</code> 中回显其中一个以应用它。带有 <code>localSettings</code> 目标的建议会将规则写入 <code>.claude/settings.local.json</code>，以便将来的会话跳过匹配调用的提示。</p>
+<p>在 TypeScript 中，跳过选项携带 <a href="agent-sdk-typescript.html#canusetool"><code>suppressAlwaysAllowRule: true</code></a> 的请求的始终允许选择。该提示需要 Agent SDK v0.3.268 或更高版本，Python <code>context</code> 不携带它。</p>
+<p>Python 示例需要 <code>claude-agent-sdk</code> 0.1.80 或更高版本。</p>
+<p>```python Python theme={null}<br />
+async def can_use_tool(tool_name, input_data, context):<br />
+    choice = await ask_user(f"Allow {tool_name}?", ["once", "always", "no"])</p>
+<pre><code>if choice == "always":
+    persist = [
+        s for s in context.suggestions if s.destination == "localSettings"
+    ]
+    return PermissionResultAllow(
+        updated_input=input_data, updated_permissions=persist
+    )
+if choice == "once":
+    return PermissionResultAllow(updated_input=input_data)
+return PermissionResultDeny(message="User declined")
+</code></pre>
+<p>```</p>
+<p><code>``typescript TypeScript theme={null}
+canUseTool: async (toolName, input, { suggestions = [] }) =&gt; {
+  const choice = await askUser(</code>Allow ${toolName}?`, ["once", "always", "no"]);</p>
+<p>if (choice === "always") {<br />
+    const persist = suggestions.filter(<br />
+      (s) =&gt; s.destination === "localSettings"<br />
+    );<br />
+    return {<br />
+      behavior: "allow",<br />
+      updatedInput: input,<br />
+      updatedPermissions: persist<br />
+    };<br />
+  }<br />
+  if (choice === "once") {<br />
+    return { behavior: "allow", updatedInput: input };<br />
+  }<br />
+  return { behavior: "deny", message: "User declined" };<br />
+};<br />
+```</p>
+<p>[tab] 拒绝</p>
+<p>用户不希望发生此操作。阻止工具并提供说明原因的消息。Claude 会看到此消息并可能尝试不同的方法。</p>
+<p>```python Python theme={null}<br />
+async def can_use_tool(tool_name, input_data, context):<br />
+    approved = await ask_user(f"Allow {tool_name}?")</p>
+<pre><code>if not approved:
+    return PermissionResultDeny(message="User rejected this action")
+return PermissionResultAllow(updated_input=input_data)
+</code></pre>
+<p>```</p>
+<p><code>``typescript TypeScript theme={null}
+canUseTool: async (toolName, input) =&gt; {
+  const approved = await askUser(</code>Allow ${toolName}?`);</p>
+<p>if (!approved) {<br />
+    return {<br />
+      behavior: "deny",<br />
+      message: "User rejected this action"<br />
+    };<br />
+  }<br />
+  return { behavior: "allow", updatedInput: input };<br />
+};<br />
+```</p>
+<p>[tab] 建议替代方案</p>
+<p>用户不想要此特定操作，但有不同的想法。阻止工具并在您的消息中包含指导。Claude 将阅读此内容并根据您的反馈决定如何继续。</p>
+<p><code>python Python theme={null}
+async def can_use_tool(tool_name, input_data, context):
+    if tool_name == "Bash" and "rm" in input_data.get("command", ""):
+        # 用户不想删除，建议改为存档
+        return PermissionResultDeny(
+            message="User doesn't want to delete files. They asked if you could compress them into an archive instead."
+        )
+    return PermissionResultAllow(updated_input=input_data)</code></p>
+<p><code>typescript TypeScript theme={null}
+canUseTool: async (toolName, input) =&gt; {
+  if (toolName === "Bash" &amp;&amp; input.command.includes("rm")) {
+    // 用户不想删除，建议改为存档
+    return {
+      behavior: "deny",
+      message:
+        "User doesn't want to delete files. They asked if you could compress them into an archive instead."
+    };
+  }
+  return { behavior: "allow", updatedInput: input };
+};</code></p>
+<p>[tab] 完全重定向</p>
+<p>对于完全改变方向（不仅仅是轻推），使用<a href="agent-sdk-streaming-vs-single-mode.html">流输入</a>向 Claude 发送新指令。这绕过当前工具请求并为 Claude 提供全新指令来遵循。</p>
+</blockquote>
+<h2 id="handle-clarifying-questions">处理澄清问题</h2>
+<p>当 Claude 需要在具有多个有效方法的任务上获得更多指导时，它会调用 <code>AskUserQuestion</code> 工具。这会触发您的 <code>canUseTool</code> 回调，其中 <code>toolName</code> 设置为 <code>AskUserQuestion</code>。输入包含 Claude 的问题作为多选选项，您向用户显示这些问题并返回他们的选择。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>澄清问题在 <a href="agent-sdk-permissions.html#plan-mode-plan"><code>plan</code> 模式</a>中特别常见，其中 Claude 探索代码库并在提出计划前提出问题。这使 plan 模式非常适合交互式工作流，您希望 Claude 在进行更改前收集需求。</p></div></div>
+<p>以下步骤显示如何处理澄清问题：</p>
+<p><strong>1. 传递 canUseTool 回调</strong></p>
+<p>在您的查询选项中传递 <code>canUseTool</code> 回调。默认情况下，<code>AskUserQuestion</code> 可用。如果您指定 <code>tools</code> 数组来限制 Claude 的功能（例如，仅具有 <code>Read</code>、<code>Glob</code> 和 <code>Grep</code> 的只读代理），请在该数组中包含 <code>AskUserQuestion</code>。否则，Claude 将无法提出澄清问题：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+    <span class="n">prompt</span><span class="o">=</span><span class="s2">"Analyze this codebase"</span><span class="p">,</span>
+    <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="c1"># 在您的工具列表中包含 AskUserQuestion</span>
+        <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"AskUserQuestion"</span><span class="p">],</span>
+        <span class="n">can_use_tool</span><span class="o">=</span><span class="n">can_use_tool</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Analyze this codebase"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 在您的工具列表中包含 AskUserQuestion</span>
+<span class="w">    </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"AskUserQuestion"</span><span class="p">],</span>
+<span class="w">    </span><span class="nx">canUseTool</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">(</span><span class="nx">toolName</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 批准每次调用的占位实现。"检测 AskUserQuestion"步骤会替换它。</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w"> </span><span class="nx">updatedInput</span><span class="o">:</span><span class="w"> </span><span class="kt">input</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>2. 检测 AskUserQuestion</strong></p>
+<p>在您的回调中，检查 <code>toolName</code> 是否等于 <code>AskUserQuestion</code> 以不同方式处理它与其他工具：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">can_use_tool</span><span class="p">(</span><span class="n">tool_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">input_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">tool_name</span> <span class="o">==</span> <span class="s2">"AskUserQuestion"</span><span class="p">:</span>
+        <span class="c1"># 您从用户收集答案的实现</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">handle_clarifying_questions</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+    <span class="c1"># 正常处理其他工具</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">prompt_for_approval</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">input_data</span><span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="nx">canUseTool</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">(</span><span class="nx">toolName</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">toolName</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"AskUserQuestion"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 您从用户收集答案的实现</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">handleClarifyingQuestions</span><span class="p">(</span><span class="nx">input</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// 正常处理其他工具</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">promptForApproval</span><span class="p">(</span><span class="nx">toolName</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>
+<p><strong>3. 解析问题输入</strong></p>
+<p>输入包含 Claude 在 <code>questions</code> 数组中的问题。每个问题都有 <code>question</code>（要显示的文本）、<code>options</code>（选择）和 <code>multiSelect</code>（是否允许多个选择）：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"questions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"question"</span><span class="p">:</span><span class="w"> </span><span class="s2">"How should I format the output?"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"header"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Format"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Summary"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Brief overview"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Detailed"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Full explanation"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"multiSelect"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"question"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Which sections should I include?"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"header"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sections"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Introduction"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Opening context"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Conclusion"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Final summary"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"multiSelect"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>有关完整字段描述，请参阅<a href="#question-format">问题格式</a>。</p>
+<p><strong>4. 从用户收集答案</strong></p>
+<p>向用户呈现问题并收集他们的选择。您如何执行此操作取决于您的应用程序：终端提示、Web 表单、移动对话框等。</p>
+<p><strong>5. 将答案返回给 Claude</strong></p>
+<p>将 <code>answers</code> 对象构建为记录，其中每个键是 <code>question</code> 文本，每个值是所选选项的 <code>label</code>：</p>
+<table>
+<thead>
+<tr>
+<th>来自问题对象</th>
+<th>用作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>question</code> 字段（例如 <code>"How should I format the output?"</code>）</td>
+<td>键</td>
+</tr>
+<tr>
+<td>所选选项的 <code>label</code> 字段（例如 <code>"Summary"</code>）</td>
+<td>值</td>
+</tr>
+</tbody>
+</table>
+<p>对于多选问题，传递标签数组或用 <code>", "</code> 连接它们。如果您<a href="#support-free-text-input">支持自由文本输入</a>，使用用户的自定义文本作为值。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="k">return</span> <span class="n">PermissionResultAllow</span><span class="p">(</span>
+    <span class="n">updated_input</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"questions"</span><span class="p">:</span> <span class="n">input_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"questions"</span><span class="p">,</span> <span class="p">[]),</span>
+        <span class="s2">"answers"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"How should I format the output?"</span><span class="p">:</span> <span class="s2">"Summary"</span><span class="p">,</span>
+            <span class="s2">"Which sections should I include?"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Introduction"</span><span class="p">,</span> <span class="s2">"Conclusion"</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">updatedInput</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">questions</span><span class="o">:</span><span class="w"> </span><span class="kt">input.questions</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">answers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">"How should I format the output?"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Summary"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"Which sections should I include?"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Introduction, Conclusion"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<h3 id="question-format">问题格式</h3>
+<p>输入包含 Claude 在 <code>questions</code> 数组中生成的问题。每个问题都有这些字段：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>question</code></td>
+<td>要显示的完整问题文本</td>
+</tr>
+<tr>
+<td><code>header</code></td>
+<td>问题的短标签（最多 12 个字符）</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td>2-4 个选择的数组，每个都有 <code>label</code> 和 <code>description</code>。TypeScript：可选 <code>preview</code>。请参阅<a href="#option-previews-typescript">选项预览</a>。</td>
+</tr>
+<tr>
+<td><code>multiSelect</code></td>
+<td>如果为 <code>true</code>，用户可以选择多个选项</td>
+</tr>
+</tbody>
+</table>
+<p>您的回调接收的结构：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"questions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"question"</span><span class="p">:</span><span class="w"> </span><span class="s2">"How should I format the output?"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"header"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Format"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Summary"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Brief overview of key points"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Detailed"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Full explanation with examples"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"multiSelect"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="option-previews-typescript">选项预览 (TypeScript)</h4>
+<p><code>toolConfig.askUserQuestion.previewFormat</code> 向每个选项添加 <code>preview</code> 字段，以便您的应用可以在标签旁显示视觉模型。没有此设置，Claude 不会生成预览，该字段不存在。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><code>previewFormat</code></th>
+<th style="text-align: left;"><code>preview</code> 包含</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">未设置（默认）</td>
+<td style="text-align: left;">字段不存在。Claude 不会生成预览。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>"markdown"</code></td>
+<td style="text-align: left;">ASCII 艺术和围栏代码块</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>"html"</code></td>
+<td style="text-align: left;">样式的 <code>&lt;div&gt;</code> 片段（SDK 在您的回调运行前拒绝 <code>&lt;script&gt;</code>、<code>&lt;style&gt;</code> 和 <code>&lt;!DOCTYPE&gt;</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>该格式适用于会话中的所有问题。Claude 在视觉比较有帮助的选项上包含 <code>preview</code>（布局选择、配色方案），并在不会的地方省略它（是/否确认、仅文本选择）。在呈现前检查 <code>undefined</code>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Help me choose a card layout"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">toolConfig</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">askUserQuestion</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">previewFormat</span><span class="o">:</span><span class="w"> </span><span class="s2">"html"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">canUseTool</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">(</span><span class="nx">toolName</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// input.questions[].options[].preview 是 HTML 字符串或 undefined</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w"> </span><span class="nx">updatedInput</span><span class="o">:</span><span class="w"> </span><span class="kt">input</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>带有 HTML 预览的选项：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Compact"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Title and metric value only"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"preview"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;div style=\"padding:12px;border:1px solid #ddd;border-radius:8px\"&gt;&lt;div style=\"font-size:12px;color:#666\"&gt;Active users&lt;/div&gt;&lt;div style=\"font-size:28px;font-weight:600\"&gt;1,284&lt;/div&gt;&lt;/div&gt;"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="response-format">响应格式</h3>
+<p>返回 <code>answers</code> 对象，将每个问题的 <code>question</code> 字段映射到所选选项的 <code>label</code>：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>questions</code></td>
+<td>传递原始问题数组（工具处理需要）</td>
+</tr>
+<tr>
+<td><code>answers</code></td>
+<td>对象，其中键是问题文本，值是所选标签</td>
+</tr>
+<tr>
+<td><code>response</code></td>
+<td>可选的自由格式回复，用户输入的而不是回答结构化问题</td>
+</tr>
+</tbody>
+</table>
+<p>对于多选问题，传递标签数组或用 <code>", "</code> 连接它们。对于按问题的自由文本，例如"其他"选项，将用户的文本放在 <code>answers[question]</code> 中，如<a href="#support-free-text-input">支持自由文本输入</a>中所示。仅当您的 UI 让用户关闭问题卡并输入不是任何特定问题答案的一般回复时，才设置 <code>response</code>。当设置 <code>response</code> 时，Claude 会收到"用户回复：…"而不是按问题答案列表。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">jsonc</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"questions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"answers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"How should I format the output?"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Summary"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"Which sections should I include?"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Introduction"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Conclusion"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="support-free-text-input">支持自由文本输入</h4>
+<p>Claude 的预定义选项并不总是涵盖用户想要的内容。要让用户输入自己的答案：</p>
+<ul>
+<li>在 Claude 的选项后显示额外的"其他"选择，接受文本输入</li>
+<li>使用用户的自定义文本作为答案值（不是单词"其他"）</li>
+</ul>
+<p>有关完整实现，请参阅下面的<a href="#complete-example">完整示例</a>。</p>
+<h3 id="complete-example">完整示例</h3>
+<p>当 Claude 需要用户输入来继续时，它会提出澄清问题。例如，当被要求帮助为移动应用程序决定技术栈时，Claude 可能会询问跨平台与原生、后端偏好或目标平台。这些问题帮助 Claude 做出与用户偏好相匹配的决定，而不是猜测。</p>
+<p>此示例在终端应用程序中处理这些问题。以下是每个步骤发生的情况：</p>
+<ol>
+<li><strong>路由请求</strong>：<code>canUseTool</code> 回调检查工具名称是否为 <code>"AskUserQuestion"</code> 并路由到专用处理程序</li>
+<li><strong>显示问题</strong>：处理程序循环遍历 <code>questions</code> 数组并打印每个问题及编号选项</li>
+<li><strong>收集输入</strong>：用户可以输入数字来选择选项，或直接输入自由文本（例如"jquery"、"i don't know"）</li>
+<li><strong>映射答案</strong>：代码检查输入是数字（使用选项的标签）还是自由文本（使用文本直接）</li>
+<li><strong>返回给 Claude</strong>：响应包括原始 <code>questions</code> 数组和 <code>answers</code> 映射</li>
+</ol>
+<p>将 TypeScript 版本保存为 <code>ask.ts</code> 并使用 <code>npx tsx ask.ts</code> 运行它，或将 Python 版本保存为 <code>ask.py</code> 并使用 <code>python ask.py</code> 运行它。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">,</span> <span class="n">query</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">HookMatcher</span><span class="p">,</span> <span class="n">PermissionResultAllow</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_response</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""将用户输入解析为选项编号或自由文本。"""</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)]</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">options</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">"label"</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span> <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="k">if</span> <span class="n">labels</span> <span class="k">else</span> <span class="n">response</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_ask_user_question</span><span class="p">(</span><span class="n">input_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PermissionResultAllow</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""显示 Claude 的问题并收集用户答案。"""</span>
+    <span class="n">answers</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">input_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"questions"</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="n">q</span><span class="p">[</span><span class="s1">'header'</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">q</span><span class="p">[</span><span class="s1">'question'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="n">options</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="s2">"options"</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">opt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">'label'</span><span class="p">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"multiSelect"</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"  (Enter numbers separated by commas, or type your own answer)"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"  (Enter a number, or type your own answer)"</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"Your choice: "</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">answers</span><span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="s2">"question"</span><span class="p">]]</span> <span class="o">=</span> <span class="n">parse_response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">PermissionResultAllow</span><span class="p">(</span>
+        <span class="n">updated_input</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">"questions"</span><span class="p">:</span> <span class="n">input_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"questions"</span><span class="p">,</span> <span class="p">[]),</span>
+            <span class="s2">"answers"</span><span class="p">:</span> <span class="n">answers</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">can_use_tool</span><span class="p">(</span>
+    <span class="n">tool_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">input_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PermissionResultAllow</span><span class="p">:</span>
+    <span class="c1"># 将 AskUserQuestion 路由到我们的问题处理程序</span>
+    <span class="k">if</span> <span class="n">tool_name</span> <span class="o">==</span> <span class="s2">"AskUserQuestion"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">handle_ask_user_question</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+    <span class="c1"># 为此示例自动批准其他工具</span>
+    <span class="k">return</span> <span class="n">PermissionResultAllow</span><span class="p">(</span><span class="n">updated_input</span><span class="o">=</span><span class="n">input_data</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">prompt_stream</span><span class="p">():</span>
+    <span class="k">yield</span> <span class="p">{</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
+        <span class="s2">"message"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
+            <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"Help me decide on the tech stack for a new mobile app"</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+
+<span class="c1"># 必需的解决方法：虚拟 hook 保持流打开以供 can_use_tool 使用</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">dummy_hook</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"continue_"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="n">prompt_stream</span><span class="p">(),</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+            <span class="n">can_use_tool</span><span class="o">=</span><span class="n">can_use_tool</span><span class="p">,</span>
+            <span class="n">hooks</span><span class="o">=</span><span class="p">{</span><span class="s2">"PreToolUse"</span><span class="p">:</span> <span class="p">[</span><span class="n">HookMatcher</span><span class="p">(</span><span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">dummy_hook</span><span class="p">])]},</span>
+        <span class="p">),</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"success"</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PermissionResult</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">readline</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"readline/promises"</span><span class="p">;</span>
+
+<span class="c1">// 帮助程序在终端中提示用户输入</span>
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">prompt</span><span class="p">(</span><span class="nx">question</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">rl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readline</span><span class="p">.</span><span class="nx">createInterface</span><span class="p">({</span><span class="w"> </span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="kt">process.stdin</span><span class="p">,</span><span class="w"> </span><span class="nx">output</span><span class="o">:</span><span class="w"> </span><span class="kt">process.stdout</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">answer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">rl</span><span class="p">.</span><span class="nx">question</span><span class="p">(</span><span class="nx">question</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">rl</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">answer</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 将用户输入解析为选项编号或自由文本</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">parseResponse</span><span class="p">(</span><span class="nx">response</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">[])</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">indices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">","</span><span class="p">).</span><span class="nx">map</span><span class="p">((</span><span class="nx">s</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">trim</span><span class="p">())</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">indices</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">!</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">options</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">options</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">label</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">labels</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">labels</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">", "</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">response</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 显示 Claude 的问题并收集用户答案</span>
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">handleAskUserQuestion</span><span class="p">(</span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">PermissionResult</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">answers</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">q</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">input</span><span class="p">.</span><span class="nx">questions</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`\n</span><span class="si">${</span><span class="nx">q</span><span class="p">.</span><span class="nx">header</span><span class="si">}</span><span class="sb">: </span><span class="si">${</span><span class="nx">q</span><span class="p">.</span><span class="nx">question</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">q</span><span class="p">.</span><span class="nx">options</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">options</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">opt</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`  </span><span class="si">${</span><span class="nx">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="si">}</span><span class="sb">. </span><span class="si">${</span><span class="nx">opt</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb"> - </span><span class="si">${</span><span class="nx">opt</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">q</span><span class="p">.</span><span class="nx">multiSelect</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"  (Enter numbers separated by commas, or type your own answer)"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"  (Enter a number, or type your own answer)"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">prompt</span><span class="p">(</span><span class="s2">"Your choice: "</span><span class="p">)).</span><span class="nx">trim</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">answers</span><span class="p">[</span><span class="nx">q</span><span class="p">.</span><span class="nx">question</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">parseResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">options</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 将答案返回给 Claude（必须包括原始问题）</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">updatedInput</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">questions</span><span class="o">:</span><span class="w"> </span><span class="kt">input.questions</span><span class="p">,</span><span class="w"> </span><span class="nx">answers</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Help me decide on the tech stack for a new mobile app"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">canUseTool</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">(</span><span class="nx">toolName</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 将 AskUserQuestion 路由到我们的问题处理程序</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">toolName</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"AskUserQuestion"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="nx">handleAskUserQuestion</span><span class="p">(</span><span class="nx">input</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// 为此示例自动批准其他工具</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w"> </span><span class="nx">updatedInput</span><span class="o">:</span><span class="w"> </span><span class="kt">input</span><span class="w"> </span><span class="p">};</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s2">"result"</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">message</span><span class="p">)</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">main</span><span class="p">();</span>
+</code></pre></div>
+<h2 id="limitations">限制</h2>
+<ul>
+<li><strong>子代理</strong>：<code>AskUserQuestion</code> 目前在通过 Agent 工具生成的子代理中不可用</li>
+<li><strong>问题限制</strong>：每个 <code>AskUserQuestion</code> 调用支持 1-4 个问题，每个 2-4 个选项</li>
+</ul>
+<h2 id="other-ways-to-get-user-input">获取用户输入的其他方式</h2>
+<p><code>canUseTool</code> 回调和 <code>AskUserQuestion</code> 工具涵盖了大多数批准和澄清场景，但 SDK 提供了其他从用户获取输入的方式：</p>
+<h3 id="streaming-input">流输入</h3>
+<p>当您需要以下情况时，使用<a href="agent-sdk-streaming-vs-single-mode.html">流输入</a>：</p>
+<ul>
+<li><strong>在任务中断代理</strong>：在 Claude 工作时发送取消信号或改变方向</li>
+<li><strong>提供额外上下文</strong>：添加 Claude 需要的信息而无需等待它提出问题</li>
+<li><strong>构建聊天界面</strong>：让用户在长时间运行的操作期间发送后续消息</li>
+</ul>
+<p>流输入非常适合对话式 UI，用户在整个执行过程中与代理交互，而不仅仅在批准检查点。</p>
+<h3 id="custom-tools">自定义工具</h3>
+<p>当您需要以下情况时，使用<a href="agent-sdk-custom-tools.html">自定义工具</a>：</p>
+<ul>
+<li><strong>收集结构化输入</strong>：构建超越 <code>AskUserQuestion</code> 多选格式的表单、向导或多步工作流</li>
+<li><strong>集成外部批准系统</strong>：连接到现有的票务、工作流或批准平台</li>
+<li><strong>实现特定领域的交互</strong>：创建针对您的应用程序需求定制的工具，如代码审查界面或部署清单</li>
+</ul>
+<p>自定义工具让您完全控制交互，但需要比使用内置 <code>canUseTool</code> 回调更多的实现工作。</p>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li><a href="agent-sdk-permissions.html">配置权限</a>：设置权限模式和规则</li>
+<li><a href="agent-sdk-hooks.html">使用 hooks 控制执行</a>：在代理生命周期的关键点运行自定义代码</li>
+<li><a href="agent-sdk-typescript.html#canusetool">TypeScript SDK 参考</a>：完整的 canUseTool API 文档</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="agent-sdk-streaming-vs-single-mode.html"><span class="pager-dir">← 上一页</span><span class="pager-name">流式输入</span></a><a class="pager-link next" href="agent-sdk-streaming-output.html"><span class="pager-dir">下一页 →</span><span class="pager-name">实时流式传输响应</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#detect-when-claude-needs-input">检测 Claude 何时需要输入</a><a class="toc-l2" href="#handle-tool-approval-requests">处理工具批准请求</a><a class="toc-l3" href="#respond-to-tool-requests">响应工具请求</a><a class="toc-l2" href="#handle-clarifying-questions">处理澄清问题</a><a class="toc-l3" href="#question-format">问题格式</a><a class="toc-l3" href="#response-format">响应格式</a><a class="toc-l3" href="#complete-example">完整示例</a><a class="toc-l2" href="#limitations">限制</a><a class="toc-l2" href="#other-ways-to-get-user-input">获取用户输入的其他方式</a><a class="toc-l3" href="#streaming-input">流输入</a><a class="toc-l3" href="#custom-tools">自定义工具</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

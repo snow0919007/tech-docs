@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>实时流式传输响应 · Claude Code 中文文档</title>
+<meta name="description" content="当文本和工具调用流入时，从 Agent SDK 获取实时响应">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-sdk/streaming-output">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-sdk/streaming-output" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link active" href="agent-sdk-streaming-output.html" aria-current="page">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>Agent SDK</span> <span class="sep">/</span> <span>输入和输出</span></div>
+    <article class="prose" id="article"><h1 id="_1">实时流式传输响应</h1>
+<blockquote>
+<p>当文本和工具调用流入时，从 Agent SDK 获取实时响应</p>
+</blockquote>
+<p>默认情况下，Agent SDK 在 Claude 完成生成每个非空内容块（例如文本块或工具调用）后会产生完整的 <code>AssistantMessage</code>。要在文本和工具调用生成时接收增量更新，请启用部分消息流式传输。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>本页面涵盖输出流式传输（实时接收令牌）。有关输入模式（如何发送消息），请参阅<a href="agent-sdk-streaming-vs-single-mode.html">向代理发送消息</a>。您也可以<a href="headless.html">通过 CLI 使用 Agent SDK 流式传输响应</a>。</p></div></div>
+<h2 id="enable-streaming-output">启用流式输出</h2>
+<p>要启用流式传输，请在选项中将 <code>include_partial_messages</code>（Python）或 <code>includePartialMessages</code>（TypeScript）设置为 <code>true</code>。这会导致 SDK 产生包含原始 API 事件的 <code>StreamEvent</code> 消息，这些事件在到达时产生，除了通常的 <code>AssistantMessage</code> 和 <code>ResultMessage</code> 之外。</p>
+<p>您的代码需要：</p>
+<ol>
+<li>检查每条消息的类型以区分 <code>StreamEvent</code> 和其他消息类型</li>
+<li>对于 <code>StreamEvent</code>，提取 <code>event</code> 字段并检查其 <code>type</code></li>
+<li>查找 <code>content_block_delta</code> 事件，其中 <code>delta.type</code> 是 <code>text_delta</code>，这些事件包含实际的文本块</li>
+</ol>
+<p>下面的示例启用流式传输并在文本块到达时打印它们。注意嵌套的类型检查：首先是 <code>StreamEvent</code>，然后是 <code>content_block_delta</code>，最后是 <code>text_delta</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">StreamEvent</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_response</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">include_partial_messages</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Bash"</span><span class="p">,</span> <span class="s2">"Read"</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">"List the files in my project"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">StreamEvent</span><span class="p">):</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">event</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"content_block_delta"</span><span class="p">:</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"delta"</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="k">if</span> <span class="n">delta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"text_delta"</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"text"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">stream_response</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"List the files in my project"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">includePartialMessages</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Bash"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Read"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"stream_event"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">event</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"content_block_delta"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">delta</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"text_delta"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">delta</span><span class="p">.</span><span class="nx">text</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="streamevent-reference">StreamEvent 参考</h2>
+<p>启用部分消息时，您会收到包装在对象中的原始 Claude API 流事件。该类型在每个 SDK 中有不同的名称：</p>
+<ul>
+<li><strong>Python</strong>: <a href="agent-sdk-python.html#streamevent"><code>StreamEvent</code></a>（从 <code>claude_agent_sdk.types</code> 导入）</li>
+<li><strong>TypeScript</strong>: <a href="agent-sdk-typescript.html#sdkpartialassistantmessage"><code>SDKPartialAssistantMessage</code></a>，其中 <code>type: 'stream_event'</code></li>
+</ul>
+<p>两者都包含原始 Claude API 事件，而不是累积的文本。您需要自己提取和累积文本增量。</p>
+<p><code>parent_tool_use_id</code> 字段在 Python 中始终为 <code>None</code>，在 TypeScript 中始终为 <code>null</code>。流事件仅针对主会话发出；来自子代理的令牌级增量不会被转发。要将输出归属于子代理，请使用完整消息，这些消息携带 <code>parent_tool_use_id</code>。请参阅<a href="agent-sdk-subagents.html#detect-subagent-invocation">检测子代理调用</a>。</p>
+<p>Claude Code 在轮次的第一个非 ping 流事件上设置 <code>user_message_uuid</code>，以及当轮次回答的消息更改时再次设置，条件在 <a href="agent-sdk-typescript.html#user_message_uuid"><code>user_message_uuid</code></a> 中。Python <code>StreamEvent</code> 不公开此字段。</p>
+<p><code>event</code> 字段包含来自 <a href="https://platform.claude.com/docs/en/build-with-claude/streaming#event-types" target="_blank" rel="noopener">Claude API</a> 的原始流事件。常见的事件类型包括：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件类型</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>message_start</code></td>
+<td style="text-align: left;">新消息的开始</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>content_block_start</code></td>
+<td style="text-align: left;">新内容块的开始（文本或工具使用）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>content_block_delta</code></td>
+<td style="text-align: left;">内容的增量更新</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>content_block_stop</code></td>
+<td style="text-align: left;">内容块的结束</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>message_delta</code></td>
+<td style="text-align: left;">消息级更新（停止原因、使用情况）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>message_stop</code></td>
+<td style="text-align: left;">消息的结束</td>
+</tr>
+</tbody>
+</table>
+<h2 id="message-flow">消息流</h2>
+<p>Claude Code 在每个非空内容块完成时发出一个 <code>AssistantMessage</code>，因此包含文本块和工具调用的响应会产生两个 <code>AssistantMessage</code> 对象。每个对象仅携带其自己的内容块，两者共享相同的消息 ID，在 TypeScript 中读作 <code>message.message.id</code>，在 Python 中读作 <code>message.message_id</code>。启用部分消息后，每个 <code>AssistantMessage</code> 在该块的 <code>content_block_stop</code> 事件之前到达，你会按以下顺序接收消息：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">StreamEvent (message_start)
+StreamEvent (content_block_start) - text block
+StreamEvent (content_block_delta) - text chunks...
+AssistantMessage - complete text block
+StreamEvent (content_block_stop)
+StreamEvent (content_block_start) - tool_use block
+StreamEvent (content_block_delta) - tool input chunks...
+AssistantMessage - complete tool_use block
+StreamEvent (content_block_stop)
+StreamEvent (message_delta)
+StreamEvent (message_stop)
+... tool executes ...
+... more streaming events for next turn ...
+ResultMessage - final result
+</code></pre></div>
+<p>未启用部分消息时，你会接收除 <code>StreamEvent</code> 之外的所有消息类型。常见类型包括 <code>SystemMessage</code>（会话初始化）、<code>AssistantMessage</code>（完整内容块）、<code>ResultMessage</code>（最终结果）和一个紧凑边界消息，指示何时压缩了对话历史记录（TypeScript 中为 <code>SDKCompactBoundaryMessage</code>；Python 中为带有子类型 <code>"compact_boundary"</code> 的 <code>SystemMessage</code>）。</p>
+<h3 id="handle-a-stream-that’s-cut-off">处理被中断的流</h3>
+<p>如果流在消息中途被中断，您仍会在该轮次结束前收到该消息的 <code>message_stop</code>。导致流被中断的原因包括轮次被中断、连接断开以及回退到非流式请求。在该 <code>message_stop</code> 之前，<code>content_block_stop</code> 和 <code>message_delta</code> 可能会缺失：</p>
+<ul>
+<li><strong><code>content_block_stop</code></strong>：会为处于打开状态的块到达，除非该块是工具调用。如果 <code>message_stop</code> 到达时某个工具调用的块仍处于打开状态，请将该调用的输入视为不完整。</li>
+<li><strong><code>message_delta</code></strong>：在您中断该轮次时会到达，而在连接断开或回退到非流式请求后可能会缺失，因此对于被中断的消息，请勿等待它。</li>
+</ul>
+<p>在 Claude Code v2.1.290 之前，被中断的流可能会在没有 <code>message_stop</code> 的情况下结束轮次，因此您根据流事件渲染的回复可能会一直显示为进行中。TypeScript Agent SDK 从 v0.3.290 起捆绑 Claude Code v2.1.290 或更高版本，Python Agent SDK 则从 v0.2.164 起捆绑。如果轮次结束后回复仍显示为进行中，请更新 SDK。</p>
+<h2 id="stream-tool-calls">流式传输工具调用</h2>
+<p>工具调用也会增量流式传输。您可以跟踪工具何时开始、在生成时接收其输入，以及查看它们何时完成。下面的示例跟踪当前被调用的工具并在流式传输时累积 JSON 输入。它使用三种事件类型：</p>
+<ul>
+<li><code>content_block_start</code>：工具开始</li>
+<li><code>content_block_delta</code>，带有 <code>input_json_delta</code>：输入块到达</li>
+<li><code>content_block_stop</code>：工具调用完成</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">StreamEvent</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_tool_calls</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">include_partial_messages</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Bash"</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 跟踪当前工具并累积其输入 JSON</span>
+    <span class="n">current_tool</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">tool_input</span> <span class="o">=</span> <span class="s2">""</span>
+
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">"Read the README.md file"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">StreamEvent</span><span class="p">):</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">event</span>
+            <span class="n">event_type</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">event_type</span> <span class="o">==</span> <span class="s2">"content_block_start"</span><span class="p">:</span>
+                <span class="c1"># 新工具调用开始</span>
+                <span class="n">content_block</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"content_block"</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="k">if</span> <span class="n">content_block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"tool_use"</span><span class="p">:</span>
+                    <span class="n">current_tool</span> <span class="o">=</span> <span class="n">content_block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
+                    <span class="n">tool_input</span> <span class="o">=</span> <span class="s2">""</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Starting tool: </span><span class="si">{</span><span class="n">current_tool</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">event_type</span> <span class="o">==</span> <span class="s2">"content_block_delta"</span><span class="p">:</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"delta"</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="k">if</span> <span class="n">delta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"input_json_delta"</span><span class="p">:</span>
+                    <span class="c1"># 在流式传输时累积 JSON 输入</span>
+                    <span class="n">chunk</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"partial_json"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+                    <span class="n">tool_input</span> <span class="o">+=</span> <span class="n">chunk</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Input chunk: </span><span class="si">{</span><span class="n">chunk</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">event_type</span> <span class="o">==</span> <span class="s2">"content_block_stop"</span><span class="p">:</span>
+                <span class="c1"># 工具调用完成 - 显示最终输入</span>
+                <span class="k">if</span> <span class="n">current_tool</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Tool </span><span class="si">{</span><span class="n">current_tool</span><span class="si">}</span><span class="s2"> called with: </span><span class="si">{</span><span class="n">tool_input</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                    <span class="n">current_tool</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">stream_tool_calls</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="c1">// 跟踪当前工具并累积其输入 JSON</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">currentTool</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">toolInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Read the README.md file"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">includePartialMessages</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Bash"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"stream_event"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">event</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"content_block_start"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 新工具调用开始</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">content_block</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"tool_use"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">currentTool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">event</span><span class="p">.</span><span class="nx">content_block</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">toolInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Starting tool: </span><span class="si">${</span><span class="nx">currentTool</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"content_block_delta"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">delta</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"input_json_delta"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 在流式传输时累积 JSON 输入</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">event</span><span class="p">.</span><span class="nx">delta</span><span class="p">.</span><span class="nx">partial_json</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">toolInput</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">chunk</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`  Input chunk: </span><span class="si">${</span><span class="nx">chunk</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"content_block_stop"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 工具调用完成 - 显示最终输入</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">currentTool</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Tool </span><span class="si">${</span><span class="nx">currentTool</span><span class="si">}</span><span class="sb"> called with: </span><span class="si">${</span><span class="nx">toolInput</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">currentTool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="build-a-streaming-ui">构建流式 UI</h2>
+<p>此示例将文本和工具流式传输结合到一个有凝聚力的 UI 中。它跟踪代理当前是否正在执行工具（使用 <code>in_tool</code> 标志）以显示状态指示器，如 <code>[Using Read...]</code>，同时工具运行。当不在工具中时文本正常流式传输，工具完成会触发"完成"消息。此模式对于需要在多步骤代理任务期间显示进度的聊天界面很有用。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">StreamEvent</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">streaming_ui</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">include_partial_messages</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Bash"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 跟踪我们当前是否在工具调用中</span>
+    <span class="n">in_tool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Find all TODO comments in the codebase"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">StreamEvent</span><span class="p">):</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">event</span>
+            <span class="n">event_type</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">event_type</span> <span class="o">==</span> <span class="s2">"content_block_start"</span><span class="p">:</span>
+                <span class="n">content_block</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"content_block"</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="k">if</span> <span class="n">content_block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"tool_use"</span><span class="p">:</span>
+                    <span class="c1"># 工具调用开始 - 显示状态指示器</span>
+                    <span class="n">tool_name</span> <span class="o">=</span> <span class="n">content_block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">[Using </span><span class="si">{</span><span class="n">tool_name</span><span class="si">}</span><span class="s2">...]"</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">in_tool</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">elif</span> <span class="n">event_type</span> <span class="o">==</span> <span class="s2">"content_block_delta"</span><span class="p">:</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"delta"</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="c1"># 仅在不执行工具时流式传输文本</span>
+                <span class="k">if</span> <span class="n">delta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"text_delta"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">in_tool</span><span class="p">:</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"text"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+            <span class="k">elif</span> <span class="n">event_type</span> <span class="o">==</span> <span class="s2">"content_block_stop"</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">in_tool</span><span class="p">:</span>
+                    <span class="c1"># 工具调用完成</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">" done"</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">in_tool</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">):</span>
+            <span class="c1"># 代理完成所有工作</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">--- Complete ---"</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">streaming_ui</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="c1">// 跟踪我们当前是否在工具调用中</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">inTool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Find all TODO comments in the codebase"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">includePartialMessages</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Bash"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"stream_event"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">event</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"content_block_start"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">content_block</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"tool_use"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 工具调用开始 - 显示状态指示器</span>
+<span class="w">        </span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="sb">`\n[Using </span><span class="si">${</span><span class="nx">event</span><span class="p">.</span><span class="nx">content_block</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb">...]`</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">inTool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"content_block_delta"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 仅在不执行工具时流式传输文本</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">delta</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"text_delta"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">inTool</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">delta</span><span class="p">.</span><span class="nx">text</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"content_block_stop"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">inTool</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 工具调用完成</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">" done"</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">inTool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 代理完成所有工作</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"\n\n--- Complete ---"</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="known-limitations">已知限制</h2>
+<ul>
+<li><strong>结构化输出</strong>：启用部分消息时，JSON 作为工具调用的未验证 <code>input_json_delta</code> 块进行流式传输，只有验证后的结果才会到达最终的 <code>ResultMessage.structured_output</code>。<a href="agent-sdk-structured-outputs.html#recognize-the-structuredoutput-tool-call">识别 StructuredOutput 工具调用</a>介绍了该调用在您的流中如何呈现。</li>
+</ul>
+<h2 id="next-steps">后续步骤</h2>
+<p>现在您可以实时流式传输文本和工具调用，请探索这些相关主题：</p>
+<ul>
+<li><a href="agent-sdk-streaming-vs-single-mode.html">交互式与一次性查询</a>：为您的用例选择输入模式</li>
+<li><a href="agent-sdk-structured-outputs.html">结构化输出</a>：从代理获取类型化的 JSON 响应</li>
+<li><a href="agent-sdk-permissions.html">权限</a>：控制代理可以使用哪些工具</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="agent-sdk-user-input.html"><span class="pager-dir">← 上一页</span><span class="pager-name">处理批准和用户输入</span></a><a class="pager-link next" href="agent-sdk-structured-outputs.html"><span class="pager-dir">下一页 →</span><span class="pager-name">从代理获取结构化输出</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#enable-streaming-output">启用流式输出</a><a class="toc-l2" href="#streamevent-reference">StreamEvent 参考</a><a class="toc-l2" href="#message-flow">消息流</a><a class="toc-l3" href="#handle-a-stream-that’s-cut-off">处理被中断的流</a><a class="toc-l2" href="#stream-tool-calls">流式传输工具调用</a><a class="toc-l2" href="#build-a-streaming-ui">构建流式 UI</a><a class="toc-l2" href="#known-limitations">已知限制</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

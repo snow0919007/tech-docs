@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cron 触发器 · Workers 文档（中文版）</title>
+<meta name="description" content="用一条 cron 表达式，让 Worker 按计划自动执行。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>Cron 触发器</h1>
+      <p class="lead">用一条 cron 表达式，让 Worker 按计划自动执行。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-10-17</span>
+        <span>对应页面：configuration/cron-triggers</span>
+      </div>
+
+<h2>背景</h2>
+      <p>Cron 触发器（Cron Triggers）让用户把一条 cron 表达式映射到 Worker 上——通过 <a href="../../sections/runtime-apis.html"><code>scheduled()</code> 处理器</a>，Worker 就能按计划执行。</p>
+      <p>Cron 触发器非常适合跑周期性任务，例如日常维护，或定时调用第三方 API 拉取最新数据。被 Cron 触发器调度的 Worker 会跑在利用率较低的机器上，从而更好地利用 Cloudflare 的容量、并高效地调度流量。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>Cron 触发器也可以直接在 <a href="https://developers.cloudflare.com/workflows/" target="_blank" rel="noopener">Workflows ↗</a> 中使用，方式是 Workflow 绑定上的 <code>schedules</code>。详见<a href="https://developers.cloudflare.com/workflows/build/trigger-workflows/" target="_blank" rel="noopener">触发 Workflows ↗</a>，并注意使用支持 Workflow 调度的 Wrangler 版本。</p>
+      </div>
+      <p><strong>Cron 触发器按 UTC 时间执行。</strong></p>
+
+      <h2>添加 Cron 触发器</h2>
+      <h3>1. 定义 scheduled 事件监听器</h3>
+      <p>要响应 Cron 触发器，必须给 Worker 加上 <a href="../../sections/runtime-apis.html"><code>"scheduled"</code> 处理器</a>。</p>
+<pre data-lang="js"><code>export default {
+	async scheduled(controller, env, ctx) {
+		console.log("cron processed");
+	},
+};</code></pre>
+<pre data-lang="ts"><code>interface Env {}
+export default {
+	async scheduled(
+		controller: ScheduledController,
+		env: Env,
+		ctx: ExecutionContext,
+	) {
+		console.log("cron processed");
+	},
+};</code></pre>
+<pre data-lang="python"><code>from workers import WorkerEntrypoint
+
+class Default(WorkerEntrypoint):
+    async def scheduled(self, controller, env, ctx):
+        # All four parameters (self, controller, env, ctx) are required
+        print("cron processed")</code></pre>
+      <p>更多写法可参考这两个示例：<a href="../../sections/examples.html">设置 Cron 触发器</a>、<a href="../../sections/examples.html">多个 Cron 触发器</a>。</p>
+
+      <h3>2. 更新配置</h3>
+      <div class="warn-box">
+        <span class="box-title">Cron 触发器改动的传播需要时间</span>
+        <p>新增、修改或删除 Cron 触发器，可能要几分钟（最长 15 分钟）才能传播到 Cloudflare 全球网络。</p>
+      </div>
+      <p>给 Worker 代码加上 <code>"scheduled"</code> 事件之后，还要更新项目配置。</p>
+
+      <h4>通过 cloudflare.config.ts</h4>
+      <p>用 <a href="https://developers.cloudflare.com/cf/" target="_blank" rel="noopener">Cloudflare CLI ↗</a> 管理的项目，在 <code>cloudflare.config.ts</code> 的 <code>worker.triggers</code> 里添加 <code>triggers.scheduled()</code> 条目：</p>
+      <div class="note-box">
+        <span class="box-title">原站此处是交互式 API 参考</span>
+        <p>原文这一节是一个可展开的类型提示组件，逐项说明 <code>defineConfig</code>、<code>worker</code>、<code>name</code>、<code>entrypoint</code>、<code>compatibilityDate</code>、<code>triggers</code> 与 <code>triggers.scheduled({ schedule })</code> 的签名与含义。要点如下：</p>
+        <ul>
+          <li><code>defineConfig(config)</code>：定义 <code>cloudflare.config.ts</code> 的默认导出，可传配置对象、解析为该对象的 Promise，或接收配置上下文（<code>isPreview</code>、<code>mode</code>）并返回配置的函数。</li>
+          <li><code>worker.name</code>（必填）：Worker 名称。</li>
+          <li><code>worker.entrypoint</code>（可选）：入口模块，可以是路径字符串（如 <code>"./src/index.ts"</code>），也可以是带 <code>cf-worker</code> 导入属性的模块命名空间。</li>
+          <li><code>worker.compatibilityDate</code>（必填）：<code>yyyy-mm-dd</code> 形式的日期，决定使用哪个 Workers 运行时版本。</li>
+          <li><code>worker.triggers</code>（可选）：事件触发器数组，可用 <code>triggers.fetch()</code>、<code>triggers.queue()</code>、<code>triggers.scheduled()</code>、<code>triggers.email()</code>、<code>triggers.connect()</code> 构造。</li>
+          <li><code>triggers.scheduled({ schedule })</code>：cron 定义，<code>schedule</code> 为必填字符串。</li>
+        </ul>
+      </div>
+<pre data-lang="ts"><code>import { defineConfig, triggers } from "cf/config";
+import * as entrypoint from "./src/index.ts" with { type: "cf-worker" };
+
+export default defineConfig({
+	worker: {
+		name: "my-worker",
+		entrypoint,
+		compatibilityDate: "&lt;COMPATIBILITY_DATE&gt;",
+		triggers: [triggers.scheduled({ schedule: "0 * * * *" })],
+	},
+});</code></pre>
+      <p>本地测试处理器用 <code>cf dev</code>；部署配置好的调度用 <code>cf deploy</code>。</p>
+
+      <h4>通过 Wrangler 配置文件</h4>
+      <p>如果 Worker 由 Wrangler 管理，Cron 触发器应<strong>只</strong>通过 <a href="../../sections/wrangler.html">Wrangler 配置文件</a>管理。</p>
+<pre data-lang="jsonc"><code>{
+	"triggers": {
+		// Schedule cron triggers:
+		// - At every 3rd minute
+		// - At 15:00 (UTC) on first day of the month
+		// - At 23:59 (UTC) on the last weekday of the month
+		"crons": [
+			"*/3 * * * *",
+			"0 15 1 * *",
+			"59 23 LW * *"
+		]
+	}
+}</code></pre>
+<pre data-lang="toml"><code>[triggers]
+crons = [ "*/3 * * * *", "0 15 1 * *", "59 23 LW * *" ]</code></pre>
+      <p>你也可以为 <a href="../../sections/wrangler.html">Wrangler 配置文件</a>中的每个<a href="../../sections/wrangler.html">环境</a>设置不同的 Cron 触发器——把 <code>triggers</code> 数组放进对应环境里即可：</p>
+<pre data-lang="jsonc"><code>{
+	"env": {
+		"dev": {
+			"triggers": {
+				"crons": [
+					"0 * * * *"
+				]
+			}
+		}
+	}
+}</code></pre>
+<pre data-lang="toml"><code>[env.dev.triggers]
+crons = [ "0 * * * *" ]</code></pre>
+
+      <h4>通过控制台</h4>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>在 <strong>Overview</strong> 中选择你的 Worker &gt; <strong>Settings</strong> &gt; <strong>Triggers</strong> &gt; <strong>Cron Triggers</strong>。</li>
+      </ol>
+
+      <h2>支持的 cron 表达式</h2>
+      <p>Cloudflare 支持五字段的 cron 表达式，以及大部分 <a href="http://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html#introduction" target="_blank" rel="noopener">Quartz 调度器 ↗</a>风格的语法扩展：</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>字段</th><th>取值</th><th>可用字符</th></tr></thead>
+          <tbody>
+            <tr><td>分钟（Minute）</td><td>0-59</td><td><code>*</code> <code>,</code> <code>-</code> <code>/</code></td></tr>
+            <tr><td>小时（Hours）</td><td>0-23</td><td><code>*</code> <code>,</code> <code>-</code> <code>/</code></td></tr>
+            <tr><td>日（Days of Month）</td><td>1-31</td><td><code>*</code> <code>,</code> <code>-</code> <code>/</code> <code>L</code> <code>W</code></td></tr>
+            <tr><td>月（Months）</td><td>1-12，以及不区分大小写的三字母缩写（"JAN"、"aug" 等）</td><td><code>*</code> <code>,</code> <code>-</code> <code>/</code></td></tr>
+            <tr><td>星期（Weekdays）</td><td>1-7，以及不区分大小写的三字母缩写（"MON"、"fri" 等）</td><td><code>*</code> <code>,</code> <code>-</code> <code>/</code> <code>L</code> <code>#</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>星期取值从 1＝周日 到 7＝周六，这与某些 cron 系统不同（那些系统里 0＝周日、6＝周六）。为避免歧义，建议直接用三字母缩写（例如用 <code>SUN</code> 而不是 1）。</p>
+      </div>
+
+      <h3>示例</h3>
+      <p>一些常用的时间间隔，便于设置 Cron 触发器：</p>
+      <ul>
+        <li><code>* * * * *</code> —— 每分钟</li>
+        <li><code>*/30 * * * *</code> —— 每 30 分钟</li>
+        <li><code>45 * * * *</code> —— 每小时的第 45 分钟</li>
+        <li><code>0 17 * * sun</code> 或 <code>0 17 * * 1</code> —— 周日 17:00（UTC）</li>
+        <li><code>10 7 * * mon-fri</code> 或 <code>10 7 * * 2-6</code> —— 工作日 07:10（UTC）</li>
+        <li><code>0 15 1 * *</code> —— 每月 1 日 15:00（UTC）</li>
+        <li><code>0 18 * * 6L</code> 或 <code>0 18 * * friL</code> —— 每月最后一个周五 18:00（UTC）</li>
+        <li><code>59 23 LW * *</code> —— 每月最后一个工作日 23:59（UTC）</li>
+      </ul>
+
+      <h2>本地测试 Cron 触发器</h2>
+      <p>用 <a href="https://developers.cloudflare.com/cf/projects/#start-development" target="_blank" rel="noopener"><code>cf dev</code> ↗</a>、<a href="../../sections/wrangler.html"><code>wrangler dev</code></a> 或 <a href="../../sections/vite-plugin.html">Cloudflare Vite 插件</a>在本地测试 Cron 触发器。可以用 Local Explorer，也可以直接发一个 HTTP 请求。</p>
+      <p>在 Local Explorer 中测试 Cron 触发器，需要 Wrangler 4.139.0 或更高版本，或 Cloudflare Vite 插件 1.60.0 或更高版本。由 <code>cf dev</code> 启动的开发服务器同样有这一要求。</p>
+
+      <h3>使用 Local Explorer</h3>
+      <p><a href="../../pages/local-development/index.html">Local Explorer</a> 会显示当前环境实际配置的 Cron 触发器，也能在不改配置的前提下临时测试任意表达式。</p>
+      <p>要测试已配置的表达式，当前环境至少得有一个 Cron 触发器；而临时表达式不配置也能测。</p>
+      <ol>
+        <li><a href="../../pages/local-development/index.html">打开 Local Explorer</a>，选择要测试的 Worker。</li>
+        <li>选择 <strong>Cron Triggers</strong> &gt; <strong>Configured Crons</strong>。</li>
+        <li>选择 <em>Now</em>，或添加一个预设的调度时间。</li>
+        <li>在要测试的表达式旁选择 <strong>Trigger</strong>。</li>
+        <li>查看处理器结果、<code>noRetry()</code> 状态、实际派发的表达式与调度时间。</li>
+      </ol>
+      <p>完整的调用日志在拥有该 Worker 的开发会话里查看，且该会话必须开启 <strong>Observability</strong>。</p>
+      <p>每次调用都是一次性本地测试，本地开发<strong>不会</strong>自动运行 Cron 触发器。</p>
+      <p>要测试未配置的表达式，选择 <strong>Cron Triggers</strong> &gt; <strong>Ad-Hoc Triggers</strong>。临时触发器只留在你的浏览器里，不会改动已部署的 Cron 触发器。</p>
+
+      <h3>用 HTTP 请求测试</h3>
+      <p>本地开发服务器暴露了两个用于触发 scheduled 调用的端点。下面的例子用的是 <code>8787</code> 端口；请以你的开发服务器实际打印的端口为准（用 <code>cf dev</code> 启动时也一样）。Vite 默认使用 <code>5173</code> 端口。</p>
+
+      <h4>使用 scheduled 路由</h4>
+      <p>向 <code>/cdn-cgi/local/scheduled</code> 发请求即可调用 scheduled 处理器。</p>
+<pre data-lang="sh"><code>curl "http://localhost:8787/cdn-cgi/local/scheduled"</code></pre>
+      <p>默认以文本返回处理器结果。要拿到结构化的 JSON 结果，加上 <code>?format=json</code>。</p>
+<pre data-lang="sh"><code>curl "http://localhost:8787/cdn-cgi/local/scheduled?format=json"</code></pre>
+<pre data-lang="json"><code>{
+  "outcome": "ok",
+  "noRetry": false
+}</code></pre>
+      <p>当 scheduled 处理器调用了 <code>controller.noRetry()</code> 时，<code>noRetry</code> 字段为 <code>true</code>。</p>
+      <p>还可以传 <code>cron</code> 查询参数，模拟不同的 cron 模式。</p>
+<pre data-lang="sh"><code>curl "http://localhost:8787/cdn-cgi/local/scheduled?cron=*+*+*+*+*"</code></pre>
+      <p>也可以传 <code>time</code> 查询参数，用来覆盖 scheduled 事件监听器里的 <code>controller.scheduledTime</code>。</p>
+<pre data-lang="sh"><code>curl "http://localhost:8787/cdn-cgi/local/scheduled?cron=*+*+*+*+*&amp;time=1745856238000"</code></pre>
+
+      <h4>使用 Local Explorer API</h4>
+      <p>要精确指定 Local Explorer 可见的某个 Worker，向 <code>/cdn-cgi/local/explorer/api/local/scheduled?worker=&lt;WORKER_NAME&gt;</code> 发 <code>POST</code> 请求。<code>worker</code> 查询参数必须与 Worker 名称完全一致。可用 Worker 名列表可向 <code>/cdn-cgi/local/explorer/api/local/workers</code> 发 <code>GET</code> 获取。</p>
+      <p>JSON 请求体里 <code>cron</code> 字段必填且不能为空；可选的 <code>scheduled_time</code> 用毫秒时间戳设置 <code>controller.scheduledTime</code>，省略时默认取当前时间。</p>
+<pre data-lang="sh"><code>curl -X POST \
+  "http://localhost:8787/cdn-cgi/local/explorer/api/local/scheduled?worker=my-worker" \
+  -H "Content-Type: application/json" \
+  --data '{"cron":"0 * * * *","scheduled_time":1745856238000}'</code></pre>
+      <p>响应采用 Local Explorer API 的统一信封格式，其中 <code>result</code> 包含处理器的 <code>outcome</code> 与 <code>noRetry</code> 值。<strong>API 请求成功不等于处理器执行成功</strong>——请始终检查 <code>result.outcome</code>。</p>
+
+      <h2>查看历史事件</h2>
+      <p>要查看 Cron 触发器的执行历史，打开 <strong>Cron Events</strong>：</p>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>在 <strong>Overview</strong> 中选择你的 Worker。</li>
+        <li>选择 <strong>Settings</strong>。</li>
+        <li>在 <strong>Trigger Events</strong> 下选择 <strong>View events</strong>。</li>
+      </ol>
+      <p>Cron Events 保存最近 100 次 Cron 调度事件调用。<a href="../../sections/observability.html">Workers Logs</a> 也会记录 Cron 触发器的调用日志，保留期更长，并提供过滤与查询界面。如果需要用 API 访问 Cron Events，可以使用 Cloudflare 的 <a href="https://developers.cloudflare.com/analytics/graphql-api" target="_blank" rel="noopener">GraphQL Analytics API ↗</a>。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>新建 Worker 或修改 Worker 名称后，事件最长可能需要 30 分钟才会出现在 <strong>Past Cron Events</strong> 里。</p>
+      </div>
+      <p>更多信息见<a href="../../sections/observability.html">指标与分析</a>。</p>
+
+      <h2>删除 Cron 触发器</h2>
+      <h3>通过控制台</h3>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>选择你的 Worker。</li>
+        <li>进入 <strong>Triggers</strong> &gt; 点要删除的 Cron 触发器旁的三点图标 &gt; <strong>Delete</strong>。</li>
+      </ol>
+
+      <h3>通过 Wrangler 配置文件</h3>
+      <p>如果 Worker 由 Wrangler 管理，Cron 触发器应<strong>只</strong>通过 <a href="../../sections/wrangler.html">Wrangler 配置文件</a>管理。</p>
+      <p>用 Wrangler 部署时，之前的所有 Cron 触发器会被 <code>triggers</code> 数组中的内容替换：</p>
+      <ul>
+        <li><code>crons</code> 属性为空数组时，所有 Cron 触发器都会被删除。</li>
+        <li><code>triggers</code> 或 <code>crons</code> 为 <code>undefined</code> 时，当前已部署的 Cron 触发器保持不变。</li>
+      </ul>
+<pre data-lang="jsonc"><code>{
+	"triggers": {
+		// Remove all cron triggers:
+		"crons": []
+	}
+}</code></pre>
+<pre data-lang="toml"><code>[triggers]
+crons = [ ]</code></pre>
+
+      <h2>限额</h2>
+      <p>每个账户可创建的 Cron 触发器上限见 <a href="../../sections/platform.html">Workers 限额</a>。</p>
+
+      <h2>Green Compute</h2>
+      <p>启用 Green Compute 后，你的 Cron 触发器只会在完全由可再生能源供电的数据中心里的 Cloudflare 节点上运行。如果一家机构采购的可再生能源足以覆盖其总体能耗，就可以宣称自己是 100% 可再生能源供电。</p>
+      <p>可再生能源有多种采购方式：现场发电（风力发电机、光伏板）、通过名为购电协议（PPA）的合同直接从可再生能源生产商购买，或从能源凭证市场购买可再生能源凭证（REC、IRECs、GoOs）。</p>
+      <p>Green Compute 可在账户级配置：</p>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>在 <strong>Account details</strong> 区域找到 <strong>Compute Setting</strong>。</li>
+        <li>选择 <strong>Change</strong>。</li>
+        <li>选择 <strong>Green Compute</strong>。</li>
+        <li>选择 <strong>Confirm</strong>。</li>
+      </ol>
+
+      <h2>相关资源</h2>
+      <ul>
+        <li><a href="../../sections/wrangler.html">Triggers</a>：Cron 触发器在 Wrangler 配置文件中的语法。</li>
+        <li>了解如何在 <a href="../../pages/reference/module-workers.html">ES modules 语法</a>中使用 Cron 触发器，以获得更好的体验。</li>
+      </ul>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/cron-triggers/" target="_blank" rel="noopener">configuration/cron-triggers</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

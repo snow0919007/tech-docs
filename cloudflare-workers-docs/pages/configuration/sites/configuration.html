@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workers Sites 配置 · Workers 文档（中文版）</title>
+<meta name="description" content="bucket、include、exclude 三个字段，决定哪些静态文件被上传。">
+<link rel="stylesheet" href="../../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>Workers Sites 配置</h1>
+      <p class="lead">bucket、include、exclude 三个字段，决定哪些静态文件被上传。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-04-23</span>
+        <span>对应页面：configuration/sites/configuration</span>
+      </div>
+
+<div class="warn-box">
+        <span class="box-title">请改用 Workers 静态资源</span>
+        <p>托管全栈应用请用 <a href="../../../sections/static-assets.html">Workers 静态资源</a>，而不是 Workers Sites。Workers Sites 在 Wrangler v4 中已被废弃，<a href="../../../sections/vite-plugin.html">Cloudflare Vite 插件</a>也不支持它。新项目不要使用 Workers Sites。</p>
+      </div>
+
+      <p>Workers Sites 需要最新版本的 <a href="https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler" target="_blank" rel="noopener">Wrangler ↗</a>。</p>
+
+      <h2>Wrangler 配置文件</h2>
+      <p>Workers Sites 在 Wrangler 文件里有几个专属配置项：</p>
+      <ul>
+        <li><code>bucket</code>（必填）：存放静态资源的目录，路径相对于 <a href="../../../sections/wrangler.html">Wrangler 配置文件</a>。例如 <code>bucket = "./public"</code>。</li>
+        <li><code>include</code>（可选）：一组 gitignore 风格的匹配模式，指定你<strong>只想</strong>上传 <code>bucket</code> 里的哪些文件或目录。例如 <code>include = ["upload_dir"]</code>。</li>
+        <li><code>exclude</code>（可选）：一组 gitignore 风格的匹配模式，指定你<strong>不想</strong>上传的文件或目录。例如 <code>exclude = ["ignore_dir"]</code>。</li>
+      </ul>
+      <p>关于可选的 <code>include</code> 与 <code>exclude</code>，见下文<a href="#ignoring">忽略部分静态资源</a>。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>如果项目使用了<a href="../../../sections/wrangler.html">环境</a>，请把 <code>site</code> 放在任何环境专属配置块<strong>之上</strong>。</p>
+      </div>
+<pre data-lang="jsonc"><code>{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "docs-site-blah",
+	"site": {
+		"bucket": "./public"
+	},
+	"env": {
+		"production": {
+			"name": "docs-site",
+			"route": "https://example.com/docs*"
+		},
+		"staging": {
+			"name": "docs-site-staging",
+			"route": "https://staging.example.com/docs*"
+		}
+	}
+}</code></pre>
+<pre data-lang="toml"><code>"$schema" = "./node_modules/wrangler/config-schema.json"
+name = "docs-site-blah"
+
+[site]
+bucket = "./public"
+
+[env.production]
+name = "docs-site"
+route = "https://example.com/docs*"
+
+[env.staging]
+name = "docs-site-staging"
+route = "https://staging.example.com/docs*"</code></pre>
+
+      <h2>存储限额</h2>
+      <p>对特别大的页面，Workers Sites 可能不适用：单个页面或文件上限为 <strong>25 MiB</strong>。</p>
+
+      <h2 id="ignoring">忽略部分静态资源</h2>
+      <p>Workers Sites 依赖 <a href="https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler" target="_blank" rel="noopener">Wrangler ↗</a>，请务必使用<a href="../../../sections/wrangler.html">最新版本</a>。</p>
+      <p>有时你并不想上传某些静态资源。Workers Sites 可以配置忽略特定文件或目录，逻辑类似 <a href="https://doc.rust-lang.org/cargo/reference/manifest.html#the-exclude-and-include-fields-optional" target="_blank" rel="noopener">Cargo 的可选 include/exclude 字段 ↗</a>。也就是说，声明上传哪些目录项时，用的是 gitignore 语义。</p>
+
+      <h3>只包含某些文件/目录</h3>
+      <p>如果你只想上传 <code>bucket</code> 里特定的一组文件或目录，可以在 Wrangler 文件的 <code>[site]</code> 段加 <code>include</code>：</p>
+<pre data-lang="jsonc"><code>{
+	"site": {
+		"bucket": "./public",
+		"include": [ // must be an array.
+			"included_dir"
+		]
+	}
+}</code></pre>
+<pre data-lang="toml"><code>[site]
+bucket = "./public"
+include = [ "included_dir" ]</code></pre>
+      <p>Wrangler 之后只会上传与 <code>include</code> 数组中模式匹配的文件或目录。</p>
+
+      <h3>排除文件/目录</h3>
+      <p>如果要排除 <code>bucket</code> 里的某些文件或目录，可以在 <code>[site]</code> 段加 <code>exclude</code>：</p>
+<pre data-lang="jsonc"><code>{
+	"site": {
+		"bucket": "./public",
+		"exclude": [ // must be an array.
+			"excluded_dir"
+		]
+	}
+}</code></pre>
+<pre data-lang="toml"><code>[site]
+bucket = "./public"
+exclude = [ "excluded_dir" ]</code></pre>
+      <p>向 Workers KV 上传资源时，Wrangler 会忽略与 <code>exclude</code> 数组中模式匹配的文件或目录。</p>
+
+      <h3>include 优先于 exclude</h3>
+      <p>同时提供 <code>include</code> 与 <code>exclude</code> 时，以 <code>include</code> 为准，<code>exclude</code> 被忽略。</p>
+
+      <h3>默认忽略的项</h3>
+      <p>Wrangler 始终会忽略：</p>
+      <ul>
+        <li><code>node_modules</code></li>
+        <li>隐藏文件与隐藏目录</li>
+        <li>符号链接</li>
+      </ul>
+
+      <h4>关于 include/exclude 模式</h4>
+      <p>这些模式的标准写法见 <a href="https://git-scm.com/docs/gitignore" target="_blank" rel="noopener">gitignore 文档 ↗</a>。</p>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/sites/configuration/" target="_blank" rel="noopener">configuration/sites/configuration</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../../assets/nav-data-1.js"></script>
+<script src="../../../assets/nav-data-2.js"></script>
+<script src="../../../assets/site.js"></script>
+</body>
+</html>

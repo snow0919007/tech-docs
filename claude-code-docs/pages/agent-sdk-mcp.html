@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用 MCP 连接外部工具 · Claude Code 中文文档</title>
+<meta name="description" content="配置 MCP 服务器以扩展您的代理的外部工具。涵盖传输类型、大型工具集的工具搜索、身份验证和错误处理。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-sdk/mcp">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-sdk/mcp" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link active" href="agent-sdk-mcp.html" aria-current="page">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>Agent SDK</span> <span class="sep">/</span> <span>使用工具扩展</span></div>
+    <article class="prose" id="article"><h1 id="mcp">使用 MCP 连接外部工具</h1>
+<blockquote>
+<p>配置 MCP 服务器以扩展您的代理的外部工具。涵盖传输类型、大型工具集的工具搜索、身份验证和错误处理。</p>
+</blockquote>
+<p><a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="noopener">Model Context Protocol (MCP)</a> 是一个开放标准，用于将 AI 代理连接到外部工具和数据源。使用 MCP，您的代理可以查询数据库、与 Slack 和 GitHub 等 API 集成，以及连接到其他服务，而无需编写自定义工具实现。</p>
+<p>MCP 服务器可以作为本地进程运行、通过 HTTP 连接或直接在您的 SDK 应用程序中执行。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>本页面涵盖 Agent SDK 的 MCP 配置。要将 MCP 服务器添加到 Claude Code CLI 以便在每个项目中加载，请参阅 <a href="mcp.html#mcp-installation-scopes">MCP 安装范围</a>。</p></div></div>
+<h2 id="quickstart">快速开始</h2>
+<p>此示例使用 <a href="#http%2Fsse-servers">HTTP 传输</a> 连接到 <a href="https://code.claude.com/docs">Claude Code 文档</a> MCP 服务器，并使用 <a href="#allow-mcp-tools"><code>allowedTools</code></a> 与通配符来允许来自服务器的所有工具。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Use the docs MCP server to explain what hooks are in Claude Code"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">"claude-code-docs"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">"https://code.claude.com/docs/mcp"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp__claude-code-docs__*"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"success"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">"claude-code-docs"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"http"</span><span class="p">,</span>
+                <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"https://code.claude.com/docs/mcp"</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"mcp__claude-code-docs__*"</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Use the docs MCP server to explain what hooks are in Claude Code"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"success"</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p>代理连接到文档服务器，搜索有关 hooks 的信息，并返回结果。</p>
+<h2 id="add-an-mcp-server">添加 MCP 服务器</h2>
+<p>您可以在调用 <code>query()</code> 时在代码中配置 MCP 服务器，或在通过 <a href="#from-a-config-file"><code>settingSources</code></a> 加载的 <code>.mcp.json</code> 文件中配置。</p>
+<h3 id="add-a-server-in-code">在代码中添加服务器</h3>
+<p>在 <code>mcpServers</code> 选项中直接传递 MCP 服务器。此示例为 <code>/Users/me/projects</code> 启动本地文件系统 MCP 服务器。将该路径替换为您机器上的目录：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"List files in my project"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">filesystem</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">args</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"@modelcontextprotocol/server-filesystem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"/Users/me/projects"</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp__filesystem__*"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"success"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">"filesystem"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"command"</span><span class="p">:</span> <span class="s2">"npx"</span><span class="p">,</span>
+                <span class="s2">"args"</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">"-y"</span><span class="p">,</span>
+                    <span class="s2">"@modelcontextprotocol/server-filesystem"</span><span class="p">,</span>
+                    <span class="s2">"/Users/me/projects"</span><span class="p">,</span>
+                <span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"mcp__filesystem__*"</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">"List files in my project"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"success"</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<h3 id="add-a-server-from-a-config-file">从配置文件添加服务器</h3>
+<p>在您的项目根目录创建一个 <code>.mcp.json</code> 文件。当启用 <code>project</code> 设置源时，该文件会被加载，默认 <code>query()</code> 选项已启用此功能。如果您显式设置 <code>settingSources</code>，请包含 <code>"project"</code> 以加载此文件。将 <code>/Users/me/projects</code> 替换为您机器上的目录：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"filesystem"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"@modelcontextprotocol/server-filesystem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"/Users/me/projects"</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="connection-timing">连接时序</h2>
+<p>Claude Code 在会话启动时开始连接您的 MCP 服务器，并在第一轮等待（如果有的话）结束后发送 <a href="#error-handling">init 消息</a>。第一轮等待某个服务器的时长取决于您在何处配置它。如果您设置了 <code>permissionPromptToolName</code>，无论您在何处配置该工具的服务器，第一轮始终会等待该服务器，最多等待 <code>MCP_TIMEOUT</code>。</p>
+<p>对于 <code>options.mcpServers</code> 中的服务器，请在第一列中找到其类型，以查看第一轮等待它的时长。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">服务器类型</th>
+<th style="text-align: left;">延迟第一轮？</th>
+<th style="text-align: left;">第一轮等待超时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">stdio 服务器，或没有缓存工具列表的 HTTP/SSE 服务器</td>
+<td style="text-align: left;">是，直到连接</td>
+<td style="text-align: left;"><a href="env-vars.html"><code>MCP_TIMEOUT</code></a>，默认 30 秒；连接在该截止时间失败</td>
+</tr>
+<tr>
+<td style="text-align: left;">具有缓存工具列表的远程服务器，由 Claude Code 从之前的连接保存</td>
+<td style="text-align: left;">否；缓存的工具从第一轮开始可用</td>
+<td style="text-align: left;">无；在其第一次工具调用时连接，该延迟连接有其自己的超时</td>
+</tr>
+<tr>
+<td style="text-align: left;">进程内 <a href="#sdk-mcp-servers">SDK 服务器</a></td>
+<td style="text-align: left;">是，直到连接并列出其工具</td>
+<td style="text-align: left;"><a href="env-vars.html"><code>MCP_TIMEOUT</code></a>，默认 30 秒，每次连接尝试；连接在该截止时间失败</td>
+</tr>
+</tbody>
+</table>
+<p>只有在启用 <a href="mcp.html#server-status-detail">MCP 发现缓存</a>时，服务器才会有缓存的工具列表。</p>
+<p>来自 <a href="#from-a-config-file">设置文件</a>（如 <code>.mcp.json</code>）或插件的服务器通常在 init 消息中仍显示 <code>pending</code>。第一轮等待它们的时长取决于 <code>options.mcpServers</code> 和 tool search：</p>
+<ul>
+<li><strong><code>options.mcpServers</code> 包含 stdio、HTTP 或 SSE 服务器</strong>：第一轮也会等待待处理的设置文件服务器和插件服务器，最多等待 <code>MCP_TIMEOUT</code>。</li>
+<li><strong>否则，当 <code>ANTHROPIC_BASE_URL</code> 指向<a href="mcp.html#tool-search-through-a-gateway">网关</a>且未设置 <a href="mcp.html#configure-tool-search"><code>ENABLE_TOOL_SEARCH</code></a> 时</strong>：第一轮最多等待 2 秒，等待每个待处理的设置文件服务器和插件服务器。</li>
+<li><strong>否则，在启用 <a href="agent-sdk-tool-search.html">tool search</a>（默认启用）时</strong>：第一轮最多等待 2 秒，且仅等待设置了 <a href="mcp.html#exempt-a-server-from-deferral"><code>alwaysLoad: true</code></a> 或您已<a href="#named-servers">指名</a>的待处理服务器。其余服务器继续在后台连接，Claude 会在它们连接后<a href="mcp.html#tool-availability">访问其工具</a>。</li>
+<li><strong>否则，在关闭 tool search 时</strong>：第一轮最多等待 2 秒，等待每个待处理的设置文件服务器和插件服务器。当您的 <a href="agent-sdk-tool-search.html#configure-tool-search"><code>ENABLE_TOOL_SEARCH</code> 值或模型</a>将其关闭，或当您排除 <code>ToolSearch</code> 工具（例如通过 <code>disallowedTools</code>）时，tool search 处于关闭状态。</li>
+</ul>
+<h3 id="named-servers">指名服务器</h3>
+<p>您可以通过在 <a href="#allow-mcp-tools"><code>allowedTools</code></a> 中或在 <code>settings</code> 选项的 <code>permissions.allow</code> 规则中列出服务器的任意工具（例如 <code>mcp__github__list_issues</code> 或 <code>mcp__github__*</code>）来指名该服务器。当您在提示提交、工具使用、权限、子代理、任务、elicitation 或 worktree 事件上配置 <a href="hooks.html#mcp-tool-hook-fields"><code>mcp_tool</code> hook</a> 时，它也会指名其调用的服务器。在 v2.1.284 之前，指名服务器不会影响第一轮等待。</p>
+<h3 id="set-the-first-turn-wait-yourself">自行设置第一轮等待</h3>
+<p>要自行选择第一轮等待时长，请在 <a href="agent-sdk-configuration.html#set-environment-variables"><code>env</code> 选项</a>中设置 <code>CLAUDE_CODE_MCP_STARTUP_WAIT_MS</code>，例如 <code>CLAUDE_CODE_MCP_STARTUP_WAIT_MS: "5000"</code>。此后第一轮会最多等待该毫秒数，以等待待处理的设置文件服务器和插件服务器，无论 tool search 是否启用。同一上限也会替代 <code>options.mcpServers</code> 中 stdio、HTTP 和 SSE 服务器的 <code>MCP_TIMEOUT</code> 等待。</p>
+<p>无论您设置什么值（包括 <code>0</code>），以下三种等待都适用：</p>
+<ul>
+<li><strong><code>permissionPromptToolName</code> 服务器</strong>：最多等待 <code>MCP_TIMEOUT</code>。</li>
+<li><strong>进程内 <a href="#sdk-mcp-servers">SDK 服务器</a></strong>：每次连接尝试最多等待 <code>MCP_TIMEOUT</code>。</li>
+<li><strong>仍在连接中的<a href="#named-servers">指名服务器</a></strong>：等待上限至少为 2 秒，因此低于 <code>2000</code> 的值不会缩短其等待时间。</li>
+</ul>
+<p>将该变量设置为 <code>0</code> 可跳过对其他所有服务器的等待。等待结束时仍处于待处理状态的服务器会继续在后台连接。<code>CLAUDE_CODE_MCP_STARTUP_WAIT_MS</code> 需要 Claude Code v2.1.274 或更高版本。</p>
+<h3 id="make-startup-wait-for-servers">让启动等待服务器</h3>
+<p>有两项设置会让启动本身在 Claude Code 发送 init 消息之前进行等待：</p>
+<ul>
+<li><strong>将 <a href="env-vars.html"><code>MCP_CONNECTION_NONBLOCKING</code></a> 设置为 <code>0</code></strong>：启动会等待整个连接批次，默认最多 5 秒。设置 <a href="env-vars.html"><code>MCP_CONNECT_TIMEOUT_MS</code></a>（单位为毫秒）可更改该上限。达到上限时仍处于待处理状态的服务器会继续在后台连接。</li>
+<li><strong>在服务器的配置上设置 <code>alwaysLoad: true</code></strong>：启动会在相同上限内等待该服务器的工具，使第一轮能以完整 schema 获得这些工具，<a href="mcp.html#exempt-a-server-from-deferral">豁免于 tool search 延迟加载</a>。具有缓存工具列表的远程服务器无需连接或阻塞启动即可提供这些工具。</li>
+</ul>
+<p>init 消息报告的是 Claude Code 发送该消息时每个服务器的状态。</p>
+<h2 id="allow-mcp-tools">允许 MCP 工具</h2>
+<p>MCP 工具需要明确的权限才能让 Claude 使用它们。没有权限的情况下，Claude 会看到工具可用，但无法调用它们。</p>
+<h3 id="tool-naming-convention">工具命名约定</h3>
+<p>MCP 工具的命名格式为 <code>mcp__&lt;server-name&gt;__&lt;tool-name&gt;</code>，其中 <code>&lt;server-name&gt;</code> 是您注册服务器时使用的名称，例如它在 <code>mcpServers</code> 中的键。</p>
+<p>服务器名称中的 <code>.</code> 和空格等字符会被替换为 <code>_</code>。下表显示了两个服务器键下 <code>list_issues</code> 工具的完整名称：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><code>mcpServers</code> 中的键</th>
+<th style="text-align: left;">完整工具名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>github</code></td>
+<td style="text-align: left;"><code>mcp__github__list_issues</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>my.server</code></td>
+<td style="text-align: left;"><code>mcp__my_server__list_issues</code></td>
+</tr>
+</tbody>
+</table>
+<p>在 <code>allowedTools</code> 和 <a href="permissions.html#mcp">MCP 权限规则</a>中使用完整的工具名称。对于由<a href="agent-sdk-plugins.html">插件</a>提供的服务器，<code>&lt;server-name&gt;</code> 采用<a href="mcp.html#plugin-provided-mcp-servers">插件作用域形式</a>，并以 <code>plugin_</code> 开头。</p>
+<h3 id="auto-approve-with-allowedtools">使用 allowedTools 自动批准</h3>
+<p>使用 <code>allowedTools</code> 自动批准特定的 MCP 工具，这样 Claude 就可以在没有权限提示的情况下使用它们：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// your servers</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"mcp__github__*"</span><span class="p">,</span><span class="w"> </span><span class="c1">// All tools from the github server</span>
+<span class="w">      </span><span class="s2">"mcp__db__query"</span><span class="p">,</span><span class="w"> </span><span class="c1">// Only the query tool from db server</span>
+<span class="w">      </span><span class="s2">"mcp__slack__send_message"</span><span class="w"> </span><span class="c1">// Only send_message from slack server</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+    <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span>
+        <span class="c1"># your servers</span>
+    <span class="p">},</span>
+    <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">"mcp__github__*"</span><span class="p">,</span>  <span class="c1"># All tools from the github server</span>
+        <span class="s2">"mcp__db__query"</span><span class="p">,</span>  <span class="c1"># Only the query tool from db server</span>
+        <span class="s2">"mcp__slack__send_message"</span><span class="p">,</span>  <span class="c1"># Only send_message from slack server</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>通配符（<code>*</code>）让你可以允许来自一个服务器的所有工具，而无需逐个列出。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><strong>对于 MCP 访问，优先使用 <code>allowedTools</code> 而不是权限模式。</strong> <code>permissionMode: "acceptEdits"</code> 不会自动批准 MCP 工具（仅限文件编辑和文件系统 Bash 命令）。<code>permissionMode: "bypassPermissions"</code> 会自动批准 MCP 工具，但也会禁用大多数其他安全提示，这比必要的范围更广；请参阅 <a href="agent-sdk-permissions.html#how-permissions-are-evaluated">权限如何被评估</a> 了解保留的提示。<code>allowedTools</code> 中的通配符仅授予你想要的 MCP 服务器，不会授予其他任何东西。请参阅 <a href="agent-sdk-permissions.html#permission-modes">权限模式</a> 了解完整的比较。</p></div></div>
+<h3 id="discover-available-tools">发现可用工具</h3>
+<p>要查看 MCP 服务器提供的工具，请检查服务器的文档或检查 <code>system</code> init 消息中的 <code>tools</code> 数组。MCP 工具名称以 <code>mcp__</code> 开头。</p>
+<p>Claude Code 在 <a href="#connection-timing">首次连接等待</a> 之后为在 <code>options.mcpServers</code> 中传递的服务器发出 init 消息，因此 <code>tools</code> 数组列出了到那时已连接的每个服务器的 <code>mcp__</code> 工具，以及具有 <a href="#connection-timing">缓存工具列表</a> 的服务器的工具，这些服务器在首次使用时连接。任何其他尚未连接的服务器的工具不存在；请参阅 <a href="#error-handling">错误处理</a> 了解如何读取每个服务器的状态。</p>
+<p>此过滤器打印 MCP 工具名称：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// your servers</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">};</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span><span class="w"> </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"system"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"init"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">mcpTools</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">tools</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">name</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">name</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s2">"mcp__"</span><span class="p">));</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Available MCP tools:"</span><span class="p">,</span><span class="w"> </span><span class="nx">mcpTools</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">SystemMessage</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span>
+            <span class="c1"># your servers</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">"..."</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"init"</span><span class="p">:</span>
+            <span class="n">mcp_tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tools"</span><span class="p">,</span> <span class="p">[])</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"mcp__"</span><span class="p">)]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Available MCP tools:"</span><span class="p">,</span> <span class="n">mcp_tools</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p>你也可以要求 Claude 列出来自服务器的可用工具。</p>
+<h2 id="transport-types">传输类型</h2>
+<p>MCP 服务器使用不同的传输协议与您的代理进行通信。检查服务器的文档以查看它支持哪种传输：</p>
+<ul>
+<li>如果文档给您一个<strong>要运行的命令</strong>（如 <code>npx @modelcontextprotocol/server-filesystem</code>），请使用 stdio</li>
+<li>如果文档给您一个 <strong>URL</strong>，请使用 HTTP 或 SSE</li>
+<li>如果您在代码中构建自己的工具，请使用 SDK MCP 服务器</li>
+</ul>
+<h3 id="stdio-servers">stdio 服务器</h3>
+<p>通过 stdin/stdout 进行通信的本地进程。对于在同一台机器上运行的 MCP 服务器，请使用此方法。对于 <code>.mcp.json</code> 形式，请使用<a href="#from-a-config-file">从配置文件添加服务器</a>中显示的相同字段。在代码中，传递命令及其参数。将 <code>/Users/me/projects</code> 替换为您机器上的目录：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">filesystem</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">args</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"@modelcontextprotocol/server-filesystem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"/Users/me/projects"</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp__filesystem__read_file"</span><span class="p">,</span><span class="w"> </span><span class="s2">"mcp__filesystem__list_directory"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+    <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"filesystem"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"command"</span><span class="p">:</span> <span class="s2">"npx"</span><span class="p">,</span>
+            <span class="s2">"args"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">"-y"</span><span class="p">,</span>
+                <span class="s2">"@modelcontextprotocol/server-filesystem"</span><span class="p">,</span>
+                <span class="s2">"/Users/me/projects"</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"mcp__filesystem__read_file"</span><span class="p">,</span> <span class="s2">"mcp__filesystem__list_directory"</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="http/sse-servers">HTTP/SSE 服务器</h3>
+<p>对于云托管的 MCP 服务器和远程 API，请使用 HTTP 或 SSE。对于 <code>.mcp.json</code> 形式，请使用 <a href="#http-headers-for-remote-servers">HTTP headers for remote servers</a> 中示例的相同字段，对于 SSE 服务器使用 <code>"type": "sse"</code>。在代码中，传递服务器的 URL：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">"remote-api"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"sse"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">"https://api.example.com/mcp/sse"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">Authorization</span><span class="o">:</span><span class="w"> </span><span class="sb">`Bearer </span><span class="si">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">API_TOKEN</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp__remote-api__*"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+    <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"remote-api"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"sse"</span><span class="p">,</span>
+            <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"https://api.example.com/mcp/sse"</span><span class="p">,</span>
+            <span class="s2">"headers"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'API_TOKEN'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"mcp__remote-api__*"</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>对于可流式传输的 HTTP 传输，请改用 <code>"type": "http"</code>。在 <code>.mcp.json</code> 和其他 JSON 配置文件中，<code>"streamable-http"</code> 被接受为 <code>"http"</code> 的别名。SDK 的 <code>McpHttpServerConfig</code> 类型仅声明 <code>"http"</code>，因此对于您在代码中传递的服务器，请使用 <code>"http"</code>。</p>
+<h3 id="sdk-mcp-servers">SDK MCP 服务器</h3>
+<p>直接在您的应用程序代码中定义自定义工具，而不是运行单独的服务器进程。有关实现详情，请参阅 <a href="agent-sdk-custom-tools.html">custom tools guide</a>。</p>
+<p>由 <a href="agent-sdk-typescript.html#sdkcontrolinitializeresponse"><code>initialize</code> control request</a> 注册的 SDK MCP 服务器在 Claude Code 处理请求后立即开始连接。</p>
+<h2 id="mcp-tool-search">MCP 工具搜索</h2>
+<p>当你配置了许多 MCP 工具时，工具定义可能会消耗上下文窗口的很大一部分。工具搜索通过从上下文中隐藏工具定义并仅加载 Claude 每轮所需的工具来解决这个问题。</p>
+<p>工具搜索默认启用。有关配置选项、最佳实践以及将工具搜索与自定义 SDK 工具一起使用的信息，请参阅<a href="agent-sdk-tool-search.html">工具搜索</a>。</p>
+<h2 id="authentication">身份验证</h2>
+<p>大多数 MCP 服务器需要身份验证才能访问外部服务。通过服务器配置中的环境变量传递凭证。</p>
+<h3 id="pass-credentials-via-environment-variables">通过环境变量传递凭证</h3>
+<p>使用 <code>env</code> 字段将 API 密钥、令牌和其他凭证传递给 MCP 服务器：</p>
+<blockquote>
+<p>[tab] In code</p>
+<p><code>typescript TypeScript hidelines={1,-1} theme={null}
+const _ = {
+  options: {
+    mcpServers: {
+      "api-server": {
+        command: "npx",
+        args: ["-y", "@your-org/api-mcp-server"],
+        env: {
+          API_KEY: process.env.API_KEY
+        }
+      }
+    },
+    allowedTools: ["mcp__api-server__*"]
+  }
+};</code></p>
+<p><code>python Python theme={null}
+options = ClaudeAgentOptions(
+    mcp_servers={
+        "api-server": {
+            "command": "npx",
+            "args": ["-y", "@your-org/api-mcp-server"],
+            "env": {"API_KEY": os.environ["API_KEY"]},
+        }
+    },
+    allowed_tools=["mcp__api-server__*"],
+)</code></p>
+<p>[tab] .mcp.json</p>
+<p><code>json theme={null}
+{
+  "mcpServers": {
+    "api-server": {
+      "command": "npx",
+      "args": ["-y", "@your-org/api-mcp-server"],
+      "env": {
+        "API_KEY": "${API_KEY}"
+      }
+    }
+  }
+}</code></p>
+<p><code>${API_KEY}</code> 语法在运行时展开环境变量。</p>
+</blockquote>
+<h3 id="http-headers-for-remote-servers">远程服务器的 HTTP 头</h3>
+<p>对于 HTTP 和 SSE 服务器，直接在服务器配置中传递身份验证头：</p>
+<blockquote>
+<p>[tab] In code</p>
+<p><code>typescript TypeScript hidelines={1,-1} theme={null}
+const _ = {
+  options: {
+    mcpServers: {
+      "secure-api": {
+        type: "http",
+        url: "https://api.example.com/mcp",
+        headers: {
+          Authorization: `Bearer ${process.env.API_TOKEN}`
+        }
+      }
+    },
+    allowedTools: ["mcp__secure-api__*"]
+  }
+};</code></p>
+<p><code>python Python theme={null}
+options = ClaudeAgentOptions(
+    mcp_servers={
+        "secure-api": {
+            "type": "http",
+            "url": "https://api.example.com/mcp",
+            "headers": {"Authorization": f"Bearer {os.environ['API_TOKEN']}"},
+        }
+    },
+    allowed_tools=["mcp__secure-api__*"],
+)</code></p>
+<p>[tab] .mcp.json</p>
+<p><code>json theme={null}
+{
+  "mcpServers": {
+    "secure-api": {
+      "type": "http",
+      "url": "https://api.example.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${API_TOKEN}"
+      }
+    }
+  }
+}</code></p>
+<p><code>${API_TOKEN}</code> 语法在运行时展开环境变量。</p>
+</blockquote>
+<p>有关使用头进行身份验证的远程服务器的完整工作示例，请参阅<a href="#list-issues-from-a-repository">从存储库列出问题</a>。</p>
+<h3 id="oauth2-authentication">OAuth2 身份验证</h3>
+<p><a href="https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization" target="_blank" rel="noopener">MCP 规范支持 OAuth 2.1</a> 用于授权。SDK 不会打开浏览器或运行交互式 OAuth 流程。当配置的服务器返回授权质询而 Claude Code 没有可发送的令牌时，SDK 会将该服务器报告为 <code>needs-auth</code> 或 <code>failed</code>：</p>
+<ul>
+<li><strong><code>needs-auth</code></strong>：Claude Code 未找到可用于该服务器的登录信息。请在 <code>headers</code> 中传递令牌，或在运行之前在同一台机器上<a href="mcp.html#authenticate-with-remote-mcp-servers">从交互式 Claude Code 会话中登录</a>。</li>
+<li><strong><code>failed</code></strong>，且其 <a href="agent-sdk-typescript.html#mcpserverstatus"><code>McpServerStatus</code></a> 条目中的 <code>error</code> 以 <code>Couldn't read the stored credentials</code> 或 <code>A request to MCP server</code> 开头：Claude Code 无法读取其凭据存储。有关处理方法，请参阅 <a href="errors.html#couldnt-read-the-stored-credentials-for-mcp-server">Couldn't read the stored credentials for MCP server</a>。在 Claude Code v2.1.307 之前，当 Mac 的登录钥匙串被锁定时，状态会显示为 <code>needs-auth</code>。</li>
+</ul>
+<p>无论哪种情况，Agent 运行都会继续，但不使用该服务器的工具。<a href="agent-sdk-typescript.html#sdksystemmessage">系统初始化消息</a>的 <code>mcp_servers</code> 数组在发出时可能仍会为该服务器显示 <code>pending</code>。要确认服务器是否需要凭据，请在 TypeScript SDK 中轮询 <code>mcpServerStatus()</code> 或在 Python 中轮询 <a href="agent-sdk-python.html#methods"><code>get_mcp_status()</code></a>。</p>
+<p>要提供凭证，请在您自己的应用程序中完成 OAuth 流程，并在服务器的 <code>headers</code> 中传递生成的访问令牌：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="c1">// After completing OAuth flow in your app.</span>
+<span class="c1">// Implement getAccessTokenFromOAuthFlow for your OAuth provider.</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">accessToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">getAccessTokenFromOAuthFlow</span><span class="p">();</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"oauth-api"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">"https://api.example.com/mcp"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">Authorization</span><span class="o">:</span><span class="w"> </span><span class="sb">`Bearer </span><span class="si">${</span><span class="nx">accessToken</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp__oauth-api__*"</span><span class="p">]</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="c1"># After completing OAuth flow in your app.</span>
+<span class="c1"># Implement get_access_token_from_oauth_flow for your OAuth provider.</span>
+<span class="n">access_token</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_access_token_from_oauth_flow</span><span class="p">()</span>
+
+<span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+    <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"oauth-api"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"http"</span><span class="p">,</span>
+            <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"https://api.example.com/mcp"</span><span class="p">,</span>
+            <span class="s2">"headers"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">access_token</span><span class="si">}</span><span class="s2">"</span><span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"mcp__oauth-api__*"</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="examples">示例</h2>
+<h3 id="list-issues-from-a-repository">从仓库列出问题</h3>
+<p>此示例连接到远程 <a href="https://github.com/github/github-mcp-server" target="_blank" rel="noopener">GitHub MCP 服务器</a>以列出最近的问题。该示例包括调试日志以验证 MCP 连接和工具调用。</p>
+<p>运行前，创建一个具有对要查询的仓库的读取访问权限的 <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener">GitHub 个人访问令牌</a>，并将其设置为环境变量：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>YOUR_GITHUB_PAT
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"List the 3 most recent issues in anthropics/claude-code"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">github</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">"https://api.githubcopilot.com/mcp/"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">Authorization</span><span class="o">:</span><span class="w"> </span><span class="sb">`Bearer </span><span class="si">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_TOKEN</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp__github__list_issues"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Verify MCP server connected successfully</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"system"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"init"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"MCP servers:"</span><span class="p">,</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">mcp_servers</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Log when Claude calls an MCP tool</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"assistant"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">block</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">block</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"tool_use"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">block</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s2">"mcp__"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"MCP tool called:"</span><span class="p">,</span><span class="w"> </span><span class="nx">block</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Print the final result</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"success"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">query</span><span class="p">,</span>
+    <span class="n">ClaudeAgentOptions</span><span class="p">,</span>
+    <span class="n">ResultMessage</span><span class="p">,</span>
+    <span class="n">SystemMessage</span><span class="p">,</span>
+    <span class="n">AssistantMessage</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">"github"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"http"</span><span class="p">,</span>
+                <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"https://api.githubcopilot.com/mcp/"</span><span class="p">,</span>
+                <span class="s2">"headers"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'GITHUB_TOKEN'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"mcp__github__list_issues"</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"List the 3 most recent issues in anthropics/claude-code"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># Verify MCP server connected successfully</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"init"</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"MCP servers:"</span><span class="p">,</span> <span class="n">message</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mcp_servers"</span><span class="p">))</span>
+
+        <span class="c1"># Log when Claude calls an MCP tool</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">AssistantMessage</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">block</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"mcp__"</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">"MCP tool called:"</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># Print the final result</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"success"</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p>在 <code>MCP servers:</code> 行中，<code>github</code> 的 <code>status</code> 为 <code>connected</code> 确认令牌有效。如果 Claude Code 对服务器有 <a href="#connection-timing">缓存的工具列表</a>，状态可以改为 <code>pending</code>，服务器在首次工具调用时连接。如果状态为 <code>failed</code> 或 <code>needs-auth</code>，在信任结果之前请参阅 <a href="#error-handling">错误处理</a>，因为当服务器不可用时 Claude 可能会回退到内置工具。</p>
+<h3 id="query-a-database">查询数据库</h3>
+<p>此示例使用 <a href="https://github.com/bytebase/dbhub" target="_blank" rel="noopener">DBHub</a> 查询 Postgres 数据库。代理自动发现数据库架构、编写 SQL 查询并返回结果。</p>
+<p>DBHub 的 <code>execute_sql</code> 工具运行代理发出的任何 SQL，包括写入操作，除非您限制它。在 <a href="https://dbhub.ai/config/toml" target="_blank" rel="noopener">DBHub 配置文件</a> 中设置 <code>readonly = true</code> 会使 DBHub 拒绝 <code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code> 和 DDL 语句，因此即使代理发出写入操作，该示例也无法修改您的数据。DBHub 在加载配置时从进程环境解析 <code>${DATABASE_URL}</code>，因此连接字符串保持在文件之外。在脚本旁边创建此 <code>dbhub.toml</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">toml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-toml"><span class="k">[[sources]]</span>
+<span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
+<span class="n">dsn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${DATABASE_URL}"</span>
+
+<span class="k">[[tools]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"execute_sql"</span>
+<span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
+<span class="n">readonly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+<p>脚本随后指向 DBHub 的配置文件，而不是直接传递连接字符串。运行前，将 <code>DATABASE_URL</code> 环境变量设置为您的连接字符串。用您自己的数据库详细信息替换占位符值：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://user:password@localhost:5432/mydb
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="c1">// Natural language query - Claude writes the SQL</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"How many users signed up last week? Break it down by day."</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">postgres</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
+<span class="w">        </span><span class="c1">// dbhub.toml sets readonly = true, so execute_sql rejects writes</span>
+<span class="w">        </span><span class="nx">args</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"@bytebase/dbhub"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--config"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dbhub.toml"</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp__postgres__execute_sql"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"success"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">"postgres"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"command"</span><span class="p">:</span> <span class="s2">"npx"</span><span class="p">,</span>
+                <span class="c1"># dbhub.toml sets readonly = true, so execute_sql rejects writes</span>
+                <span class="s2">"args"</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">"-y"</span><span class="p">,</span>
+                    <span class="s2">"@bytebase/dbhub"</span><span class="p">,</span>
+                    <span class="s2">"--config"</span><span class="p">,</span>
+                    <span class="s2">"dbhub.toml"</span><span class="p">,</span>
+                <span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"mcp__postgres__execute_sql"</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Natural language query - Claude writes the SQL</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"How many users signed up last week? Break it down by day."</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"success"</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="error-handling">错误处理</h2>
+<p>MCP 服务器可能因各种原因连接失败：服务器进程可能未安装、凭证可能无效，或远程服务器可能无法访问。</p>
+<p>Claude Code 在每个查询开始时发出一条 <code>system</code> 类型、子类型为 <code>init</code> 的消息。此消息包括每个 MCP 服务器的连接状态。<code>status</code> 字段可以是 <code>"pending"</code>、<code>"connected"</code>、<code>"failed"</code>、<code>"needs-auth"</code> 或 <code>"disabled"</code>。Claude Code 在 <a href="#connection-timing">首次转换连接等待</a> 之后为在 <code>options.mcpServers</code> 中传递的服务器发出 init 消息，因此在等待时间内连接的服务器会显示 <code>"connected"</code>。</p>
+<p>在 init 消息中，不要将 <code>"pending"</code> 本身视为失败。它可能意味着以下任何一种情况：</p>
+<ul>
+<li>服务器尚未连接。请参阅 <a href="#connection-timing">Claude Code 在首次转换前等待多长时间</a></li>
+<li>服务器的工具列表是 <a href="#connection-timing">从缓存提供的</a>，连接在首次使用时建立</li>
+<li>连接截止时间已过期。此类服务器根据时间报告 <code>"pending"</code> 或 <code>"failed"</code></li>
+</ul>
+<p>检查 <code>"failed"</code> 或 <code>"needs-auth"</code> 以检测无法使用的服务器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Process data"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Replace dataServer with your server configuration</span>
+<span class="w">        </span><span class="s2">"data-processor"</span><span class="o">:</span><span class="w"> </span><span class="nx">dataServer</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"system"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"init"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">unavailableServers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">mcp_servers</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span>
+<span class="w">        </span><span class="p">(</span><span class="nx">s</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">s</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"failed"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">s</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"needs-auth"</span>
+<span class="w">      </span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">unavailableServers</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="s2">"Unavailable MCP servers:"</span><span class="p">,</span><span class="w"> </span><span class="nx">unavailableServers</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"error_during_execution"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">"Execution failed"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// A single-shot query() throws after yielding an error result. If the</span>
+<span class="w">  </span><span class="c1">// failure was an error result, the error subtype branch above has</span>
+<span class="w">  </span><span class="c1">// already run; a failure to start or reach the Claude Code process</span>
+<span class="w">  </span><span class="c1">// yields no result message. MCP servers that fail to connect don't</span>
+<span class="w">  </span><span class="c1">// throw: use the status check above, and note that servers still</span>
+<span class="w">  </span><span class="c1">// "pending" at init need a later status check.</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Session ended with an error: </span><span class="si">${</span><span class="nx">error</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">ResultMessage</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Replace data_server with your server configuration</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span><span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span><span class="s2">"data-processor"</span><span class="p">:</span> <span class="n">data_server</span><span class="p">})</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">"Process data"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"init"</span><span class="p">:</span>
+                <span class="n">unavailable_servers</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">s</span>
+                    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mcp_servers"</span><span class="p">,</span> <span class="p">[])</span>
+                    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"status"</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"failed"</span><span class="p">,</span> <span class="s2">"needs-auth"</span><span class="p">)</span>
+                <span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">unavailable_servers</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unavailable MCP servers: </span><span class="si">{</span><span class="n">unavailable_servers</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"error_during_execution"</span>
+            <span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Execution failed"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="c1"># A single-shot query() raises after yielding an error result. If the</span>
+        <span class="c1"># failure was an error result, the error subtype branch above has</span>
+        <span class="c1"># already run; a failure to start or reach the Claude Code process</span>
+        <span class="c1"># yields no result message. MCP servers that fail to connect don't</span>
+        <span class="c1"># raise: use the status check above, and note that servers still</span>
+        <span class="c1"># "pending" at init need a later status check.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Session ended with an error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p>远程服务器的状态在报告 <code>"connected"</code> 后也可能会改变。当连接在会话中途断开时，Claude Code 会在 <a href="mcp.html#automatic-reconnection">重新连接</a> 时将服务器移回 <code>"pending"</code>。之后在 TypeScript 中调用 <code>mcpServerStatus()</code>，或在 Python 中调用 <a href="agent-sdk-python.html#methods"><code>ClaudeSDKClient.get_mcp_status()</code></a>，可能会为您之前看到已连接的服务器报告 <code>"pending"</code>，而您这一方没有进行任何配置更改。</p>
+<p>在五次重新连接尝试失败后，服务器报告 <code>"failed"</code>，或在需要再次授权时报告 <code>"needs-auth"</code>。处于 <code>"failed"</code> 状态的 HTTP 或 SSE 服务器仍可能在您无需调用任何方法的情况下恢复为 <code>"connected"</code>，因为 Claude Code 在发生暂时性错误后会持续<a href="mcp.html#mid-session-drops-of-a-remote-server">在后台重试</a>。要手动重试，请在 TypeScript 中调用 <a href="agent-sdk-typescript.html#methods"><code>reconnectMcpServer()</code></a> 或在 Python 中调用 <a href="agent-sdk-python.html#methods"><code>ClaudeSDKClient.reconnect_mcp_server()</code></a>。</p>
+<h2 id="troubleshooting">故障排除</h2>
+<h3 id="server-shows-failed-status">服务器显示"failed"状态</h3>
+<p>检查 <code>init</code> 消息以查看哪些服务器连接失败：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"system"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"init"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">server</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">mcp_servers</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">server</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"failed"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`Server </span><span class="si">${</span><span class="nx">server</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb"> failed to connect`</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">SystemMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"init"</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">server</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mcp_servers"</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">if</span> <span class="n">server</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"status"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"failed"</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Server </span><span class="si">{</span><span class="n">server</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span><span class="si">}</span><span class="s2"> failed to connect"</span><span class="p">)</span>
+</code></pre></div>
+<p><code>"pending"</code> 状态并不意味着服务器连接失败。请参阅<a href="#error-handling">错误处理</a>了解它在初始化时涵盖的情况。要在会话后期获取更新的状态，请在 TypeScript SDK 中调用查询的 <code>mcpServerStatus()</code> 方法，或在 Python 中调用 <a href="agent-sdk-python.html#methods"><code>ClaudeSDKClient.get_mcp_status()</code></a>。</p>
+<p>常见原因：</p>
+<ul>
+<li><strong>缺少环境变量</strong>：确保设置了所需的令牌和凭证。对于 stdio 服务器，检查 <code>env</code> 字段是否与服务器期望的相匹配。</li>
+<li><strong>服务器未安装</strong>：对于 <code>npx</code> 命令，验证该包是否存在以及 Node.js 是否在您的 PATH 中。</li>
+<li><strong>无效的连接字符串</strong>：对于数据库服务器，验证连接字符串格式以及数据库是否可访问。</li>
+<li><strong>网络问题</strong>：对于远程 HTTP/SSE 服务器，检查 URL 是否可达以及任何防火墙是否允许连接。</li>
+</ul>
+<h3 id="tools-not-being-called">工具未被调用</h3>
+<p>如果 Claude 看到工具但不使用它们，请检查您是否已使用 <code>allowedTools</code> 授予权限：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// your servers</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp__servername__*"</span><span class="p">]</span><span class="w"> </span><span class="c1">// Auto-approve calls from this server</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+    <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span>
+        <span class="c1"># your servers</span>
+    <span class="p">},</span>
+    <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"mcp__servername__*"</span><span class="p">],</span>  <span class="c1"># Auto-approve calls from this server</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="a-tool-is-missing-from-an-sdk-mcp-server">SDK MCP 服务器中缺少某个工具</h3>
+<p>在 TypeScript SDK 中，当某个工具的输入 schema 无法转换为 JSON Schema 时，您使用 <a href="agent-sdk-typescript.html#createsdkmcpserver"><code>createSdkMcpServer()</code></a> 创建的服务器在列出其工具时会省略该工具。此时 SDK 会发出一条警告。在 Node.js 下，该警告是一个代码为 <code>CLAUDE_SDK_MCP_TOOL_SCHEMA_UNCONVERTIBLE</code> 的进程警告，并以以下文本开头：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Tool "&lt;name&gt;" on SDK MCP server "&lt;server&gt;" was left out of the server's tool list, because its input schema cannot be converted to JSON Schema
+</code></pre></div>
+<p>警告的其余部分会给出转换错误的消息（如果有），然后说明需要检查和更改的内容。</p>
+<p>在 TypeScript Agent SDK v0.3.286 之前，只要有一个无法转换的 schema，就会导致该服务器的整个工具列表失败且不显示此警告，因此该服务器的所有工具都无法提供给 Claude。</p>
+<h3 id="connection-timeouts">连接超时</h3>
+<p>MCP 服务器连接默认在 30 秒后超时。要更改运行中的工具调用可能需要的时间，请设置 <a href="env-vars.html"><code>MCP_TOOL_TIMEOUT</code></a>。如果您的服务器需要更长时间才能启动，连接将失败。使用 <a href="env-vars.html"><code>MCP_TIMEOUT</code></a> 环境变量（以毫秒为单位）提高连接限制。对于需要更多启动时间的服务器，还应考虑：</p>
+<ul>
+<li>使用更轻量级的服务器（如果可用）</li>
+<li>在启动代理之前预热服务器</li>
+<li>检查服务器日志以查找缓慢初始化的原因</li>
+</ul>
+<p>在 TypeScript 中，您可以通过将 <a href="agent-sdk-typescript.html#createsdkmcpserver"><code>timeout</code> 传递给 <code>createSdkMcpServer()</code></a> 来为单个 <a href="#sdk-mcp-servers">SDK MCP 服务器</a> 设置工具调用限制。</p>
+<h3 id="tool-output-exceeds-maximum-allowed-tokens">工具输出超过最大允许令牌数</h3>
+<p>SDK 应用与 Claude Code 相同的 MCP 输出限制。当不含图像内容的成功工具结果大于 25,000 个 token 时，Claude Code 会将输出保存到文件中，并用一条指明文件路径的错误消息替换工具结果，以便 Agent 可以分部分读回输出。</p>
+<p>要更改 token 限制，请设置 <a href="env-vars.html"><code>MAX_MCP_OUTPUT_TOKENS</code></a> 环境变量。除非工具声明了 <code>anthropic/maxResultSizeChars</code>，否则长度超过 50,000 个字符的成功文本结果无论 token 限制如何都会被保存到文件中。请参阅 <a href="mcp.html#mcp-output-limits-and-warnings">MCP 输出限制和警告</a> 了解完整行为，包括服务器如何声明该注释。</p>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li><strong><a href="agent-sdk-custom-tools.html">自定义工具指南</a></strong>：构建您自己的 MCP 服务器，在 SDK 应用程序中进程内运行</li>
+<li><strong><a href="agent-sdk-permissions.html">权限</a></strong>：使用 <code>allowedTools</code> 和 <code>disallowedTools</code> 控制您的代理可以使用哪些 MCP 工具</li>
+<li><strong><a href="agent-sdk-typescript.html">TypeScript SDK 参考</a></strong>：完整的 API 参考，包括 MCP 配置选项</li>
+<li><strong><a href="agent-sdk-python.html">Python SDK 参考</a></strong>：完整的 API 参考，包括 MCP 配置选项</li>
+<li><strong><a href="https://github.com/modelcontextprotocol/servers" target="_blank" rel="noopener">MCP 服务器目录</a></strong>：浏览可用的 MCP 服务器，用于数据库、API 等</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="agent-sdk-custom-tools.html"><span class="pager-dir">← 上一页</span><span class="pager-name">为 Claude 提供自定义工具</span></a><a class="pager-link next" href="agent-sdk-tool-search.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用工具搜索扩展到多个工具</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#quickstart">快速开始</a><a class="toc-l2" href="#add-an-mcp-server">添加 MCP 服务器</a><a class="toc-l3" href="#add-a-server-in-code">在代码中添加服务器</a><a class="toc-l3" href="#add-a-server-from-a-config-file">从配置文件添加服务器</a><a class="toc-l2" href="#connection-timing">连接时序</a><a class="toc-l3" href="#named-servers">指名服务器</a><a class="toc-l3" href="#set-the-first-turn-wait-yourself">自行设置第一轮等待</a><a class="toc-l3" href="#make-startup-wait-for-servers">让启动等待服务器</a><a class="toc-l2" href="#allow-mcp-tools">允许 MCP 工具</a><a class="toc-l3" href="#tool-naming-convention">工具命名约定</a><a class="toc-l3" href="#auto-approve-with-allowedtools">使用 allowedTools 自动批准</a><a class="toc-l3" href="#discover-available-tools">发现可用工具</a><a class="toc-l2" href="#transport-types">传输类型</a><a class="toc-l3" href="#stdio-servers">stdio 服务器</a><a class="toc-l3" href="#http/sse-servers">HTTP/SSE 服务器</a><a class="toc-l3" href="#sdk-mcp-servers">SDK MCP 服务器</a><a class="toc-l2" href="#mcp-tool-search">MCP 工具搜索</a><a class="toc-l2" href="#authentication">身份验证</a><a class="toc-l3" href="#pass-credentials-via-environment-variables">通过环境变量传递凭证</a><a class="toc-l3" href="#http-headers-for-remote-servers">远程服务器的 HTTP 头</a><a class="toc-l3" href="#oauth2-authentication">OAuth2 身份验证</a><a class="toc-l2" href="#examples">示例</a><a class="toc-l3" href="#list-issues-from-a-repository">从仓库列出问题</a><a class="toc-l3" href="#query-a-database">查询数据库</a><a class="toc-l2" href="#error-handling">错误处理</a><a class="toc-l2" href="#troubleshooting">故障排除</a><a class="toc-l3" href="#server-shows-failed-status">服务器显示&quot;failed&quot;状态</a><a class="toc-l3" href="#tools-not-being-called">工具未被调用</a><a class="toc-l3" href="#a-tool-is-missing-from-an-sdk-mcp-server">SDK MCP 服务器中缺少某个工具</a><a class="toc-l3" href="#connection-timeouts">连接超时</a><a class="toc-l3" href="#tool-output-exceeds-maximum-allowed-tokens">工具输出超过最大允许令牌数</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

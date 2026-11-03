@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>为 Claude 提供自定义工具 · Claude Code 中文文档</title>
+<meta name="description" content="使用 Claude Agent SDK 的进程内 MCP 服务器定义自定义工具，以便 Claude 可以调用您的函数、访问您的 API 并执行特定领域的操作。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-sdk/custom-tools">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-sdk/custom-tools" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link active" href="agent-sdk-custom-tools.html" aria-current="page">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>Agent SDK</span> <span class="sep">/</span> <span>使用工具扩展</span></div>
+    <article class="prose" id="article"><h1 id="claude">为 Claude 提供自定义工具</h1>
+<blockquote>
+<p>使用 Claude Agent SDK 的进程内 MCP 服务器定义自定义工具，以便 Claude 可以调用您的函数、访问您的 API 并执行特定领域的操作。</p>
+</blockquote>
+<p>自定义工具通过让您定义 Claude 在对话期间可以调用的自己的函数来扩展 Agent SDK。使用 SDK 的进程内 MCP 服务器，您可以让 Claude 访问数据库、外部 API、特定领域的逻辑或应用程序需要的任何其他功能。</p>
+<h2 id="quick-reference">快速参考</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">如果您想...</th>
+<th style="text-align: left;">执行此操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">定义工具</td>
+<td style="text-align: left;">使用 <a href="agent-sdk-python.html#tool"><code>@tool</code></a>（Python）或 <a href="agent-sdk-typescript.html#tool"><code>tool()</code></a>（TypeScript），包含名称、描述、架构和处理程序。请参阅<a href="#create-a-custom-tool">创建自定义工具</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">将参数设为可选</td>
+<td style="text-align: left;">在 schema 中将其声明为可选，并在处理程序中应用默认值。请参阅<a href="#make-a-parameter-optional">将参数设为可选</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">向 Claude 注册工具</td>
+<td style="text-align: left;">在 <code>create_sdk_mcp_server</code> / <code>createSdkMcpServer</code> 中包装并传递给 <code>query()</code> 中的 <code>mcpServers</code>。请参阅<a href="#call-a-custom-tool">调用自定义工具</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">预先批准工具</td>
+<td style="text-align: left;">添加到您的允许工具列表。请参阅<a href="#configure-allowed-tools">配置允许的工具</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">要求调用某个工具前需经批准，或阻止该工具</td>
+<td style="text-align: left;">在 TypeScript SDK 中，向 <code>createSdkMcpServer()</code> 返回的配置对象添加针对该工具的 <code>permission_policy</code>。请参阅<a href="#require-approval-for-specific-tools">要求特定工具需经批准</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">从 Claude 的上下文中删除内置工具</td>
+<td style="text-align: left;">传递仅列出您想要的内置工具的 <code>tools</code> 数组。请参阅<a href="#configure-allowed-tools">配置允许的工具</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">让 Claude 并行调用工具</td>
+<td style="text-align: left;">在没有副作用的工具上设置 <code>readOnlyHint: true</code>。请参阅<a href="#add-tool-annotations">添加工具注释</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">控制 Claude 读取的错误消息</td>
+<td style="text-align: left;">返回 <code>isError: true</code> 来组合消息，而不是显示原始异常。请参阅<a href="#handle-errors">处理错误</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">返回图像或文件</td>
+<td style="text-align: left;">在内容数组中使用 <code>image</code> 或 <code>resource</code> 块。请参阅<a href="#return-images-and-resources">返回图像和资源</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">返回机器可读的 JSON 结果</td>
+<td style="text-align: left;">在结果上设置 <code>structuredContent</code>。请参阅<a href="#return-structured-data">返回结构化数据</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">扩展到许多工具</td>
+<td style="text-align: left;">使用<a href="agent-sdk-tool-search.html">工具搜索</a>按需加载工具。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="create-a-custom-tool">创建自定义工具</h2>
+<p>工具由四个部分定义，作为参数传递给 TypeScript 中的 <a href="agent-sdk-typescript.html#tool"><code>tool()</code></a> 辅助函数或 Python 中的 <a href="agent-sdk-python.html#tool"><code>@tool</code></a> 装饰器：</p>
+<ul>
+<li><strong>名称：</strong> Claude 用来调用工具的唯一标识符。</li>
+<li><strong>描述：</strong> 工具的功能。Claude 读取此内容以决定何时调用它。</li>
+<li><strong>输入 schema：</strong> 工具接受的参数，按语言分别声明：</li>
+<li><strong>TypeScript</strong>：一个 <a href="https://zod.dev/" target="_blank" rel="noopener">Zod schema</a>。处理程序的 <code>args</code> 从中获得类型。对字段调用 <code>.describe()</code> 可为其添加 Claude 能看到的描述。</li>
+<li><strong>Python</strong>：一个将名称映射到类型的字典，如 <code>{"latitude": float}</code>，SDK 会为您将其转换为 JSON Schema。将类型包装在 <code>Annotated</code> 中，如 <code>{"latitude": Annotated[float, "Latitude coordinate"]}</code>，可为字段添加 Claude 能看到的描述。当您需要枚举、范围、可选字段或嵌套对象时，装饰器还可以直接接受完整的 <a href="https://json-schema.org/understanding-json-schema/about" target="_blank" rel="noopener">JSON Schema</a> 字典。</li>
+<li><strong>处理程序：</strong> 当 Claude 调用工具时运行的异步函数。它接收验证的参数，必须返回一个包含以下内容的对象：</li>
+<li><code>content</code>（必需）：结果块数组，每个块的 <code>type</code> 为 <code>"text"</code>、<code>"image"</code>、<code>"audio"</code>、<code>"resource"</code> 或 <code>"resource_link"</code>。有关非文本块，请参阅<a href="#return-images-and-resources">返回图像和资源</a>。</li>
+<li><code>structuredContent</code>（可选）：包含结果作为机器可读数据的 JSON 对象，与 <code>content</code> 一起返回。请参阅<a href="#return-structured-data">返回结构化数据</a>。</li>
+<li><code>isError</code>（可选）：设置为 <code>true</code> 以表示工具失败，以便 Claude 可以对其做出反应。请参阅<a href="#handle-errors">处理错误</a>。</li>
+</ul>
+<p>定义工具后，使用 <a href="agent-sdk-typescript.html#createsdkmcpserver"><code>createSdkMcpServer</code></a>（TypeScript）或 <a href="agent-sdk-python.html#create_sdk_mcp_server"><code>create_sdk_mcp_server</code></a>（Python）将其包装在服务器中。服务器在应用程序内部进程中运行，而不是作为单独的进程运行。</p>
+<p>本页中发出 HTTP 请求的 Python 示例使用 <a href="https://www.python-httpx.org/" target="_blank" rel="noopener">httpx</a>。请使用您项目所用的包管理器添加它：</p>
+<blockquote>
+<p>[tab] Python (uv)</p>
+<p><code>bash theme={null}
+uv add httpx</code></p>
+<p>[tab] Python (pip)</p>
+<p><code>bash theme={null}
+pip install httpx</code></p>
+</blockquote>
+<h3 id="weather-tool-example">天气工具示例</h3>
+<p>此示例定义了一个 <code>get_temperature</code> 工具并将其包装在 MCP 服务器中，但没有将服务器传递给 <code>query</code>。要运行该工具，请参阅下面的<a href="#call-a-custom-tool">调用自定义工具</a>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span><span class="p">,</span> <span class="n">create_sdk_mcp_server</span>
+
+
+<span class="c1"># Define a tool: name, description, input schema, handler</span>
+<span class="nd">@tool</span><span class="p">(</span>
+    <span class="s2">"get_temperature"</span><span class="p">,</span>
+    <span class="s2">"Get the current temperature at a location"</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">"latitude"</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="s2">"Latitude coordinate"</span><span class="p">],</span>
+        <span class="s2">"longitude"</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="s2">"Longitude coordinate"</span><span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_temperature</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">"https://api.open-meteo.com/v1/forecast"</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"latitude"</span><span class="p">:</span> <span class="n">args</span><span class="p">[</span><span class="s2">"latitude"</span><span class="p">],</span>
+                <span class="s2">"longitude"</span><span class="p">:</span> <span class="n">args</span><span class="p">[</span><span class="s2">"longitude"</span><span class="p">],</span>
+                <span class="s2">"current"</span><span class="p">:</span> <span class="s2">"temperature_2m"</span><span class="p">,</span>
+                <span class="s2">"temperature_unit"</span><span class="p">:</span> <span class="s2">"fahrenheit"</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="c1"># Return a content array - Claude sees this as the tool result</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"content"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span>
+                <span class="s2">"text"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Temperature: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'current'</span><span class="p">][</span><span class="s1">'temperature_2m'</span><span class="p">]</span><span class="si">}</span><span class="s2">°F"</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+
+
+<span class="c1"># Wrap the tool in an in-process MCP server</span>
+<span class="n">weather_server</span> <span class="o">=</span> <span class="n">create_sdk_mcp_server</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">"weather"</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">"1.0.0"</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_temperature</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="p">,</span><span class="w"> </span><span class="nx">createSdkMcpServer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">z</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"zod"</span><span class="p">;</span>
+
+<span class="c1">// Define a tool: name, description, input schema, handler</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">getTemperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">tool</span><span class="p">(</span>
+<span class="w">  </span><span class="s2">"get_temperature"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"Get the current temperature at a location"</span><span class="p">,</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">latitude</span><span class="o">:</span><span class="w"> </span><span class="kt">z.number</span><span class="p">().</span><span class="nx">describe</span><span class="p">(</span><span class="s2">"Latitude coordinate"</span><span class="p">),</span><span class="w"> </span><span class="c1">// .describe() adds a field description Claude sees</span>
+<span class="w">    </span><span class="nx">longitude</span><span class="o">:</span><span class="w"> </span><span class="kt">z.number</span><span class="p">().</span><span class="nx">describe</span><span class="p">(</span><span class="s2">"Longitude coordinate"</span><span class="p">)</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// args is typed from the schema: { latitude: number; longitude: number }</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span>
+<span class="w">      </span><span class="sb">`https://api.open-meteo.com/v1/forecast?latitude=</span><span class="si">${</span><span class="nx">args</span><span class="p">.</span><span class="nx">latitude</span><span class="si">}</span><span class="sb">&amp;longitude=</span><span class="si">${</span><span class="nx">args</span><span class="p">.</span><span class="nx">longitude</span><span class="si">}</span><span class="sb">&amp;current=temperature_2m&amp;temperature_unit=fahrenheit`</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// Return a content array - Claude sees this as the tool result</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="sb">`Temperature: </span><span class="si">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">temperature_2m</span><span class="si">}</span><span class="sb">°F`</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">);</span>
+
+<span class="c1">// Wrap the tool in an in-process MCP server</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">weatherServer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createSdkMcpServer</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">"weather"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">getTemperature</span><span class="p">]</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>有关完整的参数详细信息，包括 JSON Schema 输入格式和返回值结构，请参阅 <a href="agent-sdk-typescript.html#tool"><code>tool()</code></a> TypeScript 参考或 <a href="agent-sdk-python.html#tool"><code>@tool</code></a> Python 参考。</p>
+<h3 id="make-a-parameter-optional">使参数可选</h3>
+<p>要使参数可选，请在 schema 中将其声明为可选，并在处理程序中应用默认值：</p>
+<ul>
+<li><strong>TypeScript</strong>：向 Zod 字段添加 <code>.optional()</code>。</li>
+<li><strong>Python</strong>：字典 schema 要求每个键都必须提供。请使用 JSON Schema 形式，将该参数从 <code>required</code> 中省略，并使用 <code>args.get()</code> 读取它。如需带有可选键的类型化 schema，请参阅 <a href="agent-sdk-python.html#input-schema-options">TypedDict 类</a>。</li>
+</ul>
+<p>下面的 <a href="#add-more-tools"><code>get_precipitation_chance</code> 工具</a>展示了这两种写法。</p>
+<h3 id="call-a-custom-tool">调用自定义工具</h3>
+<p>通过 <code>mcpServers</code> 选项将您创建的 MCP 服务器传递给 <code>query</code>，并在 <code>allowedTools</code> 中列出每个工具的<a href="agent-sdk-mcp.html#tool-naming-convention">完全限定名称</a>，以便工具运行而无需权限提示。该名称为 <code>mcp__{server_name}__{tool_name}</code>，其中 <code>{server_name}</code> 是您在 <code>mcpServers</code> 中为服务器指定的键。如果该键包含 <code>.</code> 或空格等字符，请在编写 <code>{server_name}</code> 时将其替换为 <code>_</code>。</p>
+<p>这些代码片段重用了<a href="#weather-tool-example">天气工具示例</a>中的 <code>weatherServer</code>，以询问 Claude 特定位置的天气。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span><span class="s2">"weather"</span><span class="p">:</span> <span class="n">weather_server</span><span class="p">},</span>
+        <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"mcp__weather__get_temperature"</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"What's the temperature in San Francisco?"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># ResultMessage is the final message after all tool calls complete</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"success"</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"What's the temperature in San Francisco?"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">weather</span><span class="o">:</span><span class="w"> </span><span class="kt">weatherServer</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp__weather__get_temperature"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// "result" is the final message after all tool calls complete</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"success"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>将此代码片段与<a href="#weather-tool-example">天气工具示例</a>中的工具和服务器定义合并到一个文件（<code>weather.py</code> 或 <code>weather.ts</code>）中，然后在终端中运行它：</p>
+<blockquote>
+<p>[tab] TypeScript</p>
+<p><code>bash theme={null}
+npx tsx weather.ts</code></p>
+<p>[tab] Python (uv)</p>
+<p><code>bash theme={null}
+uv run weather.py</code></p>
+<p>[tab] Python (pip)</p>
+<p>激活您安装了 SDK 的虚拟环境，然后运行：</p>
+<p><code>bash theme={null}
+python weather.py</code></p>
+</blockquote>
+<p>Claude 调用 <code>get_temperature</code>，脚本打印一行答案，显示旧金山的当前温度。</p>
+<h3 id="add-more-tools">添加更多工具</h3>
+<p>服务器可以容纳您在其 <code>tools</code> 数组中列出的任意数量的工具。当服务器上有多个工具时，您可以在 <code>allowedTools</code> 中单独列出每个工具，或使用通配符 <code>mcp__weather__*</code> 来覆盖服务器公开的每个工具。</p>
+<p>下面的示例定义了第二个工具 <code>get_precipitation_chance</code>，并用列出数组中两个工具的工具替换了<a href="#weather-tool-example">天气工具示例</a>中的 <code>weatherServer</code> 定义。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="c1"># Define a second tool for the same server</span>
+<span class="nd">@tool</span><span class="p">(</span>
+    <span class="s2">"get_precipitation_chance"</span><span class="p">,</span>
+    <span class="s2">"Get the hourly precipitation probability for a location"</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+        <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"latitude"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"number"</span><span class="p">},</span>
+            <span class="s2">"longitude"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"number"</span><span class="p">},</span>
+            <span class="s2">"hours"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+                <span class="s2">"minimum"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">"maximum"</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+                <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"How many hours of forecast to return"</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="c1"># 'hours' is left out of required, so Claude can omit it</span>
+        <span class="s2">"required"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"latitude"</span><span class="p">,</span> <span class="s2">"longitude"</span><span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_precipitation_chance</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="c1"># 'hours' isn't in required - read it with .get() to fall back to a default</span>
+    <span class="n">hours</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"hours"</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">"https://api.open-meteo.com/v1/forecast"</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"latitude"</span><span class="p">:</span> <span class="n">args</span><span class="p">[</span><span class="s2">"latitude"</span><span class="p">],</span>
+                <span class="s2">"longitude"</span><span class="p">:</span> <span class="n">args</span><span class="p">[</span><span class="s2">"longitude"</span><span class="p">],</span>
+                <span class="s2">"hourly"</span><span class="p">:</span> <span class="s2">"precipitation_probability"</span><span class="p">,</span>
+                <span class="s2">"forecast_days"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">chances</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"hourly"</span><span class="p">][</span><span class="s2">"precipitation_probability"</span><span class="p">][:</span><span class="n">hours</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"content"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span>
+                <span class="s2">"text"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Next </span><span class="si">{</span><span class="n">hours</span><span class="si">}</span><span class="s2"> hours: </span><span class="si">{</span><span class="s1">'%, '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">chances</span><span class="p">))</span><span class="si">}</span><span class="s2">%"</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+
+
+<span class="c1"># Rebuild the server with both tools in the array</span>
+<span class="n">weather_server</span> <span class="o">=</span> <span class="n">create_sdk_mcp_server</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">"weather"</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">"1.0.0"</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_temperature</span><span class="p">,</span> <span class="n">get_precipitation_chance</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="c1">// Define a second tool for the same server</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">getPrecipitationChance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">tool</span><span class="p">(</span>
+<span class="w">  </span><span class="s2">"get_precipitation_chance"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"Get the hourly precipitation probability for a location"</span><span class="p">,</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">latitude</span><span class="o">:</span><span class="w"> </span><span class="kt">z.number</span><span class="p">(),</span>
+<span class="w">    </span><span class="nx">longitude</span><span class="o">:</span><span class="w"> </span><span class="kt">z.number</span><span class="p">(),</span>
+<span class="w">    </span><span class="nx">hours</span><span class="o">:</span><span class="w"> </span><span class="kt">z</span>
+<span class="w">      </span><span class="p">.</span><span class="kt">number</span><span class="p">()</span>
+<span class="w">      </span><span class="p">.</span><span class="kr">int</span><span class="p">()</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mf">24</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">optional</span><span class="p">()</span><span class="w"> </span><span class="c1">// .optional() lets Claude omit the parameter</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s2">"How many hours of forecast to return"</span><span class="p">)</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">hours</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">args</span><span class="p">.</span><span class="nx">hours</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="mf">12</span><span class="p">;</span><span class="w"> </span><span class="c1">// Apply the default in the handler</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span>
+<span class="w">      </span><span class="sb">`https://api.open-meteo.com/v1/forecast?latitude=</span><span class="si">${</span><span class="nx">args</span><span class="p">.</span><span class="nx">latitude</span><span class="si">}</span><span class="sb">&amp;longitude=</span><span class="si">${</span><span class="nx">args</span><span class="p">.</span><span class="nx">longitude</span><span class="si">}</span><span class="sb">&amp;hourly=precipitation_probability&amp;forecast_days=1`</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">chances</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">hourly</span><span class="p">.</span><span class="nx">precipitation_probability</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">hours</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="sb">`Next </span><span class="si">${</span><span class="nx">hours</span><span class="si">}</span><span class="sb"> hours: </span><span class="si">${</span><span class="nx">chances</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">"%, "</span><span class="p">)</span><span class="si">}</span><span class="sb">%`</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">);</span>
+
+<span class="c1">// Rebuild the server with both tools in the array</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">weatherServer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createSdkMcpServer</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">"weather"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">getTemperature</span><span class="p">,</span><span class="w"> </span><span class="nx">getPrecipitationChance</span><span class="p">]</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><a href="agent-sdk-tool-search.html">工具搜索</a>默认启用，并延迟 SDK MCP 工具：Claude 在紧凑列表中看到每个工具的名称，并按需加载其完整模式。禁用工具搜索后，此数组中的每个工具在每个回合都会消耗上下文窗口空间。在 TypeScript 中，在 <a href="agent-sdk-typescript.html#tool"><code>tool()</code></a> 的 <code>extras</code> 参数或 <a href="agent-sdk-typescript.html#createsdkmcpserver"><code>createSdkMcpServer()</code></a> 的选项中传递 <code>alwaysLoad: true</code>，以在初始提示中保持工具的完整模式。</p>
+<h3 id="add-tool-annotations">添加工具注释</h3>
+<p><a href="https://modelcontextprotocol.io/docs/concepts/tools#tool-annotations" target="_blank" rel="noopener">工具注释</a>是描述工具行为方式的可选元数据。在 TypeScript 中将它们作为 <code>tool()</code> 辅助函数的第五个参数传递，或在 Python 中通过 <code>@tool</code> 装饰器的 <code>annotations</code> 关键字参数传递。所有提示字段都是布尔值。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">默认值</th>
+<th style="text-align: left;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>readOnlyHint</code></td>
+<td style="text-align: left;"><code>false</code></td>
+<td style="text-align: left;">工具不修改其环境。控制工具是否可以与其他只读工具并行调用。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>destructiveHint</code></td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">工具可能执行破坏性更新。对于您<a href="#require-approval-for-specific-tools">标记为 <code>always_ask</code></a> 的任何工具，请将其显式设置为 <code>true</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>idempotentHint</code></td>
+<td style="text-align: left;"><code>false</code></td>
+<td style="text-align: left;">使用相同参数的重复调用没有额外效果。仅供参考。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>openWorldHint</code></td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">工具到达流程外的系统。仅供参考。</td>
+</tr>
+</tbody>
+</table>
+<p>注释是元数据，不是强制执行。标记为 <code>readOnlyHint: true</code> 的工具如果处理程序这样做，仍然可以写入磁盘。保持注释与处理程序准确一致。</p>
+<p>此示例向<a href="#weather-tool-example">天气工具示例</a>中的 <code>get_temperature</code> 工具添加 <code>readOnlyHint</code>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span><span class="p">,</span> <span class="n">ToolAnnotations</span>
+
+
+<span class="nd">@tool</span><span class="p">(</span>
+    <span class="s2">"get_temperature"</span><span class="p">,</span>
+    <span class="s2">"Get the current temperature at a location"</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">"latitude"</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">"longitude"</span><span class="p">:</span> <span class="nb">float</span><span class="p">},</span>
+    <span class="n">annotations</span><span class="o">=</span><span class="n">ToolAnnotations</span><span class="p">(</span>
+        <span class="n">readOnlyHint</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">),</span>  <span class="c1"># Lets Claude batch this with other read-only calls</span>
+<span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_temperature</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"content"</span><span class="p">:</span> <span class="p">[{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"..."</span><span class="p">}]}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">z</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"zod"</span><span class="p">;</span>
+
+<span class="nx">tool</span><span class="p">(</span>
+<span class="w">  </span><span class="s2">"get_temperature"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"Get the current temperature at a location"</span><span class="p">,</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">latitude</span><span class="o">:</span><span class="w"> </span><span class="kt">z.number</span><span class="p">(),</span><span class="w"> </span><span class="nx">longitude</span><span class="o">:</span><span class="w"> </span><span class="kt">z.number</span><span class="p">()</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="sb">`...`</span><span class="w"> </span><span class="p">}]</span><span class="w"> </span><span class="p">}),</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">annotations</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readOnlyHint</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1">// Lets Claude batch this with other read-only calls</span>
+<span class="p">);</span>
+</code></pre></div>
+<p>在 <a href="agent-sdk-typescript.html#toolannotations">TypeScript</a> 或 <a href="agent-sdk-python.html#toolannotations">Python</a> 参考中查看 <code>ToolAnnotations</code>。</p>
+<h2 id="control-tool-access">控制工具访问</h2>
+<p><a href="#weather-tool-example">天气工具示例</a>注册了一个服务器，并在<code>allowedTools</code>中列出了工具。本节介绍当您有多个工具或想要限制内置工具时如何限制访问范围。有关工具名称的构造方式，请参阅<a href="#call-a-custom-tool">调用自定义工具</a>。</p>
+<h3 id="configure-allowed-tools">配置允许的工具</h3>
+<p><code>tools</code>选项和允许/禁止列表影响两个层级：可用性（控制工具是否出现在Claude的上下文中）和权限（控制Claude尝试调用后是否批准该调用）。<code>tools</code>和裸名称<code>disallowedTools</code>条目改变可用性。<code>allowedTools</code>和作用域<code>disallowedTools</code>规则改变权限。如果您在<code>allowedTools</code>中命名其中一个<a href="agent-sdk-todo-tracking.html#model-availability">任务跟踪工具</a>，Claude Code也会为该会话启用这些工具。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">选项</th>
+<th style="text-align: left;">层级</th>
+<th style="text-align: left;">效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>tools: ["Read", "Grep"]</code></td>
+<td style="text-align: left;">可用性</td>
+<td style="text-align: left;">仅列出的内置工具在Claude的上下文中。未列出的内置工具被移除。MCP工具不受影响。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tools: []</code></td>
+<td style="text-align: left;">可用性</td>
+<td style="text-align: left;">所有内置工具都被移除。Claude只能使用您的MCP工具。</td>
+</tr>
+<tr>
+<td style="text-align: left;">允许的工具</td>
+<td style="text-align: left;">权限</td>
+<td style="text-align: left;">列出的工具无需权限提示即可运行。其他未列出的工具保持可用；调用通过<a href="agent-sdk-permissions.html">权限流程</a>进行。</td>
+</tr>
+<tr>
+<td style="text-align: left;">禁止的工具</td>
+<td style="text-align: left;">两者</td>
+<td style="text-align: left;">裸工具名称如<code>"Bash"</code>从Claude的上下文中移除工具，与从<code>tools</code>中省略它的效果相同。作用域规则如<code>"Bash(rm *)"</code>将工具保留在上下文中，仅拒绝与<a href="permissions.html#bash-rule-limits">如所写</a>匹配的调用。</td>
+</tr>
+</tbody>
+</table>
+<p>要完全移除内置工具，请从<code>tools</code>中省略它或在<code>disallowedTools</code>中列出其裸名称（Python：<code>disallowed_tools</code>）；两者都将工具保留在上下文之外，以便Claude永远不会尝试它。作用域<code>disallowedTools</code>规则阻止匹配的调用但将工具保留为可见，因此Claude可能会浪费一个回合尝试它。有关完整的评估顺序，请参阅<a href="agent-sdk-permissions.html">配置权限</a>。</p>
+<h3 id="require-approval-for-specific-tools">要求特定工具需经批准</h3>
+<p>将工具的<code>permission_policy</code>设置为<code>always_ask</code>后，<code>allowedTools</code>将不再批准该工具的调用，因此即使该工具已被列出，其调用也可以到达您的<a href="agent-sdk-user-input.html"><code>canUseTool</code></a>回调。如果改为设置<code>always_deny</code>，则<a href="agent-sdk-permissions.html#how-permissions-are-evaluated">对该工具的调用会被拒绝</a>，但您加载的插件中的<a href="plugins-mods-overview.html">mod</a><a href="permissions.html#precedence-among-rules-hooks-and-mods">仍然可以批准它</a>。该字段仅适用于TypeScript，并且需要Agent SDK v0.3.301或更高版本。</p>
+<p>请将策略条目放在<code>createSdkMcpServer()</code>返回的配置对象的<code>tools</code>数组中，而不是放在传入该函数的<code>tools</code>选项中。以下示例展开了<a href="#weather-tool-example">天气工具示例</a>中的<code>weatherServer</code>，并添加了一个<code>tools</code>数组，为<code>get_temperature</code>指定<code>always_ask</code>策略：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">weather</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="p">...</span><span class="nx">weatherServer</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">"get_temperature"</span><span class="p">,</span><span class="w"> </span><span class="nx">permission_policy</span><span class="o">:</span><span class="w"> </span><span class="s2">"always_ask"</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp__weather__get_temperature"</span><span class="p">],</span>
+<span class="w">  </span><span class="nx">permissionMode</span><span class="o">:</span><span class="w"> </span><span class="s2">"default"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">canUseTool</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">(</span><span class="nx">toolName</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Approval requested for </span><span class="si">${</span><span class="nx">toolName</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w"> </span><span class="nx">updatedInput</span><span class="o">:</span><span class="w"> </span><span class="kt">input</span><span class="w"> </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>要试用该策略，请将<a href="#call-a-custom-tool">调用自定义工具</a>脚本中的<code>options</code>替换为本示例的<code>options</code>，然后在终端中运行该脚本。脚本会打印<code>Approval requested for mcp__weather__get_temperature</code>，随后输出Claude关于温度的回答。有关完整脚本，请参阅<a href="agent-sdk-typescript.html#mcpsdkserverconfigwithinstance">TypeScript参考</a>。</p>
+<p>如果您使用<code>auto</code>或<code>plan</code><a href="agent-sdk-permissions.html#permission-modes">权限模式</a>，请在工具的<a href="#add-tool-annotations">注解</a>中设置<code>destructiveHint: true</code>，以便对该工具的调用仍能到达您的回调。否则，<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式分类器</a>可能会在<a href="agent-sdk-typescript.html#permission-modes-that-can-approve-an-always_ask-call">TypeScript参考中列出的条件</a>下批准某些<code>always_ask</code>调用，而被其批准的调用不会到达您的回调。请显式设置该提示，因为对于<code>always_ask</code>调用，未设置的<code>destructiveHint</code>会被视为<code>false</code>，而不是默认为<code>true</code>。</p>
+<h2 id="handle-errors">处理错误</h2>
+<p>处理程序错误不会停止代理循环。SDK 的进程内 MCP 服务器捕获未捕获的异常并将其作为错误结果返回，因此您报告错误的方式决定了 Claude 读取的内容，而不是查询是否失败：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">发生的情况</th>
+<th style="text-align: left;">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">处理程序抛出未捕获的异常</td>
+<td style="text-align: left;">MCP 服务器将其转换为携带原始异常消息的错误结果。Claude 看到该消息，代理循环继续。</td>
+</tr>
+<tr>
+<td style="text-align: left;">处理程序捕获错误并返回 <code>isError: true</code> (TS) / <code>"is_error": True</code> (Python)</td>
+<td style="text-align: left;">Claude 看到您编写的消息。您可以添加原始异常缺少的上下文，例如哪个请求失败或应该尝试什么。</td>
+</tr>
+</tbody>
+</table>
+<p>在这两种情况下，Claude 都可以重试、尝试不同的工具或解释失败。当原始异常消息不足以让 Claude 采取行动时，请自己捕获错误。</p>
+<p>下面的示例在处理程序内捕获两种失败，并编写 Claude 读取的错误消息。非 200 HTTP 状态从响应中捕获并作为错误结果返回。网络错误或无效的 JSON 由周围的 <code>try/except</code> (Python) 或 <code>try/catch</code> (TypeScript) 捕获，也作为错误结果返回。在这两种情况下，Claude 都会收到描述失败的消息，而不是裸异常字符串。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+
+<span class="nd">@tool</span><span class="p">(</span>
+    <span class="s2">"fetch_data"</span><span class="p">,</span>
+    <span class="s2">"Fetch data from an API"</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">"endpoint"</span><span class="p">:</span> <span class="nb">str</span><span class="p">},</span>  <span class="c1"># Simple schema</span>
+<span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_data</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">"endpoint"</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="c1"># Return the failure as a tool result so Claude can react to it.</span>
+                <span class="c1"># is_error marks this as a failed call rather than odd-looking data.</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">"content"</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span>
+                            <span class="s2">"text"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"API error: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">reason_phrase</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                        <span class="p">}</span>
+                    <span class="p">],</span>
+                    <span class="s2">"is_error"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="p">}</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">"content"</span><span class="p">:</span> <span class="p">[{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)}]}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Composes the message Claude reads. An uncaught exception would</span>
+        <span class="c1"># reach Claude as the raw str(e) with no context.</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"content"</span><span class="p">:</span> <span class="p">[{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Failed to fetch data: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">}],</span>
+            <span class="s2">"is_error"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">z</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"zod"</span><span class="p">;</span>
+
+<span class="nx">tool</span><span class="p">(</span>
+<span class="w">  </span><span class="s2">"fetch_data"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"Fetch data from an API"</span><span class="p">,</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">endpoint</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">().</span><span class="nx">url</span><span class="p">().</span><span class="nx">describe</span><span class="p">(</span><span class="s2">"API endpoint URL"</span><span class="p">)</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">endpoint</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Return the failure as a tool result so Claude can react to it.</span>
+<span class="w">        </span><span class="c1">// isError marks this as a failed call rather than odd-looking data.</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">              </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span>
+<span class="w">              </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="sb">`API error: </span><span class="si">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">statusText</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="nx">isError</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="kt">JSON.stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">)</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Composes the message Claude reads. An uncaught throw would</span>
+<span class="w">      </span><span class="c1">// reach Claude as the raw error message with no context.</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="sb">`Failed to fetch data: </span><span class="si">${</span><span class="nx">error</span><span class="w"> </span><span class="ow">instanceof</span><span class="w"> </span><span class="ne">Error</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">error.message</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">String</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nx">isError</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="w">      </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">);</span>
+</code></pre></div>
+<h2 id="return-images-and-resources">返回图像和资源</h2>
+<p>工具结果中的 <code>content</code> 数组接受 <code>text</code>、<code>image</code>、<code>audio</code>、<code>resource</code> 和 <code>resource_link</code> 块。您可以在同一响应中混合使用它们。在 TypeScript 中，SDK 将音频块保存到磁盘，Claude 接收包含已保存文件路径的文本块；在 Python 中，SDK 从工具结果中删除音频块并记录警告。</p>
+<p>Claude 将每个资源链接块作为包含链接名称、URI 和描述的文本块接收。在 TypeScript 中，您的应用程序还会在用户消息的 <code>tool_use_result</code> 上以 <a href="agent-sdk-typescript.html#sdkmcpresourcelink"><code>resourceLinks</code></a> 的形式接收链接本身；在 Python 中，SDK 在 CLI 看到结果之前将它们展平为文本，因此 Python <a href="agent-sdk-python.html#usermessage"><code>resourceLinks</code> 键</a>永远不会为进程内工具生成。</p>
+<h3 id="images">图像</h3>
+<p>图像块以 base64 编码的方式内联携带图像字节。没有 URL 字段。要返回位于 URL 的图像，请在处理程序中获取它，读取响应字节，并在返回之前对其进行 base64 编码。PNG、JPEG、GIF 或 WebP 图像作为视觉输入到达 Claude；任何其他类型的图像都被保存到磁盘，Claude 接收其文件路径作为文本。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>type</code></td>
+<td style="text-align: left;"><code>"image"</code></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>data</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">Base64 编码的字节。仅原始 base64，不带 <code>data:image/...;base64,</code> 前缀</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mimeType</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">必需。例如 <code>image/png</code>、<code>image/jpeg</code>、<code>image/webp</code>、<code>image/gif</code></td>
+</tr>
+</tbody>
+</table>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+
+
+<span class="c1"># Define a tool that fetches an image from a URL and returns it to Claude</span>
+<span class="nd">@tool</span><span class="p">(</span><span class="s2">"fetch_image"</span><span class="p">,</span> <span class="s2">"Fetch an image from a URL and return it to Claude"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"url"</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_image</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>  <span class="c1"># Fetch the image bytes</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">"url"</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"content"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"image"</span><span class="p">,</span>
+                <span class="s2">"data"</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span>
+                    <span class="s2">"ascii"</span>
+                <span class="p">),</span>  <span class="c1"># Base64-encode the raw bytes</span>
+                <span class="s2">"mimeType"</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">"content-type"</span><span class="p">,</span> <span class="s2">"image/png"</span>
+                <span class="p">),</span>  <span class="c1"># Read MIME type from the response</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">z</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"zod"</span><span class="p">;</span>
+
+<span class="nx">tool</span><span class="p">(</span>
+<span class="w">  </span><span class="s2">"fetch_image"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"Fetch an image from a URL and return it to Claude"</span><span class="p">,</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">().</span><span class="nx">url</span><span class="p">()</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">url</span><span class="p">);</span><span class="w"> </span><span class="c1">// Fetch the image bytes</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Buffer</span><span class="p">.</span><span class="kr">from</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">arrayBuffer</span><span class="p">());</span><span class="w"> </span><span class="c1">// Read into a Buffer for base64 encoding</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">mimeType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">"content-type"</span><span class="p">)</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s2">"image/png"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"image"</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">buffer.toString</span><span class="p">(</span><span class="s2">"base64"</span><span class="p">),</span><span class="w"> </span><span class="c1">// Base64-encode the raw bytes</span>
+<span class="w">          </span><span class="nx">mimeType</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">);</span>
+</code></pre></div>
+<h3 id="resources">资源</h3>
+<p>资源块嵌入由 URI 标识的内容片段。实际内容位于块的 <code>text</code> 或 <code>blob</code> 字段中。当您的工具生成文件或来自外部系统的记录时，请使用此方法。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>type</code></td>
+<td style="text-align: left;"><code>"resource"</code></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>resource.uri</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">内容的标识符。任何 URI 方案</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>resource.text</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">内容（如果是文本）。提供此项或 <code>blob</code>，但不能同时提供两者</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>resource.blob</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">内容 base64 编码（如果是二进制）。仅 TypeScript：Python SDK 从工具结果中删除二进制资源并记录警告</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>resource.mimeType</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">可选</td>
+</tr>
+</tbody>
+</table>
+<p>此示例显示从工具处理程序内部返回的资源块。SDK 不会从示例的 URI <code>file:///tmp/report.md</code> 读取。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"resource"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">resource</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">uri</span><span class="o">:</span><span class="w"> </span><span class="s2">"file:///tmp/report.md"</span><span class="p">,</span><span class="w"> </span><span class="c1">// Label for Claude to reference, not a path the SDK reads</span>
+<span class="w">        </span><span class="nx">mimeType</span><span class="o">:</span><span class="w"> </span><span class="s2">"text/markdown"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s2">"# Report\n..."</span><span class="w"> </span><span class="c1">// The actual content, inline</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="k">return</span> <span class="p">{</span>
+    <span class="s2">"content"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"resource"</span><span class="p">,</span>
+            <span class="s2">"resource"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"uri"</span><span class="p">:</span> <span class="s2">"file:///tmp/report.md"</span><span class="p">,</span>  <span class="c1"># Not a path the SDK reads</span>
+                <span class="s2">"mimeType"</span><span class="p">:</span> <span class="s2">"text/markdown"</span><span class="p">,</span>
+                <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"# Report</span><span class="se">\n</span><span class="s2">..."</span><span class="p">,</span>  <span class="c1"># The actual content, inline</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>这些块形状来自 MCP <code>CallToolResult</code> 类型。有关完整定义，请参阅 <a href="https://modelcontextprotocol.io/specification/2025-06-18/server/tools#tool-result" target="_blank" rel="noopener">MCP 规范</a>。</p>
+<h2 id="return-structured-data">返回结构化数据</h2>
+<p><code>structuredContent</code> 是结果上的可选 JSON 对象，与 <code>content</code> 数组分开。使用它来返回原始值，Claude 可以将其作为精确字段读取，而不是从文本字符串或图像中解析它们。</p>
+<p>当设置 <code>structuredContent</code> 时，Claude 会接收 JSON 以及来自 <code>content</code> 的任何图像或资源块。<code>content</code> 中的文本块不会被转发，因为假设它们会复制结构化数据。下面的示例将图表呈现为图像块，并从同一处理程序的 <code>structuredContent</code> 中返回其后面的数据点。在代码片段中，<code>chartPngBuffer</code> 是一个包含呈现的 PNG 字节的 <code>Buffer</code>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"image"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">chartPngBuffer.toString</span><span class="p">(</span><span class="s2">"base64"</span><span class="p">),</span>
+<span class="w">      </span><span class="nx">mimeType</span><span class="o">:</span><span class="w"> </span><span class="s2">"image/png"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nx">structuredContent</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">series</span><span class="o">:</span><span class="w"> </span><span class="s2">"temperature_2m"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">unit</span><span class="o">:</span><span class="w"> </span><span class="s2">"fahrenheit"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">points</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">62.1</span><span class="p">,</span><span class="w"> </span><span class="mf">63.4</span><span class="p">,</span><span class="w"> </span><span class="mf">65.0</span><span class="p">,</span><span class="w"> </span><span class="mf">64.2</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Python <code>@tool</code> 装饰器仅从处理程序的返回字典中转发 <code>content</code> 和 <code>is_error</code>。要从 Python 返回 <code>structuredContent</code>，请运行<a href="agent-sdk-mcp.html">独立 MCP 服务器</a>而不是进程内 SDK 服务器。</p></div></div>
+<h2 id="example-unit-converter">示例：单位转换器</h2>
+<p>此工具在长度、温度和重量单位之间转换值。用户可以询问"将100公里转换为英里"或"72°F是多少摄氏度"，Claude会从请求中选择正确的单位类型和单位。</p>
+<p>它演示了两种模式：</p>
+<ul>
+<li><strong>枚举模式：</strong> <code>unit_type</code> 被限制为一组固定值。在 TypeScript 中，使用 <code>z.enum()</code>。在 Python 中，字典模式不支持枚举，因此需要完整的 JSON Schema 字典。</li>
+<li><strong>不支持的输入处理：</strong> 当找不到转换对时，处理程序返回 <code>isError: true</code>，以便 Claude 可以告诉用户出了什么问题，而不是将失败视为正常结果。</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span><span class="p">,</span> <span class="n">create_sdk_mcp_server</span>
+
+
+<span class="c1"># z.enum() in TypeScript becomes an "enum" constraint in JSON Schema.</span>
+<span class="c1"># The dict schema has no equivalent, so full JSON Schema is required.</span>
+<span class="nd">@tool</span><span class="p">(</span>
+    <span class="s2">"convert_units"</span><span class="p">,</span>
+    <span class="s2">"Convert a value from one unit to another"</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+        <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"unit_type"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
+                <span class="s2">"enum"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"length"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">,</span> <span class="s2">"weight"</span><span class="p">],</span>
+                <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Category of unit"</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">"from_unit"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
+                <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Unit to convert from, e.g. kilometers, fahrenheit, pounds"</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">"to_unit"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Unit to convert to"</span><span class="p">},</span>
+            <span class="s2">"value"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"number"</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Value to convert"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s2">"required"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"unit_type"</span><span class="p">,</span> <span class="s2">"from_unit"</span><span class="p">,</span> <span class="s2">"to_unit"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">convert_units</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="n">conversions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"length"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"kilometers_to_miles"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="mf">0.621371</span><span class="p">,</span>
+            <span class="s2">"miles_to_kilometers"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="mf">1.60934</span><span class="p">,</span>
+            <span class="s2">"meters_to_feet"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="mf">3.28084</span><span class="p">,</span>
+            <span class="s2">"feet_to_meters"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="mf">0.3048</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"temperature"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"celsius_to_fahrenheit"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="mi">9</span><span class="p">)</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span><span class="p">,</span>
+            <span class="s2">"fahrenheit_to_celsius"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">9</span><span class="p">,</span>
+            <span class="s2">"celsius_to_kelvin"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">+</span> <span class="mf">273.15</span><span class="p">,</span>
+            <span class="s2">"kelvin_to_celsius"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">-</span> <span class="mf">273.15</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"weight"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"kilograms_to_pounds"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="mf">2.20462</span><span class="p">,</span>
+            <span class="s2">"pounds_to_kilograms"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="mf">0.453592</span><span class="p">,</span>
+            <span class="s2">"grams_to_ounces"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="mf">0.035274</span><span class="p">,</span>
+            <span class="s2">"ounces_to_grams"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="mf">28.3495</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">args</span><span class="p">[</span><span class="s1">'from_unit'</span><span class="p">]</span><span class="si">}</span><span class="s2">_to_</span><span class="si">{</span><span class="n">args</span><span class="p">[</span><span class="s1">'to_unit'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="n">conversions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">"unit_type"</span><span class="p">],</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fn</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"content"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span>
+                    <span class="s2">"text"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Unsupported conversion: </span><span class="si">{</span><span class="n">args</span><span class="p">[</span><span class="s1">'from_unit'</span><span class="p">]</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">args</span><span class="p">[</span><span class="s1">'to_unit'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">"is_error"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">"value"</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"content"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span>
+                <span class="s2">"text"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">args</span><span class="p">[</span><span class="s1">'value'</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">args</span><span class="p">[</span><span class="s1">'from_unit'</span><span class="p">]</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">result</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">args</span><span class="p">[</span><span class="s1">'to_unit'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+
+
+<span class="n">converter_server</span> <span class="o">=</span> <span class="n">create_sdk_mcp_server</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">"converter"</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">"1.0.0"</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">convert_units</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="p">,</span><span class="w"> </span><span class="nx">createSdkMcpServer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">z</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"zod"</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">convert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">tool</span><span class="p">(</span>
+<span class="w">  </span><span class="s2">"convert_units"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"Convert a value from one unit to another"</span><span class="p">,</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">unit_type</span><span class="o">:</span><span class="w"> </span><span class="kt">z.enum</span><span class="p">([</span><span class="s2">"length"</span><span class="p">,</span><span class="w"> </span><span class="s2">"temperature"</span><span class="p">,</span><span class="w"> </span><span class="s2">"weight"</span><span class="p">]).</span><span class="nx">describe</span><span class="p">(</span><span class="s2">"Category of unit"</span><span class="p">),</span>
+<span class="w">    </span><span class="nx">from_unit</span><span class="o">:</span><span class="w"> </span><span class="kt">z</span>
+<span class="w">      </span><span class="p">.</span><span class="kt">string</span><span class="p">()</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s2">"Unit to convert from, e.g. kilometers, fahrenheit, pounds"</span><span class="p">),</span>
+<span class="w">    </span><span class="nx">to_unit</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">().</span><span class="nx">describe</span><span class="p">(</span><span class="s2">"Unit to convert to"</span><span class="p">),</span>
+<span class="w">    </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">z.number</span><span class="p">().</span><span class="nx">describe</span><span class="p">(</span><span class="s2">"Value to convert"</span><span class="p">)</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">type</span><span class="w"> </span><span class="nx">Conversions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="kt">number</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">conversions</span><span class="o">:</span><span class="w"> </span><span class="kt">Conversions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">length</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">kilometers_to_miles</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.621371</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">miles_to_kilometers</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1.60934</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">meters_to_feet</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">3.28084</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">feet_to_meters</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.3048</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">temperature</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">celsius_to_fahrenheit</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">9</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">5</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">32</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">fahrenheit_to_celsius</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">((</span><span class="nx">v</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">32</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">5</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">9</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">celsius_to_kelvin</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">273.15</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">kelvin_to_celsius</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">273.15</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">weight</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">kilograms_to_pounds</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">2.20462</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">pounds_to_kilograms</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.453592</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">grams_to_ounces</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.035274</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">ounces_to_grams</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">28.3495</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">args</span><span class="p">.</span><span class="nx">from_unit</span><span class="si">}</span><span class="sb">_to_</span><span class="si">${</span><span class="nx">args</span><span class="p">.</span><span class="nx">to_unit</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">conversions</span><span class="p">[</span><span class="nx">args</span><span class="p">.</span><span class="nx">unit_type</span><span class="p">]</span><span class="o">?</span><span class="p">.[</span><span class="nx">key</span><span class="p">];</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">fn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="sb">`Unsupported conversion: </span><span class="si">${</span><span class="nx">args</span><span class="p">.</span><span class="nx">from_unit</span><span class="si">}</span><span class="sb"> to </span><span class="si">${</span><span class="nx">args</span><span class="p">.</span><span class="nx">to_unit</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nx">isError</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="w">      </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fn</span><span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">args</span><span class="p">.</span><span class="nx">value</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">args</span><span class="p">.</span><span class="nx">from_unit</span><span class="si">}</span><span class="sb"> = </span><span class="si">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">toFixed</span><span class="p">(</span><span class="mf">4</span><span class="p">)</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">args</span><span class="p">.</span><span class="nx">to_unit</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">);</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">converterServer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createSdkMcpServer</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">"converter"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">convert</span><span class="p">]</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>定义服务器后，以与天气示例相同的方式将其传递给 <code>query</code>。此示例在循环中发送三个不同的提示，以显示同一工具处理不同单位类型的情况。对于每个响应，它检查 <code>AssistantMessage</code> 对象（包含 Claude 在该轮中进行的工具调用）并在打印最终 <code>ResultMessage</code> 文本之前打印每个 <code>ToolUseBlock</code>。这让你可以看到 Claude 何时使用工具与何时从自己的知识中回答。</p>
+<p>因为 <a href="agent-sdk-tool-search.html">tool search</a> 默认启用，输出也可能包括 <code>ToolSearch</code> 调用，因为 Claude 加载延迟的工具模式。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">query</span><span class="p">,</span>
+    <span class="n">ClaudeAgentOptions</span><span class="p">,</span>
+    <span class="n">ResultMessage</span><span class="p">,</span>
+    <span class="n">AssistantMessage</span><span class="p">,</span>
+    <span class="n">ToolUseBlock</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">mcp_servers</span><span class="o">=</span><span class="p">{</span><span class="s2">"converter"</span><span class="p">:</span> <span class="n">converter_server</span><span class="p">},</span>
+        <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"mcp__converter__convert_units"</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">prompts</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">"Convert 100 kilometers to miles."</span><span class="p">,</span>
+        <span class="s2">"What is 72°F in Celsius?"</span><span class="p">,</span>
+        <span class="s2">"How many pounds is 5 kilograms?"</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="n">prompts</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">AssistantMessage</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">ToolUseBlock</span><span class="p">):</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[tool call] </span><span class="si">{</span><span class="n">block</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">block</span><span class="o">.</span><span class="n">input</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">subtype</span> <span class="o">==</span> <span class="s2">"success"</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Q: </span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="se">\n</span><span class="s2">A: </span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="c1"># A single-shot query() raises after yielding an error result. Only success</span>
+            <span class="c1"># results are printed above, so handle the failure here and continue with</span>
+            <span class="c1"># the next prompt.</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Call failed: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">prompts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="s2">"Convert 100 kilometers to miles."</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"What is 72°F in Celsius?"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"How many pounds is 5 kilograms?"</span>
+<span class="p">];</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">prompt</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">prompts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">prompt</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">mcpServers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">converter</span><span class="o">:</span><span class="w"> </span><span class="kt">converterServer</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp__converter__convert_units"</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"assistant"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">block</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">block</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"tool_use"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[tool call] </span><span class="si">${</span><span class="nx">block</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="nx">block</span><span class="p">.</span><span class="nx">input</span><span class="p">);</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"success"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Q: </span><span class="si">${</span><span class="nx">prompt</span><span class="si">}</span><span class="sb">\nA: </span><span class="si">${</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="si">}</span><span class="sb">\n`</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// A single-shot query() throws after yielding an error result. Only success</span>
+<span class="w">    </span><span class="c1">// results are logged above, so handle the failure here and continue with</span>
+<span class="w">    </span><span class="c1">// the next prompt.</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`Call failed: </span><span class="si">${</span><span class="nx">error</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="next-steps">后续步骤</h2>
+<p>您可以在同一服务器中混合使用本页面上的模式：单个服务器可以同时包含数据库工具、API 网关工具和图像渲染器。</p>
+<p>从这里开始：</p>
+<ul>
+<li>如果您的服务器增长到数十个工具，请参阅<a href="agent-sdk-tool-search.html">工具搜索</a>以延迟加载它们，直到 Claude 需要它们。</li>
+<li>要连接到外部 MCP 服务器（文件系统、GitHub、Slack）而不是构建自己的服务器，请参阅<a href="agent-sdk-mcp.html">连接 MCP 服务器</a>。</li>
+<li>要控制哪些工具自动运行与需要批准，请参阅<a href="agent-sdk-permissions.html">配置权限</a>。</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="agent-sdk-structured-outputs.html"><span class="pager-dir">← 上一页</span><span class="pager-name">从代理获取结构化输出</span></a><a class="pager-link next" href="agent-sdk-mcp.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用 MCP 连接外部工具</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#quick-reference">快速参考</a><a class="toc-l2" href="#create-a-custom-tool">创建自定义工具</a><a class="toc-l3" href="#weather-tool-example">天气工具示例</a><a class="toc-l3" href="#make-a-parameter-optional">使参数可选</a><a class="toc-l3" href="#call-a-custom-tool">调用自定义工具</a><a class="toc-l3" href="#add-more-tools">添加更多工具</a><a class="toc-l3" href="#add-tool-annotations">添加工具注释</a><a class="toc-l2" href="#control-tool-access">控制工具访问</a><a class="toc-l3" href="#configure-allowed-tools">配置允许的工具</a><a class="toc-l3" href="#require-approval-for-specific-tools">要求特定工具需经批准</a><a class="toc-l2" href="#handle-errors">处理错误</a><a class="toc-l2" href="#return-images-and-resources">返回图像和资源</a><a class="toc-l3" href="#images">图像</a><a class="toc-l3" href="#resources">资源</a><a class="toc-l2" href="#return-structured-data">返回结构化数据</a><a class="toc-l2" href="#example-unit-converter">示例：单位转换器</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

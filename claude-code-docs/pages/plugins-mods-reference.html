@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mod 参考 · Claude Code 中文文档</title>
+<meta name="description" content="Claude Code mod 的完整参考：hook 模块布局、事件、mods API 方法、渲染位置、按使用入口划分的元素、限制和设置。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/mods/reference">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/mods/reference" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link active" href="plugins-mods-reference.html" aria-current="page">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>mod</span></div>
+    <article class="prose" id="article"><h1 id="mod">mod 参考</h1>
+<blockquote>
+<p>Claude Code mod 的完整参考：hook 模块布局、事件、mods API 方法、渲染位置、按使用入口划分的元素、限制和设置。</p>
+</blockquote>
+<p>查阅 <a href="plugins-mods-overview.html">mod</a> 可以处理的任何事件、可以调用的任何 mods API 方法，或可以在其中绘制的任何渲染位置。条目涵盖 v2.1.290 起的 Claude Code CLI 和 Desktop 应用，以及 v2.1.299 起的 VS Code 扩展。每个条目给出名称和一行描述，如有相应的指南章节，还会链接到该章节。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>完整的参考是 Claude Code 的 <a href="https://github.com/anthropics/claude-code/blob/main/mods/types/claude-code.d.ts" target="_blank" rel="noopener">mod TypeScript 声明</a>，其中描述了每个事件、方法和元素，并附有示例。GitHub 上的副本可能比您安装的 Claude Code 版本更旧。两者不一致时，请以 <a href="plugins-mods-create.html#get-the-types-for-your-build">Claude Code 为您的版本写入的副本</a>为准。</p></div></div>
+<h2 id="files">文件</h2>
+<p>mod 是一个包含以下文件的插件目录：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">文件</th>
+<th style="text-align: left;">必需</th>
+<th style="text-align: left;">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>.claude-plugin/plugin.json</code></td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">插件<a href="plugins-manifest-reference.html">清单</a>。mod 不会添加任何必需字段。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hooks/hooks.json</code></td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;"><code>modules</code>：一个数组，包含一个指向 hook 模块的路径（相对于此文件），如 <code>"modules": ["./register.js"]</code>。也可以在 <code>hooks</code> 下包含<a href="hooks.html">设置 hook</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">hook 模块，例如 <a href="plugins-mods-create.html#write-a-mod-yourself"><code>hooks/register.js</code></a></td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">mod 的入口点。导出 <code>register(on, options)</code>。文件名以 <code>.js</code>、<code>.mjs</code>、<code>.cjs</code>、<code>.jsx</code>、<code>.ts</code>、<code>.mts</code>、<code>.cts</code> 或 <code>.tsx</code> 结尾。是一个 ES 模块。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#declare-the-values"><code>types/index.d.ts</code></a>，除非清单中的 <code>types</code> 指定了其他路径</td>
+<td style="text-align: left;">当 mod 使用 <code>$.state</code> 或向 mods API 添加命名空间时</td>
+<td style="text-align: left;">声明 <code>PluginState</code> 值以及 mod 添加的任何命名空间。要在清单中省略 <code>types</code>，需要 v2.1.299 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;">名称以 <code>.test.ts</code> 或 <code>.test.tsx</code> 结尾的文件</td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;"><a href="plugins-mods-test.html#write-a-test"><code>claude plugin test</code></a> 运行的测试</td>
+</tr>
+</tbody>
+</table>
+<p><code>register</code> 接收 <code>on</code> 和 <code>options</code>。<code>options</code> 包含清单所声明的 <a href="plugins-components.html#user-configuration"><code>userConfig</code></a> 字段的值，并已填入默认值。</p>
+<h2 id="the-hook-function">hook 函数</h2>
+<p>mod 通过在 <code>register</code> 内调用 <code>on</code> 来注册它的每个 hook（即事件处理程序）。<code>on</code> 接受事件名称、一个可选的<a href="plugins-mods-events.html#filter-which-events-a-hook-handles">匹配器</a>（即对事件字段的过滤条件）以及 hook，如 <code>on('tool.call', { tool: 'Bash' }, async ($, e, next) =&gt; next(e))</code>。<code>on</code> 返回一个注册对象，它只有一个方法 <code>.catch(handler)</code>，用于设置该 hook 的<a href="plugins-mods-events.html#handle-a-hook-that-fails">错误处理程序</a>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">参数</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#how-a-hook-handles-an-event"><code>$</code></a></td>
+<td style="text-align: left;">mods API：<a href="#mods-api-methods">mods API 方法</a>中的所有方法。每次调用都要完整写出，先写命名空间再写方法，如 <code>$.fs.read('notes.md')</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#how-a-hook-handles-an-event"><code>e</code></a></td>
+<td style="text-align: left;">事件的输入，为深度冻结的纯数据。要更改它，请将副本传给 <code>next</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#how-a-hook-handles-an-event"><code>next(e)</code></a></td>
+<td style="text-align: left;">下一个处理程序，类似中间件。先运行此 hook 之后的 hook，再运行 Claude Code 的行为。解析为事件的结果。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#stop-background-work"><code>next.signal</code></a></td>
+<td style="text-align: left;">一个 <code>AbortSignal</code>，在事件被放弃时中止</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>next.origin</code></td>
+<td style="text-align: left;">触发该事件者的 <code>{ plugin, tier }</code>。Claude Code 自身为 <code>{ plugin: 'engine', tier: 'core' }</code>。mod 的 <code>tier</code> 是它在 <a href="plugins-mods-events.html#the-order-mods-run-in">mod 运行顺序</a>中的优先级组：<code>prepend</code>、<code>user</code>、<code>append</code> 或 <code>builtin</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>next.budget</code></td>
+<td style="text-align: left;">hook 的时间限制（以毫秒为单位）：<code>next.budget.ms</code> 是总限制，<code>next.budget.remainingMs</code> 是当前剩余时间</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>next.to(e, tier)</code></td>
+<td style="text-align: left;">跳到后面的层级，即 <code>append</code>、<code>builtin</code> 或 <code>core</code>。<code>next.to(e, 'append')</code> 会跳过用户安装的 mod。只有 <code>prependPlugins</code> 或 <code>appendPlugins</code> 中的 mod 才能调用它。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>next.error</code></td>
+<td style="text-align: left;">仅在 <code>.catch</code> 处理程序中可用。hook 失败时，<code>kind</code> 为 <code>throw</code> 或 <code>timeout</code>，<code>message</code> 是错误文本。当 hook 因事件来自该 hook 或您的 mod 在其 hook 之外的代码所发起的 mods API 调用内部而被跳过时，<code>kind</code> 为 <code>re-entry</code>。<code>re-entry</code> 需要 Claude Code v2.1.292 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>next.error.cause</code></td>
+<td style="text-align: left;">仅当 <code>kind</code> 为 <code>re-entry</code> 时设置。如果 <code>tool.call</code> 或 <a href="hooks.html#pretooluse"><code>PreToolUse</code></a> hook 更改了该事件所来自的 mods API 调用，或者 <code>agent.spawn</code> hook 更改了由该调用启动的 Agent，则为 <code>rewritten</code>。当触发该事件的是另一个 mod 添加到 mods API 的方法时，为 <code>lent</code>，除非同时适用 <code>rewritten</code>。<code>lent</code> 需要 Claude Code v2.1.292 或更高版本，<code>rewritten</code> 需要 v2.1.300 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>next.called</code></td>
+<td style="text-align: left;">仅在 <code>.catch</code> 处理程序中可用。当 hook 已调用 <code>next</code> 时为 <code>true</code>。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="events">事件</h2>
+<p>事件按其涉及的内容分组，每个事件都列出了触发时机以及其上的 hook 可以返回的内容。<code>turn.step</code> 和 <code>process.spawn</code> 上的 hook 是异步生成器，其他 hook 是异步函数。</p>
+<p>每个表格的最后一列使用简写。<code>next(e)</code> 原样传递事件。<code>next({ ...e, text })</code> 传递一个更改了指定字段的副本，如 <code>next({ ...e, text: e.text.trim() })</code>。对象表示不调用 <code>next</code> 而直接应答该事件，而 <code>reason</code> 之类的词代表您编写的字符串，如 <code>{ deny: 'Use the file tools.' }</code>。</p>
+<h3 id="tools">工具</h3>
+<p>工具事件围绕 Claude 发出的每个工具调用触发，涵盖从 Claude 读取的描述到是否运行该调用的决定：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">触发时机</th>
+<th style="text-align: left;">hook 可以返回</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#guard-or-change-a-tool-call"><code>tool.call</code></a></td>
+<td style="text-align: left;">工具即将运行</td>
+<td style="text-align: left;"><code>next(e)</code>、<code>{ deny: reason }</code> 或 <code>{ result }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#where-settings-hooks-run-in-the-order"><code>tool.check</code></a></td>
+<td style="text-align: left;">Claude Code 在 <code>tool.call</code> 和 <code>PreToolUse</code> hook 之后决定是否允许运行某个工具调用。<code>next(e)</code> 解析为规则、权限模式和这些 hook 得出的决定。</td>
+<td style="text-align: left;"><code>next(e)</code> 或 <code>{ decision }</code>，其中 <code>decision</code> 设为 <code>allow</code>、<code>ask</code> 或 <code>deny</code>，并可附带可选的 <code>reason</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tool.describe</code></td>
+<td style="text-align: left;">每个工具一次，在其描述首次发送给 Claude 时。对于 MCP 工具，当 Claude 通过<a href="mcp.html#scale-with-mcp-tool-search">工具搜索</a>加载它时会再触发一次，此时 <code>e.description</code> 设为 Claude 针对已加载工具读取的文本。</td>
+<td style="text-align: left;"><code>{ description }</code>，可选择将 <code>isDeferred</code> 设为 <code>true</code> 以将该工具置于工具搜索之后，或设为 <code>false</code> 以预先加载它</td>
+</tr>
+</tbody>
+</table>
+<h4 id="agent-and-organization-fields-on-tool-check"><code>tool.check</code> 上的 Agent 和组织字段</h4>
+<p>在 <code>tool.check</code> hook 中，读取以下字段可区分子代理的调用与主对话的调用，并查看您的组织是否要求对某个连接器工具进行批准：</p>
+<ul>
+<li><strong><code>e.agentId</code></strong>：当<a href="sub-agents.html">子代理</a>或<a href="agent-teams.html#choose-a-display-mode">进程内队友</a>发出调用时设置，由主对话发出调用时则不存在</li>
+<li><strong><code>e.ceiling</code></strong>：对于您的组织设为 <code>ask</code> 的连接器工具，其值为 <code>ask</code>，适用于<a href="mcp.html#organization-controls-on-connector-tools">该设置能传达到 Claude Code 的会话</a></li>
+</ul>
+<p>在 <code>tool.check</code> 上，<code>e.agentId</code> 和 <code>e.ceiling</code> 需要 Claude Code v2.1.290 或更高版本。</p>
+<h4 id="tool-check-read-only"><code>tool.check</code> 上的 <code>e.isReadOnly</code> 字段</h4>
+<p>在 <code>tool.check</code> hook 中，当工具报告此次调用为只读时，<code>e.isReadOnly</code> 为 <code>true</code>。否则该字段不存在，而不是 <code>false</code>。该值是工具自身的报告，因此在仅凭此字段批准某个调用之前，请先阅读<a href="plugins-mods-events.html#check-whether-a-tool-call-is-read-only">检查工具调用是否为只读</a>。</p>
+<p>在 <code>tool.check</code> 上，<code>e.isReadOnly</code> 需要 Claude Code v2.1.304 或更高版本。</p>
+<h3 id="prompts-and-what-claude-reads">提示词以及 Claude 读取的内容</h3>
+<p>提示词事件涵盖用户输入的文本，以及 Claude Code 自行发送给 Claude 的文本，例如系统提示词和提醒：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">触发时机</th>
+<th style="text-align: left;">hook 可以返回</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#rewrite-or-add-to-a-prompt"><code>prompt.submit</code></a></td>
+<td style="text-align: left;">提交提示词时</td>
+<td style="text-align: left;"><code>next({ ...e, text })</code>、<code>next({ ...e, context })</code> 或 <code>{ drop: reason }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt.fill</code>, <code>prompt.suggest</code></td>
+<td style="text-align: left;">文本即将作为草稿或暗色建议进入输入框</td>
+<td style="text-align: left;">更改了文本的 <code>next(e)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt.edit</code></td>
+<td style="text-align: left;">用户编辑输入框</td>
+<td style="text-align: left;"><code>next(e)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt.autocomplete</code></td>
+<td style="text-align: left;">用户在输入框中输入内容，且光标处有一个词结束。<code>e.token</code> 即该词。Claude Code 不会等待该 hook：其自身的自动补全行会先显示。</td>
+<td style="text-align: left;"><code>{ suggestions }</code>，一个由 <code>{ text, label, description }</code> 行组成的列表，显示在 Claude Code 自身的行下方。选择某一行会用其 <code>text</code> 覆盖该词。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt.compose</code></td>
+<td style="text-align: left;">Claude Code 渲染系统提示词</td>
+<td style="text-align: left;"><code>{ sections }</code>，一个按发送顺序排列的 <code>{ id, text, scope }</code> 列表</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#rewrite-or-add-to-a-prompt"><code>prompt.section</code></a></td>
+<td style="text-align: left;">系统提示词的每个命名部分一次。<code>e.name</code> 是该部分在 <code>prompt.compose</code> 中的 <code>id</code>。</td>
+<td style="text-align: left;"><code>{ text }</code>，或 <code>{ text: null }</code> 以省略该部分</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#rewrite-or-add-to-a-prompt"><code>prompt.context</code></a></td>
+<td style="text-align: left;">每个对话一次，用于随第一条消息发送的上下文</td>
+<td style="text-align: left;"><code>{ blocks }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt.attachment</code></td>
+<td style="text-align: left;">Claude Code 为 Claude 添加一条它自己的消息，例如提醒。<code>e.type</code> 指明消息类型；对于类型声明中已声明的类型，<code>e.detail</code> 包含编写该文本所依据的事实。</td>
+<td style="text-align: left;"><code>{ text }</code>，或 <code>{ text: null }</code> 以省略它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt.mention</code></td>
+<td style="text-align: left;">Claude Code 即将读取提示词中 @ 提及的文件。需要 Claude Code v2.1.290 或更高版本。</td>
+<td style="text-align: left;"><code>next({ ...e, path })</code> 以读取其他文件，或 <code>{ deny: reason }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#rewrite-or-add-to-a-prompt"><code>skill.prompt</code></a></td>
+<td style="text-align: left;">skill 的文本为 Claude 展开时</td>
+<td style="text-align: left;"><code>{ text }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>attribution.text</code></td>
+<td style="text-align: left;">Claude Code 撰写提交或 Pull Request 的署名文本时</td>
+<td style="text-align: left;"><code>{ text }</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="skill-prompt-fields"><code>skill.prompt</code> 上的来源和 frontmatter 字段</h4>
+<p>在 <code>skill.prompt</code> hook 中，除了 <code>e.skill</code> 中的 skill 名称和 <code>e.text</code> 中 Claude 读取的文本之外，您还可以读取以下字段：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">包含的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>e.source</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">提供该 skill 的来源：对于位于企业、个人或项目<a href="skills.html#where-skills-live">位置</a>的 skill，分别为 <code>policySettings</code>、<code>userSettings</code> 或 <code>projectSettings</code>。其他来源给出 <code>plugin</code>、<code>mcp</code>、<code>syncedSkills</code> 或 <code>built-in</code> 之类的词。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>e.pluginName</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">对于 <code>e.source</code> 为 <code>plugin</code> 的 skill，为插件的名称</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>e.path</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">skill 的 <code>SKILL.md</code> 文件的绝对路径；对于以<a href="skills.html#where-skills-live">命令文件</a>形式编写的 skill，则为其 <code>.md</code> 文件的绝对路径。当该 skill 在本机上没有文件时（如内置 skill）不存在。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>e.frontmatter</code></td>
+<td style="text-align: left;">object</td>
+<td style="text-align: left;">skill 文件的 frontmatter，以纯数据形式提供</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>e.frontmatterProblem</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;"><code>e.frontmatter</code> 缺少该文件的 frontmatter 或其中某个键的原因，如 <code>is a list or a single value, not a table</code>。当 <code>e.frontmatter</code> 包含完整的 frontmatter 或该 skill 没有 frontmatter 时不存在。</td>
+</tr>
+</tbody>
+</table>
+<p>hook 可以将更改后的 <code>text</code> 或 <code>frontmatter</code> 传给 <code>next</code>：其后的 hook 会读取这两者，而 Claude 读取最终的 <code>text</code>。更改任何其他字段的 hook 会<a href="plugins-mods-events.html#handle-a-hook-that-fails">失败</a>。</p>
+<p>在 <code>skill.prompt</code> 上，<code>e.source</code>、<code>e.pluginName</code>、<code>e.path</code>、<code>e.frontmatter</code> 和 <code>e.frontmatterProblem</code> 需要 Claude Code v2.1.299 或更高版本。</p>
+<h3 id="commands-and-configuration">命令和配置</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">触发时机</th>
+<th style="text-align: left;">hook 可以返回</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#add-a-command"><code>command.run</code></a></td>
+<td style="text-align: left;">命令即将运行</td>
+<td style="text-align: left;"><code>{ text }</code>、<code>{}</code> 或 <code>next(e)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>command.describe</code></td>
+<td style="text-align: left;">每个命令一次，用于命令列表</td>
+<td style="text-align: left;"><code>{ description, argumentHint, isHidden }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>config.set</code></td>
+<td style="text-align: left;"><code>/config</code> 行即将更改</td>
+<td style="text-align: left;"><code>next({ ...e, value })</code> 或 <code>{ deny: reason }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>config.describe</code></td>
+<td style="text-align: left;">每个 <code>/config</code> 行一次</td>
+<td style="text-align: left;"><code>{ label, description, isHidden }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#settings-read-hook"><code>settings.read</code></a></td>
+<td style="text-align: left;">mod 调用 <a href="plugins-mods-api.html#reach-files-processes-and-the-network"><code>$.settings.read</code></a>，或 Claude Code 构建会话的合并设置时。在 Claude Code 自身读取时触发以及 <code>e.layers</code> 字段需要 Claude Code v2.1.304 或更高版本</td>
+<td style="text-align: left;"><code>next(e)</code>、<code>{ value }</code> 或 <code>{ deny: reason }</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="e-layers-and-e-source-on-settings-read"><code>settings.read</code> 上的 <code>e.layers</code> 和 <code>e.source</code></h4>
+<ul>
+<li><strong><code>e.layers</code></strong>：每个正在使用且包含设置的来源对应一个 <code>{ source, settings }</code> 对象，<a href="settings.html#settings-precedence">优先级</a>最低的排在最前。请参阅<a href="plugins-mods-events.html#settings-read-receives"><code>settings.read</code> hook 接收的内容</a>。</li>
+<li><strong><code>e.source</code></strong>：mod 所请求的那一个来源，如 <code>$.settings.read({ source: 'policy' })</code>。在 Claude Code 自身的读取以及对合并设置的读取中不存在</li>
+</ul>
+<h3 id="turns">轮次</h3>
+<p>轮次事件从头到尾跟踪一次回答，包括其中每个发往模型的请求：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">触发时机</th>
+<th style="text-align: left;">hook 可以返回</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#follow-a-turn"><code>turn.start</code></a></td>
+<td style="text-align: left;">轮次开始</td>
+<td style="text-align: left;"><code>next(e)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#follow-a-turn"><code>turn.step</code></a></td>
+<td style="text-align: left;">一个请求即将发往模型</td>
+<td style="text-align: left;"><code>yield* next(e)</code>，或 <code>next({ ...e, model })</code>、<code>next({ ...e, effort })</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#follow-a-turn"><code>turn.complete</code></a></td>
+<td style="text-align: left;">轮次结束</td>
+<td style="text-align: left;"><code>next(e)</code>，或 <code>{ text }</code> 以在回答下方显示一行</td>
+</tr>
+</tbody>
+</table>
+<h3 id="session">会话</h3>
+<p>会话事件标记会话的开始、结束、压缩，以及与其他会话交换消息：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">触发时机</th>
+<th style="text-align: left;">hook 可以返回</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#add-a-command-or-a-tool"><code>session.start</code></a></td>
+<td style="text-align: left;">每个已加载的 mod 一次，在第一个提示词之前触发，并在该 mod 重新加载后再次触发。<code>/clear</code>、<code>/resume</code> 或 <code>/branch</code> 之后不会触发。</td>
+<td style="text-align: left;"><code>next(e)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.end</code></td>
+<td style="text-align: left;">会话结束，或运行 <code>/clear</code>、<code>/resume</code> 或 <code>/branch</code> 时。<code>e.reason</code> 为 <code>clear</code>、<code>resume</code>、<code>logout</code>、<code>prompt_input_exit</code> 或 <code>other</code>。<code>/branch</code> 报告为 <code>resume</code>。</td>
+<td style="text-align: left;"><code>next(e)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.compact</code></td>
+<td style="text-align: left;">对话即将被压缩</td>
+<td style="text-align: left;"><code>{ skip: reason }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#send-and-receive-messages-between-sessions"><code>session.receive</code></a>, <a href="plugins-mods-api.html#send-and-receive-messages-between-sessions"><code>session.send</code></a></td>
+<td style="text-align: left;">一条消息从另一个 Agent 或会话到达，或即将发往另一个 Agent 或会话。请参阅<a href="plugins-mods-api.html#send-and-receive-messages-between-sessions">在会话之间发送和接收消息</a>。</td>
+<td style="text-align: left;"><code>receive</code> 返回 <code>{ consumed: reason }</code>，<code>send</code> 返回 <code>{ isDelivered: false, reason }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.append</code></td>
+<td style="text-align: left;">对话保留的每一行一次，例如提示词、响应块、工具结果或通知，在存储之前触发</td>
+<td style="text-align: left;">带有更改后 <code>message.content</code> 的 <code>next({ ...e, message })</code>，用于重写该行的文本块或其中 <code>tool_result</code> 块的 <code>content</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.attach</code>, <code>session.detach</code></td>
+<td style="text-align: left;">另一个应用连接到会话或从会话断开</td>
+<td style="text-align: left;"><code>next(e)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.measure</code></td>
+<td style="text-align: left;">每个轮次之后，以及套餐限制的已用百分比发生变化时</td>
+<td style="text-align: left;"><code>next(e)</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="subagents">子代理</h3>
+<p>子代理事件在向 Claude 提供某个子代理类型时，以及子代理或 agent team 队友即将启动时触发：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">触发时机</th>
+<th style="text-align: left;">hook 可以返回</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>agent.offer</code></td>
+<td style="text-align: left;">向 Claude 提供某个子代理类型</td>
+<td style="text-align: left;"><code>{ isOffered: false }</code> 以不提供它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>agent.spawn</code></td>
+<td style="text-align: left;">子代理或 <a href="agent-teams.html">agent team</a> 队友即将启动。对于队友，<code>e.isTeammate</code> 为 <code>true</code>。</td>
+<td style="text-align: left;"><code>next({ ...e, model })</code> 以选择其模型，或 <code>{ deny: reason }</code></td>
+</tr>
+</tbody>
+</table>
+<p>当 Claude 使用 <a href="sub-agents.html#resume-subagents"><code>SendMessage</code></a> 工具恢复子代理时，您的 <code>agent.spawn</code> hook 不会再次运行。要拒绝恢复子代理的 <code>SendMessage</code> 调用，请在 <a href="plugins-mods-events.html#guard-or-change-a-tool-call"><code>tool.call</code></a> hook 中匹配该工具。</p>
+<h3 id="interface">界面</h3>
+<p>界面事件在 Claude Code 绘制渲染位置时，以及用户使用 mod 绘制的控件时触发。<a href="plugins-mods-interface.html">在界面中绘制</a>展示了 <code>ui.render</code> hook 返回的内容：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">触发时机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#pick-where-to-draw"><code>ui.render</code></a></td>
+<td style="text-align: left;">某个<a href="#render-sites">渲染位置</a>即将被绘制</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ui.resolve</code></td>
+<td style="text-align: left;">mod 加载时，每个应用、渲染位置和 mod 各一次。其结果是 <code>$.ui.resolve(e)</code> 读取的元素表。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#respond-to-presses-and-typing"><code>ui.press</code></a>, <a href="plugins-mods-interface.html#respond-to-presses-and-typing"><code>ui.input</code></a>, <a href="plugins-mods-interface.html#respond-to-presses-and-typing"><code>ui.select</code></a></td>
+<td style="text-align: left;">mod 绘制的 <code>Button</code>、<code>Input</code> 或 <code>Select</code> 被使用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ui.focus</code>, <code>ui.scroll</code></td>
+<td style="text-align: left;">获得焦点的控件，或窗格或横栏的滚动位置即将更改</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ui.close</code></td>
+<td style="text-align: left;">窗格即将关闭。<code>e.id</code> 是该窗格，<code>e.origin.kind</code> 为 <code>plugin</code>、<code>person</code> 或 <code>unload</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#build-a-tree-from-elements"><code>ui.message</code></a></td>
+<td style="text-align: left;"><code>Client</code> 元素向其 mod 发送数据</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#redraw-when-something-changes"><code>ui.fault</code></a></td>
+<td style="text-align: left;">您的 mod 绘制的 <code>Client</code> 元素加载、绘制或运行失败。<code>e.phase</code> 为 <code>load</code>、<code>render</code> 或 <code>run</code>，<code>e.reason</code> 是错误消息。需要 Claude Code v2.1.289 或更高版本。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="other-mods">其他 mod</h3>
+<p>这些事件让 mod 在其他 mod 加载时对其进行操作，以拒绝某个 mod 或更改它收到的 mods API：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">触发时机</th>
+<th style="text-align: left;">hook 可以返回</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-admin.html#enforce-a-policy-with-a-mod-of-your-own"><code>plugin.register</code></a></td>
+<td style="text-align: left;">hook 模块即将加载。<code>e.uses</code> 列出它的事件、mods API 调用、环境变量和状态，与 <code>claude plugin validate</code> 打印的内容一致。每个调用都不带 <code>$.</code> 前缀，如 <code>fs.read</code>。</td>
+<td style="text-align: left;"><code>{ refuse: reason }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>engine.create</code></td>
+<td style="text-align: left;">正在为此 mod 构建 mods API</td>
+<td style="text-align: left;">更改后的 mods API，用于添加某个命名空间。<code>user</code> <a href="#the-hook-function">层级</a>之外的 mod 还可以隐藏某个命名空间。</td>
+</tr>
+</tbody>
+</table>
+<p>当另一个 mod 的 hook 调用您在 <code>engine.create</code> 中添加的命名空间上的方法时，在该事件上的所有 hook 返回之前，您的方法发出的 <code>$</code> 调用都在该 hook 的上下文中运行。例如，相对路径基于该 hook 的工作目录解析，而当轮次正在等待该 hook 时，<code>$.prompt.submit</code> 会被拒绝。在此之后您的方法发出的调用将在您的 mod 自身的上下文中运行。</p>
+<h3 id="telemetry">遥测</h3>
+<p>遥测事件针对 Claude Code 记录的使用情况记录触发：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">触发时机</th>
+<th style="text-align: left;">hook 可以返回</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>telemetry.log</code>, <code>telemetry.mark</code></td>
+<td style="text-align: left;">一条遥测记录即将被记录，或标记某项功能的一次使用。在您安装的 mod 中，请为遥测 hook 设置过滤条件 <code>{ to: 'collector' }</code>，如 <code>on('telemetry.log', { to: 'collector' }, hook)</code>。如果没有该过滤条件，mod 将无法通过 <code>claude plugin validate</code>。<code>*</code> 不匹配这些事件。</td>
+<td style="text-align: left;"><code>next(e)</code> 或 <code>{ deny: reason }</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="settings-hook-events">设置 hook 事件</h3>
+<p>每个<a href="hooks.html#hook-events">设置 hook 事件</a>都是一个名为 <code>classic.&lt;Event&gt;</code> 的事件，如 <code>classic.Stop</code> 或 <code>classic.PostToolUse</code>。<code>e</code> 是该 hook 的 stdin JSON。</p>
+<h3 id="mods-api-calls">mods API 调用</h3>
+<p>每个 <a href="#mods-api-methods">mods API 方法</a>也是一个事件，以其命名空间和方法命名，如 <code>fs.read</code>、<code>model.complete</code> 或 <code>ui.open</code>。其上的 hook 会拦截在它之后运行的 mod 发出的调用，并可以返回 <code>next(e)</code>、<code>{ deny: reason }</code> 或 <code>{ value }</code>。</p>
+<h2 id="mods-api-methods">mods API 方法</h2>
+<p>mods API 是每个 hook 接收的 <code>$</code> 参数。它的方法按命名空间分组，例如 <code>$.ui</code>。此表按名称列出每个命名空间的方法，因此 <code>$.ui</code> 行中的 <code>open</code> 就是调用 <code>$.ui.open(...)</code>。指南展示了常用方法的用法，而<a href="plugins-mods-create.html#get-the-types-for-your-build">您的构建版本的类型</a>记录了每个方法并附有示例。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">命名空间</th>
+<th style="text-align: left;">方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$.plugin</code></td>
+<td style="text-align: left;"><code>name</code>、<code>root</code>：此插件的名称和目录</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#pick-where-to-draw"><code>$.ui</code></a></td>
+<td style="text-align: left;"><code>resolve</code>、<code>invalidate</code>、<code>open</code>、<code>close</code>、<code>panes</code>、<code>focus</code>、<code>scroll</code>、<code>toast</code>、<code>notify</code>、<code>status</code>、<code>log</code>、<code>notice</code>、<code>ask</code>、<code>copy</code>、<code>selection</code>、<code>blit</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#add-a-command"><code>$.command</code></a></td>
+<td style="text-align: left;"><code>register</code>、<code>run</code>、<code>list</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#add-a-tool"><code>$.tool</code></a></td>
+<td style="text-align: left;"><code>register</code>、<code>call</code>、<code>check</code>、<code>list</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.agent</code></td>
+<td style="text-align: left;"><code>register</code>、<code>spawn</code>、<code>list</code>。<code>list()</code> 返回此会话的子代理和队友，每项都带有 <code>status</code>，其值为 <code>pending</code>、<code>running</code>、<code>waiting</code>、<code>idle</code>、<code>completed</code>、<code>failed</code> 或 <code>killed</code> 之一，其中 <code>idle</code> 和 <code>waiting</code> 需要 Claude Code v2.1.289 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#call-a-model"><code>$.model</code></a></td>
+<td style="text-align: left;"><code>complete</code>、<code>fork</code>、<code>classify</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#start-a-turn-from-a-background-job"><code>$.prompt</code></a></td>
+<td style="text-align: left;"><code>submit</code>、<code>read</code>、<code>fill</code>、<code>suggest</code>、<code>compose</code>。Claude 读取来自 <code>submit({ text })</code> 的文本时，前面会有一句指明您的 mod 为发送者的话。<code>submit({ text, asUser: true })</code> 将文本作为用户自己的话发送，不带那句话。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.turn</code></td>
+<td style="text-align: left;"><code>abort</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#send-and-receive-messages-between-sessions"><code>$.session</code></a></td>
+<td style="text-align: left;"><code>messages</code>、<code>cwd</code>、<code>root</code>、<code>model</code>、<code>turns</code>、<code>id</code>、<code>repo</code>、<code>surfaces</code>、<code>usage</code>、<code>version</code>、<code>compact</code>、<code>send</code>、<code>append</code>、<code>authorize</code>。<code>usage()</code> 返回 <code>{ startedAt, context, rateLimits, cost }</code>：<code>context</code> 包含 <code>tokens</code>、<code>window</code> 和 <code>percent</code>，<code>rateLimits</code> 是由 <code>{ kind, percentUsed, resetsAt }</code> 组成的列表。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.config</code></td>
+<td style="text-align: left;"><code>list</code>、<code>set</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#reach-files-processes-and-the-network"><code>$.settings</code></a></td>
+<td style="text-align: left;"><code>read</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#reach-files-processes-and-the-network"><code>$.env</code></a></td>
+<td style="text-align: left;"><code>get</code>、<code>set</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#reach-files-processes-and-the-network"><code>$.fs</code></a></td>
+<td style="text-align: left;"><code>read</code>、<code>write</code>、<code>list</code>、<code>exists</code>、<code>stat</code>、<code>ancestors</code>。<code>write</code> 不是原子操作：它会原地替换文件内容，因此另一个进程可能读到只写了一部分的文件。请将多个会话都会更改的数据保存在 <code>$.store</code> 中。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#keep-state"><code>$.store</code></a></td>
+<td style="text-align: left;"><code>get</code>、<code>set</code>、<code>delete</code>、<code>keys</code>。一个由本机所有会话共享的键值存储。请参阅<a href="plugins-mods-interface.html#save-from-more-than-one-session">从多个会话保存</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#keep-a-value-in-\$-state"><code>$.state</code></a></td>
+<td style="text-align: left;">响应式状态：<code>get</code>、<code>set</code>，以及从 <code>claude-code</code> 导入的辅助函数 <code>atom</code>、<code>read</code>、<code>update</code>、<code>derive</code> 和 <code>memberOf</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#run-work-in-the-background"><code>$.clock</code></a></td>
+<td style="text-align: left;"><code>now</code>、<code>sleep</code>、<code>after</code>、<code>every</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#reach-files-processes-and-the-network"><code>$.http</code></a></td>
+<td style="text-align: left;"><code>fetch</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#reach-files-processes-and-the-network"><code>$.process</code></a></td>
+<td style="text-align: left;"><code>run</code>、<code>spawn</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-api.html#reach-files-processes-and-the-network"><code>$.mcp</code></a></td>
+<td style="text-align: left;"><code>call</code>、<code>connect</code>。<code>connect(server)</code> 连接您自己的插件清单中列出的 MCP 服务器。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.audio</code></td>
+<td style="text-align: left;"><code>play</code>、<code>speak</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.telemetry</code></td>
+<td style="text-align: left;"><code>log</code>、<code>mark</code>。仅当由 Claude Code 或内置 mod 发出调用时，才会发送记录。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="render-sites">渲染位置</h2>
+<p>渲染位置是 Claude Code 界面中的扩展点。每一行是 <code>ui.render</code> hook 中 <code>e.component</code> 的一个值，并列出了 <code>e.props</code> 的字段以及渲染它的应用。<code>e.surface</code> 指明正在绘制的应用，例如 <code>terminal</code>、<code>desktop</code> 或 <code>vscode</code>。<a href="plugins-mods-interface.html#change-what-claude-code-already-draws">更改 Claude Code 已绘制的内容</a>展示了 hook 在某个位置可以做什么，并为每种选择提供了示例。</p>
+<p>在 VS Code 扩展中进行渲染需要扩展版本 2.1.299 或更高版本。<a href="env-vars.html#features-that-need-feature-flag-fetching">不获取功能标志</a>的会话需要 2.1.304 或更高版本。<a href="plugins-mods-interface.html#draw-in-the-vs-code-extension">在 VS Code 扩展中绘制</a>列出了该扩展在绘制上的不同之处。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">位置</th>
+<th style="text-align: left;"><code>e.props</code></th>
+<th style="text-align: left;"><code>e.requestId</code></th>
+<th style="text-align: left;">渲染于</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#pick-where-to-draw"><code>Pane</code></a></td>
+<td style="text-align: left;"><code>title</code>、<code>isFocused</code>、<code>bodyColumns</code>、<code>placement</code>、<code>scroll</code>、<code>view</code></td>
+<td style="text-align: left;">窗格的 <code>id</code></td>
+<td style="text-align: left;">终端、Desktop、VS Code</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#pick-where-to-draw"><code>AbovePrompt</code></a></td>
+<td style="text-align: left;"><code>hasSurvey</code>、<code>isWorking</code>、<code>maxRows</code>、<code>bodyColumns</code>、<code>scroll</code>、<code>view</code></td>
+<td style="text-align: left;">单一实例</td>
+<td style="text-align: left;">终端、Desktop</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>UserMessage</code></td>
+<td style="text-align: left;"><code>text</code>、<code>origin</code>、<code>isExpanded</code>，以及视来源而定的 <code>task</code> 或 <code>from</code></td>
+<td style="text-align: left;">消息 id</td>
+<td style="text-align: left;">终端、Desktop、VS Code</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>AssistantMessage</code></td>
+<td style="text-align: left;">回复的文本</td>
+<td style="text-align: left;">消息 id</td>
+<td style="text-align: left;">终端、Desktop、VS Code</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ToolUse</code>, <code>ToolResult</code>, <code>ToolGroup</code></td>
+<td style="text-align: left;">工具的名称、输入和结果</td>
+<td style="text-align: left;">工具调用 id</td>
+<td style="text-align: left;">终端、Desktop、VS Code</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CommandOutput</code></td>
+<td style="text-align: left;"><code>command</code>、<code>text</code></td>
+<td style="text-align: left;">消息 id</td>
+<td style="text-align: left;">终端、Desktop</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#change-what-claude-code-already-draws"><code>AskUserQuestion</code></a></td>
+<td style="text-align: left;">问题和选项</td>
+<td style="text-align: left;">工具调用 id</td>
+<td style="text-align: left;">终端、Desktop、VS Code</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ToolProgress</code></td>
+<td style="text-align: left;"><code>kind</code></td>
+<td style="text-align: left;">工具调用 id</td>
+<td style="text-align: left;">终端</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#change-what-claude-code-already-draws"><code>Spinner</code></a></td>
+<td style="text-align: left;"><code>word</code>、<code>message</code>、<code>suffix</code>、<code>mode</code></td>
+<td style="text-align: left;">Agent id</td>
+<td style="text-align: left;">终端、Desktop、VS Code</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TurnDuration</code></td>
+<td style="text-align: left;"><code>word</code>、<code>durationMs</code></td>
+<td style="text-align: left;">消息 id</td>
+<td style="text-align: left;">终端</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>InfoNotice</code></td>
+<td style="text-align: left;"><code>text</code>、<code>command</code></td>
+<td style="text-align: left;">消息 id</td>
+<td style="text-align: left;">终端</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SessionMode</code></td>
+<td style="text-align: left;"><code>modes</code></td>
+<td style="text-align: left;">单一实例</td>
+<td style="text-align: left;">终端、Desktop</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PromptHint</code></td>
+<td style="text-align: left;"><code>isDraft</code>、<code>isWorking</code>、<code>hint</code></td>
+<td style="text-align: left;">单一实例</td>
+<td style="text-align: left;">终端、Desktop</td>
+</tr>
+</tbody>
+</table>
+<p><code>e.viewport</code> 包含 <code>columns</code>、<code>rows</code> 和 <code>isFullscreen</code>。在终端和 Desktop 应用中，在应用测量其窗口之前，它不存在。在这两处，它的 <code>rows</code> 是整个窗口的高度，而不是您的窗格的高度。在 VS Code 扩展中，它始终存在。</p>
+<p>要使树适配其所在位置，请在 hook 中读取以下 prop：</p>
+<ul>
+<li><strong><code>Pane</code> 或横栏的宽度</strong>：按 <code>e.props.bodyColumns</code> 绘制</li>
+<li><strong>会话记录旁的 <code>Pane</code> 的高度</strong>：当 <code>e.props.placement</code> 为 <code>'dock'</code> 时，<code>e.props.scroll.bodyRows</code> 是该窗格可供您的树使用的行数</li>
+<li><strong>输入框上方的 <code>Pane</code> 的高度</strong>：当 <code>e.props.placement</code> 为 <code>'inline'</code> 时，窗格会随您的树增高，直到达到上限，而 <code>bodyRows</code> 就是该上限。如需请求不同的上限，请参阅 <a href="plugins-mods-interface.html#open-a-pane-at-the-right-time"><code>$.ui.open</code> 的 <code>rows</code> 字段</a>。</li>
+</ul>
+<p>比窗格更高的树会整体滚动。</p>
+<h2 id="elements">元素</h2>
+<p>元素是 <code>ui.render</code> hook 所返回的树的构建块，您可以从 <code>$.ui.resolve(e)</code> 获取它们。<a href="plugins-mods-interface.html#build-a-tree-from-elements">用元素构建树</a>展示了常用元素以及终端如何绘制它们，<a href="plugins-mods-gallery.html">界面图库</a>提供了大多数元素的截图。对勾表示该应用可以绘制该元素。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">元素</th>
+<th style="text-align: left;">主要 prop</th>
+<th style="text-align: center;">终端</th>
+<th style="text-align: center;">Desktop</th>
+<th style="text-align: center;">VS Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#build-a-tree-from-elements"><code>Box</code></a></td>
+<td style="text-align: left;"><code>key</code>、flex 布局、<a href="#box-spacing-steps"><code>gap</code>、<code>padding</code>、<code>margin</code></a>、<code>width</code>、<code>height</code>、<code>minWidth</code>、<code>minHeight</code>、<a href="#box-border-styles"><code>borderStyle</code></a>、<code>borderColor</code>、<code>borderDimColor</code>、<code>backgroundColor</code>、<code>position</code>、<code>top</code>、<code>left</code>、<code>right</code>、<code>bottom</code>、<code>overflow</code>、<code>display</code>、<code>hover</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#build-a-tree-from-elements"><code>Text</code></a></td>
+<td style="text-align: left;"><code>color</code>、<code>backgroundColor</code>、<a href="#text-bold"><code>bold</code></a>、<code>italic</code>、<code>underline</code>、<code>strikethrough</code>、<code>dimColor</code>、<code>inverse</code>、<code>wrap</code>、<a href="#text-typography"><code>size</code>、<code>weight</code>、<code>mono</code>、<code>tabular</code></a>、<code>hover</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#respond-to-presses-and-typing"><code>Button</code></a></td>
+<td style="text-align: left;"><code>key</code>、<code>label</code>、<code>children</code>、<code>onPress</code>、<code>hotkey</code>、<code>plain</code>、<code>dimColor</code>、<code>autoFocus</code>、<code>action</code>、<code>variant</code>、<code>role</code>、<code>hover</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#link-in-the-desktop-app"><code>Link</code></a></td>
+<td style="text-align: left;"><code>href</code>、<code>label</code>。请参阅<a href="#limits">限制</a>。</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-gallery.html#show-code-and-changes"><code>Code</code></a></td>
+<td style="text-align: left;"><code>source</code>、<code>language</code>、<code>path</code>、<code>startLine</code>、<code>format</code>、<code>wrap</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Markdown</code></td>
+<td style="text-align: left;"><code>text</code>、<code>key</code>、<code>dimColor</code>、<code>onLinkPress</code>、<code>pressableLinks</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#take-typed-input-and-draw-a-row-for-each-item"><code>Input</code></a></td>
+<td style="text-align: left;"><code>key</code>、<code>label</code>、<code>placeholder</code>、<code>value</code>、<code>submitLabel</code>、<a href="plugins-mods-gallery.html#input"><code>rows</code></a>、<code>onSubmit</code>、<code>onInput</code>、<code>autoFocus</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Select</code></td>
+<td style="text-align: left;"><code>key</code>、<code>label</code>、<code>options</code>、<code>value</code>、<code>onSelect</code>、<code>autoFocus</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Svg</code></td>
+<td style="text-align: left;">最多 131,072 个字符的 SVG 标记 <code>source</code>、<code>alt</code> 文本、<code>width</code>、<code>height</code> 以及 <code>isInteractive</code></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#build-a-tree-from-elements"><code>Client</code></a></td>
+<td style="text-align: left;"><code>module</code>、<code>key</code>、<code>props</code>、<code>width</code>、<code>height</code>、<code>flexGrow</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-interface.html#draw-a-grid-of-colored-cells"><code>Raster</code></a></td>
+<td style="text-align: left;"><code>key</code>、<code>columns</code>（最多 512）、<code>rows</code>（最多 256）、<code>cells</code>。请参阅<a href="plugins-mods-interface.html#draw-a-grid-of-colored-cells">绘制彩色单元格网格</a>。</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Image</code></td>
+<td style="text-align: left;"><code>key</code>、<code>source</code>（例如最多 2 MiB 的 PNG 或 RGBA 字节，或文件路径）、<code>columns</code> 和 <code>rows</code>（最多 255），以及 <code>alt</code> 文本。请参阅<a href="plugins-mods-gallery.html#image-and-client">哪些终端会绘制它</a>。</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p>更多 <code>Button</code> 规则：</p>
+<ul>
+<li><strong><code>action</code></strong>：指定 Claude Code 自身的某个<a href="keybindings.html">快捷键操作</a>，当用户为该操作设置的绑定是组合键或带修饰键的按键时，该绑定会按下此按钮</li>
+<li><strong>横栏上的数字 hotkey</strong>：当用户在空的输入框中只输入某个数字并停顿时，横栏中设置了该数字 <code>hotkey</code> 的按钮也会触发</li>
+<li><strong>折叠的横栏</strong>：当横栏处于<a href="plugins-mods-interface.html#when-the-user-collapses-the-band">折叠</a>状态时，<code>action</code> 绑定和 hotkey 都不会按下其中的按钮</li>
+<li><strong>两个按钮使用同一 hotkey</strong>：当同一次绘制中的两个按钮指定相同的 <code>hotkey</code> 时，由后一个按钮获得它</li>
+<li><strong><code>variant</code></strong>：<code>primary</code> 或 <code>secondary</code>，其他任何值都会抛出错误。在终端中，<code>primary</code> 按钮会以强调色绘制，除非它设置了 <code>plain</code>。</li>
+<li><strong><code>role</code></strong>：<code>dismiss</code> 将按钮标记为关闭按钮，其他任何值都会抛出错误。请在您的 <code>onPress</code> 中执行关闭操作。在包含文本和一行按钮的横栏中，Desktop 应用可以将该行的第一个 <code>dismiss</code> 按钮绘制为其自身的关闭控件。终端会像未设置 <code>role</code> 时一样绘制该按钮。</li>
+</ul>
+<p><code>Button</code> 可以用 <code>children</code> 代替 <code>label</code>：</p>
+<ul>
+<li><strong>children 可以是什么</strong>：字符串和 <code>Text</code> 元素，例如名称后跟一段暗淡的详细信息，或一个彩色标签。Claude Code 会拒绝 <code>Button</code> 内的任何其他元素。</li>
+<li><strong>为按钮命名</strong>：<code>label</code> 为按钮命名，默认为其 children 的文本。对于 children 不是单个字符串的按钮，请为其提供 <code>key</code> 或 <code>label</code>。</li>
+<li><strong>在终端中</strong>：children 绘制在 label 原本所在的位置，在其上任意位置按下都算作一次按下，因此您可以将列表的每一行做成单个按钮</li>
+<li><strong>在 Desktop 应用和 VS Code 扩展中</strong>：按钮绘制其 <code>label</code></li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>children 不是单个字符串的 <code>Button</code> 需要 Claude Code v2.1.295 或更高版本。</p></div></div>
+<p><code>autoFocus</code> 在任何控件上都只接受 <code>true</code>，因此要关闭它，请省略该 prop。</p>
+<p>VS Code 扩展会忽略某些元素 prop，并像您省略了这些 prop 一样绘制该元素：</p>
+<ul>
+<li><strong><code>Box</code></strong>：<code>position</code> 及其 <code>top</code>、<code>left</code>、<code>right</code> 和 <code>bottom</code>，<code>alignSelf</code>、<code>borderDimColor</code> 和 <code>hover</code></li>
+<li><strong><code>Text</code></strong>：<code>size</code>、<code>mono</code>、<code>tabular</code> 和 <code>hover</code></li>
+<li><strong><code>Button</code></strong>：<code>hotkey</code>、<code>plain</code>、<code>autoFocus</code>、<code>action</code> 和 <code>hover</code>，因此用户在其中通过点击来按下按钮，或在按钮获得焦点后按 Enter。该扩展也会忽略 <code>variant</code> 和 <code>role</code>。</li>
+<li><strong><code>Code</code></strong>：<code>language</code>、<code>path</code>、<code>startLine</code>、<code>format</code> 和 <code>wrap</code>，因此代码绘制时不带颜色或行号，而 <code>format: 'diff'</code> 代码块会显示 diff 的原始文本</li>
+<li><strong><code>Input</code> 和 <code>Select</code></strong>：<code>autoFocus</code>，以及 <code>Input</code> 上的 <code>rows</code></li>
+<li><strong><code>Svg</code></strong>：<code>isInteractive</code></li>
+</ul>
+<h3 id="box-border-styles"><code>Box</code> 边框样式</h3>
+<p>要在 <code>Box</code> 周围绘制边框，请将其 <code>borderStyle</code> 设置为以下名称之一，例如 <code>borderStyle: 'round'</code>。每一行说明终端针对该名称绘制的内容，并展示边框的上边缘。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><code>borderStyle</code></th>
+<th style="text-align: left;">终端绘制的内容</th>
+<th style="text-align: left;">上边缘</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>'single'</code></td>
+<td style="text-align: left;">直角细线</td>
+<td style="text-align: left;"><code>┌──┐</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'double'</code></td>
+<td style="text-align: left;">双线</td>
+<td style="text-align: left;"><code>╔══╗</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'round'</code></td>
+<td style="text-align: left;">圆角细线</td>
+<td style="text-align: left;"><code>╭──╮</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'bold'</code></td>
+<td style="text-align: left;">粗线</td>
+<td style="text-align: left;"><code>┏━━┓</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'singleDouble'</code></td>
+<td style="text-align: left;">上下为细线，左右两侧为双线</td>
+<td style="text-align: left;"><code>╓──╖</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'doubleSingle'</code></td>
+<td style="text-align: left;">上下为双线，左右两侧为细线</td>
+<td style="text-align: left;"><code>╒══╕</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'classic'</code></td>
+<td style="text-align: left;">ASCII 字符 <code>+</code>、<code>-</code> 和 <code>\|</code></td>
+<td style="text-align: left;"><code>+--+</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'arrow'</code></td>
+<td style="text-align: left;">指向 <code>Box</code> 内部的箭头</td>
+<td style="text-align: left;"><code>↘↓↓↙</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'dashed'</code></td>
+<td style="text-align: left;">虚线，四角留空</td>
+<td style="text-align: left;"><code>╌╌</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'quote'</code></td>
+<td style="text-align: left;">左侧一条竖条 <code>▎</code>，其他三边为空白单元格</td>
+<td style="text-align: left;">空白</td>
+</tr>
+</tbody>
+</table>
+<p>如果 <code>Box</code> 的 <code>borderStyle</code> 指定的是其他名称（例如 <code>'rounded'</code>），则绘制时不带边框。</p>
+<h3 id="box-spacing-steps"><code>Box</code> 间距步长</h3>
+<p><code>Box</code> 的间距 prop 包括 <code>gap</code>、<code>columnGap</code>、<code>rowGap</code>、<code>padding</code>、<code>margin</code>，以及 <code>padding</code> 和 <code>margin</code> 的单边和单轴形式，例如 <code>paddingX</code> 和 <code>marginTop</code>。每个 prop 都接受以终端单元格为单位的数字（例如 <code>gap: 1</code>），或步长名称（例如 <code>gap: 'md'</code>）。在终端和 VS Code 扩展中，每个步长对应的单元格数如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">步长</th>
+<th style="text-align: left;">横向单元格数</th>
+<th style="text-align: left;">纵向单元格数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>'xs'</code></td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'sm'</code></td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'md'</code></td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'lg'</code></td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'xl'</code></td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">2</td>
+</tr>
+</tbody>
+</table>
+<p>如果将 <code>gap</code>、<code>padding</code> 或 <code>margin</code> 设置为某个步长，该步长会同时应用于横向和纵向。例如，在终端和 VS Code 扩展中，<code>padding: 'md'</code> 表示左右两侧各两个单元格，上下各一行。</p>
+<p>步长名称需要 Claude Code v2.1.299 或更高版本。在更早的版本中，使用了步长名称的树不会绘制。</p>
+<h3 id="text-typography"><code>Text</code> 排版 prop</h3>
+<p>在 <code>Text</code> 上设置 <code>size</code>、<code>weight</code>、<code>mono</code> 或 <code>tabular</code>，可以请求绘制您的树的应用使用某种文字大小、字重、等宽字体或等宽数字。在依赖某个 prop 之前，请先确认终端和 VS Code 扩展如何处理它。如果某个应用忽略了您设置的 prop，您的树仍会在其中绘制，文本显示效果与您省略该 prop 时相同。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Prop</th>
+<th style="text-align: left;">取值</th>
+<th style="text-align: left;">在终端中</th>
+<th style="text-align: left;">在 VS Code 扩展中</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>size</code></td>
+<td style="text-align: left;"><code>'caption'</code>、<code>'footnote'</code>、<code>'body'</code>、<code>'heading'</code> 或 <code>'title'</code></td>
+<td style="text-align: left;">忽略：终端只有一种文字大小</td>
+<td style="text-align: left;">忽略</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>weight</code></td>
+<td style="text-align: left;"><code>'regular'</code>、<code>'medium'</code>、<code>'semibold'</code> 或 <code>'bold'</code></td>
+<td style="text-align: left;"><code>semibold</code> 和 <code>bold</code> 绘制为粗体文本</td>
+<td style="text-align: left;"><code>semibold</code> 和 <code>bold</code> 绘制为粗体文本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mono</code></td>
+<td style="text-align: left;"><code>true</code>，请求使用应用的等宽字体</td>
+<td style="text-align: left;">忽略：终端始终是等宽的</td>
+<td style="text-align: left;">忽略，因此文本保持扩展自身的字体</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tabular</code></td>
+<td style="text-align: left;"><code>true</code>，请求使用等宽数字，使原地更新的数字或一列数字保持对齐</td>
+<td style="text-align: left;">忽略：终端中的数字本来就占一个单元格宽</td>
+<td style="text-align: left;">忽略</td>
+</tr>
+</tbody>
+</table>
+<p>这四个 prop 需要 Claude Code v2.1.299 或更高版本。在更早的版本中，设置了 <code>size</code>、<code>weight</code>、<code>mono</code> 或 <code>tabular</code> 的树不会绘制。</p>
+<h4 id="text-bold">用 <code>weight</code> 替换 <code>bold</code></h4>
+<p><code>Text</code> 上的 <code>bold</code> 已弃用，建议改用 <code>weight</code>，但它仍然可用。要在未设置 <code>weight</code> 的 <code>Text</code> 上替换它，请将 <code>bold: true</code> 改为 <code>weight: 'semibold'</code>，在 Claude Code v2.1.299 或更高版本上效果相同。</p>
+<p>在早于 v2.1.299 的版本中，设置了 <code>weight</code> 的树不会绘制。如果您在 <code>Text</code> 上同时设置了 <code>bold</code> 和 <code>weight</code>，则 <code>bold</code> 不起作用。</p>
+<h2 id="limits">限制</h2>
+<p>hook 和 mods API 调用受时间和大小限制。Claude Code 会跳过超出时间限制的 hook。超出嵌套、元素、<code>Raster</code> 单元格或 <code>Image</code> 字节限制的树<a href="plugins-mods-troubleshoot.html#a-pane-or-band-is-empty">不会被绘制</a>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">限制</th>
+<th style="text-align: left;">值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">单个事件中 hook 自身的执行时间，不计入在 <code>next</code> 内或在除 <code>$.clock.sleep</code> 之外的 mods API 调用中花费的时间</td>
+<td style="text-align: left;">10 秒；对于 <code>prompt.edit</code> hook 为 50 毫秒</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.catch</code> 处理程序的执行时间</td>
+<td style="text-align: left;">1 秒</td>
+</tr>
+<tr>
+<td style="text-align: left;">所有 <code>session.end</code> hook 合计</td>
+<td style="text-align: left;">与 <a href="hooks.html#sessionend-input">SessionEnd hook 预算</a>相同，除非您更改，否则为 1.5 秒，从您设置中的 <code>SessionEnd</code> hook 完成时开始计算</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.process.run</code> 超时时间</td>
+<td style="text-align: left;">默认 30 秒，最长 10 分钟</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.process.run</code> 的 <code>stdout</code> 和 <code>stderr</code></td>
+<td style="text-align: left;">各 4 MiB。当其中一项被截断时，<code>isStdoutTruncated</code> 或 <code>isStderrTruncated</code> 为 <code>true</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.model.complete</code> <code>maxTokens</code></td>
+<td style="text-align: left;">默认 1024，最多 64,000 或模型的输出上限</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.fs.read</code> 和 <code>$.fs.write</code></td>
+<td style="text-align: left;">单个文件 4 MiB</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.http.fetch</code> 请求正文</td>
+<td style="text-align: left;">4 MiB，按字符计算。正文更大的调用会被拒绝。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.http.fetch</code> 响应正文</td>
+<td style="text-align: left;">4 MiB。<code>text</code> 保存前 4 MiB，其余部分不会被读取。当 <code>Content-Length</code> 标头声明的大小超出此限制时，该调用会改为被拒绝，拒绝原因以 <code>is over the 4194304-byte limit</code> 结尾，但经过所有重定向后的最后一个请求使用 <code>HEAD</code> 方法时除外。<code>HEAD</code> 例外需要 Claude Code v2.1.296 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;">单次 <code>$.http.fetch</code> 调用（包括重定向和正文）</td>
+<td style="text-align: left;">30 秒</td>
+</tr>
+<tr>
+<td style="text-align: left;">单次 <code>$.http.fetch</code> 调用跟随的重定向次数</td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr>
+<td style="text-align: left;">hook 的 <code>drop</code> 原因或 <code>config.set</code> 的 <code>deny</code> 原因</td>
+<td style="text-align: left;">4,096 个字符。更长的原因会被截去末尾部分，drop 或 deny 仍然生效。截断需要 Claude Code v2.1.292 或更高版本；在更早的版本中，该 hook 会改为<a href="plugins-mods-events.html#handle-a-hook-that-fails">失败</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">单个树中的文本</td>
+<td style="text-align: left;">仅绘制前 100,000 个字符</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Code</code> 的 <code>language</code> 或 <code>path</code>、<code>Select</code> 选项的 <code>value</code>，或 <code>Client</code> 的 <code>module</code></td>
+<td style="text-align: left;">10,000 个字符。如果其中任何一项超出此长度，返回它的 <code>ui.render</code> hook 会<a href="plugins-mods-events.html#handle-a-hook-that-fails">失败</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Link</code> 的 <code>href</code></td>
+<td style="text-align: left;">2,048 个字符。如果超出此长度，返回它的 <code>ui.render</code> hook 会<a href="plugins-mods-events.html#handle-a-hook-that-fails">失败</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">单个树的嵌套深度</td>
+<td style="text-align: left;">根元素以下 32 层</td>
+</tr>
+<tr>
+<td style="text-align: left;">单个树中的元素和文本子项</td>
+<td style="text-align: left;">20,000</td>
+</tr>
+<tr>
+<td style="text-align: left;">单个树中的 <code>Raster</code> 单元格，即每个 <code>Raster</code> 的 <code>columns</code> 乘以其 <code>rows</code></td>
+<td style="text-align: left;">262,144</td>
+</tr>
+<tr>
+<td style="text-align: left;">单个树中所有 <code>Image</code> 的 PNG 或 RGBA 字节数</td>
+<td style="text-align: left;">2 MiB</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.store</code></td>
+<td style="text-align: left;">JSON 总计 4 MiB</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.session.messages()</code></td>
+<td style="text-align: left;">最新的 4,096 个条目</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.ui.invalidate('ui.render')</code> 重绘</td>
+<td style="text-align: left;">限制为每秒 10 次；在终端中，对于可见窗格、展开区域以及输入框下方的提示行，限制为每秒 30 次。更早到达的调用会被合并。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.ui.toast</code></td>
+<td style="text-align: left;">显示 4 秒，除非您传入 <code>{ timeoutMs }</code>。在<a href="fullscreen.html#enable-fullscreen-rendering">经典渲染器</a>中，mod 较新的 toast 可能会<a href="plugins-mods-troubleshoot.html#a-toast-doesn’t-appear">取代其较早的 toast</a>，无论较早的 toast 正在显示还是正在等待显示。</td>
+</tr>
+<tr>
+<td style="text-align: left;">非用户主动打开的窗格</td>
+<td style="text-align: left;">终端至少 144 列宽时放置；用户打开过一次后，110 列宽即可</td>
+</tr>
+<tr>
+<td style="text-align: left;">mods API 调用参数的嵌套深度</td>
+<td style="text-align: left;">28,000 层。超过此深度，调用会被拒绝，消息以 <code>nesting deeper than 28000 levels is not supported</code> 结尾。需要 Claude Code v2.1.299 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;">传递给 <code>next</code> 的已更改事件的嵌套深度，<a href="#events">异步生成器 hook</a>（例如 <code>turn.step</code> 上的 hook）除外</td>
+<td style="text-align: left;">28,000 层。超过此深度，<code>next</code> 会拒绝，消息以 <code>nesting deeper than 28000 levels is not supported</code> 结尾。需要 Claude Code v2.1.299 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;">hook 返回值的嵌套深度，<code>ui.render</code>、<code>ui.resolve</code> 和异步生成器 hook 除外</td>
+<td style="text-align: left;">28,000 层。超过此深度，该 hook 的结果会被拒绝，<a href="plugins-mods-troubleshoot.html#find-out-why-a-mod-does-nothing">报告此问题的通知</a>中包含 <code>nesting deeper than 28000 levels is not supported</code>。需要 Claude Code v2.1.299 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;">在 hook 模块的单个文件中相互嵌套的作用域（如函数、代码块和循环）</td>
+<td style="text-align: left;">2,000</td>
+</tr>
+<tr>
+<td style="text-align: left;">命令、工具、子代理类型和窗格名称</td>
+<td style="text-align: left;">字母、数字、<code>_</code> 和 <code>-</code>，最多 64 个字符</td>
+</tr>
+<tr>
+<td style="text-align: left;">单个 <code>claude plugin test</code> 测试</td>
+<td style="text-align: left;">5 秒，除非该测试设置了 <code>timeoutMs</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="settings-and-environment-variables">设置和环境变量</h2>
+<p>以下是影响 mod 的设置和环境变量。“位置”列说明每一项从哪个设置文件或环境中读取：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">名称</th>
+<th style="text-align: left;">位置</th>
+<th style="text-align: left;">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PLUGIN_DIRS</code></td>
+<td style="text-align: left;">环境变量，或 <code>~/.claude/settings.json</code> 中的 <code>env</code></td>
+<td style="text-align: left;">要像 <code>--plugin-dir</code> 那样加载的插件目录，用于无法传递标志的应用。以 <code>:</code> 分隔的绝对路径，在 Windows 上以 <code>;</code> 分隔。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PLUGIN_DIR_WATCH</code></td>
+<td style="text-align: left;">环境变量</td>
+<td style="text-align: left;"><code>1</code> 使长时间运行的非交互式会话在保存时重新加载 <code>--plugin-dir</code> mod</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prependPlugins</code>, <code>appendPlugins</code></td>
+<td style="text-align: left;">托管设置。仅在没有托管设置的机器上、且会话的凭据不是 Team 或 Enterprise <code>/login</code> 时，才可在用户设置中使用。</td>
+<td style="text-align: left;">插件 id 列表，例如 <code>acme-guard@acme-tools</code>。<code>prependPlugins</code> 中的 mod 在用户安装的每个 mod 之前运行，<code>appendPlugins</code> 中的 mod 在之后运行，均按列出的顺序。请参阅 <a href="plugins-mods-events.html#the-order-mods-run-in">mod 运行顺序</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>allowManagedModsOnly</code></td>
+<td style="text-align: left;">托管设置，作为<a href="plugins-mods-admin.html#set-options-on-the-built-in-guard">内置守卫的选项</a></td>
+<td style="text-align: left;">只有<a href="plugins-mods-admin.html#install-your-organizations-mods">算作您组织的</a> mod 以及 Claude Code 内置的 mod 会运行其 hook。用户的设置 hook 会继续运行。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>allowModsToOverrideDenyRules</code></td>
+<td style="text-align: left;">托管设置，作为<a href="plugins-mods-admin.html#set-options-on-the-built-in-guard">内置守卫的选项</a></td>
+<td style="text-align: left;">允许用户安装的 mod 批准被 <code>deny</code> 规则拒绝的工具调用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>allowManagedHooksOnly</code></td>
+<td style="text-align: left;">托管设置</td>
+<td style="text-align: left;">阻止不属于您组织的 hook 和已安装的 mod。请参阅<a href="settings-reference.html#what-runs-under-allowmanagedhooksonly">哪些会继续运行</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disableAllHooks</code></td>
+<td style="text-align: left;">任何设置文件</td>
+<td style="text-align: left;">在托管设置中，来自已安装插件的任何 mod 或 hook 都不会运行。在您自己的设置中，您组织管理的内容会继续运行。请参阅 <a href="settings-reference.html#disableallhooks"><code>disableAllHooks</code></a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disableSideloadFlags</code></td>
+<td style="text-align: left;">托管设置</td>
+<td style="text-align: left;">在启动时拒绝 <code>--plugin-dir</code> 和 <code>--plugin-url</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pluginConfigs</code></td>
+<td style="text-align: left;">用户设置或托管设置</td>
+<td style="text-align: left;">保存 mod 的 <code>userConfig</code> 值，以插件 id 为键，例如 <code>acme-guard@acme-tools</code>；对于使用 <code>--plugin-dir</code> 加载的 mod，则以其名称加 <code>@inline</code> 为键，例如 <code>first-mod@inline</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>sec-default@builtin</code> 是 Claude Code 内置的守卫，在 <code>/plugin</code> 和调试日志中显示为 <code>cc-plugin-sec-default</code>。在有托管设置的机器上，或在凭据为 Team 或 Enterprise <a href="authentication.html#authentication-precedence"><code>/login</code></a> 的会话中，它会在用户安装的每个 mod 之前加载。如果设置了托管的 <code>prependPlugins</code>，则只有当该列表指定了该守卫时它才会加载，并位于列出的位置。</p>
+<p>其源代码位于 <a href="https://github.com/anthropics/claude-code/tree/main/mods/sec-default" target="_blank" rel="noopener">Claude Code 仓库的 <code>mods/sec-default</code> 目录</a>中。</p>
+<h2 id="commands">命令</h2>
+<p>这些命令和标志用于加载、检查和测试 mod。<code>claude</code> 命令在您的 shell 中运行，<code>/</code> 命令在 Claude Code 输入框中运行。表中的 <code>&lt;directory&gt;</code> 代表您输入的路径，如 <code>claude plugin validate ./first-mod</code>。方括号表示可选参数。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">命令</th>
+<th style="text-align: left;">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-overview.html#see-which-mods-a-session-loaded"><code>/plugin</code></a></td>
+<td style="text-align: left;">当有非内置的 mod 加载时，在其标签页下方显示一行，例如 <code>1 mod active · first-mod</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-create.html#check-what-claude-code-reads-from-your-mod"><code>claude plugin validate &lt;directory&gt;</code></a></td>
+<td style="text-align: left;">读取插件的清单和 hook 模块，并报告错误、它处理的事件以及它发出的 mods API 调用。<code>--strict</code> 将警告视为错误，<code>--json</code> 打印机器可读的报告。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-test.html#write-a-test"><code>claude plugin test [directory]</code></a></td>
+<td style="text-align: left;">运行该目录（如果未指定目录，则为当前目录）下名称以 <code>.test.ts</code> 或 <code>.test.tsx</code> 结尾的每个文件。有测试失败时以状态 1 退出。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-create.html#write-a-mod-yourself"><code>claude --plugin-dir &lt;directory&gt;</code></a></td>
+<td style="text-align: left;">为一个会话加载插件目录，并在您保存时重新加载其 hook 模块。重复该标志可加载多个目录。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/reload-plugins</code></td>
+<td style="text-align: left;">在您运行时重新加载插件</td>
+</tr>
+</tbody>
+</table></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-mods-create.html"><span class="pager-dir">← 上一页</span><span class="pager-name">创建一个 mod</span></a><a class="pager-link next" href="plugins-mods-interface.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用 mod 在界面中绘制</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#files">文件</a><a class="toc-l2" href="#the-hook-function">hook 函数</a><a class="toc-l2" href="#events">事件</a><a class="toc-l3" href="#tools">工具</a><a class="toc-l3" href="#prompts-and-what-claude-reads">提示词以及 Claude 读取的内容</a><a class="toc-l3" href="#commands-and-configuration">命令和配置</a><a class="toc-l3" href="#turns">轮次</a><a class="toc-l3" href="#session">会话</a><a class="toc-l3" href="#subagents">子代理</a><a class="toc-l3" href="#interface">界面</a><a class="toc-l3" href="#other-mods">其他 mod</a><a class="toc-l3" href="#telemetry">遥测</a><a class="toc-l3" href="#settings-hook-events">设置 hook 事件</a><a class="toc-l3" href="#mods-api-calls">mods API 调用</a><a class="toc-l2" href="#mods-api-methods">mods API 方法</a><a class="toc-l2" href="#render-sites">渲染位置</a><a class="toc-l2" href="#elements">元素</a><a class="toc-l3" href="#box-border-styles">Box 边框样式</a><a class="toc-l3" href="#box-spacing-steps">Box 间距步长</a><a class="toc-l3" href="#text-typography">Text 排版 prop</a><a class="toc-l2" href="#limits">限制</a><a class="toc-l2" href="#settings-and-environment-variables">设置和环境变量</a><a class="toc-l2" href="#commands">命令</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

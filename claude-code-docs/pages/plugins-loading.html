@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>插件加载参考 · Claude Code 中文文档</title>
+<meta name="description" content="追踪 Claude Code 从何处加载每个插件，哪个设置文件决定是否加载，以及为什么更新没有产生任何变化。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/loading">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/loading" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link active" href="plugins-loading.html" aria-current="page">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>故障排除</span></div>
+    <article class="prose" id="article"><h1 id="_1">插件加载参考</h1>
+<blockquote>
+<p>追踪 Claude Code 从何处加载每个插件，哪个设置文件决定是否加载，以及为什么更新没有产生任何变化。</p>
+</blockquote>
+<p>当插件未加载、加载了与预期不同的副本，或未获取更新时，使用此页面查看哪个源、设置范围或磁盘上的文件决定了这一点。它提供了 Claude Code 在会话启动时和每次运行 <code>/reload-plugins</code> 时应用的规则。您也可以要求 Claude 阅读此页面并诊断您的设置。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>这些情况在其他页面上有介绍：</p>
+<ul>
+<li><strong>安装、启用、禁用和更新步骤</strong>：请参阅<a href="plugins-install.html">安装和管理插件</a></li>
+<li><strong>您有特定的错误消息</strong>：请参阅<a href="plugins-troubleshooting.html">插件故障排除</a></li>
+</ul></div></div>
+<p>从<a href="#check-which-stage-a-plugin-reached">检查插件达到的阶段</a>开始，了解已安装插件经过的三个阶段，或转到与您看到的情况相匹配的部分：</p>
+<ul>
+<li>您关闭的插件仍然加载：<a href="#find-where-a-plugin-is-enabled">查找插件的启用位置</a></li>
+<li>更新没有产生任何变化：<a href="#versions-and-updates">版本和更新</a></li>
+<li>您正在查看 <code>~/.claude/plugins/</code> 下的文件：<a href="#find-plugins-on-disk">查找磁盘上的插件</a></li>
+<li><code>--plugin-dir</code> 插件未加载，或加载了同名插件：<a href="#name-conflicts">名称冲突</a></li>
+<li><code>~/.claude/skills/</code> 或 <code>.claude/skills/</code> 下的插件未加载，且没有任何错误说明原因：<a href="#skills-directory-plugins-blocked-by-managed-settings">被托管设置阻止的 skills 目录插件</a></li>
+</ul>
+<h2 id="check-which-stage-a-plugin-reached">检查插件达到的阶段</h2>
+<p><code>enabledPlugins</code> 条目分阶段成为您可以使用的插件：您的设置声明它，Claude Code 将其获取到磁盘，运行中的会话加载它。当插件的行为与设置文件建议的不符时，检查它达到了哪个阶段：</p>
+<ul>
+<li><strong>已声明，在设置中</strong>：<code>enabledPlugins</code> 说明哪些插件应该打开，<code>extraKnownMarketplaces</code> 说明哪些市场应该存在。当您运行 <code>claude plugin marketplace add</code> 时，Claude Code 将市场写入您的用户设置中的 <code>extraKnownMarketplaces</code> 以及磁盘</li>
+<li><strong>已获取，在 <code>~/.claude/plugins/</code> 下的磁盘上</strong>：Claude Code 已获取的记录和获取的文件本身：</li>
+<li><code>known_marketplaces.json</code> 记录 Claude Code 已获取的每个市场，包括其 <code>source</code>、<code>installLocation</code>、<code>lastUpdated</code> 和 <code>autoUpdate</code>。每个用户有一个 <code>known_marketplaces.json</code>，因此您在一个项目中添加的市场在每个项目中都可用</li>
+<li><code>installed_plugins.json</code> 记录每个安装及其 <code>scope</code>、<code>installPath</code> 和 <code>version</code></li>
+<li><code>cache/</code> 保存插件文件</li>
+<li><strong>已加载，在运行中的会话中</strong>：Claude Code 在启动时或最后一次 <code>/reload-plugins</code> 时加载的插件集。对设置或磁盘的更改不会到达此层，直到您运行 <code>/reload-plugins</code> 或启动新会话。这就是为什么 <code>claude plugin update</code> 以 <code>Restart to apply changes.</code> 结尾，背景更新会提示您 <code>Run /reload-plugins to apply</code></li>
+</ul>
+<h3 id="plugins-and-marketplaces-that-aren’t-on-disk-at-session-start">会话启动时磁盘上没有的插件和市场</h3>
+<p>插件在会话启动时从 <code>installed_plugins.json</code> 和缓存加载，不使用网络。会话启动后，Claude Code 在后台检查声明的市场：</p>
+<ul>
+<li><strong>设置声明但 <code>known_marketplaces.json</code> 缺少的市场</strong>：Claude Code 克隆它，然后重新加载插件并下载未缓存的已启用插件</li>
+<li><strong>声明的市场其源在设置中更改</strong>：Claude Code 从新源重新获取它并显示 <code>Plugins changed. Run /reload-plugins to activate.</code></li>
+</ul>
+<p>既未被任何路径获取且没有可用缓存目录的已启用插件会在 <code>/plugin</code> <strong>Errors</strong> 选项卡中显示 <code>Plugin "&lt;name&gt;" not cached at &lt;path&gt;</code>。有关修复，请参阅<a href="plugins-troubleshooting.html#plugin-not-cached-at"><code>Plugin "&lt;name&gt;" not cached at &lt;path&gt;</code></a>。</p>
+<h2 id="find-where-a-plugin-came-from">查找插件的来源</h2>
+<p>每个插件都有形式为 <code>&lt;name&gt;@&lt;origin&gt;</code> 的 id，这是您在设置文件和 <code>claude plugin list --json</code> 中看到的。<code>@</code> 之后的部分告诉您 Claude Code 在哪里找到了插件：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ID 结尾</th>
+<th style="text-align: left;">插件如何到达</th>
+<th style="text-align: left;">如何打开或关闭</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>@&lt;marketplace&gt;</code></td>
+<td style="text-align: left;">您从添加的市场安装了它</td>
+<td style="text-align: left;">在设置文件中的 <code>enabledPlugins</code> 下设置 <code>"&lt;name&gt;@&lt;marketplace&gt;": true</code> 或 <code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>@inline</code></td>
+<td style="text-align: left;">您使用 <code>--plugin-dir</code> 或 <code>--plugin-url</code> 启动了 Claude Code，设置了 <a href="env-vars.html#variables"><code>CLAUDE_CODE_PLUGIN_DIRS</code></a>，或 Agent SDK 应用传递了 <code>plugins</code> 选项。它仅为该会话加载</td>
+<td style="text-align: left;">除非清单设置 <code>defaultEnabled: false</code> 或设置文件设置 <code>"&lt;name&gt;@inline": false</code>，否则为会话打开</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>@skills-dir</code></td>
+<td style="text-align: left;">您在 <code>~/.claude/skills/</code> 或项目的 <code>.claude/skills/</code> 下保存了具有 <code>.claude-plugin/plugin.json</code> 的插件目录</td>
+<td style="text-align: left;">清单的 <code>defaultEnabled</code>，除非设置文件将 <code>"&lt;name&gt;@skills-dir"</code> 设置为 <code>true</code> 或 <code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>@synced</code></td>
+<td style="text-align: left;">您或您的组织为您的 claude.ai 账户打开了它，Claude Code <a href="#synced-plugins">下载了它</a></td>
+<td style="text-align: left;">除非清单设置 <code>defaultEnabled: false</code> 或设置文件设置 <code>"&lt;name&gt;@synced": false</code>，否则打开。您的组织标记为必需的插件无论如何都会加载</td>
+</tr>
+</tbody>
+</table>
+<p>对于市场插件，<code>&lt;name&gt;</code> 是 <code>marketplace.json</code> 中的条目名称；对于 <code>@inline</code> 和 <code>@skills-dir</code>，它是插件清单中的 <code>name</code>。</p>
+<p>此表中的源名称是保留的，因此没有市场可以命名为 <code>inline</code>、<code>skills-dir</code> 或 <code>synced</code>。</p>
+<h3 id="entry-name-and-manifest-name">条目名称和清单名称</h3>
+<p>市场插件有两个名称，它们可能不同：</p>
+<ul>
+<li><strong><code>marketplace.json</code> 中的条目名称</strong>：安装和启用密钥。这是您在 <code>enabledPlugins</code> 中写入的内容，缓存目录的命名依据，以及 <code>claude plugin list</code> 显示的内容</li>
+<li><strong>清单中的 <code>name</code></strong>：插件组件命名空间所在的位置，以及<a href="#name-conflicts">名称冲突</a>比较的内容</li>
+</ul>
+<h3 id="plugins-shared-through-a-repository">通过存储库共享的插件</h3>
+<p>要通过存储库共享插件，请在 <code>.claude/settings.json</code> 中的 <code>enabledPlugins</code> 下列出它，或将其放在 <code>.claude/skills/</code> 下。Claude Code 不扫描项目的 <code>.claude/plugins/</code> 目录。</p>
+<p>云会话不会添加存储库在 <a href="settings-reference.html#extraknownmarketplaces"><code>extraKnownMarketplaces</code></a> 下列出的市场，因为这需要工作区信任对话框，云会话永远不会显示。</p>
+<h4 id="trust-check-and-component-limits-for-repository-plugins">仓库插件的信任检查和组件限制</h4>
+<p>项目范围的插件被检入存储库，并到达克隆它的每个协作者。因为该内容来自存储库而不是来自您，它仅在应用于 <code>.claude/settings.json</code> 中项目允许规则的相同信任检查后加载。信任父文件夹或使用 <code>-p</code> 运行是不够的。运行代码的组件受到进一步限制：</p>
+<ul>
+<li>它声明的 MCP 服务器经过<a href="mcp.html">与项目 <code>.mcp.json</code> 相同的每服务器批准</a></li>
+<li>它声明为<a href="plugins-manifest-reference.html#mcpservers">MCP 包</a>、<code>.mcpb</code> 或 <code>.dxt</code> 文件或来自插件目录外文件的 MCP 服务器被跳过。内联声明它们或在插件目录内的 <code>.mcp.json</code> 中声明</li>
+<li><a href="plugins-components.html#monitors">后台监视器</a>不加载</li>
+</ul>
+<p>信任检查和这些组件限制均不适用于您自己的 <code>~/.claude/skills/</code> 下的插件。</p>
+<p>有关如何编写 <code>--plugin-dir</code> 和技能目录插件，请参阅<a href="plugins-create.html">创建插件</a>。</p>
+<h4 id="check-why-a-repository-plugin-didnt-load">检查仓库插件未加载的原因</h4>
+<p>如果仓库 <code>.claude/skills/</code> 中的插件未加载，请检查以下原因：</p>
+<ul>
+<li><strong>在子目录中</strong>：仓库根目录中的插件不会加载。Claude Code 读取会话<a href="permissions.html#working-directories">主工作目录</a>的 <code>.claude/skills/</code>，并且与普通 skill 和命令不同，它不会为插件<a href="skills.html#discovery-from-parent-and-nested-directories">搜索父目录</a>。请改为从仓库根目录启动，或在 v2.1.246 或更高版本上 <a href="permissions.html#move-the-session-to-another-directory">使用 <code>/cd</code> 将会话移到那里</a></li>
+<li><strong>从桌面应用启动、在 worktree 中</strong>：插件从主检出的 <code>.claude/skills/</code> 加载，而不是从 worktree 的 <code>.claude/skills/</code> 加载。请参阅 <a href="worktrees.html#what-worktrees-share-with-the-main-checkout">worktree 与主检出共享的内容</a></li>
+<li><strong>在您尚未信任的文件夹中</strong>：插件仅在您接受该文件夹的<a href="permissions.html#what-runs-before-you-trust-a-folder">工作区信任对话框</a>后加载</li>
+<li><strong>在管理 Claude Code 的组织中</strong>：请参阅<a href="#skills-directory-plugins-blocked-by-managed-settings">被托管设置阻止的 skill 目录插件</a></li>
+</ul>
+<h3 id="skills-directory-plugins-blocked-by-managed-settings">被托管设置阻止的 skill 目录插件</h3>
+<p>如果 <code>~/.claude/skills/</code> 或项目 <code>.claude/skills/</code> 中的插件文件夹未加载且您没有看到任何错误，您的管理员可能已通过<a href="managed-settings.html">托管设置</a>阻止了它。这些文件夹来自您或您的仓库，而不是来自市场，因此当您的管理员设置以下限制之一时，Claude Code 会跳过它们：</p>
+<ul>
+<li><strong>自定义锁定为仅插件</strong>：<a href="settings-reference.html#strictpluginonlycustomization"><code>strictPluginOnlyCustomization</code></a> 设置为 <code>true</code>，或设置为列出一种或多种要锁定的自定义类型的数组。只要锁定了任意一种类型（例如 <code>mcp</code>），无论插件包含哪些组件，整个插件都会被跳过。</li>
+<li><strong>市场来源受限</strong>：<a href="settings-reference.html#strictknownmarketplaces"><code>strictKnownMarketplaces</code></a> 允许列表中没有 <code>{ "source": "skills-dir" }</code> 条目，或 <a href="settings-reference.html#blockedmarketplaces"><code>blockedMarketplaces</code></a> 列表中包含该条目。</li>
+</ul>
+<p>对于被跳过的文件夹，<code>/plugin</code> 和 <code>claude plugin list</code> 既不显示插件也不显示错误。它的 <code>/&lt;name&gt;:&lt;skill&gt;</code> 命令和 Agent 都不存在，它的 hook 和 MCP 服务器也是如此。</p>
+<p>除非 skill 属于被锁定的类型，否则文件夹根目录下的 <code>SKILL.md</code> 仍会作为普通 skill 加载。在这种情况下，<code>/&lt;name&gt;</code> 仍然可用，并且 <code>/plugin</code> 的 <strong>Installed</strong> 选项卡会在 <strong>Skills</strong> 下列出该 skill。</p>
+<ul>
+<li><strong>确认原因</strong>：在 Claude Code 会话中运行 <code>/status</code>。如果 <code>Setting sources</code> 行列出了 <code>Enterprise managed settings</code>，请询问您的管理员这些设置中是否有一项适用于您。如果不适用，请参阅<a href="#check-why-a-repository-plugin-didnt-load">检查仓库插件未加载的原因</a>了解其他原因。</li>
+<li><strong>加载整个插件</strong>：将其添加到您的组织允许的<a href="plugins-create-marketplace.html#create-a-marketplace">市场</a>中，然后从那里安装。若只想为一个会话加载它，请在 shell 中使用 <a href="plugins-cli-reference.html#flags-that-load-a-plugin-for-one-session"><code>--plugin-dir</code></a> 和该文件夹的路径启动 <code>claude</code>，除非您的管理员也关闭了该标志，否则此方法有效。</li>
+</ul>
+<h3 id="synced-plugins">从 claude.ai 同步的插件</h3>
+<p>您为 claude.ai 账户打开的插件也会在 Claude Code 中加载，与您从市场安装的插件一起。这包括您的组织为其成员打开的插件。这些插件中的每一个都作为 <code>&lt;name&gt;@synced</code> 加载，没有市场，也没有<a href="#check-which-stage-a-plugin-reached">安装记录</a>。</p>
+<p>在终端会话中，同步插件的技能、代理、hooks、MCP 服务器和 LSP 服务器都加载，具有与您安装的市场插件相同的信任。</p>
+<p>有关 Cowork 加载的组件，请参阅 claude.com 上的<a href="https://claude.com/docs/plugins/platform-support#compare-component-support-by-app" target="_blank" rel="noopener">组件支持表</a>。</p>
+<p>同步插件在 Cowork 会话和您使用 claude.ai 账户登录的终端会话中加载：</p>
+<ul>
+<li><strong><a href="https://claude.com/product/cowork" target="_blank" rel="noopener">Cowork</a></strong>：Claude Code 在会话启动时将它们下载到会话自己的环境中</li>
+<li><strong>终端会话</strong>：每次启动 Claude Code 时，它在后台同步一次，下载新的和更新的插件，并删除您或您的组织关闭的插件。终端会话中的同步需要 Claude Code v2.1.273 或更高版本</li>
+</ul>
+<h4 id="sync-timing-in-cloud-cowork-sessions">云端 Cowork 会话中的同步时间</h4>
+<p>如果您在云端运行的 Cowork 会话期间为 claude.ai 账户打开或关闭插件，请继续在该会话中工作。如果几条消息之后仍没有任何变化，请启动新会话。</p>
+<h4 id="sync-timing-in-terminal-sessions">终端会话中的同步时间</h4>
+<p>因为终端同步在后台运行，它可能在您的会话启动后完成。当它在交互式会话中添加、更新或删除同步插件时，您会看到 <code>Plugins changed. Run /reload-plugins to activate.</code> 运行 <code>/reload-plugins</code> 以在该会话中加载更改，或将其留到下次启动 Claude Code 时。</p>
+<p>如果您在终端会话期间为 claude.ai 账户打开或关闭插件，Claude Code 会在您下次启动 Claude Code 时下载或删除该插件。</p>
+<h4 id="sign-in-requirements-for-terminal-sync">终端同步的登录要求</h4>
+<p>在您的终端中，插件仅在您使用 claude.ai 账户登录的会话中同步。</p>
+<p>Claude Code 在这些终端会话中既不下载也不加载同步插件，即使您使用 <code>/login</code> 登录后也是如此：</p>
+<ul>
+<li>一个会话，其中 <code>ANTHROPIC_AUTH_TOKEN</code>、<code>CLAUDE_CODE_OAUTH_TOKEN</code> 或 <code>apiKeyHelper</code> 脚本提供凭证来代替该登录</li>
+<li>一个不<a href="env-vars.html#features-that-need-feature-flag-fetching">从 Anthropic 获取功能标志</a>的会话，例如您设置 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> 的会话</li>
+<li>一个处于<a href="headless.html#start-faster-with-bare-mode">裸模式</a>的会话或您使用 <code>--safe-mode</code> 启动的会话</li>
+<li>一个您使用<a href="cli-reference.html#cli-flags"><code>--setting-sources</code></a>列表启动的会话，该列表遗漏了 <code>user</code></li>
+</ul>
+<p>如果您在早期版本的 Claude Code 上登录，该登录不会覆盖插件，直到 Claude Code 在后台续期。要更快获得访问权限，请再次运行 <code>/login</code>。插件同步然后在下次启动 Claude Code 时开始。</p>
+<h4 id="control-which-synced-plugins-load">控制哪些同步插件加载</h4>
+<p>您可以逐个关闭同步插件，除了您的组织要求的插件，或关闭机器上的每个同步插件：</p>
+<ul>
+<li><strong>一个插件</strong>：在您的 shell 中运行 <code>claude plugin disable &lt;name&gt;@synced</code>，会话中 <code>/plugin</code> <strong>Installed</strong> 选项卡都在您的用户级<a href="settings-reference.html#enabledplugins"><code>enabledPlugins</code></a>中保存 <code>"&lt;name&gt;@synced": false</code>。要在每个环境中将插件排除在项目之外，请在项目的已提交 <code>.claude/settings.json</code> 中设置相同的密钥</li>
+<li><strong>机器上的每个同步插件</strong>：在您的用户设置中设置 <a href="settings-reference.html#syncclaudeaiplugins"><code>syncClaudeAiPlugins</code></a> 为 <code>false</code>，或您的组织在<a href="managed-settings.html">托管设置</a>中设置它。Claude Code 停止下载，下次启动时，它将已同步的插件移到 <code>~/.claude/plugins/.trash/</code>，不再加载它们。如果您的组织在 claude.ai 上关闭技能，插件也会停止同步</li>
+<li><strong>您的组织要求的插件</strong>：您的组织在 claude.ai 上标记为必需的插件即使您之前禁用了它也会加载。<code>claude plugin disable</code> 拒绝它，显示 <code>Plugin "&lt;name&gt;@synced" is required by your organization and can't be disabled here. Contact your admin to change it.</code>，<code>claude plugin list</code> 将其标记为 <code>required by your org</code></li>
+</ul>
+<p>有关在 claude.ai 上删除插件，请参阅<a href="plugins-install.html#manage-installed-plugins">管理已安装的插件</a>。</p>
+<h2 id="find-where-a-plugin-is-enabled">查找插件的启用位置</h2>
+<p>您可以在六个源中的任何一个中设置 <code>enabledPlugins</code> 条目。该表从最低优先级到最高优先级列出它们，以及每个适用于谁。有关设置文件本身，请参阅<a href="settings.html#where-settings-live">设置文件及其影响的人</a>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">源</th>
+<th style="text-align: left;">您在哪里设置它</th>
+<th style="text-align: left;">到达</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>--add-dir</code></td>
+<td style="text-align: left;">您使用 <code>--add-dir</code> 传递的目录中的 <code>.claude/settings.json</code> 或 <code>.claude/settings.local.json</code></td>
+<td style="text-align: left;">仅此会话。仅 <code>true</code> 值有效，每个其他源都会覆盖它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>user</code></td>
+<td style="text-align: left;"><code>~/.claude/settings.json</code></td>
+<td style="text-align: left;">您，在每个项目中</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>project</code></td>
+<td style="text-align: left;"><code>.claude/settings.json</code></td>
+<td style="text-align: left;">克隆存储库的每个人</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>local</code></td>
+<td style="text-align: left;"><code>.claude/settings.local.json</code></td>
+<td style="text-align: left;">您，仅在此存储库中</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>flag</code></td>
+<td style="text-align: left;">您在启动时传递的 <code>--settings</code> 值</td>
+<td style="text-align: left;">仅此会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>managed</code></td>
+<td style="text-align: left;"><a href="managed-settings.html">托管设置</a></td>
+<td style="text-align: left;">策略覆盖的每个用户。<code>true</code> 强制启用，<code>false</code> 阻止，没有其他源覆盖它们</td>
+</tr>
+</tbody>
+</table>
+<p>这些源逐个密钥合并。对于每个插件 id，应用的值来自提及该 id 的最高优先级源。不提及该 id 的源将较低优先级源的值保留在有效状态。</p>
+<h3 id="disabled-in-user-settings-but-still-loads">在用户设置中禁用但仍然加载</h3>
+<p>如果您在 <code>~/.claude/settings.json</code> 中将插件设置为 <code>false</code> 并且它仍然加载，较高优先级源中的 <code>true</code> 正在覆盖它。插件在 <code>claude plugin list</code> 和 <code>/plugin</code> 中的行显示 <code>Disabled in ~/.claude/settings.json but still loads — project settings enable it, which overrides your user setting</code>。该消息命名覆盖您的源：<code>project</code>、<code>project, gitignored</code>（对于 <code>.claude/settings.local.json</code>）、<code>cli flag</code> 或 <code>managed</code>。</p>
+<p>要在您的机器上选择退出项目启用的插件，请在 <code>.claude/settings.local.json</code> 中将 id 设置为 <code>false</code>，它的优先级高于项目文件。</p>
+<h3 id="enabled-in-project-settings-but-not-installed">在项目设置中启用但未安装</h3>
+<p>当插件的唯一 <code>true</code> 在项目的 <code>.claude/settings.json</code> 中时，Claude Code 不会在未安装它的机器上获取它，除非其市场条目具有<a href="plugins-marketplace-reference.html#plugin-sources">相对路径源</a>或<a href="plugins-org.html#seed-containers-and-ci">种子目录</a>已经保存它。相反，<code>/plugin</code> <strong>Errors</strong> 选项卡显示 <code>Plugin "&lt;name&gt;" is enabled in project settings but isn't installed here</code>。</p>
+<p>相对路径插件不需要安装记录，因为它从市场本身加载。</p>
+<p>Claude Code 仅当以下源之一将其设置为 <code>true</code> 时才获取具有外部源的插件：</p>
+<ul>
+<li>您的用户设置</li>
+<li>git 不跟踪的 <code>.claude/settings.local.json</code></li>
+<li><code>--settings</code> 标志</li>
+<li>托管设置</li>
+</ul>
+<h2 id="find-plugins-on-disk">查找磁盘上的插件</h2>
+<p>Claude Code 在一个插件根目录下保存插件文件和状态记录，该目录是 <code>~/.claude/plugins</code>，除非您设置了 <a href="env-vars.html"><code>CLAUDE_CODE_PLUGIN_CACHE_DIR</code></a>。表中的每个路径都相对于该根目录。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">路径</th>
+<th style="text-align: left;">它保存什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>cache/&lt;marketplace&gt;/&lt;plugin&gt;/&lt;version&gt;/</code></td>
+<td style="text-align: left;">市场插件的每个已安装版本一个目录。<code>&lt;plugin&gt;</code> 是市场条目名称，<code>&lt;version&gt;</code> 是<a href="#versions-and-updates">已解析版本</a>。<code>${CLAUDE_PLUGIN_ROOT}</code> 指向此目录</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>data/&lt;plugin-id&gt;/</code></td>
+<td style="text-align: left;">插件的持久目录，公开为 <code>${CLAUDE_PLUGIN_DATA}</code>。有关如何形成 <code>&lt;plugin-id&gt;</code>，请参阅<a href="plugins-components.html#path-variables-and-persistent-data">路径变量和持久数据</a>。Claude Code 在插件组件首次使用它时创建它，并在更新中保留它。默认情况下，当您从其最后一个范围卸载插件时，Claude Code 会删除它。有关 <code>--keep-data</code> 和它保留的其他情况，请参阅<a href="plugins-cli-reference.html#plugin-uninstall">插件卸载</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>marketplaces/&lt;name&gt;/</code></td>
+<td style="text-align: left;">从 GitHub、另一个 Git 主机或 URL 添加的市场的克隆或下载。从本地 <code>file</code> 或 <code>directory</code> 源添加的市场在此处没有副本，其 <code>installLocation</code> 在 <code>known_marketplaces.json</code> 中是您给定的路径</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>synced/</code></td>
+<td style="text-align: left;">Claude Code <a href="#synced-plugins">从您的 claude.ai 账户同步的</a>插件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.trash/</code></td>
+<td style="text-align: left;">claude.ai 同步删除的插件，例如在您在 claude.ai 上关闭一个或停止同步后</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>installed_plugins.json</code> 和 <code>known_marketplaces.json</code></td>
+<td style="text-align: left;">Claude Code 已安装的内容和已获取的市场的记录，在<a href="#check-which-stage-a-plugin-reached">检查插件达到的阶段</a>下描述。<a href="plugins-install.html#add-from-claude-ai">托管在 claude.ai 上的市场</a>改为记录在 <code>known_marketplaces_claudeai.json</code> 中</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>flagged-plugins.json</code></td>
+<td style="text-align: left;">Claude Code 卸载的插件，因为其市场将其除名。它们出现在 <code>/plugin</code> 的 <strong>Flagged</strong> 部分；请参阅<a href="plugins-host-marketplace.html">托管市场</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>installed_plugins.set-aside.&lt;date&gt;.&lt;hash&gt;.json</code> 和 <code>installed_plugins.unreadable.&lt;date&gt;.&lt;hash&gt;.kept</code></td>
+<td style="text-align: left;">Claude Code 在删除任何版本的 Claude Code 都无法使用的安装记录或重建不可读的 <code>installed_plugins.json</code> 之前保留的日期副本。请参阅<a href="plugins-troubleshooting.html#installed-plugins-json-could-not-be-read-and-was-rebuilt">恢复说明</a>。它们按照 <a href="settings-reference.html#cleanupperioddays"><code>cleanupPeriodDays</code></a> 计划老化</td>
+</tr>
+</tbody>
+</table>
+<p>因为 <code>${CLAUDE_PLUGIN_ROOT}</code> 指向版本目录，插件的根路径随每个版本更改。改为在 <code>${CLAUDE_PLUGIN_DATA}</code> 中保留插件的持久文件。</p>
+<h3 id="in-place-and-copied-plugins">就地和复制的插件</h3>
+<p>Claude Code 根据插件的来源，从您保存它们的位置就地加载某些插件，并将其余的复制到缓存中：</p>
+<ul>
+<li><strong><code>--plugin-dir</code> 和技能目录插件</strong>：目录就地加载，永远不会被复制。<code>--plugin-url</code> 存档或 <code>--plugin-dir</code> <code>.zip</code> 首先被提取到会话临时目录中</li>
+<li><strong>您从本地路径添加的市场中的相对路径插件</strong>：插件从市场文件夹内的其路径就地加载。您对源目录的编辑在下次会话启动或 <code>/reload-plugins</code> 时生效，您不需要增加版本。插件的 hook 进程以及 MCP 和 LSP 服务器接收指向源目录的 <code>CLAUDE_PLUGIN_ROOT</code>。有关其 Node.js 包依赖项，请参阅<a href="#when-the-dependency-install-runs">依赖项安装何时运行</a></li>
+<li><strong><a href="plugins-marketplace-reference.html#command-plugin-source">链接模式</a>中的 <code>command</code> 源插件</strong>：命令打印的目录通过缓存条目中的链接就地加载</li>
+<li><strong>每个其他市场插件</strong>：Claude Code 在安装时将插件复制到 <code>cache/&lt;marketplace&gt;/&lt;plugin&gt;/&lt;version&gt;/</code> 中，并从该副本加载。插件目录外的文件不会被复制，因此当复制的插件内的脚本读取插件根目录上方的路径（如 <code>../shared</code>）时，它找不到它们</li>
+</ul>
+<h3 id="paths-that-escape-the-plugin-directory">逃逸插件目录的路径</h3>
+<p>无论插件就地加载还是从缓存副本加载，Claude Code 都不允许它声明其自己目录外的组件。它拒绝解析到插件根目录外的组件路径，无论路径是在 <code>plugin.json</code> 还是市场条目中声明的：</p>
+<ul>
+<li><strong>按书写指向插件外的路径</strong>，例如 <code>../shared-utils</code></li>
+<li><strong>导致插件外的符号链接</strong>，除了<a href="plugins-host-marketplace.html#share-files-within-a-marketplace-with-symlinks">市场内插件之间的链接</a></li>
+<li><strong>在 macOS 和 Linux 上，路径中任何地方包含反斜杠的路径</strong>，即使路径保留在插件内。因此使用反斜杠路径声明的组件仅在 Windows 上加载，所以使用正斜杠编写组件路径，例如 <code>./commands/deploy.md</code></li>
+</ul>
+<p>被拒绝的路径显示为<a href="errors.html#path-escapes-plugin-directory"><code>path escapes plugin directory</code></a>错误，插件加载时不包含该组件。</p>
+<h3 id="cleanup-of-previous-versions">以前版本的清理</h3>
+<p>当您更新或卸载插件时，Claude Code 将 <code>.orphaned_at</code> 标记写入以前的版本目录。它在 14 天后的后台清理中删除该目录，因此已加载旧版本的会话继续运行。</p>
+<p>扫描仅在 <code>installed_plugins.json</code> 记录至少一个安装时运行。卸载最后一个插件后，孤立目录保留到您安装另一个。</p>
+<h3 id="node-js-package-dependencies">Node.js 包依赖项</h3>
+<p>当 Claude Code 将插件复制到缓存中时，它也会在那里安装插件的 Node.js 包依赖项，以便插件的 hooks 和 MCP 服务器可以加载它们。</p>
+<p>本部分涵盖插件在其自己的 <code>package.json</code> 中声明的 npm 和 Bun 包。对于依赖其他插件的插件，请参阅<a href="plugins-dependencies.html">插件依赖项版本</a>。</p>
+<h4 id="when-the-dependency-install-runs">依赖项安装何时运行</h4>
+<p>Claude Code 每次创建复制的版本目录时，都会将依赖项安装到其中：</p>
+<ul>
+<li>当您安装插件时</li>
+<li>当 Claude Code 将插件更新到新版本时</li>
+<li>在会话启动时，当已启用的插件未缓存时，例如在新机器上</li>
+</ul>
+<p>对于从您通过本地路径添加的市场中<a href="#in-place-and-copied-plugins">就地加载</a>的相对路径插件，Claude Code 不会将依赖项安装到源目录中。自己在那里安装它们，或从 hook 安装到<a href="plugins-components.html#path-variables-and-persistent-data"><code>${CLAUDE_PLUGIN_DATA}</code></a>。</p>
+<p>安装仅在插件的根目录同时包含 <code>package.json</code> 和支持的锁定文件时运行。</p>
+<p>锁定文件决定 Claude Code 运行哪个包管理器：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">锁定文件</th>
+<th style="text-align: left;">包管理器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>bun.lock</code></td>
+<td style="text-align: left;">Bun</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>npm-shrinkwrap.json</code> 或 <code>package-lock.json</code></td>
+<td style="text-align: left;">npm</td>
+</tr>
+</tbody>
+</table>
+<p>如果插件包含这些锁定文件中的多个，Claude Code 使用第一个匹配项，按顺序检查：<code>bun.lock</code>、<code>npm-shrinkwrap.json</code>、<code>package-lock.json</code>。</p>
+<p>在以下锁定文件情况下，Claude Code 会跳过安装：</p>
+<ul>
+<li><strong><code>bun.lockb</code></strong>：Bun 的二进制锁定文件无法被检查。请改为提供文本格式的 <code>bun.lock</code> 或 npm 锁定文件</li>
+<li><strong><code>yarn.lock</code> 或 <code>pnpm-lock.yaml</code></strong>：请将其替换为 npm 锁定文件</li>
+<li><strong>Claude Code 无法读取的格式的锁定文件</strong>：npm 锁定文件需要 <code>lockfileVersion</code> 为 <code>2</code> 或 <code>3</code>（由 npm 7 或更高版本写入），<code>bun.lock</code> 需要 <code>lockfileVersion</code> 不高于 <code>2</code></li>
+</ul>
+<p>包含 npm 锁定文件以到达最多用户。Claude Code 从用户的 PATH 运行匹配的锁定文件的包管理器，如果缺少该包管理器，不会尝试其他锁定文件。</p>
+<p>对于通过 npm 源分发的插件，使用 <code>npm-shrinkwrap.json</code>，因为 npm 从已发布的包中排除 <code>package-lock.json</code>。</p>
+<h4 id="limits-on-the-dependency-install">依赖项安装的限制</h4>
+<p>Claude Code 限制此依赖项安装，以便插件或其包中的任何代码在安装期间不执行，并限制其运行时间：</p>
+<ul>
+<li><strong>仅限注册表包</strong>：每个依赖项都必须是在锁定文件中固定到精确版本的注册表包。具有 git、GitHub、文件夹、工作区或链接依赖项的插件不会进行安装。</li>
+<li><strong><code>https</code> 下载</strong>：锁定文件中的下载链接必须使用 <code>https</code>，除非它指向执行安装的用户自己的默认 npm 注册表。</li>
+<li><strong>单独的安装文件夹</strong>：包管理器在其专用的文件夹中运行，该文件夹仅包含经过检查的依赖项列表的副本，因此 npm 和 Bun 不会读取插件的 <code>.npmrc</code>、<code>.env</code> 或 <code>bunfig.toml</code>。安装成功后，Claude Code 会将生成的 <code>node_modules</code> 移入插件中。</li>
+<li><strong>冻结解析</strong>：安装严格使用锁定文件固定的版本，当 <code>package.json</code> 和锁定文件列出的依赖项不一致时，Claude Code 会跳过安装</li>
+<li><strong>无生命周期脚本</strong>：<code>--ignore-scripts</code> 防止 <code>preinstall</code>、<code>install</code> 和 <code>postinstall</code> 脚本运行，因此在这些脚本中构建本机模块的依赖项在此安装期间下载但不编译</li>
+<li><strong>无覆盖或补丁</strong>：<code>package.json</code> 设置了 npm <code>overrides</code> 的插件不会从 npm 锁定文件进行安装，设置了 Bun <code>patchedDependencies</code> 的插件不会从 <code>bun.lock</code> 进行安装</li>
+<li><strong>60 秒超时</strong>：Claude Code 停止运行超过 60 秒的安装并将其视为失败</li>
+</ul>
+<p>Claude Code 在此依赖项安装之前获取 npm 源插件，包的任何自己的安装脚本在获取期间不运行。请参阅 <a href="plugins-marketplace-reference.html#npm-plugin-source">npm 插件源</a>。</p>
+<p>您无法关闭自动安装。没有设置或环境变量禁用它。</p>
+<p>在受限网络中，请参阅<a href="network-config.html#network-access-requirements">网络访问要求</a>以允许的主机。</p>
+<h4 id="when-the-dependency-install-fails-or-is-skipped">依赖项安装失败或被跳过时</h4>
+<p>如果安装失败或被跳过，插件仍会加载，但其中需要缺失包的部分可能无法正常工作。</p>
+<p>对于已启用的插件，如果其缓存副本包含锁定文件和列出运行时依赖项的 <code>package.json</code>，但没有 <code>node_modules</code> 目录，<code>/plugin</code> 和 <code>claude plugin list</code> 会在该插件上显示一条说明。该说明会指出安装是未完成，还是无法针对此插件运行。有关每种情况的处理方法，请参阅<a href="plugins-troubleshooting.html#the-packages-it-lists-are-not-installed">故障排除条目</a>。</p>
+<p>当自动安装无法提供依赖项时，从 hook 安装到<a href="plugins-components.html#path-variables-and-persistent-data">持久数据目录</a>。这包括需要其生命周期脚本来构建的包、Python 依赖项、使用 Yarn 或 pnpm 锁定的插件，以及不是注册表包的依赖项（例如 git 依赖项）。</p>
+<h2 id="versions-and-updates">版本和更新</h2>
+<p>如果插件的作者推送了新提交，<code>claude plugin update</code> 打印 <code>&lt;name&gt; is already at the latest version (&lt;version&gt;).</code>，Claude Code 为插件计算的版本未更改，因此插件在磁盘上的文件不会更改。</p>
+<p>Claude Code 为它安装的每个插件计算一个版本，这就是它如何检测更新的方式。<code>claude plugin update</code> 和后台自动更新会重新计算版本，当它与 <code>installed_plugins.json</code> 记录的内容匹配时，不会替换缓存副本。由您发起的更新仍可在该副本中<a href="plugins-troubleshooting.html#the-packages-it-lists-are-not-installed">重试未完成的依赖安装</a>。</p>
+<p>版本也命名插件的缓存目录。</p>
+<p>固定 <code>"version"</code> 的清单是计算的版本在提交中保持相同的一种方式。有关解析顺序，请参阅<a href="#how-claude-code-computes-the-version">Claude Code 如何计算版本</a>。</p>
+<p>从您通过本地路径添加的市场中<a href="#in-place-and-copied-plugins">就地加载</a>的插件在每次会话启动时加载其当前源文件，无论其版本字符串说什么。对于来自<a href="plugins-install.html#add-from-claude-ai">托管在 claude.ai 上的市场</a>的插件，claude.ai 为插件记录的版本是其版本，清单的 <code>version</code> 不被读取。</p>
+<h3 id="how-claude-code-computes-the-version">Claude Code 如何计算版本</h3>
+<p>对于您添加的市场，Claude Code 按插件市场条目的 <code>source</code> 类型选择规则。<a href="plugins-marketplace-reference.html#plugin-sources">市场参考</a>列出源类型。对于该列表中除 <code>command</code> 外的每个源类型：</p>
+<ol>
+<li>插件清单中的 <code>version</code> 字段首先出现</li>
+<li>然后是插件市场条目中的 <code>version</code> 字段</li>
+<li>当都未设置时，版本来自源类型：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">源类型</th>
+<th style="text-align: left;">未设置 <code>version</code> 字段时的版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>github</code>、<code>url</code> 或 <code>git-subdir</code></td>
+<td style="text-align: left;">源的提交 SHA，缩短为 12 个字符。<code>git-subdir</code> 版本也包含子目录路径的哈希</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>archive</code></td>
+<td style="text-align: left;">SHA-256 摘要，缩短为 12 个字符：市场条目中的 <code>sha256</code> 固定，或没有固定时下载文件的摘要</td>
+</tr>
+<tr>
+<td style="text-align: left;">Git 托管市场内的相对路径</td>
+<td style="text-align: left;">已安装目录的提交 SHA</td>
+</tr>
+<tr>
+<td style="text-align: left;">本地目录，当插件目录和其市场都不是 git 存储库时</td>
+<td style="text-align: left;"><code>unknown</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>npm</code></td>
+<td style="text-align: left;"><code>unknown</code></td>
+</tr>
+</tbody>
+</table>
+<p>Claude Code 不从包含安装路径的存储库（如 git 管理的 <code>~/.claude</code>）获取版本。</p>
+<p>对于 <code>command</code> 源，Claude Code 始终从命令生成的内容派生版本：单独的 12 字符哈希，或当清单设置一个时的 <code>&lt;manifest version&gt;-&lt;hash&gt;</code>。市场条目的 <code>version</code> 对命令源被忽略。有关哈希覆盖的内容，请参阅<a href="plugins-marketplace-reference.html#copy-mode-and-link-mode">复制模式和链接模式</a>。</p>
+<p>因为清单首先出现，固定 <code>"version": "1.0.0"</code> 的清单将每个用户保留在缓存副本上，直到其作者更改字符串，无论他们推送多少提交。要让用户跟踪提交，请从清单和条目中都省略 <code>version</code>。<a href="plugins-host-marketplace.html">托管市场</a>涵盖哪个选择适合哪个发布设置。</p>
+<h3 id="when-claude-code-refreshes-a-marketplace-before-an-install">Claude Code 在安装前何时刷新市场</h3>
+<p>当您安装插件时，Claude Code 在其市场目录的本地副本中查找它。您可以在会话中运行 <code>/plugin install</code> 或在 shell 中运行 <code>claude plugin install</code>，并使用或不使用其市场命名插件。该表显示这些组合中哪些刷新本地副本。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">插件名称</th>
+<th style="text-align: left;">命令</th>
+<th style="text-align: left;">Claude Code 刷新什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>name@marketplace</code></td>
+<td style="text-align: left;"><code>/plugin install</code> 或 <code>claude plugin install</code></td>
+<td style="text-align: left;">命名的市场，在查找之前</td>
+</tr>
+<tr>
+<td style="text-align: left;">仅 <code>name</code></td>
+<td style="text-align: left;"><code>/plugin install</code></td>
+<td style="text-align: left;">仅具有自动更新的市场，仅在查找失败后</td>
+</tr>
+<tr>
+<td style="text-align: left;">仅 <code>name</code></td>
+<td style="text-align: left;"><code>claude plugin install</code></td>
+<td style="text-align: left;">无。它读取缓存的目录而不刷新</td>
+</tr>
+</tbody>
+</table>
+<p><code>name@marketplace</code> 安装之前的刷新不取决于市场的自动更新设置或 <code>DISABLE_AUTOUPDATER</code>。</p>
+<p>当刷新失败时，安装从缓存的目录进行，<code>claude plugin install</code> 报告 <code>marketplace not refreshed</code>。</p>
+<p>Claude Code 在以下情况下跳过 <code>name@marketplace</code> 安装之前的刷新：</p>
+<ul>
+<li>市场是从本地 <code>file</code> 或 <code>directory</code> 源添加的，或在设置中使用<a href="settings-reference.html#extraknownmarketplaces"><code>settings</code> 源</a>内联定义</li>
+<li><a href="env-vars.html">种子目录</a>提供市场</li>
+<li>Claude Code 在过去 30 秒内刷新了市场</li>
+<li>您设置了 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code></li>
+<li><a href="plugins-org.html#restrict-what-users-can-install">托管设置</a>阻止市场，在这种情况下 Claude Code 也拒绝安装</li>
+</ul>
+<h3 id="when-auto-update-runs">自动更新何时运行</h3>
+<p>在交互式会话中，在您发送第一条消息后，Claude Code 等待最多十分钟的随机延迟。然后它刷新每个启用自动更新的市场，并更新从它们安装的磁盘上的插件。</p>
+<p>运行中的会话保留它加载的版本，您会看到 <code>Plugin updated: &lt;name&gt; · Run /reload-plugins to apply</code>。无论您是否重新加载，新版本都会在下次启动时加载。</p>
+<h4 id="which-marketplaces-and-plugins-auto-update">哪些市场和插件自动更新</h4>
+<p>市场是否自动更新遵循首先设置的以下内容：</p>
+<ol>
+<li><strong>其 <code>extraKnownMarketplaces</code> 条目中的 <code>autoUpdate</code></strong> 在设置文件中</li>
+<li><strong>其 <code>known_marketplaces.json</code> 条目中的 <code>autoUpdate</code></strong>，<code>/plugin</code> <strong>Marketplaces</strong> 下的 <strong>Enable auto-update</strong> 切换写入。当设置文件也在 <code>extraKnownMarketplaces</code> 下声明市场时，切换也将 <code>autoUpdate</code> 写入该设置条目</li>
+<li><strong>默认值</strong>：对于 Anthropic 的官方市场（如 <code>claude-plugins-official</code>）打开，对于 <code>knowledge-work-plugins</code> 和 <code>first-party-plugins</code> 关闭，对于<a href="plugins-install.html#add-from-claude-ai">从 claude.ai 添加的市场</a>打开，对于每个其他市场关闭</li>
+</ol>
+<p>如果您设置 <code>DISABLE_UPDATES=1</code>、<code>DISABLE_AUTOUPDATER=1</code> 或 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1</code>，整个传递关闭，<strong>Enable auto-update</strong> 切换被隐藏，除非您也设置 <code>FORCE_AUTOUPDATE_PLUGINS=1</code>。<a href="env-vars.html">环境变量参考</a>涵盖每个变量的更广泛影响。</p>
+<p>自动更新也跳过其市场条目声明 <code>headersHelper</code> 的插件。<a href="plugins-host-marketplace.html#installs-and-updates-that-refuse-the-command-instead-of-asking">拒绝命令而不是询问的安装和更新</a>解释何时这样的插件出现在 <code>/plugin</code> <strong>Errors</strong> 选项卡中以及如何从那里更新它。</p>
+<p>当复制的插件在会话中期更新时，hook 命令、监视器、MCP 服务器和 LSP 服务器继续使用以前版本的路径。运行 <code>/reload-plugins</code> 以将 hooks、MCP 服务器和 LSP 服务器切换到新路径。监视器需要会话重启。</p>
+<h3 id="when-a-command-source-re-runs">何时命令源重新运行</h3>
+<p>具有 <code>command</code> 源的插件不等待<a href="#when-auto-update-runs">自动更新传递</a>。打印的目录反映工具在命令运行时的状态，因此 Claude Code 在以下时间再次运行<a href="plugins-host-marketplace.html#change-the-command-of-a-command-source">您接受的命令</a>：</p>
+<ul>
+<li>每次安装或更新插件时</li>
+<li>每个已启用的命令源插件每个会话一次，在会话启动后不久在后台。此运行不取决于市场的自动更新设置或 <code>DISABLE_AUTOUPDATER</code></li>
+<li>在启动或 <code>/reload-plugins</code> 时，当已启用的插件的已安装版本在插件缓存中丢失时</li>
+</ul>
+<p>当您设置 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code></a> 时，Claude Code 跳过两个后台运行。显式安装和更新仍然使用该变量集运行命令。</p>
+<p>当命令的哈希输出已更改时，Claude Code 将结果安装为新版本并在运行中的交互式会话中重新加载它，切换<a href="plugins-cli-reference.html#reload-plugins"><code>/reload-plugins</code> 切换的相同组件</a>。您会看到插件已重新加载的通知。</p>
+<p>如果就地重新加载会使会话的提示缓存失效，Claude Code 改为提示您运行 <code>/reload-plugins</code>，它<a href="prompt-caching.html#enabling-or-disabling-a-plugin">警告缓存成本并在使用 <code>--force</code> 重新运行时应用</a>。</p>
+<h2 id="name-conflicts">名称冲突</h2>
+<p>当来自不同来源的已启用插件共享清单名称时，此顺序决定哪个加载，从最高优先级到最低：</p>
+<ol>
+<li>其 id 出现在托管设置 <code>enabledPlugins</code> 中的插件，作为 <code>true</code> 或 <code>false</code>。其清单名称与 id 的名称部分匹配的 <code>--plugin-dir</code> 副本不被加载，您会看到 <code>--plugin-dir copy of "&lt;name&gt;" ignored: plugin is locked by managed settings</code></li>
+<li>已启用的 <code>--plugin-dir</code>、<code>--plugin-url</code> 或 <code>CLAUDE_CODE_PLUGIN_DIRS</code> 插件。它替换同名的已安装市场插件或技能目录插件：<br />
+   * <strong>已安装的市场插件</strong>：无声替换。<code>claude plugin list</code> 仍然显示市场行为已启用，因为该行反映您的设置。仅当您使用 <code>--debug</code> 启动时 Claude Code 在 <code>~/.claude/debug/</code> 下写入的日志记录 <code>Plugin "&lt;name&gt;" from --plugin-dir overrides installed version</code><br />
+   * <strong>技能目录插件</strong>：替换为 <code>/plugin</code> <strong>Errors</strong> 选项卡行，读取 <code>Not loaded — the name "&lt;name&gt;" is already taken by a session-only plugin (--plugin-dir / --plugin-url), which takes precedence</code></li>
+<li>已安装的市场插件。同名的技能目录插件获得相同的 <code>Not loaded</code> 行，命名已安装的插件</li>
+<li>技能目录插件。在这两者之间，<code>~/.claude/skills/</code> 下的副本加载，项目的 <code>.claude/skills/</code> 副本被删除，带有一行说明哪个路径遮蔽了它</li>
+<li><a href="#synced-plugins">从 claude.ai 同步的</a>插件。当来自任何其他来源的已启用插件与其名称匹配时，Claude Code 加载该插件并报告同步副本未加载。要改为使用 claude.ai 副本，请禁用您自己的副本</li>
+</ol>
+<p>因为顺序比较清单名称，名为 <code>hello-plugin</code> 的 <code>--plugin-dir</code> 插件在该插件的清单也说 <code>"name": "hello-plugin"</code> 时替换 <code>hello@example-marketplace</code>。</p>
+<h3 id="hooks-when-two-enabled-plugins-share-a-name">两个已启用插件同名时的 hook</h3>
+<p>当您从不同市场安装并启用两个具有相同清单名称的插件时，两者在 <code>/plugin</code> 中都显示为已启用，但其中一个的 hook 会被略过。每个名称只有一个插件会注册其 <code>hooks/hooks.json</code> 中的 hook，每个名称也只有一个插件会加载 <a href="plugins-mods-overview.html">hook 模块</a>。当您组织的托管设置启用了其中一个副本时，该副本占有此名称。否则，由 Claude Code 首先加载的副本占有此名称。</p>
+<p>要查看哪个副本占有此名称，请在会话中运行 <code>/plugin</code> 并打开 <strong>Errors</strong> 选项卡。对于 hook 被略过的副本，那里会有一条说明，指出占有此名称的副本，被略过副本的详细信息中也会显示相同的说明。对于 <code>hooks/hooks.json</code> 中的 hook，说明以 <code>Its hooks.json hooks do not run</code> 开头；对于 hook 模块，说明以 <code>Its hooks module does not load</code> 开头。此说明需要 Claude Code v2.1.296 或更高版本。</p>
+<p>要改为运行被略过副本的 hook，请禁用或卸载占有此名称的副本，然后在会话中运行 <code>/reload-plugins</code>。重新加载会注册剩余副本的 hook 并清除该说明。当占有此名称的副本是由您的托管设置启用的副本时，您无法禁用它，只要两者都已安装，另一个副本的 hook 就会保持关闭。</p>
+<h3 id="keep-a-session-only-plugin-from-loading">防止会话专用插件加载</h3>
+<p>要防止 <code>--plugin-dir</code> 插件遮蔽任何内容，或在父进程为您传递标志时关闭一个，请在任何设置文件中将其 id 设置为 <code>false</code>。对于清单名称为 <code>hello-plugin</code> 的插件，条目是 <code>"enabledPlugins": {"hello-plugin@inline": false}</code>。禁用的会话专用插件不遮蔽，因此市场或技能目录副本加载。</p>
+<h2 id="next-steps">后续步骤</h2>
+<ul>
+<li><a href="plugins-install.html">安装和管理插件</a>：安装、启用、禁用和更新步骤本身</li>
+<li><a href="plugins-troubleshooting.html">插件故障排除</a>：按生成它们的阶段分类的错误消息</li>
+<li><a href="plugins-cli-reference.html">插件命令参考</a>：此页面上命名的标志和命令</li>
+<li><a href="plugins-org.html">为您的组织管理插件</a>：强制启用或阻止插件的托管设置</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-troubleshooting.html"><span class="pager-dir">← 上一页</span><span class="pager-name">排查插件问题</span></a><a class="pager-link next" href="plugins-manifest-reference.html"><span class="pager-dir">下一页 →</span><span class="pager-name">Plugin manifest 参考</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#check-which-stage-a-plugin-reached">检查插件达到的阶段</a><a class="toc-l3" href="#plugins-and-marketplaces-that-aren’t-on-disk-at-session-start">会话启动时磁盘上没有的插件和市场</a><a class="toc-l2" href="#find-where-a-plugin-came-from">查找插件的来源</a><a class="toc-l3" href="#entry-name-and-manifest-name">条目名称和清单名称</a><a class="toc-l3" href="#plugins-shared-through-a-repository">通过存储库共享的插件</a><a class="toc-l3" href="#skills-directory-plugins-blocked-by-managed-settings">被托管设置阻止的 skill 目录插件</a><a class="toc-l3" href="#synced-plugins">从 claude.ai 同步的插件</a><a class="toc-l2" href="#find-where-a-plugin-is-enabled">查找插件的启用位置</a><a class="toc-l3" href="#disabled-in-user-settings-but-still-loads">在用户设置中禁用但仍然加载</a><a class="toc-l3" href="#enabled-in-project-settings-but-not-installed">在项目设置中启用但未安装</a><a class="toc-l2" href="#find-plugins-on-disk">查找磁盘上的插件</a><a class="toc-l3" href="#in-place-and-copied-plugins">就地和复制的插件</a><a class="toc-l3" href="#paths-that-escape-the-plugin-directory">逃逸插件目录的路径</a><a class="toc-l3" href="#cleanup-of-previous-versions">以前版本的清理</a><a class="toc-l3" href="#node-js-package-dependencies">Node.js 包依赖项</a><a class="toc-l2" href="#versions-and-updates">版本和更新</a><a class="toc-l3" href="#how-claude-code-computes-the-version">Claude Code 如何计算版本</a><a class="toc-l3" href="#when-claude-code-refreshes-a-marketplace-before-an-install">Claude Code 在安装前何时刷新市场</a><a class="toc-l3" href="#when-auto-update-runs">自动更新何时运行</a><a class="toc-l3" href="#when-a-command-source-re-runs">何时命令源重新运行</a><a class="toc-l2" href="#name-conflicts">名称冲突</a><a class="toc-l3" href="#hooks-when-two-enabled-plugins-share-a-name">两个已启用插件同名时的 hook</a><a class="toc-l3" href="#keep-a-session-only-plugin-from-loading">防止会话专用插件加载</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

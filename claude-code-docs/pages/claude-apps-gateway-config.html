@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude 应用网关配置 · Claude Code 中文文档</title>
+<meta name="description" content="每个 gateway.yaml 选项的参考：监听器和 TLS、OIDC、会话、Postgres 存储、Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上游、模型路由、托管策略和遥测。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="claude-apps-gateway-config">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/claude-apps-gateway-config" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link active" href="claude-apps-gateway-config.html" aria-current="page">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>管理</span> <span class="sep">/</span> <span>网关</span> <span class="sep">/</span> <span>Claude 应用网关</span></div>
+    <article class="prose" id="article"><h1 id="claude">Claude 应用网关配置</h1>
+<blockquote>
+<p>每个 gateway.yaml 选项的参考：监听器和 TLS、OIDC、会话、Postgres 存储、Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上游、模型路由、托管策略和遥测。</p>
+</blockquote>
+<p>Claude 应用网关部署由一个 YAML 文件配置，按惯例命名为 <code>gateway.yaml</code>。该文件定义网关所做的一切：它在哪里监听、开发者如何登录、推理去往何处，以及应用哪些策略和遥测。本页是该文件中每个选项的参考。</p>
+<p>要编写你的第一个配置，请从<a href="claude-apps-gateway.html#quickstart">快速入门</a>开始，它构建一个最小的工作配置并运行它。一旦你有了满意的配置，<a href="claude-apps-gateway-deploy.html">部署指南</a>涵盖了在 Kubernetes、Cloud Run 或你自己的平台上容器化和托管它。</p>
+<p>网关在启动时使用 <code>claude gateway --config /path/to/gateway.yaml</code> 读取该文件一次。每个选项都在启动时根据模式进行验证，因此格式错误的配置在启动时失败并显示字段级错误，而不是在首次使用时失败。</p>
+<p>本页末尾的<a href="#complete-example">完整示例</a>演示了每个部分。</p>
+<h2 id="file-structure">文件结构</h2>
+<p>五个部分是<a href="#required-sections">必需的</a>。其他所有部分都是<a href="#optional-sections">可选的</a>，省略的部分采用其默认值。未知的键会导致启动失败，因此拼写错误会显示为命名错误，而不是被静默忽略的设置。</p>
+<p><strong>必需部分：</strong></p>
+<ul>
+<li><a href="#listen"><code>listen</code></a>：绑定地址、公共 URL、TLS 终止</li>
+<li><a href="#oidc"><code>oidc</code></a>：您的身份提供商 (IdP)，包括颁发者、客户端、声明映射以及谁可以登录</li>
+<li><a href="#session"><code>session</code></a>：网关铸造的持有者令牌，包括密钥和生命周期</li>
+<li><a href="#store"><code>store</code></a>：PostgreSQL，用于设备授权和速率限制计数器</li>
+<li><a href="#upstreams"><code>upstreams</code></a>：推理的去向，无论是 Anthropic、Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 还是 Microsoft Foundry</li>
+</ul>
+<p><strong>可选部分：</strong></p>
+<ul>
+<li><a href="#admin"><code>admin</code></a>：Admin API 身份验证和支出限制的保留</li>
+<li><a href="#enforcement"><code>enforcement</code></a>：支出限制故障开放或故障关闭行为</li>
+<li><a href="#pricing"><code>pricing</code></a>：合同费率，以及适用于支出计量器和开发人员所见成本数字的乘数</li>
+<li><a href="#models"><code>models</code></a> 和 <code>auto_include_builtin_models</code>：管理员策划的模型列表和每个上游 ID</li>
+<li><a href="#managed"><code>managed</code></a>：按 IdP 组的托管设置策略</li>
+<li><a href="#telemetry"><code>telemetry</code></a>：OTLP 转发到您的可观测性堆栈</li>
+<li><a href="#http-tuning"><code>access_control</code>、<code>limits</code>、<code>timeouts</code>、<code>rate_limits</code></a>：IP 允许/拒绝、请求大小上限、上游首字节时间和每 IP 登录限制</li>
+<li><a href="#load_test_mode"><code>load_test_mode</code></a>：在不调用模型提供商的情况下对网关进行负载测试</li>
+</ul>
+<h2 id="secret-expansion">密钥扩展</h2>
+<p>不要直接在 <code>gateway.yaml</code> 中写入密钥，如 <code>client_secret</code>、<code>jwt_secret</code> 或 <code>postgres_url</code>。使用下面的一种形式引用它们，网关在启动时从环境变量或文件解析该值：</p>
+<table>
+<thead>
+<tr>
+<th>形式</th>
+<th>解析为</th>
+<th>用于</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>${VAR}</code></td>
+<td>环境变量 <code>VAR</code>。如果未定义，启动失败。</td>
+<td>容器环境变量、通过环境注入的 AWS Secrets Manager</td>
+</tr>
+<tr>
+<td><code>${file:/path}</code></td>
+<td>该绝对路径处的文件内容，已修剪。该引用必须是字段的整个值：与 <code>${VAR}</code> 不同，它不会在较长的字符串内展开，因此对于数据库密码，请设置 <code>store.password</code> 而不是将其嵌入 <code>postgres_url</code>。</td>
+<td>Kubernetes Secret 卷挂载、Vault Agent、SOPS</td>
+</tr>
+</tbody>
+</table>
+<h2 id="required-sections">必需的部分</h2>
+<h3 id="listen"><code>listen</code></h3>
+<p><code>listen</code> 块控制网关的服务位置：绑定地址和端口、外部可见的源以及可选的 TLS 终止。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>host</code></td>
+<td>否</td>
+<td>绑定地址。默认 <code>0.0.0.0</code>。</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>否</td>
+<td>绑定端口。默认 <code>8080</code>。</td>
+</tr>
+<tr>
+<td><code>public_url</code></td>
+<td>除非 <code>host</code> 是环回地址</td>
+<td>外部可见的 <code>https://</code> 源，用于构建 IdP <code>redirect_uri</code> 和发现元数据。当 <code>host</code> 不是环回地址时需要，无论 TLS 是在代理（如 ALB、Ingress 或 Cloud Run）还是通过 <code>tls</code> 在网关本身终止，因为网关永远不会从 <code>X-Forwarded-*</code> 标头派生自己的源；这些标头可被客户端欺骗。没有它启动会失败。下面的 <code>trusted_proxies</code> 仅控制客户端 IP 解析。还需要启用<a href="#telemetry">遥测</a>，因为网关从此 URL 构建它推送给客户端的 OTLP 端点。</td>
+</tr>
+<tr>
+<td><code>tls.cert</code> / <code>tls.key</code></td>
+<td>否</td>
+<td>如果网关自己终止 TLS，则为 PEM 路径</td>
+</tr>
+<tr>
+<td><code>trusted_proxies</code></td>
+<td>否</td>
+<td>网关前面的负载均衡器的 CIDR 或 IP。设置后，网关仅从这些对等方信任 <code>X-Forwarded-For</code>，并记录真实客户端 IP 用于按 IP 速率限制和审计。等同于 nginx <code>set_real_ip_from</code>。<code>X-Forwarded-For</code> 条目写成 <code>ipv4:port</code> 或 <code>[ipv6]:port</code>（如某些负载均衡器所做），读取时端口被丢弃。带有端口附加且无括号的 IPv6 地址可能被读取为不同的地址或根本不被读取，因此在任何写入该形式的代理上关闭端口选项。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="oidc"><code>oidc</code></h3>
+<p><code>oidc</code> 块将网关连接到您的身份提供商，并决定谁可以登录。它命名发行者和 OAuth 客户端，映射携带电子邮件和组的声明，并按电子邮件域或组限制登录。</p>
+<p>OpenID Connect (OIDC) 是网关与您的身份提供商一起使用的 SSO 协议；有关在 IdP 端注册的内容，请参阅<a href="claude-apps-gateway-deploy.html#identity-provider-setup">身份提供商设置</a>。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>issuer</code></td>
+<td>是</td>
+<td>OIDC 发现基础。必须在 <code>/.well-known/openid-configuration</code> 提供发现。在生产中使用 HTTPS；网关接受 <code>http://</code> 发行者。环回发行者（如 <code>http://localhost:8081</code>）被<a href="claude-apps-gateway-deploy.html#threat-model-summary">SSRF 防护</a>拒绝，除非在网关的环境中设置了 <code>CLAUDE_GATEWAY_ALLOW_LOOPBACK=1</code>。</td>
+</tr>
+<tr>
+<td><code>client_id</code></td>
+<td>是</td>
+<td>来自您的 OAuth 客户端注册</td>
+</tr>
+<tr>
+<td><code>client_secret</code></td>
+<td>除非 <code>token_endpoint_auth_method</code> 为 <code>private_key_jwt</code></td>
+<td>来自您的 OAuth 客户端注册。使用<a href="#certificate-client-authentication">证书客户端身份验证</a>时省略此项。</td>
+</tr>
+<tr>
+<td><code>allowed_email_domains</code></td>
+<td>否</td>
+<td>拒绝 <code>email</code> 声明不在这些域之一中的 id_tokens，不区分大小写。针对多租户 IdP 配置错误的深度防御。独立于此设置，<code>email_verified</code> 声明明确为 <code>false</code> 的 id_token 总是被拒绝。</td>
+</tr>
+<tr>
+<td><code>allowed_groups</code></td>
+<td>否</td>
+<td>限制登录仅限于这些 IdP 组的成员，与 <code>groups_claim</code> 匹配。处于允许的电子邮件域但不在这些组中的用户被拒绝。需要 IdP 发出组声明。匹配是对该声明中的值的精确、区分大小写的字符串比较，网关不展开嵌套组：要允许子组的成员，在此列出子组或配置 IdP 发出扁平化成员资格。</td>
+</tr>
+<tr>
+<td><code>groups_claim</code></td>
+<td>否</td>
+<td>哪个 id_token 声明携带组成员资格。默认 <code>groups</code>。Microsoft Entra 在 <code>roles</code> 下发出应用角色。接受平面键或 RFC 6901 JSON 指针（如 <code>/resource_access/gateway/roles</code>）用于嵌套声明。</td>
+</tr>
+<tr>
+<td><code>google_groups</code></td>
+<td>否</td>
+<td>通过 Google Workspace Admin SDK Directory API 查找已登录用户的组，因为 Google 的 id_token 不携带组声明。将 <code>service_account_json_path</code> 设置为具有 <code>https://www.googleapis.com/auth/admin.directory.group.readonly</code> 范围的域范围委派的服务帐户密钥文件，并将 <code>admin_email</code> 设置为服务帐户模拟的 Workspace 管理员；Directory API 需要真实的管理员主体。每个用户的组电子邮件地址成为他们的组声明，因此 <code>allowed_groups</code> 和 <code>managed.policies.match.groups</code> 匹配组电子邮件。</td>
+</tr>
+<tr>
+<td><code>email_claim</code></td>
+<td>否</td>
+<td>哪个 id_token 声明携带用户的电子邮件。默认 <code>email</code>。某些 IdP（如 ADFS 和 Entra B2C）改为发出 <code>upn</code> 或 <code>preferred_username</code>。接受平面键、JSON 指针或回退键列表，其中使用第一个存在的键。</td>
+</tr>
+<tr>
+<td><code>scopes</code></td>
+<td>否</td>
+<td>网关请求的 OIDC 范围的完全覆盖。默认 <code>[openid, profile, email, offline_access]</code>。当您的 IdP 拒绝它不识别的范围或需要自定义范围来发出组或电子邮件时设置。必须包括 <code>openid</code>。删除 <code>offline_access</code> 会禁用刷新令牌，因此开发人员每 <code>session.ttl_hours</code> 重新运行浏览器登录。有关每个 IdP 范围配方（如 Google 的刷新令牌流），请参阅<a href="claude-apps-gateway-deploy.html#identity-provider-setup">身份提供商设置</a>。</td>
+</tr>
+<tr>
+<td><code>scope_on_refresh</code></td>
+<td>否</td>
+<td>当网关交换刷新令牌时，也发送 <code>scope</code>，与登录请求相同的列表。默认 <code>false</code>：刷新请求省略 <code>scope</code>。大多数 IdP 在每次刷新时返回 id_token，不需要这个。当您的 IdP 仅在再次请求 <code>openid</code> 时才在刷新时返回 id_token 时设置 <code>true</code>，Okta 为其刷新授权记录了这一点。没有 id_token，每次刷新都取决于 IdP 的 userinfo 端点接受刷新的访问令牌。如果您在登录或匹配策略上设置了组，并且您的 IdP 的刷新时间 id_token 省略了它们，也设置 <code>userinfo_fallback: true</code> 以便网关从 userinfo 端点填充它们。授予的范围少于请求的 IdP 可以用 <code>invalid_scope</code> 拒绝刷新，包括如果您在此打开时向 <code>scopes</code> 添加条目的现有会话。如果在设置后刷新开始在 <code>token_endpoint</code> 失败，请取消设置该键。需要网关服务器上的 Claude Code v2.1.260 或更高版本。</td>
+</tr>
+<tr>
+<td><code>extra_auth_params</code></td>
+<td>否</td>
+<td>附加到 IdP 授权请求的额外查询参数，逐字。这是 IdP 特定行为的覆盖机制，如 Google 刷新令牌的 <code>access_type: offline</code>、某些 Entra 租户的 <code>domain_hint</code> 或分步流的 <code>acr_values</code>。无法覆盖网关管理的协议参数：<code>state</code>、<code>nonce</code>、<code>redirect_uri</code>、PKCE、<code>scope</code>、<code>response_type</code>、<code>response_mode</code> 和 <code>client_id</code>。</td>
+</tr>
+<tr>
+<td><code>userinfo_fallback</code></td>
+<td>否</td>
+<td>当 id_token 省略电子邮件或组时，从 <code>/userinfo</code> 获取它们。Keycloak 轻量级访问令牌、Okta 组织服务器和 ADFS 最小令牌需要。id_token 保持权威；userinfo 仅填补空白。默认 <code>false</code>。</td>
+</tr>
+<tr>
+<td><code>use_pkce</code></td>
+<td>否</td>
+<td>在授权请求上发送 PKCE (S256) 质询。默认 <code>true</code>。仅当您的 IdP 为此机密客户端拒绝 PKCE 时设置 <code>false</code>。</td>
+</tr>
+<tr>
+<td><code>clock_skew_seconds</code></td>
+<td>否</td>
+<td>验证 id_token 时间声明时容忍时钟漂移。默认 <code>0</code>，严格。如果您在登录后立即看到"令牌已过期/尚未有效"错误，请提高以应对主机/IdP 时钟偏差。</td>
+</tr>
+<tr>
+<td><code>token_endpoint_auth_method</code></td>
+<td>否</td>
+<td>网关向 IdP 令牌端点进行身份验证的方式：<code>client_secret_basic</code>、<code>client_secret_post</code>，或用于<a href="#certificate-client-authentication">证书客户端身份验证</a>的 <code>private_key_jwt</code>。默认情况下，网关根据 IdP 公布的内容从两种 <code>client_secret</code> 方法中选择一种。</td>
+</tr>
+<tr>
+<td><code>client_assertion</code></td>
+<td>使用 <code>private_key_jwt</code> 时</td>
+<td>包含 <code>private_key_pem</code> 和 <code>certificate_pem</code> 的块：用于<a href="#certificate-client-authentication">证书客户端身份验证</a>的私钥和证书。需要 v2.1.284 或更高版本。</td>
+</tr>
+<tr>
+<td><code>id_token_signed_response_alg</code></td>
+<td>否</td>
+<td>预期的 id_token 签名算法。默认 <code>RS256</code>。为使用 ES256、PS256 或 EdDSA 签名的 IdP 设置。</td>
+</tr>
+<tr>
+<td><code>additional_authorized_parties</code></td>
+<td>否</td>
+<td>除 <code>client_id</code> 外要接受的额外 <code>azp</code> 值，用于 Keycloak 代理和令牌交换流</td>
+</tr>
+<tr>
+<td><code>discovery_url</code></td>
+<td>否</td>
+<td>从此 URL 获取发现文档而不是从 <code>issuer</code> 派生，用于代理后面重写发行者主机的 IdP。路径必须包含 <code>/.well-known/</code>。</td>
+</tr>
+<tr>
+<td><code>use_proxy</code></td>
+<td>否</td>
+<td>通过 <code>HTTPS_PROXY</code> 或 <code>HTTP_PROXY</code> 中的前向代理发送网关自己的 IdP 请求，遵守 <code>NO_PROXY</code>。<code>false</code> 保持这些请求直接。需要 v2.1.227 或更高版本；请参阅下面的<a href="#idp-requests-through-a-forward-proxy">通过前向代理的 IdP 请求</a>。</td>
+</tr>
+<tr>
+<td><code>form_action_origins</code></td>
+<td>否</td>
+<td><code>/device</code> 页面的 <code>Content-Security-Policy: form-action</code> 指令的其他源。网关已允许 <code>'self'</code> 和发现的 <code>authorization_endpoint</code> 源，但 Chrome 对整个重定向链强制执行 <code>form-action</code>。如果您的 IdP 通过第二个主机重定向，如 Azure AD 联合到 ADFS、中心辐射 Okta 或公司 SSO 拦截器，列出授权请求可能重定向通过的每个源。</td>
+</tr>
+<tr>
+<td><code>ca_cert_pem</code></td>
+<td>否</td>
+<td>PEM 编码的 CA 证书本身，不是文件的路径。它仅替换 IdP 请求的系统信任存储。要加载挂载的文件，请写 <code>${file:/etc/gateway/idp-ca.pem}</code>。用于公司 PKI 后面的 Keycloak 或 Dex。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="certificate-client-authentication">证书客户端身份验证</h4>
+<p>如果您的身份提供商使用证书而不是客户端密钥对 OAuth 客户端进行身份验证（如 Microsoft Entra 使用证书凭据），请设置 <code>token_endpoint_auth_method: private_key_jwt</code>。需要网关服务器上的 Claude Code v2.1.284 或更高版本。</p>
+<p>使用此配置时，网关不发送任何密钥。当开发人员登录时以及网关每次刷新其会话时，网关使用由证书私钥签名的短期 JWT 向 IdP 的令牌端点进行身份验证。该 JWT 使用 RS256 签名，并通过 <code>x5t</code> 和 <code>x5t#S256</code> 指纹标头而不是 <code>kid</code> 来标识证书。您的 IdP 必须能够按指纹找到已注册的证书。</p>
+<p><strong>1. 创建密钥和证书</strong></p>
+<p>创建一个至少 2048 位的未加密 RSA 私钥（PKCS#8 或 PKCS#1 PEM 格式），并为其创建证书。对于任何不满足这些条件的密钥，网关都会拒绝启动。以下 <code>openssl</code> 命令会创建这样的密钥以及有效期为一年的自签名证书：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">openssl<span class="w"> </span>req<span class="w"> </span>-x509<span class="w"> </span>-newkey<span class="w"> </span>rsa:2048<span class="w"> </span>-nodes<span class="w"> </span>-keyout<span class="w"> </span>idp-client.key<span class="w"> </span>-out<span class="w"> </span>idp-client.crt<span class="w"> </span>-days<span class="w"> </span><span class="m">365</span><span class="w"> </span>-subj<span class="w"> </span><span class="s2">"/CN=claude-gateway"</span>
+</code></pre></div>
+<p>它会将 <code>idp-client.key</code> 和 <code>idp-client.crt</code> 写入当前目录。将这两个文件复制或挂载到网关可以读取的位置。第 3 步中的示例使用 <code>/etc/gateway/</code>。</p>
+<p><strong>2. 将证书上传到 IdP</strong></p>
+<p>将证书（而不是私钥）上传到 IdP 上网关的应用注册。</p>
+<p><strong>3. 将密钥和证书添加到 gateway.yaml</strong></p>
+<p>在 <code>client_assertion</code> 块中向网关提供私钥和证书。省略 <code>client_secret</code>，因为当它与 <code>private_key_jwt</code> 一起设置时，网关会拒绝启动。以下 <code>oidc</code> 块使用证书向 Microsoft Entra 租户对网关进行身份验证：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">oidc</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</span>
+<span class="w">  </span><span class="nt">client_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;application-id&gt;</span>
+<span class="w">  </span><span class="nt">token_endpoint_auth_method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">private_key_jwt</span>
+<span class="w">  </span><span class="nt">client_assertion</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">private_key_pem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${file:/etc/gateway/idp-client.key}</span>
+<span class="w">    </span><span class="nt">certificate_pem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${file:/etc/gateway/idp-client.crt}</span>
+</code></pre></div>
+<p>这两个值都是 PEM 内容，而不是文件路径，因此请像示例那样使用 <code>${file:/path}</code> 加载挂载的文件。除非 <code>certificate_pem</code> 是单个 PEM 证书（不含证书链的其余部分）且其公钥与 <code>private_key_pem</code> 匹配，否则网关会拒绝启动。</p>
+<p><strong>4. 重启网关并检查启动日志</strong></p>
+<p>重启网关，并在启动日志中找到以下行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">[gateway] 2026-10-01T23:07:40.512Z info oidc: client authentication private_key_jwt; certificate CN=claude-gateway, SHA-1 thumbprint DE92821854EE8BAA1D98C758FAA04AABE80B9F57, expires Oct  1 23:07:31 2027 GMT
+</code></pre></div>
+<p>将该 SHA-1 指纹与 IdP 为您上传的证书显示的指纹进行比较。如果证书已过期或尚未生效，网关仍会启动，但会记录一条警告，说明在您替换证书之前登录和刷新都将失败。要确认 IdP 接受该证书，请让一位开发人员通过网关登录。</p>
+<h4 id="rotate-the-client-certificate">轮换客户端证书</h4>
+<p>网关在启动时读取一次密钥和证书，因此更改后的文件仅在重启后生效。请按以下顺序轮换，以确保任何令牌请求都不会出示 IdP 中不存在的证书：</p>
+<ol>
+<li>将新证书与旧证书一起上传到 IdP。</li>
+<li>替换 <code>gateway.yaml</code> 加载的密钥和证书文件，然后重启网关。如果您运行多个副本，可以使用<a href="claude-apps-gateway-deploy.html#upgrades">滚动重启</a>，因为在您删除旧证书之前，IdP 同时拥有这两个证书。</li>
+<li>在每个副本都重启之后，从 IdP 中删除旧证书。</li>
+</ol>
+<h4 id="idp-requests-through-a-forward-proxy">通过前向代理的 IdP 请求</h4>
+<p>推理上游在每个版本上都遵守 <code>HTTPS_PROXY</code> 和 <code>HTTP_PROXY</code>。网关自己对 IdP、发现、JWKS、令牌和 userinfo 的请求直接进行，除非您设置 <code>oidc.use_proxy: true</code>，这需要 v2.1.227 或更高版本。设置代理变量、<code>use_proxy</code> 未设置且发行者不被 <code>NO_PROXY</code> 覆盖时，网关保持这些请求直接并在启动时记录通知，要求您选择；<code>use_proxy: false</code> 保持它们直接并沉默通知。</p>
+<p>使用 <code>use_proxy: true</code>，pod 自己解析每个 IdP 端点的主机名，并要求代理 <code>CONNECT</code> 到解析的 IP 地址，因此代理必须接受 <code>CONNECT</code> 到发现文档命名的每个主机的 IP 地址，不仅仅是发行者。使用 <code>http://</code> 代理 URL。<code>ca_cert_pem</code> 和<a href="claude-apps-gateway-deploy.html#threat-model-summary">SSRF 防护</a>也适用于代理路径。</p>
+<p><a href="#proxy-only-egress">仅代理出口</a>改变这两者：当它活跃时，IdP 请求遵循代理，除非您设置 <code>use_proxy: false</code>，网关将每个 IdP 主机名交给代理而不首先解析它。</p>
+<h4 id="proxy-only-egress">仅代理出口</h4>
+<p>在网关的环境中设置 <code>CLAUDE_GATEWAY_PROXY_IS_EGRESS_BOUNDARY=1</code>，在 <code>HTTPS_PROXY</code> 旁边，当 pod 仅通过该前向代理到达其他主机且无法自己解析公共 DNS 名称时，或当代理拒绝 <code>CONNECT</code> 到 IP 地址时。需要 v2.1.277 或更高版本。它是环境变量而不是 <code>gateway.yaml</code> 键，以便配置文件中的任何内容都无法放松网关的地址检查。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">HTTPS_PROXY</span><span class="o">=</span>http://proxy.corp.example.com:3128
+<span class="nb">export</span><span class="w"> </span><span class="nv">NO_PROXY</span><span class="o">=</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">no_proxy</span><span class="o">=</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_GATEWAY_PROXY_IS_EGRESS_BOUNDARY</span><span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+<p>网关在仅代理出口活跃时在启动时记录一条 <code>network:</code> 行。</p>
+<p>下面的每一行是具有 <code>HTTPS_PROXY</code> 设置的网关上的一类出站请求，默认情况下和仅代理出口活跃时。</p>
+<table>
+<thead>
+<tr>
+<th>出站请求</th>
+<th>默认</th>
+<th>仅代理出口活跃</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>provider: anthropic</code> 上游、Workload Identity Federation 令牌交换、<code>telemetry.forward_to</code> 导出</td>
+<td>在本地解析和检查，然后通过代理 <code>CONNECT</code> 到检查的 IP 地址。<code>NO_PROXY</code> 中列出的遥测收集器改为直接到达</td>
+<td>主机名交给代理</td>
+</tr>
+<tr>
+<td>IdP 发现、JWKS、令牌和 userinfo</td>
+<td>直接，除非<a href="#idp-requests-through-a-forward-proxy"><code>oidc.use_proxy: true</code></a>，然后 <code>CONNECT</code> 到检查的 IP 地址</td>
+<td>主机名交给代理，除非 <code>oidc.use_proxy: false</code> 保持内部 IdP 直接</td>
+</tr>
+<tr>
+<td>Amazon Bedrock、AWS 上的 Claude Platform、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上游；Google 组查找</td>
+<td>主机名交给代理</td>
+<td>不变</td>
+</tr>
+</tbody>
+</table>
+<p>仅代理出口保持关闭，除非网关的环境满足所有这三个条件：</p>
+<ul>
+<li><code>HTTPS_PROXY</code> 或 <code>HTTP_PROXY</code> 已设置。</li>
+<li><code>NO_PROXY</code> 和 <code>no_proxy</code> 为空。如果您的平台将任一个注入到 pod，在网关容器上将两者设置为空值。在 <code>NO_PROXY</code> 中列出遥测收集器保持仅代理出口关闭。</li>
+<li><code>CLAUDE_GATEWAY_ALLOW_LOOPBACK</code> 未打开。pod 自己环回上的收集器或 IdP 无法与仅代理出口结合，因为交给代理的环回地址将是代理主机自己的，因此给这些服务一个代理可以到达的地址。出于同样的原因，网关在仅代理出口活跃时完全拒绝 <code>localhost</code> 风格的名称。</li>
+</ul>
+<p>当这些条件之一未满足时，网关在启动时记录警告，命名停止它的变量，并保持默认行为。</p>
+<p>一旦仅代理出口活跃，允许代理中的每个目的地，包括内部收集器和任何由 IP 地址配置的主机。您仍然可以使用<a href="#idp-requests-through-a-forward-proxy"><code>oidc.use_proxy: false</code></a>保持内部 IdP 直接。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>仅当代理的允许列表至少与网关自己的检查一样严格时才打开此功能。代理必须拒绝云元数据端点（如 <code>169.254.169.254</code> 和 <code>metadata.google.internal</code>）、链路本地地址和代理主机自己的环回，并且必须按名称解析到的地址拒绝它们，而不仅仅按名称，因为网关不再捕获解析到其中之一的主机名。连接到任何要求的地方的代理会移除网关对这些请求的<a href="claude-apps-gateway-deploy.html#threat-model-summary">SSRF 防护</a>。</p></div></div>
+<h3 id="session"><code>session</code></h3>
+<p><code>session</code> 块塑造网关在登录后铸造的持有者令牌：签署它们的秘密和它们的生存时间。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jwt_secret</code></td>
+<td>是</td>
+<td>至少 32 字节的熵，例如来自 <code>openssl rand -base64 32</code>。签署网关的 HS256 持有者令牌。接受单个字符串或用于轮换的数组：索引 0 签署，所有条目验证。要轮换，前置新秘密，等待 <code>ttl_hours</code>，然后删除旧秘密。</td>
+</tr>
+<tr>
+<td><code>ttl_hours</code></td>
+<td>否</td>
+<td>网关持有者令牌生存期。默认 <code>1</code>。当 IdP 发出刷新令牌时，CLI 在过期前静默刷新。较短的生存期更快地取消配置；较长的生存期减少 IdP 往返。如果您的 IdP 因为 <code>offline_access</code> 不可用而无法发出刷新令牌，则没有静默刷新，因此将其提高到 <code>8</code> 或 <code>12</code> 以避免每小时将开发人员发送回浏览器登录。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="store"><code>store</code></h3>
+<p><code>store</code> 块将网关指向其 PostgreSQL 数据库，该数据库保存设备授权和速率限制计数器。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>postgres_url</code></td>
+<td>是</td>
+<td><code>postgres://</code> 或 <code>postgresql://</code> URL，只能包含一个主机，不能是逗号分隔的列表。网关在启动和升级时运行自己的 schema 迁移，因此角色需要在目标 schema 上创建和更改表的权限。请参阅<a href="claude-apps-gateway-deploy.html#upgrades">升级</a>和 <a href="claude-apps-gateway-deploy.html#postgres">Postgres</a>。</td>
+</tr>
+<tr>
+<td><code>username</code></td>
+<td>否</td>
+<td>覆盖 <code>postgres_url</code> 中的用户</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>否</td>
+<td>数据库凭据。在此设置而不是在 <code>postgres_url</code> 中，以便凭据保持在 URL 之外。接受任何字符并优先于 URL 凭据。</td>
+</tr>
+<tr>
+<td><code>max_connections</code></td>
+<td>否</td>
+<td>每个副本的 Postgres 连接池大小。默认 <code>5</code>，保守且对共享数据库友好。启用<a href="#admin">支出限制</a>后，网关每个推理请求会执行几次数据库操作，因此在负载下为专用数据库提高它，但不要超出<a href="claude-apps-gateway-deploy.html#size-the-connection-pool">调整连接池大小</a>所允许的范围。</td>
+</tr>
+<tr>
+<td><code>connect_timeout_seconds</code></td>
+<td>否</td>
+<td>网关打开 Postgres 连接时等待的秒数。从 <code>1</code> 到 <code>60</code> 的整数，默认 <code>5</code>。如果新网关实例启动时连接尝试超时，请提高它。需要网关服务器上的 Claude Code v2.1.274 或更高版本。早期版本在设置键时拒绝启动。</td>
+</tr>
+<tr>
+<td><code>readiness_grace_seconds</code></td>
+<td>否</td>
+<td>Postgres 停止应答后 <code>/readyz</code> 继续报告就绪的秒数。从 <code>0</code> 到 <code>3600</code> 的整数，默认 <code>0</code>。请参阅<a href="claude-apps-gateway-deploy.html#outage-behavior">中断行为</a>了解如何选择值。需要网关服务器上的 Claude Code v2.1.282 或更高版本。早期版本在设置键时拒绝启动。</td>
+</tr>
+</tbody>
+</table>
+<p>对于本地开发，将 <code>postgres_url</code> 指向一次性 Postgres 容器，例如 <code>docker run --rm -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust postgres</code>。</p>
+<h3 id="upstreams"><code>upstreams</code></h3>
+<p><code>upstreams</code> 是一个有序列表。网关将推理转发到解析请求的模型的第一个上游。</p>
+<p>在 <code>5xx</code>、<code>429</code>、<code>401</code>、<code>403</code>、<code>404</code> 或超时时，网关故障转移到下一个上游；其他 <code>4xx</code> 不会，因为这些错误可归因于请求而不是上游。<code>401</code> 或 <code>403</code> 意味着上游拒绝了网关使用的凭据，或拒绝其访问，例如对所请求模型的访问。<code>404</code> 意味着该上游不提供请求的模型，因此列表中的后续上游仍然可以。</p>
+<p>如果您在上游上设置 <code>forward_user_identity: true</code>，它返回给携带开发人员电子邮件的请求的 <code>429</code> 不会故障转移。请参阅<a href="#per-user-identity-headers-for-a-proxy-you-run">每用户限制拒绝如何到达开发人员</a>。</p>
+<p><code>404</code> 上的故障转移需要网关 v2.1.198 或更高版本。早期版本即使列表中的后续上游提供模型，也将第一个 <code>404</code> 返回给客户端。</p>
+<p>相同提供商的多个上游必须设置不同的 <code>name:</code>。</p>
+<p>Amazon Bedrock、AWS 上的 Claude Platform、Google Cloud 的 Agent Platform 和 Microsoft Foundry 客户端在启动时构建一次，其 SDK 在内部刷新凭据，因此轮换云凭据不需要重启。静态 Anthropic API 密钥和持有者在启动时读取；请参阅 <a href="#anthropic-api">Anthropic API</a>。</p>
+<h4 id="upstream-error-messages">上游错误消息</h4>
+<p>网关返回一个上游的错误响应或其自己的 <code>502</code>，取决于上游如何应答：</p>
+<ul>
+<li><strong>上游返回网关不<a href="#multiple-upstreams">故障转移</a>的状态</strong>：该上游的响应。网关不尝试进一步的上游。</li>
+<li><strong>网关尝试的每个上游都以网关<a href="#multiple-upstreams">故障转移</a>的方式失败</strong>：最后一个 <code>429</code>。当没有返回 <code>429</code> 时，网关按顺序优先选择最后一个 <code>401</code> 或 <code>403</code>、最后一个 <code>404</code> 和最后一个 <code>501</code>。当没有返回任何这些时，网关自己的 <code>502</code>，<code>all upstreams failed (N attempted)</code>，其中 N 计算 <a href="#upstreams"><code>upstreams</code></a> 中的每个条目，包括网关跳过的条目，因为它们不提供请求的模型。</li>
+</ul>
+<p>当网关返回上游的响应时，它保持上游的状态代码。它是否保持上游的消息取决于提供商。Anthropic API 上游的错误正文不变地到达开发人员。</p>
+<p>Amazon Bedrock、AWS 上的 Claude Platform、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上游可以在其错误文本中命名您的帐户 ID、角色 ARN 和项目 ID。网关在<a href="claude-apps-gateway-deploy.html#logs">操作日志</a>中记录该完整文本。开发人员从这些上游看到的内容取决于拒绝：</p>
+<ul>
+<li>Anthropic 标准错误信封中的 <code>400</code> 或 <code>413</code>：上游自己的消息，如 <code>prompt is too long</code>。AWS 上的 Claude Platform、Agent Platform 和 Microsoft Foundry 为模型 API 拒绝返回此信封。</li>
+<li>提供商自己形状中的 <code>400</code> 或 <code>413</code>：<code>capability_rejected:</code> 令牌。当网关无法分类拒绝时，<code>400</code> 上的 <code>upstream rejected the request</code> 或 <code>413</code> 上的 <code>request too large for this upstream</code>。</li>
+<li>任何其他状态：通用的按状态副本，如 <code>429</code> 上的 <code>upstream rate limit exceeded</code>。</li>
+</ul>
+<p>例如，网关将 Amazon Bedrock 的 <code>Input is too long for requested model.</code> 替换为 <code>capability_rejected: prompt_too_long</code>。Claude Code <a href="errors.html#prompt-is-too-long">自动压缩</a>该令牌，就像它对 <code>prompt is too long</code> 所做的那样。</p>
+<p>保持云上游的 <code>400</code> 或 <code>413</code> 消息或将其替换为 <code>capability_rejected:</code> 令牌需要网关 v2.1.233 或更高版本。</p>
+<h4 id="anthropic-api">Anthropic API</h4>
+<p>最小的 Anthropic 上游是来自 <a href="https://platform.claude.com" target="_blank" rel="noopener">Claude Console</a> 的 API 密钥：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ANTHROPIC_API_KEY}</span>
+<span class="w">    </span><span class="c1"># 或 OAuth 持有者（例如 Workload-Identity-Federation 交换的令牌）：</span>
+<span class="w">    </span><span class="c1">#   oauth_token: ${file:/var/run/secrets/anthropic-oauth-token}</span>
+<span class="w">    </span><span class="c1"># base_url: https://api.anthropic.com   # 默认；为前向代理覆盖</span>
+</code></pre></div>
+<p>两种凭据形式在它们发送的标头中有所不同：</p>
+<ul>
+<li><strong><code>api_key</code></strong>：发送 <code>x-api-key</code>。在 Claude Console 中轮换它并更新环境变量。</li>
+<li><strong><code>oauth_token</code></strong>：发送 <code>Authorization: Bearer</code>。当您的组织发出短期令牌而不是长期 API 密钥时使用持有者形式。持有者在启动时读取一次，因此通过重新挂载秘密和重启来刷新。</li>
+</ul>
+<p>您可以使用 Workload Identity Federation 而不是静态密钥或持有者。按照 <a href="https://platform.claude.com/docs/en/manage-claude/workload-identity-federation" target="_blank" rel="noopener">Workload Identity Federation 指南</a>创建联合规则，然后将您的工作负载的 OIDC JWT 挂载为文件，如 Kubernetes 投影服务帐户令牌或 CI 平台的 id-token。网关将 JWT 交换为短期持有者并自动刷新它。令牌文件在每次交换时重新读取，因此轮换的投影令牌被拾取而无需重启。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">federation_rule_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ANTHROPIC_FEDERATION_RULE_ID}</span>
+<span class="w">      </span><span class="nt">organization_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ANTHROPIC_ORGANIZATION_ID}</span>
+<span class="w">      </span><span class="nt">identity_token_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/run/secrets/anthropic/id-token</span>
+<span class="w">      </span><span class="c1"># workspace_id: wrkspc_...       # 如果规则覆盖 &gt;1 个工作区则需要</span>
+<span class="w">      </span><span class="c1"># service_account_id: svac_...   # 可选的预期目标检查</span>
+</code></pre></div>
+<h5 id="per-user-identity-headers-for-a-proxy-you-run">为您运行的代理的每用户身份标头</h5>
+<p>您可以将 <code>provider: anthropic</code> 上游的 <code>base_url</code> 指向您运行的代理而不是 Anthropic API。要告诉该代理哪个开发人员发送了每个请求，在该上游上设置 <code>forward_user_identity: true</code>。代理然后可以按开发人员属性支出。需要网关运行 Claude Code v2.1.233 或更高版本。</p>
+<p>例如，对于 <code>upstream-gateway.internal.example.com</code> 上的代理：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic</span>
+<span class="w">    </span><span class="nt">base_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://upstream-gateway.internal.example.com</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${PROXY_KEY}</span>
+<span class="w">    </span><span class="nt">forward_user_identity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># 默认 false</span>
+</code></pre></div>
+<p>网关将这些标头添加到它转发到该上游的每个请求。</p>
+<table>
+<thead>
+<tr>
+<th>标头</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x-litellm-end-user-id</code></td>
+<td>开发人员的电子邮件，当 IdP 提供时。</td>
+</tr>
+<tr>
+<td><code>x-claude-gateway-user-id</code></td>
+<td>开发人员的 IdP 主体，来自令牌的 <code>sub</code> 声明。</td>
+</tr>
+<tr>
+<td><code>x-claude-gateway-user-email</code></td>
+<td>开发人员的电子邮件，当 IdP 提供时。</td>
+</tr>
+</tbody>
+</table>
+<p>当 IdP 令牌不携带电子邮件时，网关仅发送 <code>x-claude-gateway-user-id</code> 并省略两个电子邮件标头。如果您的 IdP 将电子邮件放在不同的声明中，将 <a href="#oidc"><code>oidc.email_claim</code></a> 设置为该声明。</p>
+<p>您的代理不会收到 Claude Code 发送的 <a href="llm-gateway-protocol.html#request-headers"><code>x-claude-code-*</code> 标头</a>，例如 <code>x-claude-code-session-id</code>。网关不会将它们传递给任何上游，因此请使用上表中的标头按开发人员对请求进行分组。</p>
+<p>当您的代理对携带开发人员电子邮件的请求应答 <code>429</code> 时，网关按原样将该响应返回给开发人员而不是故障转移到下一个上游，因此您的代理的每用户预算或速率限制保持。代理的其他响应遵循普通<a href="#upstreams">故障转移规则</a>。如果开发人员的 IdP 令牌不携带电子邮件，网关转发其请求而不带电子邮件标头，因此对其中一个请求的 <code>429</code> 计为上游容量并故障转移。在网关服务器上的 v2.1.267 之前，每个 <code>429</code> 都故障转移。</p>
+<p>仅在 <code>base_url</code> 是您操作的代理的上游上设置 <code>forward_user_identity</code>。网关将开发人员电子邮件发送到该 <code>base_url</code> 命名的任何服务器。如果 <code>base_url</code> 是 Anthropic API（默认），网关拒绝启动。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>如果您在 Amazon Bedrock 上游上设置 <code>forward_user_identity</code>，网关会在启动时退出并显示 <code>Unrecognized key(s) in object: 'forward_user_identity'</code>。如果您的代理位于 Bedrock 前面，请改为将其列为 <code>provider: anthropic</code> 上游。网关向该上游发送 Anthropic Messages 格式，因此您的代理必须<a href="llm-gateway-protocol.html#format-mismatch-with-the-upstream">为 Bedrock 转换请求</a>。若要改为向 AWS 标明每个开发人员，请参阅<a href="#per-developer-aws-cost-attribution">每开发人员 AWS 成本属性</a>。</p></div></div>
+<h4 id="amazon-bedrock">Amazon Bedrock</h4>
+<p>对于网关替换或前置的客户端 Amazon Bedrock 部署，请参阅 <a href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a>。网关端上游：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">                           </span><span class="c1"># 首选：AWS 默认凭据链</span>
+<span class="w">    </span><span class="c1"># 或显式凭据：</span>
+<span class="w">    </span><span class="c1"># auth:</span>
+<span class="w">    </span><span class="c1">#   aws_access_key_id: ${AWS_AKID}</span>
+<span class="w">    </span><span class="c1">#   aws_secret_access_key: ${AWS_SK}</span>
+<span class="w">    </span><span class="c1">#   aws_session_token: ${AWS_ST}</span>
+<span class="w">    </span><span class="c1"># 或 Bedrock API 持有者令牌：</span>
+<span class="w">    </span><span class="c1"># auth:</span>
+<span class="w">    </span><span class="c1">#   aws_bearer_token: ${AWS_BEARER_TOKEN}</span>
+<span class="w">    </span><span class="c1"># 为 FIPS 或 VPC 端点部署覆盖 bedrock-runtime 端点：</span>
+<span class="w">    </span><span class="c1"># base_url: https://bedrock-runtime-fips.us-east-1.amazonaws.com</span>
+</code></pre></div>
+<p>空 <code>auth</code> 块使用 AWS SDK 的默认凭据链：环境变量、<code>~/.aws/credentials</code>、ECS 任务角色、EC2 实例元数据或 EKS 上的 IRSA。在生产中，给网关 pod 一个 IAM 角色而不是在容器镜像中嵌入静态密钥。</p>
+<p>显式凭据必须完整：当 <code>aws_access_key_id</code> 和 <code>aws_secret_access_key</code> 未一起设置时，或当 <code>aws_session_token</code> 在没有它们的情况下设置时，网关在启动时失败。在 v2.1.207 之前，部分 <code>auth:</code> 块通过验证。</p>
+<table>
+<thead>
+<tr>
+<th>设置</th>
+<th>如何</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IAM 权限</td>
+<td>授予网关的主体 <code>bedrock:InvokeModel</code> 和 <code>bedrock:InvokeModelWithResponseStream</code> 在推理配置文件 ARN 和底层基础模型 ARN 上。对于美国地区的内置目录：<code>arn:aws:bedrock:&lt;region&gt;:&lt;account&gt;:inference-profile/us.anthropic.*</code> 和 <code>arn:aws:bedrock:*::foundation-model/anthropic.*</code>。也在基础模型 ARN 上授予 <code>bedrock:CountTokens</code>。网关使用它（免费）来计算客户端放弃的请求的输入 token，因此<a href="#admin">支出限制</a>保持准确。没有它，网关回退到针对该计数的单 token Bedrock 请求。</td>
+</tr>
+<tr>
+<td>模型访问</td>
+<td>Amazon Bedrock 在商业地区默认启用模型访问。剩余的帐户级门是 Anthropic 的一次性用例表：如果您的 AWS 帐户中没有人提交过，请打开 Amazon Bedrock 控制台，从模型目录中选择 Anthropic 模型，并完成表单。有关 AWS Organizations 表和提交者需要的权限，请参阅<a href="amazon-bedrock.html#1-submit-use-case-details">提交用例详情</a>。</td>
+</tr>
+<tr>
+<td>EKS (IRSA)</td>
+<td>创建具有上述策略和您的集群 OIDC 提供商的信任策略的 IAM 角色，范围限于网关的服务帐户。使用 <code>eks.amazonaws.com/role-arn: arn:aws:iam::&lt;acct&gt;:role/claude-gateway</code> 注释服务帐户。<code>auth: {}</code> 拾取它。</td>
+</tr>
+<tr>
+<td>ECS / EC2</td>
+<td>将 IAM 角色附加到任务定义或实例配置文件。<code>auth: {}</code> 拾取它。</td>
+</tr>
+<tr>
+<td>其他任何地方</td>
+<td>通过 <code>AWS_ACCESS_KEY_ID</code>、<code>AWS_SECRET_ACCESS_KEY</code> 和 <code>AWS_SESSION_TOKEN</code> 环境变量传递凭据，或在 <code>auth:</code> 中使用 <code>${VAR}</code> 扩展显式设置它们</td>
+</tr>
+<tr>
+<td>区域</td>
+<td><code>region:</code> 是 API 端点区域。跨区域推理配置文件跨地理位置（美国、欧盟、亚太）路由，无论您选择哪一个。对于非美国地区或预配吞吐量 ARN，添加带有正确的按上游 ID 的 <a href="#models"><code>models:</code></a> 块。</td>
+</tr>
+</tbody>
+</table>
+<h5 id="apply-an-amazon-bedrock-guardrail">应用 Amazon Bedrock 防护栏</h5>
+<p>要将 Amazon Bedrock 防护栏应用于网关通过 Bedrock 上游发送的每个推理请求，将 <code>guardrail</code> 块添加到该上游。需要网关服务器上的 Claude Code v2.1.281 或更高版本。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">    </span><span class="nt">guardrail</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gr-abc123</span><span class="w">                    </span><span class="c1"># 防护栏 ID 或完整 ARN</span>
+<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"1"</span><span class="w">                     </span><span class="c1"># 已发布的版本号或 DRAFT</span>
+<span class="w"> </span><span class="c1"># 保留引号：裸 1 在启动时失败</span>
+</code></pre></div>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>网关不支持防护栏输入标签。它不向提示词添加防护内容标签，因此 Amazon Bedrock 仅应用于标记输入的防护栏过滤器不在通过网关的流量上运行。对于哪些过滤器依赖输入标签，请参阅 Amazon Bedrock 文档中的<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-tagging.html" target="_blank" rel="noopener">输入标签</a>。</p></div></div>
+<p>也在防护栏上授予 <code>bedrock:ApplyGuardrail</code> 给签署此上游请求的主体：网关的 AWS 主体，或使用 <a href="#bedrock-in-another-aws-account"><code>assume_role</code></a> 的 <code>role_arn</code> 中命名的角色。</p>
+<p>在每个 <code>bedrock</code> 上游或不在任何上游上设置 <code>guardrail</code>。网关拒绝在混合上启动，因为<a href="#multiple-upstreams">故障转移</a>可能会将请求发送到没有防护栏的 Bedrock 上游。</p>
+<p>防护栏仅覆盖 Bedrock 上游。如果您在 <code>upstreams</code> 中列出另一个提供商，网关将请求发送到该提供商而不带防护栏；如果该提供商是 <a href="#amazon-bedrock-mantle-endpoint"><code>mantle</code></a>，则网关拒绝启动。</p>
+<p>当 <code>/v1/messages</code> 请求的正文携带 <code>amazon-bedrock-*</code> 字段（如 <code>amazon-bedrock-guardrailConfig</code>）到达设置了 <code>guardrail</code> 的 Bedrock 上游时，网关应答 400 而不是转发它。</p>
+<h5 id="bedrock-in-another-aws-account">另一个 AWS 帐户中的 Bedrock</h5>
+<p>在 Bedrock 上游上设置 <code>assume_role</code>，网关仅使用其自己的 AWS 身份来调用您命名的角色上的 <code>sts:AssumeRole</code>，该角色可以在与网关不同的 AWS 帐户中。该上游的每个 Bedrock 请求都使用 STS 返回的一小时凭据签署，因此没有长期访问密钥跨帐户。</p>
+<p>需要网关运行 Claude Code v2.1.281 或更高版本。早期网关在找到键时拒绝启动。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock-isolated</span>
+<span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">                           </span><span class="c1"># 网关自己的角色：它仅调用 STS</span>
+<span class="w">    </span><span class="nt">assume_role</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">role_arn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::222222222222:role/claude-gateway-bedrock</span>
+<span class="w">      </span><span class="c1"># external_id: ${BEDROCK_ROLE_EXTERNAL_ID}   # 当角色的信任策略需要时</span>
+</code></pre></div>
+<p><code>assume_role</code> 块采用三个键：</p>
+<table>
+<thead>
+<tr>
+<th>键</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>role_arn</code></td>
+<td>网关假设的 IAM 角色，作为 <code>arn:aws:iam::</code> 或 <code>arn:aws-us-gov:iam::</code> ARN。给它这个上游需要的 <a href="#amazon-bedrock">Bedrock 权限</a>，包括 <code>bedrock:CountTokens</code>，加上当上游设置 <code>guardrail</code> 时的 <code>bedrock:ApplyGuardrail</code>。</td>
+</tr>
+<tr>
+<td><code>external_id</code></td>
+<td>可选。在每个 <code>sts:AssumeRole</code> 调用上作为外部 ID 发送。当角色的信任策略需要时设置它，如果它全是数字则引用它。</td>
+</tr>
+<tr>
+<td><code>session_name</code></td>
+<td>可选。<code>email</code> 或 <code>sub</code> 给每个开发人员他们自己的会话：请参阅<a href="#per-developer-aws-cost-attribution">每开发人员 AWS 成本属性</a>。未设置，每个请求使用一个名为 <code>claude-apps-gateway</code> 的会话。</td>
+</tr>
+</tbody>
+</table>
+<p>角色的信任策略命名网关自己的主体，如其 IRSA 或 ECS 任务角色。该主体需要在角色上的 <code>sts:AssumeRole</code> 且没有 Bedrock 权限。如果您设置没有 <code>external_id</code>，删除 <code>Condition</code>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">    </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"AWS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:iam::111111111111:role/claude-gateway"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sts:AssumeRole"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"Condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"StringEquals"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"sts:ExternalId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-external-id"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}]</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>如果 STS 拒绝或无法到达，网关不使用上游自己的凭据发送请求。它记录 STS 错误和要检查的内容，然后尝试您列出的下一个上游。<a href="#upstream-error-messages">上游错误消息</a>覆盖当没有上游成功时客户端接收的内容。没有 <code>assume_role</code> 的后续上游将使用其自己的凭据提供请求，因此仅在这是您想要的情况下列出一个。</li>
+<li>网关调用区域 STS 端点 <code>sts.&lt;region&gt;.amazonaws.com</code>，其网络必须到达。对于 FIPS 端点，在网关的环境中设置 <code>AWS_USE_FIPS_ENDPOINT=true</code> 而不是在 AWS 配置文件中的 <code>use_fips_endpoint</code>。</li>
+<li><code>assume_role</code> 仅适用于 <code>provider: bedrock</code> 并需要 SigV4 源凭据：当它在 <code>aws_bearer_token</code> 旁边设置时，网关拒绝启动。</li>
+<li>网关允许的每个开发人员都可以使用此上游；<a href="#managed"><code>managed</code></a> 控制哪些开发人员可能使用哪些模型。要保持通过角色提供的模型也不从另一个帐户提供，给它一个自定义 id，其 <code>upstream_model</code> 映射仅具有此上游的名称。对于这样的 id，网关跳过每个其他上游，因此请求和放弃请求的 token 计数都无法故障转移到另一个帐户。对内置模型名称的请求仍可能<a href="#multiple-upstreams">到达此上游</a>，网关会使用同一角色对其签名。除非其帐户也应该提供这些模型，否则请将此上游列在最后。</li>
+</ul>
+<p>此示例给一个模型一个自定义 id，仅隔离上游提供：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restricted-claude-opus-4-8</span><span class="w">      </span><span class="c1"># 自定义 id，不是内置模型名称</span>
+<span class="w">    </span><span class="nt">upstream_model</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">bedrock-isolated</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us.anthropic.claude-opus-4-8</span><span class="w">   </span><span class="c1"># 唯一提供它的上游</span>
+</code></pre></div>
+<h5 id="per-developer-aws-cost-attribution">每开发人员 AWS 成本属性</h5>
+<p>默认情况下，网关使用一个凭据签署每个 Bedrock 请求，因此 AWS 在单个 IAM 主体下看到所有开发人员的请求。将 <code>session_name: email</code> 添加到 <a href="#bedrock-in-another-aws-account"><code>assume_role</code></a>，网关每个开发人员每小时调用一次 <code>sts:AssumeRole</code>，会话名称设置为该开发人员的电子邮件，并使用返回的凭据签署其请求，因此每个开发人员的请求在 AWS 下以其自己的假设角色会话到达。角色可以在网关自己的帐户中。</p>
+<p>需要网关运行 Claude Code v2.1.281 或更高版本。<a href="claude-apps-gateway-on-aws.html#cost-attribution">AWS 上的成本属性</a>覆盖 IAM 角色和 AWS 计费显示会话的位置。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">                           </span><span class="c1"># 网关自己的角色：它仅调用 STS</span>
+<span class="w">    </span><span class="nt">assume_role</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">role_arn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::123456789012:role/claude-gateway-bedrock-user</span>
+<span class="w">      </span><span class="nt">session_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">email</span><span class="w">              </span><span class="c1"># 或 sub</span>
+</code></pre></div>
+<p><code>session_name</code> 选择哪个已验证的声明成为 AWS <code>RoleSessionName</code>：<code>email</code> 或 <code>sub</code>。网关将除 ASCII 字母、数字和 <code>_+,.@-</code> 之外的任何字符写成 <code>=XX</code> 十六进制（按 UTF-8 字节），并将长于 64 字符的结果缩短为前缀加哈希，因此每个开发人员的会话名称保持有效且唯一。来自其令牌缺少声明的开发人员的请求不通过此上游发送，操作员日志说切换到 <code>sub</code> 或设置 <a href="#oidc"><code>oidc.email_claim</code></a>。</p>
+<p>活跃开发人员每小时每个网关副本成本一个 STS 调用，并发首次请求共享一个调用。</p>
+<p>网关也在此角色上进行一个调用：客户端放弃的请求的 token 计数，因此<a href="claude-apps-gateway-spend-limits.html">支出限制</a>保持准确。该计数及其<a href="#amazon-bedrock">单 token 回退请求</a>由共享 <code>claude-apps-gateway</code> 会话签署，因此 AWS 将回退属性到 <code>claude-apps-gateway</code> 而不是开发人员。</p>
+<p>对于严格的每开发人员属性，在您列出的每个 Bedrock 上游上设置 <code>assume_role</code> 与 <code>session_name</code>。没有它的上游使用其自己的凭据签署它提供的请求。</p>
+<h4 id="amazon-bedrock-mantle-endpoint">Amazon Bedrock Mantle 端点</h4>
+<p><code>mantle</code> 提供商将推理发送到 Amazon Bedrock 的 <a href="amazon-bedrock.html#use-the-mantle-endpoint">Mantle 端点</a>。它需要网关服务器上的 Claude Code v2.1.283 或更高版本。早期网关版本在启动时拒绝它，因此请在添加之前升级每个副本。</p>
+<p>下面的示例将 Mantle 放在首位，其后是一个 Amazon Bedrock 上游，用于提供 <code>models</code> 字段未列出的每个模型：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mantle</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">    </span><span class="nt">models</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">claude-opus-4-7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">claude-haiku-4-5</span><span class="p p-Indicator">]</span><span class="w">   </span><span class="c1"># 必需</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">                           </span><span class="c1"># AWS 默认凭据链</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</code></pre></div>
+<p>下表列出 <code>mantle</code> 上游特有的字段。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>region</code></td>
+<td>是</td>
+<td>AWS 区域。网关从它派生端点为 <code>https://bedrock-mantle.&lt;region&gt;.api.aws/anthropic</code>。</td>
+</tr>
+<tr>
+<td><code>models</code></td>
+<td>是</td>
+<td>您的 AWS 帐户在 Mantle 上获授权的模型，按客户端发送的名称命名，如 <code>claude-haiku-4-5</code>。只有这些模型会发送到此上游，其他每个模型都跳到下一个上游。</td>
+</tr>
+<tr>
+<td><code>auth</code></td>
+<td>否</td>
+<td>接受与 <a href="#amazon-bedrock">Amazon Bedrock</a> 上游的 <code>auth</code> 块相同的键，遵循相同的规则。</td>
+</tr>
+<tr>
+<td><code>base_url</code></td>
+<td>否</td>
+<td>覆盖派生的端点。在末尾保留 <code>/anthropic</code> 路径。</td>
+</tr>
+</tbody>
+</table>
+<p>为上游的 AWS 身份授予 Mantle 自己用于推理和 token 计数的 IAM 操作，<a href="amazon-bedrock.html#use-the-mantle-endpoint">使用 Mantle 端点</a>中列出了这些操作。</p>
+<p>对于网关不知道的 Mantle 模型 ID，在顶层 <a href="#models"><code>models:</code></a> 块中添加一个条目，其 <code>upstream_model</code> 将此上游的名称映射到该 ID。然后也将该条目的 <code>id</code> 放入此上游的 <code>models</code> 字段。</p>
+<p><code>bedrock</code> 上游的 <code>guardrail</code> 和 <code>assume_role</code> 设置不会扩展到 Mantle 提供的请求：</p>
+<ul>
+<li><strong><code>guardrail</code></strong>：网关不对发送到 Mantle 的请求应用 <a href="#apply-an-amazon-bedrock-guardrail">Bedrock 防护栏</a>，因此当列出 <code>mantle</code> 上游而任何 <code>bedrock</code> 上游设置了 <code>guardrail</code> 时，网关拒绝启动。</li>
+<li><strong><code>assume_role</code></strong>：<code>mantle</code> 上游不接受 <a href="#bedrock-in-another-aws-account"><code>assume_role</code></a>。Mantle 提供的请求使用 <code>mantle</code> 上游自己的 <code>auth</code> 凭据发送，且不会<a href="#per-developer-aws-cost-attribution">按开发人员归属</a>。</li>
+</ul>
+<p>有关 Mantle 自身错误响应的含义，请参阅 <a href="amazon-bedrock.html#mantle-endpoint-errors">Mantle 端点错误</a>。</p>
+<h4 id="claude-platform-on-aws">AWS 上的 Claude Platform</h4>
+<p>AWS 上的 Claude Platform 在 AWS 基础设施上提供第一方 Anthropic API，位于 <code>aws-external-anthropic.&lt;region&gt;.api.aws</code>。它使用第一方模型 ID，按原样遵守 <code>anthropic-beta</code> 标头，并提供 <code>count_tokens</code>，因此没有 Bedrock 特定的转换适用。<code>anthropicAws</code> 提供商需要 Claude Code v2.1.198 或更高版本；早期网关版本在启动时拒绝它。</p>
+<p>对于相同平台的客户端部署，请参阅 <a href="claude-platform-on-aws.html">AWS 上的 Claude Platform 上的 Claude Code</a>。网关端上游：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropicAws</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">    </span><span class="nt">workspace_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wrkspc_...</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ANTHROPIC_AWS_API_KEY}</span><span class="w">   </span><span class="c1"># 作为 x-api-key 发送</span>
+<span class="w">    </span><span class="c1"># 或通过 AWS 默认凭据链的 SigV4：</span>
+<span class="w">    </span><span class="c1"># auth: {}</span>
+<span class="w">    </span><span class="c1"># 或显式 SigV4 凭据：</span>
+<span class="w">    </span><span class="c1"># auth:</span>
+<span class="w">    </span><span class="c1">#   aws_access_key_id: ${AWS_ACCESS_KEY_ID}</span>
+<span class="w">    </span><span class="c1">#   aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}</span>
+<span class="w">    </span><span class="c1"># 覆盖派生的端点：</span>
+<span class="w">    </span><span class="c1"># base_url: https://aws-external-anthropic.us-east-1.api.aws</span>
+</code></pre></div>
+<p>平台在与 Amazon Bedrock 不同的 AWS 帐户中运行，并为其自己的服务名称 <code>aws-external-anthropic</code> 签署 SigV4 请求，因此 Bedrock 范围的 IAM 角色不授权它。<code>auth.api_key</code> 中的 API 密钥在同时设置 SigV4 凭据时优先。空 <code>auth</code> 块使用 AWS SDK 的默认凭据链，与 <a href="#amazon-bedrock">Amazon Bedrock</a> 上游使用的链相同。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>region</code></td>
+<td>是</td>
+<td>AWS 区域，小写字母、数字和连字符。网关从它派生端点为 <code>https://aws-external-anthropic.&lt;region&gt;.api.aws</code>。</td>
+</tr>
+<tr>
+<td><code>workspace_id</code></td>
+<td>是</td>
+<td>在每个请求上作为标头发送；平台需要它</td>
+</tr>
+<tr>
+<td><code>auth.api_key</code></td>
+<td>否</td>
+<td>平台的 API 密钥，作为 <code>x-api-key</code> 发送。不是持有者令牌：两种身份验证模式是 API 密钥或 SigV4。</td>
+</tr>
+<tr>
+<td><code>auth.aws_access_key_id</code> / <code>auth.aws_secret_access_key</code></td>
+<td>否</td>
+<td>显式 SigV4 凭据。在没有另一个的情况下设置一个在启动时失败。<code>auth.aws_session_token</code> 在它们旁边被接受。</td>
+</tr>
+<tr>
+<td><code>base_url</code></td>
+<td>否</td>
+<td>覆盖派生的端点</td>
+</tr>
+</tbody>
+</table>
+<p>因为平台解析第一方模型 ID，内置目录路由到它而不带 <a href="#models"><code>models:</code></a> 块。当您策划 <code>models:</code> 列表时，使用第一方 ID 作为 <code>anthropicAws:</code> 条目的值。</p>
+<h4 id="google-cloud-agent-platform">Google Cloud Agent Platform</h4>
+<p>对于等效的客户端设置，请参阅 <a href="google-vertex-ai.html">Google Cloud 上的 Claude Code</a>。网关端上游：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vertex</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east5</span>
+<span class="w">    </span><span class="nt">project_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example-prod</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">                           </span><span class="c1"># 首选：应用默认凭据</span>
+<span class="w">    </span><span class="c1"># 或服务帐户密钥文件：</span>
+<span class="w">    </span><span class="c1"># auth: { service_account_json: /secrets/sa.json }</span>
+<span class="w">    </span><span class="c1"># 为私有服务连接覆盖 aiplatform 端点：</span>
+<span class="w">    </span><span class="c1"># base_url: https://us-east5-aiplatform.p.googleapis.com</span>
+</code></pre></div>
+<p>空 <code>auth</code> 块使用应用默认凭据：<code>GOOGLE_APPLICATION_CREDENTIALS</code>、GCE 元数据或 GKE Workload Identity。服务帐户 JSON 密钥文件被支持但不鼓励；使用 Workload Identity 或将服务帐户附加到 GCE 或 Cloud Run 实例。</p>
+<p>设置 <code>region: global</code> 以使用 <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations" target="_blank" rel="noopener">Google Cloud Agent Platform 的全局端点</a>而不是区域端点。Google 然后将每个请求路由到可用区域，因此您不跟踪按区域模型可用性。设置特定区域将每个请求固定到它。</p>
+<table>
+<thead>
+<tr>
+<th>设置</th>
+<th>如何</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IAM 权限</td>
+<td>授予网关的服务帐户项目上的 <code>roles/aiplatform.user</code>，或具有 <code>aiplatform.endpoints.predict</code> 的自定义角色。启用 Google Cloud Agent Platform API (<code>aiplatform.googleapis.com</code>)。</td>
+</tr>
+<tr>
+<td>模型访问</td>
+<td>在 Model Garden 中，为您的项目启用 Claude 模型。它们发布到特定区域；检查模型卡以了解支持的区域。</td>
+</tr>
+<tr>
+<td>GKE (Workload Identity)</td>
+<td>将 GCP 服务帐户绑定到网关的 Kubernetes 服务帐户，并使用 <code>iam.gke.io/gcp-service-account: claude-gateway@&lt;proj&gt;.iam.gserviceaccount.com</code> 注释 KSA。<code>auth: {}</code> 拾取它。</td>
+</tr>
+<tr>
+<td>Cloud Run / GCE</td>
+<td>将服务的服务帐户设置为具有 <code>roles/aiplatform.user</code> 的服务帐户。<code>auth: {}</code> 拾取它。</td>
+</tr>
+<tr>
+<td>其他任何地方</td>
+<td><code>auth: { service_account_json: /secrets/sa.json }</code>，JSON 密钥文件的路径挂载为秘密。该字段采用文件路径，而不是密钥内容，因此不涉及 <code>${file:…}</code> 扩展。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="microsoft-foundry">Microsoft Foundry</h4>
+<p>对于客户端 Microsoft Foundry 部署，请参阅 <a href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a>。网关端上游：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foundry</span>
+<span class="w">    </span><span class="nt">resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example-foundry</span><span class="w">              </span><span class="c1"># https://example-foundry.services.ai.azure.com</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> use_azure_ad</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="w"> </span><span class="p p-Indicator">}</span><span class="w">        </span><span class="c1"># 首选：DefaultAzureCredential / 托管身份</span>
+<span class="w">    </span><span class="c1"># 或 API 密钥：</span>
+<span class="w">    </span><span class="c1"># auth:</span>
+<span class="w">    </span><span class="c1">#   api_key: ${FOUNDRY_API_KEY}</span>
+</code></pre></div>
+<p><code>use_azure_ad: true</code> 通过 <code>DefaultAzureCredential</code> 解析：AKS、ACI 或 App Service 上的托管身份；Azure CLI；或环境凭据。API 密钥有效但是项目范围的，不自动轮换。Microsoft Foundry 的端点从 <code>resource:</code> 派生；为主权云（如 Azure Government）设置可选 <code>base_url</code> 以覆盖它。</p>
+<table>
+<thead>
+<tr>
+<th>设置</th>
+<th>如何</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RBAC</td>
+<td>授予网关的身份 Microsoft Foundry 资源上的 <code>Azure AI User</code> 或 <code>Cognitive Services User</code></td>
+</tr>
+<tr>
+<td>部署</td>
+<td>Microsoft Foundry 使用管理员选择的部署名称，而不是规范模型 ID。添加 <a href="#models"><code>models:</code></a> 块将每个规范 ID 映射到您的部署名称。</td>
+</tr>
+<tr>
+<td>AKS (workload identity)</td>
+<td>将用户分配的托管身份与集群的 OIDC 发行者联合，并将其绑定到网关的服务帐户。<code>use_azure_ad: true</code> 通过 <code>WorkloadIdentityCredential</code> 拾取它。</td>
+</tr>
+<tr>
+<td>ACI / App Service</td>
+<td>在资源上启用系统分配或用户分配的托管身份。<code>use_azure_ad: true</code> 拾取它。</td>
+</tr>
+<tr>
+<td>其他任何地方</td>
+<td><code>auth: { api_key: "${FOUNDRY_API_KEY}" }</code>。在 <code>{ }</code> 内引用 <code>${…}</code>。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="static-headers-on-upstream-requests">上游请求上的静态标头</h4>
+<p>要将固定标头添加到网关发送到一个上游的请求，在该上游上设置 <code>headers:</code>。当您运行的代理通过标头路由或属性流量时使用它。</p>
+<p><code>headers:</code> 需要网关服务器上的 Claude Code v2.1.277 或更高版本。早期网关在找到键时拒绝启动。在添加键之前升级每个副本，并在回滚到早期版本之前删除键。</p>
+<p>标头转到 <code>base_url</code> 命名的服务器，或当 <code>base_url</code> 未设置时转到提供商自己的端点。提供商也接收它们，除非您的代理删除它们。</p>
+<p>此示例通过 <code>upstream-proxy.internal.example.com</code> 上的代理到达 <code>provider: vertex</code> 上游。它设置代理读取的 <code>x-source</code> 标头，并从 <code>PROXY_TOKEN</code> 环境变量发送令牌作为 <code>x-proxy-token</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vertex</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east5</span>
+<span class="w">    </span><span class="nt">project_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example-prod</span>
+<span class="w">    </span><span class="nt">base_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://upstream-proxy.internal.example.com</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">    </span><span class="nt">headers</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">x-source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-apps-gateway</span>
+<span class="w">      </span><span class="nt">x-proxy-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${PROXY_TOKEN}</span>
+</code></pre></div>
+<p>值是可打印的 ASCII 文本，两端没有空格。引用数字、<code>true</code> 或 <code>false</code> 以便 YAML 将其读取为文本。</p>
+<p>要将秘密保持在配置文件之外，使用<a href="#secret-expansion">秘密扩展</a>从环境变量使用 <code>${VAR}</code> 或从文件使用 <code>${file:/path}</code> 加载值。解析为空值的 <code>${VAR}</code> 停止网关启动。</p>
+<p><code>headers:</code> 适用于每个提供商，每个上游仅发送自己的。</p>
+<p>并非网关发送到上游的每个请求都携带它们：</p>
+<table>
+<thead>
+<tr>
+<th>网关发送到此上游的请求</th>
+<th>携带 <code>headers:</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/v1/messages</code>，流式或非流式，和 <code>/v1/messages/count_tokens</code></td>
+<td>是</td>
+</tr>
+<tr>
+<td>从另一个上游故障转移的请求</td>
+<td>是，仅此上游的 <code>headers:</code></td>
+</tr>
+<tr>
+<td>Amazon Bedrock 的 <code>CountTokens</code> 调用用于客户端放弃的请求</td>
+<td>否</td>
+</tr>
+<tr>
+<td>Workload Identity Federation 令牌交换</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<p>在使用 AWS SigV4 签署请求的 Amazon Bedrock 或 AWS 上的 Claude Platform 上游上，这些标头是签名的一部分，因此您的代理必须原样通过它们。</p>
+<p>如果您使用网关保留的名称，它拒绝启动，启动错误命名标头。保留名称包括：</p>
+<ul>
+<li><code>authorization</code> 和 <code>x-api-key</code></li>
+<li><code>host</code>、<code>content-type</code> 和 <code>user-agent</code></li>
+<li>任何以 <code>anthropic-</code>、<code>x-goog-</code>、<code>x-amz-</code> 或 <code>x-amzn-</code> 开头的名称</li>
+</ul>
+<h4 id="multiple-upstreams">多个上游</h4>
+<p>相同提供商可以出现多次，具有不同的 <code>name:</code>。这涵盖不同的区域、通过不同凭据链的不同帐户、预配吞吐量与按需，以及跨提供商故障转移。</p>
+<p>网关按顺序尝试上游。<code>5xx</code>、<code>429</code>、<code>401</code>、<code>403</code>、<code>404</code>、超时和缺失端点 (<code>501</code>) 故障转移；其他 <code>4xx</code> 不会。</p>
+<p><code>429</code> 是按上游容量，因此预配吞吐量 (PT) 耗尽故障转移到按需。如果您在上游上设置 <a href="#per-user-identity-headers-for-a-proxy-you-run"><code>forward_user_identity: true</code></a>，对携带开发人员电子邮件的请求的 <code>429</code> 是按用户拒绝而不是故障转移。</p>
+<p>每个请求从第一个上游开始。请求仅在它前面的每个上游都失败或不提供请求的模型时才到达后续上游。</p>
+<p>网关不保持失败上游的记录，因此当上游关闭时，到达它的每个请求仍然尝试它并等待它失败后再继续。</p>
+<p>网关等待响应开始的时长如下：</p>
+<ul>
+<li><strong><code>provider: anthropic</code> 上游</strong>：<a href="#http-tuning"><code>timeouts.upstream_ttfb_ms</code></a>，默认 120 秒</li>
+<li><strong>其他提供商</strong>：最多一小时。要缩短流式请求的等待时间，请在网关 v2.1.295 或更高版本上设置 <code>timeouts.upstream_ttfb_ms</code>。非流式模型请求无论如何都最多等待一小时</li>
+</ul>
+<p><code>404</code> 是按上游模型可用性，因此未启用模型的上游不阻止提供它的后续上游。无法解析请求的模型的上游被跳过而不进行网络往返。</p>
+<p>此示例首先路由预配吞吐量 Amazon Bedrock 分配，溢出到按需和第二个帐户，并最后回退到 Anthropic API：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># 主要：您主区域中的预配吞吐量。</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock-pt</span>
+<span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">  </span><span class="c1"># 溢出：按需跨区域。</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock-od</span>
+<span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-west-2</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">  </span><span class="c1"># 不同帐户：通过静态密钥的单独 Bedrock 分配。</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock-acct2</span>
+<span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">aws_access_key_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ACCT2_AKID}</span>
+<span class="w">      </span><span class="nt">aws_secret_access_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ACCT2_SK}</span>
+<span class="w">  </span><span class="c1"># 最后的手段：直接 Anthropic API。</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic-fallback</span>
+<span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ANTHROPIC_API_KEY}</span>
+
+<span class="c1"># 每个上游的模型 ID 以上游的 `name:` 为键。</span>
+<span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-opus-4-8</span>
+<span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Claude Opus 4.8</span>
+<span class="w">    </span><span class="nt">upstream_model</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">bedrock-pt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:bedrock:us-east-1:111111111111:provisioned-model/abcdef</span>
+<span class="w">      </span><span class="nt">bedrock-od</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us.anthropic.claude-opus-4-8</span>
+<span class="w">      </span><span class="nt">bedrock-acct2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us.anthropic.claude-opus-4-8</span>
+<span class="w">      </span><span class="nt">anthropic-fallback</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-opus-4-8</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>杠杆</th>
+<th>如何</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不同区域</td>
+<td>每个区域一个 Amazon Bedrock 上游，每个都有自己的 <code>region:</code>。使用 <a href="#models"><code>auto_include_builtin_models: true</code></a> 跨区域推理配置文件自动路由；对于区域固定部署，使用 <code>models:</code> 块。</td>
+</tr>
+<tr>
+<td>不同帐户</td>
+<td>每个帐户一个 Amazon Bedrock 上游。默认链 (<code>auth: {}</code>) 使用 pod 的身份；对于第二个帐户，添加 <a href="#bedrock-in-another-aws-account"><code>assume_role</code></a> 以使用短期凭据到达它，或在 <code>auth:</code> 中设置显式凭据或持有者令牌。</td>
+</tr>
+<tr>
+<td>预配吞吐量</td>
+<td>将模型映射到该上游名称的 <code>models:</code> 中的预配吞吐量 ARN。其他上游保持按需 ID，因此 PT 容量在故障转移前耗尽。</td>
+</tr>
+<tr>
+<td>VPC / FIPS 端点</td>
+<td>在上游上设置 <code>base_url:</code> 到您的 VPC 端点或 FIPS 端点 URL</td>
+</tr>
+<tr>
+<td>模型范围路由</td>
+<td>仅自定义模型 <code>id</code>（即不是内置 Claude 模型的 id）会跳过其 <code>upstream_model:</code> 映射中不存在的上游。<code>mantle</code> 上游仅针对其 <a href="#amazon-bedrock-mantle-endpoint"><code>models</code> 字段</a>中列出的模型被尝试。在其他每个上游上，网关按顺序尝试内置模型，并在映射没有条目时使用提供商的默认 ID，因此对于内置模型，映射改变上游接收的 ID 而不是它是否被尝试；拒绝 ID 的上游遵循与任何其他上游错误相同的<a href="#upstreams">故障转移规则</a>。</td>
+</tr>
+</tbody>
+</table>
+<p>在云提供商之间或直接 Anthropic API 之间故障转移改变哪个协议、地理位置和其他条款控制请求。</p>
+<p>CLI 对网关应用相同的功能门控，无论哪个上游提供给定请求，因此默认情况下故障转移不会发送上游会拒绝的正文字段。如果您在策略中设置了<a href="#one-hour-prompt-cache">一小时缓存 TTL</a>，它会发送到列表中的每个上游，因此仅当所有上游都接受它时才设置。</p>
+<h2 id="optional-sections">可选部分</h2>
+<h3 id="admin"><code>admin</code></h3>
+<p>可选。启用 <code>/v1/organizations/spend_limits</code>（它与 Anthropic 的公开 Admin API 一致），并在 <code>/v1/messages</code> 上按开发者执行支出限制。有关上限的设置和执行方式，请参阅<a href="claude-apps-gateway-spend-limits.html">支出限制</a>；本节介绍用于启用和调整该功能的 <code>gateway.yaml</code> 键。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">admin</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Named static API keys for the admin endpoints, sent as x-api-key.</span>
+<span class="w">  </span><span class="c1"># The id appears in the audit log as admin-key:&lt;id&gt; so each key is</span>
+<span class="w">  </span><span class="c1"># attributable. Array for rotation: add the new key, roll clients,</span>
+<span class="w">  </span><span class="c1"># remove the old.</span>
+<span class="w">  </span><span class="nt">write_keys</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> id</span><span class="p">:</span><span class="w"> </span><span class="nv">terraform</span><span class="p p-Indicator">,</span><span class="nt"> key</span><span class="p">:</span><span class="w"> </span><span class="s">"${GATEWAY_ADMIN_WRITE_KEY_TF}"</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> id</span><span class="p">:</span><span class="w"> </span><span class="nv">ci</span><span class="p p-Indicator">,</span><span class="nt">        key</span><span class="p">:</span><span class="w"> </span><span class="s">"${GATEWAY_ADMIN_WRITE_KEY_CI}"</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">read_keys</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> id</span><span class="p">:</span><span class="w"> </span><span class="nv">reporting</span><span class="p p-Indicator">,</span><span class="nt"> key</span><span class="p">:</span><span class="w"> </span><span class="s">"${GATEWAY_ADMIN_READ_KEY}"</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="c1"># IdP groups granted full admin via the normal gateway JWT (no API key).</span>
+<span class="w">  </span><span class="nt">admin_groups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">platform-finops</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">blocked_message</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">request an increase at https://go.example.com/claude-limits</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>write_keys</code></td>
+<td>否</td>
+<td><code>{id, key}</code> 数组。与其中之一匹配的 <code>x-api-key</code> 可以列出、设置和删除支出限制。密钥值长度至少为 32 个字符；<code>id</code> 在 <code>read_keys</code> 和 <code>write_keys</code> 中必须唯一。</td>
+</tr>
+<tr>
+<td><code>read_keys</code></td>
+<td>否</td>
+<td><code>{id, key}</code> 数组。只读：可访问所有 <code>GET</code> 端点，包括列出上限、按 ID 获取单个上限，以及读取 <a href="claude-apps-gateway-spend-limits.html#%2Feffective"><code>/effective</code></a> 和 <a href="claude-apps-gateway-spend-limits.html#%2Faudit"><code>/audit</code></a>。</td>
+</tr>
+<tr>
+<td><code>admin_groups</code></td>
+<td>否</td>
+<td>IdP 组名。<code>groups</code> 声明包含其中之一的网关 JWT 拥有完整的管理员访问权限（读和写），并以 <code>oidc:&lt;sub&gt;</code> 记入审计。人工管理员使用此方式；机器使用 API 密钥。此列表中的空条目会导致网关在启动时停止。请参阅<a href="#matcher-values-that-stop-the-gateway-at-boot">会导致网关在启动时停止的匹配器值</a>。</td>
+</tr>
+<tr>
+<td><code>blocked_message</code></td>
+<td>否</td>
+<td>原样附加到被阻止的开发者看到的 <code>429 billing_error</code> 中。请写出完整的说明，例如 URL 或 Slack 频道。未设置时，网关仅发送默认消息。请参阅<a href="claude-apps-gateway-spend-limits.html#how-enforcement-works">执行方式</a>。</td>
+</tr>
+<tr>
+<td><code>audit_retention_days</code></td>
+<td>否</td>
+<td>默认值 <code>365</code>。更早的 <code>admin_audit</code> 行会被清除。</td>
+</tr>
+<tr>
+<td><code>spend_retention_months</code></td>
+<td>否</td>
+<td>默认值 <code>13</code>。早于此时间的 <code>spend</code> 计数器行会被清除。默认值保留完整一年加上当前未满的月份，以便进行同比报告。</td>
+</tr>
+<tr>
+<td><code>identity_retention_days</code></td>
+<td>否</td>
+<td>默认值 <code>90</code>。<code>principal_emails</code> 行的最后活跃 TTL，这些行保存每位开发者的电子邮件、显示名称和组（PII）。有意设置得比支出保留期短，以便已取消配置的身份过期，而其匿名支出计数器仍然保留。</td>
+</tr>
+<tr>
+<td><code>group_limit_mode</code></td>
+<td>否</td>
+<td><code>min</code>（默认）或 <code>max</code>。当开发者属于多个设有上限的组时，<code>min</code> 执行最严格的上限，<code>max</code> 执行最宽松的上限。执行和 <code>/effective</code> 都使用此设置。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="enforcement"><code>enforcement</code></h3>
+<p><code>enforcement</code> 块控制存储不可用时支出限制检查的行为。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fail_closed_on_error</code></td>
+<td>否</td>
+<td>默认值 <code>false</code>。Postgres 中断时，支出执行以失败开放方式处理，因此推理保持可用。设置为 <code>true</code> 可改为失败关闭：超出上限的开发者会被阻止，但如果存储不可达，其他所有人也会被阻止。需要 <a href="#admin"><code>admin:</code></a> 块：支出执行仅在配置了 <code>admin</code> 时运行，如果您在没有该块的情况下将此项设为 <code>true</code>，网关将拒绝启动。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pricing"><code>pricing</code></h3>
+<p><code>pricing</code> 块告诉支出计量器按什么价格计费，而不是使用美元标价，因此上限和 <a href="claude-apps-gateway-spend-limits.html#%2Feffective"><code>/effective</code></a> 会反映您的合同价格。金额仍以美元计，并且仍然是估算值，而不是发票。两个前提条件：</p>
+<ul>
+<li>网关服务器上的 Claude Code 为 v2.1.227 或更高版本。更早的版本会在启动时拒绝这个未知键。</li>
+<li>存在 <a href="#admin"><code>admin:</code></a> 块，或者在 v2.1.268 或更高版本中，存在至少包含一个策略的 <a href="#managed"><code>managed:</code></a> 块。如果设置了 <code>pricing</code> 但两个块都不存在，网关将拒绝启动，因为没有任何内容会读取它。</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">pricing</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">multiplier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.85</span>
+<span class="w">  </span><span class="nt">overrides</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">upstream</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock-eu</span>
+<span class="w">      </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-sonnet-4-6</span>
+<span class="w">      </span><span class="nt">input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.30</span>
+<span class="w">      </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16.50</span>
+<span class="w">      </span><span class="nt">cache_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.33</span>
+<span class="w">      </span><span class="nt">cache_write</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4.125</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>multiplier</code></td>
+<td>否</td>
+<td>默认值 <code>1</code>。计量器将每笔计量金额（无论是标价还是覆盖价格）乘以此值，因此 <code>0.85</code> 按价格的 85% 计费。必须大于 0 且不超过 10，大于 1 的值表示<a href="#mark-prices-up">加价</a>。</td>
+</tr>
+<tr>
+<td><code>overrides</code></td>
+<td>否</td>
+<td><code>{upstream, model, input, output, cache_read, cache_write}</code> 行，单位为每百万 token 的美元价格。四个费率都是必需的。每个费率必须大于 0 且不超过 10000。</td>
+</tr>
+</tbody>
+</table>
+<p>计量器匹配覆盖行的方式：</p>
+<ul>
+<li>对于 <code>upstream</code>（一个 <a href="#upstreams"><code>upstreams[].name</code></a>）为 <code>model</code> 提供服务的请求，该行会替换标价。这包括较高的<a href="fast-mode.html#understand-the-cost-tradeoff">快速模式</a>费率，因此快速请求和标准请求按相同的四个费率计量。</li>
+<li>内置 ID（例如 <code>claude-sonnet-4-6</code>）的匹配方式与 <a href="#models"><code>models[].id</code></a> 相同，涵盖计量器按该模型计价的所有带日期形式、区域性 Amazon Bedrock 形式或 Google Cloud Agent Platform 形式。其他任何字符串（例如别名或推理配置文件 ARN）会不区分大小写地匹配客户端发送的 ID 或发送到上游的字符串。</li>
+<li>当多行重叠时，计量器选择最具体的行，而不是第一行：首先是 <code>model</code> 为发送到上游的确切模型字符串的行，其次是与客户端发送的确切 ID 匹配的行，最后是指定内置模型的行。</li>
+<li>未知的上游名称会导致启动失败，同一上游的两行指定相同模型（包括同一内置模型的两种写法）也会导致启动失败。对于任何可请求模型都无法使用的行，网关会在启动时发出警告。</li>
+<li>网页搜索请求保持 \$0.01 的标价；乘数仍然适用于它们。</li>
+</ul>
+<p>要使用按区域的费率，请为每个区域提供各自的命名上游，并为每个上游提供一行。</p>
+<h4 id="mark-prices-up">加价</h4>
+<p>在网关服务器上使用 v2.1.271 或更高版本时，您可以将 <code>multiplier</code> 设置为大于 1（最高 10），以高于提供商收费的价格进行计量，例如用于内部成本分摊费率。此示例将每个请求按价格的 120% 计量：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">pricing</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">multiplier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2</span>
+</code></pre></div>
+<p>存在 <a href="#admin"><code>admin:</code></a> 块时，加价也适用于支出限制。计量器按价格的 120% 计数，因此开发者会更早达到上限。网关会在启动时记录一条说明此情况的警告。</p>
+<p>乘数不会改变上游提供商对这些请求的收费。</p>
+<p>如果网关还<a href="#send-the-rates-to-signed-in-clients">将费率发送到已登录的客户端</a>，开发者需要 Claude Code v2.1.271 或更高版本才能看到加价。更早的客户端会忽略大于 1 的 <code>multiplier</code>，并显示不含加价的成本。</p>
+<p>如果您将 <code>multiplier</code> 设置为大于 1，早于 v2.1.271 的网关服务器将拒绝启动。</p>
+<h4 id="send-the-rates-to-signed-in-clients">将费率发送到已登录的客户端</h4>
+<p>在网关服务器上使用 v2.1.268 或更高版本时，网关还会将 <code>pricing</code> 中的费率作为 <a href="settings-reference.html#modelpricing"><code>modelPricing</code></a> 托管设置放入其提供的 <a href="#managed"><code>managed</code></a> 策略中。随后，被策略匹配的开发者会在 <code>/usage</code>、状态栏和 OpenTelemetry 中看到为每个模型 ID 提供服务的第一个上游的 <code>pricing</code> 费率。未匹配任何策略的开发者不会收到托管设置，因此其数据保持标价。客户端在 Claude Code v2.1.242 或更高版本中应用该设置。</p>
+<ul>
+<li>网关添加的内容：除非策略的 <code>cli</code> 块已设置 <code>modelPricing</code>，否则网关会添加 <code>multiplier</code>，并针对客户端可以请求的每个模型 ID，添加为该 ID 提供服务的第一个上游的覆盖行。仅由故障转移上游收取的费率保留在网关上。</li>
+<li>让某个策略退出：在该策略的 <code>cli</code> 块中将 <code>modelPricing</code> 设置为 <code>{}</code>，其开发者将保持标价。</li>
+<li>保留策略自身的费率：如果策略的 <code>cli</code> 块使用自己的 <code>multiplier</code> 或 <code>overrides</code> 设置了 <code>modelPricing</code>，则该 <code>modelPricing</code> 会完整保留，网关不会向其中添加自己的任何费率。</li>
+</ul>
+<h3 id="models"><code>models</code></h3>
+<p><code>models</code> 块是一个可选的、由管理员维护的模型列表，在 <code>/v1/models</code> 提供，并用于按上游转换模型 ID。对于非美国 Amazon Bedrock 区域、Amazon Bedrock 预置吞吐量 ARN 和 Microsoft Foundry 部署名称，此块是必需的。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">auto_include_builtin_models</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span><span class="c1"># false: expose only the list below</span>
+<span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-opus-4-8</span>
+<span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Claude Opus 4.8</span>
+<span class="w">    </span><span class="c1"># description: optional text shown in clients that surface it</span>
+<span class="w">    </span><span class="nt">upstream_model</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">anthropic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-opus-4-8</span>
+<span class="w">      </span><span class="nt">bedrock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us.anthropic.claude-opus-4-8</span><span class="w">   </span><span class="c1"># or an inference-profile ARN</span>
+<span class="w">      </span><span class="nt">foundry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-opus-deployment-name</span>
+</code></pre></div>
+<p><code>upstream_model</code> 下的每个键必须与已配置上游的 <code>name</code> 匹配，该名称默认为提供商名称。不匹配任何上游的键会导致启动失败，因此请省略您不使用的提供商对应的行。</p>
+<h3 id="managed"><code>managed</code></h3>
+<p><code>managed</code> 块定义基于 IdP 组或电子邮件域的基于角色的访问策略。策略按顺序评估；选中第一个匹配项，然后将其合并到 <code>match: {}</code> 兜底基础层上。这些策略按用户在 <code>GET /managed/settings</code> 提供，并使用 ETag/304 缓存。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">managed</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">policies</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Specific groups first.</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> groups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">eng-contractors</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">cli</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">availableModels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">claude-sonnet-4-6</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">permissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> deny</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"WebFetch"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"WebSearch"</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="c1"># Default catch-all last: matches everyone who authenticated.</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">      </span><span class="nt">cli</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">availableModels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">claude-opus-4-8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">claude-sonnet-4-6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">claude-haiku-4-5</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="c1"># Make the Default option in /model resolve inside each policy's</span>
+<span class="w">        </span><span class="c1"># list. The eng-contractors policy inherits enforceAvailableModels.</span>
+<span class="w">        </span><span class="nt">enforceAvailableModels</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p><code>match: {}</code> 兜底策略按惯例放在最后，被视为基础层。其他每个策略都会从兜底策略继承自己未设置的任何键，因此按角色的条目只需列出与组织默认值不同的内容。合并规则取决于键的类型：</p>
+<ul>
+<li><strong>允许列表</strong>：<code>availableModels</code> 和 <code>permissions.allow</code>。特定策略的列表会完全替换基础层的列表。</li>
+<li><strong>拒绝列表和 hook 数组</strong>：<code>permissions.deny</code>、<code>permissions.ask</code>、<code>disabledMcpjsonServers</code>、<code>deniedMcpServers</code>、<code>blockedMarketplaces</code>、<code>deniedModels</code> 以及每个 <code>hooks</code> 事件类型数组。这些取基础层与策略的并集，因此组织范围的拒绝规则或审计 hook 不会被按角色的覆盖意外丢弃。</li>
+<li><strong>记录类型的键</strong>：<code>env</code>、<code>modelOverrides</code> 和 <code>skillOverrides</code>。这些进行浅合并，因此按角色的 <code>env</code> 块会覆盖它设置的键，并从基础层继承其余的键。</li>
+</ul>
+<p><code>availableModels</code> 还会在 <code>/v1/messages</code> 的服务器端执行，因此无论客户端发送什么，被拒绝的模型都会返回 <code>400</code>。空列表会拒绝所有模型。该检查还涵盖开发者选择模型之前会话启动时使用的模型，因此请<a href="#start-sessions-on-a-model-the-policy-allows">让会话在策略允许的模型上启动</a>。</p>
+<p>网关在转发请求之前会自行验证 <code>model</code> 值，因此格式错误的值永远不会到达上游。在以下两种情况下，它会以 <code>400</code> 拒绝请求：</p>
+<ul>
+<li>当该值缺失或为空时，网关会以消息 <code>model is required</code> 拒绝请求。该检查要求网关运行 Claude Code v2.1.228 或更高版本。</li>
+<li>当该值存在但不是字符串时，网关会以消息 <code>model must be a string</code> 拒绝请求。要求网关运行 Claude Code v2.1.221 或更高版本。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>匹配器</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>match: {}</code></td>
+<td>匹配每个已通过身份验证的用户。先从这样一个策略开始，之后再在其上方添加按组范围的策略。</td>
+</tr>
+<tr>
+<td><code>match: { groups: [a, b] }</code></td>
+<td>如果 JWT 的 <code>groups</code> 声明包含所列的任一组，则匹配。区分大小写：组名必须与 IdP 中的确切大小写一致。</td>
+</tr>
+<tr>
+<td><code>match: { email_domain: example.com }</code></td>
+<td>匹配 JWT 的 <code>email</code> 声明中最后一个 <code>@</code> 之后的部分，不区分大小写。每个策略只接受一个域。</td>
+</tr>
+<tr>
+<td><code>match: { groups: [a], email_domain: example.com }</code></td>
+<td>两个条件都必须匹配</td>
+</tr>
+</tbody>
+</table>
+<p>未匹配任何策略的已通过身份验证的用户将获得网关的默认值，即目录中的所有模型且没有托管设置。如果您希望有一个确定的默认策略，请在最后添加一个 <code>match: {}</code> 兜底策略。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>网关本身不保存用户目录。它根据用户的 IdP 令牌对每个请求进行授权，从令牌的 <code>groups</code> 声明中读取组成员身份，并据此评估策略。没有可枚举的名单，也没有需要预先创建的账户，因此也没有 SCIM 端点，因为没有任何内容可供 SCIM 同步。</p>
+<p>请在事实来源处进行用户和组的生命周期管理，即您的 IdP 的原生 SCIM 预配或专用的身份治理平台。在那里管理的成员身份和取消预配会通过令牌自动传递到网关。如果您希望对 Claude 账户本身进行 SCIM 预配，那是 <a href="admin-setup.html">Claude for Enterprise</a> 的功能。</p>
+<p>有两个传播时钟：</p>
+<ul>
+<li><strong>策略内容</strong>：编辑策略并重新部署后，已连接的 Claude Code 客户端会在下一次托管设置轮询时（一小时内）收到更改，但<a href="server-managed-settings.html#fetch-and-caching-behavior">仅在下次启动时生效的更改</a>除外</li>
+<li><strong>组成员身份</strong>：更改用户的组成员身份会改变与其匹配的策略。这在下一次会话重新签发时生效，即下一次静默刷新，最长不超过 <code>session.ttl_hours</code>。</li>
+</ul>
+<p>Claude Desktop 遵循<a href="#when-a-policy-change-reaches-claude-desktop">其自身的时间安排</a>。</p></div></div>
+<h4 id="start-sessions-on-a-model-the-policy-allows">让会话在策略允许的模型上启动</h4>
+<p>如果 <code>availableModels</code> 未包含 Claude Code 的默认模型，会话将收到 <code>400</code> 响应，直到开发者选择一个列出的模型（例如使用 <code>/model</code>）。在网关会话中，默认模型是 <code>opus</code> 别名解析到的 Opus 模型，而单独使用 <code>availableModels</code> 不会改变它。</p>
+<p>要解决此问题，请在同一 <code>cli</code> 块中设置 <a href="model-config.html#enforce-the-allowlist-for-the-default-model"><code>enforceAvailableModels: true</code></a>，然后检查列表中包含哪种条目：</p>
+<ul>
+<li><strong>别名（例如 <code>sonnet</code>）或内置 ID（例如 <code>claude-sonnet-4-6</code>）</strong>：会话会在其中一个模型上启动，<code>/model</code> 中的 Default 选项会解析为该模型</li>
+<li><strong>列表中没有别名或内置 ID</strong>：会话可能仍在内置默认模型上启动，因此还需在该策略的 <code>cli</code> 块中将 <a href="model-config.html#control-the-model-users-run-on"><code>model</code></a> 设置为列出的 ID 之一</li>
+</ul>
+<p>此策略列出了一个由 <a href="#models"><code>models</code></a> 定义的自定义 ID，并让会话在该 ID 上启动：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">managed</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">policies</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> groups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">restricted-projects</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">cli</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">availableModels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">restricted-claude-opus-4-8</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">enforceAvailableModels</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restricted-claude-opus-4-8</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">ANTHROPIC_DEFAULT_OPUS_MODEL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restricted-claude-opus-4-8</span><span class="w">   </span><span class="c1"># opus and Default resolve to the ID too</span>
+</code></pre></div>
+<h4 id="matcher-values-that-stop-the-gateway-at-boot">会导致网关在启动时停止的匹配器值</h4>
+<p>启动时，网关会检查每个策略的 <code>match</code> 块以及 <a href="#admin"><code>admin_groups</code></a> 列表。以下任一值都会使网关停止，并显示一条指明该字段的错误：</p>
+<ul>
+<li>空的 <code>groups</code> 列表</li>
+<li><code>groups</code> 或 <code>admin_groups</code> 中的空条目</li>
+<li>空的 <code>email_domain</code></li>
+<li>包含 <code>@</code>、空白或逗号的 <code>email_domain</code>。网关在此检查之前会修剪该值并去除一个前导 <code>@</code>。请写一个不带修饰的域，例如 <code>example.com</code>。</li>
+</ul>
+<p>在 v2.1.232 之前，网关会带着这些值启动。每个值的影响如下：</p>
+<ul>
+<li>空的 <code>email_domain</code>：网关跳过域检查，因此 <code>email_domain</code> 为空且没有 <code>groups</code> 列表的策略会匹配每个已通过身份验证的用户</li>
+<li>空的 <code>groups</code> 列表：该策略不匹配任何人</li>
+<li>包含 <code>@</code>、空白或逗号的 <code>email_domain</code>：该策略不匹配任何人</li>
+<li><code>groups</code> 或 <code>admin_groups</code> 中的空条目：仅当用户的 IdP <code>groups</code> 声明也包含空条目时，该条目才会匹配该用户。在 <code>admin_groups</code> 中，这种匹配会授予管理员访问权限。如果您的 <code>admin_groups</code> 列表从未包含空条目，则没有人会通过这种方式获得管理员访问权限。</li>
+</ul>
+<h4 id="choose-cli-or-code">选择 <code>cli</code> 或 <code>code</code></h4>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>当策略使用 <code>code</code> 键时，以下每种情况都会阻止网关启动：</p>
+<ul>
+<li><strong>网关版本</strong>：<code>code</code> 要求网关服务器上的 Claude Code 为 v2.1.296 或更高版本。更早的网关发现该键时会拒绝启动。请在添加该键之前升级每个副本，并在回滚到更早版本之前将 <code>code</code> 改回 <code>cli</code>。</li>
+<li><strong>混用键</strong>：同时包含 <code>code</code> 和 <code>cli</code>（或其早期写法 <code>settings</code>）的文件会导致网关在启动时停止。请在一次编辑中将所有块放在同一个键下。</li>
+</ul></div></div>
+<p>策略的 Claude Code 设置（例如拒绝读取 <code>.env</code> 文件的规则）放在 <code>cli</code> 或 <code>code</code> 键下的块中。<code>code</code> 是推荐的键，<code>cli</code> 是旧版键。两个键接受相同的内容。键决定了设置在何处执行：</p>
+<ul>
+<li><strong><code>cli</code></strong>：终端、VS Code 和 JetBrains 扩展以及 Agent SDK。在 <code>cli</code> 下，Claude Desktop 的 Code 选项卡获得的是<a href="#claude-desktop-overlay">派生设置</a>，因此像 <code>Read(./.env)</code> 这样的限定范围规则不会在那里阻止用户。</li>
+<li><strong><code>code</code></strong>：相同的位置，并且也可以覆盖 Claude Desktop 的 Code 选项卡。</li>
+</ul>
+<p>使用 <code>cli</code> 的文件照常工作；如果网关在带有 <a href="#claude-desktop-overlay"><code>desktop</code></a> 键的策略中发现 <code>cli</code>，会在启动时发出警告，但仍会启动。请切换到 <code>code</code>，以便设置也能覆盖 Code 选项卡。</p>
+<p>切换之前，请阅读<a href="#apply-code-settings-in-the-code-tab">在 Code 选项卡中应用 <code>code</code> 设置</a>。策略需要 <code>desktop</code> 键，并且用户的机器需要完成设置后这些设置才会在那里生效，此外 Claude Desktop 中的网页搜索会被关闭。</p>
+<p>此策略将拒绝规则放在 <code>code</code> 下，并带有一个空的 <code>desktop</code> 键：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">managed</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">policies</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">      </span><span class="nt">code</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">permissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> deny</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"Read(./.env)"</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">desktop</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</code></pre></div>
+<p>切换时，请在重命名块的同一次编辑中删除所有 <code>serve_to_desktop</code> 行。在说明中提到 <code>cli</code> 块的地方，请使用您的 <code>code</code> 块。</p>
+<p><code>serve_to_desktop: true</code> 是向 Code 标签页提供策略 <code>cli</code> 设置的旧方式。当 Claude Desktop 通过 <a href="#claude-desktop-overlay"><code>bootstrapUrl</code></a> 连接时，它不起作用。当您的策略使用 <code>cli</code> 时，提到此键的启动警告意味着这些设置未到达 Code 标签页：</p>
+<ul>
+<li><strong>要覆盖 Code 标签页</strong>：在用户的计算机满足<a href="#apply-code-settings-in-the-code-tab">在 Code 标签页中应用 <code>code</code> 设置</a>中的条件后，切换到 <code>code</code></li>
+<li><strong>要继续使用 <code>cli</code></strong>：在策略中的 <code>cli</code> 旁设置 <code>serve_to_desktop: false</code> 以消除警告</li>
+</ul>
+<h4 id="what-goes-in-cli"><code>cli</code> 中包含什么</h4>
+<p>每个 <code>code</code> 或 <code>cli</code> 值都是一个完整的 Claude Code <code>managed-settings.json</code> 文档，与您通过 MDM 或 <code>/etc/claude-code/managed-settings.json</code> 部署的 schema 相同，只是此处以 YAML 表示。CLI 在托管层级（高于用户和项目设置）应用所交付的文档，以取代服务器托管设置。因此，它会忽略<a href="server-managed-settings.html#current-limitations">仅限于操作系统级策略来源</a>的设置，例如 <code>policyHelper</code> 和 <code>wslInheritsWindowsSettings</code>。</p>
+<p>网关在启动时根据 CLI 的设置 schema 验证每个文档，因此无法识别的顶层键会导致启动失败，并显示指明每个违规键的错误。schema 中有意开放的部分仍接受任意值，因为较新的客户端可能识别网关 schema 无法识别的条目。这些开放的键包括 <code>env</code>、<code>pluginConfigs</code> 以及嵌套在 <code>permissions</code> 下的键。</p>
+<p>由于验证使用的是网关已安装版本中捆绑的 schema，要在托管配置中放入较新 Claude Code 版本引入的顶层设置键，需要先升级网关。在推广新策略之前，请先在一个客户端上进行冒烟测试。</p>
+<p>完整的键参考请参阅 <a href="settings-reference.html#all-settings">Claude Code 设置</a>。运维人员最常首先使用的键：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">managed</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">policies</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">      </span><span class="nt">cli</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Model access (also enforced server-side at /v1/messages)</span>
+<span class="w">        </span><span class="nt">availableModels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">claude-opus-4-8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">claude-sonnet-4-6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">claude-haiku-4-5</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">enforceAvailableModels</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">              </span><span class="c1"># Default resolves inside the list</span>
+
+<span class="w">        </span><span class="c1"># Permission policy</span>
+<span class="w">        </span><span class="nt">permissions</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">deny</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"WebFetch"</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Read(./.env)"</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Read(./secrets/**)"</span>
+<span class="w">          </span><span class="nt">disableBypassPermissionsMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disable</span><span class="w">   </span><span class="c1"># blocks --dangerously-skip-permissions</span>
+<span class="w">        </span><span class="nt">allowManagedPermissionRulesOnly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">     </span><span class="c1"># ignore user/project permission rules</span>
+
+<span class="w">        </span><span class="c1"># Environment pushed into the CLI process. DISABLE_UPDATES blocks</span>
+<span class="w">        </span><span class="c1"># background and manual updates; DISABLE_AUTOUPDATER stops only</span>
+<span class="w">        </span><span class="c1"># background updates.</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">DISABLE_UPDATES</span><span class="p">:</span><span class="w"> </span><span class="s">"1"</span><span class="w">                    </span><span class="c1"># pin versions via your own distribution</span>
+
+<span class="w">        </span><span class="c1"># Org-wide hooks. Hook commands run on developer machines, not the</span>
+<span class="w">        </span><span class="c1"># gateway, so the path must exist on every client OS in the policy.</span>
+<span class="w">        </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">PostToolUse</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">matcher</span><span class="p">:</span><span class="w"> </span><span class="s">"Edit|Write"</span>
+<span class="w">              </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> type</span><span class="p">:</span><span class="w"> </span><span class="nv">command</span><span class="p p-Indicator">,</span><span class="nt"> command</span><span class="p">:</span><span class="w"> </span><span class="nv">/usr/local/bin/audit-edit.sh</span><span class="w"> </span><span class="p p-Indicator">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>键</th>
+<th>执行方</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>availableModels</code></td>
+<td>网关 + CLI</td>
+<td>模型允许列表。还会在 <code>/v1/messages</code> 进行检查，因此打过补丁的客户端无法绕过它。</td>
+</tr>
+<tr>
+<td><a href="settings-reference.html#deniedmodels"><code>deniedModels</code></a>、<a href="settings-reference.html#availablemodelsmatch"><code>availableModelsMatch</code></a></td>
+<td>网关 + CLI</td>
+<td><a href="model-config.html#block-specific-models-or-versions">阻止特定模型或版本</a>，即使 <code>availableModels</code> 原本会允许它们。被阻止的模型会在 <code>/v1/messages</code> 以 <code>400</code> 被拒绝，并且不会出现在 <code>/v1/models</code> 中。网关自身的检查要求网关服务器上的 Claude Code 为 v2.1.299 或更高版本。CLI 的检查要求客户端为 v2.1.283 或更高版本，更早的客户端会忽略这两个键。</td>
+</tr>
+<tr>
+<td><code>permissions.allow</code> / <code>.deny</code></td>
+<td>CLI</td>
+<td>工具和命令规则。请参阅<a href="permissions.html">权限</a>和 <a href="permissions.html#bash-rule-limits">Bash 规则不匹配的情况</a>。</td>
+</tr>
+<tr>
+<td><code>permissions.disableBypassPermissionsMode</code></td>
+<td>CLI</td>
+<td>设置为 <code>disable</code> 可阻止 <a href="permission-modes.html#skip-all-checks-with-bypasspermissions-mode"><code>bypassPermissions</code></a>（跳过权限提示的模式）以及 <code>--dangerously-skip-permissions</code> 标志</td>
+</tr>
+<tr>
+<td><code>allowManagedPermissionRulesOnly</code></td>
+<td>CLI</td>
+<td>为 <code>true</code> 时，托管设置成为权限规则的唯一设置来源。<a href="settings-reference.html#allowmanagedpermissionrulesonly"><code>allowManagedPermissionRulesOnly</code></a> 条目列出了 Claude Code 随后会忽略的每个来源。</td>
+</tr>
+<tr>
+<td><code>env</code></td>
+<td>CLI</td>
+<td>合并到 CLI 进程中的环境变量。用于遥测、自动更新和模型名称覆盖。</td>
+</tr>
+<tr>
+<td><code>hooks</code></td>
+<td>CLI</td>
+<td>组织范围的 <a href="hooks.html">hook</a></td>
+</tr>
+<tr>
+<td><code>managedMcpServers</code></td>
+<td>CLI</td>
+<td><a href="managed-mcp.html#provide-servers-through-managed-settings">提供给每位匹配开发者</a>的远程 MCP 服务器，与开发者自行添加的服务器并存，仅限 <code>http</code> 和 <code>sse</code>。请参阅<a href="#mcp-servers-in-a-policy">策略中的 MCP 服务器</a>。要求网关服务器和客户端上的 Claude Code 为 v2.1.259 或更高版本。更早的客户端会忽略该键。</td>
+</tr>
+</tbody>
+</table>
+<p>由于这些设置通过网络到达，CLI 在应用以下设置之前会向每位开发者显示安全批准对话框：</p>
+<ul>
+<li><code>hooks</code></li>
+<li>需要开发者批准的 <code>env</code> 变量，例如代理和基础 URL 变量</li>
+<li>shell 执行设置，例如 <code>apiKeyHelper</code> 和 <code>statusLine</code></li>
+<li>沙箱二进制设置 <code>sandbox.bwrapPath</code>、<code>sandbox.socatPath</code> 和 <code>sandbox.ripgrep</code></li>
+<li>拦截流量、注入凭据或削弱隔离的沙箱设置，例如 <code>sandbox.network.tlsTerminate</code> 和代理端口设置。<a href="server-managed-settings.html#security-approval-dialogs">安全批准对话框</a>列出了全部此类设置。</li>
+</ul>
+<p><a href="server-managed-settings.html#approval-memory">批准记忆</a>介绍了批准的有效期以及对话框何时会再次出现。</p>
+<p>Claude Code 应用某些交付的 <code>env</code> 变量时不会向开发者显示批准对话框，例如模型选择设置和数值限制。其他交付的变量可能需要开发者批准；非空的代理、base-URL 或 <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> 值始终需要。当交付的变量需要批准时，对话框会列出它的名称。<a href="server-managed-settings.html#environment-variables-and-the-approval-dialog">环境变量与批准对话框</a>提供了详细信息，包括四个隐私开关，其交付值决定它们是否需要批准。</p>
+<p>网关的<a href="#telemetry">遥测</a>配置会推送 <code>OTEL_EXPORTER_OTLP_ENDPOINT</code>，因此设置 <code>telemetry.forward_to</code> 会在每个交互式客户端上触发对话框。该对话框保护的是开发者的机器免受被入侵或恶意网关的影响，而不是保护组织免受开发者的影响。</p>
+<p><a href="server-managed-settings.html#security-approval-dialogs">非交互式运行</a>（例如 <code>claude -p</code>、Agent SDK 会话或 Claude Desktop 的 Code 选项卡中的会话）无法显示对话框。它仅在该次运行中应用推送的设置，并且不会将其记录为已批准，因此开发者的下一个交互式会话仍会显示对话框。</p>
+<p>如果开发者拒绝，Claude Code 会退出该会话，而不是应用策略。因此，当您向一个广泛的策略推送新的 hook 或任何会触发对话框的环境变量时，每位匹配的开发者都会在其交互式会话中看到该对话框。正在运行的交互式会话会在下一次每小时轮询时显示它，否则它会在开发者下次交互式启动时出现。</p>
+<p><code>cli</code> 键在早期版本中名为 <code>settings</code>，网关仍接受该写法作为别名。对于新部署，请使用 <a href="#choose-cli-or-code"><code>code</code></a>。</p>
+<h4 id="test-a-policy-before-deployment">在部署前测试策略</h4>
+<p>要测试策略更改，请让网关连接一个临时的 Postgres 数据库启动。网关会先连接 Postgres 并应用其 schema 迁移，然后才检查 <code>cli</code>、<code>code</code> 和 <code>desktop</code> 块的内容。如果无法连接数据库，启动会在 <code>could not connect to Postgres</code> 处停止，且不会报告这些块内容的任何信息。</p>
+<h4 id="context-window-in-terminal-sessions">终端会话中的上下文窗口</h4>
+<p>通过 <code>/login</code> 登录的终端会话对 Opus 4.7 及更高版本、Sonnet 5 及更高版本以及 Fable 模型使用 1M 上下文窗口。模型 ID 不需要 <code>[1m]</code> 后缀，会话在约 967K token 时压缩。在开发者机器上的 Claude Code v2.1.287 之前，除非模型 ID 以 <code>[1m]</code> 结尾，否则 Claude Code 将 Opus 和 Fable 模型视为具有 200K 窗口。</p>
+<p>要让终端会话改为在 200K 边界处压缩，请在策略的 <code>env</code> 中设置<a href="model-config.html#set-the-auto-compact-window">自动压缩窗口</a>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">managed</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">policies</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">      </span><span class="nt">cli</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">CLAUDE_CODE_AUTO_COMPACT_WINDOW</span><span class="p">:</span><span class="w"> </span><span class="s">"200000"</span>
+</code></pre></div>
+<p>Claude Code 应用此变量时不会向开发者显示批准对话框。该变量适用于所有模型，包括以 <code>[1m]</code> 结尾的模型 ID。</p>
+<p>要改为关闭 1M 上下文，请在同一 <code>env</code> 块中设置 <a href="model-config.html#extended-context"><code>CLAUDE_CODE_DISABLE_1M_CONTEXT: "1"</code></a>。Claude Code 随后将每个模型视为具有 200K 窗口。在交互式会话中，每位开发者需要在<a href="#what-goes-in-cli">批准对话框</a>中批准此变量后它才会生效。</p>
+<h4 id="one-hour-prompt-cache">一小时提示缓存</h4>
+<p>要请求一小时的<a href="prompt-caching.html#cache-lifetime">提示缓存 TTL</a> 而非默认的五分钟，请将以下键添加到策略现有的 <a href="#choose-cli-or-code"><code>code</code>、<code>cli</code> 或 <code>settings</code> 块</a>中，然后重启网关。这些键要求网关服务器和客户端上运行 Claude Code v2.1.242 或更高版本。</p>
+<p><code>promptCacheTtl</code> 涵盖主对话。<code>subagentPromptCacheTtl</code> 是可选的，涵盖子代理、工作流和后台请求。此示例将两者都添加到以 <code>cli</code> 为键的 <code>match: {}</code> 策略中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">managed</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">policies</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">      </span><span class="nt">cli</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">promptCacheTtl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1h</span>
+<span class="w">        </span><span class="nt">subagentPromptCacheTtl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1h</span>
+</code></pre></div>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>仅当您的上游为网关提供的每个模型都支持一小时 TTL 时才设置这些键。如果上游拒绝该 TTL，请求会失败，网关和 Claude Code 都不会使用五分钟 TTL 重试。对于 Amazon Bedrock，请查看<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html#prompt-caching-models" target="_blank" rel="noopener">支持的模型、区域和限制</a>。</p></div></div>
+<p>要确认 <code>promptCacheTtl</code>，请以策略匹配的用户身份登录网关，然后<a href="prompt-caching.html#choose-the-ttl-yourself">检查您的缓存写入使用了哪个 TTL</a>。传入 <code>--model</code> 以对网关提供的每个模型重复此检查。</p>
+<p>一小时缓存写入的<a href="prompt-caching.html#cache-lifetime">费用高于</a>五分钟写入。要让<a href="claude-apps-gateway-spend-limits.html#how-requests-are-priced">支出限额</a>计入这一较高费率，网关服务器上需要 v2.1.286 或更高版本。</p>
+<h4 id="mcp-servers-in-a-policy">策略中的 MCP 服务器</h4>
+<p>要向策略匹配的 Claude Code 客户端提供 MCP 服务器，请在该策略的 <code>cli</code> 块中设置 <a href="managed-mcp.html#provide-servers-through-managed-settings"><code>managedMcpServers</code></a>。网关服务器和客户端上需要 Claude Code v2.1.259 或更高版本。</p>
+<p>网关在启动时使用<a href="managed-mcp.html#what-an-entry-can-contain">与 Claude Code 在客户端上应用的相同规则</a>检查每个条目；如果某个条目未通过检查，网关将拒绝启动并指明该条目。</p>
+<p>如果您在 <code>gateway.yaml</code> 中写入 <code>${VAR}</code> 引用，网关会在运行条目检查之前，在启动时通过<a href="#secret-expansion">密钥展开</a>从其环境中解析它，因此每个匹配的客户端都会收到字面值并可以读取它。<a href="managed-mcp.html#provide-servers-through-managed-settings">提供服务器的标头指南</a>适用于展开后的值。</p>
+<p>网关会拒绝 <code>cli</code> 块中的 <code>.mcp.json</code> 写法 <code>mcpServers</code>，其启动错误会指明应使用的键为 <code>managedMcpServers</code>。在 v2.1.259 之前，网关会拒绝 <code>cli</code> 块中的任何 MCP 服务器定义。</p>
+<h4 id="claude-desktop-overlay">Claude Desktop 叠加层</h4>
+<p>如果您的组织还部署了 <a href="desktop.html">Claude Desktop</a>，同一个网关可以同时为两个客户端提供服务。在 Claude Desktop 的<a href="https://claude.com/docs/third-party/claude-desktop/configuration" target="_blank" rel="noopener">托管配置</a>中，将 <code>bootstrapUrl</code> 指向 <code>&lt;listen.public_url&gt;/user/bootstrap</code>。Claude Desktop 从该 URL 派生 OAuth 颁发者，针对此网关运行相同的设备代码登录，并从响应中获取其配置。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>要求网关服务器上的 Claude Code 为 v2.1.203 或更高版本，并且需要显式选择加入：除非与用户匹配的策略带有 <code>desktop</code> 键，否则 <code>/user/bootstrap</code> 返回 404。空的 <code>desktop: {}</code> 即可让策略选择加入，而 <code>match: {}</code> 基础层上的 <code>desktop</code> 键会让所有继承它的策略选择加入。审计日志会将每个请求记录为 <code>desktop_bootstrap.serve</code> 或 <code>desktop_bootstrap.denied</code>。</p></div></div>
+<p>如果您不部署 Claude Desktop，请在策略中完全省略 <code>desktop</code>；此时网关会对每个用户从 <code>/user/bootstrap</code> 返回 404。</p>
+<h5 id="settings-the-gateway-derives-for-claude-desktop">网关为 Claude Desktop 派生的设置</h5>
+<p>网关从匹配策略的 <code>cli</code> 或 <code>code</code> 块以及顶层网关配置派生出 bootstrap 响应的大部分内容：</p>
+<ul>
+<li>模型列表，来自 <code>availableModels</code>。该列表不包含策略通过 <a href="#what-goes-in-cli"><code>deniedModels</code> 或 <code>availableModelsMatch: exact</code></a> 阻止的模型。此筛选要求网关服务器上的 Claude Code 为 v2.1.299 或更高版本。<a href="#extended-context-in-claude-desktop">Claude Desktop 中的扩展上下文</a>介绍了每个模型的 1M 上下文选项</li>
+<li>禁用的工具，来自仅包含工具名称的 <code>permissions.deny</code> 条目。如果您在策略的 <code>desktop</code> 块中设置了 <code>disabledBuiltinTools</code>，网关会提供您的值与派生列表的并集，因此您可以通过这种方式禁用更多工具，但无法重新启用通过 <code>permissions.deny</code> 禁用的工具</li>
+<li>出站允许列表，来自 <code>sandbox.network.allowedDomains</code>。如果您在策略的 <code>desktop</code> 块中设置了 <code>coworkEgressAllowedHosts</code>，网关会使用该值代替派生列表。如果网关提供的允许列表包含 <code>*</code>，且网关未同时提供 Claude Desktop 的 <a href="https://claude.com/docs/third-party/claude-desktop/code#applied-as-managed-policy" target="_blank" rel="noopener"><code>allowedWorkspaceFolders</code></a>，Claude Desktop 不会在 Code 选项卡中启用 <a href="sandboxing.html">Bash 沙箱</a></li>
+<li>一个指向网关自身的 OTLP 端点，以及已登录用户的身份属性。网关会将其在该端点收到的导出数据转发到您的 <code>forward_to</code> 目标。当您同时设置 <a href="#telemetry"><code>telemetry.forward_to</code></a> 和 <code>listen.public_url</code> 时，网关会包含该端点和这些属性。</li>
+</ul>
+<p>Claude Desktop 使用一种编码导出所有信号：<code>http/protobuf</code>；如果您在策略的 <code>env</code> 中将 <code>OTEL_EXPORTER_OTLP_PROTOCOL</code> 或其按信号的变体之一设置为 <code>http/json</code>，则使用 <code>http/json</code>。在网关服务器上的 Claude Code v2.1.261 之前，响应始终设置为 <code>http/json</code>，因此仅接受 protobuf 的收集器会拒绝 Claude Desktop 的导出</p>
+<p>要在策略的 <code>desktop</code> 块中设置 <code>disabledBuiltinTools</code>、<code>coworkEgressAllowedHosts</code> 或 Claude Desktop 自己的 <code>managedMcpServers</code> 设置，网关服务器上需要 Claude Code v2.1.232 或更高版本。Claude Desktop 的 <code>managedMcpServers</code> 接受数组值而不是对象。</p>
+<p>网关会从 bootstrap 响应中省略没有 Claude Desktop 对应项的键，例如 <code>hooks</code> 以及像 <code>Bash(npm *)</code> 这样的限定范围权限规则。</p>
+<h5 id="apply-code-settings-in-the-code-tab">在 Code 选项卡中应用 <code>code</code> 设置</h5>
+<p>当以下所有条件都满足时，策略在其 <a href="#choose-cli-or-code"><code>code</code></a> 键下保存的 Claude Code 设置会在 Claude Desktop 的 Code 选项卡中生效：</p>
+<ul>
+<li>策略还带有 <code>desktop</code> 键，空的 <code>desktop: {}</code> 也算</li>
+<li>Claude Desktop 为 2.9939.2 或更高版本</li>
+<li>机器上的 Claude Code 托管设置<a href="#client-side-managed-settings">指定了此网关</a></li>
+<li>该机器通过私有网络上的 HTTPS 访问网关</li>
+</ul>
+<p>后两个条件适用于为会话运行 Claude Code 的那台机器。对于本地会话，那是用户自己的计算机。对于通过 SSH 的 Code 选项卡会话，那是远程主机。</p>
+<p>在将 <code>cli</code> 重命名为 <code>code</code> 之前，请先将<a href="#client-side-managed-settings">客户端托管设置</a>部署到这些机器。当前两个条件满足而后两个条件之一不满足时，策略匹配的用户会得到以下结果之一：</p>
+<ul>
+<li><strong>通过 HTTPS，且 Claude Desktop 捆绑了 Claude Code v2.1.296 或更高版本</strong>：Code 选项卡不会启动，对用户提示词的回复会说明原因</li>
+<li><strong>通过 HTTPS，且 Claude Desktop 捆绑了更早的版本</strong>：Code 选项卡启动但不带您的 <code>code</code> 设置，会话中也没有任何提示</li>
+<li><strong>通过普通 HTTP</strong>：无论 Claude Desktop 捆绑哪个版本，Code 选项卡都会启动但不带您的 <code>code</code> 设置</li>
+</ul>
+<p>当网关前面的代理用自己的 404 响应 <code>/managed/settings</code> 时，Code 选项卡同样会启动但不带您的 <code>code</code> 设置，即使在满足全部四个条件的机器上也是如此。</p>
+<p>在带有 <code>desktop</code> 键的策略中，包含设置的 <code>code</code> 块会在 Cowork、Chat 和 Code 选项卡中关闭 WebSearch 工具。关于 MCP 服务器，请参阅 <a href="managed-mcp.html#where-managedmcpservers-applies"><code>managedMcpServers</code> 的适用范围</a>。</p>
+<h5 id="set-claude-desktop-settings-directly">直接设置 Claude Desktop 设置</h5>
+<p>在 <code>cli</code> 旁边添加可选的 <code>desktop</code> 块，即可直接设置 Claude Desktop 设置。以扁平键名写入 Claude Desktop <a href="https://claude.com/docs/third-party/claude-desktop/configuration" target="_blank" rel="noopener">托管配置参考</a>中的设置。请省略 Claude Desktop 仅从 MDM 或本地文件读取的键，例如 <code>bootstrapUrl</code>；网关会在启动时拒绝它们。</p>
+<p>此示例为 <code>eng-contractors</code> 组在其 <code>cli</code> 设置旁设置了三个 Claude Desktop 键：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">managed</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">policies</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> groups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">eng-contractors</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">cli</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">availableModels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">claude-sonnet-4-6</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">enforceAvailableModels</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">desktop</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">isLocalDevMcpEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">disableAutoUpdates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">banner</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> text</span><span class="p">:</span><span class="w"> </span><span class="s">"Contractor</span><span class="nv"> </span><span class="s">build:</span><span class="nv"> </span><span class="s">internal</span><span class="nv"> </span><span class="s">use</span><span class="nv"> </span><span class="s">only"</span><span class="w"> </span><span class="p p-Indicator">}</span>
+</code></pre></div>
+<p>每个键都是可选的；对于您省略的任何键，Claude Desktop 会应用自己的默认值。</p>
+<h5 id="what-the-gateway-rejects-at-boot">网关在启动时拒绝的内容</h5>
+<p>网关在启动时根据 Claude Desktop 自身使用的配置 schema 验证每个 <code>desktop</code> 块，因此错误会在网关启动时以指明该键的错误形式暴露出来，而不会传递到每个已连接的桌面客户端。当块中包含以下内容时，网关会在启动时失败：</p>
+<ul>
+<li>未知的键</li>
+<li>已识别的键，但其值会被 Claude Desktop 拒绝或静默丢弃，例如空值或嵌套条目中拼写错误的子键。在 v2.1.260 之前，对于 <code>managedMcpServers</code> 或 <code>orgPluginSettings</code> 条目的嵌套对象中拼写错误的字段，网关会静默丢弃，而不是在启动时失败。</li>
+<li>由网关自行计算的键：推理连接、模型列表和 OTLP 中继。请通过 <a href="#upstreams"><code>upstreams</code></a>、<a href="#models"><code>models</code></a> 以及 <a href="#telemetry"><code>telemetry</code></a> 部分的 <code>forward_to</code> 配置这些内容。</li>
+<li>当前键的旧版别名。在启动错误中，网关会指明应写入的规范键。</li>
+</ul>
+<p>如果您使用已弃用的值或条目形式，例如不带 <code>transport</code> 的 <code>managedMcpServers</code> 条目，网关会启动并记录一条指明替代项的警告。</p>
+<p>在 v2.1.232 之前，网关只接受由 11 个功能开关键组成的固定列表（例如 <code>chatTabEnabled</code> 和 <code>disableAutoUpdates</code>），并在启动时拒绝其他所有键。在 v2.1.227 之前，网关还会在启动时拒绝 <code>chatTabEnabled</code> 和 <code>chatAdvancedFileAnalysisEnabled</code>。</p>
+<h5 id="keys-that-need-a-later-gateway-or-claude-desktop-version">需要更新的网关或 Claude Desktop 版本的键</h5>
+<p>网关根据其已安装版本捆绑的 schema 验证 <code>desktop</code> 块，与验证 <code>cli</code> 块的方式相同。要交付由较新 Claude Desktop 版本引入的设置，请先升级网关。例如，<code>userPluginMarketplacesEnabled</code> 和 <code>userPluginUploadsEnabled</code> 需要网关服务器上的 Claude Code v2.1.260 或更高版本，以及成员机器上的 Claude Desktop 1.37937.0 或更高版本。</p>
+<p><code>blockReadsOutsideWorkingDirectories</code>、<code>disableBypassPermissionsMode</code>、<code>configRecheckIntervalMinutes</code> 和 <code>sshClientPath</code> 需要网关服务器上的 Claude Code v2.1.281 或更高版本。<code>microsoftAuthBroker</code> 的 <code>required</code> 值以及 Microsoft 365 <code>managedMcpServers</code> 条目的 <code>continuousAccessEvaluation</code> 字段也是如此。早于 <code>required</code> 值的 Claude Desktop 版本会将其读取为 <code>disabled</code>，因此请仅在每位成员的 Claude Desktop 都支持后再设置 <code>required</code>。Claude Desktop 的<a href="https://claude.com/docs/third-party/claude-desktop/configuration" target="_blank" rel="noopener">托管配置参考</a>列出了首次读取每个键的版本。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><a href="https://claude.com/docs/third-party/claude-desktop/configuration#sshtransport" target="_blank" rel="noopener"><code>sshTransport</code></a> 需要网关服务器上为 Claude Code v2.1.293 或更高版本。</p></div></div>
+<p>如果您在策略的 <code>desktop</code> 块中设置了 <code>orgPluginSettings</code>，网关会以 Claude Desktop 1.15200.0 及更高版本读取的数组形式提供它。较旧的桌面客户端会忽略该数组且不执行任何插件工具策略，因此在依赖它之前，请将成员更新到 1.15200.0 或更高版本。</p>
+<h5 id="how-a-role-policy-inherits-the-base-desktop-block">角色策略如何继承基础 <code>desktop</code> 块</h5>
+<p>对于策略的 <code>desktop</code> 块未设置的键，网关会从 <code>match: {}</code> 兜底策略的 <code>desktop</code> 块中补充，方式与从基础层补充策略的 <code>cli</code> 块相同。如果您在基础层和角色策略中都设置了 <code>disabledBuiltinTools</code> 或 <code>builtinToolPolicy</code>，网关会保留基础层的限制：</p>
+<ul>
+<li><code>disabledBuiltinTools</code>：网关使用基础层列表与策略列表的并集</li>
+<li><code>builtinToolPolicy</code>：如果您在基础层中将某个工具设置为 <code>allow</code> 以外的值，即使您在角色策略中为同一工具设置了 <code>allow</code>，网关也会保留该值</li>
+</ul>
+<p>对于其他所有键，如果您在角色策略中设置了它，网关会使用角色策略的值。网关会整体替换数组或嵌套对象（例如 <code>banner</code>），因此如果您在角色策略中设置了 <code>banner.text</code>，网关会丢弃基础层的 <code>banner.backgroundColor</code>。</p>
+<h5 id="when-a-policy-change-reaches-claude-desktop">策略更改何时到达 Claude Desktop</h5>
+<p>使用更改后的策略重新部署网关后，Claude Desktop 大多数设置仅在下次启动时应用：</p>
+<ul>
+<li><strong>已关闭</strong>：Claude Desktop 在启动时获取 bootstrap 响应，因此更改从下次启动开始生效</li>
+<li><strong>已打开</strong>：Claude Desktop 默认每 10 分钟检查一次响应是否有更改，并在无需重启的情况下应用少数设置。对于其余设置，例如 <a href="https://claude.com/docs/third-party/claude-desktop/configuration#skillcreationenabled" target="_blank" rel="noopener"><code>skillCreationEnabled</code></a>，用户会在侧边栏中看到 <strong>Relaunch Claude Desktop</strong> 卡片，并在重启应用之前保留之前的配置。默认 24 小时后，Claude Desktop 会显示重启对话框，并在 2 分钟无操作后自行重启</li>
+</ul>
+<p>要缩短这 24 小时，请在策略的 <code>desktop</code> 块中设置 <a href="https://claude.com/docs/third-party/claude-desktop/configuration#relaunchenforcementhours" target="_blank" rel="noopener"><code>relaunchEnforcementHours</code></a>。网关服务器上需要 Claude Code v2.1.260 或更高版本，成员机器上需要 Claude Desktop 1.40609.0 或更高版本。设置为 <code>0</code> 时，Claude Desktop 一发现更改就会显示对话框。</p>
+<h4 id="extended-context-in-claude-desktop">Claude Desktop 中的扩展上下文</h4>
+<p>如果您通过网关提供 <a href="#claude-desktop-overlay">Claude Desktop</a>，其模型选择器会为每个可以使用 1M 上下文窗口运行的已列出模型提供 1M 上下文选项。这些模型包括 Claude Opus 4.6 及更高版本、Claude Sonnet 4.6 及更高版本以及 Fable 模型。该选项即模型的 <code>[1m]</code> 变体，<a href="model-config.html#extended-context">扩展上下文</a>对此有介绍。网关服务器上需要 Claude Code v2.1.284 或更高版本。</p>
+<p>在以下情况下，<a href="#models"><code>models</code></a> 条目不会获得 1M 选项：</p>
+<ul>
+<li>可以为该条目提供服务的某个上游将其映射到不支持 1M 的模型，包括网关仅在故障转移时才访问的上游</li>
+<li>其 <code>id</code> 和任何 <code>upstream_model</code> 值都没有指定 Claude 模型，例如路由到应用程序推理配置文件 ARN 的自定义别名</li>
+</ul>
+<p>要更改选择器提供的内容，请使用以下方式之一：</p>
+<ul>
+<li><strong>让用户从 1M 选项开始</strong>：在策略的 <code>desktop</code> 块中设置 <code>modelPrefer1mContext: true</code>。当第一个列出的模型具有 1M 选项时，尚未选择模型的用户会从该 1M 选项开始。已经选择模型的用户保留其选择。</li>
+<li><strong>手动提供该选项</strong>：如果您的网关服务器运行的版本早于 v2.1.284，或某个条目未指定 Claude 模型，请使用此方式。在 <code>models</code> 中将该模型列出两次，一次使用其普通 ID，一次附加 <code>[1m]</code>，两者使用相同的 <code>upstream_model</code> 映射。Claude Desktop 会将这一对显示为一个带有 1M 选项的模型。网关提供 <code>[1m]</code> 条目时不会对其进行检查，因此请仅为上游以 1M 提供服务的模型添加此类条目。</li>
+</ul>
+<p>此示例为路由到应用程序推理配置文件的自定义别名手动提供该选项，并让新用户从该选项开始：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">corp-sonnet</span>
+<span class="w">    </span><span class="nt">upstream_model</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">bedrock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:bedrock:us-east-2:123456789012:application-inference-profile/sonnet-5-prod</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">corp-sonnet[1m]</span>
+<span class="w">    </span><span class="nt">upstream_model</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">bedrock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:bedrock:us-east-2:123456789012:application-inference-profile/sonnet-5-prod</span>
+
+<span class="nt">managed</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">policies</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">      </span><span class="nt">desktop</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">modelPrefer1mContext</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h5 id="remove-the-1m-option">移除 1M 选项</h5>
+<p>要从选择器中移除该选项，请在策略 <code>cli</code> 键下的 <code>env</code> 块中设置 <code>CLAUDE_CODE_DISABLE_1M_CONTEXT: "1"</code>。如果您还列出了 <code>id</code> 以 <code>[1m]</code> 结尾的条目，网关仍会提供它，因此也请删除该条目。</p>
+<p>该变量也会传递到策略匹配的开发者的终端会话。有关它在那里的作用，请参阅<a href="model-config.html#extended-context">扩展上下文</a>。</p>
+<h4 id="precedence-with-other-managed-sources">与其他托管来源的优先级</h4>
+<p>如果设备还有通过 MDM 交付的策略或本地 <code>managed-settings.json</code>，则网关交付的设置优先级最高。托管设置页面上的<a href="managed-settings.html#precedence-within-the-managed-tier">托管层级内的优先级</a>说明了本地来源何时生效，并列出了 <a href="managed-settings.html#keys-read-from-every-admin-source">Claude Code 从每个管理员来源读取的键</a>（无论它选择了哪个来源），例如沙箱锁定键、<code>forceRemoteSettingsRefresh</code> 以及按变量的 <code>env</code> 合并。在 MDM 配置文件或托管设置文件中配置的 <a href="settings-reference.html#policyhelper"><code>policyHelper</code></a> 仅在网关未交付任何设置时运行；该条目说明了其输出会替换哪些内容。</p>
+<p><a href="desktop.html">Claude Desktop</a> 等嵌入宿主可以通过 SDK 的 <code>managedSettings</code> 选项提供策略。<a href="managed-settings.html#parent-settings-from-embedding-hosts">来自嵌入宿主的父级设置</a>说明了 Claude Code 何时应用它，<a href="claude-apps-gateway.html#restrict-parent-settings">限制父级设置</a>列出了在没有 <code>allowManaged*Only</code> 锁定时仍然适用的放宽方向设置。</p>
+<p>网关策略适用于机器上的每次 Claude Code 调用，包括非交互式 <code>claude -p</code> 运行以及由 Agent SDK 生成的会话。如果启动时网关不可达，已登录的会话会以错误退出，而不是在没有其策略的情况下运行。</p>
+<h3 id="telemetry"><code>telemetry</code></h3>
+<p>CLI 将指标、日志以及（启用时的）追踪发送到网关，网关将它们原样转发到每个已配置的目标。导出使用基于 HTTP 的 OpenTelemetry Protocol（OTLP）。要跳过中继并让会话直接导出到您的收集器，请<a href="#export-directly-to-your-collector">在策略中指定收集器</a>。有关 CLI 发出的指标和事件，请参阅<a href="monitoring-usage.html">监控使用情况</a>。</p>
+<p>在通过 <code>/login</code> 登录的会话中，CLI 会在每次导出中标注已通过身份验证的用户身份，该身份从网关签发的 JWT 中读取：<code>user.id</code>、<code>user.email</code> 和 <code>user.groups</code> 属性。因此，按开发者的成本和使用情况归因无需开发者端进行任何配置。Claude Code 在开发者登录之前记录的事件<a href="monitoring-usage.html#standard-attributes">不带有此身份</a>。要了解开发者的组发生变化时哪个属性会随之变化，请参阅<a href="#group-changes-during-an-open-session">会话打开期间的组变化</a>。</p>
+<p>通过网关登录的 <a href="#claude-desktop-overlay">Claude Desktop</a> 和 Cowork 会话会在其遥测中同时标注 <code>user.email</code>、<code>user.groups</code> 和 <code>enduser.id</code>，因此您可以通过对 <code>user.email</code> 或 <code>user.groups</code> 进行一次查询来涵盖终端、Desktop 和 Cowork 的使用情况。<code>user.groups</code> 是以逗号分隔的 IdP 组列表。</p>
+<p>Desktop 和 Cowork 遥测还带有 <code>enduser.sub</code>，即您的身份提供商为该用户签发的 <code>sub</code> 声明，它在用户电子邮件更改时保持不变。终端会话在 <code>user.id</code> 下标注相同的值，因此将 <code>enduser.sub</code> 与终端 <code>user.id</code> 匹配的查询可以同时涵盖一个用户的终端、Desktop 和 Cowork 使用情况。在 Desktop 和 Cowork 导出中，<code>user.id</code> 是一个匿名标识符，而不是主体。</p>
+<p>与 Claude Code 的所有 OpenTelemetry 数据一样，这些属性只会发送到您的组织配置的目标，绝不会发送给 Anthropic。</p>
+<p>如果用户的组列表经百分比编码后超过 255 个字符，或者某个组名包含逗号或等号，网关会在该用户的 Desktop 和 Cowork 遥测中省略 <code>user.groups</code>，而不是将其截断。该用户的终端会话仍带有完整列表。</p>
+<p>当主体经百分比编码后超过 255 个字符，或者包含空格、可打印 ASCII 之外的字符，或 <code>,</code> <code>;</code> <code>=</code> <code>\</code> <code>"</code> <code>%</code> 之一时，网关会省略 <code>enduser.sub</code>。该用户的 Desktop 和 Cowork 遥测会保留其其他属性。</p>
+<p>要在 Desktop 和 Cowork 遥测中包含 <code>user.email</code> 和 <code>user.groups</code>，网关服务器上需要 Claude Code v2.1.265 或更高版本；要包含 <code>user.groups</code>，每位开发者的机器上还需要 Claude Desktop 1.24012 或更高版本。</p>
+<p>要包含 <code>enduser.sub</code>，网关服务器上需要 Claude Code v2.1.274 或更高版本。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">telemetry</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">forward_to</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://otel-collector.internal.example.com</span>
+<span class="w">      </span><span class="nt">headers</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">Authorization</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${OTLP_TOKEN}</span>
+<span class="w">      </span><span class="c1"># Per-signal opt-in. Default: metrics only.</span>
+<span class="w">      </span><span class="nt">metrics</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">logs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">traces</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://api.datadoghq.com/api/v2/otlp</span>
+<span class="w">      </span><span class="nt">headers</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">DD-API-KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DD_API_KEY}</span>
+</code></pre></div>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>每个目标独立选择加入 <code>metrics</code>、<code>logs</code> 和 <code>traces</code>，默认仅为指标。这些信号的敏感程度不同：</p>
+<ul>
+<li><strong>指标</strong>：聚合计数器，例如 token 计数、请求计数和延迟</li>
+<li><strong>日志和追踪</strong>：可能包含完整的 Bash 命令、工具输入和文件路径，涵盖 Claude Code 在开发者机器上所做的任何事情</li>
+</ul>
+<p>请仅在具备与这些数据相称的访问控制和保留策略的目标上启用日志和追踪。</p></div></div>
+<p>每个 <code>forward_to</code> URL 必须使用 <code>https://</code>，但位于网关自身回环接口上的收集器是一个例外：</p>
+<ul>
+<li><code>http://localhost:&lt;port&gt;</code> 可以通过配置验证，但除非您在网关的环境中设置了 <code>CLAUDE_GATEWAY_ALLOW_LOOPBACK=1</code>，否则 <a href="claude-apps-gateway-deploy.html#threat-model-summary">SSRF 防护</a>会以 <code>ECONNREFUSED_SSRF</code> 阻止每次导出</li>
+<li>除非设置了该变量，否则 <code>http://127.0.0.1:&lt;port&gt;</code> 或 <code>http://[::1]:&lt;port&gt;</code> 会导致启动失败</li>
+</ul>
+<p>对于集群内的收集器，请在其自己的内部地址上通过 HTTPS 公开它，或者将其作为 sidecar 运行并设置该变量。</p>
+<p>设置了 <code>HTTPS_PROXY</code> 时，网关会通过该代理发送导出数据。</p>
+<p>要直接访问内部收集器，请将其按主机名或以带前导点的域（例如 <code>.internal.example.com</code>）添加到 <code>NO_PROXY</code>，这要求网关服务器上的 Claude Code 为 v2.1.277 或更高版本。请确保网关可以不经代理访问该收集器。不带前导点的条目只匹配该确切名称，不匹配其下级名称。CIDR 范围不会匹配。</p>
+<p>启用<a href="#proxy-only-egress">仅代理出站</a>时，请改为在代理中允许该收集器，因为任何 <code>NO_PROXY</code> 条目都会使仅代理出站保持关闭。</p>
+<p>CLI 中的遥测默认处于关闭状态。当您同时设置 <code>telemetry.forward_to</code> 和 <code>listen.public_url</code> 时，网关会通过 <code>/managed/settings</code> 推送六个环境变量，为已连接的客户端启用遥测：</p>
+<ul>
+<li><code>CLAUDE_CODE_ENABLE_TELEMETRY=1</code></li>
+<li><code>OTEL_METRICS_EXPORTER</code>、<code>OTEL_LOGS_EXPORTER</code> 和 <code>OTEL_TRACES_EXPORTER</code>，如果至少一个 <code>forward_to</code> 目标启用了该信号，则各自设置为 <code>otlp</code>，否则设置为 <code>none</code></li>
+<li><code>OTEL_EXPORTER_OTLP_ENDPOINT=&lt;public_url&gt;</code></li>
+<li><code>OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf</code></li>
+</ul>
+<p>当您<a href="#add-your-own-labels">添加自己的标签</a>时，网关还会推送 <code>OTEL_RESOURCE_ATTRIBUTES</code>。</p>
+<p>在网关服务器上的 Claude Code v2.1.265 之前，网关会将全部三个导出器选择器都推送为 <code>otlp</code>，包括没有任何目标选择加入的信号。</p>
+<p>推送的端点由公共 URL 构建，因此指标和日志不需要开发者或策略进行任何 OTEL 配置。</p>
+<p>通过 <code>/login</code> 登录的开发者无法使用自己的 OTEL 配置重定向导出：</p>
+<ul>
+<li><strong>本地设置的变量</strong>：Claude Code 在托管层级应用推送的变量，因此每个变量都会覆盖开发者在本地为其设置的值。</li>
+<li><strong>本地配置的端点</strong>：启用 OTLP/HTTP 导出后，无论网关是否推送了遥测变量，CLI 都会忽略任何本地配置的端点。除非策略<a href="#export-directly-to-your-collector">将您的收集器指定为端点</a>，否则其导出会发送到网关。</li>
+</ul>
+<p>如果某个信号没有 <code>forward_to</code> 目标，网关会接受并丢弃它。如果开发者已经将 Claude Code 遥测导出到您的某个收集器，请将其添加为 <code>forward_to</code> 目标（如果他们导出日志或追踪，则启用相应信号），以便在他们登录后该收集器继续接收其数据。要改为跳过中继，请<a href="#export-directly-to-your-collector">在策略中指定收集器</a>。</p>
+<p><a href="monitoring-usage.html#traces-beta">追踪</a>还要求每个客户端上设置 <code>CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1</code>。请在托管策略的 <code>env</code> 块中设置它，因为网关不会推送它。开发者会在推送的端点已触发的同一<a href="#managed">安全批准对话框</a>中批准它。</p>
+<p>请仅在您希望追踪其组的策略中将其设置为 <code>1</code>。根据<a href="#managed">合并规则</a>，未设置它的策略会从您的 <code>match: {}</code> 兜底策略继承该值（如果兜底策略设置了它）。要让某个组的客户端即使在开发者本地设置了该变量时也不发送追踪，请在该组的策略中将其设置为 <code>0</code>。</p>
+<p>protobuf 和 JSON 两种 OTLP 编码都会被转发，任何兼容 OpenTelemetry 的后端都可以用作目标。</p>
+<h4 id="send-cumulative-metrics">发送累积指标</h4>
+<p>如果您的收集器只接受累积指标，请将 <a href="monitoring-usage.html#common-configuration-variables"><code>OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE</code></a> 设置为 <code>cumulative</code>。Claude Code 默认发送增量指标，网关转发它们时不会进行转换。请在每种会话读取该变量的位置设置它：</p>
+<ul>
+<li><strong>终端会话</strong>：在策略的 <a href="#choose-cli-or-code"><code>cli</code> 或 <code>code</code> 键</a>下的 <code>env</code> 块中</li>
+<li><strong><a href="managed-settings.html#where-and-when-a-policy-applies">在用户机器上运行</a>的 Cowork 会话</strong>：在该机器上<a href="#client-side-managed-settings">客户端托管设置</a>的 <code>env</code> 块中</li>
+<li><strong><code>code</code> 策略下的 Code 选项卡会话</strong>：在满足<a href="#apply-code-settings-in-the-code-tab"><code>code</code> 设置生效的条件</a>后，在策略的 <code>env</code> 块中</li>
+<li><strong><code>cli</code> 策略下的 Code 选项卡会话</strong>：在运行该会话的机器上客户端托管设置的 <code>env</code> 块中。通过 SSH 时，那是远程主机。</li>
+</ul>
+<p>如果您将该变量添加到机器的托管设置中，还需在该机器上优先级最高的来源中设置 <a href="claude-apps-gateway.html#set-the-opt-in"><code>parentSettingsBehavior: "merge"</code></a>。否则，Cowork 会话和 <code>cli</code> 策略下的 Code 选项卡会话在运行时将不带有 Claude Desktop 作为父级设置传递给它们的出站允许列表和其他策略。</p>
+<h4 id="add-your-own-labels">添加自己的标签</h4>
+<p>要在通过网关登录的会话的遥测上添加固定标签，例如 <code>service.namespace</code> 或 <code>deployment.environment.name</code>，请设置 <code>telemetry.resource_attributes</code>。每个标签都是一个 OpenTelemetry 资源属性，每个目标都会收到相同的标签。</p>
+<p>仅当您同时设置 <code>telemetry.forward_to</code> 和 <code>listen.public_url</code> 时，会话才会获得这些标签。此示例添加了两个标签：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">telemetry</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">forward_to</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://otel-collector.internal.example.com</span>
+<span class="w">  </span><span class="nt">resource_attributes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">service.namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude</span>
+<span class="w">    </span><span class="nt">deployment.environment.name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod</span>
+</code></pre></div>
+<p>当标签违反以下规则之一时，网关会拒绝启动，启动错误会指明该标签：</p>
+<ul>
+<li>名称只能使用字母、数字、<code>.</code>、<code>_</code> 和 <code>-</code></li>
+<li>名称不能是保留名称。保留名称不区分大小写进行比较，包括所有以 <code>user.</code>、<code>enduser.</code> 或 <code>identity.</code> 开头的名称，以及 <code>service.name</code>、<code>service.version</code>、<code>claude.deployment_mode</code>、<code>host.arch</code>、<code>os.type</code>、<code>os.version</code> 和 <code>wsl.version</code></li>
+<li>值为非空的可打印 ASCII，不含空格，也不含 <code>, ; = \ " %</code> 中的任何字符</li>
+<li>值在网关按百分比编码后计数时最多 255 个字符，因此 <code>/</code>、<code>:</code> 和 <code>@</code> 各计为三个字符</li>
+<li>值为文本，因此请为数字、<code>true</code> 或 <code>false</code> 加引号</li>
+</ul>
+<p>要设置 <code>telemetry.resource_attributes</code>，网关服务器上需要 Claude Code v2.1.281 或更高版本。更早的网关发现该键时会拒绝启动。请在添加该键之前升级每个副本，并在回滚到更早版本之前移除该键。</p>
+<p>通过 <code>/login</code> 登录的终端会话会以 <code>OTEL_RESOURCE_ATTRIBUTES</code> 的形式接收标签，与其他<a href="#telemetry">遥测变量</a>一起推送。如果您在策略的 <code>env</code> 块中设置了 <code>OTEL_RESOURCE_ATTRIBUTES</code>，该策略匹配的终端会话会获得该值而不是这些标签。Claude Desktop 从网关接收标签，同时接收 <code>user.email</code> 和其他身份属性。</p>
+<p>Claude Code 还会将每个标签复制到每个指标数据点上，因此您可以在不索引资源属性的后端中按标签筛选指标。要关闭此复制，请参阅<a href="monitoring-usage.html#metrics-cardinality-control">指标基数控制</a>。</p>
+<h4 id="group-changes-during-an-open-session">会话打开期间的组变化</h4>
+<p>终端会话将 <code>user.groups</code> 放在 OTLP 资源上，并再次放在每个指标数据点和事件上。如果开发者的组在会话打开期间发生变化，下一次<a href="#session">静默刷新</a>之后的使用情况所对应的数据点和事件会带有新的组。资源会保留旧的组，直到开发者重启 Claude Code，因此请按数据点或事件上的属性进行分组。</p>
+<p>如果您在 OpenTelemetry Collector 的 Prometheus remote write 导出器中启用了 <code>resource_to_telemetry_conversion</code>，该导出器会用资源的 <code>user.groups</code> 替换每个数据点的 <code>user.groups</code>，因此每个数据点都会显示旧的组。要保留数据点的值，请在该导出器之前从资源中删除 <code>user.groups</code>。</p>
+<p>此 OpenTelemetry Collector <code>resource</code> 处理器会在列出它的管道中删除该属性：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">processors</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">resource/drop-user-groups</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">attributes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user.groups</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">delete</span>
+</code></pre></div>
+<p>将 <code>resource/drop-user-groups</code> 添加到指标管道的 <code>processors</code> 之后，每个序列都会带有来自其自身数据点的 <code>user_groups</code> 标签。</p>
+<h4 id="export-directly-to-your-collector">直接导出到您的收集器</h4>
+<p>要让通过 <code>/login</code> 登录的会话将遥测直接发送到您的收集器而不经过中继，请在<a href="#managed">托管策略</a>的 <code>env</code> 块中将 <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> 设置为收集器的 <code>https://</code> 基础 URL。Claude Code 会在您设置的 URL（例如 <code>https://otel-collector.example.com:4318</code>）后附加 <code>/v1/metrics</code>、<code>/v1/logs</code> 或 <code>/v1/traces</code>，并通过 OTLP/HTTP 将每个信号导出到那里。要求每位开发者机器上的 Claude Code 为 v2.1.265 或更高版本。更早的客户端通过中继导出。</p>
+<p>要向收集器进行身份验证，请在同一 <code>env</code> 块中设置 <code>OTEL_EXPORTER_OTLP_HEADERS</code>。会话永远不会将开发者的网关会话令牌发送到以这种方式指定的收集器。</p>
+<p>当您在策略中添加或更改此端点时，Claude Code 会在交互式会话中应用它之前，要求每位开发者在<a href="#managed">安全批准对话框</a>中批准它。</p>
+<p>Claude Code 在直接导出信号之前会检查端点，检查失败时该信号会保留在中继上。检查包括：</p>
+<ul>
+<li>端点来自网关本身。如果您在 MDM 配置文件或本地 <code>managed-settings.json</code> 中设置了同一变量，导出会保留在中继上。</li>
+<li>URL 使用 <code>https://</code>，或使用指向回环地址的 <code>http://</code></li>
+<li>URL 解析为以 <code>/v1/&lt;signal&gt;</code> 结尾的路径，且不带查询或片段。Claude Code 会根据通用变量自行构建该路径。对于按信号的变量（例如 <code>OTEL_EXPORTER_OTLP_METRICS_ENDPOINT</code>），它会按原样使用，因此请在其中包含完整路径。</li>
+<li>URL 不是网关自己的主机。指向网关的端点会保留中继路径及其会话令牌。</li>
+<li>您和开发者都未在任何设置来源中配置 <a href="settings-reference.html#otelheadershelper"><code>otelHeadersHelper</code></a>。配置了该辅助程序时，每个信号都会保留在中继上。</li>
+</ul>
+<p>您指定的端点只改变导出的去向。您仍然需要通过 <code>OTEL_*_EXPORTER</code> 选择器决定哪些信号要导出。</p>
+<p>仅设置端点并不会启用导出，因此还需设置启用导出的变量，除非网关已经推送了它们：</p>
+<ul>
+<li>如果网关已经<a href="#telemetry">推送了遥测变量</a>，它们涵盖启用、选择器和协议，您显式设置的端点会覆盖推送的 <code>&lt;public_url&gt;</code> 值。仅对没有任何 <code>forward_to</code> 目标启用的信号，才需要您自行将 <code>OTEL_*_EXPORTER</code> 选择器设置为 <code>otlp</code>。</li>
+<li>如果网关没有推送，还需设置 <code>CLAUDE_CODE_ENABLE_TELEMETRY=1</code>、<code>OTEL_*_EXPORTER</code> 选择器和 <code>OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf</code>。</li>
+</ul>
+<p>当开发者注销或登录到其他网关时，到收集器的导出会停止，Claude Code 会丢弃每个剩余批次而不是发送它们。</p>
+<h4 id="when-a-destination-fails">目标失败时</h4>
+<p>网关不会缓冲、重试或存储遥测，因此对于未能到达目标的导出，它会将其丢弃，而不是延迟交付。每个目标独立成功或失败，并且无论哪种情况，导出的客户端都会收到成功响应，因此交付失败只会出现在网关的日志中。</p>
+<p>向某个目标连续五次交付失败后，网关会以 30 秒为间隔暂停向其转发，并记录每次暂停，直到某次交付成功。任何错误响应、超时或连接错误都计为交付失败，但 <code>400</code>、<code>413</code>、<code>415</code>、<code>422</code> 和 <code>431</code> 除外，这些表示收集器因负载格式错误或过大而拒绝了该次导出。</p>
+<p>被拒绝的负载既不会增加也不会重置失败计数：网关会继续向该目标转发，并在该目标第一次拒绝时以及此后每第一百次拒绝时，记录一条指明该目标和状态的警告。</p>
+<h3 id="http-tuning">HTTP 调优</h3>
+<p>四个可选的顶层块 <code>access_control</code>、<code>limits</code>、<code>timeouts</code> 和 <code>rate_limits</code> 用于调优 HTTP 层面的行为。默认值适用于大多数部署。</p>
+<table>
+<thead>
+<tr>
+<th>块</th>
+<th>键</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>access_control</code></td>
+<td><code>allow_cidrs</code> / <code>deny_cidrs</code></td>
+<td>空</td>
+<td>在完成 <code>trusted_proxies</code> 解析后，按客户端地址对入站 IP 进行允许/拒绝。会先检查 <code>deny_cidrs</code>；与其匹配的客户端会被拒绝，即使 <code>allow_cidrs</code> 也匹配。如果 <code>allow_cidrs</code> 非空，网关默认拒绝。<code>/healthz</code> 和 <code>/readyz</code> 不受 <code>allow_cidrs</code> 约束。当受信任的代理发送的 <code>X-Forwarded-For</code> 条目不是 IP 地址时，真实客户端未知，网关会记录一次警告，指明需要检查的内容。如果任一列表适用于该请求，网关将以 <code>403</code> 拒绝该请求，审计原因为 <code>xff_unparseable</code>。如果两个列表都不适用，网关会处理该请求，并使用代理自身的地址作为客户端 IP，用于按 IP 的速率限制和审计。</td>
+</tr>
+<tr>
+<td><code>limits</code></td>
+<td><code>max_request_bytes</code></td>
+<td>32 MiB</td>
+<td>入站请求体的最大大小；超出大小的请求会在缓冲请求体之前收到 <code>413</code>。对于大型文件或图片请求，请调高此值。</td>
+</tr>
+<tr>
+<td><code>limits</code></td>
+<td><code>max_request_header_bytes</code></td>
+<td>未设置</td>
+<td>降低网关对请求头总大小的 256 KiB 限制。超出限制的请求返回 <code>431</code>，大于 256 KiB 的值不起作用。如果开发者在登录后收到 <code>431</code>，请参阅<a href="claude-apps-gateway-deploy.html#request-headers-too-large-after-sign-in">登录后请求头过大</a>。</td>
+</tr>
+<tr>
+<td><code>limits</code></td>
+<td><code>max_url_length</code></td>
+<td>未设置</td>
+<td>设置后，过长的 URL 返回 <code>414</code></td>
+</tr>
+<tr>
+<td><code>timeouts</code></td>
+<td><code>upstream_ttfb_ms</code></td>
+<td>120000</td>
+<td>等待上游响应标头的最长时间（首字节时间）。之后响应体以流式传输，没有总时长上限。如果未设置此键，默认值适用于 <code>provider: anthropic</code> 上游；对于其他所有提供商，网关最多等待一小时让响应开始。如需缩短此等待时间，请参阅<a href="#multiple-upstreams">多个上游</a>。</td>
+</tr>
+<tr>
+<td><code>rate_limits</code></td>
+<td><code>device_authorization.max</code> / <code>.window_seconds</code></td>
+<td>30 / 600</td>
+<td>对未经身份验证的设备授权端点按 IP 施加的速率限制。对于位于共享出口 IP 或 NAT 之后的大型组织，请调高此值。<a href="claude-apps-gateway-deploy.html#large-rollouts">大规模推广</a>说明了如何确定其大小。这些限制仅适用于设备授权登录流程，不适用于 <code>/v1/messages</code> 推理。请参阅<a href="claude-apps-gateway-deploy.html#user-code-brute-force-resistance">用户码暴力破解防护</a>。</td>
+</tr>
+<tr>
+<td><code>rate_limits</code></td>
+<td><code>device_verify.max</code> / <code>.window_seconds</code></td>
+<td>10 / 600</td>
+<td>对 <code>/device</code> 处 <code>user_code</code> 提交按 IP 施加的速率限制。它用于阻止他人猜测其他开发者的码。<a href="claude-apps-gateway-deploy.html#large-rollouts">大规模推广</a>说明了可以将其调高到什么程度。</td>
+</tr>
+</tbody>
+</table>
+<p>如果两个 <code>access_control</code> 列表都留空（即默认情况），网关会为任何客户端地址提供服务，因此只有您的网络能限制谁可以访问它。这一点很重要，因为网关可以推送在开发者机器上运行命令的<a href="#managed">托管设置</a>。</p>
+<p>当 <code>allow_cidrs</code> 为空时，网关会在两个地方发出警告，但不会改变其响应任何请求的方式：</p>
+<ul>
+<li><strong>启动时</strong>：运行日志中的一条警告建议仅允许私有地址段 <code>10.0.0.0/8</code>、<code>172.16.0.0/12</code>、<code>192.168.0.0/16</code>、<code>100.64.0.0/10</code>、<code>127.0.0.0/8</code>、<code>::1/128</code> 和 <code>fc00::/7</code>，以及开发者连接所用的其他内部地址段。如果将网关绑定到环回地址，并且既未设置 <code>trusted_proxies</code> 也未设置 <code>public_url</code>（如本地开发时），则不会出现该警告。</li>
+<li><strong>运行时</strong>：当首次有请求来自这些私有地址段之外的地址时，网关会记录一条警告，并发出一个携带客户端 IP 的 <a href="claude-apps-gateway-deploy.html#logs"><code>access.public_client</code> 审计事件</a>。两者在每个进程中各触发一次。链路本地地址 <code>169.254.0.0/16</code> 和 <code>fe80::/10</code> 不算作公网地址。网关会在此检查运行之前响应 <code>/healthz</code> 和 <code>/readyz</code>，因此来自公网地址段的健康探测不会触发它。</li>
+</ul>
+<p>这两种信号都使用网关解析得到的客户端地址。如果负载均衡器、端口转发或隧道中继了流量，但未列在 <code>listen.trusted_proxies</code> 中，网关看到的将是中继的地址（通常是私有地址），因此运行时警告和私有允许列表都无法捕获经由它中继的流量。</p>
+<p>在此类前端之后，请先设置 <a href="#listen"><code>listen.trusted_proxies</code></a>，使网关能看到真实的客户端地址，并且无论如何都要确保网关及其前面的所有组件无法从公网访问。</p>
+<h3 id="load_test_mode"><code>load_test_mode</code></h3>
+<p><code>load_test_mode</code> 块可让您在不调用模型提供商的情况下对网关进行负载测试。启用后，网关会照常构建并签名每个提供商请求，但将其丢弃而不发送，并通过其正常的响应路径以流式方式返回一条预设回复。该回复是填充文本，开头有一句话说明它是预设的。</p>
+<p>要求网关服务器上运行 Claude Code v2.1.282 或更高版本。更早版本的网关在发现该键时会拒绝启动。请在添加该块之前升级每个副本，并在回滚之前移除该块。</p>
+<p>以下示例使用默认值启用该模式，即约 750 个 token 的文本回复，在约 10 秒内以流式传输：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">load_test_mode</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">reply_tokens</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">750</span><span class="w">     </span><span class="c1"># roughly how many tokens of text each canned reply carries</span>
+<span class="w">  </span><span class="nt">reply_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9.5</span><span class="w">    </span><span class="c1"># how long a streamed reply takes</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td>是</td>
+<td><code>true</code> 启用该模式。<code>false</code> 会在关闭该模式的同时将您的数值保留在文件中。如果存在该块但缺少此字段，网关会拒绝启动。</td>
+</tr>
+<tr>
+<td><code>reply_tokens</code></td>
+<td>否</td>
+<td>默认 <code>750</code>。每条预设回复大约包含多少个 token 的文本，取值为 1 到 100000 之间的整数。</td>
+</tr>
+<tr>
+<td><code>reply_seconds</code></td>
+<td>否</td>
+<td>默认 <code>9.5</code>。一条流式回复所需的时间，取值为 0 到 600。<code>0</code> 会一次性发送整条回复。对非流式请求的回复始终一次性返回。</td>
+</tr>
+</tbody>
+</table>
+<p>此模式下的负载测试涵盖网关、您的 Postgres 以及网关前面的所有组件。它不涵盖提供商的限制、速度或网络路径。</p>
+<p>由于不会向提供商发送模型请求，副本每个请求的 CPU 用量只是估算值，且读数低于生产环境，因为生产环境还需要加密发往提供商的流量。请针对真实提供商进行小规模试点，以确认副本数量。在 v2.1.283 之前，该估算值读数会低得多。</p>
+<p>启用该模式时，请求可以携带一个 <code>x-load-test-user</code> 请求头，其值为最多七位数的整数。网关会将每个数字计为一名独立的开发者，并使用随请求附带的令牌所属开发者的电子邮件和组。</p>
+<p>请为负载测试部署提供单独的空数据库，因为如果数据库中已有任何开发者产生过花费，网关在启用该模式时会拒绝启动。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>切勿在开发者使用的网关上启用此模式。每个请求都会收到预设回复，不会调用任何模型。启用该模式时，网关会在启动时记录一条 <code>load_test_mode is on</code> 警告，并在每个 <code>inference</code> <a href="claude-apps-gateway-deploy.html#logs">审计事件</a>上标记 <code>load_test: true</code>。</p></div></div>
+<h2 id="complete-example">完整示例</h2>
+<p>此完整参考配置演示了每个核心部分；<a href="#http-tuning">HTTP 调整块</a>保持其默认值。复制它，删除您不需要的，并填入您的值。<a href="claude-apps-gateway.html#quickstart">快速入门</a>中的配置是此的最小版本。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="c1"># 运行方式：</span>
+<span class="c1">#   claude gateway --config gateway.yaml</span>
+<span class="c1">#</span>
+<span class="c1"># 操作日志详细程度由 CLAUDE_GATEWAY_LOG_LEVEL</span>
+<span class="c1"># 环境变量控制（debug | info | warn | error；默认 info）。debug</span>
+<span class="c1"># 也会记录每个 id_token 中的声明名称，用于 groups_claim 诊断。</span>
+<span class="c1"># 它不影响审计事件，总是发出。</span>
+
+<span class="nt">listen</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">  </span><span class="nt">public_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://claude-gateway.internal.example.com</span>
+<span class="w">  </span><span class="c1"># 在 TLS 终止入口后面运行时省略 tls 块。</span>
+<span class="w">  </span><span class="c1"># tls:</span>
+<span class="w">  </span><span class="c1">#   cert: /certs/gateway.crt</span>
+<span class="w">  </span><span class="c1">#   key: /certs/gateway.key</span>
+<span class="w">  </span><span class="c1"># trusted_proxies:</span>
+<span class="w">  </span><span class="c1">#   - 10.0.0.0/8</span>
+
+<span class="nt">oidc</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.okta.com</span>
+<span class="w">  </span><span class="nt">client_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0oa1example2</span>
+<span class="w">  </span><span class="nt">client_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${OIDC_CLIENT_SECRET}</span>
+<span class="w">  </span><span class="nt">allowed_email_domains</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">  </span><span class="c1"># 当发行者是 Okta 组织服务器时需要，其 id_tokens</span>
+<span class="w">  </span><span class="c1"># 可以省略电子邮件和组；网关从 /userinfo 填充它们。</span>
+<span class="w">  </span><span class="nt">userinfo_fallback</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="c1"># allowed_groups: [claude-code-users]</span>
+<span class="w">  </span><span class="c1"># Okta 仅在请求 `groups` 范围且</span>
+<span class="w">  </span><span class="c1"># 应用的组声明过滤允许它们时发出组。下面的承包商策略</span>
+<span class="w">  </span><span class="c1"># 匹配组，因此范围在此处请求。</span>
+<span class="w">  </span><span class="nt">scopes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">openid</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">profile</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">email</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">offline_access</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">groups</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="c1"># extra_auth_params: { access_type: offline, prompt: consent }  # Google</span>
+<span class="w">  </span><span class="c1"># groups_claim: groups          # Entra 应用角色：使用 `roles`</span>
+<span class="w">  </span><span class="c1"># email_claim: email</span>
+
+<span class="nt">session</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">jwt_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${GATEWAY_JWT_SECRET}</span><span class="w">   </span><span class="c1"># openssl rand -base64 32</span>
+<span class="w">  </span><span class="c1"># ttl_hours: 1</span>
+
+<span class="nt">store</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">postgres_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${GATEWAY_POSTGRES_URL}</span>
+<span class="w">  </span><span class="c1"># max_connections: 5</span>
+<span class="w">  </span><span class="c1"># connect_timeout_seconds: 5</span>
+<span class="w">  </span><span class="c1"># readiness_grace_seconds: 300   # 在数据库故障转移期间保持通过就绪检查</span>
+
+<span class="c1"># 启用 /v1/organizations/spend_limits（镜像 Anthropic Admin API）</span>
+<span class="c1"># 和 /v1/messages 上的每开发者支出强制。省略以禁用。</span>
+<span class="c1"># 上限本身通过 admin API 设置，而不是此处。</span>
+<span class="c1"># admin:</span>
+<span class="c1">#   write_keys:</span>
+<span class="c1">#     - { id: terraform, key: "${GATEWAY_ADMIN_WRITE_KEY_TF}" }</span>
+<span class="c1">#   read_keys:</span>
+<span class="c1">#     - { id: reporting, key: "${GATEWAY_ADMIN_READ_KEY}" }</span>
+<span class="c1">#   admin_groups: [platform-finops]</span>
+<span class="c1">#   blocked_message: request an increase at https://go.example.com/claude-limits</span>
+<span class="c1">#   # audit_retention_days: 365</span>
+<span class="c1">#   # spend_retention_months: 13</span>
+<span class="c1">#   # identity_retention_days: 90</span>
+<span class="c1">#   # group_limit_mode: min</span>
+
+<span class="c1"># enforcement:</span>
+<span class="c1">#   fail_closed_on_error: false</span>
+
+<span class="c1"># 在不调用模型提供商的情况下对此部署进行负载测试。永远不要在</span>
+<span class="c1"># 开发人员使用的网关上：每个请求都会获得一个预设回复。</span>
+<span class="c1"># load_test_mode:</span>
+<span class="c1">#   enabled: true</span>
+<span class="c1">#   # reply_tokens: 750</span>
+<span class="c1">#   # reply_seconds: 9.5</span>
+
+<span class="c1"># 按合同费率而不是美元列表价格计费。需要 admin: 或</span>
+<span class="c1"># managed: 策略。使用 managed:，相同的费率也会发送到已登录的客户端。</span>
+<span class="c1"># 下面的费率是占位符，不是真实合同价格。</span>
+<span class="c1"># pricing:</span>
+<span class="c1">#   multiplier: 0.85</span>
+<span class="c1">#   overrides:</span>
+<span class="c1">#     - { upstream: anthropic, model: claude-sonnet-4-6, input: 3.30, output: 16.50, cache_read: 0.33, cache_write: 4.125 }</span>
+
+<span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ANTHROPIC_API_KEY}</span>
+
+<span class="w">  </span><span class="c1"># - provider: bedrock</span>
+<span class="w">  </span><span class="c1">#   region: us-east-1</span>
+<span class="w">  </span><span class="c1">#   auth: {}</span>
+
+<span class="w">  </span><span class="c1"># - provider: mantle</span>
+<span class="w">  </span><span class="c1">#   region: us-east-1</span>
+<span class="w">  </span><span class="c1">#   models: [claude-opus-4-8, claude-opus-4-7, claude-haiku-4-5]</span>
+<span class="w">  </span><span class="c1">#   auth: {}</span>
+
+<span class="w">  </span><span class="c1"># - provider: anthropicAws</span>
+<span class="w">  </span><span class="c1">#   region: us-east-1</span>
+<span class="w">  </span><span class="c1">#   workspace_id: wrkspc_...</span>
+<span class="w">  </span><span class="c1">#   auth:</span>
+<span class="w">  </span><span class="c1">#     api_key: ${ANTHROPIC_AWS_API_KEY}</span>
+
+<span class="w">  </span><span class="c1"># - provider: vertex</span>
+<span class="w">  </span><span class="c1">#   region: us-east5</span>
+<span class="w">  </span><span class="c1">#   project_id: example-prod</span>
+<span class="w">  </span><span class="c1">#   auth: {}</span>
+
+<span class="w">  </span><span class="c1"># - provider: foundry</span>
+<span class="w">  </span><span class="c1">#   resource: example-foundry</span>
+<span class="w">  </span><span class="c1">#   auth: { use_azure_ad: true }</span>
+
+<span class="nt">auto_include_builtin_models</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-opus-4-8</span>
+<span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Claude Opus 4.8</span>
+<span class="w">    </span><span class="nt">upstream_model</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">anthropic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-opus-4-8</span>
+<span class="w">      </span><span class="c1"># bedrock: us.anthropic.claude-opus-4-8</span>
+<span class="w">      </span><span class="c1"># mantle: anthropic.claude-opus-4-8</span>
+<span class="w">      </span><span class="c1"># anthropicAws: claude-opus-4-8</span>
+<span class="w">      </span><span class="c1"># vertex: claude-opus-4-8</span>
+<span class="w">      </span><span class="c1"># foundry: &lt;your-opus-deployment-name&gt;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-sonnet-4-6</span>
+<span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Claude Sonnet 4.6</span>
+<span class="w">    </span><span class="nt">upstream_model</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">anthropic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-sonnet-4-6</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-haiku-4-5</span>
+<span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Claude Haiku 4.5</span>
+<span class="w">    </span><span class="nt">upstream_model</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">anthropic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-haiku-4-5</span>
+
+<span class="nt">managed</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">policies</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> groups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">contractors</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">cli</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">availableModels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">claude-haiku-4-5</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="c1"># allow 自动批准这些工具；它不阻止其余的。</span>
+<span class="w">        </span><span class="c1"># 添加拒绝规则以限制工具。</span>
+<span class="w">        </span><span class="nt">permissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> allow</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Read</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Grep</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">      </span><span class="nt">cli</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">availableModels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">claude-opus-4-8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">claude-sonnet-4-6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">claude-haiku-4-5</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="c1"># 将默认选择器选项限制为每个策略的 availableModels，</span>
+<span class="w">        </span><span class="c1"># 而不是内置默认值，因此任何角色都不会在默认上获得 400。</span>
+<span class="w">        </span><span class="c1"># 承包商策略继承此键。</span>
+<span class="w">        </span><span class="nt">enforceAvailableModels</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">permissions</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">allow</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Read</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Grep</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Edit</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">deny</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"WebFetch"</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> HTTP_PROXY</span><span class="p">:</span><span class="w"> </span><span class="nv">http</span><span class="p p-Indicator">:</span><span class="nv">//proxy.example.com</span><span class="p p-Indicator">:</span><span class="nv">8080</span><span class="w"> </span><span class="p p-Indicator">}</span>
+
+<span class="nt">telemetry</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">forward_to</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://otel.internal.example.com:4318</span>
+<span class="w">      </span><span class="nt">headers</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">Authorization</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bearer ${OTEL_TOKEN}</span>
+</code></pre></div>
+<h2 id="client-side-managed-settings">客户端托管设置</h2>
+<p>上面的所有内容配置网关服务器。将开发者机器指向网关是在每个设备上单独配置的，通过 Claude Code 的<a href="managed-settings.html">托管设置</a>。网关无法自己推送登录密钥，因为这些密钥是告诉客户端网关在哪里的内容。</p>
+<p>对于 CLI，在每个 OS 的 <code>managed-settings.json</code> 中设置这些密钥。这两个登录密钥将每个开发者的 <code>/login</code> 路由到你的网关：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"forceLoginMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gateway"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"forceLoginGatewayUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://claude-gateway.internal.example.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"parentSettingsBehavior"</span><span class="p">:</span><span class="w"> </span><span class="s2">"merge"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>parentSettingsBehavior: "merge"</code> 保持 Claude Desktop 向其嵌入式 Claude Code 会话传递出站允许列表的功能；<a href="claude-apps-gateway.html#deliver-policy-to-claude-desktop-sessions">向 Claude Desktop 会话传递策略</a>解释了该机制以及选择加入必须位于的位置。</p>
+<p>为了防止开发者通过云提供商变量或他们自己的 <code>ANTHROPIC_BASE_URL</code> 绕过网关，请在同一文件中添加 <code>"allowedProviders": ["gateway"]</code>。Claude Code 随后会拒绝机器上未设置为云网关的每个会话，并仅允许网关在它是 <code>forceLoginGatewayUrl</code> 命名的网关或文件的 <code>env</code> 块将其 URL 设置为 <code>ANTHROPIC_BASE_URL</code> 的网关时。<code>claude gateway</code> 拒绝在设置该列表的机器上运行，因此请在网关主机上保持该密钥关闭。请参阅设置参考中的 <a href="settings-reference.html#allowedproviders"><code>allowedProviders</code></a> 条目。需要 Claude Code v2.1.285 或更高版本。</p>
+<p>将 <code>managed-settings.json</code> 文件部署到每个设备，通常通过你的 MDM 平台。文件路径因平台而异。请参阅<a href="managed-settings.html#where-each-mechanism-stores-the-policy">每个机制存储策略的位置</a>。</p>
+<p>默认情况下，Windows 上的注册表策略或 macOS 上的托管首选项 plist 会替换 <code>managed-settings.json</code> 文件而不是与其合并，除了<a href="#precedence-with-other-managed-sources">上面的例外密钥和跨源检查</a>。此代码片段中的所有三个密钥都遵循最高优先级源规则，因此通过组策略或配置文件传递策略的团队必须改为将所有三个密钥放在该机制中。</p>
+<p>对于 Claude Desktop，在 Claude Desktop 自己的<a href="https://claude.com/docs/third-party/claude-desktop/configuration" target="_blank" rel="noopener">托管配置</a>中设置 <code>bootstrapUrl</code> 密钥为 <code>&lt;listen.public_url&gt;/user/bootstrap</code>。登录流程和每组策略随后与 CLI 的匹配，一旦策略通过 <code>desktop</code> 密钥在服务器端选择加入；没有选择加入，<code>/user/bootstrap</code> 返回 404。有关服务器端部分，请参阅 <a href="#claude-desktop-overlay">Claude Desktop 覆盖层</a>。</p>
+<p>Claude Code 从机器上的托管源读取并遵循 <a href="settings-reference.html#forcelogingatewayurl"><code>forceLoginGatewayUrl</code></a>、<a href="settings-reference.html#gatewayinternalnetworks"><code>gatewayInternalNetworks</code></a> 和 <a href="settings-reference.html#forceloginmethod"><code>forceLoginMethod</code></a> 的 <code>"gateway"</code> 值：<code>managed-settings.json</code>、macOS plist 或 Windows HKLM 注册表，或策略助手。在网关负载中设置它们不会配置网关登录。关于开发者自己的 <code>~/.claude/settings.json</code>，请参阅<a href="claude-apps-gateway.html#set-the-gateway-url-in-user-settings">在用户设置中设置网关 URL</a>。</p>
+<p>不要在有效负载中包含 <code>forceLoginMethod</code> 和 <code>forceLoginOrgUUID</code>。Claude Code 仍然从有效负载中读取这两个密钥以进行启动凭证检查，因此在机器上保留 Anthropic 颁发的凭证的开发者会获得<a href="errors.html#administrator-policy-requires-a-cloud-gateway-sign-in">管理员策略需要云网关登录</a>下描述的启动退出，即使他们已经登录。</p>
+<h2 id="related">相关</h2>
+<ul>
+<li><a href="claude-apps-gateway.html">Claude 应用网关概述</a>：快速入门和开发者连接</li>
+<li><a href="claude-apps-gateway-deploy.html">部署指南</a>：IdP 设置、容器镜像、Kubernetes 和 Cloud Run，以及操作</li>
+<li><a href="claude-apps-gateway-spend-limits.html">支出限制</a>：每开发者上限和 Admin API</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="claude-apps-gateway.html"><span class="pager-dir">← 上一页</span><span class="pager-name">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</span></a><a class="pager-link next" href="claude-apps-gateway-spend-limits.html"><span class="pager-dir">下一页 →</span><span class="pager-name">Claude 应用网关支出限制</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#file-structure">文件结构</a><a class="toc-l2" href="#secret-expansion">密钥扩展</a><a class="toc-l2" href="#required-sections">必需的部分</a><a class="toc-l3" href="#listen">listen</a><a class="toc-l3" href="#oidc">oidc</a><a class="toc-l3" href="#session">session</a><a class="toc-l3" href="#store">store</a><a class="toc-l3" href="#upstreams">upstreams</a><a class="toc-l2" href="#optional-sections">可选部分</a><a class="toc-l3" href="#admin">admin</a><a class="toc-l3" href="#enforcement">enforcement</a><a class="toc-l3" href="#pricing">pricing</a><a class="toc-l3" href="#models">models</a><a class="toc-l3" href="#managed">managed</a><a class="toc-l3" href="#telemetry">telemetry</a><a class="toc-l3" href="#http-tuning">HTTP 调优</a><a class="toc-l3" href="#load_test_mode">load_test_mode</a><a class="toc-l2" href="#complete-example">完整示例</a><a class="toc-l2" href="#client-side-managed-settings">客户端托管设置</a><a class="toc-l2" href="#related">相关</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

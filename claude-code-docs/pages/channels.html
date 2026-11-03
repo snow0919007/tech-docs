@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用 channels 将事件推送到运行中的会话 · Claude Code 中文文档</title>
+<meta name="description" content="使用 channels 从 MCP 服务器将消息、警报和 webhooks 推送到您的 Claude Code 会话中。转发 CI 结果、聊天消息和监控事件，以便 Claude 在您离开时做出反应。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="channels">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/channels" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link active" href="channels.html" aria-current="page">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>使用 Claude Code 构建</span> <span class="sep">/</span> <span>自动化</span></div>
+    <article class="prose" id="article"><h1 id="channels">使用 channels 将事件推送到运行中的会话</h1>
+<blockquote>
+<p>使用 channels 从 MCP 服务器将消息、警报和 webhooks 推送到您的 Claude Code 会话中。转发 CI 结果、聊天消息和监控事件，以便 Claude 在您离开时做出反应。</p>
+</blockquote>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Channels 处于<a href="#research-preview">研究预览</a>阶段。它们需要通过 claude.ai 或控制台 API 密钥进行 Anthropic 身份验证，在 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 上不可用。Team 和 Enterprise 组织必须<a href="#enterprise-controls">明确启用它们</a>。</p></div></div>
+<p>Channel 是一个 MCP 服务器，它将事件推送到您运行中的 Claude Code 会话中，以便 Claude 可以对您不在终端时发生的事情做出反应。Channels 可以是双向的：Claude 读取事件并通过同一 channel 回复，就像聊天桥接一样。事件仅在会话打开时到达，因此对于始终在线的设置，您可以在后台进程或持久终端中运行 Claude。</p>
+<p>与生成新的云会话或等待被轮询的集成不同，事件到达您已经打开的会话中：请参阅 <a href="#how-channels-compare">channels 如何比较</a>。</p>
+<p>您将 channel 作为插件安装并使用您自己的凭据配置它。Telegram、Discord 和 iMessage 包含在研究预览中。</p>
+<p>当 Claude 通过 channel 回复时，您会在终端中看到入站消息，但看不到回复文本。终端显示工具调用和确认（如"已发送"），实际回复出现在其他平台上。</p>
+<p>如果您管理 Team、Enterprise 或控制台组织，请参阅<a href="#enterprise-controls">为您的组织启用 channels</a>。要构建您自己的 channel，请参阅 <a href="channels-reference.html">Channels 参考</a>。</p>
+<h2 id="supported-channels">支持的频道</h2>
+<p>每个支持的频道都是一个需要 <a href="https://bun.sh" target="_blank" rel="noopener">Bun</a> 的插件。在连接真实平台之前，要获得插件流程的实际演示，请尝试 <a href="#quickstart">fakechat 快速入门</a>。</p>
+<blockquote>
+<p>[tab] Telegram</p>
+<p>查看完整的 <a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/telegram" target="_blank" rel="noopener">Telegram 插件源代码</a>。</p>
+<p><strong>1. 创建 Telegram 机器人</strong></p>
+<p>在 Telegram 中打开 <a href="https://t.me/BotFather" target="_blank" rel="noopener">BotFather</a> 并发送 <code>/newbot</code>。给它一个显示名称和一个以 <code>bot</code> 结尾的唯一用户名。复制 BotFather 返回的令牌。</p>
+<p><strong>2. 安装插件</strong></p>
+<p>在终端中运行 <code>claude</code> 启动 Claude Code，然后在其输入框中输入以下内容：</p>
+<p><code>/plugin install telegram@claude-plugins-official</code></p>
+<p>如果安装失败，请匹配 Claude Code 报告的消息：</p>
+<ul>
+<li><code>Marketplace "claude-plugins-official" not found</code>：使用 <code>/plugin marketplace add anthropics/claude-plugins-official</code> 添加市场，然后重试安装。</li>
+<li><code>Plugin "&lt;name&gt;" not found in marketplace "claude-plugins-official"</code>：您本地的市场目录副本可能已过期。使用 <code>/plugin marketplace update claude-plugins-official</code> 刷新它，然后重试安装。如果重试后打印相同的消息，请参阅<a href="plugins-troubleshooting.html#plugin-not-found-in-marketplace">在市场中找不到插件</a>。</li>
+</ul>
+<p>当安装要求选择安装作用域时，选择用户作用域选项，以便插件在所有项目中可用。检查安装摘要：如果它报告 <code>Run /reload-plugins to apply.</code>，请参阅<a href="plugins-cli-reference.html#reload-plugins">在不重启的情况下应用插件更改</a>以使插件的配置命令可用。</p>
+<p><strong>3. 配置您的令牌</strong></p>
+<p>使用来自 BotFather 的令牌运行配置命令：</p>
+<p><code>/telegram:configure &lt;token&gt;</code></p>
+<p>这会将其保存到 <code>~/.claude/channels/telegram/.env</code>。您也可以在启动 Claude Code 之前在 shell 环境中设置 <code>TELEGRAM_BOT_TOKEN</code>。</p>
+<p><strong>4. 重启并启用频道</strong></p>
+<p>退出 Claude Code 并使用频道标志重启。这会启动 Telegram 插件，它开始轮询来自您的机器人的消息：</p>
+<p><code>bash theme={null}
+claude --channels plugin:telegram@claude-plugins-official</code></p>
+<p><strong>5. 配对您的账户</strong></p>
+<p>打开 Telegram 并向您的机器人发送任何消息。机器人会回复一个配对代码。</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>如果您的机器人没有响应，请确保 Claude Code 正在使用上一步中的 <code>--channels</code> 运行。机器人只能在频道处于活动状态时回复。</p>
+</blockquote>
+<p>回到 Claude Code，运行：</p>
+<p><code>/telegram:access pair &lt;code&gt;</code></p>
+<p>然后锁定访问权限，以便只有您的账户可以发送消息：</p>
+<p><code>/telegram:access policy allowlist</code></p>
+<p>[tab] Discord</p>
+<p>查看完整的 <a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/discord" target="_blank" rel="noopener">Discord 插件源代码</a>。</p>
+<p><strong>1. 创建 Discord 机器人</strong></p>
+<p>转到 <a href="https://discord.com/developers/applications" target="_blank" rel="noopener">Discord 开发者门户</a>，点击<strong>新应用程序</strong>，并为其命名。在<strong>机器人</strong>部分中，创建用户名，然后点击<strong>重置令牌</strong>并复制令牌。</p>
+<p><strong>2. 启用消息内容意图</strong></p>
+<p>在您的机器人设置中，滚动到<strong>特权网关意图</strong>并启用<strong>消息内容意图</strong>。</p>
+<p><strong>3. 邀请机器人加入您的服务器</strong></p>
+<p>转到 <strong>OAuth2 &gt; URL 生成器</strong>。选择 <code>bot</code> 作用域并启用这些权限：</p>
+<ul>
+<li>查看频道</li>
+<li>发送消息</li>
+<li>在线程中发送消息</li>
+<li>读取消息历史记录</li>
+<li>附加文件</li>
+<li>添加反应</li>
+</ul>
+<p>打开生成的 URL 以将机器人添加到您的服务器。</p>
+<p><strong>4. 安装插件</strong></p>
+<p>在终端中运行 <code>claude</code> 启动 Claude Code，然后在其输入框中输入以下内容：</p>
+<p><code>/plugin install discord@claude-plugins-official</code></p>
+<p>如果安装失败，请匹配 Claude Code 报告的消息：</p>
+<ul>
+<li><code>Marketplace "claude-plugins-official" not found</code>：使用 <code>/plugin marketplace add anthropics/claude-plugins-official</code> 添加市场，然后重试安装。</li>
+<li><code>Plugin "&lt;name&gt;" not found in marketplace "claude-plugins-official"</code>：您本地的市场目录副本可能已过期。使用 <code>/plugin marketplace update claude-plugins-official</code> 刷新它，然后重试安装。如果重试后打印相同的消息，请参阅<a href="plugins-troubleshooting.html#plugin-not-found-in-marketplace">在市场中找不到插件</a>。</li>
+</ul>
+<p>当安装要求选择安装作用域时，选择用户作用域选项，以便插件在所有项目中可用。检查安装摘要：如果它报告 <code>Run /reload-plugins to apply.</code>，请参阅<a href="plugins-cli-reference.html#reload-plugins">在不重启的情况下应用插件更改</a>以使插件的配置命令可用。</p>
+<p><strong>5. 配置您的令牌</strong></p>
+<p>使用您复制的机器人令牌运行配置命令：</p>
+<p><code>/discord:configure &lt;token&gt;</code></p>
+<p>这会将其保存到 <code>~/.claude/channels/discord/.env</code>。您也可以在启动 Claude Code 之前在 shell 环境中设置 <code>DISCORD_BOT_TOKEN</code>。</p>
+<p><strong>6. 重启并启用频道</strong></p>
+<p>退出 Claude Code 并使用频道标志重启。这会连接 Discord 插件，以便您的机器人可以接收和响应消息：</p>
+<p><code>bash theme={null}
+claude --channels plugin:discord@claude-plugins-official</code></p>
+<p><strong>7. 配对您的账户</strong></p>
+<p>在 Discord 上向您的机器人发送私信。机器人会回复一个配对代码。</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>如果您的机器人没有响应，请确保 Claude Code 正在使用上一步中的 <code>--channels</code> 运行。机器人只能在频道处于活动状态时回复。</p>
+</blockquote>
+<p>回到 Claude Code，运行：</p>
+<p><code>/discord:access pair &lt;code&gt;</code></p>
+<p>然后锁定访问权限，以便只有您的账户可以发送消息：</p>
+<p><code>/discord:access policy allowlist</code></p>
+<p>[tab] iMessage</p>
+<p>查看完整的 <a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/imessage" target="_blank" rel="noopener">iMessage 插件源代码</a>。</p>
+<p>iMessage 频道直接读取您的消息数据库，并通过 AppleScript 发送回复。它需要 macOS，不需要机器人令牌或外部服务。</p>
+<p><strong>1. 授予完全磁盘访问权限</strong></p>
+<p>位于 <code>~/Library/Messages/chat.db</code> 的消息数据库受 macOS 保护。服务器第一次读取它时，macOS 会提示访问权限：点击<strong>允许</strong>。提示会命名启动 Bun 的应用程序，例如终端、iTerm 或您的 IDE。</p>
+<p>如果提示没有出现或您点击了"不允许"，请在<strong>系统设置 &gt; 隐私和安全 &gt; 完全磁盘访问</strong>下手动授予访问权限，并添加您的终端。没有这个，服务器会立即退出，显示 <code>authorization denied</code>。</p>
+<p><strong>2. 安装插件</strong></p>
+<p>在终端中运行 <code>claude</code> 启动 Claude Code，然后在其输入框中输入以下内容：</p>
+<p><code>/plugin install imessage@claude-plugins-official</code></p>
+<p>如果安装失败，请匹配 Claude Code 报告的消息：</p>
+<ul>
+<li><code>Marketplace "claude-plugins-official" not found</code>：使用 <code>/plugin marketplace add anthropics/claude-plugins-official</code> 添加市场，然后重试安装。</li>
+<li><code>Plugin "&lt;name&gt;" not found in marketplace "claude-plugins-official"</code>：您本地的市场目录副本可能已过期。使用 <code>/plugin marketplace update claude-plugins-official</code> 刷新它，然后重试安装。如果重试后打印相同的消息，请参阅<a href="plugins-troubleshooting.html#plugin-not-found-in-marketplace">在市场中找不到插件</a>。</li>
+</ul>
+<p>当安装要求选择安装作用域时，选择用户作用域选项，以便插件在所有项目中可用。</p>
+<p>如果安装摘要报告 <code>Run /reload-plugins to apply.</code>，您无需在此处理，因为下一步中的重启会加载该插件。</p>
+<p><strong>3. 重启并启用频道</strong></p>
+<p>退出 Claude Code 并使用频道标志重启：</p>
+<p><code>bash theme={null}
+claude --channels plugin:imessage@claude-plugins-official</code></p>
+<p><strong>4. 给自己发短信</strong></p>
+<p>在任何登录到您的 Apple ID 的设备上打开消息，并向自己发送消息。它立即到达 Claude：自聊天绕过访问控制，无需设置。</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>Claude 发送的第一条回复会触发 macOS 自动化提示，询问您的终端是否可以控制消息。点击<strong>确定</strong>。</p>
+</blockquote>
+<p><strong>5. 允许其他发送者</strong></p>
+<p>默认情况下，只有您自己的消息通过。要让另一个联系人到达 Claude，请添加他们的句柄：</p>
+<p><code>/imessage:access allow +15551234567</code></p>
+<p>句柄是 <code>+country</code> 格式的电话号码或 Apple ID 电子邮件，如 <code>user@example.com</code>。</p>
+</blockquote>
+<h2 id="quickstart">快速入门</h2>
+<p>Fakechat 是一个官方支持的演示 channel，在 localhost 上运行聊天 UI，无需身份验证，也无需配置外部服务。</p>
+<p>安装并启用 fakechat 后，您可以在浏览器中输入，消息会到达您的 Claude Code 会话。Claude 回复，回复会显示在浏览器中。测试了 fakechat 界面后，尝试 <a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/telegram" target="_blank" rel="noopener">Telegram</a>、<a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/discord" target="_blank" rel="noopener">Discord</a> 或 <a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/imessage" target="_blank" rel="noopener">iMessage</a>。</p>
+<p>要尝试 fakechat 演示，您需要：</p>
+<ul>
+<li>Claude Code <a href="quickstart.html#step-1-install-claude-code">已安装并使用 claude.ai 账户或 Claude 控制台 API 密钥进行身份验证</a></li>
+<li><a href="https://bun.sh" target="_blank" rel="noopener">Bun</a> 已安装。预构建的 channel 插件是 Bun 脚本。使用 <code>bun --version</code> 检查；如果失败，<a href="https://bun.sh/docs/installation" target="_blank" rel="noopener">安装 Bun</a>。</li>
+<li><strong>Team、Enterprise 或托管控制台组织</strong>：您的管理员必须在托管设置中<a href="#enterprise-controls">启用 channels</a></li>
+</ul>
+<p><strong>1. 安装 fakechat 频道插件</strong></p>
+<p>在终端中运行 <code>claude</code> 启动 Claude Code，然后在其输入框中输入安装命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/plugin install fakechat@claude-plugins-official
+</code></pre></div>
+<p>如果安装失败，请匹配 Claude Code 报告的消息：</p>
+<ul>
+<li><code>Marketplace "claude-plugins-official" not found</code>：使用 <code>/plugin marketplace add anthropics/claude-plugins-official</code> 添加市场，然后重试安装。</li>
+<li><code>Plugin "&lt;name&gt;" not found in marketplace "claude-plugins-official"</code>：您本地的市场目录副本可能已过期。使用 <code>/plugin marketplace update claude-plugins-official</code> 刷新它，然后重试安装。如果重试后仍显示相同的消息，请参阅<a href="plugins-troubleshooting.html#plugin-not-found-in-marketplace">在市场中找不到插件</a>。</li>
+</ul>
+<p>当安装要求安装范围时，选择用户范围选项，以便插件在您的所有项目中可用。</p>
+<p>如果安装摘要报告 <code>Run /reload-plugins to apply.</code>，您不需要在此处采取行动，因为下一步中的重启会加载该插件。</p>
+<p><strong>2. 重启并启用 channel</strong></p>
+<p>退出 Claude Code，然后使用 <code>--channels</code> 重启并传递您安装的 fakechat 插件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--channels<span class="w"> </span>plugin:fakechat@claude-plugins-official
+</code></pre></div>
+<p>fakechat 服务器会自动启动。启动屏幕显示一个 channels 通知，说明来自 <code>plugin:fakechat@claude-plugins-official</code> 的消息直接注入此会话。如果插件未安装或不在批准的允许列表中，问题名称下方会出现警告行。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>您可以将多个插件传递给 <code>--channels</code>，用空格分隔。</p></div></div>
+<p><strong>3. 推送消息进来</strong></p>
+<p>在 <a href="http://localhost:8787" target="_blank" rel="noopener">http://localhost:8787</a> 打开 fakechat UI 并输入消息：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">what's in my working directory?
+</code></pre></div>
+<p>消息到达您的 Claude Code 会话。终端将其显示为入站 channel 行，如 <code>← fakechat · web: what's in my working directory?</code>，而模型将其接收为 <code>&lt;channel source="plugin:fakechat:fakechat"&gt;</code> 事件，使用插件的作用域服务器名称。Claude 读取它，完成工作，并调用 fakechat 的 <code>reply</code> 工具。如果 Claude Code 要求第一次回复的权限，请批准。答案显示在聊天 UI 中。</p>
+<p>如果 Claude 在您离开终端时遇到权限提示，会话会暂停，直到您响应。声明<a href="channels-reference.html#relay-permission-prompts">权限中继功能</a>的 Channel 服务器可以将这些提示转发给您，以便您可以远程批准或拒绝。对于无人值守使用，<a href="permission-modes.html#skip-all-checks-with-bypasspermissions-mode"><code>--dangerously-skip-permissions</code></a> 绕过大多数提示，但仅在您信任的环境中使用。即使这样，<a href="permission-modes.html#actions-no-mode-auto-approves">任何模式都不会自动批准的操作</a>仍然适用。</p>
+<p>当您使用 <code>-p</code> 以非交互模式运行 channels 时，需要终端输入的工具（如多选问题和 Plan Mode 批准）被禁用，以便会话永远不会因等待输入而停滞。</p>
+<h2 id="security">安全性</h2>
+<p>每个批准的 channel 插件都维护一个发送者允许列表：只有您添加的 ID 可以推送消息，其他所有人都会被静默丢弃。</p>
+<p>Telegram 和 Discord 通过配对来引导列表：</p>
+<ol>
+<li>在 Telegram 或 Discord 中找到您的机器人并向其发送任何消息</li>
+<li>机器人回复一个配对代码</li>
+<li>在您的 Claude Code 会话中，在提示时批准代码</li>
+<li>您的发送者 ID 被添加到允许列表</li>
+</ol>
+<p>iMessage 的工作方式不同：给自己发短信会自动绕过门禁，您可以使用 <code>/imessage:access allow</code> 通过句柄添加其他联系人。</p>
+<p>除此之外，您可以使用 <code>--channels</code> 控制每个会话启用哪些服务器，您的组织可以使用 <a href="#enterprise-controls"><code>channelsEnabled</code></a> 在 claude.ai Team 和 Enterprise 计划以及部署托管设置的控制台组织上控制可用性。</p>
+<p>仅在 <code>.mcp.json</code> 中还不足以推送消息：服务器还必须在 <code>--channels</code> 中命名。</p>
+<p>允许列表也会限制<a href="channels-reference.html#relay-permission-prompts">权限中继</a>（如果 channel 声明了它）。任何可以通过 channel 回复的人都可以批准或拒绝您会话中的工具使用，因此只允许列表您信任具有该权限的发送者。</p>
+<h2 id="enterprise-controls">Enterprise 控制</h2>
+<p>管理员通过两个<a href="settings.html">托管设置</a>控制可用性，用户无法覆盖。默认值取决于您如何进行身份验证：</p>
+<ul>
+<li><strong>claude.ai Team 和 Enterprise</strong>：channels 被阻止，直到所有者<a href="#enable-channels-for-your-organization">启用它们</a>。</li>
+<li><strong>Anthropic 控制台与 API 密钥身份验证</strong>：channels 默认被允许。仅当您的组织部署托管设置时才需要此设置。</li>
+</ul>
+<p>在所有情况下，在用户使用 <code>--channels</code> 为会话选择加入之前，没有 channel 会运行。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">设置</th>
+<th style="text-align: left;">目的</th>
+<th style="text-align: left;">未配置时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>channelsEnabled</code></td>
+<td style="text-align: left;">主开关。必须为 <code>true</code> 才能让任何 channel 传递消息。阻止所有 channels，包括开发标志（关闭时）。请参阅<a href="#enable-channels-for-your-organization">为您的组织启用 channels</a>。</td>
+<td style="text-align: left;">claude.ai Team 和 Enterprise：channels 被阻止。控制台：channels 被允许，除非您的组织部署托管设置，在这种情况下 channels 被阻止，直到设置此密钥</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>allowedChannelPlugins</code></td>
+<td style="text-align: left;">启用 channels 后哪些插件可以注册。设置时替换 Anthropic 维护的列表。</td>
+<td style="text-align: left;">应用 Anthropic 默认列表</td>
+</tr>
+</tbody>
+</table>
+<p>没有组织的 Pro、Max 和 Ultra 用户完全跳过这些检查：频道可用，用户使用 <code>--channels</code> 按会话选择加入。</p>
+<h3 id="enable-channels-for-your-organization">为您的组织启用 channels</h3>
+<p>可以从 <a href="https://claude.ai/admin-settings/claude-code" target="_blank" rel="noopener"><strong>Organization settings &gt; Claude Code &gt; Channels</strong></a> 为您的组织启用频道（需要所有者角色），或通过在托管设置中将 <code>channelsEnabled</code> 设置为 <code>true</code>。</p>
+<p>启用后，您组织中的用户可以使用 <code>--channels</code> 将 channel 服务器选择加入到各个会话中。如果设置被禁用或未设置，MCP 服务器仍会连接，其工具可以工作，但 channel 消息不会到达。启动警告会告诉用户让管理员启用该设置。</p>
+<h3 id="restrict-which-channel-plugins-can-run">限制哪些 channel 插件可以运行</h3>
+<p>默认情况下，Anthropic 维护的允许列表上的任何插件都可以注册为 channel。Team 和 Enterprise 计划上的管理员可以通过在托管设置中设置 <code>allowedChannelPlugins</code> 来替换该允许列表。使用此功能来限制允许哪些官方插件、批准来自您自己的内部市场的 channels，或两者兼有。每个条目命名一个插件及其来自的市场：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"channelsEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"allowedChannelPlugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"marketplace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claude-plugins-official"</span><span class="p">,</span><span class="w"> </span><span class="nt">"plugin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"telegram"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"marketplace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claude-plugins-official"</span><span class="p">,</span><span class="w"> </span><span class="nt">"plugin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"discord"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"marketplace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"acme-corp-plugins"</span><span class="p">,</span><span class="w"> </span><span class="nt">"plugin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"internal-alerts"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>如果您设置空数组，您会阻止所有 channel 插件从允许列表中，但 <code>--dangerously-load-development-channels</code> 仍可以为本地测试绕过该阻止。要完全阻止 channels，包括开发标志，请改为保持 <code>channelsEnabled</code> 未设置。</p>
+<p>此设置需要 <code>channelsEnabled: true</code>。如果用户将不在您列表中的插件传递给 <code>--channels</code>，Claude Code 会正常启动，但 channel 不会注册，启动通知会解释该插件不在组织的批准列表中。在 v2 MCP 客户端运行时上，channel 也可能无法注册，因为 Claude Code <a href="mcp.html#push-messages-with-channels">不会注册协商协议修订版本 2026-07-28 的 channel 服务器</a>。</p>
+<h2 id="research-preview">研究预览</h2>
+<p>Channels 是一个研究预览功能。可用性正在逐步推出，<code>--channels</code> 标志语法和协议契约可能会根据反馈而改变。</p>
+<p>在预览期间，<code>--channels</code> 和 <code>--dangerously-load-development-channels</code> 都不会出现在 <code>claude --help</code> 中。这些标志即使未列出也能正常工作。</p>
+<p>在预览期间，<code>--channels</code> 仅接受来自 Anthropic 维护的允许列表的插件，或来自您组织的允许列表（如果管理员已设置 <a href="#restrict-which-channel-plugins-can-run"><code>allowedChannelPlugins</code></a>）。<a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins" target="_blank" rel="noopener">claude-plugins-official</a> 中的 channel 插件是默认批准的集合。如果您传递不在有效允许列表中的内容，Claude Code 会正常启动，但 channel 不会注册，启动通知会告诉您原因。</p>
+<p>要测试您正在构建的 channel，请将其以 <code>plugin:&lt;name&gt;@&lt;marketplace&gt;</code> 或 <code>server:&lt;name&gt;</code> 的形式传递给 <code>--dangerously-load-development-channels</code>。有关测试您构建的自定义 channels 的信息，请参阅<a href="channels-reference.html#test-during-the-research-preview">在研究预览期间测试</a>。</p>
+<p>在 <a href="https://github.com/anthropics/claude-code/issues" target="_blank" rel="noopener">Claude Code GitHub 存储库</a>上报告问题或反馈。</p>
+<h2 id="how-channels-compare">channels 如何比较</h2>
+<p>几个 Claude Code 功能连接到终端外的系统，每个都适合不同类型的工作：</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>它做什么</th>
+<th>适合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="claude-code-on-the-web.html">云端会话</a></td>
+<td>在新的云沙箱中运行任务，从 GitHub 克隆</td>
+<td>委派您稍后检查的自包含异步工作</td>
+</tr>
+<tr>
+<td><a href="slack.html">Slack 中的 Claude</a></td>
+<td>从频道或线程中的 <code>@Claude</code> 提及生成云端会话</td>
+<td>直接从团队对话上下文启动任务</td>
+</tr>
+<tr>
+<td>标准 <a href="mcp.html">MCP 服务器</a></td>
+<td>Claude 在任务期间查询它；没有任何内容被推送到会话</td>
+<td>给 Claude 按需访问以读取或查询系统</td>
+</tr>
+<tr>
+<td><a href="remote-control.html">Remote Control</a></td>
+<td>您从 claude.ai 或 Claude 移动应用程序驱动您的本地会话</td>
+<td>在离开您的办公桌时指导进行中的会话</td>
+</tr>
+</tbody>
+</table>
+<p>Channels 通过将来自非 Claude 源的事件推送到您已经运行的本地会话中，填补了该列表中的空白。</p>
+<ul>
+<li><strong>聊天桥接</strong>：通过 Telegram、Discord 或 iMessage 从您的手机向 Claude 询问某事，答案会在同一聊天中返回，而工作在您的机器上针对您的真实文件运行。</li>
+<li><strong><a href="channels-reference.html#example-build-a-webhook-receiver">Webhook 接收器</a></strong>：来自 CI、您的错误跟踪器、部署管道或其他外部服务的 webhook 到达 Claude 已经打开您的文件并记得您正在调试的内容的地方。</li>
+</ul>
+<h2 id="next-steps">后续步骤</h2>
+<p>一旦您有一个 channel 运行，请探索这些相关功能：</p>
+<ul>
+<li><a href="channels-reference.html">构建您自己的 channel</a>，用于尚未有插件的系统</li>
+<li><a href="remote-control.html">Remote Control</a>，从您的手机驱动本地会话，而不是将事件转发到其中</li>
+<li><a href="scheduled-tasks.html">会话范围的定时任务</a>，按计时器轮询而不是对推送事件做出反应</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="hooks-guide.html"><span class="pager-dir">← 上一页</span><span class="pager-name">使用 hooks 自动化操作</span></a><a class="pager-link next" href="scheduled-tasks.html"><span class="pager-dir">下一页 →</span><span class="pager-name">按计划运行提示词</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#supported-channels">支持的频道</a><a class="toc-l2" href="#quickstart">快速入门</a><a class="toc-l2" href="#security">安全性</a><a class="toc-l2" href="#enterprise-controls">Enterprise 控制</a><a class="toc-l3" href="#enable-channels-for-your-organization">为您的组织启用 channels</a><a class="toc-l3" href="#restrict-which-channel-plugins-can-run">限制哪些 channel 插件可以运行</a><a class="toc-l2" href="#research-preview">研究预览</a><a class="toc-l2" href="#how-channels-compare">channels 如何比较</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

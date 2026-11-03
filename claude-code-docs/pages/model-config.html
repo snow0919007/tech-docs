@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>模型配置 · Claude Code 中文文档</title>
+<meta name="description" content="配置 Claude Code 使用的模型、工作量级别、扩展上下文和自动压缩窗口">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="model-config">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/model-config" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link active" href="model-config.html" aria-current="page">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>配置</span> <span class="sep">/</span> <span>模型与回复</span></div>
+    <article class="prose" id="article"><h1 id="_1">模型配置</h1>
+<blockquote>
+<p>配置 Claude Code 使用的模型、工作量级别、扩展上下文和自动压缩窗口</p>
+</blockquote>
+<h2 id="available-models">可用模型</h2>
+<p>对于 Claude Code 中的 <code>model</code> 设置，您可以配置以下任一项：</p>
+<ul>
+<li>一个<strong>模型别名</strong></li>
+<li>一个<strong>模型名称</strong></li>
+<li>Anthropic API：完整的**<a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noopener">模型名称</a>**</li>
+<li>Amazon Bedrock：推理配置文件 ARN</li>
+<li>Microsoft Foundry：部署名称</li>
+<li>Google Cloud 的 Agent Platform：版本名称</li>
+</ul>
+<p>有关哪种模型和 effort 级别适合不同类型工作的指导，请参阅博客上的 <a href="https://claude.com/blog/claude-model-and-effort-level-in-claude-code" target="_blank" rel="noopener">Choosing a Claude model and effort level in Claude Code</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><code>ANTHROPIC_BASE_URL</code> 改变的是请求发送的位置，而不是由哪个模型回答。要通过 LLM 网关路由 Claude，请参阅 <a href="llm-gateway.html">LLM gateways</a>。</p></div></div>
+<h3 id="model-aliases">模型别名</h3>
+<p>使用模型别名来选择模型设置，而无需记住确切的版本号：</p>
+<table>
+<thead>
+<tr>
+<th>模型别名</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>default</code></strong></td>
+<td>特殊值，清除任何模型覆盖并恢复到<a href="#default-model-setting">您账户的运行时默认值</a>。本身不是模型别名</td>
+</tr>
+<tr>
+<td><strong><code>best</code></strong></td>
+<td>如果 Fable 对您可用，则使用 <a href="#fable-alias-resolution"><code>fable</code> 别名解析到的模型</a>，否则使用与 <code>opus</code> 相同的模型</td>
+</tr>
+<tr>
+<td><strong><code>fable</code></strong></td>
+<td>为您最困难和运行时间最长的任务使用<a href="#fable-alias-resolution">您的提供商的 Fable 模型</a></td>
+</tr>
+<tr>
+<td><strong><code>sonnet</code></strong></td>
+<td>为日常编码任务使用最新的 Sonnet 模型</td>
+</tr>
+<tr>
+<td><strong><code>opus</code></strong></td>
+<td>为复杂推理任务使用最新的 Opus 模型</td>
+</tr>
+<tr>
+<td><strong><code>haiku</code></strong></td>
+<td>为简单任务使用快速高效的 Haiku 模型</td>
+</tr>
+<tr>
+<td><strong><code>sonnet[1m]</code></strong></td>
+<td>为长会话使用具有 <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model" target="_blank" rel="noopener">100 万 token 上下文窗口</a> 的 Sonnet。当 <code>sonnet</code> 已解析到具有原生 1M 窗口的 Sonnet 5.5 或 Sonnet 5 时无效</td>
+</tr>
+<tr>
+<td><strong><code>opus[1m]</code></strong></td>
+<td>为长会话使用具有 <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model" target="_blank" rel="noopener">100 万 token 上下文窗口</a> 的 Opus。当 <code>opus</code> 已解析到具有原生 1M 窗口的 Opus 4.7 或更高版本时无效</td>
+</tr>
+<tr>
+<td><strong><code>opusplan</code></strong></td>
+<td>特殊模式，在计划模式期间使用 <code>opus</code>，然后在执行期间切换到 <code>sonnet</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>opus</code>、<code>sonnet</code> 和 <code>haiku</code> 别名在 Anthropic API 上解析到最新版本，在其他一些提供商上解析到较早的版本：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">提供商</th>
+<th style="text-align: left;"><code>opus</code></th>
+<th style="text-align: left;"><code>sonnet</code></th>
+<th style="text-align: left;"><code>haiku</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Anthropic API</td>
+<td style="text-align: left;">Opus 5.5</td>
+<td style="text-align: left;">Sonnet 5.5</td>
+<td style="text-align: left;">Haiku 5.5</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="claude-platform-on-aws.html">Claude Platform on AWS</a></td>
+<td style="text-align: left;">Opus 5.5</td>
+<td style="text-align: left;">Sonnet 4.6</td>
+<td style="text-align: left;">Haiku 4.5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Amazon Bedrock、Google Cloud 的 Agent Platform</td>
+<td style="text-align: left;">Opus 5.5</td>
+<td style="text-align: left;">Sonnet 4.5</td>
+<td style="text-align: left;">Haiku 4.5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Microsoft Foundry</td>
+<td style="text-align: left;">Opus 4.6</td>
+<td style="text-align: left;">Sonnet 4.5</td>
+<td style="text-align: left;">Haiku 4.5</td>
+</tr>
+</tbody>
+</table>
+<p>除非您设置 <code>ANTHROPIC_DEFAULT_FABLE_MODEL</code>，否则 <code>fable</code> 别名解析到 Fable 5.1，但在 <a href="claude-apps-gateway.html">Claude apps gateway</a> 会话中除外，其中 <code>fable</code> 和 <code>best</code> 解析到 Fable 5。</p>
+<p>未配置为提供 <code>claude-fable-5-1</code> 的网关会拒绝对该模型的请求。要通过提供它的网关使用 Fable 5.1，请使用 <code>/model claude-fable-5-1</code> 选择它。</p>
+<p>当 <code>opus</code> 或 <code>sonnet</code> 解析到较旧的模型时，可以通过显式选择完整模型名称或设置 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 或 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 来使用较新的模型。</p>
+<p>较早的版本将这些别名解析到较旧的模型。有关每个别名更改的版本，请参阅<a href="#version-history">版本历史</a>。</p>
+<p>别名指向您的提供商的推荐版本，并随时间更新。要固定到特定版本，请使用完整模型名称，例如 <code>claude-opus-5-5</code>，或设置相应的环境变量，如 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Sonnet 5.5 需要 Claude Code v2.1.284 或更高版本，Opus 5.5 需要 v2.1.280 或更高版本。如果从较旧版本对其中某个模型的请求失败，请参阅 <a href="errors.html#claude-code-does-not-support-this-model">Claude Code does not support this model</a>。使用 Haiku 5.5 时请使用 v2.1.293 或更高版本。运行 <code>claude update</code> 进行升级。</p></div></div>
+<h3 id="work-with-fable">使用 Fable</h3>
+<p><a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noopener">Claude Fable 5.1</a> 和 Claude Fable 5 是 Claude Code 中最强大的模型，适合一次无法完成的大型任务。它们能够维持长时间的自主会话，在行动前进行调查，并比较小的模型更频繁地验证其工作。Fable 5.1 是较新的版本。</p>
+<p>这两个 Fable 模型都不是任何套餐或提供商上的账户类型默认值。请显式选择一个：</p>
+<ul>
+<li><strong>Fable 5.1</strong>：运行 <code>/model fable</code>，或使用 <code>claude --model fable</code> 启动。在 <a href="claude-apps-gateway.html">Claude apps gateway</a> 会话中，别名解析到 Fable 5，请改为运行 <code>/model claude-fable-5-1</code>。</li>
+<li><strong>Fable 5</strong>：按模型 ID 选择它。在 Anthropic API 上，运行 <code>/model claude-fable-5</code> 或使用 <code>claude --model claude-fable-5</code> 启动。在其他提供商上，使用您的提供商的 Fable 5 模型 ID，或使用 <code>ANTHROPIC_DEFAULT_FABLE_MODEL</code> <a href="#pin-models-for-third-party-deployments">固定它</a>。</li>
+</ul>
+<p>如果您直接连接到 Anthropic API，并且您的用户设置将 <code>claude-fable-5</code> 或 <code>claude-fable-5[1m]</code> 作为模型（例如因为您在 v2.1.257 之前在 <code>/model</code> 选择器中选择了 Fable），Claude Code 会在您首次运行 v2.1.257 或更高版本时将该保存的值更改为 <code>fable</code> 或 <code>fable[1m]</code> 别名。启动模型行会显示一次 <code>(auto-updated)</code>。项目、本地或托管设置中的 <code>claude-fable-5</code> 值保持原样。</p>
+<p>被 Fable 模型的安全分类器标记的请求（最常见于网络安全和生物学领域）会触发<a href="#automatic-model-fallback">自动模型回退</a>。</p>
+<p>要充分利用 Fable：</p>
+<ul>
+<li><strong>描述结果，而不是步骤</strong>：告诉它您想要的结果，让它规划路径。要让它持续朝着该结果工作，请<a href="goal.html">设置一个目标</a>。</li>
+<li><strong>交给它模糊的问题</strong>：根本原因调查、故障调试和架构决策正是额外调查和验证发挥作用的地方。</li>
+<li><strong>省去验证提醒</strong>：它无需太多提示就会验证自己的工作，因此通常不必提醒它测试或检查。</li>
+<li><strong>交给它更大的任务</strong>：把您通常会拆分成几部分的工作交给它。它能够维持长时间的会话而不失去思路。</li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Fable 5.1 需要 Claude Code v2.1.257 或更高版本。如果来自较旧版本的请求失败，请参阅 <a href="errors.html#claude-code-does-not-support-this-model">Claude Code does not support this model</a>。运行 <code>claude update</code> 进行升级。有关零数据保留下的可用性，请参阅 <a href="zero-data-retention.html#model-availability-under-zdr">Model availability under ZDR</a>。</p></div></div>
+<p>在 Anthropic API 上，Fable 模型会出现在 <code>/model</code> 选择器中，除非 <a href="#restrict-model-selection"><code>availableModels</code></a> 或<a href="#organization-model-restrictions">组织模型限制</a>将其排除。当您的组织完全无法使用 Fable 时，例如在<a href="zero-data-retention.html#model-availability-under-zdr">零数据保留</a>下，该行在选择器中保持灰显，并附有说明原因的注释。</p>
+<h4 id="fable-and-usage-credits">Fable 和使用额度</h4>
+<p>根据您的套餐和席位等级，Fable 的使用可能计入<a href="https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans" target="_blank" rel="noopener">使用额度</a>，而不是从您套餐包含的限额中扣除。在这种情况下，<code>/model</code> 选择器会在 Fable 行上显示"Requires usage credits"。要管理使用额度，请参阅 <a href="costs.html#add-usage-credits-to-your-subscription">Add usage credits to your subscription</a>。</p>
+<p>在交互式会话中，Claude Code 可能会显示 Fable 使用额度同意提示。使用组织计费的企业套餐成员不会看到该提示。您可以选择使用使用额度继续使用 Fable，或切换到您的默认模型。您也可以关闭提示：</p>
+<ul>
+<li>当您使用 <code>/model</code> 选择 Fable 模型时，将保持当前模型。</li>
+<li>在会话中途，Claude Code 会在您的默认模型上继续该轮次。</li>
+</ul>
+<p>在您选择使用使用额度继续使用 Fable 后，Claude Code 不会再显示该提示。</p>
+<p>在连接了 <a href="remote-control.html">Remote Control</a> 的会话、<a href="agent-view.html">后台会话</a>或 <a href="agent-teams.html">agent team</a> 队友的会话中，终端前可能没有人，因此 Claude Code 会将会话中途的同意提示保留到 <a href="settings-reference.html#dialogexpiry"><code>dialogExpiry</code></a> 截止时间，默认为五分钟。如果到截止时间仍无人回答，Claude Code 会结束该轮次而不发送请求，并在会话记录中添加通知，Remote Control 客户端也会显示该通知。您的模型选择保持不变，Claude Code 会在您发送下一条消息时再次请求同意。</p>
+<p>提示等待期间您可以执行的操作取决于会话：</p>
+<ul>
+<li>在连接了 Remote Control 的会话或队友的会话中，在终端按任意键可取消截止时间，Claude Code 会等待您的回答。</li>
+<li>在后台会话中，请在截止时间前回答。</li>
+<li>如果在有人在终端输入之前，您从远程客户端发送了新消息，Claude Code 会以相同的方式结束该轮次，您的新消息将开始下一轮。在有人在终端输入之后，Claude Code 会继续等待回答，并将您的新消息排在其后。</li>
+</ul>
+<p>在由其他应用通过 <a href="agent-sdk-overview.html">Agent SDK</a> 托管的会话中，是否显示提示由该应用决定。如果显示了提示，并且在相同的 <a href="settings-reference.html#dialogexpiry"><code>dialogExpiry</code></a> 截止时间前无人回答，Claude Code 会结束该轮次而不发送请求。</p>
+<p>在使用 <code>-p</code> 标志的<a href="headless.html">非交互模式</a>中，以及在不显示提示的 Agent SDK 应用中，Claude Code 永远不会请求同意。当其中的 Fable 请求会计入使用额度时，Claude Code 会直接计费而不询问。</p>
+<h3 id="setting-your-model">设置您的模型</h3>
+<p>您可以通过多种方式配置模型，按优先级顺序列出：</p>
+<ol>
+<li><strong>在会话期间</strong>：使用 <code>/model &lt;alias|name&gt;</code> 立即切换，或运行不带参数的 <code>/model</code> 打开选择器。参阅 <a href="prompt-caching.html#switching-models">when Claude Code asks you to confirm the switch</a></li>
+<li><strong>在启动时</strong>：使用 <code>claude --model &lt;alias|name&gt;</code> 启动</li>
+<li><strong>环境变量</strong>：设置 <code>ANTHROPIC_MODEL=&lt;alias|name&gt;</code></li>
+<li><strong>设置</strong>：使用 <code>model</code> 字段在设置文件中永久配置</li>
+<li><strong><a href="#set-a-default-model-for-new-sessions">新会话的默认值</a></strong>：设置 <code>ANTHROPIC_DEFAULT_MODEL=&lt;alias|name&gt;</code></li>
+</ol>
+<p><code>/model</code> 通过在您的用户设置中写入 <code>model</code> 字段，将您的选择保存为新会话的默认值。在选择器中：</p>
+<ul>
+<li><code>Enter</code>：切换模型并保存为默认值</li>
+<li><code>s</code>：仅为此会话切换模型，保持默认值不变。要使用其他按键，请重新绑定 <a href="keybindings.html#model-picker-actions"><code>modelPicker:thisSessionOnly</code></a></li>
+</ul>
+<p>直接输入 <code>/model &lt;name&gt;</code> 的行为与 <code>Enter</code> 相同。要仅为此会话切换，请使用 <code>/model</code> 打开选择器，然后在该模型的行上按 <code>s</code>。</p>
+<p>在企业套餐上，当您使用 claude.ai 账户登录并使用 <code>/model</code> 保存默认值时，Claude Code 也会在该账户上记录该选择。这需要 Claude Code v2.1.280 或更高版本。</p>
+<ul>
+<li>当您的管理员未设置<a href="#organization-default-model">组织默认模型</a>时，<a href="#default-model-setting">Default 选项</a>可以解析为记录的模型，此时选择器的 Default 行会显示该模型的名称。</li>
+<li>如果<a href="#restrict-model-selection">模型限制</a>排除了记录的模型，或该模型对您的账户不可用，并且您的管理员未设置组织默认模型，则 Default 选项会按未记录任何内容的情况解析。</li>
+<li>如果您在 <code>/model</code> 中选择 Default 或 <code>opusplan</code>，记录的选择不会改变。</li>
+</ul>
+<p>如果您使用 <code>/model</code> 切换模型，该切换也会影响<a href="sub-agents.html#choose-a-model">继承主对话模型的子代理</a>，因为 Claude Code 会在 Claude 启动它们时根据会话正在使用的模型解析它们的模型。在 Claude 将研究或测试运行委派给其中某个子代理之前切换到 Opus，该工作也会在 Opus 上运行。要让自定义子代理保持使用较小的模型，请在其定义中设置 <code>model</code>。</p>
+<p>如果您在使用 <code>-p</code> 标志的<a href="headless.html">非交互模式</a>中通过 <code>/model</code> 设置模型，您的选择仅适用于当前会话，不会保存为默认值；该模式中的 <code>/model</code> 需要 Claude Code v2.1.205 或更高版本。项目和托管设置仍然优先，并在下次启动时重新应用。您的管理员配置为覆盖用户选择的<a href="#organization-default-model">组织默认模型</a>也会在下次启动时重新应用。</p>
+<p>在 v2.1.144 到 v2.1.152 中，<code>/model</code> 仅适用于当前会话，在选择器中按 <code>d</code> 可保存默认值。</p>
+<p><code>--model</code> 标志和 <code>ANTHROPIC_MODEL</code> 环境变量仅适用于使用它们启动的会话。要同时在不同的终端中运行不同的模型，请分别使用各自的 <code>--model</code> 标志启动，而不是使用 <code>/model</code> 切换。</p>
+<p>当 Claude Code 直接或通过代理 Anthropic API 的 <a href="llm-gateway.html">LLM 网关</a>与 Anthropic API 通信时，<code>/model</code> 选择器中会显示价格，每行的价格即该行所选模型的价格。在<a href="third-party-integrations.html">第三方提供商</a>（如 Amazon Bedrock）和 <a href="claude-apps-gateway.html">Claude apps gateway</a> 上，由您的提供商或网关决定您支付的费用，因此选择器行不显示价格。价格仅是显示标签；它不影响某行选择哪个模型，也不影响提供商的计费。在 v2.1.206 之前，<a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 和网关会话显示 Anthropic 标价，且某行可能显示与其所选模型不同的模型的价格。</p>
+<p>使用 <code>claude --resume</code>、<code>--continue</code> 或 <code>/resume</code> 选择器启动的恢复会话会保持保存会话记录时所使用的模型。如果恢复的模型已被停用或被 <a href="#restrict-model-selection"><code>availableModels</code></a> 排除，会话会回退到正常的优先级顺序。在使用提供商特定部署 ID 而不是 Anthropic 模型 ID 的提供商上，如 Amazon Bedrock、Google Cloud 的 Agent Platform 和 Microsoft Foundry，完全不会恢复会话记录中的模型，会话会通过正常的优先级顺序解析其模型。</p>
+<p>如果您的 <code>model</code> 设置为 <code>haiku</code>，在 Haiku 模型上保存的会话会在 <code>haiku</code> 当前解析到的模型上恢复。例如，当 <code>haiku</code> 解析到 Haiku 5.5 后，在 Haiku 4.5 上保存的会话会在 Haiku 5.5 上恢复。</p>
+<p>您在新启动时通过 <code>--model</code> 或 <code>ANTHROPIC_MODEL</code> 选择的模型仍然优先于恢复的模型。从 v2.1.195 开始，<a href="#environment-variables"><code>ANTHROPIC_DEFAULT_OPUS_MODEL</code></a> 系列变量也是如此。<a href="#set-a-default-model-for-new-sessions"><code>ANTHROPIC_DEFAULT_MODEL</code></a> 在其章节所列条件下也可以优先。</p>
+<p>当启动时的活动模型来自项目或托管设置而不是您自己的选择时，启动标题会显示是哪个设置文件设置了它。运行 <code>/model</code> 可覆盖；项目或托管设置会在下次启动时重新应用。在嵌入 Claude Code 并设置 <a href="env-vars.html"><code>CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST</code></a> 的平台上，主机的模型配置优先于托管模型设置，而托管的 <code>availableModels</code> 允许列表仍然有效，除非主机提供自己的允许列表；<a href="settings.html#exceptions-to-managed-settings-precedence">Exceptions to managed settings precedence</a> 说明主机会覆盖哪些键和变量。</p>
+<p>如果您或您的组织配置了 <a href="hooks.html#premodelswitch">PreModelSwitch hook</a>，它们会在请求的切换生效之前运行，并可以阻止切换或要求您确认。</p>
+<p>当 Claude Code 无法判断您组织的<a href="settings-reference.html#enabledplugins">托管插件</a>提供了哪些 PreModelSwitch hook 时（例如因为某个托管插件加载失败），它会拒绝切换而不是在未经检查的情况下应用，并在每次新尝试时再次检查。有关消息和恢复方法，请参阅 <a href="errors.html#model-switch-was-blocked-by-a-premodelswitch-hook">Model switch was blocked by a PreModelSwitch hook</a>。</p>
+<p>当您通过 <a href="agent-sdk-overview.html">Agent SDK</a> 的 <code>setModel()</code> 方法、通过应用（如 <a href="desktop.html">Desktop app</a>）或从通过 <a href="remote-control.html">Remote Control</a> 连接的设备切换模型时，Claude Code 会在切换时检查该值：</p>
+<ul>
+<li><strong>Agent SDK 或应用</strong>：使用 Claude Code v2.1.268 或更高版本时，除非 Claude Code 在本地接受该模型 ID（如对您的<a href="#add-a-custom-model-option">自定义模型选项</a>所做的那样），否则它会在会话首次切换到该 ID 时向您的提供商确认。该确认在所有提供商上都会运行，您的提供商不提供的 ID 会在切换时被拒绝，而不是在您的下一个请求时失败。</li>
+<li><strong>Remote Control</strong>：在 Anthropic API 上，Claude Code 在本地检查该值，不发送请求。</li>
+</ul>
+<p>有关这些消息，请参阅 <a href="errors.html#model-is-not-a-recognized-model-id">Model is not a recognized model id</a> 和 <a href="errors.html#model-not-found">Model not found</a>。</p>
+<p>如果您使用 <code>--model</code> 标志、<code>ANTHROPIC_MODEL</code> 环境变量或 <code>model</code> 设置来设置模型，Claude Code 不会预先检查，拼写错误的值会在第一个请求时产生 <a href="errors.html#theres-an-issue-with-the-selected-model">There's an issue with the selected model</a>。</p>
+<p>当请求的模型有计划的停用日期或会被自动重新映射到较新版本时，Claude Code 会显示一条指明所请求模型的警告。交互式会话将其显示为启动通知。从 v2.1.182 开始，在使用默认文本输出格式的<a href="headless.html">非交互模式</a>中，相同的警告会写入 stderr。该检查也涵盖在<a href="sub-agents.html">子代理 frontmatter</a> 中设置的 <code>model</code>。对于 <code>--output-format json</code> 和 <code>stream-json</code>，stderr 警告会被抑制；请改为从<a href="headless.html#get-structured-output">结果消息</a>的 <code>modelUsage</code> 字段读取实际模型。</p>
+<p>例如，在 Opus 上启动会话：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--model<span class="w"> </span>opus
+</code></pre></div>
+<p>然后在会话内切换模型：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/model sonnet
+</code></pre></div>
+<p>示例设置文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">    </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"allow"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Bash(npm run lint)"</span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"opus"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="set-a-default-model-for-new-sessions">为新会话设置默认模型</h4>
+<p>设置 <code>ANTHROPIC_DEFAULT_MODEL=&lt;alias|name&gt;</code> 来选择会话默认启动的模型。需要 Claude Code v2.1.236 或更高版本。</p>
+<p>仅当以下各项都未选择模型时，Claude Code 才会在该变量的模型上启动新会话：</p>
+<ul>
+<li><code>--model</code> 标志</li>
+<li><code>ANTHROPIC_MODEL</code></li>
+<li>任何设置文件中的 <code>model</code> 值，包括您使用 <code>/model</code> 保存的选择</li>
+<li><a href="#organization-default-model">组织默认模型</a></li>
+</ul>
+<p>您使用 <code>/model</code> 保存的选择在后续启动时也优先于该变量。如果改为设置 <code>ANTHROPIC_MODEL</code>，无论您使用 <code>/model</code> 保存了什么，Claude Code 都会在下次启动时回到该变量的模型。</p>
+<p>除非应用了组织默认模型，Claude Code 也会将 Default 选项解析为该变量的模型。当 Default 选项解析为该变量的模型时，<code>/model</code> 选择器中的 Default 行会显示标签 Set by ANTHROPIC_DEFAULT_MODEL。</p>
+<p>在以下情况下，Claude Code 会忽略该变量，Default 选项会按未设置该变量的情况解析：</p>
+<ul>
+<li>您将其设置为 <code>default</code>、<code>inherit</code>、<code>opusplan</code> 或 <code>haiku</code></li>
+<li><a href="#enforce-the-allowlist-for-the-default-model"><code>enforceAvailableModels</code></a> 已启用</li>
+<li>您组织的<a href="#restrict-model-selection">模型限制</a>排除了该模型</li>
+<li>该模型对您的账户不可用</li>
+</ul>
+<p>当新会话会在该变量的模型上启动时，您使用 <code>claude --resume</code>、<code>--continue</code> 或 <code>/resume</code> 选择器恢复的会话也会在该模型上启动。Claude Code 不会恢复该会话的会话记录中保存的模型。在其他情况下，Claude Code 在您<a href="#setting-your-model">恢复会话</a>时不使用该变量。</p>
+<h4 id="a-new-session-starts-on-a-different-model-than-you-picked">新会话在与您所选不同的模型上启动</h4>
+<p>当您使用 <code>/model</code> 选择了模型，但下一个会话却在其他模型上启动时，常见原因如下：</p>
+<ul>
+<li><strong>您只为一个会话选择了它。</strong> 在选择器中按 <code>s</code>、使用 <code>--model</code> 启动以及在非交互模式中运行 <code>/model</code> 都仅适用于当前会话，不会改变已保存的默认值。</li>
+<li><strong>优先级更高的项设置了模型。</strong> 项目或托管设置中的 <code>model</code> 值、shell 中的 <code>ANTHROPIC_MODEL</code>，或管理员设置为覆盖用户选择的<a href="#organization-default-model">组织默认值</a>，会在每次启动时再次生效。您的 <code>/model</code> 选择仍然已保存，只是优先级较低。当项目或托管设置设置了模型时，启动标题会指明该文件。</li>
+<li><strong>Claude Code 无法保存您的选择。</strong> <code>/model</code> 会将 <code>model</code> 写入 <code>~/.claude/settings.json</code>。如果您无法写入该文件（例如因为另一个工具生成了该文件，或将其链接到只读副本），您所选的模型仅在当前会话中有效，下次启动时会读取旧值。请在生成该文件的工具中设置 <code>model</code>，或使该文件可写。参阅 <a href="settings.html#a-change-you-made-in-claude-code-is-lost-in-new-sessions">A change you made in Claude Code is lost in new sessions</a>。</li>
+<li><strong>您恢复了一个会话。</strong> 使用 <code>claude --resume</code> 或 <code>--continue</code> 恢复的会话通常会<a href="#setting-your-model">保持其原先使用的模型</a>，而不是当前的默认值。</li>
+</ul>
+<h2 id="restrict-model-selection">限制模型选择</h2>
+<p>管理员可以在<a href="managed-settings.html">托管或策略设置</a>中使用 <code>availableModels</code> 来限制用户可以选择的模型。条目可以匹配模型系列（如 <code>sonnet</code>）、版本前缀（如 <code>claude-sonnet-4-5</code>）或完整模型 ID（如 <code>claude-sonnet-4-5-20250929</code>）。版本前缀也会匹配扩展它的后续模型 ID，因此 <code>claude-fable-5</code> 允许 Fable 5 和 Fable 5.1，而 <code>claude-fable-5-1</code> 仅允许 Fable 5.1。要阻止列表允许的模型，或使每个模型 ID 条目仅允许它命名的版本，请参阅<a href="#block-specific-models-or-versions">阻止特定模型或版本</a>。</p>
+<p>在嵌入 Claude Code 并设置 <a href="env-vars.html"><code>CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST</code></a> 的平台上，主机的模型配置优先于托管模型设置，而托管的 <code>availableModels</code> 允许列表保持有效，除非主机提供自己的列表；<a href="settings.html#exceptions-to-managed-settings-precedence">托管设置优先级的例外</a>说明了主机覆盖的键和变量。</p>
+<p>设置 <code>availableModels</code> 时，允许列表适用于用户可以指定模型的所有地方：</p>
+<ul>
+<li><strong>主会话模型</strong>：<code>/model</code>、<code>--model</code> 标志、<code>ANTHROPIC_MODEL</code> 环境变量、<code>model</code> 设置、<a href="#set-a-default-model-for-new-sessions"><code>ANTHROPIC_DEFAULT_MODEL</code></a> 和<a href="#setting-your-model">恢复会话</a>时恢复的模型</li>
+<li><strong>别名解析</strong>：环境变量 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code>、<code>ANTHROPIC_DEFAULT_SONNET_MODEL</code>、<code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code> 和 <code>ANTHROPIC_DEFAULT_FABLE_MODEL</code> 无法将允许的别名重定向到列表外的模型</li>
+<li><strong>快速模式</strong>：当 <code>/fast</code> 会隐式切换到列表外的 Opus 模型时，它会拒绝切换，并显示消息"不在您组织的允许模型中"</li>
+<li><strong>子代理和队友模型</strong>：<a href="sub-agents.html#choose-a-model">子代理</a> frontmatter 中的 <code>model</code> 字段、Agent 工具的 <code>model</code> 参数、<a href="agent-teams.html#specify-teammates-and-models">agent team</a> 队友模型、<code>CLAUDE_CODE_SUBAGENT_MODEL</code>，以及在 v2.1.197 及更早版本中，<code>/agents</code> 向导中的模型选择器&#x20;</li>
+<li><strong>skill 和命令模型</strong>：<a href="skills.html">skill 和命令</a>中的 <code>model</code> frontmatter</li>
+<li><strong>顾问模型</strong>：配置的 <a href="advisor.html"><code>advisorModel</code></a> 设置和 <code>--advisor</code> 标志</li>
+<li><strong>后台 Agent 模型</strong>：在 <a href="agent-view.html">Dispatch 选择器</a>中选择的模型</li>
+</ul>
+<p>在 Anthropic API 和 <a href="claude-platform-on-aws.html">AWS 上的 Claude Platform</a> 上，当允许列表允许该模型时，模型系列别名 <code>opus</code>、<code>sonnet</code>、<code>haiku</code> 或 <code>fable</code> 解析为其通常的模型。当允许列表阻止该模型时，Claude Code 替换允许列表允许的该系列的最新版本，并显示一条通知，命名请求的和替换的模型。例如，使用 <code>["sonnet", "claude-opus-4-6"]</code>，<code>/model opus</code> 和 <code>--model opus</code> 都选择 Claude Opus 4.6，这是允许的最新 Opus。在 v2.1.205 之前，最新发布版本在列表外的别名被拒绝或替换，就像任何其他被阻止的选择一样，即使列表允许较旧版本。</p>
+<p>替换需要一个允许的版本来落地：当允许列表不允许别名系列的任何版本时，别名遵循下面的拒绝和替换行为，就像任何其他被阻止的值一样。</p>
+<p>Claude Code 根据模型的设置位置处理任何其他被阻止的选择：</p>
+<ul>
+<li><strong><code>/model</code></strong>：Claude Code 以错误拒绝切换</li>
+<li><strong><code>--model</code> 标志、<code>ANTHROPIC_MODEL</code> 或 <code>model</code> 设置</strong>：Claude Code 在启动时用警告替换该值，命名请求的和替换的模型，会话在默认模型上启动</li>
+<li><strong><a href="#set-a-default-model-for-new-sessions"><code>ANTHROPIC_DEFAULT_MODEL</code></a></strong>：Claude Code 忽略该变量</li>
+<li><strong>子代理或队友覆盖</strong>：Claude Code 在备用模型上运行子代理或队友，而不是使请求失败。有关子代理回退，请参阅<a href="sub-agents.html#choose-a-model">选择模型</a>，有关队友回退，请参阅<a href="agent-teams.html#specify-teammates-and-models">指定队友和模型</a>。</li>
+</ul>
+<p>在交互式会话中，当 Claude Code 通过此回退或上面的最新允许版本替换来替换子代理的模型时，它会警告您，命名请求的和替换的模型；它不报告队友的回退。</p>
+<p>在上面的最新允许版本替换操作的地方，被阻止的系列别名遵循它。在 v2.1.222 之前，别名在每个提供商上像任何其他被阻止的值一样回退<br />
+* <strong>skill 或命令覆盖</strong>：Claude Code 忽略覆盖，包括被阻止的系列别名，skill 或命令在会话模型上运行。<a href="skills.html#run-skills-in-a-subagent">在子代理中运行</a>的 skill 或命令遵循上面的子代理行为<br />
+* <strong><code>advisorModel</code> 设置</strong>：顾问对会话禁用<br />
+* <strong><code>--advisor</code> 标志</strong>：Claude Code 在启动时以错误退出。在<a href="agent-view.html">后台会话</a>中，它改为在没有顾问的情况下启动会话，而不是退出<br />
+* <strong><code>CLAUDE_CODE_AUTO_MODE_MODEL</code></strong>：Claude Code 忽略该变量，并像您未设置它一样为其<a href="permission-modes.html#default-classifier-model">自动模式分类器请求</a>选择模型</p>
+<p>Claude Code 从 <code>/model</code> 选择器中隐藏排除的模型。您列出的模型 ID 是否也会获得自己的一行，因提供商而异：</p>
+<ul>
+<li><strong>Anthropic API、<a href="claude-platform-on-aws.html">AWS 上的 Claude Platform</a>、<a href="claude-apps-gateway.html">Claude apps 网关</a>或通过 <code>ANTHROPIC_BASE_URL</code> 设置的 <a href="llm-gateway.html">LLM 网关</a></strong>：您列出的没有内置选择器行的 Anthropic 模型 ID 显示为其自己的标记行。Claude Code 会为 Opus、Sonnet 和 Haiku 版本添加这样的行，例如列表固定的较旧版本。如果您在 <a href="settings-reference.html#modelpicker"><code>modelPicker</code></a> 阵容中设置了 <code>replaceBuiltInOptions</code>，则该行不会显示。在 v2.1.199 之前，这样的 ID 只能通过键入 <code>/model &lt;id&gt;</code> 来选择。</li>
+<li><strong>Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry</strong>：除非您列出的模型 ID 以 <code>anthropic.</code> 开头，否则 Claude Code 不会为其添加行，无论它是 Anthropic 模型 ID 还是提供商特定的 ID。<a href="#mantle-model-ids">Mantle 模型 ID</a> 带有该前缀。要显示没有内置行的已列出版本，还需将其添加到 <a href="settings-reference.html#modelpicker"><code>modelPicker</code></a> 阵容中，该阵容接受您的提供商格式的 ID。</li>
+</ul>
+<p>Claude Code 代表您进行的模型更改以相同的方式检查：</p>
+<ul>
+<li><strong><a href="#fallback-model-chains">备用模型链</a></strong>：允许列表外的条目被删除</li>
+<li><strong>计划模式升级</strong>：在 Anthropic API 和 AWS 上的 Claude Platform 上，升级（如 <a href="#opusplan-model-setting"><code>opusplan</code></a>）到排除的模型使用升级系列允许的最新版本。在具有提供商特定模型 ID 的提供商上，以及当不允许任何版本时，升级被跳过，规划继续在会话的模型上进行</li>
+<li><strong><a href="#automatic-model-fallback">自动模型回退</a></strong>：目标被排除的回退不运行，因此标记的请求以拒绝结束</li>
+<li><strong><a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式分类器</a></strong>：当允许列表排除<a href="permission-modes.html#default-classifier-model">默认分类器模型</a>时，原本会使用该模型的分类器请求改为在会话模型上运行，或在 <a href="#work-with-fable">Fable</a> 会话中在 Opus 模型上运行。在 Anthropic API 以外的提供商上，该 Opus 回退在您于 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 中设置的模型上运行，否则在 Opus 5 上运行，不咨询允许列表。需要 Claude Code v2.1.210 或更高版本</li>
+<li><strong><a href="fast-mode.html">快速模式</a></strong>：当会话之后运行的模型在允许列表外时，启用快速模式被拒绝</li>
+<li><strong>Amazon Bedrock 和 Google Cloud 的 Agent Platform 上的可用性回退</strong>：当您的帐户在会话中途失去对某个模型的访问权限时，切换到其他模型时会跳过被排除的模型。<a href="amazon-bedrock.html#when-your-organization-enforces-a-model-allowlist">Amazon Bedrock</a> 和 <a href="google-vertex-ai.html#when-your-organization-enforces-a-model-allowlist">Google Cloud 的 Agent Platform</a> 上的启动模型检查仅在托管设置同时设置了 <a href="#enforce-the-allowlist-for-the-default-model"><code>enforceAvailableModels</code></a> 时才跳过被排除的模型</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"availableModels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"sonnet"</span><span class="p">,</span><span class="w"> </span><span class="s2">"haiku"</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="surface-coverage">使用入口覆盖范围</h3>
+<p>每个使用入口都强制执行它接收的允许列表。哪个交付机制到达每个使用入口不同：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">交付机制</th>
+<th style="text-align: left;">CLI 和 IDE</th>
+<th style="text-align: left;">桌面本地会话</th>
+<th style="text-align: left;">Web、移动和云端会话</th>
+<th style="text-align: left;">Agent SDK 和非交互式</th>
+<th style="text-align: left;">Cowork</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">来自管理控制台的<a href="server-managed-settings.html">服务器管理设置</a></td>
+<td style="text-align: left;">强制执行</td>
+<td style="text-align: left;">强制执行</td>
+<td style="text-align: left;">强制执行，除了<a href="https://claude.com/docs/claude-tag/overview" target="_blank" rel="noopener">Claude Tag</a> 会话</td>
+<td style="text-align: left;">强制执行</td>
+<td style="text-align: left;">远程 Cowork 会话：服务器检查模型。在用户的机器上：未交付。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="managed-settings.html#delivery-mechanisms">MDM 或托管设置文件</a></td>
+<td style="text-align: left;">强制执行</td>
+<td style="text-align: left;">强制执行</td>
+<td style="text-align: left;">在 Anthropic 托管环境中未交付；在<a href="self-hosted-environments.html">自托管环境</a>中，根据<a href="managed-settings.html#how-claude-code-combines-managed-sources">Claude Code 如何组合托管源</a>从运行器镜像强制执行</td>
+<td style="text-align: left;">强制执行</td>
+<td style="text-align: left;">在部署的地方强制执行</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><a href="claude-code-on-the-web.html">云端会话</a>（包括您从桌面应用启动的会话）默认在 Anthropic 管理的 VM 上运行：部署到您的设备的设置不会到达它们，因此通过服务器管理设置交付允许列表。您的组织路由到<a href="self-hosted-environments.html">自托管环境</a>的会话在您自己的计算上运行，也读取运行器镜像中的托管设置文件。<a href="managed-settings.html#how-claude-code-combines-managed-sources">Claude Code 如何组合托管源</a>说明了该文件何时适用。云端会话中的中途模型切换在请求的模型被允许列表排除时被拒绝。当您的服务器管理设置中的 <code>availableModels</code> 列表非空时，服务器拒绝在 claude.ai/code 或从桌面应用以列表排除的模型启动云端会话的请求。</li>
+<li><a href="https://claude.com/docs/claude-tag/overview" target="_blank" rel="noopener">Claude Tag</a> 会话在云环境中运行，但不接收服务器管理设置；在<a href="self-hosted-environments.html">自托管环境</a>中，它们仍然读取运行器镜像中的托管设置文件。要为这些会话设置模型，请参阅 Claude Tag 管理员指南中的<a href="https://claude.com/docs/claude-tag/admins/customize#choose-the-model-for-a-scope" target="_blank" rel="noopener">为作用域选择模型</a>。</li>
+<li>Cowork（Claude 桌面应用中的 Agent 式工作选项卡）在 Claude Code 上运行其会话，但按设计不从 claude.ai 管理控制台接收服务器管理设置。当您的服务器管理设置中的 <code>availableModels</code> 列表非空且用户选择列表外的模型时，服务器拒绝该模型用于远程 Cowork 会话。当托管设置文件存在于会话运行的地方时，它适用于 Cowork 会话；远程 Cowork 会话在 Anthropic 管理的 VM 上运行，其中不存在设备部署的文件。</li>
+<li><a href="server-managed-settings.html#platform-availability">第三方提供商</a>（如 Amazon Bedrock、Google Cloud 的 Agent Platform、Microsoft Foundry 和 <a href="claude-platform-on-aws.html">AWS 上的 Claude Platform</a>）上的会话不接收服务器管理设置，因此通过 MDM 或托管设置文件在那里交付允许列表。</li>
+<li>来自管理控制台的交付还要求会话使用登录到您组织的<a href="server-managed-settings.html#platform-availability">符合条件的登录</a>或为您组织签发的 OAuth 令牌来获取设置。对于使用 API 密钥进行身份验证的设备群（无论是直接配置的，还是由 <a href="settings-reference.html#apikeyhelper"><code>apiKeyHelper</code></a> 脚本生成的），请通过 MDM 或托管设置文件交付允许列表。</li>
+<li>桌面代码选项卡还托管 <a href="desktop.html#ssh-sessions">SSH 会话</a>，它们从运行的远程主机读取托管设置文件。请参阅<a href="desktop.html#managed-settings">桌面托管设置</a>。</li>
+<li>claude.ai 和桌面应用中的模型选择器隐藏或灰显您的组织的允许列表排除的模型。选择器状态是用户的便利；它不强制执行允许列表。</li>
+</ul>
+<h3 id="default-model-behavior">默认模型行为</h3>
+<p>使用默认前缀匹配，<code>availableModels</code> 本身将默认选项留在帐户的系统<a href="#default-model-setting">运行时默认</a>上，直到您也设置 <a href="#enforce-the-allowlist-for-the-default-model"><code>enforceAvailableModels</code></a>。如果该默认值是您打算限制的模型，也设置 <code>enforceAvailableModels</code>，或<a href="#block-specific-models-or-versions">阻止该模型</a>。</p>
+<p>使用 <code>availableModels: []</code>，命名的模型选择被阻止，<code>enforceAvailableModels</code> 无效。</p>
+<h3 id="enforce-the-allowlist-for-the-default-model">为默认模型强制执行允许列表</h3>
+<p>在托管设置中将 <code>enforceAvailableModels: true</code> 与非空 <code>availableModels</code> 一起设置，以将允许列表扩展到默认选项。这需要 Claude Code v2.1.175 或更高版本。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"availableModels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"sonnet"</span><span class="p">,</span><span class="w"> </span><span class="s2">"haiku"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"enforceAvailableModels"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>对于在其帐户上没有模型<a href="#setting-your-model">记录</a>的成员，默认选项解析为帐户类型默认值，或当管理员设置了一个时解析为<a href="#organization-default-model">组织默认模型</a>。当该模型不在允许列表中时，默认选项改为解析为命名允许的、可用模型的第一个 <code>availableModels</code> 条目，<code>/model</code> 选择器的默认行显示该模型。这适用于到达默认值的所有地方：会话启动、在 <code>/model</code> 中选择默认值、<a href="#fallback-model-chains">备用模型链</a>中的 <code>"default"</code> 关键字，以及排除选择被删除时使用的备用模型。在成员帐户上记录的模型也针对 <code>availableModels</code> 进行检查；<a href="#setting-your-model">设置您的模型</a>描述了默认选项如何处理它。</p>
+<p><code>enforceAvailableModels</code> 仅当 <code>availableModels</code> 非空时才重新映射默认选项。当 <code>availableModels</code> 非空但没有条目解析为允许的、可用的模型时，强制执行被跳过，并显示仅在 <code>--debug</code> 下可见的警告。在列表中保留至少一个保证可用的条目以避免这种情况。</p>
+<p>在您交付的最高排名的托管源中一起部署两个键。默认情况下，Claude Code 仅读取该源，因此放在托管设置文件中的对在管理控制台交付任何设置时被忽略；在<a href="managed-settings.html#how-claude-code-combines-managed-sources">Claude Code 如何组合托管源</a>中的选择加入合并下，Claude Code 仍然忽略来自排名低于设置 <code>availableModels</code> 的源的 <code>modelOverrides</code> 映射。</p>
+<h3 id="control-the-model-users-run-on">控制用户运行的模型</h3>
+<p><code>model</code> 设置是初始选择，不是强制执行。它设置会话启动时哪个模型处于活动状态，但用户仍然可以打开 <code>/model</code> 并选择默认值，该值解析为系统的<a href="#default-model-setting">运行时默认</a>，无论 <code>model</code> 设置为什么，除非 <a href="#enforce-the-allowlist-for-the-default-model"><code>enforceAvailableModels</code></a> 或<a href="#block-specific-models-or-versions">阻止特定版本的键</a>适用于它。</p>
+<p>要完全控制模型体验，请组合这些设置：</p>
+<ul>
+<li><strong><code>availableModels</code></strong>：限制用户可以切换到的命名模型</li>
+<li><strong><code>enforceAvailableModels</code></strong>：将 <code>availableModels</code> 允许列表扩展到默认选项，因此默认值无法解析到列表外的模型</li>
+<li><strong><code>deniedModels</code></strong> 和 <strong><code>availableModelsMatch</code></strong>：<a href="#block-specific-models-or-versions">阻止特定版本</a>，<code>availableModels</code> 条目会允许这些版本</li>
+<li><strong><code>model</code></strong>：在会话启动时设置初始模型选择</li>
+<li><strong><code>ANTHROPIC_DEFAULT_SONNET_MODEL</code></strong> / <strong><code>ANTHROPIC_DEFAULT_OPUS_MODEL</code></strong> / <strong><code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code></strong> / <strong><code>ANTHROPIC_DEFAULT_FABLE_MODEL</code></strong>：控制 <code>sonnet</code>、<code>opus</code>、<code>haiku</code> 和 <code>fable</code> 别名解析为什么，以及<a href="#default-model-setting">帐户类型默认</a>使用哪个版本</li>
+</ul>
+<p>此示例在 Sonnet 4.5 上启动用户，将选择器限制为 Sonnet 和 Haiku，并确保默认值解析为允许列表上的模型，而不是层级默认值：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claude-sonnet-4-5"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"availableModels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"claude-sonnet-4-5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"haiku"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"enforceAvailableModels"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"ANTHROPIC_DEFAULT_SONNET_MODEL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claude-sonnet-4-5"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>没有 <code>enforceAvailableModels</code> 或 <code>env</code> 块，在选择器中选择默认值的用户获得<a href="#default-model-setting">运行时默认</a>，而不是 <code>model</code> 中固定的版本。这两个设置覆盖不同的范围：<code>enforceAvailableModels</code> 使默认值遵守允许列表，而 <code>env</code> 块固定允许的别名（如 <code>sonnet</code>）解析为哪个版本。当限制模型系列足够时单独使用 <code>enforceAvailableModels</code>；当您还需要固定特定版本时添加 <code>env</code> 块。</p>
+<h3 id="merge-behavior">合并行为</h3>
+<p>当 Claude Code 应用的托管设置定义 <code>availableModels</code> 时，该列表单独适用，除了<a href="settings.html#exceptions-to-managed-settings-precedence">提供自己的主机平台</a>：用户、项目或本地设置中的条目无法扩展它，Claude Code 也永远不会跨托管源合并 <code>availableModels</code>；<a href="managed-settings.html#how-claude-code-combines-managed-sources">Claude Code 如何组合托管源</a>说明了哪个源的列表适用。否则，来自用户、项目和本地设置的列表像其他数组设置一样<a href="settings.html#settings-precedence">连接和去重</a>。在 Claude Code v2.1.175 之前，来自较低优先级作用域的条目合并到托管列表中，而不是被它替换。</p>
+<p>在有效列表中，命名系列中特定模型的条目（无论是版本前缀还是完整模型 ID）禁用该系列的通配符条目。例如，使用 <code>["sonnet", "claude-sonnet-4-5"]</code> 时，用户只能选择 <code>claude-sonnet-4-5</code> <a href="#restrict-model-selection">匹配</a>的模型 ID，而不是每个 Sonnet 模型。</p>
+<h3 id="mantle-model-ids">Mantle 模型 ID</h3>
+<p><code>availableModels</code> 中以 <code>anthropic.</code> 开头的条目会作为自定义选项添加到 <code>/model</code> 选择器中。这是<a href="#pin-models-for-third-party-deployments">为第三方部署固定模型</a>中描述的别名匹配的例外。启用 <a href="amazon-bedrock.html#use-the-mantle-endpoint">Amazon Bedrock Mantle 端点</a>后，Claude Code 会将符合 Mantle 格式的条目路由到该端点。该设置仍然将选择器限制为列出的条目，Mantle ID 嵌入系列名称，因此它计为特定条目并禁用该系列的通配符：在任何 Mantle ID 旁边，列出您想保持可选择的版本前缀或完整 ID。请参阅<a href="#merge-behavior">合并行为</a>。</p>
+<h3 id="block-specific-models-or-versions">阻止特定模型或版本</h3>
+<p><code>availableModels</code> 条目（如 <code>claude-opus-5</code>）也允许扩展它的后续版本（如 Opus 5.5），一旦 Claude Code 支持它们。两个托管设置让您保留一个版本，两者都需要 Claude Code v2.1.283 或更高版本：</p>
+<ul>
+<li><a href="settings-reference.html#deniedmodels"><code>deniedModels</code></a>：列出要阻止的模型。即使 <code>availableModels</code> 允许，列出的模型也被阻止，该键也适用于根本没有允许列表的情况。没有条目阻止的版本保持允许</li>
+<li><a href="settings-reference.html#availablemodelsmatch"><code>availableModelsMatch</code></a>：将其设置为 <code>"exact"</code>，以便 <code>availableModels</code> 中的每个模型 ID 仅允许它命名的版本。列出的模型 ID 的较新版本然后保持被阻止，直到您将其添加到列表中</li>
+</ul>
+<p>较早的版本忽略两个键，因此也设置 <a href="settings-reference.html#requiredminimumversion"><code>requiredMinimumVersion</code></a> 以防止这些版本启动。</p>
+<p>此示例允许 Opus 和 Sonnet 模型，并在每种拼写中阻止 Opus 5.5，包括日期和提供商特定的 ID：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"availableModels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"opus"</span><span class="p">,</span><span class="w"> </span><span class="s2">"sonnet"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"deniedModels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"claude-opus-5-5"</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>被阻止的模型（无论 <code>deniedModels</code> 是否命名它或 <code>"exact"</code> 列表是否省略它）在<a href="#restrict-model-selection">允许列表适用</a>的所有地方被视为被阻止的选择。它从 <code>/model</code> 选择器中隐藏，<code>/model &lt;name&gt;</code> 拒绝它。如果您用 <code>--model</code>、<code>ANTHROPIC_MODEL</code> 或 <code>model</code> 设置命名被阻止的模型 ID，Claude Code 在启动时删除它并解析默认选项。如果 <a href="hooks.html">hook</a> 或后台请求命名 <code>deniedModels</code> 阻止的模型（如 Agent hook 的 <code>model</code> 字段），该请求在会话的模型上运行。</p>
+<p>默认选项遵循两个键，无论您是否设置 <a href="#enforce-the-allowlist-for-the-default-model"><code>enforceAvailableModels</code></a>。如果您使用非空 <code>availableModels</code> 设置它，被阻止的默认值计为允许列表外的模型。否则，会解析为被阻止模型的默认选项按此顺序下降：</p>
+<ol>
+<li>同一系列允许的最新版本</li>
+<li>每个较低成本系列允许的最新模型：Sonnet，然后 Haiku</li>
+<li>命名允许模型的第一个 <code>availableModels</code> 条目</li>
+</ol>
+<p>如果这些都不允许，在默认选项上启动的会话<a href="errors.html#managed-settings-block-the-default-model">拒绝启动</a>，并显示命名要修复的键的错误。<code>"exact"</code> 列表仅当托管 <code>availableModels</code> 列表至少命名一个模型或系列时才影响默认选项。</p>
+<p>Claude Code 仅从托管设置读取两个键。如果您在用户、项目或本地设置中或使用 <code>--settings</code> 设置其中任何一个，Claude Code 会忽略它并显示警告。</p>
+<h3 id="organization-model-restrictions">组织模型限制</h3>
+<p>Claude Enterprise 计划上的组织管理员通过在 claude.ai 管理控制台中禁用单个模型来限制成员可以运行的模型。此限制在 Claude Code 进行身份验证时与帐户的权利一起交付，与设置中的任何 <code>availableModels</code> 列表分开，服务器在创建会话时独立强制执行相同的限制。需要 Claude Code v2.1.187 或更高版本。</p>
+<p>当成员登录或使用自己的 API 密钥时，限制适用。限定于组织的凭据（如组织服务密钥）不与用户绑定，因此限制不适用于它们。</p>
+<p>Claude Console 没有模型限制控制。没有 Claude Enterprise 计划的组织（包括其成员通过 Anthropic API 进行身份验证的组织）使用<a href="managed-settings.html">托管设置</a>中的 <a href="#restrict-model-selection"><code>availableModels</code></a> 限制模型，添加 <a href="#enforce-the-allowlist-for-the-default-model"><code>enforceAvailableModels</code></a> 以覆盖默认选项。<a href="#surface-coverage">使用入口覆盖范围</a>说明了每个使用入口如何接收和强制执行这些设置。</p>
+<p>受限模型从 <code>/model</code> 选择器中隐藏。用 <code>--model</code>、<code>ANTHROPIC_MODEL</code> 环境变量或 <code>model</code> 设置按名称选择它显示通知 <code>Model "&lt;name&gt;" is restricted by your organization's settings. Using &lt;model&gt; instead.</code>，会话在允许的模型上启动。为受限模型键入 <code>/model &lt;name&gt;</code> 被拒绝，显示 <code>Model '&lt;name&gt;' is restricted by your organization's settings. Run /model to choose a different model.</code>，会话保持其当前模型。</p>
+<p><a href="#restrict-model-selection">模型系列别名</a>（如 <code>opus</code>）当组织允许它时解析为其通常的模型。当组织限制该模型时，Claude Code 替换组织允许的该系列的最新版本，显示相同的替换通知。<code>/model &lt;alias&gt;</code> 仅当其系列的每个版本都被限制时才被拒绝；用 <code>--model</code>、<code>ANTHROPIC_MODEL</code> 或 <code>model</code> 设置的别名在这种情况下仍在启动时被替换。在 v2.1.205 之前，系列别名基于其最新发布版本单独被替换或拒绝，即使允许较旧版本。</p>
+<p>限制适用于组织范围或按角色：</p>
+<ul>
+<li>在组织级别禁用模型会为每个成员删除它。</li>
+<li>角色级别访问向不同的自定义角色授予不同的模型，持有多个角色的成员可以使用其任何角色授予的模型。</li>
+<li>Haiku 模型始终可用，无法禁用，因此每个成员至少保留一个可用模型。</li>
+<li>访问更改在约一分钟内对新请求生效；<code>/model</code> 选择器在下次会话启动时反映它。</li>
+</ul>
+<p>两个限制一起适用：仅当模型由 <code>availableModels</code> 允许且不受组织限制时，模型才可选择。组织限制仅到达 Anthropic API 和<a href="llm-gateway.html">LLM 网关</a>部署上的会话；在任何其他提供商上，改为使用 <code>availableModels</code>。</p>
+<h2 id="organization-default-model">组织默认模型</h2>
+<p>Claude Enterprise 计划上的组织管理员可以从 claude.ai 管理控制台为 Claude Code 成员设置默认模型，可以为整个组织设置，也可以按自定义角色设置。设置后，"默认"选项将解析为该模型。需要 Claude Code v2.1.196 或更高版本。</p>
+<p><code>/model</code> 选择器中的"默认"行显示组织默认值的名称，并带有"组织默认"标签。无论管理员是为整个组织设置默认值还是为您的角色设置默认值，标签都显示"组织默认"。角色默认值适用于该自定义角色的成员，优先于组织范围的默认值；当您的多个角色设置不同的默认值时，应用最强大的模型。</p>
+<p>组织默认值是一个起点，而不是限制。这些选择优先于它：</p>
+<ul>
+<li><code>--model</code> 标志和 <code>ANTHROPIC_MODEL</code> 环境变量</li>
+<li><a href="managed-settings.html">托管设置</a>中的 <code>model</code> 值或通过 <code>--settings</code> 提供的值</li>
+<li>您的用户、项目或本地设置中的 <code>model</code> 值，包括您使用 <code>/model</code> 保存的模型</li>
+</ul>
+<p>管理员还可以配置组织默认值以覆盖用户选择。启用覆盖后，它优先于用户、项目和本地设置中的 <code>model</code> 值，因此您使用 <code>/model</code> 保存的模型在当前会话中应用，组织默认值在下次启动时返回。当您的选择不同时，<code>/model</code> 显示 <code>Your organization's default (&lt;model&gt;) applies on restart</code>。即使启用了覆盖，<code>--model</code> 标志、<code>ANTHROPIC_MODEL</code>、托管设置和 <code>--settings</code> 仍然优先。</p>
+<p>要限制成员可以选择的模型，请改用<a href="#organization-model-restrictions">组织模型限制</a>或 <a href="#restrict-model-selection"><code>availableModels</code></a>。</p>
+<p>Claude Code 在启动时读取组织默认值一次，因此管理员在会话中期更改的默认值在下次启动时生效。</p>
+<p>当组织默认值不覆盖用户选择时，管理员更改后的第一次交互式启动会从您的用户设置中清除 <code>model</code> 键一次，以便应用新的默认值。它不会更改文件中的任何其他内容，您在该启动后使用 <code>/model</code> 保存的模型会被保留。</p>
+<p>组织默认值在被采用之前会通过这些限制检查：</p>
+<ul>
+<li>使用默认前缀匹配时，<a href="#restrict-model-selection"><code>availableModels</code></a> 本身不适用于组织默认值，因此允许列表外的组织默认值仍然适用。当同时设置了 <a href="#enforce-the-allowlist-for-the-default-model"><code>enforceAvailableModels</code></a> 时，允许列表外的组织默认值也会被重新映射到第一个允许列表条目</li>
+<li><a href="#organization-model-restrictions">组织模型限制</a>对您的账户拒绝的组织默认值会被替换为其系列中最新的允许模型，或当该系列的每个版本都被限制时被替换为成本较低的系列</li>
+<li>对于 <code>deniedModels</code> 或 <code>"exact"</code> 列表阻止的组织默认值，请参阅<a href="#block-specific-models-or-versions">阻止特定模型或版本</a></li>
+<li>您的账户完全无法使用的组织默认值会被跳过，"默认"选项的解析方式与<a href="#default-model-setting">没有组织默认值</a>时相同</li>
+</ul>
+<p>从 v2.1.199 开始，当组织默认值是与您的账户类型通常默认值不同的模型系列时，<code>/model</code> 选择器会为该通常系列保留单独的行，以便您仍然可以为会话切换到它。在 v2.1.196 到 v2.1.198 中，该行在选择器中缺失。</p>
+<p>组织默认值仅适用于使用 Anthropic API 进行身份验证的会话。要在其他任何地方设置默认值，包括 <a href="llm-gateway.html">LLM 网关</a>部署，请改用<a href="managed-settings.html">托管设置</a>中的 <code>model</code> 键。</p>
+<h2 id="organization-effort-limits">组织工作量限制</h2>
+<p>您的组织可以通过两种方式限制<a href="#adjust-effort-level">工作量级别</a>。在 Claude Enterprise 计划中，组织管理员设置按角色的工作量限制，如下所述。在任何计划和任何提供商上，包括 Amazon Bedrock、Google Cloud 的 Agent Platform 和 Microsoft Foundry，<a href="settings-reference.html#maxeffortlevel"><code>maxEffortLevel</code></a> 托管设置在客户端上限制工作量。当两者都适用于某个模型时，较低的限制适用。</p>
+<p>Claude Enterprise 计划上的组织管理员可以为每个自定义角色按模型设置最大 <a href="#adjust-effort-level">effort 级别</a>，以及角色级别的<a href="#organization-model-restrictions">组织模型限制</a>。需要 Claude Code v2.1.195 或更高版本。</p>
+<ul>
+<li>超过限制的级别不会在 <code>/effort</code> 选择器中提供，使用 <code>--effort</code> 或 <code>/effort</code> 指定更高级别时会改为以限制级别运行。如果您使用高于限制的 <code>--effort</code> 启动纯文本 <code>--print</code> 运行，stderr 上的警告会指出请求的级别和实际应用的级别。在交互式会话中、使用 <code>json</code> 或 <code>stream-json</code> 输出时，或在后台 Agent 中，该警告会改为写入<a href="errors.html#configuration-warnings">调试日志</a>。</li>
+<li>限制是按模型的，因此切换模型可能会改变哪些级别可用。</li>
+<li>当您的多个角色授予相同的模型时，最不严格的限制适用。</li>
+</ul>
+<p>工作量限制与<a href="#organization-model-restrictions">组织模型限制</a>一起交付，并到达相同的会话。</p>
+<h2 id="special-model-behavior">特殊模型行为</h2>
+<h3 id="default-model-setting"><code>default</code> 模型设置</h3>
+<p><code>default</code> 的行为取决于您的账户类型：</p>
+<ul>
+<li><strong>Pro、Max、Ultra、Team、Enterprise 和 Anthropic API</strong>：默认为 Opus 5.5</li>
+<li><strong>Claude Platform on AWS、Amazon Bedrock 和 Google Cloud's Agent Platform</strong>：默认为 Opus 5.5</li>
+<li><strong>Microsoft Foundry</strong>：默认为 Sonnet 4.5</li>
+</ul>
+<p>在 v2.1.280 之前，<code>default</code> 在 Pro 和 Team Standard 上解析为 Sonnet 5，在 Max、Ultra、Team Premium、Enterprise、Anthropic API、Claude Platform on AWS、Amazon Bedrock 和 Google Cloud's Agent Platform 上从 v2.1.219 开始解析为 Opus 5。在 v2.1.219 之前，<code>default</code> 在 Anthropic API、Max、Ultra、Team Premium 和 Enterprise 按量付费上从 v2.1.154 开始解析为 Opus 4.8，在 Claude Platform on AWS、Amazon Bedrock 和 Google Cloud's Agent Platform 上从 v2.1.207 开始解析为 Opus 4.8。在 v2.1.207 之前，<code>default</code> 在 Claude Platform on AWS 上解析为 Opus 4.7，在 Amazon Bedrock 和 Google Cloud's Agent Platform 上解析为 Sonnet 4.5。</p>
+<p>当管理员设置了<a href="#organization-default-model">组织默认模型</a>时，<code>default</code> 会解析为该模型，而不是上面的账户类型默认值。需要 Claude Code v2.1.196 或更高版本。<code>default</code> 也可以解析为您使用 <a href="#set-a-default-model-for-new-sessions"><code>ANTHROPIC_DEFAULT_MODEL</code></a> 设置的模型，具体条件见其部分说明，或解析为<a href="#setting-your-model">记录在您账户上的</a>模型。</p>
+<p>当您的账户上没有记录任何内容、托管设置<a href="#enforce-the-allowlist-for-the-default-model">对默认模型强制执行允许列表</a>且账户类型默认值不在 <code>availableModels</code> 中时，<code>default</code> 会解析为强制执行的默认值，而不是上面的账户类型默认值。当组织默认值和强制执行都适用时，组织默认值首先替换账户类型默认值，然后强制执行应用于它：允许列表中的组织默认值被保留，而列表外的值解析为强制执行的默认值。</p>
+<p>Fable 模型在任何套餐或提供商上都不是账户类型默认值。使用 <code>/model</code> 选择一个会将其保存为用户设置中的选定模型，以便后续会话从它开始。关于 Claude Code v2.1.257 对保存的 Fable 5 选择所做的一次性更改，请参阅<a href="#work-with-fable">使用 Fable</a>。</p>
+<h3 id="opusplan-model-setting"><code>opusplan</code> 模型设置</h3>
+<p><code>opusplan</code> 模型别名提供了一种自动化混合方法：</p>
+<ul>
+<li><strong>在计划模式中</strong>：使用 <code>opus</code> 进行复杂推理和架构决策</li>
+<li><strong>在执行模式中</strong>：自动切换到 <code>sonnet</code> 进行代码生成和实现</li>
+</ul>
+<p>这将 Opus 的推理能力与 Sonnet 的执行效率相结合。</p>
+<p>计划模式 Opus 阶段使用与 <code>opus</code> 模型设置相同的上下文窗口，执行阶段使用与 <code>sonnet</code> 相同的窗口。当 <code>opus</code> 和 <code>sonnet</code> 解析为默认运行<a href="#extended-context">1M 上下文窗口</a>的模型时，如当前模型在 Anthropic API 上所做的那样，两个阶段都使用它运行。要在它们不这样做的地方为两个阶段请求 1M 上下文，<a href="#setting-your-model">设置模型</a>为 <code>opusplan[1m]</code>，例如使用 <code>/model opusplan[1m]</code>。使用 <code>/model</code> 设置它需要 Claude Code v2.1.265 或更高版本；在早期版本上，使用 <code>--model</code> 标志或 <code>model</code> 设置。</p>
+<p>当 <a href="#restrict-model-selection"><code>availableModels</code></a> 排除最新的 Opus 但允许较旧版本时，例如 <code>["sonnet", "claude-opus-4-6"]</code>，<code>opusplan</code> 使用最新的允许的 Opus 进行规划，仅当每个 Opus 都被排除时才保持在 Sonnet 上。在计划模式中通常会升级到 Sonnet 的 Haiku 会话同样使用最新的允许的 Sonnet，仅当每个 Sonnet 都被排除时才保持在 Haiku 上。在 v2.1.205 之前，当升级系列的最新版本被排除时，计划模式会保持在会话的模型上，即使允许列表允许较旧的版本。</p>
+<p>较旧的允许版本的替换适用于 Anthropic API 和 <a href="claude-platform-on-aws.html">Claude Platform on AWS</a>。在 Amazon Bedrock、Google Cloud's Agent Platform、Microsoft Foundry 和 Mantle 上，其部署使用提供商特定的模型 ID，当升级模型被排除时，计划模式会保持在会话的模型上。</p>
+<p>关于 Claude 在任务中途决定何时咨询第二个模型而不是在计划边界处切换的混合方法，请参阅<a href="advisor.html">顾问工具</a>。</p>
+<h3 id="fallback-model-chains">备用模型链</h3>
+<p>当主模型过载、不可用或返回另一个不可重试的服务器错误时，Claude Code 可以切换到备用模型，而不是使请求失败。身份验证、计费、速率限制、请求大小和传输错误，以及<a href="errors.html#automatic-retries">您组织的策略检查拒绝</a>，永远不会触发切换；这些遵循其正常的重试和错误处理。当 <a href="amazon-bedrock.html#when-a-model-is-disabled-mid-session">Amazon Bedrock</a> 或 <a href="google-vertex-ai.html#when-a-model-is-disabled-mid-session">Google Cloud's Agent Platform</a> 拒绝您的账户无法调用的模型时，它会切换，Claude Code 将其视为模型不可用而不是身份验证错误。</p>
+<p>配置一个或多个备用模型，Claude Code 会按顺序尝试它们，在切换时显示通知。切换仅持续当前轮次，因此您的下一条消息会首先再次尝试主模型。Claude Code 在删除重复项后将链限制为三个模型，并忽略额外条目。</p>
+<p>使用 <code>--fallback-model</code> 标志为一个会话设置链，该标志接受逗号分隔的列表：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--fallback-model<span class="w"> </span>sonnet,haiku
+</code></pre></div>
+<p>要在会话间保持链，在<a href="settings.html">设置</a>中将 <code>fallbackModel</code> 设置为数组：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"fallbackModel"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"claude-sonnet-5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"claude-haiku-4-5"</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>--fallback-model</code> 标志优先于 <code>fallbackModel</code> 设置。每个条目接受模型名称或别名，<code>"default"</code> 扩展为默认模型。</p>
+<p>Claude Code 在启动时不确认链，<code>/status</code> 也不显示它。切换发生时显示的通知是回退已配置的第一个可见迹象。</p>
+<p>当请求失败转移时，Claude Code 会按顺序尝试每个条目，直到一个接受它。无法到达的条目，例如在设置中固定的已停用模型，会以相同方式失败转移到下一个。Claude Code 在该遍历开始前删除两种条目：</p>
+<ul>
+<li><strong>超出允许列表</strong>：当 Claude Code 读取链时，会删除 <a href="#restrict-model-selection"><code>availableModels</code></a> 不允许的任何条目。</li>
+<li><strong>压缩期间上下文窗口较小</strong>：链也涵盖<a href="context-window.html#what-survives-compaction">压缩</a>，但 Claude Code 不会回退到上下文窗口小于主模型的模型，因为在那里进行摘要会首先切断部分对话。如果每个备用模型都较小，压缩会显示原始错误，您可以重试。</li>
+</ul>
+<p>Claude Code 也将链应用于<a href="sub-agents.html">子代理</a>。当子代理的请求失败转移时，Claude Code 会按顺序尝试您配置的备用模型，子代理继续在接受请求的模型上运行。您的会话模型保持不变。在 v2.1.247 之前，链涵盖的失败会结束子代理。</p>
+<h3 id="automatic-model-fallback">自动模型回退</h3>
+<p>本部分涵盖来自 Fable 模型、Opus 5.5、Sonnet 5.5 和 Opus 5 的基于内容的回退。关于模型过载或不可用时的基于可用性的回退，请参阅<a href="#fallback-model-chains">备用模型链</a>。</p>
+<p>Fable 模型、Opus 5.5、Sonnet 5.5 和 Opus 5 运行安全分类器，最常标记网络安全和生物学内容。对于这两个类别，备用模型取决于哪个模型拒绝：</p>
+<ul>
+<li><strong>Fable 5.1、Fable 5 和 Opus 5.5</strong>：生物学标记的请求在 Opus 5 上重新运行，网络安全标记的请求在 Opus 4.8 上重新运行。</li>
+<li><strong>Sonnet 5.5</strong>：网络安全标记的请求在 Sonnet 5 上重新运行。生物学标记的请求以拒绝结束，因为 Sonnet 5.5 没有生物学备用模型。</li>
+<li><strong>Opus 5</strong>：网络安全标记的请求在 Opus 4.8 上重新运行。生物学标记的请求以拒绝结束，因为 Opus 5 运行自己的生物学分类器，没有备用模型。</li>
+</ul>
+<p>在 Amazon Bedrock、Google Cloud's Agent Platform 和 Microsoft Foundry 上，Claude Code 通过您的部署的模型 ID 解析这些目标。请参阅<a href="#enable-fallback-on-bedrock-agent-platform-and-foundry">在 Bedrock、Agent Platform 和 Foundry 上启用回退</a>。</p>
+<p>当 Claude Code 将被标记的请求切换到其类别对应的备用模型时，它会在该模型上重新运行请求。在您的主对话中，它会在会话记录中显示通知。如果希望先被询问，请参阅<a href="#ask-before-switching">切换前询问</a>。</p>
+<p>回退后，会话继续在备用模型上。要返回到您的原始模型，运行 <a href="#setting-your-model"><code>/model</code></a>。</p>
+<p>基于类别的回退需要 Claude Code v2.1.219 或更高版本。在 v2.1.219 之前，每个标记的 Fable 5 请求都在您提供商的默认 Opus 模型上重新运行，Opus 5 不是回退源。</p>
+<p>备用模型针对 <a href="#restrict-model-selection"><code>availableModels</code></a> 进行检查。当它被阻止时，不会发生回退。拒绝显示为正常错误，会话的模型保持不变。</p>
+<h4 id="effort-level-after-a-fallback">回退后的 effort 级别</h4>
+<p>当 Claude Code 将您的会话切换到备用模型时，它会保留被标记请求运行时的 effort 级别。例如，在 Opus 5.5 上以其默认 <code>medium</code> 运行的会话回退到 Opus 4.8 后仍保持 <code>medium</code>，尽管 Opus 4.8 默认为 <code>high</code>。</p>
+<p>在以下情况下会应用不同的级别：</p>
+<ul>
+<li><strong>您自己的更改</strong>：一旦您选择了 effort 级别、在 <code>/model</code> 中选择了模型或稍后恢复会话，被标记请求的级别就不再沿用。</li>
+<li><strong>为单个轮次设置的 effort</strong>：如果您使用 <code>ultrathink</code> 提升了被标记的轮次，或 skill 的 <code>effort</code> frontmatter 设置了其级别，该级别适用于该轮次。后续轮次以 <a href="#adjust-effort-level">effort 解析顺序</a>为备用模型给出的级别运行。</li>
+</ul>
+<p>要查看回退后为您的会话设置的级别，请运行 <code>/effort status</code>。要更改它，请运行 <code>/effort</code>。</p>
+<h4 id="check-what-triggered-fallback">检查触发回退的原因</h4>
+<p>回退可以在会话的第一个请求上触发，在您发送任何不寻常的内容之前，因为第一个请求携带工作区上下文，例如您的 CLAUDE.md 内容和 git 状态。包含安全或生物学材料的仓库可以仅在该上下文上触发分类器。</p>
+<p>要检查自定义是否是触发器，使用 <code>claude --safe-mode</code> 启动会话，这会禁用自定义，例如 CLAUDE.md、skill、MCP 服务器和 hook。Git 状态和目录名称不是自定义，仍然包括在内。</p>
+<h4 id="ask-before-switching">切换前询问</h4>
+<p>要决定每次请求被标记时发生什么，运行 <code>/config</code>，选择 <strong>Switch models when a message is flagged</strong>，然后选择 <strong>Ask each time</strong>。您也可以在设置文件中将 <a href="settings-reference.html#switchmodelsonflag"><code>switchModelsOnFlag</code></a> 设置为 <code>false</code>。之后，Claude Code 会在将要切换模型的标记请求处暂停，并为您提供两个选项：切换到备用模型，或编辑提示词并重试。</p>
+<p>在交互式会话中，第一次有标记的请求将要切换模型时，Claude Code 可能会询问今后是否自动切换。仅当您尚未设置 <code>switchModelsOnFlag</code> 时它才会询问，并将您的选择作为该键保存到您的用户设置中。</p>
+<p>如果您选择保留在当前模型上，保存的值为 <code>false</code>，与 <strong>Ask each time</strong> 相同。如果您关闭该询问，Claude Code 不保存任何内容，并在下次有标记的请求将要切换模型时再次询问。</p>
+<p>当您选择了 <strong>Ask each time</strong> 时，某些情况的行为不同：</p>
+<ul>
+<li>当标记的类别没有备用模型时，例如 Opus 5 或 Sonnet 5.5 上的生物学标记，Claude Code 不显示提示，请求以拒绝结束。</li>
+<li>如果两个模型都标记相同的请求，您可以编辑提示词并重试，或启动新会话。</li>
+<li>在移动应用上的<a href="claude-code-on-the-web.html">云端会话</a>中，不支持编辑和重试。切换模型，或从桌面浏览器或桌面应用继续会话。</li>
+<li>在<a href="cli-reference.html#cli-flags">非交互模式</a>和无法显示提示的 SDK 集成中，标记的请求以拒绝结束轮次。</li>
+<li>在<a href="sub-agents.html">子代理</a>中，Claude Code 不显示提示，将要切换模型的标记请求会在备用模型上重新运行。</li>
+<li>当回退目标被 <a href="#restrict-model-selection"><code>availableModels</code></a> 阻止时，Claude Code 不显示提示。标记的请求以拒绝结束，与目标被阻止时的自动回退相同。</li>
+</ul>
+<h4 id="enable-fallback-on-bedrock-agent-platform-and-foundry">在 Bedrock、Agent Platform 和 Foundry 上启用回退</h4>
+<p>在 <a href="amazon-bedrock.html">Amazon Bedrock</a>、<a href="google-vertex-ai.html">Google Cloud's Agent Platform</a> 和 <a href="microsoft-foundry.html">Microsoft Foundry</a> 上，模型 ID 是提供商特定的，因此自动回退仅在 Claude Code 可以识别每个涉及的模型时运行：</p>
+<ul>
+<li>Claude Code 必须将当前模型识别为回退源。当模型 ID 包含 <code>claude-fable-5</code>、匹配 <code>ANTHROPIC_DEFAULT_FABLE_MODEL</code> 的值或使用 <a href="#override-model-ids-per-version"><code>modelOverrides</code></a> 映射时，Fable 5.1 和 Fable 5 被识别。Opus 5.5、Sonnet 5.5 和 Opus 5 通过其提供商模型 ID 或 <a href="#override-model-ids-per-version"><code>modelOverrides</code></a> 映射被识别。</li>
+<li>一个 Opus 目标必须在您的部署中解析，无论哪个模型拒绝：设置 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code>，或在提供商的模型列表中保留一个 Opus 4.8 条目。没有一个，回退对每个源模型都保持关闭，包括 Sonnet 5.5，标记的请求以拒绝结束。</li>
+<li>标记的类别的备用模型必须在您的部署中解析。从 Fable 模型、Opus 5.5 或 Opus 5，如果您设置了 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code>，标记的请求会在该模型上为每个具有回退的类别重新运行；Opus 5 上的生物学标记仍以拒绝结束。如果您没有设置它，网络安全标记的请求会在 Opus 4.8 条目上重新运行，来自 Fable 模型或 Opus 5.5 的生物学标记请求会在 Opus 5 条目上重新运行。从 Sonnet 5.5，网络安全标记的请求会在您在 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 中设置的模型上重新运行，或在提供商模型列表中的 Sonnet 5 条目上（如果您没有设置它）。</li>
+</ul>
+<p>如果任一模型无法识别，Claude Code 不会切换。标记的请求以拒绝消息结束，您可以使用 <a href="#setting-your-model"><code>/model</code></a> 切换模型并重试。要使两个模型都可识别，为您的源模型设置固定值：</p>
+<ul>
+<li><strong>Fable 模型</strong>：将 <code>ANTHROPIC_DEFAULT_FABLE_MODEL</code> 设置为您的 Fable 模型 ID，以便 Claude Code 将其识别为回退源。</li>
+<li><strong>每个源模型</strong>：将 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 设置为 Opus 模型 ID 以打开回退并为标记的类别提供目标。命名 Opus 系列外的模型或拒绝的模型的固定值会使拒绝成立。</li>
+<li><strong>Sonnet 5.5</strong>：除了 Opus 固定值外，设置 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 或在提供商的模型列表中保留 Sonnet 5 条目以提供请求重新运行的模型。命名 Sonnet 系列外的模型或 Sonnet 5.5 本身的 Sonnet 固定值会使拒绝成立。</li>
+</ul>
+<p>备用模型的上下文窗口还必须至少与会话的上下文窗口一样大，否则 Claude Code 不会切换，标记的请求会以相同的拒绝结束。在这些提供商上，源模型默认运行 <a href="#extended-context">1M 上下文窗口</a>。请固定一个同样如此的模型，例如在 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 中固定 Opus 4.8，或在 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 中固定 Sonnet 5，并使用 Claude Code <a href="#pin-models-for-third-party-deployments">能够匹配到该模型</a>的 ID。</p>
+<h4 id="security-research-and-biology-workloads">安全研究和生物学工作负载</h4>
+<p>进攻性安全或生物学中的工作负载，包括渗透测试、Capture the Flag (CTF) 练习和生物学相邻代码库，经常触发回退，通常在第一个请求上。对于 Fable 5.1、Fable 5 或 Opus 5.5 上的实质性生物学工作，第一个切换模型的标记请求会将会话移动到 Opus 5，后来的生物学标记请求在那里以拒绝结束，因为 Opus 5 没有生物学回退。在 Opus 5 和 Sonnet 5.5 上，您从第一个标记的请求获得这些拒绝。</p>
+<p>这是这些域的预期路由，不是账户标记。如果您的组织需要 Fable 级别的能力来完成这项工作，请向您的 Anthropic 账户团队询问受信任的访问计划。</p>
+<h3 id="adjust-effort-level">调整 effort 级别</h3>
+<p><a href="https://platform.claude.com/docs/en/build-with-claude/effort" target="_blank" rel="noopener">Effort 级别</a>控制自适应推理，让模型根据任务复杂性决定是否以及在每一步上思考多少。较低的 effort 对于直接的任务更快且更便宜，而较高的 effort 为复杂问题提供更深入的推理。</p>
+<p>可用的 effort 级别取决于模型。此处未列出的模型不支持 effort：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">模型</th>
+<th style="text-align: left;">级别</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Fable 5.1 和 Fable 5</td>
+<td style="text-align: left;"><code>low</code>、<code>medium</code>、<code>high</code>、<code>xhigh</code>、<code>max</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Opus 5.5、Sonnet 5.5、Haiku 5.5、Opus 5、Sonnet 5、Opus 4.8 和 Opus 4.7</td>
+<td style="text-align: left;"><code>low</code>、<code>medium</code>、<code>high</code>、<code>xhigh</code>、<code>max</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Opus 4.6 和 Sonnet 4.6</td>
+<td style="text-align: left;"><code>low</code>、<code>medium</code>、<code>high</code>、<code>max</code></td>
+</tr>
+</tbody>
+</table>
+<p>如果您设置活动模型不支持的级别，Claude Code 会回退到不高于您所设级别的最高支持级别。例如，<code>xhigh</code> 在 Opus 4.6 上运行为 <code>high</code>。您的组织或您自己的设置也可以限制模型提供的级别；请参阅<a href="#organization-effort-limits">组织 effort 限制</a>。</p>
+<p>Claude Code 按此顺序解析会话的 effort 级别，采用首先适用的：</p>
+<ol>
+<li><a href="env-vars.html#variables"><code>CLAUDE_CODE_EFFORT_LEVEL</code></a> 环境变量</li>
+<li>您在会话中选择的级别，例如通过 <code>/effort</code>、<code>/model</code> 选择器或 <a href="agent-sdk-typescript.html#applyflagsettings"><code>applyFlagSettings()</code></a></li>
+<li>使用 <code>--effort</code> 启动</li>
+<li>您的设置：您为模型保存的级别或 <a href="settings-reference.html#effortlevel"><code>effortLevel</code></a> 键，在 <a href="settings-reference.html#modelsettings"><code>modelSettings</code></a> 中说明它们之间和跨设置文件的优先级</li>
+<li>模型的默认 effort：在支持 effort 的每个模型上为 <code>high</code>，除了 Opus 5.5、Sonnet 5.5 和 Haiku 5.5 默认为 <code>medium</code>、Opus 4.7 默认为 <code>xhigh</code>。如果您的组织为其<a href="#organization-default-model">组织默认模型</a>设置了默认 effort 级别，则当您运行该模型时，该级别即为默认值。</li>
+</ol>
+<p>自动模型回退后适用的级别，请参阅<a href="#effort-level-after-a-fallback">回退后的 effort 级别</a>。</p>
+<p>Opus 5.5 从 <code>medium</code> 开始，除非上面的源之一为其设置级别，您的用户设置文件中的顶级 <code>effortLevel</code> 不计入 Opus 5.5。该键是较旧的形式 <code>/effort</code> 在 Claude Code 按模型保存级别之前写入的：它继续在它之前应用的地方应用，在 Opus 5、Fable 5.1 和更早的模型上，而 Opus 5.5 和在它之后发布的模型从它们自己的默认开始，直到您使用 <code>/effort</code> 或 <code>/model</code> 选择器为它们选择级别。项目、本地或托管设置中的顶级 <code>effortLevel</code>，或使用 <code>--settings</code> 传递的，适用于每个模型。</p>
+<p>当您在机器上的交互式会话中设置 <code>low</code>、<code>medium</code>、<code>high</code> 或 <code>xhigh</code> 时，您通过如何确认它来选择它持续多长时间：</p>
+<ul>
+<li>在 <code>/effort</code> 滑块或 <code>/model</code> 选择器中使用 <code>Enter</code>，或在 <code>/effort</code> 后键入的级别：将级别保存为您的默认值并在后续会话中应用它</li>
+<li>在 <code>/effort</code> 滑块或 <code>/model</code> 选择器中的 <code>s</code>：仅将级别应用于此会话。需要 Claude Code v2.1.257 或更高版本</li>
+</ul>
+<p>Claude Code 在用户设置中的 <a href="settings-reference.html#modelsettings"><code>modelSettings</code></a> 键下按模型保存级别，因此每个模型保持其自己的保存级别。</p>
+<p><code>max</code> 是最深的推理级别。除非您通过 <code>CLAUDE_CODE_EFFORT_LEVEL</code> 环境变量设置它，Claude Code 仅将 <code>max</code> 应用于当前会话。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>您从通过 <a href="remote-control.html#what-connected-devices-see">Remote Control</a> 连接的手机或浏览器上的 effort 控件中选择的级别仅适用于该会话。</p></div></div>
+<p>当您在 <a href="headless.html"><code>-p</code> 运行</a>中使用 <code>/effort</code> 设置级别时，Claude Code 仅将其应用于该会话，不将其保存为您的默认值。</p>
+<p><code>/effort</code> 滑块也有一个 <strong>Ultracode</strong> 切换。Ultracode 是 Claude Code 设置而不是模型 effort 级别：启用它时，Claude 为实质性任务编排<a href="workflows.html">动态工作流</a>，在会话运行的任何 effort 级别。关于它可以在哪里持久设置，请参阅 <a href="settings-reference.html#ultracode"><code>ultracode</code></a> 设置。</p>
+<p>使用 <code>/effort</code> 或 <code>ultracode</code> 设置打开或关闭 ultracode 会使 effort 级别保持不变。<code>--effort ultracode</code> 标志和 Agent SDK <code>effortLevel: "ultracode"</code> 值打开它，也将级别设置为 <code>xhigh</code>。在 <code>/effort</code> 滑块或 <code>/model</code> 选择器中选择级别会使 ultracode 保持原样。</p>
+<p>您可以通过以下任何方式打开 ultracode：</p>
+<ul>
+<li><strong><code>/effort</code></strong>：运行 <code>/effort ultracode</code> 为当前会话打开它或 <code>/effort ultracode off</code> 关闭它。在 <code>/effort</code> 滑块中，按 <code>Tab</code> 翻转 <strong>Ultracode</strong> 切换，然后 <code>Enter</code> 应用它</li>
+<li><strong><code>--effort</code> 标志</strong>：使用 <code>claude --effort ultracode</code> 启动，这会在 <code>xhigh</code> effort 和 ultracode 打开的情况下启动会话</li>
+<li><strong><code>ultracode</code> 设置</strong>：在设置文件中、使用 <code>--settings</code> 或在 Agent SDK 控制请求中设置 <a href="settings-reference.html#ultracode"><code>"ultracode": true</code></a>。<a href="agent-sdk-typescript.html#applyflagsettings"><code>applyFlagSettings()</code></a> 请求也接受 <code>effortLevel: "ultracode"</code>，它打开它并将 effort 级别设置为 <code>xhigh</code></li>
+</ul>
+<p><code>/effort ultracode off</code> 形式、滑块切换和在 <code>xhigh</code> 以外的 effort 级别保持 ultracode 打开需要 Claude Code v2.1.284 或更高版本。在 v2.1.284 之前，打开 ultracode 将会话设置为 <code>xhigh</code> effort，选择另一个级别关闭它，effort 上限低于 <code>xhigh</code> 使其不可用。</p>
+<p>将 <code>ultracode</code> 传递给 <code>--effort</code> 标志或 Agent SDK <code>effortLevel</code> 值需要 Claude Code v2.1.203 或更高版本。在 v2.1.203 之前，<code>--effort ultracode</code> 打印 <code>Unknown --effort value 'ultracode'</code>，会话以默认 effort 开始。</p>
+<p>持久化的 <code>effortLevel</code> 设置和 <code>CLAUDE_CODE_EFFORT_LEVEL</code> 环境变量不接受 <code>ultracode</code>。如果 <code>CLAUDE_CODE_EFFORT_LEVEL</code> 或 <a href="#organization-effort-limits">effort 上限</a>设置会话的级别，ultracode 在该级别保持打开。</p>
+<p>Ultracode 在以下情况下不可用：</p>
+<ul>
+<li><a href="workflows.html#turn-workflows-off">工作流被关闭</a></li>
+<li>模型不支持 <code>xhigh</code> effort</li>
+</ul>
+<p>在这些情况下，<code>--effort ultracode</code> 启动会话时 ultracode 关闭，effort 级别为模型和任何上限允许的最高级别，最高为 <code>xhigh</code>。</p>
+<h4 id="choose-an-effort-level">选择 effort 级别</h4>
+<p>每个级别在 token 支出和能力之间进行权衡。默认值适合大多数编码任务；当您想要不同的平衡时进行调整。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">级别</th>
+<th style="text-align: left;">何时使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>low</code></td>
+<td style="text-align: left;">快速交换，您审查每个结果，例如头脑风暴、初稿或小改动如重命名</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>medium</code></td>
+<td style="text-align: left;">Opus 5.5、Sonnet 5.5 和 Haiku 5.5 上的默认值。在 Opus 5.5 和 Sonnet 5.5 上，它适合具有明确范围的日常工程工作，例如实现新功能。在默认值更高的模型上，减少成本敏感工作的 token 使用，可以权衡一些智能</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>high</code></td>
+<td style="text-align: left;">验证重要或边界情况可能的工作，例如修复现有代码库中的错误。除 Opus 5.5、Sonnet 5.5、Haiku 5.5 和 Opus 4.7 外，每个模型上的默认值</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>xhigh</code></td>
+<td style="text-align: left;">更高 token 支出的更深推理。Opus 4.7 上的默认值</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>max</code></td>
+<td style="text-align: left;">您想让 Claude 自己完成的难题，例如发现安全漏洞。<code>max</code> 可能显示收益递减，容易过度思考，所以在广泛采用前测试</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ultracode</code></td>
+<td style="text-align: left;">一个 Claude Code 设置而不是级别：为每个实质性任务规划<a href="workflows.html">动态工作流</a>，在任何 effort 级别</td>
+</tr>
+</tbody>
+</table>
+<p>在 Opus 5.5 和 Fable 5.1 的测试中，Claude 在更高级别测试了更多边界情况，在回答前验证了更多工作。它也自己做了更多选择。在较低级别，Claude 更快地返回起点，适合您审查每个结果并指导下一步的工作。要查看在每个级别运行的相同任务，请阅读博客上的<a href="https://claude.dev/blog/spending-your-effort/" target="_blank" rel="noopener">Using Claude Code: Spending your effort</a>。</p>
+<p>Effort 规模按模型校准，因此相同的级别名称在模型间不代表相同的基础值。</p>
+<p>Opus 5.5 <a href="#adjust-effort-level">默认为 <code>medium</code></a>，比 Opus 5 的默认值 <code>high</code> 低一个级别。在 Anthropic 的测试中，Opus 5.5 在 <code>medium</code> 时在编码和知识工作评估上匹配或超过 Opus 5 在 <code>high</code> 时的表现。在给定的级别，Opus 5.5 倾向于每轮比 Opus 5 思考更多。当您从 Opus 5 移动到 Opus 5.5 时，从 <code>medium</code> 开始，而不是沿用您在 Opus 5 上使用的级别。要针对您自己的工作测试级别，请参阅 Opus 5.5 提示词指南中的<a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5#calibrate-effort" target="_blank" rel="noopener">校准 effort</a>。</p>
+<h4 id="use-ultrathink-for-one-off-deep-reasoning">使用 ultrathink 进行一次性深度推理</h4>
+<p>在您的提示词中的任何地方包含 <code>ultrathink</code> 以请求该轮次的更深推理，而不改变您的会话 effort 设置。Claude Code 识别关键字并添加上下文内指令。Claude Code 将其他短语如"think"、"think hard"和"think more"作为普通提示词文本传递，不将它们识别为关键字。</p>
+<p>在终端输入框中键入时，该词还可以将该轮次提升到 <code>xhigh</code> effort。当它可以这样做时，该词会以彩虹色显示。需要 Claude Code v2.1.311 或更高版本。如果您开始新轮次时该词没有以彩虹色显示，请尝试以下方法之一：</p>
+<ul>
+<li>在不以 <code>/</code> 开头的提示词中重新键入该词，并确保它不在引号、括号、路径或命令等任何内容之内</li>
+<li>如果 <code>CLAUDE_CODE_EFFORT_LEVEL</code> 设置为低于 <code>xhigh</code> 的级别，请取消设置它。或者将您自己的 <a href="settings-reference.html#maxeffortlevel"><code>maxEffortLevel</code></a> 提高到 <code>xhigh</code> 或更高，或请组织管理员提高您的<a href="#organization-effort-limits">组织限制</a></li>
+<li>在会话中运行 <code>/model</code> 切换到 Opus 5.5、Sonnet 5.5、Haiku 5.5 或 Fable 5.1 模型。在该词无法提升轮次的情况下（例如在 Amazon Bedrock 上），请改为<a href="#set-the-effort-level">设置 effort 级别</a></li>
+</ul>
+<h4 id="set-the-effort-level">设置 effort 级别</h4>
+<p>您可以通过以下任何方式更改 effort：</p>
+<ul>
+<li><strong><code>/effort</code></strong>：运行 <code>/effort</code> 不带参数以打开交互式滑块，<code>/effort</code> 后跟级别名称以直接设置它，或 <code>/effort auto</code> 以清除活动模型的保存级别</li>
+<li><strong>在 <code>/model</code> 中</strong>：选择模型时使用左/右箭头键调整 effort 滑块。新级别最迟从您的下一条消息开始生效。在此之前，Claude 可能继续以旧级别工作，即使是在新模型上。当<a href="#adjust-effort-level">优先级高于您所选级别的来源</a>（例如 <code>CLAUDE_CODE_EFFORT_LEVEL</code>）适用时，Claude 改为以该来源的级别工作。</li>
+<li><strong><code>--effort</code> 标志</strong>：启动 Claude Code 时传递级别名称以为单个会话设置它</li>
+<li><strong>环境变量</strong>：将 <code>CLAUDE_CODE_EFFORT_LEVEL</code> 设置为级别名称。要让 Claude Code <a href="#send-no-effort-level">不发送 effort 级别</a>，请改为将其设置为 <code>auto</code> 或 <code>unset</code></li>
+<li><strong>设置</strong>：在 <a href="settings-reference.html#modelsettings"><code>modelSettings</code></a> 中设置每个模型的级别，或将 <a href="settings-reference.html#effortlevel"><code>effortLevel</code></a> 设置为 <code>low</code>、<code>medium</code>、<code>high</code> 或 <code>xhigh</code> 作为没有级别的模型的默认值。<code>max</code> 在任一键中都不被接受为级别，<code>ultracode</code> 有其自己的 <a href="settings-reference.html#ultracode"><code>ultracode</code></a> 键</li>
+<li><strong>从连接的设备</strong>：在 <a href="remote-control.html#what-connected-devices-see">Remote Control</a> 会话中，从您的手机或浏览器上的 effort 控件中选择级别。该级别仅适用于当前会话。需要 Claude Code v2.1.234 或更高版本</li>
+<li><strong>Skill 和子代理 frontmatter</strong>：在 <a href="skills.html#frontmatter-reference">skill</a> 或<a href="sub-agents.html#supported-frontmatter-fields">子代理</a> markdown 文件中设置 <code>effort</code> 以在该 skill 或子代理运行时覆盖 effort 级别</li>
+</ul>
+<p>skill 的 <code>effort</code> 在其运行所在的轮次结束前一直适用；使用 <code>context: fork</code> 时，则在分叉出的子代理运行期间适用。子代理的 <code>effort</code> 在子代理运行期间适用，除非<a href="sub-agents.html#choose-an-effort-level">其调用覆盖了它</a>。当其中任一项适用时，skill 或子代理都以其级别运行，无论您启动时使用、保存或选择的是什么级别。如果设置了 <code>CLAUDE_CODE_EFFORT_LEVEL</code>，则改为应用该级别。</p>
+<p><a href="settings-reference.html#maxeffortlevel"><code>maxEffortLevel</code></a> 或<a href="#organization-effort-limits">组织 effort 上限</a>仍然限制 skill 或子代理运行的级别。如果您在<a href="managed-settings.html">托管设置</a>中设置 <code>effortLevel</code>，Claude Code 在 <a href="#adjust-effort-level">effort 解析顺序</a>的设置步骤处应用它，用户仍然可以使用 <code>/effort</code> 或 <code>--effort</code> 更改级别。要将用户保持在或低于某个级别，设置 <a href="settings-reference.html#maxeffortlevel"><code>maxEffortLevel</code></a>。</p>
+<h4 id="check-the-effort-level-you-set">检查您设置的 effort 级别</h4>
+<p>选择支持的模型时，effort 滑块会出现在 <code>/model</code> 中。会话标题中显示的级别（例如"with low effort"）来自您的 effort 设置，即使 Claude <a href="#when-a-new-effort-level-starts">仍在以旧级别工作</a>。在启动时以及您更改级别时，页脚也会简要显示为您的会话设置的级别。</p>
+<h4 id="when-a-new-effort-level-starts">新 effort 级别何时生效</h4>
+<p>在终端会话中，一旦 <code>/effort</code> 确认了新级别，您发送的下一条消息就会以该级别运行。您可以在当前轮次结束后发送它，也可以<a href="interactive-mode.html#queue-messages-while-claude-works">在 Claude 仍在工作时</a>发送：</p>
+<ul>
+<li><strong>轮次结束后</strong>：在此之前您无需执行任何操作，如果该轮次以旧级别完成，这属于预期行为</li>
+<li><strong>Claude 仍在工作时</strong>：输入一条消息（例如 <code>keep going</code>），然后按 <code>Enter</code> 将其加入队列，而不会中断当前轮次。Claude 会在其当前工具调用完成时（最迟在轮次结束时）收到该消息，并从那时起以新级别工作。</li>
+</ul>
+<p>在 v2.1.242 之前，Claude Code 可能会将 <code>/effort</code> 本身排队直到轮次结束；在不<a href="env-vars.html#features-that-need-feature-flag-fetching">获取功能标志</a>的会话中（例如在<a href="third-party-integrations.html">第三方提供商</a>上）则始终如此。</p>
+<h4 id="send-no-effort-level">不发送 effort 级别</h4>
+<p>当 Claude Code 不向<a href="#adjust-effort-level">支持的模型</a>发送 effort 级别时，将应用 <a href="https://platform.claude.com/docs/en/build-with-claude/effort" target="_blank" rel="noopener">API 的默认值</a>，而不是 Claude Code 的默认值。要让 Claude Code 不发送任何级别，请从导出了 <code>CLAUDE_CODE_EFFORT_LEVEL</code> 且其值为 <code>auto</code> 或 <code>unset</code> 的 shell 中启动 <code>claude</code>，这两个值的作用相同：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_EFFORT_LEVEL</span><span class="o">=</span>auto
+</code></pre></div>
+<p>未发送任何级别时，会话标题和页脚不显示 effort 级别。要确认未发送任何级别，请在 Claude Code 提示符处运行 <code>/effort status</code>：</p>
+<ul>
+<li><strong><code>Effort level: auto</code></strong>：未发送任何 effort 级别。</li>
+<li><strong><code>Effort level: auto (currently &lt;level&gt;)</code></strong>：仍在发送级别。如果低于 <code>max</code> 的 <a href="settings-reference.html#maxeffortlevel"><code>maxEffortLevel</code></a> 设置适用于活动模型，Claude Code 会发送其自己为该模型设定的默认值，并降低到该上限。请移除该设置或将其设置为 <code>max</code>。</li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>在 v2.1.304 之前，即使未发送任何级别，<code>/effort status</code> 也会打印 <code>Effort level: auto (currently high)</code>。</p></div></div>
+<h4 id="adaptive-reasoning-and-fixed-thinking-budgets">自适应推理和固定思考预算</h4>
+<p>自适应推理使思考在每一步上可选，因此 Claude 可以更快地响应常规提示词，并为受益于它的步骤保留更深入的思考。如果您想要 Claude 比当前级别产生的更频繁或更少地思考，您可以直接在您的提示词或 <code>CLAUDE.md</code> 中说出来；模型在其 effort 设置内响应该指导。</p>
+<p>Fable 模型、Sonnet 5 及更高版本、Haiku 5.5 和 Opus 4.7 及更高版本始终使用自适应推理。固定思考预算模式和 <code>CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING</code> 不适用于它们。</p>
+<p>在 Opus 4.6 和 Sonnet 4.6 上，您可以设置 <code>CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1</code> 以恢复到由 <code>MAX_THINKING_TOKENS</code> 控制的先前固定思考预算。请参阅<a href="env-vars.html">环境变量</a>。</p>
+<h3 id="extended-thinking">扩展思考</h3>
+<p>扩展思考是 Claude 在响应前发出的推理。在支持<a href="#adjust-effort-level">自适应推理</a>的模型上，effort 级别是对发生多少思考的主要控制；下面的设置打开或关闭思考并控制它如何显示。在 Anthropic API 上关闭思考时，Claude Code 向它知道<a href="errors.html#effort-isnt-available-with-thinking-turned-off">不接受该组合</a>的模型（如 Opus 5）发送 effort <code>high</code> 而不是更高级别。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">控制</th>
+<th style="text-align: left;">如何设置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">当前会话的切换</td>
+<td style="text-align: left;">在 macOS 上按 <code>Option+T</code> 或在 Windows 和 Linux 上按 <code>Alt+T</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">设置全局默认值</td>
+<td style="text-align: left;">运行 <code>/config</code> 并切换思考模式。保存为 <code>~/.claude/settings.json</code> 中的 <code>alwaysThinkingEnabled</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">通过环境变量禁用</td>
+<td style="text-align: left;">设置 <a href="env-vars.html"><code>MAX_THINKING_TOKENS=0</code></a>，这在 Anthropic API 上关闭思考，除了 Opus 5.5、Sonnet 5.5、Haiku 5.5 和 Fable 模型。在<a href="third-party-integrations.html">第三方提供商</a>上，Claude Code 改为省略 <code>thinking</code> 参数，自适应推理模型可能仍然思考</td>
+</tr>
+</tbody>
+</table>
+<p>您不能在 Opus 5.5、Sonnet 5.5、Haiku 5.5 或 Fable 模型上关闭思考。对于这些模型，会话切换和 <code>/config</code> 行显示 <code>Thinking can't be turned off</code>，而不是提供切换，保存的 <code>alwaysThinkingEnabled: false</code> 或 <code>MAX_THINKING_TOKENS=0</code> 在那里没有效果。在这些模型上，模型根据 effort 级别按步骤决定思考多少。保存的设置在您切换到接受它的模型时再次应用。</p>
+<p>Claude Code 默认折叠思考输出。按 <code>Ctrl+O</code> 切换详细模式并将推理视为灰色斜体文本。Anthropic API 上的交互式会话默认接收编辑的思考块，因此如果您想要完整摘要在展开时可用，在<a href="settings.html">设置</a>中设置 <code>showThinkingSummaries: true</code>。您需要为所有生成的思考 token 付费，即使折叠或编辑。</p>
+<h3 id="extended-context">扩展上下文</h3>
+<p>Fable 5.1、Fable 5、Sonnet 5 及更高版本、Haiku 5.5、Opus 4.6 及更高版本和 Sonnet 4.6 支持<a href="https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model" target="_blank" rel="noopener">100 万 token 上下文窗口</a>，用于具有大型代码库的长会话。</p>
+<p>Fable 5.1、Fable 5、Sonnet 5 及更高版本、Haiku 5.5 和 Opus 4.7 及更高版本默认运行 1M 窗口，无需 <code>[1m]</code> 后缀。这包括 Amazon Bedrock、Google Cloud's Agent Platform 和 Microsoft Foundry 上的会话，以及 <a href="claude-apps-gateway.html">Claude apps gateway</a> 会话。要改为以 200K 窗口运行它们，请参阅<a href="#turn-off-1m-context">关闭 1M 上下文</a>。</p>
+<p>Opus 4.6 和 Sonnet 4.6 仅通过其 <code>[1m]</code> 变体达到 1M，对该变体的访问取决于您的套餐。在 Max、Ultra、Team 和 Enterprise 套餐上，包括 Team Standard 和 Team Premium 席位，Opus 4.6 与 1M 上下文包含在您的订阅中。Sonnet 4.6 与 1M 上下文在每个订阅套餐上都需要<a href="https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans" target="_blank" rel="noopener">使用额度</a>，包括 Max 和 Ultra。</p>
+<table>
+<thead>
+<tr>
+<th>套餐</th>
+<th>Opus 4.6 与 1M 上下文</th>
+<th>Sonnet 4.6 与 1M 上下文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Max、Ultra、Team 和 Enterprise</td>
+<td>包含在订阅中</td>
+<td>需要<a href="https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans" target="_blank" rel="noopener">使用额度</a></td>
+</tr>
+<tr>
+<td>Pro</td>
+<td>需要<a href="https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans" target="_blank" rel="noopener">使用额度</a></td>
+<td>需要<a href="https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans" target="_blank" rel="noopener">使用额度</a></td>
+</tr>
+<tr>
+<td>API 和按量付费</td>
+<td>完全访问</td>
+<td>完全访问</td>
+</tr>
+</tbody>
+</table>
+<p>Claude Code 仅在直接连接到 Anthropic API 时检查这些套餐要求。如果您将 <code>ANTHROPIC_BASE_URL</code> 指向 <a href="llm-gateway.html#subscriptions-and-gateways">LLM 网关</a>，且您保存的 claude.ai 登录仍为活跃凭据，Claude Code 不检查您套餐的使用额度。<code>/model</code> 中的 <code>[1m]</code> 选项保持可用，网关决定请求是否成功。在 v2.1.229 之前，当 Claude Code 无法确认账户上的使用额度时，它在该配置中拒绝 <code>/model sonnet[1m]</code>。</p>
+<p>在 Anthropic API 上，1M 上下文窗口使用标准模型定价，超过 200K 的 token 没有溢价，但 Haiku 5.5 除外，它<a href="#haiku-5-5-context-window-and-pricing">在提示词超过 100K token 时费用更高</a>。对于扩展上下文包含在您的订阅中的套餐，使用仍由您的订阅覆盖。对于通过使用额度访问扩展上下文的套餐，token 计费到使用额度。</p>
+<h4 id="select-1m-context-for-opus-4-6-or-sonnet-4-6">为 Opus 4.6 或 Sonnet 4.6 选择 1M 上下文</h4>
+<p>要按名称选择 1M 变体，请在模型别名或完整模型名称后附加 <code>[1m]</code> 后缀：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text"># Append [1m] to a full model name
+/model claude-opus-4-6[1m]
+/model claude-sonnet-4-6[1m]
+
+# Or to an alias: the suffix applies to the model the alias resolves to
+/model opus[1m]
+</code></pre></div>
+<h4 id="context-window-behind-an-llm-gateway">LLM 网关后面的上下文窗口</h4>
+<p>如果您将 <code>ANTHROPIC_BASE_URL</code> 设置为 <a href="llm-gateway.html">LLM 网关</a>或另一个代理，Claude Code 给每个它识别的模型与该模型在 Anthropic API 上具有的相同上下文窗口。Fable 5.1、Fable 5、Sonnet 5 及更高版本、Haiku 5.5 和 Opus 4.7 及更高版本获得 1M 窗口，没有 <code>[1m]</code> 变体可选择，仅通过其 <code>[1m]</code> 变体达到 1M 的模型（如 Opus 4.6）在没有它的情况下运行在 200K。Claude Code 无法检测网关或其后面的服务器强制的更低限制。如果您的网关拒绝超过 200K token 的请求，请在启动 Claude Code 的环境中设置 <a href="env-vars.html"><code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=200000</code></a>，以便所有模型上的会话都<a href="#set-the-auto-compact-window">在该边界处压缩</a>。</p>
+<h4 id="turn-off-1m-context">关闭 1M 上下文</h4>
+<p>要将会话保持在 200K 窗口，请在您的 shell 或<a href="env-vars.html#set-environment-variables">设置文件</a>中设置 <code>CLAUDE_CODE_DISABLE_1M_CONTEXT=1</code>。Claude Code 从模型选择器中删除 <code>[1m]</code> 模型变体。在默认运行 1M 窗口的模型上，例如 Fable 模型、Sonnet 5 及更高版本和 Opus 4.7 及更高版本，它也将模型视为具有 200K 上下文窗口：</p>
+<ul>
+<li>启用自动压缩时，会话在 200K 边界处通过<a href="#set-the-auto-compact-window">自动压缩</a>进行压缩。将自动压缩窗口设置在 200K 以上不会解除该限制，因为 Claude Code 将该窗口限制为模型的上下文窗口。</li>
+<li>禁用自动压缩时，会话在 200K 边界处停止，出现<a href="errors.html#prompt-is-too-long">上下文限制错误</a>，而不是压缩。</li>
+</ul>
+<h4 id="haiku-5-5-context-window-and-pricing">Haiku 5.5 上下文窗口和定价</h4>
+<p>在 Anthropic API 上，Haiku 5.5 在每个套餐上都运行 1M 上下文窗口，没有 <code>[1m]</code> 后缀可选择。其模型 ID 为 <code>claude-haiku-5-5</code>。要使用它，请在会话中运行 <code>/model claude-haiku-5-5</code>，或在 shell 中使用 <code>claude --model claude-haiku-5-5</code> 启动 Claude Code。</p>
+<p>当 Haiku 5.5 请求的提示词超过 100K token 时，每 token 的费用更高。两种费率请参阅 <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Anthropic 定价</a>。</p>
+<p>会话默认在约 967K token 时自动压缩。要更早压缩，请为该模型<a href="#set-the-auto-compact-window">设置更小的自动压缩窗口</a>。</p>
+<h2 id="context-window-and-auto-compaction">上下文窗口和自动压缩</h2>
+<p>自动压缩窗口是指在 Claude Code 压缩对话之前，上下文窗口可以有多满。关于压缩保留和删除的内容，请参阅<a href="context-window.html#what-survives-compaction">压缩后保留的内容</a>。</p>
+<h3 id="set-the-auto-compact-window">设置自动压缩窗口</h3>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>如果 Claude Code 就 <code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code> 的值发出了警告，请参阅<a href="#claude_code_auto_compact_window-values">该变量的值和警告</a>。</p></div></div>
+<p>您可以在以下位置设置自动压缩窗口：</p>
+<ul>
+<li><strong>对于当前模型，在此会话及以后的会话中</strong>：运行 <code>/autocompact</code> 命令并指定一个值，例如 <code>/autocompact 500k</code>。Claude Code 将其保存到您的用户设置中 <a href="settings-reference.html#modelsettings"><code>modelSettings</code></a> 下的当前模型条目，并将其应用于当前会话。如果更高优先级的<a href="settings.html#settings-precedence">设置作用域</a>（例如托管设置）为该模型或所有模型设置了自己的窗口，该命令会保存您的值，但会话会保持该作用域的窗口，命令会说明这一点。运行 <code>/autocompact auto</code> 以返回为您的模型调整的窗口。在 v2.1.288 之前，该命令会为所有模型保存同一个窗口，即顶层的 <code>autoCompactWindow</code>。</li>
+<li><strong>对于所有模型</strong>：在设置文件中设置 <a href="settings-reference.html#autocompactwindow"><code>autoCompactWindow</code></a>，例如在 <code>~/.claude/settings.json</code> 中设置 <code>"autoCompactWindow": 200000</code>。对于某个模型，您使用 <code>/autocompact</code> 为该模型保存的窗口优先于同一文件中的此键。</li>
+<li><strong>对于一次启动</strong>：启动 Claude Code 时传递 <a href="cli-reference.html#cli-flags"><code>--autocompact</code></a>。该标志会为该次启动覆盖您保存的设置，而不会更改它，<code>claude --autocompact auto</code> 会以调整的窗口运行会话，即使您保存的设置有一个值。与 <code>/autocompact</code> 不同，该标志不会被更高优先级的设置作用域（例如托管设置）抢占。</li>
+<li><strong>在脚本和云环境中</strong>：将 <a href="env-vars.html"><code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code></a> 设置为 token 数，例如 <code>200000</code>。除非 Claude Code <a href="#claude_code_auto_compact_window-values">忽略该值</a>，否则该变量优先于命令、标志和 <code>autoCompactWindow</code> 设置。此时 <code>/autocompact</code> 会报告该覆盖而不保存。状态栏的 <code>used_percentage</code> 是相对于模型的完整上下文窗口计算的，因此在设置该变量时，该百分比并不表示何时会运行压缩。</li>
+<li><strong>对于单个子代理</strong>：请参阅<a href="sub-agents.html#subagent-auto-compact-window">为单个子代理设置自动压缩窗口</a>。</li>
+</ul>
+<p>命令和标志接受 100K 到 1M token 的窗口大小，采用以下任何形式：</p>
+<ul>
+<li>纯 token 计数，例如 <code>200000</code></li>
+<li><code>k</code> 或 <code>M</code> 后缀，例如 <code>500k</code> 或 <code>1M</code></li>
+<li>100 到 1000 之间的裸数字，表示千位，所以 <code>200</code> 设置 200,000</li>
+</ul>
+<p>无论您以哪种方式设置窗口，Claude Code 都会将其限制在模型的上下文窗口内。</p>
+<h4 id="claude_code_auto_compact_window-values"><code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code> 的值和警告</h4>
+<p>如果警告中引用了您的 <code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code> 值，则表示该值超出了 100,000 到 1,000,000 的范围，或者不是 token 数。要消除该警告，请设置该范围内的数字，例如 <code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=200000</code>。在 Claude Code v2.1.304 或更高版本上，您也可以用 <code>k</code> 表示千、用 <code>M</code> 表示百万来书写该数字，例如 <code>200k</code> 或 <code>1M</code>。</p>
+<p>在第一列中找到您的警告措辞，然后横向查看会话使用的窗口以及需要更改的内容：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您的警告包含</th>
+<th style="text-align: left;">会话使用的窗口</th>
+<th style="text-align: left;">需要更改的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>reads as &lt;N&gt; tokens, so Claude Code treats it as the 100k minimum</code></td>
+<td style="text-align: left;">100,000 token 与模型上下文窗口中的较小者</td>
+<td style="text-align: left;">至少设置为 <code>100000</code>，例如 <code>200000</code>；如果您的 <code>200</code> 是指千位，则设置为 <code>200k</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>is too large, so Claude Code treats it as the 1M maximum</code></td>
+<td style="text-align: left;">1,000,000 token 与模型上下文窗口中的较小者</td>
+<td style="text-align: left;">您已经拥有最大的窗口。要消除该警告，请设置 <code>1M</code> 或 <code>1000000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>isn't a usable size, so Claude Code ignores it</code></td>
+<td style="text-align: left;">来自 <code>--autocompact</code>、<code>/autocompact</code> 或 <code>autoCompactWindow</code> 的窗口；如果均未设置，则为<a href="#default-auto-compact-thresholds">默认值</a></td>
+<td style="text-align: left;">设置一个数字，例如 <code>200000</code>，或取消设置该变量</td>
+</tr>
+</tbody>
+</table>
+<p>不带后缀的数字会被读取为相应数量的 token，因此 <code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=200</code> 表示 200 个 token，而 <code>/autocompact 200</code> 表示 200,000。</p>
+<h3 id="default-auto-compact-thresholds">默认自动压缩阈值</h3>
+<p>如果您没有设置自动压缩窗口，Claude Code 会在对话达到模型的上下文限制时进行压缩，除了以下会话：</p>
+<ul>
+<li><a href="claude-code-on-the-web.html">云端会话</a>在对话接近模型限制时进行压缩</li>
+<li>Sonnet 4.6 和 Opus 4.6（不带<a href="#extended-context">扩展上下文</a>）在 200K 边界处进行压缩</li>
+<li>当您设置 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_1M_CONTEXT=1</code></a> 时，具有原生 1M 窗口的模型（例如 Sonnet 5 和 Fable 模型）在 200K 边界处进行压缩</li>
+<li>使用原生 1M 窗口运行的模型在窗口填满之前进行压缩，默认情况下约为 967K token。这些模型包括 Fable 模型、Sonnet 5 及更高版本、Haiku 5.5 以及 Opus 4.7 及更高版本。在自定义 <code>ANTHROPIC_BASE_URL</code> 后面，请参阅<a href="#context-window-behind-a-gateway">网关后面的上下文窗口</a></li>
+<li>在 Claude Code 不识别的模型 ID（例如 <a href="llm-gateway.html">LLM 网关</a>别名）上的会话在 Claude Code 为该 ID 假设的上下文窗口处进行压缩；请参阅<a href="#correct-the-window-for-a-gateway-or-custom-model-id">为网关或自定义模型 ID 更正窗口</a></li>
+</ul>
+<p>关于 Claude Code 何时还会压缩您闲置的对话，请参阅 <a href="settings-reference.html#idlecompaction"><code>idleCompaction</code></a> 设置。</p>
+<h3 id="correct-the-window-for-a-gateway-or-custom-model-id">为网关或自定义模型 ID 更正窗口</h3>
+<p>以下任一启动警告都表示 Claude Code 无法识别您会话的模型 ID，因此无法得知该模型的上下文窗口，并假设其为 200K token：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">⚠ Model "my-gateway-opus" isn't recognized · context assumed to be 200k tokens · ...
+Claude Code doesn't recognize the model "my-gateway-opus", so it assumes a context window of 200k tokens. Update Claude Code, or see https://code.claude.com/docs/en/model-config#correct-the-window-for-a-gateway-or-custom-model-id to set the window.
+</code></pre></div>
+<p>Claude Code 会在假设的 200K 处<a href="#default-auto-compact-thresholds">自动压缩</a>对话，因此如果模型的实际上下文窗口为 200K，则无需更正。否则，请根据您的 ID 选择以下适用的方式，将实际窗口告知 Claude Code：</p>
+<ul>
+<li><strong>比您的 Claude Code 版本更新的模型</strong>：在 shell 中运行 <code>claude update</code>。如果更新后 Claude Code 能识别该 ID，则无需再配置其他内容。</li>
+<li><strong>您的网关或提供商为 Claude Code 已知模型使用的名称</strong>：添加一个 <a href="#override-model-ids-per-version"><code>modelOverrides</code></a> 条目，将 Anthropic 模型 ID 映射到您的 ID，例如 <code>"claude-opus-4-8": "my-gateway-opus"</code>。您也可以改为在 <a href="settings-reference.html#fields-for-modelpicker"><code>modelPicker</code></a> 行中列出您的 ID，并将 <code>behavesAs</code> 设置为该模型。无论采用哪种方式，Claude Code 随后都会将该 ID 视为该模型。</li>
+<li><strong>具有 1M 窗口的模型</strong>：在设置模型的位置为 ID 追加 <code>[1m]</code>，例如在 shell 中运行 <code>claude --model 'my-gateway-opus[1m]'</code>。如果您<a href="#turn-off-1m-context">关闭了 1M 上下文</a>，则无论是否带有该后缀，您获得的窗口都相同。</li>
+<li><strong>任何其他窗口</strong>：在启动 Claude Code 的环境中将 <a href="env-vars.html"><code>CLAUDE_CODE_MAX_CONTEXT_TOKENS</code></a> 设置为以 token 为单位的窗口大小，例如 <code>CLAUDE_CODE_MAX_CONTEXT_TOKENS=400000</code>。对于不以 <code>claude-</code> 开头且没有 <code>[1m]</code> 后缀的无法识别的 ID，该变量会单独生效。对于任何其他 ID，请先查看<a href="#which-ids-claude_code_max_context_tokens-applies-to">它适用于哪些 ID</a>。</li>
+</ul>
+<p>一旦 Claude Code 识别了该 ID 或使用了您提供的窗口，在该 ID 上启动会话时就不会再出现该警告。</p>
+<h4 id="which-ids-claude_code_max_context_tokens-applies-to"><code>CLAUDE_CODE_MAX_CONTEXT_TOKENS</code> 适用于哪些 ID</h4>
+<p>在 <a href="llm-gateway.html">LLM 网关</a>或其他自定义部署上，Claude Code 可能会为模型 ID 假设一个与模型实际窗口不同的上下文窗口，无论它是否将 ID 解析为 Claude 模型。设置 <a href="env-vars.html"><code>CLAUDE_CODE_MAX_CONTEXT_TOKENS</code></a> 为 Claude Code 应该假设的窗口。</p>
+<p>变量的应用方式取决于 ID。当 ID 不以 <code>claude-</code>（任何大小写）开头时，或当它携带 Claude Code 在读取 ID 时剥离的后缀（例如 Google Cloud 的 Agent Platform 上使用的 <code>@YYYYMMDD</code> 日期）时，Claude Code 将 ID 视为提供商或自定义拼写。在 v2.1.259 之前，Claude Code 没有计算剥离的后缀，所以带有日期后缀的无法识别的 <code>claude-</code> ID 被视为裸 <code>claude-</code> 名称。</p>
+<p>无法识别的提供商或自定义拼写、相同拼写加上 <code>[1m]</code> 和所有其他 ID 是三种不同的情况：</p>
+<ul>
+<li>如果 Claude Code 无法将提供商或自定义拼写解析为它识别的模型，且 ID 不包含 <code>[1m]</code>，则变量直接应用，主动压缩在声明的窗口处继续。</li>
+<li>如果 Claude Code 无法将提供商或自定义拼写解析为它识别的模型，且 ID 包含 <code>[1m]</code>（任何大小写），Claude Code 为其假设 1M 窗口，变量本身不适用。要在保持主动压缩的同时更正窗口，还要设置 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_1M_CONTEXT=1</code></a>。设置该变量后，Claude Code 会像相同拼写但不带 <code>[1m]</code> 一样调整 ID 的大小，所以当 <code>CLAUDE_CODE_MAX_CONTEXT_TOKENS</code> 适用于该无标记拼写时，它就会应用。</li>
+</ul>
+<p>当声明的窗口大于 200K 时，在此配置中出现<a href="errors.html#the-200k-limit-isnt-enforced">200K 限制未被强制执行</a>的警告是预期的。<br />
+* 如果 ID 解析为 Claude Code 识别的模型，或 ID 是没有 Claude Code 要剥离的后缀的裸 <code>claude-</code> 名称（任何大小写），变量仅在您也设置 <a href="env-vars.html"><code>DISABLE_COMPACT</code></a> 时生效，这会禁用所有压缩。</p>
+<p>例如，包含 Claude Code 知道的 Claude 模型名称的 ID（例如 <code>anthropic/claude-opus-4-8</code>、<code>us.anthropic.claude-…-v1:0</code> 或带日期的 <code>claude-sonnet-4-5@20250929</code>）解析为该模型。这包括也包含 <code>[1m]</code> 的 ID：即使设置了 <code>CLAUDE_CODE_DISABLE_1M_CONTEXT</code>，Claude Code 也会将 <code>claude-opus-4-8[1m]</code> 解析为 Opus 4.8。</p>
+<p>对于 Claude Code 不识别的模型 ID，设置 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1</code></a> 以让 Claude Code 仅在 API 以 Claude Code 识别的<a href="errors.html#prompt-is-too-long">过长错误</a>拒绝对话后才进行压缩。当网关<a href="llm-gateway-connect.html#troubleshoot-gateway-errors">将错误重写</a>为 Claude Code 不识别的措辞时，Claude Code 不会运行该恢复。</p>
+<h2 id="checking-your-current-model">检查您当前的模型</h2>
+<p>您可以在两个位置查看您当前使用的模型：</p>
+<ul>
+<li>在<a href="statusline.html">状态行</a>中（如果已配置）</li>
+<li>在 <code>/status</code> 中，它也显示您的账户信息</li>
+</ul>
+<h2 id="add-a-custom-model-option">添加自定义模型选项</h2>
+<p>使用 <code>ANTHROPIC_CUSTOM_MODEL_OPTION</code> 向 <code>/model</code> 选择器添加单个自定义条目，而无需替换内置别名。这对于测试 Claude Code 默认不列出的模型 ID 很有用。对于 LLM 网关部署，当设置 <code>CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1</code> 时，Claude Code 可以从网关的 <code>/v1/models</code> 端点自动填充选择器，因此仅当发现被禁用或未返回您想要的模型时才需要此变量。请参阅 <a href="llm-gateway-protocol.html#model-discovery">网关模型发现</a>。</p>
+<p>要列出多个模型，按您自己的顺序和您选择的标签，请设置 <a href="settings-reference.html#modelpicker"><code>modelPicker</code></a>。其条目说明当该阵容替换内置阵容时选择器保留哪些行。</p>
+<p>此示例设置所有三个变量以使网关路由的 Opus 部署可选择。Claude Code 在启动时读取环境变量，因此在启动 <code>claude</code> 之前运行导出，或重启现有会话以获取它们：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_CUSTOM_MODEL_OPTION</span><span class="o">=</span><span class="s2">"my-gateway/claude-opus-5-5"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_CUSTOM_MODEL_OPTION_NAME</span><span class="o">=</span><span class="s2">"Opus via Gateway"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION</span><span class="o">=</span><span class="s2">"Custom deployment routed through the internal LLM gateway"</span>
+</code></pre></div>
+<p><code>ANTHROPIC_CUSTOM_MODEL_OPTION_NAME</code> 和 <code>ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION</code> 是可选的：</p>
+<ul>
+<li>如果您省略名称，当 Claude Code <a href="#customize-pinned-model-display-and-capabilities">识别 ID</a> 时条目显示模型的名称，否则显示模型 ID。</li>
+<li>如果您省略描述，Claude Code 使用 <code>Custom model (&lt;model-id&gt;)</code>。</li>
+</ul>
+<p>Claude Code 在内置条目之后列出自定义条目，您追加的任何 <a href="settings-reference.html#modelpicker"><code>modelPicker</code></a> 行都在其后面。</p>
+<p>Claude Code 跳过对 <code>ANTHROPIC_CUSTOM_MODEL_OPTION</code> 中设置的模型 ID 的验证，因此您可以使用您的 API 端点接受的任何字符串。</p>
+<p>当设置 <a href="#restrict-model-selection"><code>availableModels</code></a> 时，也要在允许列表中包含自定义模型 ID。否则 Claude Code 会从选择器中过滤自定义条目，并拒绝对其进行 <code>--model</code> 选择，就像任何其他被排除的模型一样。</p>
+<p>嵌入了系列名称的自定义 ID（例如 <code>my-gateway/claude-opus-5-5</code>），计为该系列的特定条目并禁用其通配符，因此还要列出您打算保持可选择的版本。请参阅 <a href="#merge-behavior">合并行为</a>。</p>
+<h2 id="environment-variables">环境变量</h2>
+<p>使用以下环境变量来控制别名映射到的模型名称。每个值必须是完整的模型名称，或您的 API 提供商的等效标识符。要选择会话启动时使用的模型，请设置 <a href="#set-a-default-model-for-new-sessions"><code>ANTHROPIC_DEFAULT_MODEL</code></a>，此表中省略了该变量。</p>
+<table>
+<thead>
+<tr>
+<th>环境变量</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ANTHROPIC_DEFAULT_FABLE_MODEL</code></td>
+<td>用于 <code>fable</code> 的模型，以及 Claude Code 识别为 Fable 模型的模型 ID，用于<a href="#automatic-model-fallback">第三方提供商上的自动模型回退</a></td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_DEFAULT_OPUS_MODEL</code></td>
+<td>用于 <code>opus</code> 的模型，或在计划模式活跃时用于 <code>opusplan</code> 的模型。</td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_DEFAULT_SONNET_MODEL</code></td>
+<td>用于 <code>sonnet</code> 的模型，或在计划模式不活跃时用于 <code>opusplan</code> 的模型。</td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code></td>
+<td>用于 <code>haiku</code> 的模型，或<a href="costs.html#background-token-usage">后台功能</a></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_SUBAGENT_MODEL</code></td>
+<td><a href="sub-agents.html#choose-a-model">子代理</a>、<a href="agent-teams.html#specify-teammates-and-models">agent team</a> 队友和<a href="workflows.html">工作流</a> Agent 的默认模型，适用于未以其他方式分配模型的情况。接受别名（如 <code>haiku</code>）或完整模型名称。每次调用的模型或定义的 <code>model</code> 字段（包括 <code>inherit</code>）优先。要改变这一点，请设置 <a href="sub-agents.html#run-every-subagent-on-one-model"><code>CLAUDE_CODE_SUBAGENT_MODEL_FORCE</code></a></td>
+</tr>
+</tbody>
+</table>
+<p>在第三方提供商上，<a href="#customize-pinned-model-display-and-capabilities">自定义固定模型显示和功能</a>描述了固定模型在 <code>/model</code> 选择器中的行显示的内容。</p>
+<p>注意：<code>ANTHROPIC_SMALL_FAST_MODEL</code> 已弃用，改为使用 <code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code>。</p>
+<h3 id="pin-models-for-third-party-deployments">为第三方部署固定模型</h3>
+<p>当通过 <a href="amazon-bedrock.html">Amazon Bedrock</a>、<a href="google-vertex-ai.html">Google Cloud's Agent Platform</a>、<a href="microsoft-foundry.html">Microsoft Foundry</a> 或 <a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 部署 Claude Code 时，在向用户推出前固定模型版本。</p>
+<p>不固定模型，Claude Code 会使用模型别名（如 <code>fable</code>、<code>opus</code>、<code>sonnet</code> 和 <code>haiku</code>），这些别名会解析为每个提供商的内置默认模型 ID。该默认值可能滞后于最新的 Anthropic 版本，并且它指向的模型可能尚未在用户账户中启用。当默认值不可用时，Amazon Bedrock 和 Google Cloud's Agent Platform 用户会看到通知，会话会回退到该默认模型的早期版本，或当默认值是 Opus 模型且没有 Opus 版本可用时回退到默认 Sonnet 模型。Microsoft Foundry 用户则会看到错误，因为 Microsoft Foundry 没有等效的启动检查。</p>
+<p>在 Amazon Bedrock 和 Google Cloud's Agent Platform 上，以特定 Sonnet 或 Opus 版本启动会话的用户（例如使用 <code>--model</code>、<code>ANTHROPIC_MODEL</code> 或 <code>model</code> 设置），会将该版本固定为会话的默认值，用于匹配的别名：启动检查会跳过它替换的内置默认值，并且不显示回退通知。在 v2.1.211 之前，即使会话模型被显式配置，检查也会运行并可能显示通知。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>在初始设置中将模型环境变量设置为特定版本 ID。固定让您控制用户何时迁移到新模型。</p></div></div>
+<p>对您的提供商使用以下环境变量和特定版本的模型 ID：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">提供商</th>
+<th style="text-align: left;">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Amazon Bedrock</td>
+<td style="text-align: left;"><code>export ANTHROPIC_DEFAULT_OPUS_MODEL='us.anthropic.claude-opus-4-8'</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Google Cloud's Agent Platform</td>
+<td style="text-align: left;"><code>export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Microsoft Foundry</td>
+<td style="text-align: left;"><code>export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'</code></td>
+</tr>
+</tbody>
+</table>
+<p>对 <code>ANTHROPIC_DEFAULT_FABLE_MODEL</code>、<code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 和 <code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code> 应用相同的模式。有关所有提供商的当前和旧版模型 ID，请参阅<a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noopener">模型概览</a>。要将用户升级到新模型版本，请更新这些环境变量并重新部署。</p>
+<p>具有原生 1M 窗口的固定模型（如 Opus 4.8 或 Sonnet 5），当 Claude Code 能够将固定 ID 与该模型匹配时，无需任何后缀即可以 <a href="#extended-context">1M 上下文窗口</a>运行。当 ID 包含该模型的 Anthropic API ID（例如 <code>us.anthropic.claude-opus-4-8</code> 包含 <code>claude-opus-4-8</code>），或 <a href="#override-model-ids-per-version"><code>modelOverrides</code></a> 条目将该模型映射到该 ID 时，即视为匹配。对于 Claude Code 无法与模型匹配的固定 ID，会话默认以 200K 窗口运行，除非该 ID 带有 <code>[1m]</code> 后缀。</p>
+<p>对于通过其 <code>[1m]</code> 变体达到 1M 的模型（如 Opus 4.6 或 Sonnet 4.6），请在 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 或 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 中的模型 ID 后附加 <code>[1m]</code> 以启用扩展上下文：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_OPUS_MODEL</span><span class="o">=</span><span class="s1">'claude-opus-4-6[1m]'</span>
+</code></pre></div>
+<p>使用 <code>[1m]</code> 后缀，1M 上下文窗口适用于固定别名的所有使用，包括 <a href="#opusplan-model-setting"><code>opusplan</code></a> 的计划模式 Opus 阶段和 <code>model</code> frontmatter 指定该别名的<a href="sub-agents.html#choose-a-model">子代理</a>。</p>
+<ul>
+<li>Claude Code 在将模型 ID 发送到您的提供商之前会删除该后缀。</li>
+<li>仅当底层模型<a href="https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model" target="_blank" rel="noopener">支持 1M 上下文</a>时才附加 <code>[1m]</code>。</li>
+<li>该后缀按变量读取，而不是按模型读取。在 Amazon Bedrock、Google Cloud's Agent Platform 和 Microsoft Foundry 上，一个变量中没有 <code>[1m]</code> 的 Opus 4.6 或 Sonnet 4.6 ID 使用 200K 上下文，即使另一个变量使用相同的模型和后缀。</li>
+</ul>
+<p>当您设置 <code>ANTHROPIC_DEFAULT_*_MODEL</code> 变量时，<code>/model</code> 选择器会显示该模型的一行来替代该家族的内置行，包括任何 1M 上下文行。要在不向该变量添加后缀的情况下到达 1M 窗口，您的用户运行 <code>/model opus[1m]</code>，Claude Code 会将后缀应用于该变量命名的模型。<code>/model sonnet[1m]</code> 的工作方式相同。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>通过 <a href="managed-settings.html#delivery-mechanisms">MDM 或托管设置文件</a> 提供的 <code>availableModels</code> 允许列表在使用第三方提供商时仍然适用；<a href="server-managed-settings.html#platform-availability">服务器托管设置不会在那里提供</a>。</p>
+<p>过滤与模型别名（如 <code>opus</code>）、版本前缀（如 <code>claude-opus-4-8</code>）或完整提供商形式的模型 ID 匹配。提供商特定的前缀（如 <code>us.anthropic.</code>）不会被删除，因此要允许特定模型，请通过 <a href="#override-model-ids-per-version"><code>modelOverrides</code></a> 映射它，或列出其完整提供商形式 ID：</p>
+<ul>
+<li><strong>Google Cloud's Agent Platform</strong>：当 Claude Code 请求的 ID 带有 <code>@</code> 日期（如 <code>claude-sonnet-4-5@20250929</code>）时，请在允许列表条目中包含该日期。单独的 <code>claude-sonnet-4-5</code> 在任一 <a href="settings-reference.html#availablemodelsmatch"><code>availableModelsMatch</code></a> 设置下都不会匹配该 ID。</li>
+<li><strong>固定模型</strong>：列出您在该模型的 <code>ANTHROPIC_DEFAULT_*_MODEL</code> 变量中设置的值</li>
+</ul>
+<p>任何 <code>[1m]</code> 后缀在匹配前都会从允许列表条目和请求的模型中删除。</p></div></div>
+<h3 id="customize-pinned-model-display-and-capabilities">自定义固定模型显示和功能</h3>
+<p>当您在第三方提供商上固定模型时，其在 <code>/model</code> 选择器中的行如果 Claude Code 识别固定 ID，则默认显示模型的名称，否则显示原始 ID：</p>
+<ul>
+<li><strong>已识别</strong>：Claude Code 知道的模型的确切 ID，例如其 Anthropic API ID 或您的提供商或网关的形式，带或不带 <code>[1m]</code> 后缀。固定 <code>us.anthropic.claude-sonnet-4-5-20250929-v1:0</code>，该行显示 <code>Sonnet 4.5</code>。</li>
+<li><strong>未识别</strong>：任何其他 ID，例如应用推理配置文件 ARN 或 Claude Code 不知道的模型版本，除非 <a href="#override-model-ids-per-version"><code>modelOverrides</code></a> 条目将模型映射到该 ID。在 Microsoft Foundry 上，部署名称是用户定义的，因此 Claude Code 在那里永远不会识别固定 ID，无论是否映射，该行默认显示部署名称。</li>
+</ul>
+<p>当行显示模型的名称时，其默认描述包括固定 ID，以便您仍然可以看到固定了哪个 ID。</p>
+<p>Claude Code 也可能无法识别固定模型支持的功能。您可以自己设置显示名称和描述，并为每个固定模型使用伴随环境变量声明功能。</p>
+<p>这些变量在第三方提供商（如 Amazon Bedrock、Google Cloud's Agent Platform 和 Microsoft Foundry）上生效。<code>_NAME</code> 和 <code>_DESCRIPTION</code> 变量在 <code>ANTHROPIC_BASE_URL</code> 指向 <a href="llm-gateway.html">LLM 网关</a> 时也生效。当直接连接到 <code>api.anthropic.com</code> 时无效。</p>
+<table>
+<thead>
+<tr>
+<th>环境变量</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ANTHROPIC_DEFAULT_OPUS_MODEL_NAME</code></td>
+<td>固定 Opus 模型在 <code>/model</code> 选择器中的显示名称。未设置时，如果 Claude Code 识别固定 ID，该行显示模型的名称，否则显示固定 ID</td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION</code></td>
+<td>固定 Opus 模型在 <code>/model</code> 选择器中的显示描述。未设置时，该行显示以 <code>Custom Opus model</code> 开头的默认描述</td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES</code></td>
+<td>固定 Opus 模型支持的功能的逗号分隔列表</td>
+</tr>
+</tbody>
+</table>
+<p>相同的 <code>_NAME</code>、<code>_DESCRIPTION</code> 和 <code>_SUPPORTED_CAPABILITIES</code> 后缀可用于 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code>、<code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code>、<code>ANTHROPIC_DEFAULT_FABLE_MODEL</code> 和 <code>ANTHROPIC_CUSTOM_MODEL_OPTION</code>。</p>
+<p>Claude Code 通过将模型 ID 与已知模式匹配来启用 <a href="#adjust-effort-level">effort 级别</a>和<a href="#extended-thinking">扩展思考</a>等功能。提供商特定的 ID（如 Amazon Bedrock ARN 或自定义部署名称）通常与这些模式不匹配，导致支持的功能被禁用。设置 <code>_SUPPORTED_CAPABILITIES</code> 以告诉 Claude Code 模型实际支持的功能：</p>
+<table>
+<thead>
+<tr>
+<th>功能值</th>
+<th>启用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>effort</code></td>
+<td><a href="#adjust-effort-level">effort 级别</a>和 <code>/effort</code> 命令</td>
+</tr>
+<tr>
+<td><code>xhigh_effort</code></td>
+<td><code>xhigh</code> effort 级别</td>
+</tr>
+<tr>
+<td><code>max_effort</code></td>
+<td><code>max</code> effort 级别</td>
+</tr>
+<tr>
+<td><code>thinking</code></td>
+<td><a href="#extended-thinking">扩展思考</a></td>
+</tr>
+<tr>
+<td><code>adaptive_thinking</code></td>
+<td>根据任务复杂性动态分配思考的自适应推理</td>
+</tr>
+<tr>
+<td><code>interleaved_thinking</code></td>
+<td>工具调用之间的思考</td>
+</tr>
+</tbody>
+</table>
+<p>设置 <code>_SUPPORTED_CAPABILITIES</code> 时，Claude Code 会为匹配的固定模型启用列出的功能，并禁用未列出的功能。未设置该变量时，Claude Code 回退到基于模型 ID 的内置检测。</p>
+<p>此示例将 Opus 固定到 Amazon Bedrock 自定义模型 ARN，设置友好名称，并声明其功能：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_OPUS_MODEL</span><span class="o">=</span><span class="s1">'arn:aws:bedrock:us-east-1:123456789012:custom-model/abc'</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_OPUS_MODEL_NAME</span><span class="o">=</span><span class="s1">'Opus via Bedrock'</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION</span><span class="o">=</span><span class="s1">'Opus 4.7 routed through a Bedrock custom endpoint'</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES</span><span class="o">=</span><span class="s1">'effort,xhigh_effort,max_effort,thinking,adaptive_thinking,interleaved_thinking'</span>
+</code></pre></div>
+<h3 id="override-model-ids-per-version">按版本覆盖模型 ID</h3>
+<p>在嵌入 Claude Code 并设置 <a href="env-vars.html"><code>CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST</code></a> 的平台上，主机的模型配置优先于托管模型设置，而托管 <code>availableModels</code> 允许列表保持有效，除非主机提供自己的；<a href="settings.html#exceptions-to-managed-settings-precedence">托管设置优先级的例外</a>说明主机覆盖的键和变量。</p>
+<p>上面的家族级环境变量为每个家族别名配置一个模型 ID。如果您需要将同一家族中的多个版本映射到不同的提供商 ID，请改用 <code>modelOverrides</code> 设置。</p>
+<p><code>modelOverrides</code> 将单个 Anthropic 模型 ID 映射到 Claude Code 发送到您的提供商 API 的提供商特定字符串。当用户在 <code>/model</code> 选择器中选择映射的模型时，Claude Code 会使用您配置的值而不是内置默认值。</p>
+<p>这让企业管理员可以将每个模型版本路由到特定的 Amazon Bedrock 推理配置文件 ARN、Google Cloud's Agent Platform 版本名称或 Microsoft Foundry 部署名称，用于治理、成本分配或区域路由。</p>
+<p>在您的<a href="settings.html#where-settings-live">设置文件</a>中设置 <code>modelOverrides</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"modelOverrides"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"claude-opus-4-7"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:bedrock:us-east-2:123456789012:application-inference-profile/opus-prod"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"claude-opus-4-6"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:bedrock:us-east-2:123456789012:application-inference-profile/opus-46-prod"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"claude-sonnet-4-6"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:bedrock:us-east-2:123456789012:application-inference-profile/sonnet-prod"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>键必须是<a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noopener">模型概览</a>中列出的 Anthropic 模型 ID。对于带日期的模型 ID，请包含日期后缀，完全按照其显示的方式。未知的键会被忽略。</p>
+<p>要停止针对网关别名等 ID 的 <code>[claude-code:unrecognized_model]</code> <a href="errors.html#unrecognized-model-id-on-a-request">诊断行</a>，请添加一个以该 ID 作为其值的条目。</p>
+<p>覆盖替换了支持 <code>/model</code> 选择器中每个条目的内置模型 ID。在 Amazon Bedrock 上，<code>modelOverrides</code> 条目优先于 Claude Code 在启动时自动发现的任何推理配置文件。Claude Code 将已经是提供商原生的值（如 Amazon Bedrock 推理配置文件 ARN 或 Microsoft Foundry 部署名称）按原样传递给提供商。</p>
+<p>当您通过 <code>--model</code>、<code>ANTHROPIC_MODEL</code> 环境变量或 <code>ANTHROPIC_DEFAULT_*_MODEL</code> 环境变量直接传递 Anthropic 模型 ID 时，覆盖也适用。在 Amazon Bedrock、Google Cloud's Agent Platform 和 <a href="amazon-bedrock.html#use-the-mantle-endpoint">Mantle</a> 上，没有 <code>modelOverrides</code> 条目的 Anthropic 模型 ID 解析为与该版本的 <code>/model</code> 选择器行相同的提供商特定 ID（当提供商支持该版本时）。Mantle 支持版本的子集。对于该子集之外的 Anthropic 模型 ID，Claude Code 将原始 ID 发送到 Mantle 而不进行映射，除非 <code>modelOverrides</code> 条目覆盖它。在 v2.1.200 之前，<code>--model</code> 和环境变量值直接到达提供商，不经过覆盖映射。</p>
+<p><code>modelOverrides</code> 与 <code>availableModels</code> 一起工作。允许列表针对 Anthropic 模型 ID 进行评估，而不是覆盖值，因此 <code>availableModels</code> 中的条目（如 <code>"opus"</code>）即使在 Opus 版本映射到 ARN 时也会继续匹配。当在托管设置中设置 <code>enforceAvailableModels</code> 时，强制执行的默认值仅通过来自<a href="managed-settings.html#how-claude-code-combines-managed-sources">托管设置</a>的 <code>modelOverrides</code> 解析。管理员的映射（如固定到推理配置文件 ARN 的版本）在强制执行的默认值中得到遵守。来自用户或项目设置的覆盖不会影响它。</p>
+<p>当 <code>availableModels</code> 在<a href="managed-settings.html">托管设置</a>中设置时，仅来自托管设置的 <code>modelOverrides</code> 适用于通过 <code>--model</code> 或上述环境变量直接传递的 Anthropic 模型 ID。Claude Code 忽略用户或项目设置中针对这些 ID 的覆盖，并且永远不会通过任何设置源的 <code>modelOverrides</code> 解析托管列表排除的 ID。此托管源限制需要 Claude Code v2.1.200 或更高版本。有关如何处理被阻止的 ID，请参阅<a href="#restrict-model-selection">限制模型选择</a>。</p>
+<h3 id="prompt-caching-configuration">提示缓存配置</h3>
+<p>Claude Code 自动使用<a href="prompt-caching.html">提示缓存</a>来优化性能并降低成本。您可以全局禁用提示缓存或针对特定模型层级禁用：</p>
+<table>
+<thead>
+<tr>
+<th>环境变量</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DISABLE_PROMPT_CACHING</code></td>
+<td>设置为 <code>1</code> 以禁用所有模型的提示缓存。优先于按模型设置</td>
+</tr>
+<tr>
+<td><code>DISABLE_PROMPT_CACHING_HAIKU</code></td>
+<td>设置为 <code>1</code> 以禁用<a href="prompt-caching.html#disable-prompt-caching">默认 Haiku 模型</a>的提示缓存</td>
+</tr>
+<tr>
+<td><code>DISABLE_PROMPT_CACHING_SONNET</code></td>
+<td>设置为 <code>1</code> 以禁用<a href="prompt-caching.html#disable-prompt-caching">默认 Sonnet 模型</a>的提示缓存</td>
+</tr>
+<tr>
+<td><code>DISABLE_PROMPT_CACHING_OPUS</code></td>
+<td>设置为 <code>1</code> 以禁用<a href="prompt-caching.html#disable-prompt-caching">默认 Opus 模型</a>的提示缓存</td>
+</tr>
+<tr>
+<td><code>DISABLE_PROMPT_CACHING_FABLE</code></td>
+<td>设置为 <code>1</code> 以仅禁用 Fable 模型的提示缓存</td>
+</tr>
+</tbody>
+</table>
+<p>要为主对话和子代理分别选择缓存 TTL，请参阅<a href="prompt-caching.html#choose-the-ttl-yourself">自己选择 TTL</a>。有关什么会触发缓存未命中，请参阅 <a href="prompt-caching.html">Claude Code 如何使用提示缓存</a>。</p>
+<h2 id="version-history">版本历史</h2>
+<p>此表列出了每个模型别名更改其解析模型的 Claude Code 版本，最新版本在前。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">版本</th>
+<th style="text-align: left;">更改</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">v2.1.293</td>
+<td style="text-align: left;"><code>haiku</code> 在 Anthropic API 上解析为 Haiku 5.5</td>
+</tr>
+<tr>
+<td style="text-align: left;">v2.1.284</td>
+<td style="text-align: left;"><code>sonnet</code> 在 Anthropic API 上解析为 Sonnet 5.5</td>
+</tr>
+<tr>
+<td style="text-align: left;">v2.1.280</td>
+<td style="text-align: left;"><code>opus</code> 在 Anthropic API、AWS 上的 Claude Platform、Amazon Bedrock 和 Google Cloud 的 Agent Platform 上解析为 Opus 5.5</td>
+</tr>
+<tr>
+<td style="text-align: left;">v2.1.257</td>
+<td style="text-align: left;"><code>fable</code> 解析为 Fable 5.1，Claude 应用网关会话中除外</td>
+</tr>
+<tr>
+<td style="text-align: left;">v2.1.219</td>
+<td style="text-align: left;"><code>opus</code> 在 Anthropic API、AWS 上的 Claude Platform、Amazon Bedrock 和 Agent Platform 上解析为 Opus 5</td>
+</tr>
+<tr>
+<td style="text-align: left;">v2.1.207</td>
+<td style="text-align: left;"><code>opus</code> 在 AWS 上的 Claude Platform、Amazon Bedrock 和 Agent Platform 上解析为 Opus 4.8</td>
+</tr>
+<tr>
+<td style="text-align: left;">v2.1.197</td>
+<td style="text-align: left;"><code>sonnet</code> 在 Anthropic API 上解析为 Sonnet 5</td>
+</tr>
+<tr>
+<td style="text-align: left;">v2.1.154</td>
+<td style="text-align: left;"><code>opus</code> 在 Anthropic API 上解析为 Opus 4.8</td>
+</tr>
+<tr>
+<td style="text-align: left;">更早版本</td>
+<td style="text-align: left;"><code>opus</code> 在 AWS 上的 Claude Platform 上解析为 Opus 4.7，在 Amazon Bedrock 和 Agent Platform 上解析为 Opus 4.6。<code>fable</code> 在每个提供商上解析为 Fable 5，<code>haiku</code> 在每个提供商上解析为 Haiku 4.5</td>
+</tr>
+</tbody>
+</table></article>
+    <div class="pager"><a class="pager-link prev" href="self-hosted-environments-identity.html"><span class="pager-dir">← 上一页</span><span class="pager-name">在自托管环境中验证会话身份</span></a><a class="pager-link next" href="fast-mode.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用快速模式加快响应速度</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#available-models">可用模型</a><a class="toc-l3" href="#model-aliases">模型别名</a><a class="toc-l3" href="#work-with-fable">使用 Fable</a><a class="toc-l3" href="#setting-your-model">设置您的模型</a><a class="toc-l2" href="#restrict-model-selection">限制模型选择</a><a class="toc-l3" href="#surface-coverage">使用入口覆盖范围</a><a class="toc-l3" href="#default-model-behavior">默认模型行为</a><a class="toc-l3" href="#enforce-the-allowlist-for-the-default-model">为默认模型强制执行允许列表</a><a class="toc-l3" href="#control-the-model-users-run-on">控制用户运行的模型</a><a class="toc-l3" href="#merge-behavior">合并行为</a><a class="toc-l3" href="#mantle-model-ids">Mantle 模型 ID</a><a class="toc-l3" href="#block-specific-models-or-versions">阻止特定模型或版本</a><a class="toc-l3" href="#organization-model-restrictions">组织模型限制</a><a class="toc-l2" href="#organization-default-model">组织默认模型</a><a class="toc-l2" href="#organization-effort-limits">组织工作量限制</a><a class="toc-l2" href="#special-model-behavior">特殊模型行为</a><a class="toc-l3" href="#default-model-setting">default 模型设置</a><a class="toc-l3" href="#opusplan-model-setting">opusplan 模型设置</a><a class="toc-l3" href="#fallback-model-chains">备用模型链</a><a class="toc-l3" href="#automatic-model-fallback">自动模型回退</a><a class="toc-l3" href="#adjust-effort-level">调整 effort 级别</a><a class="toc-l3" href="#extended-thinking">扩展思考</a><a class="toc-l3" href="#extended-context">扩展上下文</a><a class="toc-l2" href="#context-window-and-auto-compaction">上下文窗口和自动压缩</a><a class="toc-l3" href="#set-the-auto-compact-window">设置自动压缩窗口</a><a class="toc-l3" href="#default-auto-compact-thresholds">默认自动压缩阈值</a><a class="toc-l3" href="#correct-the-window-for-a-gateway-or-custom-model-id">为网关或自定义模型 ID 更正窗口</a><a class="toc-l2" href="#checking-your-current-model">检查您当前的模型</a><a class="toc-l2" href="#add-a-custom-model-option">添加自定义模型选项</a><a class="toc-l2" href="#environment-variables">环境变量</a><a class="toc-l3" href="#pin-models-for-third-party-deployments">为第三方部署固定模型</a><a class="toc-l3" href="#customize-pinned-model-display-and-capabilities">自定义固定模型显示和功能</a><a class="toc-l3" href="#override-model-ids-per-version">按版本覆盖模型 ID</a><a class="toc-l3" href="#prompt-caching-configuration">提示缓存配置</a><a class="toc-l2" href="#version-history">版本历史</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

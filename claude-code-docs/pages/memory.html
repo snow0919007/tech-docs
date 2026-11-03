@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude 如何记住您的项目 · Claude Code 中文文档</title>
+<meta name="description" content="使用 CLAUDE.md 或 AGENTS.md 文件为 Claude 提供持久指令，并让 Claude 通过自动记忆自动积累学习。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="memory">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/memory" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link active" href="memory.html" aria-current="page">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>快速入门</span> <span class="sep">/</span> <span>使用 Claude Code</span></div>
+    <article class="prose" id="article"><h1 id="claude">Claude 如何记住您的项目</h1>
+<blockquote>
+<p>使用 CLAUDE.md 或 AGENTS.md 文件为 Claude 提供持久指令，并让 Claude 通过自动记忆自动积累学习。</p>
+</blockquote>
+<p>每个 Claude Code 会话都以全新的上下文窗口开始。两种机制可以跨会话传递知识：</p>
+<ul>
+<li><strong>CLAUDE.md 文件</strong>：您编写的指令，为 Claude 提供持久上下文。Claude 也可以读取仓库的 <a href="#agents-md"><code>AGENTS.md</code> 文件</a>来代替 CLAUDE.md</li>
+<li><strong>自动记忆</strong>：Claude 根据您的更正和偏好自己编写的笔记</li>
+</ul>
+<p>本页面涵盖以下内容：</p>
+<ul>
+<li><a href="#claude-md-files">编写和组织 CLAUDE.md 文件</a></li>
+<li><a href="#agents-md">使用现有 AGENTS.md</a> 作为您的项目指令</li>
+<li><a href="#organize-rules-with-claude/rules/">使用 <code>.claude/rules/</code> 将规则范围限定为特定文件类型</a></li>
+<li><a href="#auto-memory">配置自动记忆</a>，以便 Claude 自动记笔记</li>
+<li><a href="#troubleshoot-memory-issues">故障排除</a>当指令未被遵循时</li>
+</ul>
+<h2 id="claude-md-vs-auto-memory">CLAUDE.md 与自动记忆</h2>
+<p>Claude Code 有两个互补的记忆系统。两者都在每次对话开始时加载。Claude 将它们视为上下文，而不是强制配置。要阻止某个操作，无论 Claude 决定什么，请改用 <a href="hooks-guide.html">PreToolUse hook</a>。你的指令越具体和简洁，Claude 遵循它们的一致性就越高。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">CLAUDE.md 文件</th>
+<th style="text-align: left;">自动记忆</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>谁编写</strong></td>
+<td style="text-align: left;">你</td>
+<td style="text-align: left;">Claude</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>包含内容</strong></td>
+<td style="text-align: left;">指令和规则</td>
+<td style="text-align: left;">学习和模式</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>范围</strong></td>
+<td style="text-align: left;">项目、用户或组织</td>
+<td style="text-align: left;">每个存储库，跨 worktrees 共享</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>加载到</strong></td>
+<td style="text-align: left;">每个会话</td>
+<td style="text-align: left;">每个会话（前 200 行或 25KB）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>用于</strong></td>
+<td style="text-align: left;">编码标准、工作流、项目架构</td>
+<td style="text-align: left;">你的偏好、你给 Claude 的更正、Claude 无法从代码中推导的项目上下文</td>
+</tr>
+</tbody>
+</table>
+<p>当你想指导 Claude 的行为时，使用 CLAUDE.md 文件。自动记忆让 Claude 从你的更正中学习，无需手动操作。</p>
+<p>Subagents 也可以维护自己的自动记忆。有关详细信息，请参阅 <a href="sub-agents.html#enable-persistent-memory">subagent 配置</a>。</p>
+<h2 id="claude-md-files">CLAUDE.md 文件</h2>
+<p>CLAUDE.md 文件是 markdown 文件，为 Claude 提供项目、个人工作流或整个组织的持久指令。您用纯文本编写这些文件；Claude 在每个会话开始时读取它们。如果您的仓库改用 <code>AGENTS.md</code>，请参阅 <a href="#agents-md">AGENTS.md</a>。</p>
+<h3 id="when-to-add-to-claude-md">何时添加到 CLAUDE.md</h3>
+<p>将 CLAUDE.md 视为您写下本来需要重新解释的内容的地方。在以下情况下添加到它：</p>
+<ul>
+<li>Claude 第二次犯同样的错误</li>
+<li>代码审查发现 Claude 应该了解的关于此代码库的内容</li>
+<li>您在聊天中输入的相同更正或澄清是您上一个会话中输入的</li>
+<li>新队友需要相同的上下文才能提高生产力</li>
+</ul>
+<p>将其保持为 Claude 应该在每个会话中保留的事实：构建命令、约定、项目布局、"始终执行 X"规则。如果条目是多步骤过程或仅对代码库的一部分重要，请将其移至 <a href="skills.html">skill</a> 或 <a href="#organize-rules-with-claude/rules/">path-scoped rule</a> 代替。<a href="features-overview.html#build-your-setup-over-time">扩展概述</a> 涵盖何时使用每种机制。</p>
+<h3 id="choose-where-to-put-claude-md-files">选择 CLAUDE.md 文件的位置</h3>
+<p>CLAUDE.md 文件可以位于多个位置，每个位置具有不同的作用域。下表按加载顺序列出它们，从最广泛的作用域到最具体的作用域，因此项目指令在用户指令之后出现在上下文中。</p>
+<table>
+<thead>
+<tr>
+<th>作用域</th>
+<th>位置</th>
+<th>目的</th>
+<th>用例示例</th>
+<th>共享对象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>托管策略</strong></td>
+<td>• macOS: <code>/Library/Application Support/ClaudeCode/CLAUDE.md</code> • Linux 和 WSL: <code>/etc/claude-code/CLAUDE.md</code> • Windows: <code>C:\Program Files\ClaudeCode\CLAUDE.md</code></td>
+<td>由 IT/DevOps 管理的组织范围指令</td>
+<td>公司编码标准、安全策略、合规要求</td>
+<td>组织中的所有用户</td>
+</tr>
+<tr>
+<td><strong>用户指令</strong></td>
+<td><code>~/.claude/CLAUDE.md</code></td>
+<td>所有项目的个人偏好</td>
+<td>代码样式偏好、个人工具快捷方式</td>
+<td>仅您（所有项目）</td>
+</tr>
+<tr>
+<td><strong>项目指令</strong></td>
+<td><code>./CLAUDE.md</code> 或 <code>./.claude/CLAUDE.md</code>。有关何时加载 <code>./AGENTS.md</code> 而不是或与它们一起加载，请参阅 <a href="#agents-md">AGENTS.md</a></td>
+<td>项目的团队共享指令</td>
+<td>项目架构、编码标准、常见工作流</td>
+<td>通过源代码控制的团队成员</td>
+</tr>
+<tr>
+<td><strong>本地指令</strong></td>
+<td><code>./CLAUDE.local.md</code></td>
+<td>个人项目特定偏好；添加到 <code>.gitignore</code></td>
+<td>您的沙箱 URL、首选测试数据</td>
+<td>仅您（当前项目）</td>
+</tr>
+</tbody>
+</table>
+<p>工作目录上方目录层次结构中的 CLAUDE.md 和 CLAUDE.local.md 文件在启动时加载。子目录中的文件按需加载。有关它们何时加载以及完整的解析顺序，请参阅 <a href="#how-claude-md-files-load">CLAUDE.md 文件如何加载</a>。</p>
+<p>对于大型项目，您可以使用 <a href="#organize-rules-with-claude/rules/">project rules</a> 将指令分解为特定主题的文件。规则允许您将指令范围限定为特定文件类型或子目录。</p>
+<h3 id="set-up-a-project-claude-md">设置项目 CLAUDE.md</h3>
+<p>项目 CLAUDE.md 可以存储在 <code>./CLAUDE.md</code> 或 <code>./.claude/CLAUDE.md</code> 中。创建此文件并添加适用于在项目上工作的任何人的指令：构建和测试命令、编码标准、架构决策、命名约定和常见工作流。这些指令通过版本控制与您的团队共享，因此请关注项目级标准而不是个人偏好。要确认文件已加载，请在会话中运行 <code>/context</code> 并检查 <strong>Memory files</strong> 下的列表。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>运行 <code>/init</code> 自动生成起始 CLAUDE.md。Claude 分析您的代码库并创建一个包含构建命令、测试指令和它发现的项目约定的文件。如果 CLAUDE.md 已存在，<code>/init</code> 会建议改进而不是覆盖它。从那里进行细化，添加 Claude 不会自己发现的指令。</p>
+<p>为了启用交互式多阶段流程，请在运行 <code>/init</code> 之前将 <code>CLAUDE_CODE_NEW_INIT</code> 环境变量设置为 <code>1</code>。在您的 shell 中或在设置文件的 <code>env</code> 块中设置它，如 <a href="env-vars.html#set-environment-variables">设置环境变量</a> 中所示。设置后，<code>/init</code> 会询问要设置哪些制品：CLAUDE.md 文件、skill 和 hook。然后它使用子代理探索您的代码库，通过后续问题填补空白，并在写入任何文件之前呈现可审查的提案。该变量仅改变 <code>/init</code> 的运行方式，因此您可以保持它的设置。</p></div></div>
+<h3 id="write-effective-instructions">编写有效的指令</h3>
+<p>Claude 将 CLAUDE.md 文件视为上下文而不是强制配置，因此您编写指令的方式会影响 Claude 遵循它们的可靠性。编写具体到足以验证的指令：</p>
+<ul>
+<li>"使用 2 空格缩进"而不是"正确格式化代码"</li>
+<li>"在提交前运行 <code>npm test</code>"而不是"测试您的更改"</li>
+<li>"API 处理程序位于 <code>src/api/handlers/</code>"而不是"保持文件有组织"</li>
+</ul>
+<p>保持您的文件简短、有组织和一致：</p>
+<ul>
+<li><strong>大小</strong>：每个 CLAUDE.md 文件目标在 200 行以下。较长的文件消耗更多上下文并降低遵守度。将仅对代码库的一部分重要的指令移至 <a href="#path-specific-rules">path-scoped rules</a>，这样它们仅在 Claude 处理匹配文件时加载。<a href="#import-additional-files">导入</a> 帮助您组织一个长文件，但不会减少其上下文成本，因为导入的文件会与导入它们的 CLAUDE.md 一起加载。</li>
+<li><strong>结构</strong>：使用 markdown 标题和项目符号来分组相关指令。有组织的部分比密集段落更容易让 Claude 遵循。</li>
+<li><strong>一致性</strong>：如果两条指令相互矛盾，Claude 可能会任意选择一条。定期审查您的 CLAUDE.md 文件、子目录中的嵌套 CLAUDE.md 文件和 <a href="#organize-rules-with-claude/rules/"><code>.claude/rules/</code></a>，以删除过时或冲突的指令。要让 Claude 为您找到它们，请 <a href="#audit-your-instruction-files">运行提示词审计</a>。</li>
+</ul>
+<h4 id="audit-your-instruction-files">审计您的指令文件</h4>
+<p>要让 Claude 检查您的指令文件是否有过时或冲突的内容，请在会话中运行 <code>/doctor prompt-audit</code>。Claude 查找问题，例如为旧模型编写的指令、对不存在的文件或命令的引用，以及相互矛盾的文件。您会获得一份发现报告和一组建议的编辑，在您要求 Claude 应用它们之前，您的文件中不会有任何更改。</p>
+<p>默认情况下，审计涵盖您的 CLAUDE.md、CLAUDE.local.md 和 AGENTS.md 文件，以及 <code>.claude/</code> 和 <code>~/.claude/</code> 下的规则、skill、命令、子代理和输出样式。要审计一个文件或目录，请改为传递其路径，例如 <code>/doctor prompt-audit .claude/skills/deploy</code>。</p>
+<p>审计通过捆绑的 <code>/claude-api</code> skill 运行。当该 skill 在 <a href="skills.html#override-skill-visibility-from-settings"><code>skillOverrides</code></a> 中关闭或使用 <a href="settings-reference.html#disablebundledskills"><code>disableBundledSkills</code></a> 时，它不可用。<code>/doctor prompt-audit</code> 需要 Claude Code v2.1.283 或更高版本。</p>
+<h3 id="import-additional-files">导入其他文件</h3>
+<p>CLAUDE.md 文件可以使用 <code>@path/to/import</code> 语法导入其他文件。导入的文件被展开并加载到上下文中，与引用它们的 CLAUDE.md 一起。</p>
+<p>允许相对路径和绝对路径。相对路径相对于包含导入的文件解析，而不是工作目录。导入的文件可以递归导入其他文件，最大深度为四跳。</p>
+<p>要导入其路径包含空格的文件，请在每个空格前放置反斜杠。没有反斜杠，路径在第一个空格处结束，即使导入在其自己的行上。用引号包装的路径根本不导入，无论是否有反斜杠。此导入从名为 <code>Design Docs</code> 的文件夹加载文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">- API conventions @Design\ Docs/api-conventions.md
+</code></pre></div>
+<p>导入解析跳过 Markdown 代码跨度和围栏代码块。要在您的 CLAUDE.md 中提及路径而不导入它，请将其包装在反引号中：编写 <code>`@README`</code> 保持文本字面，而 <code>@README</code> 在反引号外导入文件。</p>
+<p>要引入 README、package.json 和工作流指南，请在 CLAUDE.md 中的任何地方使用 <code>@</code> 语法引用它们：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">See @README for project overview and @package.json for available npm commands for this project.
+
+# Additional Instructions
+- git workflow @docs/git-instructions.md
+</code></pre></div>
+<p>对于不应该检入版本控制的私人项目特定偏好，请在项目根目录创建 <code>CLAUDE.local.md</code>。它与 <code>CLAUDE.md</code> 一起加载并以相同方式处理。将 <code>CLAUDE.local.md</code> 添加到您的 <code>.gitignore</code> 以便不提交它。设置 <code>CLAUDE_CODE_NEW_INIT=1</code> 后，运行 <code>/init</code> 并选择个人选项会为您执行此操作。</p>
+<p>如果您在同一仓库的多个 git worktree 中工作，gitignored <code>CLAUDE.local.md</code> 仅存在于您创建它的 worktree 中。要在 worktree 之间共享个人指令，请改为从您的主目录导入文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text"># Individual Preferences
+- @~/.claude/my-project-instructions.md
+</code></pre></div>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>项目级记忆文件中的导入是外部的，当其路径解析到工作目录外时，例如上面的主目录导入。Claude Code 首次在项目中遇到外部导入时，会显示一个批准对话框，列出文件。如果您拒绝，导入保持禁用状态，对话框不会再出现。</p>
+<p>Claude Code 显示对话框以保护您免受其他人提交到共享项目的文件。用户作用域记忆文件，例如 <code>~/.claude/CLAUDE.md</code> 和 <code>~/.claude/rules/</code>，是您自己编写的文件。除了在您的桌面上的 <a href="https://claude.com/product/cowork" target="_blank" rel="noopener">Cowork</a> 会话中，Claude Code 加载它们的导入而不显示对话框，并像信任您的其余个人配置一样信任它们。</p>
+<p>在您的桌面上的 Cowork 会话中，Claude Code 跳过用户作用域文件中解析到会话工作目录外的路径的任何导入，并加载文件的其余部分。在这些会话中，它也跳过本身是符号链接或硬链接的 <code>~/.claude/CLAUDE.md</code>，以及指向工作目录外的符号链接 <code>~/.claude/rules/</code> 目录或规则文件。</p></div></div>
+<h3 id="how-claude-md-files-load">CLAUDE.md 文件如何加载</h3>
+<p>Claude Code 从您的当前工作目录和其上方的每个目录加载 <code>CLAUDE.md</code> 和 <code>CLAUDE.local.md</code>。在 <code>foo/bar/</code> 中运行 Claude Code，它从 <code>foo/bar/CLAUDE.md</code>、<code>foo/CLAUDE.md</code> 和任何 <code>CLAUDE.local.md</code> 文件加载指令。</p>
+<p>所有发现的文件被连接到上下文中，而不是相互覆盖。在目录树中，内容从文件系统根目录向下排序到您的工作目录。对于 <code>foo/bar/</code> 示例，<code>foo/CLAUDE.md</code> 在上下文中出现在 <code>foo/bar/CLAUDE.md</code> 之前，因此更接近您启动 Claude 的位置的指令最后读取。在每个目录中，<code>CLAUDE.local.md</code> 附加在 <code>CLAUDE.md</code> 之后，因此您的个人笔记是 Claude 在该级别读取的最后一件事。</p>
+<p>Claude 还发现当前工作目录下子目录中的 <code>CLAUDE.md</code> 和 <code>CLAUDE.local.md</code> 文件。它们不会在启动时加载，而是在 Claude 读取、写入或编辑该子目录中的其他文件时，由 Claude Code 逐个加载。读取包括使用<a href="tools-reference.html#edit-tool-behavior">算作读取</a>的 Bash 命令查看文件，例如对单个文件使用 <code>cat</code> 或 <code>head</code>。对于 <code>.claude/worktrees/</code> 下 worktree 中的文件，请参阅 <a href="worktrees.html#isolate-subagents-with-worktrees">使用 worktree 隔离子代理</a>。</p>
+<p>如果您在大型 monorepo 中工作，其中其他团队的 CLAUDE.md 文件被拾取，请使用 <a href="#exclude-specific-claude-md-files"><code>claudeMdExcludes</code></a> 跳过它们。有关根目录和每目录 CLAUDE.md 文件和规则的完整布局，请参阅 <a href="large-codebases.html">Monorepos 和大型仓库</a>。</p>
+<p>CLAUDE.md 文件中的块级 HTML 注释（<code>&lt;!-- maintainer notes --&gt;</code>）在内容注入到 Claude 的上下文之前被剥离。使用它们为人类维护者留下笔记，而不在注释上花费上下文 token。代码块内的注释被保留。当您直接使用 Read 工具打开 CLAUDE.md 文件时，注释保持可见。</p>
+<h4 id="load-from-additional-directories">从其他目录加载</h4>
+<p><code>--add-dir</code> 标志使 Claude 能够访问主工作目录外的其他目录。默认情况下，这些目录中的 CLAUDE.md 文件不加载。</p>
+<p>要也从其他目录加载记忆文件，请设置 <code>CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD</code> 环境变量：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nv">CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>claude<span class="w"> </span>--add-dir<span class="w"> </span>../shared-config
+</code></pre></div>
+<p>内联形式为该单次启动在 Bash 或 Zsh 中设置变量。要为每个会话保持它，请将其添加到 <code>~/.claude/settings.json</code> 中的 <code>env</code> 块，如 <a href="env-vars.html#set-environment-variables">设置环境变量</a> 中所示。</p>
+<p>这从其他目录加载 <code>CLAUDE.md</code>、<code>.claude/CLAUDE.md</code>、<code>.claude/rules/*.md</code> 和 <code>CLAUDE.local.md</code>。如果您从 <a href="cli-reference.html"><code>--setting-sources</code></a> 中排除 <code>local</code>，则跳过 <code>CLAUDE.local.md</code>。</p>
+<h3 id="organize-rules-with-claude/rules/">使用 <code>.claude/rules/</code> 组织规则</h3>
+<p>对于较大的项目，您可以使用 <code>.claude/rules/</code> 目录将指令组织到多个文件中。这使指令模块化并更容易让团队维护。规则也可以 <a href="#path-specific-rules">范围限定到特定文件路径</a>，因此它们仅在 Claude 处理匹配文件时加载到上下文中，减少噪音并节省上下文空间。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>规则在每个会话或打开匹配文件时加载到上下文中。对于不需要始终在上下文中的特定任务指令，请改用 <a href="skills.html">skills</a>，它仅在您调用它们或 Claude 确定它们与您的提示词相关时加载。</p></div></div>
+<h4 id="set-up-rules">设置规则</h4>
+<p>在项目的 <code>.claude/rules/</code> 目录中放置 markdown 文件。每个文件应涵盖一个主题，具有描述性文件名，如 <code>testing.md</code> 或 <code>api-design.md</code>。所有 <code>.md</code> 文件被递归发现，因此您可以将规则组织到子目录中，如 <code>frontend/</code> 或 <code>backend/</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">your-project/
+├── .claude/
+│   ├── CLAUDE.md           # Main project instructions
+│   └── rules/
+│       ├── code-style.md   # Code style guidelines
+│       ├── testing.md      # Testing conventions
+│       └── security.md     # Security requirements
+</code></pre></div>
+<p>没有 <a href="#path-specific-rules"><code>paths</code> frontmatter</a> 的规则在启动时加载，优先级与 <code>.claude/CLAUDE.md</code> 相同。</p>
+<p>如果您从 <a href="cli-reference.html"><code>--setting-sources</code></a> 中排除 <code>project</code>，项目规则被跳过。在 v2.1.211 之前，加载按需的规则，包括路径范围规则和嵌套 <code>.claude/rules/</code> 目录中的规则，即使 <code>project</code> 被排除也会加载。</p>
+<h4 id="path-specific-rules">路径特定规则</h4>
+<p>规则可以使用带有 <code>paths</code> 字段的 YAML frontmatter 范围限定到特定文件。这些条件规则仅在 Claude 处理与指定模式匹配的文件时适用。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown">---
+paths:
+<span class="gu">  - "src/api/**/*.ts"</span>
+<span class="gu">---</span>
+
+<span class="gh"># API Development Rules</span>
+
+<span class="k">-</span><span class="w"> </span>All API endpoints must include input validation
+<span class="k">-</span><span class="w"> </span>Use the standard error response format
+<span class="k">-</span><span class="w"> </span>Include OpenAPI documentation comments
+</code></pre></div>
+<p>没有 <code>paths</code> 字段的规则无条件加载并适用于所有文件。当 Claude 对匹配的文件使用 Read、Write 或 Edit 工具时，路径范围规则会加载。当 Claude 使用<a href="tools-reference.html#edit-tool-behavior">算作读取</a>的 Bash 命令查看匹配的文件时（例如对单个文件使用 <code>cat</code> 或 <code>head</code>），该规则也会加载。当 Claude 通过项目目录的符号链接路径到达文件时，匹配也有效，例如在符号链接检出中。</p>
+<p>每个模式都相对于规则的基准目录：</p>
+<ul>
+<li><strong>项目规则</strong>：包含该规则所在 <code>.claude</code> 文件夹的目录</li>
+<li><strong><a href="#user-level-rules">用户级规则</a></strong>：会话的<a href="permissions.html#working-directories">主工作目录</a></li>
+</ul>
+<p>要让路径范围规则为同级 git worktree 中的文件加载，请在该 worktree 中启动 Claude Code，或<a href="permissions.html#move-the-session-to-another-directory">使用 <code>/cd</code> 将会话移至该处</a>。</p>
+<p>在 <code>paths</code> 字段中使用 glob 模式按扩展名、目录或任何组合匹配文件：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>**/*.ts</code></td>
+<td>任何目录中的所有 TypeScript 文件</td>
+</tr>
+<tr>
+<td><code>src/**/*</code></td>
+<td><code>src/</code> 目录下的所有文件</td>
+</tr>
+<tr>
+<td><code>*.md</code></td>
+<td>项目根目录中的 Markdown 文件</td>
+</tr>
+<tr>
+<td><code>src/components/*.tsx</code></td>
+<td>特定目录中的 React 组件</td>
+</tr>
+</tbody>
+</table>
+<p>您可以指定多个模式并使用大括号扩展在一个模式中匹配多个扩展名：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown">---
+paths:
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>"src/**/*.{ts,tsx}"
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>"lib/**/*.ts"
+<span class="gu">  - "tests/**/*.test.ts"</span>
+<span class="gu">---</span>
+</code></pre></div>
+<p>每个大括号组将扩展的模式数量相乘：<code>src/*.{ts,tsx}</code> 扩展为两个模式，<code>{a,b}/{c,d}/*.{ts,tsx}</code> 扩展为八个。为了保持扩展有界，规则的整个 <code>paths</code> 列表共享一个 1,000 个扩展模式和 4 MiB 的预算，没有大括号的模式不计入其中。</p>
+<p>Claude Code 使用任何会超过预算的未展开模式，其字面大括号不匹配任何文件。</p>
+<p>Glob 语法将 <code>[</code> 视为括号表达式的开始，例如 <code>[abc]</code>。具有无法读作括号表达式的 <code>[</code> 的模式，例如 <code>photos [2024/**</code>，是无效的：它不匹配任何内容，规则的其他模式继续工作。要匹配文件名中的字面 <code>[</code>，请将其转义为 <code>photos \[2024/**</code>。</p>
+<h4 id="rules-frontmatter-reference">规则 frontmatter 参考</h4>
+<p>使用 YAML <a href="glossary.html#frontmatter">frontmatter</a> 在文件顶部的 <code>---</code> 标记之间配置规则。<code>paths</code> 是 Claude Code 从规则中读取的唯一字段；任何其他字段都被忽略而不出现错误。Claude Code 在将规则加载到上下文之前删除 frontmatter。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">必需</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>paths</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">Glob 模式，<a href="#path-specific-rules">将规则范围限定到匹配文件</a>。接受 YAML 列表或逗号分隔的字符串</td>
+</tr>
+</tbody>
+</table>
+<p>如果标记之间的 YAML 不解析，Claude Code 忽略 frontmatter 并加载规则，就像它没有 <code>paths</code> 一样。运行 <code>claude --debug</code> 查看解析错误。</p>
+<h4 id="share-rules-across-projects-with-symlinks">使用符号链接在项目间共享规则</h4>
+<p><code>.claude/rules/</code> 目录支持符号链接，因此您可以维护一组共享规则并将它们链接到多个项目中。循环符号链接被检测并妥善处理。</p>
+<p>Claude Code 将其目标在工作目录外的符号链接视为 <a href="#import-additional-files">external import</a>。链接的规则不加载，直到您批准项目的外部导入，之后仅加载没有 <a href="#path-specific-rules"><code>paths</code> 字段</a> 的规则。</p>
+<p>Claude Code 会针对每个项目请求一次该批准，方式是在交互式会话开始时显示一个对话框。该对话框会列出链接的规则文件以及任何外部 <code>@path</code> 导入。要加载共享规则而不需要该批准，请将它们保存在 <a href="#user-level-rules"><code>~/.claude/rules/</code></a> 中，它们适用于您机器上的每个项目。</p>
+<p>此示例链接共享目录和单个文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">ln<span class="w"> </span>-s<span class="w"> </span>~/shared-claude-rules<span class="w"> </span>.claude/rules/shared
+ln<span class="w"> </span>-s<span class="w"> </span>~/company-standards/security.md<span class="w"> </span>.claude/rules/security.md
+</code></pre></div>
+<p>如果您指向网络路径（如 UNC 共享 <code>\\server\share</code> 或 <code>/net</code> 或 <code>/Network</code> 下的路径）的 <code>.claude/rules/</code> 或 <code>CLAUDE.md</code> 符号链接，链接的指令不加载。Claude Code 不跟随链接，因为查找此类路径可能会联系它命名的主机。<code>\\wsl$</code> 路径不计为网络路径。</p>
+<h4 id="user-level-rules">用户级规则</h4>
+<p><code>~/.claude/rules/</code> 中的个人规则适用于您机器上的每个项目。使用它们来处理不是项目特定的偏好：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">~/.claude/rules/
+├── preferences.md    # Your personal coding preferences
+└── workflows.md      # Your preferred workflows
+</code></pre></div>
+<p>Claude Code 在项目规则之前加载用户级规则，因此项目规则在 Claude 的上下文中出现在用户规则之后。两个集合都不会覆盖另一个：如果用户规则和项目规则冲突，Claude 可能会遵循任一个，因此保持两者一致。</p>
+<h3 id="manage-claude-md-for-large-teams">为大型团队管理 CLAUDE.md</h3>
+<p>对于在团队中部署 Claude Code 的组织，您可以集中指令并控制加载哪些 CLAUDE.md 文件。</p>
+<h4 id="deploy-organization-wide-claude-md">部署组织范围的 CLAUDE.md</h4>
+<p>组织可以部署一个集中管理的 CLAUDE.md，适用于机器上的所有用户。开发者可以使用 <code>claudeMdExcludes</code> 设置<a href="#exclude-specific-claude-md-files">排除其他 CLAUDE.md 文件</a>，但无法排除此文件。如果开发者在完全关闭 CLAUDE.md 加载的情况下启动会话，该会话也不会加载托管内容。请将此文件用于指导，并使用 <code>permissions.deny</code> 等<a href="managed-settings.html">托管设置</a>来强制执行规则。</p>
+<p><strong>1. 在托管策略位置创建文件</strong></p>
+<ul>
+<li>macOS: <code>/Library/Application Support/ClaudeCode/CLAUDE.md</code></li>
+<li>Linux 和 WSL: <code>/etc/claude-code/CLAUDE.md</code></li>
+<li>Windows: <code>C:\Program Files\ClaudeCode\CLAUDE.md</code></li>
+</ul>
+<p><strong>2. 使用您的配置管理系统部署</strong></p>
+<p>使用 MDM、Group Policy、Ansible 或类似工具在开发者机器中分发文件。有关其他组织范围配置选项，请参阅 <a href="managed-settings.html">managed settings</a>。</p>
+<p><code>claudeMd</code> 键允许您将托管 CLAUDE.md 内容直接放入 <code>managed-settings.json</code> 中，而不是部署单独的文件。</p>
+<p><strong>作用域</strong>：机器上的所有用户，在任何仓库中。对于仓库特定的指导，改为提交项目 CLAUDE.md。</p>
+<p><strong>优先级</strong>：与托管 CLAUDE.md 文件相同。在用户和项目 CLAUDE.md 之前加载。</p>
+<p><strong>在哪里被遵守</strong>：仅托管和策略设置。在用户、项目或本地设置中设置 <code>claudeMd</code> 无效。</p>
+<p>下面的示例直接在托管设置文件中添加行为指令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"claudeMd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Always run `make lint` before committing.\nNever push directly to main."</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>托管 CLAUDE.md 和 <a href="managed-settings.html">managed settings</a> 服务于不同的目的。使用设置进行技术强制，使用 CLAUDE.md 进行行为指导：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">关注点</th>
+<th style="text-align: left;">配置在</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">阻止特定工具、命令或文件路径</td>
+<td style="text-align: left;">托管设置：<code>permissions.deny</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">强制沙箱隔离</td>
+<td style="text-align: left;">托管设置：<code>sandbox.enabled</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">环境变量和 API 提供商路由</td>
+<td style="text-align: left;">托管设置：<code>env</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">登录方法和组织限制</td>
+<td style="text-align: left;">托管设置：<code>forceLoginMethod</code>、<code>forceLoginOrgUUID</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">代码样式和质量指南</td>
+<td style="text-align: left;">托管 CLAUDE.md</td>
+</tr>
+<tr>
+<td style="text-align: left;">数据处理和合规提醒</td>
+<td style="text-align: left;">托管 CLAUDE.md</td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude 的行为指令</td>
+<td style="text-align: left;">托管 CLAUDE.md</td>
+</tr>
+</tbody>
+</table>
+<p>设置规则由客户端强制执行，无论 Claude 决定做什么。CLAUDE.md 指令塑造 Claude 的行为，但不是硬强制层。</p>
+<h4 id="exclude-specific-claude-md-files">排除特定的 CLAUDE.md 文件</h4>
+<p>在大型 monorepos 中，祖先 CLAUDE.md 文件可能包含与您的工作无关的指令。<code>claudeMdExcludes</code> 设置允许您按路径或 glob 模式跳过特定文件。您无法使用 <code>claudeMdExcludes</code> 排除<a href="#deploy-organization-wide-claude-md">托管 CLAUDE.md 文件</a>。</p>
+<p>此示例排除顶级 CLAUDE.md 和来自父文件夹的规则目录。将其添加到 <code>.claude/settings.local.json</code> 以使排除保持本地到您的机器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"claudeMdExcludes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"**/monorepo/CLAUDE.md"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"/home/user/monorepo/other-team/.claude/rules/**"</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>模式使用 glob 语法与绝对文件路径匹配。您可以在任何 <a href="settings.html#where-settings-live">settings layer</a> 配置 <code>claudeMdExcludes</code>：用户、项目、本地或托管策略。数组跨层合并。</p>
+<p>要排除您通过 <a href="#share-rules-across-projects-with-symlinks">symlink</a> 到达的规则文件，无论文件还是其目录是链接，请针对任一路径编写模式：文件在 <code>.claude/rules/</code> 下的路径或其链接目标。匹配任一路径的模式排除文件。在 v2.1.239 之前，仅匹配链接目标的模式排除文件。</p>
+<h2 id="agents-md">AGENTS.md</h2>
+<p>Claude Code 可以将 <a href="glossary.html#agents-md"><code>AGENTS.md</code></a> 作为您的项目说明读取，因此已为其他编码代理设置的存储库无需添加 <code>CLAUDE.md</code>、导入或设置即可工作。此表显示了存储库中指令文件的每种组合下 Claude 默认读取的内容：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您的存储库有</th>
+<th style="text-align: left;">Claude 读取</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">一个 <code>AGENTS.md</code>，且在您的工作目录或其上方没有 <code>CLAUDE.md</code> 或 <code>CLAUDE.local.md</code></td>
+<td style="text-align: left;">您的 <code>AGENTS.md</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">一个 <code>AGENTS.md</code> 和一个 <code>CLAUDE.md</code> 或 <code>CLAUDE.local.md</code> 在您的工作目录或其上方</td>
+<td style="text-align: left;">仅您的 <code>CLAUDE.md</code> 文件</td>
+</tr>
+<tr>
+<td style="text-align: left;">一个已<a href="#share-one-file-with-other-coding-tools">导入 <code>AGENTS.md</code></a>的 <code>CLAUDE.md</code></td>
+<td style="text-align: left;">您的 <code>CLAUDE.md</code>，通过导入包含 <code>AGENTS.md</code></td>
+</tr>
+</tbody>
+</table>
+<p>要更改默认值，例如让 Claude 始终读取两个文件、仅读取 <code>CLAUDE.md</code> 或仅读取您组织的托管说明，请<a href="#choose-which-instruction-files-load">更改<strong>项目说明</strong>设置</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>直接读取 <code>AGENTS.md</code> 需要 Claude Code v2.1.277 或更高版本。在某些会话中 Claude <a href="#when-agents-md-support-is-unavailable">无法读取 <code>AGENTS.md</code></a>，因此请<a href="#share-one-file-with-other-coding-tools">从 <code>CLAUDE.md</code> 中导入它</a>。</p></div></div>
+<h3 id="when-claude-code-reads-agents-md">Claude Code 何时读取 AGENTS.md</h3>
+<p>默认情况下，Claude 仅在您的工作目录或其上方没有 <code>CLAUDE.md</code> 时才读取 <code>AGENTS.md</code>。以下是此检查中计数的文件：</p>
+<ul>
+<li><strong>计数，因此 Claude 读取它们而不是 <code>AGENTS.md</code></strong>：您的工作目录或其上方任何目录中的 <code>CLAUDE.md</code>、<code>.claude/CLAUDE.md</code> 或 <code>CLAUDE.local.md</code></li>
+<li><strong>不计数，并继续与 <code>AGENTS.md</code> 一起加载</strong>：您的 <code>~/.claude/CLAUDE.md</code>、您组织的托管 <code>CLAUDE.md</code> 和 <code>.claude/rules/</code> 文件</li>
+</ul>
+<p>当没有计数时，以下是 Claude 读取的内容以及您如何判断：</p>
+<ul>
+<li><strong>在会话开始时</strong>：您的工作目录和其上方目录中的每个 <code>AGENTS.md</code> 和 <code>.claude/AGENTS.md</code>。在交互式会话中，您会看到一行，例如 <code>no CLAUDE.md found; AGENTS.md loaded: /home/you/repo/AGENTS.md</code> 在对话中</li>
+<li><strong>当 Claude 在子目录中工作时</strong>：当 Claude 使用 Read 工具打开该处的文件且该子目录没有三个 <code>CLAUDE.md</code> 文件中的任何一个时，子目录的 <code>AGENTS.md</code></li>
+<li><strong>在每个 <code>AGENTS.md</code> 内</strong>：<a href="#import-additional-files"><code>@path</code> 导入</a>被展开，<a href="#exclude-specific-claude-md-files"><code>claudeMdExcludes</code></a> 模式适用，<a href="sub-agents.html#what-loads-at-startup">启动时不带项目说明</a>的子代理启动时同样不带这些文件</li>
+<li><strong>不读取</strong>：<code>AGENTS.local.md</code>、<code>AGENTS.override.md</code> 或 <code>.agents/</code> 目录下的任何内容</li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>因为 <code>CLAUDE.local.md</code> 计数，在依赖 <code>AGENTS.md</code> 的项目中添加一个来保留您自己的未提交说明会停止 Claude 为您读取 <code>AGENTS.md</code>。要保留您的 <code>CLAUDE.local.md</code> 并仍然让 Claude 读取 <code>AGENTS.md</code>，请将<strong>项目说明</strong>设置为 <a href="#choose-which-instruction-files-load"><code>claude-md-and-agents-md</code></a>。</p></div></div>
+<h3 id="choose-which-instruction-files-load">选择加载哪些说明文件</h3>
+<p>要更改 Claude 读取的文件，请在 Claude Code 会话中键入 <code>/config</code> 以打开设置面板，然后将<strong>项目说明</strong>设置为以下值之一：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">值</th>
+<th style="text-align: left;">Claude 读取的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>claude-md-or-agents-md</code></td>
+<td style="text-align: left;">您的 <code>CLAUDE.md</code> 文件，或当您的工作目录或其上方没有 <code>CLAUDE.md</code> 或 <code>CLAUDE.local.md</code> 时您的 <code>AGENTS.md</code> 文件。这是默认值</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude-md-and-agents-md</code></td>
+<td style="text-align: left;">您的 <code>CLAUDE.md</code> 和 <code>AGENTS.md</code> 文件一起，每个目录的 <code>CLAUDE.md</code> 文件首先，其 <code>AGENTS.md</code> 在之后。Claude Code 跳过已加载的 <code>AGENTS.md</code>，因此您的 <code>CLAUDE.md</code> 导入或符号链接到的 <code>AGENTS.md</code> 不会被读取两次</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude-md</code></td>
+<td style="text-align: left;">仅您的 <code>CLAUDE.md</code> 文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>managed-only</code></td>
+<td style="text-align: left;">仅您组织的托管 <code>CLAUDE.md</code> 和启动时的<a href="#auto-memory">自动记忆</a>。您的项目、本地和用户 <code>CLAUDE.md</code> 文件、您的 <code>.claude/rules/</code> 文件和每个 <code>AGENTS.md</code> 都被排除在外。子目录的 <code>CLAUDE.md</code> 和 <code>.claude/rules/</code> 文件以及<a href="#path-specific-rules">路径范围规则</a>仍会按需加载</td>
+</tr>
+</tbody>
+</table>
+<p>您也可以在设置文件中设置该值，而不是在 <code>/config</code> 中。将其添加到 <a href="settings-reference.html#pluginconfigs"><code>pluginConfigs</code></a> 中的 <code>cc-plugin-agents-md@builtin</code> 下，这是读取 <code>AGENTS.md</code> 的内置插件的 ID。Claude Code 从 <code>~/.claude/settings.json</code>、<code>--settings</code> 文件或<a href="managed-settings.html">托管设置</a>中读取该条目，并在项目和本地设置文件中忽略它。此示例让 Claude 读取两个文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"pluginConfigs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"cc-plugin-agents-md@builtin"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"instructionFiles"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claude-md-and-agents-md"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>在 v2.1.285 之前，该插件的 ID 是 <code>agents-md@builtin</code>，并且 Claude Code 会忽略 <code>cc-plugin-agents-md@builtin</code> 下的条目。如果早期版本也会读取您的设置文件，请在其中使用 <code>agents-md@builtin</code>。Claude Code v2.1.285 及更高版本会读取任一 ID 下的条目。</p>
+<p>您的更改从您发送的下一条消息和每个新会话中应用。</p>
+<h3 id="when-agents-md-support-is-unavailable">当 AGENTS.md 支持不可用时</h3>
+<p>在这些会话中，Claude 仅读取 <code>CLAUDE.md</code> 文件，<strong>项目说明</strong>不会出现在 <code>/config</code> 设置面板中：</p>
+<ul>
+<li>您使用的是 v2.1.277 之前的 Claude Code 版本</li>
+<li>您使用 <code>/plugin</code> 禁用了读取 <code>AGENTS.md</code> 的内置插件</li>
+<li>在某些情况下，这是您<a href="env-vars.html#first-session-after-an-install-or-upgrade">从 v2.1.276 或更早版本升级</a>后的第一个会话。Claude 从您的下一个会话开始读取 <code>AGENTS.md</code></li>
+</ul>
+<p>在 v2.1.281 之前，某些会话，例如在 Amazon Bedrock 上或禁用遥测的会话，仅读取 <code>CLAUDE.md</code> 文件。在这些版本上，更新 Claude Code。要在这些会话中向 Claude 提供您的 <code>AGENTS.md</code>，请<a href="#share-one-file-with-other-coding-tools">从 <code>CLAUDE.md</code> 中导入它</a>。</p>
+<h3 id="where-agents-md-differs-from-claude-md">AGENTS.md 与 CLAUDE.md 的区别</h3>
+<p>通过<strong>项目说明</strong>设置读取的 <code>AGENTS.md</code> 与 <code>CLAUDE.md</code> 在以下方面有所不同：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><code>CLAUDE.md</code></th>
+<th style="text-align: left;">通过设置读取的 <code>AGENTS.md</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="hooks.html#instructionsloaded"><code>InstructionsLoaded</code> hooks</a></td>
+<td style="text-align: left;">触发</td>
+<td style="text-align: left;">不触发。它们照常为 <code>CLAUDE.md</code> 导入或符号链接到的 <code>AGENTS.md</code> 触发</td>
+</tr>
+<tr>
+<td style="text-align: left;">当设置了 <a href="#load-from-additional-directories"><code>CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD</code></a> 时，您使用 <code>--add-dir</code> 添加的目录</td>
+<td style="text-align: left;">它们的 <code>CLAUDE.md</code> 加载</td>
+<td style="text-align: left;">它们的 <code>AGENTS.md</code> 不加载</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>@path</code> 导入工作目录外的文件</td>
+<td style="text-align: left;">Claude Code 要求您批准<a href="#import-additional-files">外部导入</a></td>
+<td style="text-align: left;">仅在您已为此项目批准外部导入时加载，无提示</td>
+</tr>
+</tbody>
+</table>
+<h3 id="remove-an-earlier-agents-md-workaround">删除早期的 AGENTS.md 解决方案</h3>
+<p>如果您在 Claude Code 自行读取 <code>AGENTS.md</code> 之前设置它来读取 <code>AGENTS.md</code>，以下是对每个常见设置的处理方法：</p>
+<ul>
+<li><strong>包含 <code>@AGENTS.md</code> 的 <code>CLAUDE.md</code></strong>：您可以保留它。保留导入永远不会让 Claude 读取 <code>AGENTS.md</code> 两次，无论您使用哪个<strong>项目说明</strong>值。如果 <code>CLAUDE.md</code> 不包含其他内容，请删除它，或如果您的某些会话<a href="#when-agents-md-support-is-unavailable">无法直接加载 <code>AGENTS.md</code></a>，请保留它。</li>
+<li><strong>告诉 Claude 用词语读取 <code>AGENTS.md</code> 的 <code>CLAUDE.md</code></strong>：仅当 Claude 决定打开文件时，它才会看到 <code>AGENTS.md</code>。删除 <code>CLAUDE.md</code> 以便 Claude 直接读取 <code>AGENTS.md</code>，或用 <code>@AGENTS.md</code> 导入替换该句子。</li>
+<li><strong>符号链接到 <code>AGENTS.md</code> 的 <code>CLAUDE.md</code></strong>：无，或删除符号链接。无论哪种方式，Claude 都会读取内容一次。</li>
+<li><strong>打印 <code>AGENTS.md</code> 的 <code>SessionStart</code> hook</strong>：删除它。一旦 Claude 直接读取 <code>AGENTS.md</code>，该 hook 会向上下文添加第二个副本。</li>
+</ul>
+<h3 id="share-one-file-with-other-coding-tools">与其他编码工具共享一个文件</h3>
+<p>当 Claude 不直接读取您的 <code>AGENTS.md</code> 时，您仍然可以通过在其旁边的 <code>CLAUDE.md</code> 中放置 <code>@AGENTS.md</code> 导入来将其保留为每个工具共享的一个文件。当您的项目也有 <code>CLAUDE.md</code> 时、当您已将<strong>项目说明</strong>设置为 <code>claude-md</code> 时，或在<a href="#when-agents-md-support-is-unavailable">无法加载 <code>AGENTS.md</code></a>的会话中执行此操作。在导入下方添加任何 Claude 特定的说明，Claude 会先读取导入的文件，然后读取其余部分：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown"><span class="ni">@AGENTS</span>.md
+
+<span class="gu">## Claude Code</span>
+
+Use plan mode for changes under <span class="sb">`src/billing/`</span>.
+</code></pre></div>
+<p>如果您不需要 Claude 特定的内容，符号链接也可以工作：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">ln<span class="w"> </span>-s<span class="w"> </span>AGENTS.md<span class="w"> </span>CLAUDE.md
+</code></pre></div>
+<p>该命令在成功时不打印任何输出。在选择符号链接而不是导入之前，请检查这些约束：</p>
+<ul>
+<li><strong>编辑</strong>：Claude 通过链接读取 <code>CLAUDE.md</code>，但 Edit 和 Write 工具<a href="errors.html#refusing-after-a-symlink-changed">拒绝通过符号链接写入</a>，拒绝指示 Claude 编辑链接的目标 <code>AGENTS.md</code></li>
+<li><strong>Windows</strong>：如果您或克隆存储库的任何人在 Windows 上工作，请改用 <code>@AGENTS.md</code> 导入。在那里创建符号链接需要管理员权限或开发人员模式，Git 会将提交的符号链接检出为纯文本文件，除非启用了 <code>core.symlinks</code>，这会使该克隆具有一行 <code>CLAUDE.md</code> 代替您的说明</li>
+</ul>
+<p>使用任一方法，在您的下一个会话中运行 <code>/context</code> 并确认 <code>CLAUDE.md</code> 出现在<strong>内存文件</strong>下。</p>
+<h3 id="migrate-instructions-from-other-tools">从其他工具迁移说明</h3>
+<p>运行 <a href="commands.html"><code>/init</code></a> 会读取其他工具的说明文件并将相关部分合并到生成的 <code>CLAUDE.md</code> 中：</p>
+<ul>
+<li><code>.cursor/rules/</code> 或 <code>.cursorrules</code> 中的 Cursor 规则</li>
+<li><code>.github/copilot-instructions.md</code> 中的 Copilot 规则</li>
+<li>设置 <code>CLAUDE_CODE_NEW_INIT=1</code> 时：<code>AGENTS.md</code>、<code>.devin/rules/</code>、<code>.windsurf/rules/</code> 或 <code>.windsurfrules</code>，以及 <code>.clinerules</code></li>
+</ul>
+<p>您也可以运行 <a href="commands.html"><code>/import</code></a> 将支持的编码 Agent 的配置引入 Claude Code，这会将 <code>AGENTS.md</code> 等说明文件的一次性副本追加到匹配的 <code>CLAUDE.md</code>，并携带 MCP 服务器、命令、子代理和 skill。</p>
+<h2 id="auto-memory">自动记忆</h2>
+<p>自动记忆让 Claude 跨会话积累知识，无需你编写任何内容。在工作时，Claude 为自己保存四种笔记。Claude 在记忆文件的 frontmatter 中用 <code>type</code> 字段记录类型：</p>
+<ul>
+<li><code>user</code>：你的角色、专业知识和工作偏好</li>
+<li><code>feedback</code>：你给 Claude 的更正和你确认的方法</li>
+<li><code>project</code>：正在进行的工作、截止日期和 Claude 无法从代码或 git 历史推导的决策</li>
+<li><code>reference</code>：在项目外查找信息的位置，例如问题跟踪器或仪表板</li>
+</ul>
+<p>Claude 跳过任何它可以从代码库推导的内容，例如架构、文件路径或调试修复。它也跳过你的 CLAUDE.md 文件已经说过的任何内容。</p>
+<p>Claude 不会每个会话都保存内容。它根据信息在未来对话中是否有用来决定什么值得记住。</p>
+<h3 id="enable-or-disable-auto-memory">启用或禁用自动记忆</h3>
+<p>自动记忆在本地会话中默认开启。在 <a href="https://claude.com/docs/claude-tag/overview" target="_blank" rel="noopener">Claude Tag</a> 会话之外，<a href="self-hosted-environments-configuration.html#how-each-session’s-config-is-assembled">自托管环境</a>中的会话默认关闭自动记忆。</p>
+<p>要切换它，在会话中打开 <code>/memory</code> 并使用自动记忆切换，它将 <code>autoMemoryEnabled</code> 保存到您的用户设置 <code>~/.claude/settings.json</code>。</p>
+<p>在以下会话中，该切换可以关闭自动记忆，但无法将其重新开启：</p>
+<ul>
+<li><a href="agent-view.html">后台会话</a></li>
+<li>由另一个 Claude Code 会话启动的会话，例如 Claude 通过其 Bash 工具运行 <code>claude</code> 时</li>
+</ul>
+<p>在这些会话中自动记忆关闭时，切换显示为 <code>off · can't be turned on here; use a session started outside Claude Code</code>。要重新开启自动记忆，请直接在终端中运行 <code>claude</code>，并在该会话中使用 <code>/memory</code> 切换。</p>
+<p>要为单个项目关闭它，在该项目的设置中设置 <code>autoMemoryEnabled</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"autoMemoryEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>要通过环境变量禁用自动记忆，设置 <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY=1</code>。</p>
+<h3 id="storage-location">存储位置</h3>
+<p>每个项目在 <code>~/.claude/projects/&lt;project&gt;/memory/</code> 获得自己的记忆目录。<code>&lt;project&gt;</code> 路径来自 git 存储库，因此同一存储库中的所有 worktrees 和子目录共享一个自动记忆目录。在 git 存储库外，改用项目根目录。</p>
+<p>如果你在 <code>CLAUDE_CONFIG_DIR</code> 旁边设置 <a href="sessions.html#name-the-project-directory-yourself"><code>CLAUDE_CODE_PROJECT_DIR_NAME</code></a>，Claude Code 会使用该名称作为 <code>&lt;config dir&gt;/projects/</code> 下的 <code>&lt;project&gt;</code> 目录，无论你在哪个存储库中启动它，因此使用该配置目录启动的项目共享一个自动记忆目录。需要 Claude Code v2.1.234 或更高版本。</p>
+<p>要将自动记忆存储在不同位置，在你的 <code>settings.json</code> 中设置 <code>autoMemoryDirectory</code>。它从任何<a href="settings.html#settings-precedence">设置范围</a>读取：用户、项目、本地、策略或 <code>--settings</code>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"autoMemoryDirectory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"~/my-custom-memory-dir"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>该值必须是绝对路径或以 <code>~/</code> 开头。</p>
+<p>当在项目的 <code>.claude/settings.json</code> 或 <code>.claude/settings.local.json</code> 中设置时，Claude Code 在与<a href="permissions.html#what-runs-before-you-trust-a-folder">设置文件中的 hooks 相同的工作区信任规则</a>下遵守它。当 <a href="settings-reference.html#permissions-blockreadsoutsideworkingdirectories"><code>permissions.blockReadsOutsideWorkingDirectories</code></a> 开启时，Claude Code 不从<a href="permissions.html#when-your-local-settings-file-needs-trust">存储库提供的设置文件</a>选择的目录加载自动记忆，也不向其保存任何内容，无论该目录位于何处。</p>
+<p>目录包含一个 <code>MEMORY.md</code> 索引和每个记忆一个主题文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">~/.claude/projects/&lt;project&gt;/memory/
+├── MEMORY.md           # Index, one line per memory, loaded into every session
+├── user_role.md        # One memory
+├── feedback_testing.md # One memory
+└── ...                 # Any other topic files Claude creates
+</code></pre></div>
+<p><code>MEMORY.md</code> 充当记忆目录的索引。Claude 在你的会话中读取和写入此目录中的文件，使用 <code>MEMORY.md</code> 跟踪存储的内容。</p>
+<p>自动记忆是机器本地的。同一 git 存储库中的所有 worktrees 和子目录共享一个自动记忆目录。文件不在机器或云环境之间共享。</p>
+<p>Claude Code 在 <a href="settings-reference.html#cleanupperioddays"><code>cleanupPeriodDays</code></a> 保留期后删除旧会话记录，但从该<a href="claude-directory.html#cleaned-up-automatically">保留清理</a>中排除记忆目录中的记忆文件。<code>MEMORY.md</code> 和主题文件保留到你或 Claude 编辑或删除它们。</p>
+<h3 id="how-it-works">它如何工作</h3>
+<p><code>MEMORY.md</code> 的前 200 行或前 25KB（以先到者为准）在每次对话开始时加载。超过该阈值的内容在会话开始时不加载。Claude 通过将详细笔记移到单独的主题文件中来保持 <code>MEMORY.md</code> 简洁。</p>
+<p>Claude 写入 <code>MEMORY.md</code> 后，Claude Code 根据 200 行和 25KB 读取限制测量文件。如果文件接近限制，Claude Code 提醒 Claude 缩短它：每个条目保留一行，将详细信息移到主题文件，并合并或删除陈旧条目。如果文件超过限制，写入仍然成功，但 Claude Code 返回一个<a href="errors.html#memory-index-is-over-its-read-limit">错误告诉 Claude 重写索引</a>，因为下次加载时超过限制的所有内容都会被丢弃。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>此限制仅适用于 <code>MEMORY.md</code>。对于启动时加载的每个 CLAUDE.md 文件，只要文件不超过 4 MiB，Claude 就会获得其完整内容。Claude Code 会跳过超过 4 MiB 的文件，不加载其中任何内容。路径限定的规则和子目录中的 CLAUDE.md 文件有<a href="#claude-ignores-the-end-of-my-subdirectory-claude-md">各自更小的单文件限制</a>。</p></div></div>
+<p>Claude Code 在启动时不加载主题文件，例如 <code>user_role.md</code> 或 <code>feedback_testing.md</code>。Claude 在需要信息时使用其标准文件工具按需读取它们。</p>
+<p>主对话的自动记忆不加载到<a href="sub-agents.html#what-loads-at-startup">子代理</a>中；例外是<a href="sub-agents.html#fork-the-current-conversation">分叉</a>，它继承父对话和系统提示。子代理自己的自动记忆（通过子代理 <code>memory</code> 字段启用）是一个单独的目录。</p>
+<p>Claude 在你的会话中读取和写入记忆文件。当你在 Claude Code 界面中看到"Saved 2 memories"或"Recalled 2 memories"之类的消息时，Claude 正在主动更新或读取 <code>~/.claude/projects/&lt;project&gt;/memory/</code>。</p>
+<p>当 Claude 写入以 YAML frontmatter 开头的记忆文件时，Claude Code 在 <code>modified</code> frontmatter 字段中记录写入时间为 ISO 8601 时间戳。时间戳显示事实有多新，对您和 Claude 读取记忆时都有用。</p>
+<h3 id="audit-and-edit-your-memory">审计和编辑你的记忆</h3>
+<p>自动记忆文件是纯 markdown，你可以随时编辑或删除。运行 <a href="#view-and-edit-with-%2Fmemory"><code>/memory</code></a> 从会话中浏览和打开记忆文件。</p>
+<h2 id="view-and-edit-with-/memory">使用 <code>/memory</code> 查看和编辑</h2>
+<p><code>/memory</code> 命令列出您的 CLAUDE.md、CLAUDE.local.md 和其他记忆文件在用户和项目作用域内的位置，包括尚不存在的文件的用户和项目 CLAUDE.md 条目。它还允许您开启或关闭自动记忆，并提供打开自动记忆文件夹的选项。选择任何文件即可在您的编辑器中打开它；选择一个尚不存在的文件会先创建它。要检查启动时加载了哪些 <code>CLAUDE.md</code> 和规则文件，请运行 <code>/context</code>。</p>
+<p>VS Code 等 GUI 编辑器在单独的窗口中打开文件，您可以在文件打开时继续使用会话。Vim 等终端编辑器会接管终端，直到您退出。</p>
+<p>当你要求 Claude 记住某些内容时，如"总是使用 pnpm，而不是 npm"或"记住 API 测试需要本地 Redis 实例"，Claude 将其保存到自动记忆。要改为添加指令到 CLAUDE.md，直接要求 Claude，如"将其添加到 CLAUDE.md"，或通过 <code>/memory</code> 自己编辑文件。</p>
+<h2 id="troubleshoot-memory-issues">故障排除记忆问题</h2>
+<p>这些是 CLAUDE.md 和自动记忆最常见的问题，以及调试步骤。</p>
+<h3 id="claude-isn’t-following-my-claude-md">Claude 不遵循我的 CLAUDE.md</h3>
+<p>CLAUDE.md 内容作为用户消息在系统提示词之后传递，而不是系统提示词本身的一部分。Claude 读取它并尝试遵循它，但没有严格遵守的保证，特别是对于模糊或冲突的指令。</p>
+<p>要调试：</p>
+<ul>
+<li>运行 <code>/context</code> 并检查 <strong>Memory files</strong> 下的列表，以验证应在启动时加载的 CLAUDE.md 和 CLAUDE.local.md 文件。如果其中某个文件不在列表中，Claude 就看不到它。使用 <code>/memory</code> 打开和编辑文件。</li>
+<li>如果出现 <code>Instruction file not loaded</code> 提示，请参阅<a href="errors.html#instruction-file-not-loaded">其含义及处理方法</a>。</li>
+<li>工作目录的子目录中的 <code>CLAUDE.md</code> 不会出现在 <strong>Memory files</strong> 下，因为它是按需加载而不是在启动时加载的。加载时，终端中会出现一行带有其路径的 <code>Loaded</code>。要测试新建的此类文件，请从 shell 中创建它，而不是让 Claude 编写它，然后让 Claude 读取该子目录中的某个文件。</li>
+<li>检查相关 CLAUDE.md 是否在为您的会话加载的位置（参见 <a href="#choose-where-to-put-claude-md-files">选择 CLAUDE.md 文件的位置</a>）。</li>
+<li>使指令更具体。"使用 2 空格缩进"比"格式化代码很好"效果更好。</li>
+<li>查找跨 CLAUDE.md 文件的冲突指令。如果两个文件为相同行为提供不同的指导，Claude 可能会任意选择一个。</li>
+<li>检查您的指令是否与 Claude Code 自身添加的指导相竞争。如果您的 CLAUDE.md 设置了提交或 Pull Request 规则，请使用 <a href="settings-reference.html#includegitinstructions"><code>includeGitInstructions</code></a> 关闭内置规则，并使用 <a href="settings-reference.html#attribution"><code>attribution</code></a> 设置归属文本。</li>
+</ul>
+<p>如果指令是必须在特定点运行的内容，例如在每次提交之前或每次文件编辑之后，请将其写成 <a href="hooks-guide.html">hook</a> 代替。hook 在固定的生命周期事件处作为 shell 命令执行，并且无论 Claude 决定做什么都适用。</p>
+<p>对于希望处于系统提示词级别的指令，使用 <a href="cli-reference.html#system-prompt-flags"><code>--append-system-prompt</code></a>。它在启动时传递，因此更适合脚本和自动化而不是交互式使用。有关它在恢复对话时的行为，请参见 <a href="cli-reference.html#system-prompt-flags-in-resumed-conversations">恢复对话中的系统提示词标志</a>。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>使用 <a href="hooks.html#instructionsloaded"><code>InstructionsLoaded</code> hook</a> 记录加载了哪些 <code>CLAUDE.md</code> 和规则文件、何时加载以及为什么。这对于调试特定路径规则或子目录中的延迟加载文件很有用。</p></div></div>
+<h3 id="my-agents-md-isn’t-loading">我的 AGENTS.md 未加载</h3>
+<p>如果您的仓库有 <code>AGENTS.md</code> 而 Claude 似乎不知道它说什么，通常原因是项目路径上某处有 <code>CLAUDE.md</code>。默认情况下，Claude 仅在您的工作目录或其上方没有 <code>CLAUDE.md</code> 或 <code>CLAUDE.local.md</code> 时读取 <code>AGENTS.md</code>。按顺序检查这些：</p>
+<ol>
+<li>在您的工作目录或其上方的任何目录中查找 <code>CLAUDE.md</code>、<code>.claude/CLAUDE.md</code> 或 <code>CLAUDE.local.md</code>，除了您的 <code>~/.claude/CLAUDE.md</code>。如果找到一个，Claude 会读取它而不是 <code>AGENTS.md</code>，除非您将 <strong>Project instructions</strong> 设置为 <code>claude-md-and-agents-md</code>。</li>
+<li>运行 <code>claude --version</code> 并确认 v2.1.277 或更高版本。在 v2.1.281 之前，某些会话，例如 Amazon Bedrock 上的会话或禁用遥测的会话，也<a href="#when-agents-md-support-is-unavailable">无法加载 <code>AGENTS.md</code></a>，因此在这些版本上请更新到 v2.1.281 或更高版本。</li>
+<li>在会话中输入 <code>/config</code> 以打开设置面板，并确认 <strong>Project instructions</strong> 未设置为 <code>claude-md</code> 或 <code>managed-only</code>。如果根本看不到该设置，则您的会话属于<a href="#when-agents-md-support-is-unavailable">无法加载 <code>AGENTS.md</code></a> 的会话。</li>
+</ol>
+<p>要检查 Claude 是否读取了您的 <code>AGENTS.md</code>，运行 <code>/memory</code> 并在列表中查找其路径。</p>
+<p>在 v2.1.280 之前，<code>/memory</code> 和 <code>/context</code> 没有列出 Claude 直接读取的 <code>AGENTS.md</code>。在这些版本上，改为询问 Claude 其项目指令说什么。</p>
+<p>如果您想保留找到的 <code>CLAUDE.md</code>，或您的会话无法加载 <code>AGENTS.md</code>，请<a href="#share-one-file-with-other-coding-tools">在您的 <code>AGENTS.md</code> 旁边添加一个导入它的 <code>CLAUDE.md</code></a>。</p>
+<h3 id="i-don’t-know-what-auto-memory-saved">我不知道自动记忆保存了什么</h3>
+<p>运行 <code>/memory</code> 并选择自动记忆文件夹来浏览 Claude 保存的内容。一切都是纯 markdown，您可以读取、编辑或删除。</p>
+<h3 id="my-claude-md-is-too-large">我的 CLAUDE.md 太大了</h3>
+<p>超过 200 行的文件消耗更多上下文并可能降低遵守度。Claude Code 会跳过超过 4 MiB 的文件。使用 <a href="#path-specific-rules">path-scoped rules</a> 仅在 Claude 处理匹配文件时加载指令，或修剪不是每个会话都需要的内容。分割到 <a href="#import-additional-files"><code>@path</code> imports</a> 有助于组织，但不会减少上下文，因为导入的文件会与导入它们的 CLAUDE.md 一起加载。</p>
+<p>如果您的某个指令文件超过推荐长度，您会在启动时和运行 <code>/status</code> 时看到警告。当各自都在该长度内的文件在会话开始时加起来超过组合限制时，您也会看到警告。每个 CLAUDE.md、规则文件和 <code>@path</code> 导入都计为单独的文件。</p>
+<p><a href="commands.html#all-commands"><code>/doctor</code></a> 检查为已检入的 CLAUDE.md 提议修剪：它删除 Claude 可以从代码库派生的内容，例如目录布局、依赖项列表和架构概览，并保留与工具默认值不同的陷阱、基本原理和约定。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>请将每个路径范围规则文件控制在<a href="#claude-ignores-the-end-of-my-subdirectory-claude-md">其单文件大小限制</a>之内，因为对于超过该限制的文件，Claude 只会收到文件的开头部分。</p></div></div>
+<h3 id="claude-ignores-the-end-of-my-subdirectory-claude-md">Claude 忽略了我的子目录 CLAUDE.md 的末尾部分</h3>
+<p>当子目录中的 <code>CLAUDE.md</code> 或按需加载的规则文件超过单文件大小限制时，Claude 只会收到其开头部分。该部分末尾附有一条说明，告诉 Claude 使用 Read 工具读取其余内容；在 Claude 选择这样做之前，后面的指令不会出现在其上下文中。</p>
+<p>检查您的文件是否超过限制，如果超过则缩减它：</p>
+<ol>
+<li>确认该限制适用于您的文件。该限制适用于以下按需加载的文件：<br />
+   * 您启动 Claude Code 所在目录的子目录中的 <code>CLAUDE.md</code> 和 <code>CLAUDE.local.md</code>，以及它们通过 <code>@path</code> <a href="#import-additional-files">导入</a>的文件<br />
+   * 子目录的 <code>.claude/rules/</code> 中的规则文件<br />
+   * 项目的 <code>.claude/rules/</code> 或 <code>~/.claude/rules/</code> 中的<a href="#path-specific-rules">路径范围规则</a></li>
+<li>根据您会话的<a href="model-config.html#extended-context">上下文窗口</a>找到对应的限制：<br />
+   * <strong>200K 上下文窗口</strong>：40,000 个字符<br />
+   * <strong>1M 上下文窗口</strong>：Claude Opus 4.6 和 Claude Sonnet 4.6 上为 200,000 个字符，更新的模型上为 150,000 个字符</li>
+<li>在 Bash 或 Zsh 中，运行 <code>wc -m path/to/CLAUDE.md</code> 以输出文件的字符数。</li>
+<li>将字符数与您的限制进行比较：<br />
+   * <strong>超过限制</strong>：精简文件，或将其中一部分移到一个或多个规则文件中，每个规则文件会单独计算是否超过限制<br />
+   * <strong>未超过限制</strong>：在 <a href="#claude-isn’t-following-my-claude-md">Claude 不遵循我的 CLAUDE.md</a> 中查找其他原因</li>
+</ol>
+<p>在 v2.1.309 之前，Claude Code 不会对按需加载的文件应用此限制。</p>
+<h3 id="instructions-seem-lost-after-/compact">在 <code>/compact</code> 后指令似乎丢失了</h3>
+<p>项目根 CLAUDE.md 在压缩后仍会保留：在 <code>/compact</code> 之后，Claude 从磁盘重新读取它并将其重新注入到会话中。子目录中的嵌套 CLAUDE.md 文件和具有 <a href="#path-specific-rules"><code>paths:</code> frontmatter</a> 的规则会按需重新加载。</p>
+<p>如果指令在压缩后消失，它要么仅在对话中给出，要么位于尚未重新加载的嵌套 CLAUDE.md 中，或者是此后尚未匹配到文件的路径范围规则。将仅在对话中给出的指令添加到 CLAUDE.md 以使其持久化。有关完整的细分，请参阅 <a href="context-window.html#what-survives-compaction">压缩后保留的内容</a>。</p>
+<p>有关大小、结构和具体性的指导，请参阅 <a href="#write-effective-instructions">编写有效的指令</a>。</p>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li><a href="debug-your-config.html">调试你的配置</a>：诊断为什么 CLAUDE.md 或设置未生效</li>
+<li><a href="skills.html">Skills</a>：打包按需加载的可重复工作流</li>
+<li><a href="settings.html">Settings</a>：使用设置文件配置 Claude Code 行为</li>
+<li><a href="sub-agents.html#enable-persistent-memory">Subagent 记忆</a>：让 subagents 维护自己的自动记忆</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="prompt-caching.html"><span class="pager-dir">← 上一页</span><span class="pager-name">Claude Code 如何使用 prompt caching</span></a><a class="pager-link next" href="sessions.html"><span class="pager-dir">下一页 →</span><span class="pager-name">管理会话</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#claude-md-vs-auto-memory">CLAUDE.md 与自动记忆</a><a class="toc-l2" href="#claude-md-files">CLAUDE.md 文件</a><a class="toc-l3" href="#when-to-add-to-claude-md">何时添加到 CLAUDE.md</a><a class="toc-l3" href="#choose-where-to-put-claude-md-files">选择 CLAUDE.md 文件的位置</a><a class="toc-l3" href="#set-up-a-project-claude-md">设置项目 CLAUDE.md</a><a class="toc-l3" href="#write-effective-instructions">编写有效的指令</a><a class="toc-l3" href="#import-additional-files">导入其他文件</a><a class="toc-l3" href="#how-claude-md-files-load">CLAUDE.md 文件如何加载</a><a class="toc-l3" href="#organize-rules-with-claude/rules/">使用 .claude/rules/ 组织规则</a><a class="toc-l3" href="#manage-claude-md-for-large-teams">为大型团队管理 CLAUDE.md</a><a class="toc-l2" href="#agents-md">AGENTS.md</a><a class="toc-l3" href="#when-claude-code-reads-agents-md">Claude Code 何时读取 AGENTS.md</a><a class="toc-l3" href="#choose-which-instruction-files-load">选择加载哪些说明文件</a><a class="toc-l3" href="#when-agents-md-support-is-unavailable">当 AGENTS.md 支持不可用时</a><a class="toc-l3" href="#where-agents-md-differs-from-claude-md">AGENTS.md 与 CLAUDE.md 的区别</a><a class="toc-l3" href="#remove-an-earlier-agents-md-workaround">删除早期的 AGENTS.md 解决方案</a><a class="toc-l3" href="#share-one-file-with-other-coding-tools">与其他编码工具共享一个文件</a><a class="toc-l3" href="#migrate-instructions-from-other-tools">从其他工具迁移说明</a><a class="toc-l2" href="#auto-memory">自动记忆</a><a class="toc-l3" href="#enable-or-disable-auto-memory">启用或禁用自动记忆</a><a class="toc-l3" href="#storage-location">存储位置</a><a class="toc-l3" href="#how-it-works">它如何工作</a><a class="toc-l3" href="#audit-and-edit-your-memory">审计和编辑你的记忆</a><a class="toc-l2" href="#view-and-edit-with-/memory">使用 /memory 查看和编辑</a><a class="toc-l2" href="#troubleshoot-memory-issues">故障排除记忆问题</a><a class="toc-l3" href="#claude-isn’t-following-my-claude-md">Claude 不遵循我的 CLAUDE.md</a><a class="toc-l3" href="#my-agents-md-isn’t-loading">我的 AGENTS.md 未加载</a><a class="toc-l3" href="#i-don’t-know-what-auto-memory-saved">我不知道自动记忆保存了什么</a><a class="toc-l3" href="#my-claude-md-is-too-large">我的 CLAUDE.md 太大了</a><a class="toc-l3" href="#claude-ignores-the-end-of-my-subdirectory-claude-md">Claude 忽略了我的子目录 CLAUDE.md 的末尾部分</a><a class="toc-l3" href="#instructions-seem-lost-after-/compact">在 /compact 后指令似乎丢失了</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

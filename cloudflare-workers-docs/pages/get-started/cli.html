@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>通过 Wrangler CLI 创建 Worker · Workers 文档（中文版）</title>
+<meta name="description" content="用 Wrangler 命令行工具搭建并部署你的第一个 Cloudflare Worker。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>通过 CLI 创建（Wrangler）</h1>
+      <p class="lead">用 Cloudflare 开发者平台的命令行工具 Wrangler，搭建并部署你的第一个 Worker。</p>
+      <div class="page-meta">
+        <span class="tag">快速开始</span>
+        <span>原文更新于 2026-10-12</span>
+        <span>对应页面：get-started/guide</span>
+      </div>
+
+      <p>本指南带你一步步完成第一个 Worker 的搭建与部署。</p>
+
+      <h2>前置条件</h2>
+      <ol>
+        <li>注册一个 <a href="https://dash.cloudflare.com/sign-up/workers-and-pages" target="_blank" rel="noopener">Cloudflare 账号 ↗</a>。</li>
+        <li>安装 <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm" target="_blank" rel="noopener"><code>Node.js</code> ↗</a>。</li>
+      </ol>
+
+      <details>
+        <summary>Node.js 版本管理器</summary>
+        <p>可以用 <a href="https://viteplus.dev/guide/env" target="_blank" rel="noopener">Vite+（<code>vp env</code>）↗</a> 安装和管理 Node.js 版本。</p>
+        <p>受支持的 Node.js 版本范围，请参见 <a href="../../sections/wrangler.html">Wrangler 系统要求</a>。</p>
+      </details>
+
+      <h2>1. 创建新的 Worker 项目</h2>
+      <p>打开终端，运行 C3 来创建 Worker 项目。<a href="https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare" target="_blank" rel="noopener">C3（<code>create-cloudflare-cli</code>）↗</a> 是一个命令行工具，用来帮你在 Cloudflare 上搭建并部署新应用。</p>
+
+<pre data-lang="npm"><code>npm create cloudflare@latest -- my-first-worker</code></pre>
+<pre data-lang="yarn"><code>yarn create cloudflare my-first-worker</code></pre>
+<pre data-lang="pnpm"><code>pnpm create cloudflare@latest my-first-worker</code></pre>
+
+      <p>初始化时，按下面这样选择：</p>
+      <ul>
+        <li><em>What would you like to start with?</em>（从哪里开始）→ 选 <code>Hello World example</code>。</li>
+        <li><em>Which template would you like to use?</em>（用哪个模板）→ 选 <code>Worker only</code>。</li>
+        <li><em>Which language do you want to use?</em>（用哪种语言）→ 选 <code>JavaScript</code>。</li>
+        <li><em>Do you want to use git for version control?</em>（是否用 git 做版本控制）→ 选 <code>Yes</code>。</li>
+        <li><em>Do you want to add an AGENTS.md file to help AI coding tools understand Cloudflare APIs?</em>（是否添加 AGENTS.md 帮助 AI 编码工具理解 Cloudflare API）→ 选 <code>Yes</code>。</li>
+        <li><em>Do you want to deploy your application?</em>（是否立即部署）→ 选 <code>No</code>（我们打算先改点东西再部署）。</li>
+      </ul>
+
+      <p>现在新项目已经建好，进入项目目录：</p>
+<pre data-lang="sh"><code>cd my-first-worker</code></pre>
+
+      <details>
+        <summary>C3 生成了哪些文件？</summary>
+        <p>在你的项目目录里，C3 会生成：</p>
+        <ul>
+          <li><code>wrangler.jsonc</code>：你的 <a href="../../sections/wrangler.html">Wrangler</a> 配置文件。对于 JavaScript 和 TypeScript 项目，C3 会开启 source map 上传，使捕获到的异常堆栈指向你的原始代码。</li>
+          <li><code>index.js</code>（位于 <code>/src</code>）：一个最小的 <code>'Hello World!'</code> Worker，使用 <a href="../reference/module-workers.html">ES module</a> 语法编写。</li>
+          <li><code>package.json</code>：最小的 Node 依赖配置文件。</li>
+          <li><code>package-lock.json</code>：参见 <a href="https://docs.npmjs.com/cli/v9/configuring-npm/package-lock-json" target="_blank" rel="noopener"><code>npm</code> 关于 <code>package-lock.json</code> 的文档 ↗</a>。</li>
+          <li><code>node_modules</code>：参见 <a href="https://docs.npmjs.com/cli/v7/configuring-npm/folders#node-modules" target="_blank" rel="noopener"><code>npm</code> 关于 <code>node_modules</code> 的文档 ↗</a>。</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>我已经有一个 Git 仓库里的项目，怎么办？</summary>
+        <p>除了从 C3 模板创建新项目，C3 也支持基于已有的 Git 仓库创建项目。打开终端运行：</p>
+<pre data-lang="sh"><code>npm create cloudflare@latest -- --template &lt;SOURCE&gt;</code></pre>
+        <p><code>&lt;SOURCE&gt;</code> 可以是以下任一形式：</p>
+        <ul>
+          <li><code>user/repo</code>（GitHub）</li>
+          <li><code>git@github.com:user/repo</code></li>
+          <li><code>https://github.com/user/repo</code></li>
+          <li><code>user/repo/some-template</code>（子目录）</li>
+          <li><code>user/repo#canary</code>（分支）</li>
+          <li><code>user/repo#1234abcd</code>（提交哈希）</li>
+          <li><code>bitbucket:user/repo</code>（Bitbucket）</li>
+          <li><code>gitlab:user/repo</code>（GitLab）</li>
+        </ul>
+        <p>要满足 Cloudflare Workers 的要求，你现有的模板目录至少需要包含这些文件：</p>
+        <ul>
+          <li><code>package.json</code></li>
+          <li><code>wrangler.jsonc</code>（<a href="../../sections/wrangler.html">查看 Wrangler 配置示例</a>）</li>
+          <li><code>src/</code>，其中包含一个由 <code>wrangler.jsonc</code> 引用的 worker 脚本</li>
+        </ul>
+      </details>
+
+      <h2>2. 用 Wrangler CLI 开发</h2>
+      <p>C3 默认会在 Workers 项目里安装 <a href="../../sections/wrangler.html">Wrangler</a>——Workers 的命令行工具。Wrangler 让你能够创建、测试和部署 Workers 项目。</p>
+      <p>第一个 Worker 建好之后，在项目目录中运行 <a href="../../sections/wrangler.html"><code>wrangler dev</code></a>，即可启动本地服务器来开发你的 Worker。开发期间可以在本地预览效果。</p>
+<pre data-lang="sh"><code>npx wrangler dev</code></pre>
+      <p>如果你是第一次使用 Wrangler，它会打开浏览器让你登录 Cloudflare 账号。</p>
+      <p>访问 <a href="http://localhost:8787" target="_blank" rel="noopener">http://localhost:8787 ↗</a> 查看你的 Worker。</p>
+
+      <details>
+        <summary>浏览器打不开？</summary>
+        <p>如果这一步出问题，或者你无法使用浏览器界面，请参考 <a href="../../sections/wrangler.html"><code>wrangler login</code></a> 的文档。</p>
+      </details>
+
+      <h2>3. 写代码</h2>
+      <p>项目已生成并跑起来了，现在可以开始编写和修改代码。</p>
+      <p>找到 <code>src/index.js</code> 文件，里面的内容如下：</p>
+<pre data-lang="js"><code>export default {
+	async fetch(request, env, ctx) {
+		return new Response("Hello World!");
+	},
+};</code></pre>
+
+      <details>
+        <summary>代码讲解</summary>
+        <p>这段代码由几个部分组成。</p>
+        <p><code>export default</code> 是定义 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#default_exports_versus_named_exports" target="_blank" rel="noopener">JavaScript 模块 ↗</a> 所必需的语法。你的 Worker 必须默认导出一个对象，其属性对应 Worker 需要处理的事件。</p>
+        <p>这个 <a href="../../sections/runtime-apis.html"><code>fetch()</code> 处理器</a>会在 Worker 收到 HTTP 请求时被调用。你可以在导出对象里定义更多事件处理器，以响应不同类型的事件。比如添加一个 <a href="../../sections/runtime-apis.html"><code>scheduled()</code> 处理器</a>，来响应用 <a href="../../sections/configuration.html">Cron 触发器</a>发起的调用。</p>
+        <p>此外，<code>fetch</code> 处理器始终会收到三个参数：<a href="../../sections/runtime-apis.html"><code>request</code>、<code>env</code> 和 <code>context</code></a>。</p>
+        <p>Workers 运行时要求 <code>fetch</code> 处理器返回一个 <code>Response</code> 对象，或一个 resolve 为 <code>Response</code> 对象的 Promise。在这个例子里，返回的是包含字符串 <code>"Hello World!"</code> 的新 <code>Response</code>。</p>
+      </details>
+
+      <p>把 <code>index.js</code> 里的内容替换为下面这段，输出文字就变了：</p>
+<pre data-lang="js"><code>export default {
+	async fetch(request, env, ctx) {
+		return new Response("Hello Worker!");
+	},
+};</code></pre>
+      <p>保存文件并刷新页面，Worker 的输出就会变成新的文字。</p>
+
+      <details>
+        <summary>看不到变化？</summary>
+        <p>如果 Worker 的输出没有变化，确认以下几点：</p>
+        <ol>
+          <li>改动确实保存到了 <code>index.js</code>。</li>
+          <li><code>wrangler dev</code> 正在运行。</li>
+          <li>你刷新了浏览器。</li>
+        </ol>
+      </details>
+
+      <h2>4. 部署项目</h2>
+      <p>通过 Wrangler 把 Worker 部署到 <code>*.workers.dev</code> 子域或<a href="../../sections/configuration.html">自定义域名</a>：</p>
+<pre data-lang="sh"><code>npx wrangler deploy</code></pre>
+      <p>如果你还没有配置任何子域或域名，Wrangler 会在发布过程中提示你设置一个。</p>
+      <p>然后访问 <code>&lt;YOUR_WORKER&gt;.&lt;YOUR_SUBDOMAIN&gt;.workers.dev</code> 预览你的 Worker。</p>
+
+      <details>
+        <summary>遇到 523 错误？</summary>
+        <p>如果你是第一次推送 <code>*.workers.dev</code> 子域并看到 <code>523</code> 错误，等一两分钟，错误会自行消失。</p>
+      </details>
+
+      <h2>下一步</h2>
+      <p>还可以做这些事：</p>
+      <ul>
+        <li>把项目推送到 Artifacts、GitHub 或 GitLab 仓库，然后<a href="../../sections/ci-cd.html">接入构建</a>，启用自动构建与部署。</li>
+        <li>打开 <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener">Cloudflare 控制台 ↗</a> 做更轻量的编辑。</li>
+        <li>浏览<a href="../../sections/examples.html">示例</a>与<a href="../../sections/tutorials.html">教程</a>找灵感。</li>
+        <li>配置<a href="../../sections/runtime-apis.html">绑定</a>，让 Worker 能与其他资源交互、解锁新能力。</li>
+        <li>学习如何<a href="../../sections/testing.html">测试与调试</a>你的 Worker。</li>
+        <li>了解 <a href="../../sections/platform.html">Workers 的限额与计费</a>。</li>
+      </ul>
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/get-started/guide/" target="_blank" rel="noopener">get-started/guide</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>修改系统提示词 · Claude Code 中文文档</title>
+<meta name="description" content="在 `claude_code` 预设和自定义系统提示词之间进行选择，并通过 CLAUDE.md、输出样式、追加或完全自定义提示词来自定义行为。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-sdk/modifying-system-prompts">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-sdk/modifying-system-prompts" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link active" href="agent-sdk-modifying-system-prompts.html" aria-current="page">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>Agent SDK</span> <span class="sep">/</span> <span>自定义行为</span></div>
+    <article class="prose" id="article"><h1 id="_1">修改系统提示词</h1>
+<blockquote>
+<p>在 <code>claude_code</code> 预设和自定义系统提示词之间进行选择，并通过 CLAUDE.md、输出样式、追加或完全自定义提示词来自定义行为。</p>
+</blockquote>
+<p>系统提示词定义了 Claude 的行为、能力和响应风格。从用于 CLI 或 IDE 类编码工具的 <code>claude_code</code> 预设开始，其中人类观察并指导工作。为具有不同界面、身份或权限模型的代理编写自己的提示词。</p>
+<h2 id="how-system-prompts-work">系统提示词的工作原理</h2>
+<p>系统提示词是初始指令集，它塑造了 Claude 在整个对话中的行为方式。Agent SDK 有三个起点：</p>
+<ul>
+<li><strong>最小默认值</strong>：当你在 TypeScript 中不设置 <code>systemPrompt</code> 或在 Python 中不设置 <code>system_prompt</code> 时，SDK 使用最小提示词，涵盖工具调用但省略了 <code>claude_code</code> 预设的其余内容，包括其安全和安全指令。这与 <code>claude -p</code> 不同，后者默认使用 Claude Code 系统提示词。如果你从 CLI 迁移并想要匹配的行为，请设置 <code>claude_code</code> 预设。</li>
+<li><strong><code>claude_code</code> 预设</strong>：Claude Code CLI 使用的系统提示词，包含工具使用说明和安全和安全指令。在 TypeScript 中设置 <code>systemPrompt: { type: "preset", preset: "claude_code" }</code>，或在 Python 中设置 <code>system_prompt={"type": "preset", "preset": "claude_code"}</code>，可选择使用 <code>append</code> 在末尾添加你自己的指令。</li>
+<li><strong>自定义字符串</strong>：你自己编写的提示词。SDK 仅发送你提供的内容。</li>
+</ul>
+<h3 id="decide-on-a-starting-point">决定起点</h3>
+<p>决定因素是你的代理与 Claude Code 的相似程度：一个在存储库中运行的编码代理，有人类观看流式输出并指导工作。你的产品离这个越远，你就越想编写自己的提示词。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">你正在构建</th>
+<th style="text-align: left;">使用</th>
+<th style="text-align: left;">你获得的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">一个 CLI 或类似 IDE 的编码工具，其中人类观看和指导，Claude Code 的默认值是你想要的</td>
+<td style="text-align: left;"><code>claude_code</code> 预设</td>
+<td style="text-align: left;">Claude Code 提示词，包括工具指导和安全规则</td>
+</tr>
+<tr>
+<td style="text-align: left;">相同类型的工具，加上产品特定的规则，如编码标准、输出格式或域上下文</td>
+<td style="text-align: left;"><code>claude_code</code> 预设加 <code>append</code></td>
+<td style="text-align: left;">上述所有内容，加上你的指令添加在预设之后。没有任何内容被删除，所以这是风险最低的自定义</td>
+</tr>
+<tr>
+<td style="text-align: left;">具有不同表面、身份或权限模型的代理，或非编码代理</td>
+<td style="text-align: left;">自定义提示词字符串</td>
+<td style="text-align: left;">仅你编写的内容。你负责替换你的代理仍然需要的工具指导和安全指令</td>
+</tr>
+<tr>
+<td style="text-align: left;">一个薄工具调用循环，没有代理角色，你在用户提示词中提供所有行为</td>
+<td style="text-align: left;">无 <code>systemPrompt</code> 选项</td>
+<td style="text-align: left;">最小默认值：工具调用支持，仅此而已</td>
+</tr>
+</tbody>
+</table>
+<p>"不同于 Claude Code" 通常意味着以下之一：</p>
+<ul>
+<li><strong>不同的表面</strong>：输出不是由触发它的人在终端中读取的。聊天 UI、结构化输出消费者和非编码自动化各自需要一个与其输出呈现和审查方式相匹配的提示词。无人值守的编码自动化，如修复 lint 错误或审查差异的 CI 作业，仍然适合预设，因为工作本身就是预设为之编写的。</li>
+<li><strong>不同的身份</strong>：代理不应该将自己呈现为 Claude Code。支持机器人、数据分析助手或任何特定领域的代理需要自己的名称、范围和角色。</li>
+<li><strong>不同的权限模型</strong>：代理自主运行，无需人类批准每一步，或在一组狭窄的资源上运行。Claude Code 的提示词假设人类在循环中，可以访问完整的工具集。</li>
+<li><strong>非编码任务</strong>：Claude Code 提示词的大部分是编码指导。对于研究、内容或运营代理，该指导与你实际需要的指令竞争。</li>
+</ul>
+<p><a href="#compare-the-four-approaches">比较表</a>显示了每种自定义方法保留的内容。</p>
+<h2 id="customize-agent-behavior">自定义代理行为</h2>
+<p><code>append</code> 和自定义提示字符串各自直接改变系统提示，输出样式改变 Claude Code 为每个响应给 Claude 的指令。CLAUDE.md 采用不同的路径：SDK 读取它并将其内容注入到对话中作为项目上下文，因此它与你选择的任何系统提示一起塑造行为。<a href="agent-sdk-skills.html">Skills</a>、<a href="agent-sdk-hooks.html">hooks</a> 和 <a href="agent-sdk-permissions.html">permissions</a> 也在系统提示之外塑造行为，并在各自的页面上介绍。</p>
+<h3 id="claude-md-files-for-project-level-instructions">用于项目级指令的 CLAUDE.md 文件</h3>
+<p>CLAUDE.md 文件为 Claude 提供持久的项目上下文和指令。SDK 将其内容注入到对话中并保持系统提示不变，因此它们与任何系统提示配置一起工作。关于在 CLAUDE.md 中放什么、放在哪里以及如何编写有效的指令，请参阅 <a href="memory.html#when-to-add-to-claude-md">When to add to CLAUDE.md</a> 和 <a href="memory.html">How Claude remembers your project</a> 的其余部分。本节涵盖 SDK 特定的内容：CLAUDE.md 如何加载。</p>
+<p>SDK 在匹配的设置源启用时读取 CLAUDE.md：<code>'project'</code> 从工作目录加载 <code>CLAUDE.md</code> 或 <code>.claude/CLAUDE.md</code>，<code>'user'</code> 加载 <code>~/.claude/CLAUDE.md</code>。默认 <code>query()</code> 选项启用两个源，因此 CLAUDE.md 自动加载。如果你在 TypeScript 中显式设置 <code>settingSources</code> 或在 Python 中设置 <code>setting_sources</code>，请包含你需要的源。CLAUDE.md 加载由设置源控制，而不是由 <code>claude_code</code> 预设控制。</p>
+<h4 id="load-claude-md-with-the-sdk">使用 SDK 加载 CLAUDE.md</h4>
+<p>要加载 CLAUDE.md，请设置 <code>settingSources</code> 以包含你保存 CLAUDE.md 的级别。下面的示例加载项目级 CLAUDE.md 以及 <code>claude_code</code> 预设，因此 Claude 既有编码代理提示，也有你的项目约定：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">messages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Add a new React component for user profiles"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">systemPrompt</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"preset"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">preset</span><span class="o">:</span><span class="w"> </span><span class="s2">"claude_code"</span><span class="w"> </span><span class="c1">// Use Claude Code's system prompt</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">settingSources</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"project"</span><span class="p">]</span><span class="w"> </span><span class="c1">// Loads CLAUDE.md from project</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">messages</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Now Claude has access to your project guidelines from CLAUDE.md</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Add a new React component for user profiles"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+            <span class="n">system_prompt</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"preset"</span><span class="p">,</span>
+                <span class="s2">"preset"</span><span class="p">:</span> <span class="s2">"claude_code"</span><span class="p">,</span>  <span class="c1"># Use Claude Code's system prompt</span>
+            <span class="p">},</span>
+            <span class="n">setting_sources</span><span class="o">=</span><span class="p">[</span><span class="s2">"project"</span><span class="p">],</span>  <span class="c1"># Loads CLAUDE.md from project</span>
+        <span class="p">),</span>
+    <span class="p">):</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+
+<span class="c1"># Now Claude has access to your project guidelines from CLAUDE.md</span>
+</code></pre></div>
+<p>当你运行任一示例时，SDK 在 Claude 工作时流式传输消息：系统初始化消息、助手消息、携带工具结果的用户消息，以及包含会话结果的最终结果消息。</p>
+<p>CLAUDE.md 在项目中的所有会话中持久存在，通过 git 与你的团队共享，并自动发现而无需代码更改。如果你传递空的 <code>settingSources</code> 数组，它不会被加载。</p>
+<h3 id="output-styles-for-persistent-configurations">用于持久配置的输出样式</h3>
+<p>输出样式是改变 Claude 的角色、语气和输出格式的已保存指令集。它们存储为 markdown 文件，可以在会话和项目中重复使用。</p>
+<h4 id="create-an-output-style">创建输出样式</h4>
+<p>输出样式是一个 markdown 文件，包含用于元数据的 <a href="output-styles.html#frontmatter">frontmatter</a>，后跟提示内容。将其保存到 <code>~/.claude/output-styles/</code> 以获得在每个项目中可用的用户级样式，或保存到你的存储库中的 <code>.claude/output-styles/</code> 以获得可以提交并与你的团队共享的项目级样式。</p>
+<p>自定义输出样式会省略 <code>claude_code</code> 预设的软件工程指令，转而使用您自己的指令。要保留这些指令并在其上叠加您的指令，请在 frontmatter 中设置 <code>keep-coding-instructions: true</code>。这些指令仅存在于 Claude Code 的完整系统提示词中，因此在使用较短系统提示词的会话中，该设置不起作用；将 <a href="env-vars.html#variables"><code>CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT</code></a> 设置为 <code>0</code> 即可在任何模型上选择完整提示词。当您的 Agent 仍在执行软件工程工作时，请保留它们。当您要完全替换角色时，请省略它们。</p>
+<p>下面的示例定义了一个代码审查角色，它保留编码指令，因为审查代码仍然受益于 Claude Code 的安全和代码质量指导。将其保存为 <code>~/.claude/output-styles/code-reviewer.md</code> 以使其在项目中可用：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown">---
+name: Code Reviewer
+description: Thorough code review assistant
+<span class="gu">keep-coding-instructions: true</span>
+<span class="gu">---</span>
+
+You are an expert code reviewer.
+
+For every code submission:
+<span class="k">1.</span> Check for bugs and security issues
+<span class="k">2.</span> Evaluate performance
+<span class="k">3.</span> Suggest improvements
+<span class="k">4.</span> Rate code quality (1-10)
+</code></pre></div>
+<h4 id="activate-an-output-style">激活输出样式</h4>
+<p>创建后，通过以下方式激活输出样式：</p>
+<ul>
+<li><strong>CLI</strong>：运行 <code>/output-style &lt;style&gt;</code>，例如 <code>/output-style concise</code>，或运行 <code>/config</code> 并选择一个。<code>/output-style</code> 命令需要 Claude Code v2.1.269 或更高版本。</li>
+<li><strong>设置</strong>：在 <code>.claude/settings.local.json</code> 中设置 <code>outputStyle</code></li>
+<li><strong>TypeScript SDK</strong>：在传递给 <code>query()</code> 的内联 <code>settings</code> 对象中设置 <code>outputStyle</code>，或指向设置它的设置文件。<code>outputStyle</code> 不是顶级 <code>Options</code> 字段：</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">outputStyle</span><span class="o">:</span><span class="w"> </span><span class="s2">"Explanatory"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div>
+<p>在 Python SDK 中，通过 <code>settings</code> 选项设置 <code>outputStyle</code>，该选项接受 JSON 字符串（如 <code>'{"outputStyle": "Explanatory"}'</code>）或设置它的设置文件的路径。</p>
+<p><strong>SDK 用户注意：</strong> 当你包含 <code>settingSources: ['user']</code> 或 <code>settingSources: ['project']</code>（TypeScript）/ <code>setting_sources=["user"]</code> 或 <code>setting_sources=["project"]</code>（Python）在你的选项中时，输出样式会被加载。</p>
+<h3 id="append-to-the-claude_code-preset">追加到 <code>claude_code</code> 预设</h3>
+<p>你可以使用带有 <code>append</code> 属性的 Claude Code 预设来添加你的自定义指令，同时保留所有内置功能。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">messages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Help me write a Python function to calculate fibonacci numbers"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">systemPrompt</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"preset"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">preset</span><span class="o">:</span><span class="w"> </span><span class="s2">"claude_code"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">append</span><span class="o">:</span><span class="w"> </span><span class="s2">"Always include detailed docstrings and type hints in Python code."</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">messages</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"assistant"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">AssistantMessage</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Help me write a Python function to calculate fibonacci numbers"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+            <span class="n">system_prompt</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"preset"</span><span class="p">,</span>
+                <span class="s2">"preset"</span><span class="p">:</span> <span class="s2">"claude_code"</span><span class="p">,</span>
+                <span class="s2">"append"</span><span class="p">:</span> <span class="s2">"Always include detailed docstrings and type hints in Python code."</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">),</span>
+    <span class="p">):</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">AssistantMessage</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<h4 id="improve-prompt-caching-across-users-and-machines">改进跨用户和机器的提示缓存</h4>
+<p>默认情况下，两个使用相同 <code>claude_code</code> 预设和 <code>append</code> 文本的会话仍然无法共享提示缓存条目，当它们的自动内存位置不同时。预设在你的 <code>append</code> 文本之前在系统提示中嵌入了该位置。该位置默认为 <code>~/.claude/projects/</code> 下的绝对路径，以存储库在磁盘上的路径命名，因此在用户、机器和检出之间不同。</p>
+<p>CLAUDE.md 内容和环境详情（如工作目录、平台、shell 和 OS 版本）不影响系统提示缓存，因为 Claude Code 在对话中而不是系统提示中传递它们。</p>
+<p>要使系统提示在会话中相同，请在 TypeScript 中设置 <code>excludeDynamicSections: true</code> 或在 Python 中设置 <code>"exclude_dynamic_sections": True</code>。每个用户的上下文移动到第一条用户消息中，仅在系统提示中保留静态预设和你的 <code>append</code> 文本，因此相同的配置在用户和机器之间共享缓存条目。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><code>excludeDynamicSections</code> 需要 <code>@anthropic-ai/claude-agent-sdk</code> v0.2.98 或更高版本，或 Python 的 <code>claude-agent-sdk</code> v0.1.58 或更高版本。仅在预设对象形式上设置它。当你传递自定义提示而不是预设时，SDK 会忽略它；要在 TypeScript SDK 中保持自定义提示的指令缓存，请参阅 <a href="#cache-the-static-part-of-a-custom-prompt">Cache the static part of a custom prompt</a>。</p></div></div>
+<p>以下示例将共享的 <code>append</code> 块与 <code>excludeDynamicSections</code> 配对，以便代理队列可以重复使用相同的缓存系统提示：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Triage the open issues in this repo"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">systemPrompt</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"preset"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">preset</span><span class="o">:</span><span class="w"> </span><span class="s2">"claude_code"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">append</span><span class="o">:</span><span class="w"> </span><span class="s2">"You operate Acme's internal triage workflow. Label issues by component and severity."</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">excludeDynamicSections</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Triage the open issues in this repo"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+            <span class="n">system_prompt</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"preset"</span><span class="p">,</span>
+                <span class="s2">"preset"</span><span class="p">:</span> <span class="s2">"claude_code"</span><span class="p">,</span>
+                <span class="s2">"append"</span><span class="p">:</span> <span class="s2">"You operate Acme's internal triage workflow. Label issues by component and severity."</span><span class="p">,</span>
+                <span class="s2">"exclude_dynamic_sections"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">),</span>
+    <span class="p">):</span>
+        <span class="o">...</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p><strong>权衡：</strong> 移出系统提示的文本仍然到达 Claude，但在用户消息中。该文本至少是自动内存目录的位置，通常是整个自动内存部分。用户消息中的指令比系统提示中的相同文本的权重略低，因此 Claude 可能会更少一致地遵循其自动内存指导。当跨会话缓存重复使用比最大化权威环境上下文更重要时，启用此选项。</p>
+<p>对于非交互式 CLI 模式中的等效标志，请参阅 <a href="cli-reference.html"><code>--exclude-dynamic-system-prompt-sections</code></a>。</p>
+<h3 id="custom-system-prompts">自定义系统提示</h3>
+<p>你可以提供自定义字符串作为 <code>systemPrompt</code> 以完全替换默认值为你自己的指令。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">customPrompt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`You are a Python coding specialist.</span>
+<span class="sb">Follow these guidelines:</span>
+<span class="sb">- Write clean, well-documented code</span>
+<span class="sb">- Use type hints for all functions</span>
+<span class="sb">- Include comprehensive docstrings</span>
+<span class="sb">- Prefer functional programming patterns when appropriate</span>
+<span class="sb">- Always explain your code choices`</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">messages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Create a data processing pipeline"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">systemPrompt</span><span class="o">:</span><span class="w"> </span><span class="kt">customPrompt</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">messages</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"assistant"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">AssistantMessage</span>
+
+<span class="n">custom_prompt</span> <span class="o">=</span> <span class="s2">"""You are a Python coding specialist.</span>
+<span class="s2">Follow these guidelines:</span>
+<span class="s2">- Write clean, well-documented code</span>
+<span class="s2">- Use type hints for all functions</span>
+<span class="s2">- Include comprehensive docstrings</span>
+<span class="s2">- Prefer functional programming patterns when appropriate</span>
+<span class="s2">- Always explain your code choices"""</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Create a data processing pipeline"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span><span class="n">system_prompt</span><span class="o">=</span><span class="n">custom_prompt</span><span class="p">),</span>
+    <span class="p">):</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">AssistantMessage</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p>在 Python 中，使用 <code>system_prompt={"type": "file", "path": "..."}</code> 从文件加载大型自定义提示，而不是将其作为字符串传递。Python SDK 将字符串提示作为一个命令行参数传递给 CLI 子进程，因此超过 OS 参数长度限制的提示在任何 API 请求发送之前在进程生成时失败。在 Linux 上，错误是 <code>Argument list too long</code>。请参阅 <a href="agent-sdk-python.html#systempromptfile"><code>SystemPromptFile</code></a> 了解平台阈值和 Windows 行为。</p>
+<h4 id="cache-the-static-part-of-a-custom-prompt">缓存自定义提示的静态部分</h4>
+<p>在 TypeScript SDK 中，你可以将自定义提示作为字符串数组而不是一个字符串传递，在静态部分和其余部分之间使用 <code>SYSTEM_PROMPT_DYNAMIC_BOUNDARY</code> 标记。当你的提示结合在每个请求上相同的指令与每个请求变化的上下文（如代理处理的客户或工单）时，使用此方法。当你将两部分作为一个字符串传递时，对每个请求部分的更改会改变整个系统提示，因此静态指令也会错过缓存。数组形式在 Python SDK 中不可用；<a href="agent-sdk-python.html#claudeagentoptions"><code>ClaudeAgentOptions</code></a> 列出 <code>system_prompt</code> 接受的形式。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Claude Code 仅在直接调用 Claude API 或在 <a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 上运行时拆分提示。在所有其他配置中，例如 Amazon Bedrock、Google Cloud 的 Agent Platform、Microsoft Foundry 或 <a href="llm-gateway-connect.html">LLM gateway</a>，它将整个提示作为一个块发送，与传递一个字符串相同。每当你设置 <a href="llm-gateway-protocol.html#disable-pre-release-capabilities"><code>CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1</code></a> 时也会发生这种情况。</p></div></div>
+<p>要拆分提示，从 <code>@anthropic-ai/claude-agent-sdk</code> 导入 <code>SYSTEM_PROMPT_DYNAMIC_BOUNDARY</code> 并将其作为自己的数组元素在两部分之间传递。SDK 将标记之前的字符串作为一个文本块发送，将标记之后的字符串作为第二个块发送，每个都有自己的缓存断点。在下面的示例中，支持代理从文件加载其分类指令，并在每个请求上接收有关一个工单的详细信息，因此指令保持缓存，而工单详细信息改变：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readFile</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"node:fs/promises"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="p">,</span><span class="w"> </span><span class="nx">SYSTEM_PROMPT_DYNAMIC_BOUNDARY</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="c1">// Identical on every request</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">instructions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">readFile</span><span class="p">(</span><span class="s2">"triage-instructions.md"</span><span class="p">,</span><span class="w"> </span><span class="s2">"utf8"</span><span class="p">);</span>
+<span class="c1">// Different on every request</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">ticketContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Customer plan: Enterprise. Other open tickets from this customer: 3."</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Triage ticket 4821"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">systemPrompt</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">instructions</span><span class="p">,</span><span class="w"> </span><span class="nx">SYSTEM_PROMPT_DYNAMIC_BOUNDARY</span><span class="p">,</span><span class="w"> </span><span class="nx">ticketContext</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><a href="agent-sdk-cost-tracking.html#track-cache-tokens">Track cache tokens</a> 描述了每个结果消息上的 <code>cache_creation_input_tokens</code> 和 <code>cache_read_input_tokens</code> 字段。</p>
+<p>SDK 从数组中组装块如下：</p>
+<ul>
+<li>SDK 将标记每一侧的字符串与它们之间的空行连接，并删除标记本身，因此标记文本不会到达 Claude。</li>
+<li>如果你多次包含标记，第一个是拆分，SDK 删除其他的。</li>
+<li>如果你省略标记，SDK 将所有字符串连接到一个块中，与传递一个字符串相同。</li>
+</ul>
+<p>使用 CLI 的 <a href="cli-reference.html#system-prompt-flags"><code>--system-prompt</code> 或 <code>--system-prompt-file</code> 标志</a>，提示是一个字符串，因此没有数组来携带标记。在静态和每个请求部分之间包含仅包含 <code>__SYSTEM_PROMPT_DYNAMIC_BOUNDARY__</code> 的行。Claude Code 在第一个这样的行处拆分提示为相同的两个块并删除该行。需要 Claude Code v2.1.275 或更高版本。</p>
+<p>在 SDK 中，更喜欢数组形式，它不带标记行地携带边界。</p>
+<h3 id="change-the-prompt-of-an-existing-session">更改现有会话的提示</h3>
+<p>默认情况下，如果你在使用 <code>resume</code> 或 <code>continue</code> 返回会话时传递不同的 <code>append</code> 或自定义提示，Claude 在下一轮不会看到它。Claude Code 在会话的第一个请求上记录系统提示，并重复使用该记录直到会话被压缩。新文本在该压缩之后或在新会话中生效。</p>
+<h4 id="update-claude’s-instructions-mid-session">在会话中更新 Claude 的指令</h4>
+<p>如果你在系统提示中放置的指令需要在会话运行时改变，例如因为你的用户将代理切换到只读模式或在你的应用中编辑其配置，请在对话中发送新指令，而不是改变 <code>systemPrompt</code>：</p>
+<ul>
+<li><strong>在你的下一条消息中</strong>：在你发送的下一条用户消息中包含新指令。</li>
+<li><strong>从 hook 中</strong>：从 <code>UserPromptSubmit</code> 或 <code>PostToolUse</code> <a href="agent-sdk-hooks.html#outputs">hook 回调</a> 返回 <a href="hooks.html#add-context-for-claude"><code>additionalContext</code></a>，写成事实陈述，如"工作区现在是只读的"。SDK 在 hook 触发的点将文本插入到对话中，因此记录的提示保持不变。</li>
+</ul>
+<h4 id="turn-recording-off-while-you-iterate-on-wording">在迭代措辞时关闭记录</h4>
+<p>当你迭代提示措辞并希望每个编辑到达你恢复的会话时，在系统提示的对象形式上设置 <code>snapshot</code> 为 false。Claude Code 然后在每个请求上重建提示。该字段在 TypeScript 中的 <a href="agent-sdk-typescript.html#options"><code>systemPrompt</code></a> 的预设和自定义形式上可用，在 Python 中的 <a href="agent-sdk-python.html#systempromptpreset"><code>system_prompt</code></a> 上可用，并需要 <code>@anthropic-ai/claude-agent-sdk</code> v0.3.257 或更高版本，或 <code>claude-agent-sdk</code> v0.2.153 或更高版本。</p>
+<p>在生产中保持记录打开。关闭记录时，恢复的会话上的不同 <code>append</code> 或自定义提示在下一轮到达 Claude，该请求无法重复使用会话的 <a href="prompt-caching.html#how-the-cache-is-organized">prompt cache</a>。在 API 强制 <a href="https://platform.claude.com/docs/en/build-with-claude/preserved-thinking" target="_blank" rel="noopener">preserved thinking</a> 的地方，Claude 也会失去其早期轮次的思考。</p>
+<p>在 <a href="cloud-environments.html">cloud sessions</a> 之外，如果你通过 <code>extraArgs</code> 传递 <code>--bare</code> 或设置 <code>CLAUDE_CODE_SIMPLE=1</code> 在 <a href="headless.html#start-faster-with-bare-mode">bare mode</a> 中启动 Claude Code，记录保持关闭，除非你设置 <code>snapshot: true</code>。</p>
+<p>默认记录 <code>append</code> 或自定义提示需要 Claude Code v2.1.265 或更高版本，TypeScript Agent SDK 从 v0.3.265 捆绑，Python Agent SDK 从 v0.2.153 捆绑。在 Claude Code v2.1.268 之前，不 <a href="env-vars.html#features-that-need-feature-flag-fetching">fetch feature flags</a> 的会话，包括 Amazon Bedrock、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上的会话，在每个请求上重建提示，<code>snapshot</code> 无效。</p>
+<h2 id="context-claude-code-adds-outside-the-system-prompt">Claude Code 在系统提示之外添加的上下文</h2>
+<p>系统提醒是 Claude Code 在会话期间添加到对话中的消息，用于为 Claude 提供上下文，例如 CLAUDE.md 文件的内容或文件在磁盘上已更改的说明。Claude Code 在对话中发送这些消息，而不是在系统提示词中发送，因此无论您使用 <code>claude_code</code> 预设还是传递自己的字符串作为 <code>systemPrompt</code>，大多数提醒都会送达 Claude。</p>
+<p>本部分涵盖<a href="#reminders-claude-code-adds-to-the-conversation">最可能改变您的代理行为的提醒</a>、如何<a href="#turn-off-the-context-your-agent-replaces">关闭您的代理替换的上下文</a>，以及如何<a href="#see-what-claude-received">查看 Claude 在特定请求中收到的内容</a>。</p>
+<h3 id="reminders-claude-code-adds-to-the-conversation">Claude Code 添加到对话中的提醒</h3>
+<p>系统提醒是 Claude Code 添加到对话中的文本，与您的代码发送的提示一起。以下提醒是最可能改变您的代理行为的提醒：</p>
+<ul>
+<li><strong>项目说明</strong>：您的 <a href="#claude-md-files-for-project-level-instructions"><code>settingSources</code></a> 选项加载的 CLAUDE.md 文件</li>
+<li><strong>输出样式说明</strong>：活跃<a href="#output-styles-for-persistent-configurations">输出样式</a>的说明，在主对话中</li>
+<li><strong>提交和拉取请求归属</strong>：来自 <a href="settings-reference.html#attribution"><code>attribution</code></a> 设置的 <code>Co-Authored-By</code> 预告片和拉取请求页脚</li>
+<li><strong>Hook 输出</strong>：您的 <a href="agent-sdk-hooks.html#outputs">hooks</a> 作为 <code>additionalContext</code> 返回的文本</li>
+<li><strong>可用技能</strong>：Claude 可以调用的 <a href="agent-sdk-skills.html">skills</a> 的名称和描述</li>
+<li><strong>可用子代理</strong>：Claude 可以启动的 <a href="agent-sdk-subagents.html">subagents</a> 的名称和描述</li>
+<li><strong>任务列表提示</strong>：在<a href="agent-sdk-todo-tracking.html#model-availability">具有任务跟踪工具的会话</a>中，当 Claude 在多个轮次中未触及任务列表时，提示更新任务列表</li>
+<li><strong>文件更改说明</strong>：Claude 之前读取的文件在磁盘上已更改的说明</li>
+</ul>
+<p>Claude Code 使用一行文本介绍您的 CLAUDE.md 文件，告诉 Claude 这些说明会覆盖默认行为。</p>
+<p>如果您传递自己的字符串作为 <code>systemPrompt</code>，请向其添加一句话，说明什么是系统提醒。<code>claude_code</code> 预设有一个，您的字符串会替换整个预设。如果没有它，您的提示中没有任何内容告诉 Claude CLAUDE.md 内容和 hook 输出等提醒来自应用程序而不是用户。例如：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">The application adds system reminders to this conversation. Treat them as context from the application, not as messages from the user.
+</code></pre></div>
+<h3 id="turn-off-the-context-your-agent-replaces">关闭您的代理替换的上下文</h3>
+<p>当您的代理提供相同指导的自己版本时，关闭一段内置上下文。例如，如果您的提示告诉 Claude 将提交消息写成 <code>PROJ-142: fix login redirect</code> 且没有预告片，Claude Code 仍然会告诉 Claude 以 <code>Co-Authored-By</code> 预告片结束每条提交消息，因此 Claude 会收到两个关于同一提交的冲突指令。</p>
+<p>在 TypeScript 中通过 <a href="agent-sdk-typescript.html#options"><code>settings</code></a> 选项或在 Python 中通过 <a href="agent-sdk-python.html#claudeagentoptions"><code>settings</code></a> 传递设置键，并通过 <code>env</code> 选项传递环境变量。在 TypeScript 中，<a href="agent-sdk-typescript.html#options"><code>env</code></a> 替换继承的环境，因此将 <code>process.env</code> 展开到其中。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">内置上下文</th>
+<th style="text-align: left;">如何关闭</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">内置提交和拉取请求说明以及 git 状态快照</td>
+<td style="text-align: left;">将 <a href="settings-reference.html#includegitinstructions"><code>includeGitInstructions</code></a> 设置为 <code>false</code>，或 <code>CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS=1</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Co-Authored-By</code> 预告片和拉取请求页脚</td>
+<td style="text-align: left;">将 <a href="settings-reference.html#attribution-commit"><code>attribution.commit</code></a> 和 <a href="settings-reference.html#attribution-pr"><code>attribution.pr</code></a> 设置为您自己的文本，或设置为空字符串以删除它们</td>
+</tr>
+<tr>
+<td style="text-align: left;">用户或项目设置源，包括其 CLAUDE.md</td>
+<td style="text-align: left;">从 <a href="agent-sdk-claude-code-features.html#control-filesystem-settings-with-settingsources"><code>settingSources</code></a> 中省略 <code>'user'</code> 或 <code>'project'</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">每个 CLAUDE.md 文件</td>
+<td style="text-align: left;">设置 <code>CLAUDE_CODE_DISABLE_CLAUDE_MDS=1</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">任务列表提示、文件更改说明和技能列表</td>
+<td style="text-align: left;">设置 <code>CLAUDE_CODE_DISABLE_ATTACHMENTS=1</code></td>
+</tr>
+</tbody>
+</table>
+<p>将 <code>includeGitInstructions</code> 设置为 <code>false</code> 可排除内置的提交和 Pull Request 说明；这些说明是 Bash 工具描述的一部分，即使使用自定义 <code>systemPrompt</code> 也会传达给 Claude。不过，在使用最小默认设置、自定义 <code>systemPrompt</code> 或带有自身提示词的自定义主线程 Agent 时，会话启动时不会包含 git 状态快照。</p>
+<ul>
+<li>如果您设置 <code>CLAUDE_CODE_DISABLE_ATTACHMENTS</code>，Claude Code 也会将 <code>@</code> 文件提及作为纯文本发送，而不是将其展开为文件内容。可用子代理列表和后台任务通知仍然会到达。</li>
+<li>如果只想阻止 <code>@</code> 文件提及被展开，请改为设置 <a href="env-vars.html#variables"><code>CLAUDE_CODE_DISABLE_FILE_MENTIONS=1</code></a>（需要 Claude Code v2.1.299 或更高版本）。这样 Claude 会收到所提及的路径，以及一条提示其使用文件工具读取这些路径的说明，并且您的 <code>PreToolUse</code> hook 会将每次文件读取视为一次工具调用。</li>
+</ul>
+<p>以下示例适用于在 <code>append</code> 中携带自己提交规则的代理。它将两个 <code>attribution</code> 键都设置为空字符串以删除预告片和页脚，并关闭 <code>includeGitInstructions</code>，以便 Claude Code 自己的提交工作流说明不会与您的说明竞争：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Commit the staged changes for ticket PROJ-142"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">systemPrompt</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"preset"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">preset</span><span class="o">:</span><span class="w"> </span><span class="s2">"claude_code"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">append</span><span class="o">:</span><span class="w"> </span><span class="s2">"Write commit messages as: &lt;ticket id&gt;: &lt;summary&gt;. Add no trailers."</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">includeGitInstructions</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">attribution</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">commit</span><span class="o">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="nx">pr</span><span class="o">:</span><span class="w"> </span><span class="s2">""</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Bash(git *)"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="p">)</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Commit the staged changes for ticket PROJ-142"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+            <span class="n">system_prompt</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"preset"</span><span class="p">,</span>
+                <span class="s2">"preset"</span><span class="p">:</span> <span class="s2">"claude_code"</span><span class="p">,</span>
+                <span class="s2">"append"</span><span class="p">:</span> <span class="s2">"Write commit messages as: &lt;ticket id&gt;: &lt;summary&gt;. Add no trailers."</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">settings</span><span class="o">=</span><span class="s1">'{"includeGitInstructions": false, "attribution": {"commit": "", "pr": ""}}'</span><span class="p">,</span>
+            <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Bash(git *)"</span><span class="p">],</span>
+        <span class="p">),</span>
+    <span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p>要确认更改，请在具有暂存更改的存储库中运行示例，并使用 <code>git log -1</code> 检查新提交。消息以没有 <code>Co-Authored-By</code> 预告片结尾。</p>
+<h3 id="see-what-claude-received">查看 Claude 收到的内容</h3>
+<p>SDK 消息流不包括系统提醒，因此读取您的代码接收的消息不会显示 Claude 看到的内容。要查看它们，请记录 Claude Code 发送的请求：</p>
+<ul>
+<li><strong>原始请求日志记录</strong>：将 <a href="monitoring-usage.html#api-request-body-event"><code>OTEL_LOG_RAW_API_BODIES</code></a> 设置为 <code>file:&lt;dir&gt;</code>。Claude Code 将每个请求体写入该目录。</li>
+<li><strong>您控制的网关</strong>：将 <a href="llm-gateway.html"><code>ANTHROPIC_BASE_URL</code></a> 指向记录请求体的代理。</li>
+</ul>
+<p>在记录的请求中，查看 <code>messages</code> 数组。提醒出现在用 <code>&lt;system-reminder&gt;</code> 标签包装的用户消息内，或在某些模型上，作为具有 <code>system</code> 角色的单独消息。</p>
+<h2 id="compare-the-four-approaches">比较四种方法</h2>
+<p>这四种自定义方法在存储位置、共享方式以及从 <code>claude_code</code> 预设保留的内容方面有所不同。</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>CLAUDE.md</th>
+<th>输出样式</th>
+<th>带有追加的 <code>systemPrompt</code></th>
+<th>自定义 <code>systemPrompt</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>持久性</strong></td>
+<td>每个项目文件</td>
+<td>保存为文件</td>
+<td>仅会话</td>
+<td>仅会话</td>
+</tr>
+<tr>
+<td><strong>可重用性</strong></td>
+<td>每个项目</td>
+<td>跨项目</td>
+<td>代码重复</td>
+<td>代码重复</td>
+</tr>
+<tr>
+<td><strong>管理</strong></td>
+<td>在文件系统上</td>
+<td>CLI + 文件</td>
+<td>在代码中</td>
+<td>在代码中</td>
+</tr>
+<tr>
+<td><strong>默认工具</strong></td>
+<td>保留</td>
+<td>保留</td>
+<td>保留</td>
+<td>丢失（除非包含）</td>
+</tr>
+<tr>
+<td><strong>内置安全</strong></td>
+<td>维护</td>
+<td>维护</td>
+<td>维护</td>
+<td>必须添加</td>
+</tr>
+<tr>
+<td><strong>自定义级别</strong></td>
+<td>仅添加</td>
+<td>添加；可省略编码指令</td>
+<td>仅添加</td>
+<td>完全控制</td>
+</tr>
+<tr>
+<td><strong>版本控制</strong></td>
+<td>与项目一起</td>
+<td>是</td>
+<td>与代码一起</td>
+<td>与代码一起</td>
+</tr>
+<tr>
+<td><strong>范围</strong></td>
+<td>项目特定</td>
+<td>用户或项目</td>
+<td>代码会话</td>
+<td>代码会话</td>
+</tr>
+</tbody>
+</table>
+<p>"带有追加"是指在 TypeScript 中使用 <code>systemPrompt: { type: "preset", preset: "claude_code", append: "..." }</code>，或在 Python 中使用 <code>system_prompt={"type": "preset", "preset": "claude_code", "append": "..."}</code>。CLAUDE.md 不会改变系统提示本身：SDK 将其内容作为项目上下文注入到对话中。</p>
+<h2 id="combine-approaches">组合方法</h2>
+<p>这些方法可以组合使用。持久化的输出样式或 CLAUDE.md 设置长期行为，而 <code>append</code> 在不触及保存配置的情况下在顶部分层会话特定的指令。</p>
+<h3 id="combine-an-output-style-with-session-specific-additions">将输出样式与会话特定的添加内容组合</h3>
+<p>下面的示例假设已经激活了代码审查员输出样式。<code>append</code> 块在角色的基础上分层会话特定的关注领域，因此单个审查会话可以优先考虑 OAuth 和令牌存储，而无需更改保存的输出样式：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="c1">// Assuming "Code Reviewer" output style is active (via /config or settings)</span>
+<span class="c1">// Add session-specific focus areas</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">messages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Review this authentication module"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">systemPrompt</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"preset"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">preset</span><span class="o">:</span><span class="w"> </span><span class="s2">"claude_code"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">append</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span>
+<span class="sb">        For this review, prioritize:</span>
+<span class="sb">        - OAuth 2.0 compliance</span>
+<span class="sb">        - Token storage security</span>
+<span class="sb">        - Session management</span>
+<span class="sb">      `</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">messages</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span>
+
+<span class="c1"># Assuming "Code Reviewer" output style is active (via /config or settings)</span>
+<span class="c1"># Add session-specific focus areas</span>
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Review this authentication module"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+            <span class="n">system_prompt</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"preset"</span><span class="p">,</span>
+                <span class="s2">"preset"</span><span class="p">:</span> <span class="s2">"claude_code"</span><span class="p">,</span>
+                <span class="s2">"append"</span><span class="p">:</span> <span class="s2">"""</span>
+<span class="s2">                For this review, prioritize:</span>
+<span class="s2">                - OAuth 2.0 compliance</span>
+<span class="s2">                - Token storage security</span>
+<span class="s2">                - Session management</span>
+<span class="s2">                """</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">),</span>
+    <span class="p">):</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="see-also">另请参阅</h2>
+<ul>
+<li><a href="output-styles.html">输出样式</a>：为 CLI 创建、管理和共享输出样式，包括文件格式和存储位置</li>
+<li><a href="memory.html">Claude 如何记住您的项目</a>：CLAUDE.md 中应放入的内容、放置位置以及如何编写有效的项目说明</li>
+<li><a href="agent-sdk-typescript.html">TypeScript SDK 参考</a>：完整的 <code>Options</code> 类型，包括 <code>systemPrompt</code>、<code>settingSources</code> 和 <code>settings</code></li>
+<li><a href="agent-sdk-python.html">Python SDK 参考</a>：完整的 <code>ClaudeAgentOptions</code> 类型，包括 <code>system_prompt</code> 和 <code>setting_sources</code></li>
+<li><a href="settings.html">Settings</a>：<code>settings.json</code> 参考，包括输出样式和其他配置的存储位置</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="agent-sdk-subagents.html"><span class="pager-dir">← 上一页</span><span class="pager-name">SDK 中的子代理</span></a><a class="pager-link next" href="agent-sdk-skills.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用 skills 扩展 agents</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#how-system-prompts-work">系统提示词的工作原理</a><a class="toc-l3" href="#decide-on-a-starting-point">决定起点</a><a class="toc-l2" href="#customize-agent-behavior">自定义代理行为</a><a class="toc-l3" href="#claude-md-files-for-project-level-instructions">用于项目级指令的 CLAUDE.md 文件</a><a class="toc-l3" href="#output-styles-for-persistent-configurations">用于持久配置的输出样式</a><a class="toc-l3" href="#append-to-the-claude_code-preset">追加到 claude_code 预设</a><a class="toc-l3" href="#custom-system-prompts">自定义系统提示</a><a class="toc-l3" href="#change-the-prompt-of-an-existing-session">更改现有会话的提示</a><a class="toc-l2" href="#context-claude-code-adds-outside-the-system-prompt">Claude Code 在系统提示之外添加的上下文</a><a class="toc-l3" href="#reminders-claude-code-adds-to-the-conversation">Claude Code 添加到对话中的提醒</a><a class="toc-l3" href="#turn-off-the-context-your-agent-replaces">关闭您的代理替换的上下文</a><a class="toc-l3" href="#see-what-claude-received">查看 Claude 收到的内容</a><a class="toc-l2" href="#compare-the-four-approaches">比较四种方法</a><a class="toc-l2" href="#combine-approaches">组合方法</a><a class="toc-l3" href="#combine-an-output-style-with-session-specific-additions">将输出样式与会话特定的添加内容组合</a><a class="toc-l2" href="#see-also">另请参阅</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

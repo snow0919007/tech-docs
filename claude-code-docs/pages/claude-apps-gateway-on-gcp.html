@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>在 Google Cloud 上部署 Claude apps gateway · Claude Code 中文文档</title>
+<meta name="description" content="在 Google Cloud 上运行 Claude apps gateway 的实际示例：Cloud Run 或 GKE、Cloud SQL for PostgreSQL、Secret Manager 和 Google Cloud 的 Agent Platform 的服务账户身份验证。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="claude-apps-gateway-on-gcp">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/claude-apps-gateway-on-gcp" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link active" href="claude-apps-gateway-on-gcp.html" aria-current="page">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>管理</span> <span class="sep">/</span> <span>网关</span> <span class="sep">/</span> <span>Claude 应用网关</span></div>
+    <article class="prose" id="article"><h1 id="google-cloud-claude-apps-gateway">在 Google Cloud 上部署 Claude apps gateway</h1>
+<blockquote>
+<p>在 Google Cloud 上运行 Claude apps gateway 的实际示例：Cloud Run 或 GKE、Cloud SQL for PostgreSQL、Secret Manager 和 Google Cloud 的 Agent Platform 的服务账户身份验证。</p>
+</blockquote>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>本页介绍在 Google Cloud 上运行 Claude apps gateway 的一种方式。该配置是客户管理基础设施的工作示例，而不是受支持的生产部署；使用它来了解各个部分如何组合在一起，然后再根据您自己的环境进行调整。有关平台无关的要求，请参阅<a href="claude-apps-gateway-deploy.html">部署指南</a>。</p></div></div>
+<p>此示例在 Google Cloud 上配置 Claude apps gateway，使用 Google Cloud 的 Agent Platform 作为模型上游，使用 Cloud Run 或 GKE 进行计算。Google Workspace 是示例身份提供商 (IdP)，但任何符合 OpenID Connect (OIDC) 的 IdP 都可以工作；只有 <code>oidc</code> 块会改变。有关每个 IdP 的详细信息，请参阅<a href="claude-apps-gateway-deploy.html#identity-provider-setup">身份提供商设置</a>。</p>
+<h2 id="what-you’ll-build">您将构建的内容</h2>
+<p><img alt="Google Cloud 上 Claude apps gateway 的图表：Claude Code 客户端通过 HTTPS 连接到网关（Cloud Run 或 GKE），网关在 VPC 内运行，旁边是用于会话状态的私有 IP Cloud SQL 数据库。网关通过 OIDC 针对 Google Workspace 对用户进行签名，从 Secret Manager 读取配置和机密，将模型请求转发到 Google Cloud 的 Agent Platform，并在部署时从 Artifact Registry 拉取其镜像。" src="../assets/img/bd29cff55951.svg" /></p>
+<p>部署包括：</p>
+<ul>
+<li><strong>Cloud Run</strong> 服务或 <strong>GKE</strong> Deployment 运行网关容器</li>
+<li><strong>Artifact Registry</strong> 存储库用于网关镜像</li>
+<li><strong>Cloud SQL for PostgreSQL</strong> 实例，仅限私有 IP，用于网关的<a href="claude-apps-gateway-config.html#store">存储</a></li>
+<li><strong>Secret Manager</strong> 机密用于 <code>gateway.yaml</code>、JWT 签名密钥、OIDC 客户端机密和 Postgres URL</li>
+<li><strong>服务账户</strong>，具有 <code>roles/aiplatform.user</code>，直接附加到 Cloud Run 或通过 Workload Identity 绑定到 GKE</li>
+<li><strong>HTTPS 前端</strong>，由您提供：Cloud Run 前面的内部应用负载均衡器，本演练为网关配置但不创建，或 GKE 上类别为 <code>gce-internal</code> 的内部 <strong>GKE Ingress</strong></li>
+</ul>
+<h2 id="prerequisites">前置条件</h2>
+<ul>
+<li>启用了计费的 GCP 项目，以及创建上述资源的权限</li>
+<li><code>gcloud</code> CLI，使用 <code>gcloud auth login</code> 进行身份验证，并在本地安装了 Docker</li>
+<li>对于 GKE 路径：<code>kubectl</code> 和在下面演练中创建的 VPC 上的 GKE 集群</li>
+<li>在 Model Garden 中访问您需要的 Claude 模型，在发布这些模型的区域中</li>
+<li>Google Workspace OAuth 2.0 网络应用程序客户端，重定向 URI 为 <code>https://&lt;gateway-host&gt;/oauth/callback</code>；请参阅<a href="claude-apps-gateway-deploy.html#identity-provider-setup">身份提供商设置</a></li>
+<li>网关的 TLS 主机名，通常是指向负载均衡器的内部 DNS 名称</li>
+</ul>
+<p>设置项目和区域一次：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">PROJECT_ID</span><span class="o">=</span>&lt;your-project&gt;
+<span class="nb">export</span><span class="w"> </span><span class="nv">REGION</span><span class="o">=</span>us-east5<span class="w">   </span><span class="c1"># a region where the Claude models you need are published in Model Garden</span>
+gcloud<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>project<span class="w"> </span><span class="s2">"</span><span class="nv">$PROJECT_ID</span><span class="s2">"</span>
+</code></pre></div>
+<h2 id="deploy-the-gateway">部署网关</h2>
+<p>以下步骤使用 <code>gcloud</code> 命令配置完整部署。</p>
+<p><strong>1. 启用 API</strong></p>
+<p>启用演练使用的服务 API：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>aiplatform.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>artifactregistry.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>sqladmin.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>secretmanager.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>iamcredentials.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>iam.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>compute.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>servicenetworking.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>run.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>container.googleapis.com
+</code></pre></div>
+<p>所需的 API 取决于部署路径：</p>
+<ul>
+<li><code>compute</code> 和 <code>servicenetworking</code>：私有 IP Cloud SQL 路径所需</li>
+<li><code>run</code>：仅限 Cloud Run</li>
+<li><code>container</code>：仅限 GKE</li>
+</ul>
+<p><strong>2. 创建服务账户并授予 IAM</strong></p>
+<p>网关作为专用服务账户运行，有权调用 Google Cloud 的 Agent Platform。它通过 VPC 使用密码用户访问 Cloud SQL，因此不需要 Cloud SQL IAM 角色：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">gcloud<span class="w"> </span>iam<span class="w"> </span>service-accounts<span class="w"> </span>create<span class="w"> </span>claude-gateway<span class="w"> </span>--display-name<span class="o">=</span><span class="s2">"Claude apps gateway"</span>
+<span class="nv">SA</span><span class="o">=</span><span class="s2">"claude-gateway@</span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="s2">.iam.gserviceaccount.com"</span>
+
+gcloud<span class="w"> </span>projects<span class="w"> </span>add-iam-policy-binding<span class="w"> </span><span class="s2">"</span><span class="nv">$PROJECT_ID</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--member<span class="o">=</span><span class="s2">"serviceAccount:</span><span class="si">${</span><span class="nv">SA</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>--role<span class="o">=</span><span class="s2">"roles/aiplatform.user"</span><span class="w"> </span>--condition<span class="o">=</span>None
+</code></pre></div>
+<p>然后在 Model Garden 中为项目启用 Claude 模型；模型发布到特定区域，因此请检查每个模型卡。</p>
+<p><strong>3. 构建镜像并将其推送到 Artifact Registry</strong></p>
+<p>根据<a href="claude-apps-gateway-deploy.html#container-image">容器镜像要求</a>构建镜像，使用 <code>linux-x64</code> glibc 二进制文件，然后推送：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">gcloud<span class="w"> </span>artifacts<span class="w"> </span>repositories<span class="w"> </span>create<span class="w"> </span>claude-gateway<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--repository-format<span class="o">=</span>docker<span class="w"> </span>--location<span class="o">=</span><span class="s2">"</span><span class="nv">$REGION</span><span class="s2">"</span>
+gcloud<span class="w"> </span>auth<span class="w"> </span>configure-docker<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">REGION</span><span class="si">}</span><span class="s2">-docker.pkg.dev"</span><span class="w"> </span>--quiet
+
+<span class="c1"># Cloud Run 需要 linux/amd64。--provenance=false 避免 buildx OCI</span>
+<span class="c1"># 镜像索引被 Cloud Run 拒绝。</span>
+docker<span class="w"> </span>build<span class="w"> </span>--platform<span class="o">=</span>linux/amd64<span class="w"> </span>--provenance<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-t<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">REGION</span><span class="si">}</span><span class="s2">-docker.pkg.dev/</span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="s2">/claude-gateway/gateway:&lt;version&gt;"</span><span class="w"> </span>.
+docker<span class="w"> </span>push<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">REGION</span><span class="si">}</span><span class="s2">-docker.pkg.dev/</span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="s2">/claude-gateway/gateway:&lt;version&gt;"</span>
+</code></pre></div>
+<p><strong>4. 为 PostgreSQL 配置 Cloud SQL</strong></p>
+<p>通过私有服务访问在 VPC 上创建实例，使其没有公共 IP；这也满足强制执行 <code>constraints/sql.restrictPublicIp</code> 的项目：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nv">VPC</span><span class="o">=</span>cc-gateway-vpc
+gcloud<span class="w"> </span>compute<span class="w"> </span>networks<span class="w"> </span>create<span class="w"> </span><span class="s2">"</span><span class="nv">$VPC</span><span class="s2">"</span><span class="w"> </span>--subnet-mode<span class="o">=</span>custom
+gcloud<span class="w"> </span>compute<span class="w"> </span>networks<span class="w"> </span>subnets<span class="w"> </span>create<span class="w"> </span>cc-gateway-subnet<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--network<span class="o">=</span><span class="s2">"</span><span class="nv">$VPC</span><span class="s2">"</span><span class="w"> </span>--region<span class="o">=</span><span class="s2">"</span><span class="nv">$REGION</span><span class="s2">"</span><span class="w"> </span>--range<span class="o">=</span><span class="m">10</span>.0.0.0/24
+
+<span class="c1"># 私有服务访问：每个 VPC 一次</span>
+gcloud<span class="w"> </span>compute<span class="w"> </span>addresses<span class="w"> </span>create<span class="w"> </span><span class="s2">"google-managed-services-</span><span class="si">${</span><span class="nv">VPC</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--global<span class="w"> </span>--purpose<span class="o">=</span>VPC_PEERING<span class="w"> </span>--prefix-length<span class="o">=</span><span class="m">16</span><span class="w"> </span>--network<span class="o">=</span><span class="s2">"</span><span class="nv">$VPC</span><span class="s2">"</span>
+gcloud<span class="w"> </span>services<span class="w"> </span>vpc-peerings<span class="w"> </span>connect<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--service<span class="o">=</span>servicenetworking.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--ranges<span class="o">=</span><span class="s2">"google-managed-services-</span><span class="si">${</span><span class="nv">VPC</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>--network<span class="o">=</span><span class="s2">"</span><span class="nv">$VPC</span><span class="s2">"</span>
+
+gcloud<span class="w"> </span>sql<span class="w"> </span>instances<span class="w"> </span>create<span class="w"> </span>claude-gateway-db<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--database-version<span class="o">=</span>POSTGRES_16<span class="w"> </span>--tier<span class="o">=</span>db-g1-small<span class="w"> </span>--region<span class="o">=</span><span class="s2">"</span><span class="nv">$REGION</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--network<span class="o">=</span><span class="s2">"projects/</span><span class="si">${</span><span class="nv">PROJECT_ID</span><span class="si">}</span><span class="s2">/global/networks/</span><span class="si">${</span><span class="nv">VPC</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>--no-assign-ip
+gcloud<span class="w"> </span>sql<span class="w"> </span>databases<span class="w"> </span>create<span class="w"> </span>claude_gateway<span class="w"> </span>--instance<span class="o">=</span>claude-gateway-db
+<span class="nv">PGPASS</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">24</span><span class="k">)</span><span class="s2">"</span>
+gcloud<span class="w"> </span>sql<span class="w"> </span>users<span class="w"> </span>create<span class="w"> </span>gateway<span class="w"> </span>--instance<span class="o">=</span>claude-gateway-db<span class="w"> </span>--password<span class="o">=</span><span class="s2">"</span><span class="nv">$PGPASS</span><span class="s2">"</span>
+
+<span class="nv">PRIVATE_IP</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>gcloud<span class="w"> </span>sql<span class="w"> </span>instances<span class="w"> </span>describe<span class="w"> </span>claude-gateway-db<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--format<span class="o">=</span><span class="s1">'value(ipAddresses[0].ipAddress)'</span><span class="k">)</span><span class="s2">"</span>
+<span class="nv">GATEWAY_POSTGRES_URL</span><span class="o">=</span><span class="s2">"postgres://gateway:</span><span class="si">${</span><span class="nv">PGPASS</span><span class="si">}</span><span class="s2">@</span><span class="si">${</span><span class="nv">PRIVATE_IP</span><span class="si">}</span><span class="s2">:5432/claude_gateway?sslmode=require"</span>
+</code></pre></div>
+<p>Cloud Run 或 GKE 运行时必须在此 VPC 上或路由到此 VPC。</p>
+<p><strong>5. 编写 gateway.yaml</strong></p>
+<p><code>upstreams</code> 块使用 <code>auth: {}</code> 指向 Google Cloud 的 Agent Platform，因此网关通过运行时服务账户的应用默认凭证进行身份验证。有关每个字段，请参阅<a href="claude-apps-gateway-config.html">配置参考</a>。</p>
+<p>两个 <code>listen</code> 字段描述网关的前端：</p>
+<ul>
+<li><code>public_url</code>：外部 <code>https://</code> 源，对于任何非环回绑定都是必需的；请参阅 <a href="claude-apps-gateway-config.html#listen"><code>listen</code> 参考</a>。网关仅从此值构建 IdP <code>redirect_uri</code> 和其发现文档，从不从 <code>X-Forwarded-*</code> 标头构建。</li>
+<li><code>trusted_proxies</code>：前端的源范围。网关仅在 TCP 对等体在此列表中时才遵守 <code>X-Forwarded-For</code>，然后遍历链越过受信任的跳跃，因此按 IP 登录速率限制和审计事件记录开发者 IP 而不是负载均衡器的 IP。</li>
+</ul>
+<p>设置 <code>trusted_proxies</code> 以匹配您的前端。类 <code>gce</code> 的外部 GKE Ingress 未列出：它配置一个公共转发规则地址，<code>/login</code> <a href="claude-apps-gateway.html#prerequisites">私有网络检查</a>拒绝该地址。</p>
+<table>
+<thead>
+<tr>
+<th>前端</th>
+<th><code>trusted_proxies</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>直接访问的 Cloud Run，无负载均衡器</td>
+<td><code>[169.254.0.0/16]</code></td>
+</tr>
+<tr>
+<td>Cloud Run 前面的内部应用负载均衡器</td>
+<td><code>169.254.0.0/16</code> 加上您的仅代理子网的 CIDR</td>
+</tr>
+<tr>
+<td>GKE 内部 Ingress，类 <code>gce-internal</code></td>
+<td>您的仅代理子网的 CIDR</td>
+</tr>
+</tbody>
+</table>
+<p>下面的示例使用内部负载均衡器前置 Cloud Run 的值。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nt">listen</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">  </span><span class="nt">public_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://claude-gateway.internal.example.com</span>
+<span class="w">  </span><span class="nt">trusted_proxies</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">169.254.0.0/16</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">&lt;your-proxy-only-subnet-cidr&gt;</span><span class="p p-Indicator">]</span>
+
+<span class="nt">oidc</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://accounts.google.com</span>
+<span class="w">  </span><span class="nt">client_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your-oauth-client-id&gt;</span>
+<span class="w">  </span><span class="nt">client_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${OIDC_CLIENT_SECRET}</span><span class="w">           </span><span class="c1"># GKE: ${file:/secrets/oidc-client-secret}</span>
+<span class="w">  </span><span class="nt">allowed_email_domains</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">example.com</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="c1"># Google 忽略 offline_access；这些产生刷新令牌：</span>
+<span class="w">  </span><span class="nt">scopes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">openid</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">profile</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">email</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">extra_auth_params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> access_type</span><span class="p">:</span><span class="w"> </span><span class="nv">offline</span><span class="p p-Indicator">,</span><span class="nt"> prompt</span><span class="p">:</span><span class="w"> </span><span class="nv">consent</span><span class="w"> </span><span class="p p-Indicator">}</span>
+
+<span class="nt">session</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">jwt_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${GATEWAY_JWT_SECRET}</span><span class="w">              </span><span class="c1"># GKE: ${file:/secrets/jwt-secret}</span>
+
+<span class="nt">store</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">postgres_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${GATEWAY_POSTGRES_URL}</span><span class="w">          </span><span class="c1"># GKE: ${file:/secrets/postgres-url}</span>
+<span class="w">  </span><span class="c1"># readiness_grace_seconds: 300                 # 在 Cloud SQL 故障转移期间</span>
+<span class="c1"># 保持通过就绪探针</span>
+
+<span class="nt">upstreams</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vertex</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your-region&gt;</span><span class="w">                        </span><span class="c1"># 必须匹配 $REGION</span>
+<span class="w">    </span><span class="nt">project_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your-project&gt;</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w"> </span><span class="c1"># 通过运行时服务账户的 ADC</span>
+</code></pre></div>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Google id_tokens 不包含 <code>groups</code> 声明。要在 <a href="claude-apps-gateway-config.html#managed"><code>managed.policies</code></a> 中使用基于组的策略，以 Google Workspace 作为 IdP，请配置 <a href="claude-apps-gateway-config.html#oidc"><code>oidc.google_groups</code></a>，它使用具有域范围委派的服务账户通过 Admin SDK Directory API 查找每个用户的组。没有它，改为匹配 <code>email_domain</code>。</p></div></div>
+<p><strong>6. 在 Secret Manager 中存储密钥</strong></p>
+<p>创建四个密钥并向 <code>claude-gateway</code> 服务账户授予 <code>roles/secretmanager.secretAccessor</code>：</p>
+<table>
+<thead>
+<tr>
+<th>密钥</th>
+<th>源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gateway-jwt-secret</code></td>
+<td><code>openssl rand -base64 32</code></td>
+</tr>
+<tr>
+<td><code>gateway-oidc-client-secret</code></td>
+<td>Google Cloud 控制台 → OAuth 客户端</td>
+</tr>
+<tr>
+<td><code>gateway-postgres-url</code></td>
+<td>Cloud SQL 步骤中的 <code>$GATEWAY_POSTGRES_URL</code></td>
+</tr>
+<tr>
+<td><code>gateway-config</code></td>
+<td>上一步中的完整 <code>gateway.yaml</code></td>
+</tr>
+</tbody>
+</table>
+<p>密钥到达容器的方式因路径而异：</p>
+<ul>
+<li>在 GKE 上，它们通过 Secret Manager CSI 驱动程序作为文件挂载，<code>gateway.yaml</code> 引用 <code>${file:/secrets/...}</code>。</li>
+<li>在 Cloud Run 上，它无法将多个密钥挂载到一个目录中，<code>gateway.yaml</code> 作为文件挂载，其他三个作为环境变量注入，因此 <code>gateway.yaml</code> 改为引用 <code>${GATEWAY_JWT_SECRET}</code>、<code>${OIDC_CLIENT_SECRET}</code> 和 <code>${GATEWAY_POSTGRES_URL}</code>。</li>
+</ul>
+<p><strong>7. 部署</strong></p>
+<blockquote>
+<p>[tab] Cloud Run</p>
+<p>下面的命令在内部负载均衡器后面部署用于生产。</p>
+<p><code>bash theme={null}
+gcloud run deploy claude-gateway \
+  --image="${REGION}-docker.pkg.dev/${PROJECT_ID}/claude-gateway/gateway:&lt;version&gt;" \
+  --region="$REGION" \
+  --service-account="claude-gateway@${PROJECT_ID}.iam.gserviceaccount.com" \
+  --min-instances=1 \
+  --max-instances=8 \
+  --timeout=3600 \
+  --ingress=internal \
+  --network="$VPC" --subnet=cc-gateway-subnet --vpc-egress=private-ranges-only \
+  --set-secrets=/etc/claude/gateway.yaml=gateway-config:latest,GATEWAY_JWT_SECRET=gateway-jwt-secret:latest,OIDC_CLIENT_SECRET=gateway-oidc-client-secret:latest,GATEWAY_POSTGRES_URL=gateway-postgres-url:latest \
+  --no-invoker-iam-check</code></p>
+<p>直接 VPC 出口，通过 <code>--network</code>、<code>--subnet</code> 和 <code>--vpc-egress=private-ranges-only</code>，让服务直接到达 Cloud SQL 私有 IP。到 Google Cloud 的 Agent Platform 端点和 <code>accounts.google.com</code> 的公共出口直接进入互联网，而不是通过 VPC，因此不需要 Cloud NAT。</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>每个实例最多持有 <a href="claude-apps-gateway-config.html#store"><code>store.max_connections</code></a> 个 Postgres 连接，默认为 5 个。请参阅<a href="claude-apps-gateway-deploy.html#size-the-connection-pool">调整连接池大小</a>，根据数据库为网关剩余的连接数检查 <code>--max-instances=8</code>，并将滚动更新启动的额外实例计算在内。</p>
+</blockquote>
+<p>调用者 IAM 检查必须打开或禁用。网关运行自己的 OIDC，其客户端不携带 GCP 令牌，因此 Cloud Run 的调用者检查必须允许未经身份验证的请求。网关的 OIDC 登录在请求到达容器后对其进行身份验证，<code>allowed_email_domains</code> 限制哪些域可以登录。</p>
+<p>两个标志允许未经身份验证的请求：</p>
+<ul>
+<li><code>--no-invoker-iam-check</code>：禁用检查，无需管理 <code>allUsers</code> 绑定，并在域受限共享下工作</li>
+<li><code>--allow-unauthenticated</code>：向 <code>allUsers</code> 授予 <code>run.invoker</code> 角色；如果您的组织不允许 <code>--no-invoker-iam-check</code>，请使用它</li>
+</ul>
+<p>通过 <code>--ingress</code> 的入口限制是与调用者检查分离的独立层；保持设置以将服务限制在您的公司网络。</p>
+<p>默认情况下，Cloud Run <code>*.run.app</code> URL 解析为公共地址，<code>/login</code> <a href="claude-apps-gateway.html#prerequisites">私有网络检查</a>拒绝该地址。两种拓扑为开发者提供私有可解析的主机名，Cloud Run 都不为您配置：</p>
+<ul>
+<li><strong>内部应用负载均衡器</strong>，此页面的 <code>gateway.yaml</code> 假设的拓扑：在服务前面配置一个内部应用负载均衡器，具有内部 DNS 名称和证书，并将 <code>listen.public_url</code> 设置为该主机名。<code>internal</code> 入口设置已允许来自内部应用负载均衡器的流量；<code>internal-and-cloud-load-balancing</code> 还允许外部应用负载均衡器，其公共地址 <code>/login</code> 私有网络检查拒绝，因此此页面上的任何拓扑都不需要它。</li>
+<li><strong>仅内部入口，无负载均衡器</strong>：保持部署命令不变，将 <code>listen.public_url</code> 保留为 <code>*.run.app</code> URL，下面<a href="#terraform-reference">参考资产</a>中的默认值。为了让 <code>*.run.app</code> 私有解析，您的网络团队必须已经运行 Google API 的私有服务连接端点、将 <code>*.run.app</code> 解析到它的 Cloud DNS 私有区域，以及到该端点的本地路由。</li>
+</ul>
+<p>Google 的 <a href="https://cloud.google.com/run/docs/securing/private-networking" target="_blank" rel="noopener">Cloud Run 私有网络指南</a>涵盖了两个选项都需要的基础设施。一旦网关在私有主机名上提供服务，验证登录；在此之前，从 Cloud Run 中的日志确认容器已启动。</p>
+<p>在首次登录前更新 OAuth 客户端的授权重定向 URI 为 <code>&lt;public_url&gt;/oauth/callback</code>。更改 <code>public_url</code> 后重新部署，因为网关仅从该设置构建其公共源，忽略 <code>X-Forwarded-Host</code> 和 <code>X-Forwarded-Proto</code>。仅当设置 <code>listen.trusted_proxies</code> 时，才会为客户端 IP 遵守 <code>X-Forwarded-For</code>。</p>
+<p>[tab] GKE</p>
+<p>集群必须在 Cloud SQL 步骤中创建的 <code>$VPC</code> 上，以便 Pod 可以到达数据库的私有 IP；仅 VPC 对等不起作用，因为 Cloud SQL 私有 IP 本身是对等网络，对等是非传递的。要在该 VPC 上创建新集群，请将 <code>--network="$VPC" --subnetwork=cc-gateway-subnet</code> 传递给 <code>gcloud container clusters create</code>。</p>
+<p>在集群及其节点池上启用 Workload Identity，然后将 Google 服务账户绑定到 Kubernetes 服务账户，以便 Pod 继承其凭证：</p>
+<p>```bash theme={null}<br />
+gcloud container clusters update <cluster> --region="$REGION" \<br />
+  --workload-pool="${PROJECT_ID}.svc.id.goog"</p>
+<h1 id="gke_metadata">在标准集群上，现有节点池也需要 GKE_METADATA；</h1>
+<h1 id="autopilot">Autopilot 默认启用此功能。</h1>
+<p>gcloud container node-pools update <pool> --cluster=<cluster> \<br />
+  --region="$REGION" --workload-metadata=GKE_METADATA</p>
+<p>kubectl create namespace claude-gateway<br />
+kubectl create serviceaccount gateway -n claude-gateway</p>
+<p>gcloud iam service-accounts add-iam-policy-binding \<br />
+  "claude-gateway@${PROJECT_ID}.iam.gserviceaccount.com" \<br />
+  --role roles/iam.workloadIdentityUser \<br />
+  --member "serviceAccount:${PROJECT_ID}.svc.id.goog[claude-gateway/gateway]"</p>
+<p>kubectl annotate serviceaccount gateway -n claude-gateway \<br />
+  iam.gke.io/gcp-service-account="claude-gateway@${PROJECT_ID}.iam.gserviceaccount.com"<br />
+```</p>
+<p>将网关部署为标准 Deployment 加上 Service 和内部 Ingress，类 <code>gce-internal</code>，如 <a href="claude-apps-gateway-deploy.html#kubernetes">Kubernetes 部署</a>中所述，具有：</p>
+<ul>
+<li><code>serviceAccountName: gateway</code></li>
+<li>Secret Manager CSI 驱动程序在 <code>/secrets</code> 处挂载密钥</li>
+<li>就绪探针指向 <code>GET /readyz</code></li>
+</ul>
+<p>将具有提高的 <code>timeoutSec</code> 的 BackendConfig 附加到网关 Service：GKE Ingress 后面的负载均衡器后端服务默认为 30 秒超时，这会切断长流式响应。</p>
+<p>不要在 Workload Identity 集群上应用阻止 <code>169.254.169.254</code> 的出口 NetworkPolicy；Pod 必须到达元数据服务器以获取凭证。网关的内置 <a href="claude-apps-gateway-deploy.html#threat-model-summary">SSRF 防护</a>是那里的防御。</p>
+<p>网关记录一个启动警告，指出元数据端点可达，并建议应用出口 NetworkPolicy。在 Workload Identity 下，该警告是预期的，因为 Pod 需要端点。</p>
+</blockquote>
+<p><strong>8. 将网关 URL 推送到开发者机器</strong></p>
+<p>网关现在正在运行，但开发者在网关 URL 在其机器上之前无法从 <code>/login</code> 到达它。通过 MDM 将完整的<a href="claude-apps-gateway.html#set-the-gateway-url">托管设置片段</a>部署到每个设备，具有 <code>forceLoginMethod</code>、<code>forceLoginGatewayUrl</code> 和 <code>parentSettingsBehavior: "merge"</code> 选择加入。登录选择器中没有网关选项供开发者手动选择。</p>
+<h2 id="terraform-reference">Terraform 参考</h2>
+<p><a href="https://github.com/anthropics/claude-code/tree/main/examples/gateway/gcp" target="_blank" rel="noopener">参考部署资产</a>自动化本页的 Cloud Run 路径；配置和镜像资产适用于两条路径：</p>
+<ul>
+<li><code>setup.sh</code>：一个幂等的 <code>gcloud</code> 配置程序，遍历完整的 Cloud Run 路径，从启用 API 到第一次部署</li>
+<li><code>terraform/</code>：相同的部署作为基础设施即代码，用于绿地部署：创建 Artifact Registry 存储库的目标应用，然后构建和推送镜像，然后完整应用</li>
+<li><code>gateway.yaml.example</code> 和用于 distroless 运行时镜像的 <code>Dockerfile</code></li>
+</ul>
+<p>工件默认 Cloud Run 入口为 <code>internal</code>，与本页的部署命令相匹配；该设置适用于服务前面有或没有内部应用负载均衡器的情况，工件也不创建负载均衡器。工件还默认调用者层为 <code>allUsers</code> <code>run.invoker</code> 授予而不是 <code>--no-invoker-iam-check</code>，与本页演练相反；两者都有效，选择取决于您的组织的策略约束。</p>
+<p>资产作为工作示例提供，而不是受支持的生产工件；查看并根据您的环境调整它们。</p>
+<h2 id="troubleshooting">故障排除</h2>
+<p>有关网关启动和登录错误，请参阅平台无关的<a href="claude-apps-gateway-deploy.html#troubleshooting">故障排除表</a>。下面的条目特定于 Google Cloud。</p>
+<table>
+<thead>
+<tr>
+<th>症状</th>
+<th>原因</th>
+<th>修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cloud Run 在到达容器前返回 <code>403 Forbidden</code></td>
+<td>调用者 IAM 检查仍然启用</td>
+<td>使用 <code>--no-invoker-iam-check</code> 部署，或使用 <code>--allow-unauthenticated</code> 授予 <code>allUsers</code> <code>run.invoker</code> 角色</td>
+</tr>
+<tr>
+<td><code>--no-invoker-iam-check</code> 被拒绝，显示 <code>invoker_iam_disabled is not currently available</code></td>
+<td>被 <code>constraints/run.managed.requireInvokerIam</code> 阻止</td>
+<td>使用 <code>--allow-unauthenticated</code>。如果通过 <code>constraints/iam.allowedPolicyMemberDomains</code> 的域受限共享也阻止了它，请使用 GKE 路径，它在网络层公开网关，无需 <code>allUsers</code> 绑定。</td>
+</tr>
+<tr>
+<td>部署时 <code>Container manifest type … must support amd64/linux</code></td>
+<td>镜像在非 amd64 主机上构建，或 buildx 发出了 OCI 镜像索引</td>
+<td>使用 <code>--platform=linux/amd64 --provenance=false</code> 构建</td>
+</tr>
+<tr>
+<td>网关启动在 Cloud Run 上以 Postgres 连接超时错误退出</td>
+<td>服务未附加到 VPC，或 Cloud SQL 在该 VPC 上没有私有 IP</td>
+<td>使用 <code>--network</code> 和 <code>--subnet</code> 部署以进行直接 VPC 出口，并使用 <code>--no-assign-ip</code> 和 <code>--network</code> 指向同一 VPC 创建 Cloud SQL 实例</td>
+</tr>
+<tr>
+<td>Google Cloud 的 Agent Platform 请求返回 <code>403 PERMISSION_DENIED</code></td>
+<td>运行时未使用 <code>claude-gateway</code> 服务账户，或模型未在 Model Garden 中为项目启用</td>
+<td>在 Cloud Run 上设置 <code>--service-account</code> 或在 GKE 上绑定 Workload Identity，并在 Model Garden 中为目标区域启用每个 Claude 模型</td>
+</tr>
+<tr>
+<td>流式响应在固定持续时间后切断</td>
+<td>前端请求超时：GKE Ingress 后面的负载均衡器后端服务默认为 30 秒，Cloud Run 默认为 300 秒</td>
+<td>在 GKE 上附加具有提高的 <code>timeoutSec</code> 的 BackendConfig，或在 Cloud Run 上使用 <code>--timeout=3600</code> 部署</td>
+</tr>
+</tbody>
+</table>
+<h2 id="next-steps">后续步骤</h2>
+<ul>
+<li><a href="claude-apps-gateway-config.html">配置参考</a>：每个 <code>gateway.yaml</code> 选项，包括 <code>managed.policies</code> 和 <code>telemetry</code></li>
+<li><a href="claude-apps-gateway-deploy.html">部署和操作</a>：IdP 设置、健康检查、JWT 密钥轮换、升级和安全模型</li>
+<li><a href="claude-apps-gateway.html">Claude apps gateway 概述</a>：快速入门和连接开发人员</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="claude-apps-gateway-on-aws.html"><span class="pager-dir">← 上一页</span><span class="pager-name">在 AWS 上部署 Claude apps gateway</span></a><a class="pager-link next" href="llm-gateway.html"><span class="pager-dir">下一页 →</span><span class="pager-name">其他 LLM 网关</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#what-you’ll-build">您将构建的内容</a><a class="toc-l2" href="#prerequisites">前置条件</a><a class="toc-l2" href="#deploy-the-gateway">部署网关</a><a class="toc-l2" href="#terraform-reference">Terraform 参考</a><a class="toc-l2" href="#troubleshooting">故障排除</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

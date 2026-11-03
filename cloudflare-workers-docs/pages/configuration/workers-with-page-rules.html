@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page Rules 与 Workers · Workers 文档（中文版）</title>
+<meta name="description" content="命中 Worker 路由后，哪些 Page Rules 会失效、哪些仍生效。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>Page Rules 与 Workers</h1>
+      <p class="lead">命中 Worker 路由后，哪些 Page Rules 会失效、哪些仍生效。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-10-28</span>
+        <span>对应页面：configuration/workers-with-page-rules</span>
+      </div>
+
+<p>当请求匹配你定义的某个 URL 模式时，Page Rules 会触发相应动作。你可以定义一条 Page Rule，让它在匹配到某个 URL 模式时触发一个或多个动作。Page Rules 的配置方式见 <a href="https://developers.cloudflare.com/rules/page-rules/" target="_blank" rel="noopener">Page Rules ↗</a>。</p>
+
+      <h2>Page Rules 与 Workers 的配合</h2>
+      <p>Cloudflare 作为<a href="https://www.cloudflare.com/learning/what-is-cloudflare/" target="_blank" rel="noopener">反向代理 ↗</a>，为各类互联网资产提供 Page Rules 之类的服务。你应用的流量会经过离访问者最近的 Cloudflare 数据中心——全球有数百个，每个都能运行 Workers 与 Page Rules 这类服务。如果你的应用构建在 Workers 和/或 Pages 上，那么 <a href="https://www.cloudflare.com/learning/serverless/glossary/what-is-edge-computing/" target="_blank" rel="noopener">Cloudflare 全球网络 ↗</a>就是你的源站，直接从全球网络回应请求。</p>
+
+      <p>把 Page Rules 与 Workers 一起使用时，流程如下：</p>
+      <ol>
+        <li>请求抵达 Cloudflare 数据中心。</li>
+        <li>Cloudflare 判断该请求是否属于某条 Worker 路由。由于它是 Worker 路由，Cloudflare 会关闭一批特性——其中一些本应由 Page Rules 设置。</li>
+        <li>Page Rules 作为常规请求处理的一部分运行，但部分特性已被关闭。</li>
+        <li>Worker 执行。</li>
+        <li>Worker 发起同区或其他区的子请求。因为这也是 Worker 路由，Cloudflare 同样关闭一批特性——包括一些本应由 Page Rules 设置的。</li>
+      </ol>
+      <p>也就是说，Page Rules 会在<strong>「客户端 → Worker」阶段（第 2 步）</strong>与<strong>「Worker 子请求」阶段（第 5 步）</strong>各被求值一次。</p>
+      <p>如果运行 Workers 时遇到 Page Rule 报错，请联系你的 Cloudflare 客户团队或 <a href="https://developers.cloudflare.com/support/contacting-cloudflare-support/" target="_blank" rel="noopener">Cloudflare 支持 ↗</a>。</p>
+
+      <h2>受影响的 Page Rules</h2>
+      <p>当入站请求被匹配到 Worker 路由时，下列 Page Rules 可能不会按预期工作：</p>
+      <ul>
+        <li>Always Online</li>
+        <li>Always Use HTTPS</li>
+        <li>Automatic HTTPS Rewrites</li>
+        <li>Browser Cache TTL</li>
+        <li>Browser Integrity Check</li>
+        <li>Cache Deception Armor</li>
+        <li>Cache Level</li>
+        <li>Disable Apps</li>
+        <li>Disable Zaraz</li>
+        <li>Edge Cache TTL</li>
+        <li>Email Obfuscation</li>
+        <li>Forwarding URL</li>
+        <li>Host Header Override</li>
+        <li>IP Geolocation Header</li>
+        <li>Origin Cache Control</li>
+        <li>Rocket Loader</li>
+        <li>Security Level</li>
+        <li>SSL</li>
+      </ul>
+      <p>原因是：一旦 Cloudflare 识别出请求是发往 Worker 的，这些 Page Rules 的默认设置就会被禁用。</p>
+
+      <div class="note-box">
+        <span class="box-title">测试说明</span>
+        <p>由于 Workers 运行时仍在持续变化，这些规则受影响的具体说明会在测试之后更新。各规则本身的作用见 <a href="https://developers.cloudflare.com/rules/page-rules/" target="_blank" rel="noopener">Page Rules ↗</a>。</p>
+      </div>
+
+      <div class="note-box">
+        <span class="box-title">同区与其他区</span>
+        <p><strong>同区子请求</strong>指 Worker 向它所在区域内一个橙云代理的主机名发起的请求。取决于你的 DNS 配置，任何落在这个定义之外的请求，都可能被 Cloudflare 网络视为<strong>其他区</strong>请求。</p>
+      </div>
+
+      <h3>行为对照表</h3>
+      <p>下表把原文每条规则的三行小表合并成一张总表：列分别是「客户端 → Worker」「Worker → 同区」「Worker → 其他区」三个阶段。</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th style="width:26%">Page Rule</th><th>客户端 → Worker</th><th>Worker → 同区</th><th>Worker → 其他区</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Always Use HTTPS</td><td>生效</td><td>忽略</td><td>忽略</td></tr>
+            <tr><td>Automatic HTTPS Rewrites</td><td>忽略</td><td>生效</td><td>忽略</td></tr>
+            <tr><td>Browser Cache TTL</td><td>忽略</td><td>生效</td><td>忽略</td></tr>
+            <tr><td>Browser Integrity Check</td><td>生效</td><td>忽略</td><td>忽略</td></tr>
+            <tr><td>Cache Deception Armor</td><td>生效</td><td>生效</td><td>忽略</td></tr>
+            <tr><td>Cache Level</td><td>生效</td><td>生效</td><td>忽略</td></tr>
+            <tr><td>Disable Zaraz</td><td>生效</td><td>生效</td><td>忽略</td></tr>
+            <tr><td>Edge Cache TTL</td><td>生效</td><td>生效</td><td>忽略</td></tr>
+            <tr><td>Email Obfuscation</td><td>忽略</td><td>生效</td><td>忽略</td></tr>
+            <tr><td>Forwarding URL</td><td>忽略</td><td>生效</td><td>忽略</td></tr>
+            <tr><td>IP Geolocation Header</td><td>生效</td><td>生效</td><td>忽略</td></tr>
+            <tr><td>Origin Cache Control</td><td>生效</td><td>生效</td><td>忽略</td></tr>
+            <tr><td>Rocket Loader</td><td>忽略</td><td>忽略</td><td>忽略</td></tr>
+            <tr><td>Security Level</td><td>生效</td><td>忽略</td><td>忽略</td></tr>
+            <tr><td>SSL</td><td>生效</td><td>生效</td><td>忽略</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13.4px;color:var(--ink-3)">表中「生效」对应原文的 <em>Rule Respected</em>，「忽略」对应 <em>Rule Ignored</em>。Always Online、Disable Apps、Host Header Override 三项原文未给出逐阶段矩阵。</p>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/" target="_blank" rel="noopener">configuration/workers-with-page-rules</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

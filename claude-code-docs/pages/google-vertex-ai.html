@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Google Cloud 的 Agent Platform 上的 Claude Code · Claude Code 中文文档</title>
+<meta name="description" content="了解如何通过 Google Cloud 的 Agent Platform（原 Vertex AI）配置 Claude Code，包括设置、IAM 配置和故障排除。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="google-vertex-ai">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/google-vertex-ai" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link active" href="google-vertex-ai.html" aria-current="page">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>管理</span> <span class="sep">/</span> <span>部署</span></div>
+    <article class="prose" id="article"><h1 id="google-cloud-agent-platform-claude-code">Google Cloud 的 Agent Platform 上的 Claude Code</h1>
+<blockquote>
+<p>了解如何通过 Google Cloud 的 Agent Platform（原 Vertex AI）配置 Claude Code，包括设置、IAM 配置和故障排除。</p>
+</blockquote>
+<p><strong>Deploying Claude Code across your organization?</strong> Talk to sales about enterprise plans, SSO, and centralized billing.</p>
+<p>View plans<br />
+Contact sales</p>
+<h2 id="prerequisites">前置条件</h2>
+<p>在使用 Google Cloud 的 Agent Platform（原 Vertex AI）配置 Claude Code 之前，请确保您拥有：</p>
+<ul>
+<li>启用了计费的 Google Cloud Platform (GCP) 账户</li>
+<li>启用了 Google Cloud 的 Agent Platform API 的 GCP 项目</li>
+<li>对所需 Claude 模型的访问权限（例如，Claude Sonnet 4.6）</li>
+<li>已安装并配置的 Google Cloud SDK (<code>gcloud</code>)</li>
+<li>在所需 GCP 区域中分配的配额</li>
+</ul>
+<p>要使用您自己的 Google Cloud 的 Agent Platform 凭证登录，请按照下面的<a href="#sign-in-with-agent-platform">使用 Google Cloud 的 Agent Platform 登录</a>进行操作。要在团队中部署 Claude Code，请使用<a href="#set-up-manually">手动设置</a>步骤并在推出前<a href="#5-pin-model-versions">固定您的模型版本</a>。</p>
+<h2 id="sign-in-with-agent-platform">使用 Agent Platform 登录</h2>
+<p>如果您拥有 Google Cloud 凭证并想开始通过 Google Cloud 的 Agent Platform 使用 Claude Code，登录向导会引导您完成整个过程。您需要在每个项目中完成一次 GCP 端的前置条件；向导会处理 Claude Code 端的事务。</p>
+<p><strong>1. 在您的 GCP 项目中启用 Claude 模型</strong></p>
+<p>为您的项目<a href="#1-enable-agent-platform-api">启用 Google Cloud 的 Agent Platform API</a>，然后在 <a href="https://console.cloud.google.com/vertex-ai/model-garden" target="_blank" rel="noopener">Google Cloud 的 Agent Platform Model Garden</a> 中请求访问您想要的 Claude 模型。有关您的账户需要的权限，请参阅 <a href="#iam-configuration">IAM 配置</a>。</p>
+<p><strong>2. 启动 Claude Code 并选择 Google Cloud 的 Agent Platform</strong></p>
+<p>运行 <code>claude</code>。在登录提示处，选择 <strong>3rd-party platform</strong>，然后选择 <strong>Google Vertex AI</strong>，这是登录提示仍然用于 Google Cloud 的 Agent Platform 的标签。如果您已经登录，运行 <code>/login</code> 来打开相同的菜单。</p>
+<p><strong>3. 按照向导提示进行操作</strong></p>
+<p>选择您如何向 Google Cloud 进行身份验证：来自 <code>gcloud</code> 的应用默认凭证、服务账户密钥文件或已在您的环境中的凭证。向导会检测您的项目和区域，验证您的项目可以调用哪些 Claude 模型，并让您固定它们。它将结果保存到您的<a href="settings.html">用户设置文件</a>的 <code>env</code> 块中，因此您无需自己导出环境变量。</p>
+<p>登录后，您可以随时运行 <code>/setup-vertex</code> 来重新打开向导并更改您的凭证、项目、区域或模型固定。模型固定步骤从您当前固定的模型开始。向导会写入 <code>~/.claude/settings.json</code>，或在设置了 <a href="env-vars.html#variables"><code>CLAUDE_CONFIG_DIR</code></a> 时写入 <code>$CLAUDE_CONFIG_DIR/settings.json</code>。</p>
+<h2 id="region-configuration">区域配置</h2>
+<p>Claude Code 支持 Google Cloud 的 Agent Platform <a href="https://cloud.google.com/blog/products/ai-machine-learning/global-endpoint-for-claude-models-generally-available-on-vertex-ai" target="_blank" rel="noopener">全局</a>、多区域和区域端点。将 <code>CLOUD_ML_REGION</code> 设置为 <code>global</code>、多区域位置（如 <code>eu</code> 或 <code>us</code>）或特定区域（如 <code>us-east5</code>）。Claude Code 为每种形式选择正确的 Google Cloud 的 Agent Platform 主机名，包括多区域位置的 <code>aiplatform.eu.rep.googleapis.com</code> 和 <code>aiplatform.us.rep.googleapis.com</code> 主机。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Google Cloud 的 Agent Platform 可能不支持 Claude Code 默认模型在每个端点类型上。模型可用性在<a href="https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations#genai-partner-models" target="_blank" rel="noopener">特定区域</a>、多区域位置和<a href="https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-partner-models#supported_models" target="_blank" rel="noopener">全局端点</a>之间有所不同。您可能需要切换到支持的位置或指定支持的模型。</p></div></div>
+<h2 id="set-up-manually">手动设置</h2>
+<p>要通过环境变量而不是向导配置 Google Cloud 的 Agent Platform，例如在 CI 或脚本化企业推出中，请按照下面的步骤进行。</p>
+<h3 id="1-enable-agent-platform-api">启用 Agent Platform API</h3>
+<p>在您的 GCP 项目中启用 Google Cloud 的 Agent Platform API。将 <code>YOUR-PROJECT-ID</code> 替换为您的 GCP 项目 ID，并在下面的配置步骤中使用：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 设置您的项目 ID</span>
+gcloud<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>project<span class="w"> </span>YOUR-PROJECT-ID
+
+<span class="c1"># 启用 Agent Platform API</span>
+gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>aiplatform.googleapis.com
+</code></pre></div>
+<h3 id="2-request-model-access">请求模型访问权限</h3>
+<p>请求访问 Google Cloud 的 Agent Platform 中的 Claude 模型：</p>
+<ol>
+<li>导航到 <a href="https://console.cloud.google.com/vertex-ai/model-garden" target="_blank" rel="noopener">Google Cloud 的 Agent Platform Model Garden</a></li>
+<li>搜索"Claude"模型</li>
+<li>请求访问所需的 Claude 模型（例如，Claude Sonnet 4.6）</li>
+<li>等待批准（可能需要 24-48 小时）</li>
+</ol>
+<h3 id="3-configure-gcp-credentials">配置 GCP 凭证</h3>
+<p>Claude Code 使用标准的 Google Cloud 身份验证。</p>
+<p>有关更多信息，请参阅 <a href="https://cloud.google.com/docs/authentication" target="_blank" rel="noopener">Google Cloud 身份验证文档</a>。</p>
+<p>Claude Code 通过相同的应用默认凭证链支持<a href="https://cloud.google.com/iam/docs/workload-identity-federation-with-x509-certificates" target="_blank" rel="noopener">基于 X.509 证书的工作负载身份联合</a>。将 <code>GOOGLE_APPLICATION_CREDENTIALS</code> 设置为您的凭证配置文件的路径。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Claude Code 将 Google Cloud 的 Agent Platform 请求寻址到 <code>ANTHROPIC_VERTEX_PROJECT_ID</code> 中的项目，即使 <code>GCLOUD_PROJECT</code>、<code>GOOGLE_CLOUD_PROJECT</code> 或 <code>GOOGLE_APPLICATION_CREDENTIALS</code> 引用的凭证文件包含不同的项目。</p></div></div>
+<h4 id="advanced-credential-configuration">高级凭证配置</h4>
+<p>Claude Code 通过 <code>gcpAuthRefresh</code> 设置支持 GCP 的自动凭证刷新。将其添加到您的 Claude Code <a href="settings.html">设置文件</a>，例如 <code>~/.claude/settings.json</code>。当 Claude Code 检测到您的 GCP 凭证已过期或无法加载时，它会运行配置的命令以在重试请求之前获取新凭证。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"gcpAuthRefresh"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gcloud auth application-default login"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"ANTHROPIC_VERTEX_PROJECT_ID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-project-id"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>在运行命令之前，Claude Code 使用您当前的凭证请求访问令牌以确认它们确实已过期，并在它们仍然有效时跳过该命令。</p>
+<p>如果检查在五秒内未完成，Claude Code 也会跳过该命令，仅在请求因凭证错误而失败后运行它。在 v2.1.261 之前，超时的检查被视为过期的凭证，因此即使您的凭证仍然有效，该命令也可能在启动时打开您的浏览器。</p>
+<p>Claude Code 向您显示命令的输出，但无法向命令发送交互式输入。这对于基于浏览器的身份验证流程效果很好，其中 CLI 显示 URL，您在浏览器中完成身份验证。如果身份验证未在三分钟内完成，刷新命令将超时。如果您在项目设置（如 <code>.claude/settings.json</code>）中设置 <code>gcpAuthRefresh</code>，Claude Code 会在与<a href="permissions.html#what-runs-before-you-trust-a-folder">设置文件中的 hooks 相同的工作区信任规则</a>下运行它，其中包括您从未信任的文件夹中的 <code>-p</code> 会话。</p>
+<h3 id="4-configure-claude-code">配置 Claude Code</h3>
+<p>设置以下环境变量：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 启用 Agent Platform 集成</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_USE_VERTEX</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLOUD_ML_REGION</span><span class="o">=</span>global
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_VERTEX_PROJECT_ID</span><span class="o">=</span>YOUR-PROJECT-ID
+
+<span class="c1"># 可选：为自定义端点或网关覆盖 Agent Platform 端点 URL</span>
+<span class="c1"># export ANTHROPIC_VERTEX_BASE_URL=https://aiplatform.googleapis.com</span>
+
+<span class="c1"># 当 CLOUD_ML_REGION=global 时，为不支持全局端点的模型覆盖区域</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">VERTEX_REGION_CLAUDE_HAIKU_4_5</span><span class="o">=</span>us-east5
+<span class="nb">export</span><span class="w"> </span><span class="nv">VERTEX_REGION_CLAUDE_4_6_SONNET</span><span class="o">=</span>europe-west1
+</code></pre></div>
+<p>大多数模型版本都有对应的 <code>VERTEX_REGION_CLAUDE_*</code> 变量。有关完整列表，请参阅<a href="env-vars.html#variables">环境变量参考</a>。检查 <a href="https://console.cloud.google.com/vertex-ai/model-garden" target="_blank" rel="noopener">Google Cloud 的 Agent Platform Model Garden</a> 以确定哪些模型支持全局端点与仅区域端点。</p>
+<p>如果区域值的形状不像区域或位置名称，Claude Code 会将其视为未设置。例如，Claude Code 将包含斜杠、点或空格的值视为未设置。Claude Code 为每个变量回退到不同的源：</p>
+<ul>
+<li><code>VERTEX_REGION_CLAUDE_*</code>：Claude Code 回退到 <code>CLOUD_ML_REGION</code>。</li>
+<li><code>CLOUD_ML_REGION</code>：Claude Code 回退到 <code>us-east5</code>。</li>
+</ul>
+<p><a href="prompt-caching.html">Prompt caching</a> 会自动启用。要禁用它，请设置 <code>DISABLE_PROMPT_CACHING=1</code>。要请求 1 小时的缓存 TTL 而不是 5 分钟的默认值，请设置 <code>ENABLE_PROMPT_CACHING_1H=1</code>；具有 1 小时 TTL 的缓存写入按更高费率计费。要为您的主对话和 Claude Code 在其外部进行的请求设置不同的 TTL，请<a href="prompt-caching.html#choose-the-ttl-yourself">自己选择 TTL</a>。</p>
+<p>要提高您的速率限制，请联系 Google Cloud 支持。使用 Google Cloud 的 Agent Platform 时，<code>/logout</code> 命令不可用，因为身份验证通过 Google Cloud 凭证处理。</p>
+<p>Claude Code 在 <a href="mcp.html#scale-with-mcp-tool-search">MCP tool search</a> 和预先加载之间进行决策，具体取决于模型生成：</p>
+<ul>
+<li><strong>Claude Opus 4.5、Sonnet 4.5、Haiku 4.5 及更高版本</strong>：Claude Code 默认启用工具搜索。</li>
+<li><strong>早期模型</strong>：Claude Code 预先加载 MCP 工具定义，因为它们的 Agent Platform 服务堆栈拒绝所需的 beta 标头。设置 <code>ENABLE_TOOL_SEARCH=true</code> 不会覆盖此行为。</li>
+</ul>
+<p>设置 <code>ENABLE_TOOL_SEARCH=false</code> 以在每个模型上禁用工具搜索。在 v2.1.221 之前，Claude Code 在 Google Cloud 的 Agent Platform 上为所有模型禁用工具搜索，除非您设置 <code>ENABLE_TOOL_SEARCH=true</code>。</p>
+<h3 id="5-pin-model-versions">固定模型版本</h3>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>在部署到多个用户时固定特定的模型版本。如果不固定，模型别名（如 <code>sonnet</code> 和 <code>opus</code>）会解析为 Claude Code 的 Google Cloud 的 Agent Platform 内置默认值，该默认值可能滞后于最新版本，并且可能尚未在您的项目中启用。Claude Code 在启动时当默认值不可用时会<a href="#startup-model-checks">回退</a>到之前的版本或更低级别的模型，但固定让您可以控制用户何时迁移到新模型。</p></div></div>
+<p>将这些环境变量设置为特定的 Google Cloud 的 Agent Platform 模型 ID。</p>
+<p>如果没有 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code>，Google Cloud 的 Agent Platform 上的 <code>opus</code> 别名会解析为 Opus 5.5，如果没有 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code>，<code>sonnet</code> 别名会解析为 Sonnet 4.5。此示例将每个别名固定到特定版本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_OPUS_MODEL</span><span class="o">=</span><span class="s1">'claude-opus-4-8'</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_SONNET_MODEL</span><span class="o">=</span><span class="s1">'claude-sonnet-5'</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_HAIKU_MODEL</span><span class="o">=</span><span class="s1">'claude-haiku-4-5@20251001'</span>
+</code></pre></div>
+<p>有关当前和旧版模型 ID，请参阅<a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noopener">模型概览</a>。有关完整的环境变量列表，请参阅<a href="model-config.html#pin-models-for-third-party-deployments">模型配置</a>。</p>
+<p>Claude Code 在未设置固定变量时使用这些默认模型：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">模型类型</th>
+<th style="text-align: left;">默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">主模型</td>
+<td style="text-align: left;"><code>claude-opus-5-5</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">小型/快速模型</td>
+<td style="text-align: left;"><code>claude-sonnet-4-5@20250929</code></td>
+</tr>
+</tbody>
+</table>
+<p>在 v2.1.280 之前，Google Cloud 的 Agent Platform 上的主模型默认为 Opus 5，<code>opus</code> 别名从 v2.1.219 起解析为 Opus 5。</p>
+<p>后台任务（如会话标题生成）使用小型/快速模型，通常是 Haiku 级别的模型。在 Google Cloud 的 Agent Platform 上，Claude Code 为后台任务使用默认的 Sonnet 模型，因为 Haiku 可能不会在每个项目或区域中启用。两个选择会改变哪个模型执行这些任务：</p>
+<ul>
+<li>当您使用 <code>--model</code>、<code>ANTHROPIC_MODEL</code> 或 <code>model</code> 设置选择主模型时，后台任务使用该模型。当 Claude Code 在您使用 <a href="model-config.html#set-a-default-model-for-new-sessions"><code>ANTHROPIC_DEFAULT_MODEL</code></a> 设置的模型上启动会话时，后台任务也使用该模型。设置 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 而不设置 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 也算作一个选择，因为内置的 Sonnet 模型可能在引导自己的 Opus 的项目中未启用。</li>
+<li>要为后台任务使用 Haiku，请将 <code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code> 设置为在您的项目中可用的模型 ID。</li>
+</ul>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>Opus 模型的每 token 价格高于 Sonnet 模型，因此如果您不固定主模型，将按 Opus 费率计费。要将 Sonnet 4.5 用作主模型，请将 <code>ANTHROPIC_MODEL</code> 设置为其完整模型 ID。使用 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 引导默认值且不设置 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 的部署会保持其引导的 Sonnet 模型作为默认值。</p></div></div>
+<p>要进一步自定义模型：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_MODEL</span><span class="o">=</span><span class="s1">'claude-opus-4-8'</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_DEFAULT_HAIKU_MODEL</span><span class="o">=</span><span class="s1">'claude-haiku-4-5@20251001'</span>
+</code></pre></div>
+<h3 id="6-verify-your-configuration">验证您的配置</h3>
+<p>启动 Claude Code 并运行 <code>/status</code> 以确认设置。<code>API provider</code> 行显示 <code>Google Vertex AI</code>，<code>GCP project</code>、<code>Default region</code> 和 <code>Model</code> 行显示您的项目 ID、区域和解析的模型。如果提供程序行缺失，环境变量未到达该进程。确认它们在您启动 <code>claude</code> 的 shell 中已导出，或在您的<a href="settings.html">设置文件</a>的 <code>env</code> 块中设置它们。</p>
+<h2 id="startup-model-checks">启动模型检查</h2>
+<p>当 Claude Code 启动并配置了 Google Cloud 的 Agent Platform 时，它会验证它打算使用的模型在您的项目中是否可访问。</p>
+<p>如果您固定了一个比当前 Claude Code 默认值更旧的模型版本，并且您的项目可以调用较新版本，Claude Code 会提示您更新固定。接受会将新的模型 ID 写入您的<a href="settings.html">用户设置文件</a>并重启 Claude Code。拒绝会被记住，直到下一个默认版本更改。</p>
+<p>如果您没有固定模型，并且当前默认值在您的项目中不可用，Claude Code 会在当前会话中回退并显示通知。它首先尝试默认模型的早期版本，当默认值是 Opus 模型且没有可用的 Opus 版本时，会回退到默认 Sonnet 模型。回退不会被持久化。在 <a href="https://console.cloud.google.com/vertex-ai/model-garden" target="_blank" rel="noopener">Model Garden</a> 中启用较新的模型或<a href="#5-pin-model-versions">固定一个版本</a>以使选择永久化。</p>
+<p>当您在特定的 Sonnet 或 Opus 版本上启动会话时，例如使用 <code>--model</code>、<code>ANTHROPIC_MODEL</code> 或 <a href="settings-reference.html#model"><code>model</code> 设置</a>，该版本充当会话的固定默认值，用于匹配的 <code>sonnet</code> 或 <code>opus</code> 别名。Claude Code 跳过对您的模型替换的内置默认值的可用性检查，并在您配置的模型上启动，没有回退通知。</p>
+<p>模型别名（如 <code>opus</code>）不充当固定值，Claude Code 不识别的模型 ID 也不充当固定值。</p>
+<p>当这些检查发现您的项目无法调用的模型时，Claude Code 会在这台机器上记住该拒绝长达一天，并在此期间启动时跳过记住的模型，而不再询问 Agent Platform。Claude Code 会在距离上次检查已过十分钟后，再次检查当前默认模型的记住拒绝，因此管理员重新启用的默认值会恢复。要关闭此内存，请设置 <a href="env-vars.html"><code>CLAUDE_CODE_SKIP_MODEL_ACCESS_MEMORY=1</code></a>。</p>
+<h3 id="when-your-organization-enforces-a-model-allowlist">当您的组织强制执行模型允许列表时</h3>
+<p>如果您在托管设置中设置了 <a href="model-config.html#enforce-the-allowlist-for-the-default-model"><code>enforceAvailableModels</code></a>，启动模型检查将仅使用您的 <code>availableModels</code> 列表允许的模型。这需要 Claude Code v2.1.287 或更高版本。没有 <code>enforceAvailableModels</code> 的列表不会限制这些检查。</p>
+<p>这些检查会将每个条目与它们将发送到 Agent Platform 的模型 ID 进行比较，因此请使用这些 ID 编写列表。此示例允许 Opus 4.8 和 Sonnet 4.5：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"availableModels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"claude-opus-4-8"</span><span class="p">,</span><span class="w"> </span><span class="s2">"claude-sonnet-4-5@20250929"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"enforceAvailableModels"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>有关别名、版本前缀和 <code>modelOverrides</code> 条目，请参阅<a href="model-config.html#pin-models-for-third-party-deployments">为第三方部署固定模型</a>。</p>
+<h3 id="when-a-model-is-disabled-mid-session">当模型在会话中途被禁用时</h3>
+<p>如果您的项目失去对会话正在运行的模型的访问权限，例如因为管理员在 <a href="https://console.cloud.google.com/vertex-ai/model-garden" target="_blank" rel="noopener">Model Garden</a> 中禁用了它，Claude Code 会将会话切换到另一个模型，而不是让每个请求都失败，并显示 <code>Switched to &lt;fallback&gt; because &lt;model&gt; is not available</code>。它尝试与启动回退相同的模型：首先尝试同一层级的早期版本，对于没有可用 Opus 版本的 Opus 会话，则使用默认 Sonnet 模型。</p>
+<p>切换仅适用于您未固定的层级，这与启动回退的条件相同。在您选择的特定版本上的会话保持其模型，没有回退模型链，请求会失败。在 <a href="permission-modes.html#enable-auto-mode-on-bedrock-agent-platform-or-foundry">auto mode</a> 中，Claude Code 仅切换到 auto mode 在 Agent Platform 上支持的模型。如果这些模型都不可用，请求会失败。</p>
+<p>您配置的<a href="model-config.html#fallback-model-chains">回退模型链</a>会替换层级切换：在这些拒绝上，Claude Code 会切换到您配置的回退。要使被拒绝的请求失败而不是切换，请设置 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_MODEL_ACCESS_FALLBACK=1</code></a>。您配置的回退链仍会在这些拒绝上切换；如果您希望每个被拒绝的请求都失败，也要移除该链。</p>
+<h2 id="iam-configuration">IAM 配置</h2>
+<p>分配 <code>roles/aiplatform.user</code> 角色，其中包括所需的权限：</p>
+<ul>
+<li><code>aiplatform.endpoints.predict</code> - 模型调用和令牌计数所需</li>
+</ul>
+<p>对于更严格的权限，请创建仅包含上述权限的自定义角色。</p>
+<p>有关详细信息，请参阅 <a href="https://cloud.google.com/vertex-ai/docs/general/access-control" target="_blank" rel="noopener">Google Cloud 的 Agent Platform IAM 文档</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>为 Claude Code 创建专用的 GCP 项目，以简化成本跟踪和访问控制。</p></div></div>
+<h2 id="1m-token-context-window">1M token context window</h2>
+<p>Fable 模型、Sonnet 5 及更高版本以及 Opus 4.7 及更高版本在 Google Cloud 的 Agent Platform 上默认以 <a href="https://platform.claude.com/docs/zh-CN/build-with-claude/context-windows#context-window-sizes-by-model" target="_blank" rel="noopener">1M token 上下文窗口</a>运行，无需 <code>[1m]</code> 后缀。如需改为保留 200K 窗口，请设置 <a href="model-config.html#turn-off-1m-context"><code>CLAUDE_CODE_DISABLE_1M_CONTEXT=1</code></a>。</p>
+<p>Opus 4.6 和 Sonnet 4.6 在您选择其 <code>[1m]</code> 变体时可使用 1M 窗口。<a href="#sign-in-with-agent-platform">设置向导</a>在固定模型时提供 1M 上下文选项。如需改为为手动固定的模型启用它，请在模型 ID 后附加 <code>[1m]</code>。有关详细信息，请参阅<a href="model-config.html#pin-models-for-third-party-deployments">为第三方部署固定模型</a>，包括如何在不更改固定的情况下使用 1M 窗口。</p>
+<p>在 v2.1.287 之前，Fable 模型以及 Opus 4.7 及更高版本在 Google Cloud 的 Agent Platform 上默认以 200K 窗口运行，并通过 <code>[1m]</code> 后缀使用 1M 窗口。</p>
+<h2 id="troubleshooting">故障排除</h2>
+<p>如果您遇到"无法加载默认凭证"错误：</p>
+<ul>
+<li>运行 <code>gcloud auth application-default login</code> 来设置应用默认凭证</li>
+<li>将 <code>GOOGLE_APPLICATION_CREDENTIALS</code> 设置为服务账户密钥文件路径</li>
+<li>查看 <a href="#3-configure-gcp-credentials">配置 GCP 凭证</a> 了解所有选项</li>
+</ul>
+<p>如果您遇到配额问题：</p>
+<ul>
+<li>通过 <a href="https://cloud.google.com/docs/quotas/view-manage" target="_blank" rel="noopener">Cloud Console</a> 检查当前配额或请求增加配额</li>
+</ul>
+<p>如果您遇到"模型未找到"404 错误：</p>
+<ul>
+<li>确认模型在 <a href="https://console.cloud.google.com/vertex-ai/model-garden" target="_blank" rel="noopener">Model Garden</a> 中已启用</li>
+<li>验证该模型在您指定的位置可用。某些模型仅在 <code>global</code> 或多区域位置（如 <code>eu</code> 和 <code>us</code>）上提供，而不是在特定区域</li>
+<li>如果使用 <code>CLOUD_ML_REGION=global</code>，请检查您的模型是否在 <a href="https://console.cloud.google.com/vertex-ai/model-garden" target="_blank" rel="noopener">Model Garden</a> 中的"支持的功能"下支持全局端点。对于不支持全局端点的模型，请执行以下任一操作：</li>
+<li>通过 <code>ANTHROPIC_MODEL</code> 或 <code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code> 指定支持的模型，或</li>
+<li>使用该模型对应的 <code>VERTEX_REGION_CLAUDE_*</code> 变量设置区域或多区域位置，这些变量列于<a href="env-vars.html#variables">环境变量参考</a>中</li>
+</ul>
+<p>如果您遇到 429 错误：</p>
+<ul>
+<li>对于区域端点，请确保主模型和小型/快速模型在您选择的区域中受支持</li>
+<li>考虑切换到 <code>CLOUD_ML_REGION=global</code> 以获得更好的可用性</li>
+</ul>
+<h2 id="additional-resources">其他资源</h2>
+<ul>
+<li><a href="https://cloud.google.com/vertex-ai/docs" target="_blank" rel="noopener">Google Cloud 的 Agent Platform 文档</a></li>
+<li><a href="https://cloud.google.com/vertex-ai/pricing" target="_blank" rel="noopener">Google Cloud 的 Agent Platform 定价</a></li>
+<li><a href="https://cloud.google.com/vertex-ai/docs/quotas" target="_blank" rel="noopener">Google Cloud 的 Agent Platform 配额和限制</a></li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="claude-platform-on-aws.html"><span class="pager-dir">← 上一页</span><span class="pager-name">AWS 上的 Claude Platform 中的 Claude Code</span></a><a class="pager-link next" href="microsoft-foundry.html"><span class="pager-dir">下一页 →</span><span class="pager-name">Microsoft Foundry 上的 Claude Code</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#prerequisites">前置条件</a><a class="toc-l2" href="#sign-in-with-agent-platform">使用 Agent Platform 登录</a><a class="toc-l2" href="#region-configuration">区域配置</a><a class="toc-l2" href="#set-up-manually">手动设置</a><a class="toc-l3" href="#1-enable-agent-platform-api">启用 Agent Platform API</a><a class="toc-l3" href="#2-request-model-access">请求模型访问权限</a><a class="toc-l3" href="#3-configure-gcp-credentials">配置 GCP 凭证</a><a class="toc-l3" href="#4-configure-claude-code">配置 Claude Code</a><a class="toc-l3" href="#5-pin-model-versions">固定模型版本</a><a class="toc-l3" href="#6-verify-your-configuration">验证您的配置</a><a class="toc-l2" href="#startup-model-checks">启动模型检查</a><a class="toc-l3" href="#when-your-organization-enforces-a-model-allowlist">当您的组织强制执行模型允许列表时</a><a class="toc-l3" href="#when-a-model-is-disabled-mid-session">当模型在会话中途被禁用时</a><a class="toc-l2" href="#iam-configuration">IAM 配置</a><a class="toc-l2" href="#1m-token-context-window">1M token context window</a><a class="toc-l2" href="#troubleshooting">故障排除</a><a class="toc-l2" href="#additional-resources">其他资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

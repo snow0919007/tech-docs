@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>为 Claude Code 配置您的终端 · Claude Code 中文文档</title>
+<meta name="description" content="修复 Shift+Enter 以插入新行、在 Claude 完成时获得终端铃声、配置 tmux、匹配颜色主题，以及在 Claude Code CLI 中启用 Vim 模式。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="terminal-config">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/terminal-config" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link active" href="terminal-config.html" aria-current="page">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>配置</span> <span class="sep">/</span> <span>界面</span></div>
+    <article class="prose" id="article"><h1 id="claude-code">为 Claude Code 配置您的终端</h1>
+<blockquote>
+<p>修复 Shift+Enter 以插入新行、在 Claude 完成时获得终端铃声、配置 tmux、匹配颜色主题，以及在 Claude Code CLI 中启用 Vim 模式。</p>
+</blockquote>
+<p>Claude Code 可以在任何终端中工作，无需配置。此页面适用于某些特定功能的行为不符合您预期的情况。在下方找到您的症状。如果一切都已按预期工作，您不需要此页面。</p>
+<ul>
+<li><a href="#enter-multiline-prompts">Shift+Enter 提交而不是插入新行</a></li>
+<li><a href="#enable-option-key-shortcuts-on-macos">macOS 上的 Option 键快捷键无效</a></li>
+<li><a href="#get-a-terminal-bell-or-notification">Claude 完成时没有声音或警报</a></li>
+<li><a href="#configure-tmux">您在 tmux 内运行 Claude Code</a></li>
+<li><a href="#fix-backspace-deleting-a-whole-word-on-windows">Windows 上的退格键删除整个单词</a></li>
+<li><a href="#switch-to-fullscreen-rendering">显示闪烁或滚动条跳跃</a></li>
+<li><a href="#edit-prompts-with-vim-keybindings">您想在提示符中使用 Vim 快捷键</a></li>
+</ul>
+<p>此页面是关于让您的终端向 Claude Code 发送正确的信号。要更改 Claude Code 本身响应的快捷键，请参阅 <a href="keybindings.html">快捷键</a> 代替。</p>
+<h2 id="enter-multiline-prompts">输入多行提示</h2>
+<p>按 Enter 键提交您的消息。要添加换行符而不提交，请按 Ctrl+J，或输入 <code>\</code> 然后按 Enter。两种方法在每个终端中都可以工作，无需任何设置。</p>
+<p>在大多数终端中，您也可以按 Shift+Enter，但支持因终端模拟器而异：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">终端</th>
+<th style="text-align: left;">Shift+Enter 换行</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Ghostty、Kitty、iTerm2、WezTerm、Warp、Apple Terminal、Windows Terminal</td>
+<td style="text-align: left;">无需设置即可工作</td>
+</tr>
+<tr>
+<td style="text-align: left;">支持 kitty 键盘协议的其他终端，例如 foot 和 Alacritty 0.16 或更高版本</td>
+<td style="text-align: left;">无需设置即可工作。需要 Claude Code v2.1.269 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;">VS Code、Cursor、Devin Desktop、Alacritty 0.16 之前版本、Zed</td>
+<td style="text-align: left;">运行一次 <code>/terminal-setup</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">gnome-terminal、JetBrains IDE（如 PyCharm 和 Android Studio）</td>
+<td style="text-align: left;">不可用；使用 Ctrl+J 或 <code>\</code> 然后 Enter</td>
+</tr>
+</tbody>
+</table>
+<p>对于 VS Code、Cursor、Devin Desktop、Alacritty 0.16 之前版本和 Zed，<code>/terminal-setup</code> 会将 Shift+Enter 快捷键写入终端的配置文件。在第一次运行时，您会看到确认消息，例如 <code>Installed VSCode terminal Shift+Enter key binding</code>。现有绑定保持不变；如果您看到类似 <code>VSCode terminal Shift+Enter key binding already configured</code> 的消息，则未进行任何更改。在主机终端中直接运行 <code>/terminal-setup</code>，而不是在 tmux 或 screen 内运行，因为它需要写入主机终端的配置。</p>
+<p>在 VS Code、Cursor 和 Devin Desktop 中，<code>/terminal-setup</code> 还会更新两个编辑器设置：它将 <code>terminal.integrated.gpuAcceleration</code> 设置为 <code>"off"</code> 以防止集成终端中的文本乱码，并设置 <code>terminal.integrated.mouseWheelScrollSensitivity</code> 以在<a href="fullscreen.html">全屏模式</a>中实现更平滑的滚动。要撤销 GPU 加速更改，请将其设置回 <code>"auto"</code> 并重新加载编辑器窗口。</p>
+<p>在 Zed 中，<code>/terminal-setup</code> 会就地更新您的 <code>keymap.json</code>：</p>
+<ul>
+<li>如果 keymap 已有绑定且其中没有 Terminal <code>shift-enter</code>，Claude Code 首先会将其备份到同一目录中的副本，例如 <code>keymap.json.1a2b3c4d.bak</code>，然后将 Shift+Enter 绑定合并到您的 keymap 中，保留您的其他快捷键和注释</li>
+<li>如果 Claude Code 无法读取或解析 keymap、无法备份或无法验证合并结果，它会<a href="errors.html#terminal-setup-left-your-zed-keymap-unchanged">保持文件不变并打印快捷键块供您自己添加</a></li>
+</ul>
+<p>如果您在 tmux 内运行，即使外部终端支持，Shift+Enter 也需要下面的 <a href="#configure-tmux">tmux 配置</a>。</p>
+<p>要将换行绑定到不同的键，或交换行为使 Enter 插入换行而 Shift+Enter 提交，请在您的<a href="keybindings.html">快捷键文件</a>中映射 <code>chat:newline</code> 和 <code>chat:submit</code> 操作。</p>
+<h2 id="enable-option-key-shortcuts-on-macos">在 macOS 上启用 Option 键快捷键</h2>
+<p>某些 Claude Code 快捷键使用 Option 键，例如 Option+Enter 用于换行或 Option+P 用于切换模型。在 macOS 上，大多数终端默认不会将 Option 作为修饰符发送，因此这些快捷键在启用之前不会起作用。终端设置通常标记为"Use Option as Meta Key"；Meta 是现在标记为 Option 或 Alt 的键的历史 Unix 名称。</p>
+<blockquote>
+<p>[tab] Apple Terminal</p>
+<p>打开"设置"→"配置文件"→"键盘"并勾选"Use Option as Meta Key"。</p>
+<p>如果您接受了 Claude Code 的首次运行终端设置提示，这已经完成。该提示为您运行 <code>/terminal-setup</code>，它启用 Option 作为 Meta 并在您的 Apple Terminal 配置文件中关闭可听见的铃声。</p>
+<p>在<a href="accessibility.html">屏幕阅读器模式</a>中，<code>/terminal-setup</code> 保持铃声设置不变，以便终端铃声保持可听见。如果较早的运行关闭了铃声，请在"设置"→"描述文件"→"高级"→"可听见的铃声"下将其重新打开。</p>
+<p>[tab] iTerm2</p>
+<p>打开"设置"→"描述文件"→"键"→"常规"并将"Left Option key"和"Right Option key"设置为"Esc+"。</p>
+<p>在 iTerm2 中运行 <code>/terminal-setup</code> 会在"设置"→"常规"→"选择"下启用"Applications in terminal may access clipboard"，以便 <code>/copy</code> 命令可以写入您的系统剪贴板。该命令即使在 tmux 内运行时也能检测到 iTerm2。重启 iTerm2 以使更改生效。</p>
+<p>[tab] VS Code</p>
+<p>将 <code>"terminal.integrated.macOptionIsMeta": true</code> 添加到您的 VS Code 设置中。</p>
+</blockquote>
+<p>对于 Ghostty、Kitty 和其他终端，请在终端的配置文件中查找 Option-as-Alt 或 Option-as-Meta 设置。</p>
+<h2 id="get-a-terminal-bell-or-notification">获取终端铃声或通知</h2>
+<p>当 Claude 完成任务或暂停以等待权限提示，且您似乎离开了终端时，它会触发通知事件。请参阅<a href="hooks.html#notification">每种通知类型何时触发</a>以了解确切的时间。将其显示为终端铃声或桌面通知可让您在长任务运行时切换到其他工作。</p>
+<p>默认情况下，Claude Code 在某些终端中发送桌面通知，在其他终端中则发送铃声字符或不发送任何内容：</p>
+<ul>
+<li><strong>Ghostty、Kitty 和 iTerm2</strong>：发送桌面通知，其中 iTerm2 仅在您启用其警报设置后才会显示。</li>
+<li><strong>Apple Terminal</strong>：没有声音；当 Claude Code 发现最前方 Terminal 窗口的描述文件中"Audible bell"已关闭时，发送静音铃声字符，否则不发送任何内容。如果该描述文件的"Visual bell"或 Dock 弹跳选项已启用，该铃声字符会显示为窗口闪烁，或在 Terminal 处于后台时显示为 Dock 图标弹跳。</li>
+<li><strong>其他终端</strong>：不发送任何内容。</li>
+</ul>
+<p>若要让 Claude Code 无论使用何种终端或描述文件都发送铃声字符，请将 <a href="settings-reference.html#preferrednotifchannel"><code>preferredNotifChannel</code></a> 设置为 <code>"terminal_bell"</code>。在 Apple Terminal 中，还需在 <strong>Settings &gt; Profiles &gt; Advanced</strong> 下启用 <strong>Audible bell</strong> 才能听到铃声。以下设置条目用于设置该通道：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"preferredNotifChannel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"terminal_bell"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>桌面通知通过 SSH 到达您的本地计算机，因此远程会话仍然可以提醒您。Ghostty 和 Kitty 将其转发到您的操作系统通知中心，无需进一步设置。iTerm2 要求您启用转发：</p>
+<p><strong>1. 打开 iTerm2 通知设置</strong></p>
+<p>转到"设置"→"配置文件"→"终端"。</p>
+<p><strong>2. 启用警报</strong></p>
+<p>勾选"通知中心警报"，然后单击"筛选警报"并启用"发送转义序列生成的警报"。</p>
+<p>如果通知仍未出现，请确认您的终端应用程序在操作系统设置中具有通知权限，如果您在 tmux 内运行，请<a href="#configure-tmux">启用传递</a>。</p>
+<h3 id="play-a-sound-with-a-notification-hook">使用通知 hook 播放声音</h3>
+<p>在任何终端中，您可以配置<a href="hooks-guide.html#get-notified-when-claude-needs-input">通知 hook</a> 以在 Claude 需要您的注意时播放声音或运行自定义命令。Hook 与内置通知一起运行，而不是替换它，因此不接收桌面通知的终端（如 Warp 或 VS Code 集成终端）可以使用 hook 或将 <code>preferredNotifChannel</code> 设置为 <code>"terminal_bell"</code>。</p>
+<p>下面的示例在 macOS 上播放系统声音。链接的指南包含 macOS、Linux 和 Windows 的桌面通知命令。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"Notification"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w"> </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"afplay /System/Library/Sounds/Glass.aiff"</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="see-session-status-in-your-terminal">在终端中查看会话状态</h2>
+<p>如果您的终端实现了 OSC 7501 Program Status Protocol，它可以显示每个交互式 Claude Code 会话是正在工作、正在等待您，还是已完成，这在您运行长时间任务或同时运行多个会话时很有帮助。Claude Code 中无需启用任何设置。要了解您的终端是否实现了该协议以及在何处显示状态，请查阅其文档。</p>
+<p>如果终端已实现该协议，但您没有看到某个会话的状态，请逐一检查以下原因：</p>
+<ul>
+<li><strong>Claude Code 版本</strong>：状态报告需要 Claude Code v2.1.295 或更高版本。在 shell 中运行 <code>claude --version</code> 进行检查。</li>
+<li><strong>tmux</strong>：在 tmux 中，Claude Code 会检查 tmux 而非您的终端是否支持该协议，且 <a href="#configure-tmux"><code>allow-passthrough</code></a> 对此没有影响。请在 tmux 之外启动会话。</li>
+<li><strong>后台会话</strong>：<a href="agent-view.html">后台会话</a>不会向您的终端报告其状态，即使您已连接到该会话也是如此。Agent 视图会改为显示其状态。</li>
+<li><strong><a href="env-vars.html#variables"><code>CLAUDE_CODE_DISABLE_TERMINAL_TITLE</code></a></strong>：如果您将此变量设置为 <code>1</code>，Claude Code 将不会检查支持情况，也不会报告状态。请取消设置该变量。</li>
+</ul>
+<p>在报告支持该协议的终端中，标签页标题不会以状态符号开头。终端会自行显示会话的状态，因此 Claude Code 会省略其在其他终端中置于标题前面的符号。</p>
+<h2 id="configure-tmux">配置 tmux</h2>
+<p>当 Claude Code 在 tmux 中运行时，默认情况下 Shift+Enter 提交而不是插入换行符，桌面通知和<a href="settings-reference.html#terminalprogressbarenabled">进度条</a>永远无法到达外部终端。将这些行添加到 <code>~/.tmux.conf</code>，然后运行 <code>tmux source-file ~/.tmux.conf</code> 将其应用到运行中的服务器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">set</span><span class="w"> </span>-g<span class="w"> </span>allow-passthrough<span class="w"> </span>on
+<span class="nb">set</span><span class="w"> </span>-g<span class="w"> </span>focus-events<span class="w"> </span>on
+<span class="nb">set</span><span class="w"> </span>-s<span class="w"> </span>extended-keys<span class="w"> </span>on
+<span class="nb">set</span><span class="w"> </span>-as<span class="w"> </span>terminal-features<span class="w"> </span><span class="s1">'xterm*:extkeys'</span>
+</code></pre></div>
+<p><code>allow-passthrough</code> 行允许通知和进度更新到达外部终端，而不是被 tmux 吞掉。<code>extended-keys</code> 行让 tmux 区分 Shift+Enter 和普通 Enter，这样换行快捷键就能工作。</p>
+<p><a href="plugins-mods-reference.html#elements">mod 的 <code>Image</code></a> 需要 <code>allow-passthrough</code> 和 <code>focus-events</code> 行，以及其他<a href="plugins-mods-gallery.html#draw-an-image-inside-tmux">在 tmux 中绘制的要求</a>。添加这些行后，还需要从 tmux 分离、重新连接，然后重启 Claude Code。</p>
+<h2 id="fix-backspace-deleting-a-whole-word-on-windows">修复 Windows 上 Backspace 删除整个单词的问题</h2>
+<p>在 Windows 上，Claude Code 将到达的 Backspace 读取为 <code>^H</code>，将其解释为 Ctrl+Backspace，这会<a href="interactive-mode.html#text-editing">删除前一个单词</a>，除非 <code>TERM_PROGRAM</code> 是 <code>mintty</code> 或 <code>TERM</code> 是 <code>cygwin</code>。在 macOS 和 Linux 上，Claude Code 将其读取为普通 Backspace。</p>
+<p>如果每次按 Backspace 都会删除整个单词，说明你的终端为普通 Backspace 发送了 <code>^H</code>。设置 <a href="env-vars.html"><code>CLAUDE_CODE_BS_AS_CTRL_BACKSPACE=0</code></a>。此时 Backspace 和 Ctrl+H 将各删除一个字符。如果在 macOS 或 Linux 上 Ctrl+Backspace 仅删除一个字符，因为你的终端为它发送了 <code>^H</code>，则改为将变量设置为 <code>1</code>。</p>
+<h2 id="match-the-color-theme">匹配颜色主题</h2>
+<p>使用 <code>/theme</code> 命令或 <code>/config</code> 中的主题选择器，选择与终端相匹配的 Claude Code 主题。选择自动选项会检测终端的浅色或深色背景，因此每当终端随操作系统外观变化时，主题也会随之变化。Claude Code 不控制终端自身的配色方案，该方案由终端应用程序设置。</p>
+<p>要自定义界面底部显示的内容，请配置一个<a href="statusline.html">自定义状态栏</a>，用于显示当前模型、工作目录、git 分支或其他上下文信息。</p>
+<h3 id="create-a-custom-theme">创建自定义主题</h3>
+<p>除内置预设外，<code>/theme</code> 还会列出您定义的所有自定义主题，以及已安装的<a href="plugins-components.html#themes-and-output-styles">插件</a>所提供的主题。选择列表末尾的 <strong>New custom theme…</strong> 即可以交互方式创建主题：先为主题命名，然后选择要覆盖的各个颜色 token。在某个自定义主题处于高亮状态时按 <code>Ctrl+E</code> 可对其进行编辑。</p>
+<p>每个自定义主题都是 <code>~/.claude/themes/</code> 中的一个 JSON 文件。去掉 <code>.json</code> 扩展名后的文件名即为主题的 slug，选择该主题后会将 <code>custom:&lt;slug&gt;</code> 存储为您的主题偏好。该文件包含三个可选字段：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>name</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">在 <code>/theme</code> 中显示的标签。默认为文件名 slug</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>base</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">主题所基于的内置预设：<code>dark</code>、<code>light</code>、<code>dark-daltonized</code>、<code>light-daltonized</code>、<code>dark-ansi</code> 或 <code>light-ansi</code>。默认为 <code>dark</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>overrides</code></td>
+<td style="text-align: left;">object</td>
+<td style="text-align: left;">颜色 token 名称到颜色值的映射。未在此列出的 token 会沿用基础预设</td>
+</tr>
+</tbody>
+</table>
+<p>颜色值支持 <code>#rrggbb</code>、<code>#rgb</code>、<code>rgb(r,g,b)</code>、<code>ansi256(n)</code> 或 <code>ansi:&lt;name&gt;</code>，其中 <code>&lt;name&gt;</code> 是 16 种标准 ANSI 颜色名称之一，例如 <code>red</code> 或 <code>cyanBright</code>。未知的 token 和无效的颜色值会被忽略，因此拼写错误不会破坏渲染。</p>
+<p>以下示例定义了一个主题，它保留 dark 预设，但重新设置了提示词强调色、错误文本和成功文本的颜色：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dracula"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"base"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dark"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"overrides"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"claude"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#bd93f9"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#ff5555"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#50fa7b"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Claude Code 会监视 <code>~/.claude/themes/</code>，并在添加或更改文件时重新加载，因此在编辑器中所做的修改无需重启即可应用于正在运行的会话。如果 Claude Code 启动时 <code>~/.claude/themes/</code> 文件夹本身尚不存在，请在创建第一个主题文件后重启一次。此后，更改无需重启即可生效。</p>
+<p>以下参考涵盖了可在 <code>overrides</code> 中设置的 token。<code>/theme</code> 中的交互式编辑器会显示相同的 token 并提供实时预览，此外还有一些单一用途的强调色（例如引导界面颜色），此处未列出。</p>
+<blockquote>
+<p>[accordion] 颜色 token 参考</p>
+<p>以下示例组合了下面几个分组中的 token：品牌强调色、计划模式边框、diff 背景以及消息背景。</p>
+<p><code>json ~/.claude/themes/midnight.json theme={null}
+{
+  "name": "Midnight",
+  "base": "dark",
+  "overrides": {
+    "claude": "#a78bfa",
+    "planMode": "#38bdf8",
+    "diffAdded": "#14532d",
+    "diffRemoved": "#7f1d1d",
+    "userMessageBackground": "#1e1b4b"
+  }
+}</code></p>
+<h4 id="_1">文本和强调色</h4>
+<p>控制整个界面中使用的主品牌强调色和前景文本色调。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Token</th>
+<th style="text-align: left;">控制内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>claude</code></td>
+<td style="text-align: left;">主品牌强调色，用于加载动画和助手标签</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>text</code></td>
+<td style="text-align: left;">默认前景文本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>inverseText</code></td>
+<td style="text-align: left;">绘制在彩色背景上的文本，例如状态徽章</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>inactive</code></td>
+<td style="text-align: left;">次要文本，例如提示、时间戳和禁用项</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>subtle</code></td>
+<td style="text-align: left;">淡色边框和弱化的次要文本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>suggestion</code></td>
+<td style="text-align: left;">自动补全建议以及选择器中的选中高亮</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>permission</code></td>
+<td style="text-align: left;">对话框边框，包括权限提示和选择器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>remember</code></td>
+<td style="text-align: left;">记忆和 <code>CLAUDE.md</code> 指示器</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_2">状态颜色</h4>
+<p>在消息和指示器中标示成功、失败和警告状态。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Token</th>
+<th style="text-align: left;">控制内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>success</code></td>
+<td style="text-align: left;">成功消息和通过的检查</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>error</code></td>
+<td style="text-align: left;">错误消息和失败</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>warning</code></td>
+<td style="text-align: left;">警告、注意消息以及自动模式指示器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>merged</code></td>
+<td style="text-align: left;">已合并的 Pull Request 状态</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_3">输入框和模式指示器</h4>
+<p>设置输入框边框颜色，以及权限模式或指示器处于活动状态时显示的强调色。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Token</th>
+<th style="text-align: left;">控制内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>promptBorder</code></td>
+<td style="text-align: left;">输入框边框</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>planMode</code></td>
+<td style="text-align: left;">计划模式强调色、计划消息和计划模式对话框</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>autoAccept</code></td>
+<td style="text-align: left;">接受编辑模式强调色</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>bashBorder</code></td>
+<td style="text-align: left;">输入 <code>!</code> shell 命令时的输入框边框</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ide</code></td>
+<td style="text-align: left;">IDE 连接指示器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fastMode</code></td>
+<td style="text-align: left;">快速模式指示器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>effortUltra</code></td>
+<td style="text-align: left;">启用 <a href="model-config.html#adjust-effort-level">ultracode</a> 时输入框边框上的 <code>ultracode</code> 标签。您对此颜色的覆盖在 Claude Code v2.1.239 或更高版本中生效</td>
+</tr>
+</tbody>
+</table>
+<h4 id="diff">Diff 渲染</h4>
+<p>为文件编辑和审查中添加和删除的代码着色。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Token</th>
+<th style="text-align: left;">控制内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>diffAdded</code></td>
+<td style="text-align: left;">添加行的背景</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>diffRemoved</code></td>
+<td style="text-align: left;">删除行的背景</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>diffAddedDimmed</code></td>
+<td style="text-align: left;">拒绝编辑后显示的淡化 diff 中添加行的背景</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>diffRemovedDimmed</code></td>
+<td style="text-align: left;">拒绝编辑后显示的淡化 diff 中删除行的背景</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>diffAddedWord</code></td>
+<td style="text-align: left;">添加行内的单词级高亮</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>diffRemovedWord</code></td>
+<td style="text-align: left;">删除行内的单词级高亮</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_4">全屏模式</h4>
+<p>Claude Code 仅在<a href="fullscreen.html">全屏渲染模式</a>中使用 <code>userMessageBackgroundHover</code>、<code>selectionBg</code> 和 <code>composerSidebarBackground</code>。<code>userMessageBackground</code>、<code>bashMessageBackgroundColor</code> 和 <code>memoryBackgroundColor</code> 则在默认渲染器和全屏渲染器中都会绘制。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Token</th>
+<th style="text-align: left;">控制内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>userMessageBackground</code></td>
+<td style="text-align: left;">会话记录中您的消息的背景</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>userMessageBackgroundHover</code></td>
+<td style="text-align: left;">消息在悬停或展开时的背景</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>bashMessageBackgroundColor</code></td>
+<td style="text-align: left;">会话记录中 <code>!</code> shell 命令条目的背景</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>memoryBackgroundColor</code></td>
+<td style="text-align: left;">会话记录中 <code>#</code> 记忆条目的背景</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>selectionBg</code></td>
+<td style="text-align: left;">用鼠标选中的文本的背景</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>composerSidebarBackground</code></td>
+<td style="text-align: left;">对话旁边面板的背景，例如 <a href="fullscreen.html#watch-your-changes-in-the-diff-panel">diff 面板</a>或 <a href="plugins-mods-interface.html">mod 的窗格</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="_5">用量计量条和发言者标签</h4>
+<p>调整 <code>/usage</code> 视图中显示的计量条，以及用于区分您的消息与 Claude 消息的标签。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Token</th>
+<th style="text-align: left;">控制内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>rate_limit_fill</code></td>
+<td style="text-align: left;">用量计量条的已填充部分</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rate_limit_empty</code></td>
+<td style="text-align: left;">用量计量条的未填充部分</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>briefLabelYou</code></td>
+<td style="text-align: left;">您的消息上 <code>You</code> 标签的颜色</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>briefLabelClaude</code></td>
+<td style="text-align: left;">助手消息上 <code>Claude</code> 标签的颜色</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">闪烁变体和子代理颜色</h4>
+<p>若干 token 有配对的闪烁变体，用于提供加载动画渐变中使用的较浅颜色。如果动画看起来不协调，请将闪烁变体与其基础 token 一起覆盖。</p>
+<ul>
+<li><code>claude</code> 和 <code>claudeShimmer</code></li>
+<li><code>warning</code> 和 <code>warningShimmer</code></li>
+<li><code>permission</code> 和 <code>permissionShimmer</code></li>
+<li><code>promptBorder</code> 和 <code>promptBorderShimmer</code></li>
+<li><code>inactive</code> 和 <code>inactiveShimmer</code></li>
+<li><code>fastMode</code> 和 <code>fastModeShimmer</code></li>
+</ul>
+<p>每个<a href="sub-agents.html">子代理</a>和并行任务都以八种命名颜色之一显示，以便您在会话记录中区分它们。token 名称遵循 <code>&lt;color&gt;_FOR_SUBAGENTS_ONLY</code> 模式，其中 <code>&lt;color&gt;</code> 为 <code>red</code>、<code>blue</code>、<code>green</code>、<code>yellow</code>、<code>purple</code>、<code>orange</code>、<code>pink</code> 或 <code>cyan</code>。覆盖这些 token 可更改每种命名颜色的外观。例如，定义中包含 <code>color: blue</code> 的子代理会使用 <code>blue_FOR_SUBAGENTS_ONLY</code> 的值进行绘制。</p>
+<p>当 <a href="model-config.html#use-ultrathink-for-one-off-deep-reasoning"><code>ultrathink</code></a> 可以提高某一轮次的 effort 时，Claude Code 会在提示词输入框中以七色彩虹渐变渲染该词。token 名称遵循 <code>rainbow_&lt;color&gt;</code> 和 <code>rainbow_&lt;color&gt;_shimmer</code> 模式，其中 <code>&lt;color&gt;</code> 为 <code>red</code>、<code>orange</code>、<code>yellow</code>、<code>green</code>、<code>blue</code>、<code>indigo</code> 或 <code>violet</code>。</p>
+</blockquote>
+<h2 id="switch-to-fullscreen-rendering">切换到全屏渲染</h2>
+<p>在<a href="accessibility.html">屏幕阅读器模式</a>中，本部分不适用。Claude Code 始终呈现为纯滚动文本，除非在附加的<a href="agent-view.html">后台会话</a>中，如果您在任何其他会话中运行 <code>/tui fullscreen</code>，Claude Code 会打印说明而不是切换。</p>
+<p>如果显示闪烁或在 Claude 工作时滚动位置跳跃，请切换到<a href="fullscreen.html">全屏渲染模式</a>。在此模式下，您可以使用鼠标或 PageUp 在 Claude Code 内滚动，而不是使用终端的原生回滚；请参阅<a href="fullscreen.html#search-and-review-the-conversation">全屏页面</a>了解如何搜索和复制。</p>
+<p>如果闪烁是唯一的问题，且您的终端支持同步输出但未被自动检测（例如 Emacs <code>eat</code>），请设置 <a href="env-vars.html"><code>CLAUDE_CODE_FORCE_SYNC_OUTPUT=1</code></a> 以停止闪烁而不更改渲染器。</p>
+<p>运行 <code>/tui fullscreen</code> 以切换并保存偏好设置。您的对话将完整重新启动，未来的会话将以全屏启动，除非<a href="fullscreen.html#fullscreen-renderer-didnt-finish-starting">全屏启动失败</a>。您也可以在启动 Claude Code 之前设置 <code>CLAUDE_CODE_NO_FLICKER</code> 环境变量：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nv">CLAUDE_CODE_NO_FLICKER</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>claude
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">powershell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-powershell"><span class="nv">$env:CLAUDE_CODE_NO_FLICKER</span> <span class="p">=</span> <span class="s2">"1"</span><span class="p">;</span> <span class="n">claude</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"CLAUDE_CODE_NO_FLICKER"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="cap-response-width-in-wide-terminals">在宽终端中限制响应宽度</h2>
+<p>在宽终端中，Claude 响应中的每一行文本都会占据窗口的全部宽度。要改为在设定的列数处换行，请在您的设置中设置 <a href="settings-reference.html#maxprosewidth"><code>maxProseWidth</code></a>。</p>
+<h2 id="paste-large-content">粘贴大型内容</h2>
+<p>当您粘贴超过 800 个字符或超过三行的内容到提示框时，Claude Code 会将输入折叠为占位符，例如 <code>[Pasted text #1 +120 lines]</code>，以保持输入框的可用性，并在您提交时仍会发送完整内容。对于非常大的输入（如整个文件或长日志），将内容写入文件并要求 Claude 读取它，而不是粘贴。对话记录保持可读性，Claude 可以在后续轮次中按路径引用文件。VS Code 集成终端也可能在非常大的粘贴到达 Claude Code 之前丢弃字符，因此在那里使用文件。</p>
+<p>如果粘贴包含<a href="interactive-mode.html#invisible-characters-in-prompts">不可见的 Unicode 字符</a>，Claude Code 会在您按 Enter 时移除它们，并将清理后的提示放回输入框供您再次按 Enter 发送。</p>
+<h3 id="how-claude-treats-pasted-text">Claude 如何处理粘贴的文本</h3>
+<p>当您提交时，Claude 会看到每个 <code>[Pasted text #N]</code> 占位符后面的内容，标记为您从其他地方粘贴而不是输入的文本。Claude 被告知粘贴可能包含您没有写的指令，并且仅在您输入的消息要求时才遵循其中的指令。在不<a href="env-vars.html#features-that-need-feature-flag-fetching">获取功能标志</a>的会话中，粘贴不会被标记。</p>
+<h3 id="delete-and-restore-a-collapsed-paste">删除和恢复折叠的粘贴</h3>
+<p>当您使用单词或行快捷键（如 <code>Ctrl+W</code> 或 <code>Ctrl+K</code>）删除，或通过 vim 删除（如 <code>df]</code> 这样的 <code>f</code>/<code>t</code> 动作），且删除范围到达 <code>[Pasted text #N]</code> 占位符内部时，Claude Code 会完全移除占位符。要恢复它，在单词或行快捷键后使用 <a href="interactive-mode.html#text-editing"><code>Ctrl+Y</code></a> 粘贴删除的内容，或在 vim 删除后使用 <a href="interactive-mode.html#editing-normal-mode"><code>p</code> 在 NORMAL 模式下</a>。</p>
+<h3 id="recall-a-prompt-that-had-pasted-text">调用包含粘贴文本的提示</h3>
+<p>Claude Code 将每个 <code>[Pasted text #N]</code> 占位符后面的内容保存在 <code>~/.claude/paste-cache/</code> 下，因此当您从<a href="interactive-mode.html#command-history">命令历史</a>中调用提示并重新提交时，完整的粘贴内容会再次发送，包括在后续会话中。</p>
+<p>早于 <a href="settings-reference.html#cleanupperioddays"><code>cleanupPeriodDays</code></a> 的缓存文件会根据<a href="claude-directory.html#cleaned-up-automatically">保留扫描规则</a>被删除，因此调用的提示可能引用不再存在的粘贴文本。当您提交这样的提示时，Claude Code 永远不会发送字面上的 <code>[Pasted text #N]</code> 字符串，而是显示一个通知，命名缺失的粘贴：</p>
+<ul>
+<li>在包含剩余文本的纯提示中，Claude Code 移除占位符并发送剩余文本。</li>
+<li>在<a href="interactive-mode.html#shell-mode-with-prefix">shell 模式</a>命令或 <code>/</code> 命令中，其中移除会改变运行内容，以及在任何移除会留下空白的提示中，Claude Code 取消提交并在输入中保留原始文本，占位符仍在其中。删除占位符或编辑命令，然后重新提交。</li>
+</ul>
+<h2 id="edit-prompts-with-vim-keybindings">使用 Vim 快捷键编辑提示词</h2>
+<p>Claude Code 包含用于提示词输入的 Vim 风格编辑模式。通过 <code>/config</code> → Editor mode 启用它，或在 <code>~/.claude/settings.json</code> 中将 <a href="settings-reference.html#editormode"><code>editorMode</code></a> 设置为 <code>"vim"</code>。将 Editor mode 设置回 <code>normal</code> 以关闭它。</p>
+<p>Vim 模式支持 NORMAL 和 VISUAL 模式动作和操作符的子集，例如 <code>hjkl</code> 导航、<code>v</code>/<code>V</code> 选择以及 <code>d</code>/<code>c</code>/<code>y</code> 与文本对象。有关完整的快捷键表，请参阅 <a href="interactive-mode.html#vim-editor-mode">Vim 编辑器模式参考</a>。</p>
+<p>Vim 动作无法通过快捷键文件重新映射。要将两个按键的 INSERT 模式序列（例如 <code>jj</code>）映射到 Escape，请在用户设置中设置 <a href="interactive-mode.html#remap-insert-mode-key-sequences"><code>vimInsertModeRemaps</code></a>。</p>
+<p>在 INSERT 模式下按 Enter 仍会提交您的提示词，这与标准 Vim 不同。在 NORMAL 模式下使用 <code>o</code> 或 <code>O</code>，或使用 Ctrl+J 来插入新行。</p>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li><a href="interactive-mode.html">交互模式</a>：完整的键盘快捷键参考和 Vim 快捷键表</li>
+<li><a href="keybindings.html">快捷键</a>：重新映射任何 Claude Code 快捷键，包括 Enter 和 Shift+Enter</li>
+<li><a href="fullscreen.html">全屏渲染</a>：全屏模式下滚动、搜索和复制的详细信息</li>
+<li><a href="hooks-guide.html">钩子指南</a>：Linux 和 Windows 的更多通知钩子示例</li>
+<li><a href="troubleshooting.html">故障排除</a>：修复终端配置之外的问题</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="output-styles.html"><span class="pager-dir">← 上一页</span><span class="pager-name">输出样式</span></a><a class="pager-link next" href="fullscreen.html"><span class="pager-dir">下一页 →</span><span class="pager-name">全屏渲染</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#enter-multiline-prompts">输入多行提示</a><a class="toc-l2" href="#enable-option-key-shortcuts-on-macos">在 macOS 上启用 Option 键快捷键</a><a class="toc-l2" href="#get-a-terminal-bell-or-notification">获取终端铃声或通知</a><a class="toc-l3" href="#play-a-sound-with-a-notification-hook">使用通知 hook 播放声音</a><a class="toc-l2" href="#see-session-status-in-your-terminal">在终端中查看会话状态</a><a class="toc-l2" href="#configure-tmux">配置 tmux</a><a class="toc-l2" href="#fix-backspace-deleting-a-whole-word-on-windows">修复 Windows 上 Backspace 删除整个单词的问题</a><a class="toc-l2" href="#match-the-color-theme">匹配颜色主题</a><a class="toc-l3" href="#create-a-custom-theme">创建自定义主题</a><a class="toc-l2" href="#switch-to-fullscreen-rendering">切换到全屏渲染</a><a class="toc-l2" href="#cap-response-width-in-wide-terminals">在宽终端中限制响应宽度</a><a class="toc-l2" href="#paste-large-content">粘贴大型内容</a><a class="toc-l3" href="#how-claude-treats-pasted-text">Claude 如何处理粘贴的文本</a><a class="toc-l3" href="#delete-and-restore-a-collapsed-paste">删除和恢复折叠的粘贴</a><a class="toc-l3" href="#recall-a-prompt-that-had-pasted-text">调用包含粘贴文本的提示</a><a class="toc-l2" href="#edit-prompts-with-vim-keybindings">使用 Vim 快捷键编辑提示词</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

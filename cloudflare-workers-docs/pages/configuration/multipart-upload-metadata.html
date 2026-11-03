@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>多部分上传元数据 · Workers 文档（中文版）</title>
+<meta name="description" content="直接用 API 上传脚本时，配置要写进 metadata 这一部分。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>多部分上传元数据</h1>
+      <p class="lead">直接用 API 上传脚本时，配置要写进 metadata 这一部分。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-10-28</span>
+        <span>对应页面：configuration/multipart-upload-metadata</span>
+      </div>
+
+<div class="note-box">
+        <span class="box-title">注意</span>
+        <p>上传 Worker 已有新的 API，详见<a href="../../sections/platform.html">基础设施即代码 · Cloudflare REST API</a>。</p>
+      </div>
+
+      <p>如果你直接调用 <a href="https://developers.cloudflare.com/api/resources/workers/subresources/scripts/methods/update/" target="_blank" rel="noopener">Workers Script Upload API ↗</a> 或 <a href="https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/versions/methods/create/" target="_blank" rel="noopener">Version Upload API ↗</a>，<code>multipart/form-data</code> 上传必须提供一个 <code>metadata</code> 部分。这个元数据用 JSON 描述 Worker 的配置，相当于 <a href="../../sections/wrangler.html">wrangler.toml 配置文件</a>。</p>
+
+      <h2><code>metadata</code> 示例</h2>
+<pre data-lang="json"><code>{
+	"main_module": "main.js",
+	"bindings": [
+		{
+			"type": "plain_text",
+			"name": "MESSAGE",
+			"text": "Hello, world!"
+		}
+	],
+	"compatibility_date": "2021-09-14"
+}</code></pre>
+      <p>更多与 Workers Script Upload API 配合使用的元数据示例，见<a href="../../sections/platform.html">基础设施即代码</a>。</p>
+
+      <h2>顶层属性</h2>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>上传 Worker 时，<code>main_module</code> 是<strong>最低要求</strong>的必填键。</p>
+      </div>
+      <ul>
+        <li><code>main_module</code>（string，<strong>必填</strong>）：包含 Worker 模块入口的那一部分的名称，例如 <code>main.js</code>。</li>
+        <li><code>assets</code>（object，可选）：Worker 的<a href="../../sections/static-assets.html">静态资源</a>配置。
+          <ul>
+            <li><code>config</code>（object，可选）：<code>base_path</code> 决定静态资源可用的 URL 路径前缀；<code>html_handling</code> 决定 HTML 内容请求的重定向与重写；<code>not_found_handling</code> 决定请求未命中静态资源时的响应。</li>
+            <li><code>jwt</code> 字段提供授权把资源附加到该 Worker 的令牌。</li>
+          </ul>
+        </li>
+        <li><code>keep_assets</code>（boolean，可选）：是否保留上一个上传版本中的资源；用于替代提供完成令牌（completion token）的做法。</li>
+        <li><code>bindings</code>（object 数组，可选）：要在 Worker 中暴露的<a href="#bindings">绑定</a>。</li>
+        <li><code>placement</code>（object，可选）：Worker 的<a href="placement.html">智能部署位置</a>对象。<code>mode</code> 字段仅支持 <code>smart</code>（自动放置）。</li>
+        <li><code>compatibility_date</code>（string，可选）：<a href="compatibility-dates.html">兼容性日期</a>，表示所针对的 Workers 运行时支持范围。该日期之后运行时的不兼容修复不会影响这个 Worker。强烈建议设置；否则通过 API 上传时会默认取最老的日期——任何标志生效之前（2021-11-02）。</li>
+        <li><code>compatibility_flags</code>（string 数组，可选）：<a href="compatibility-flags.html">兼容性标志</a>，开启或关闭运行时的某些特性，用于启用尚未默认的特性、或选择接受／拒绝未包含在 <code>compatibility_date</code> 中的具体变更。</li>
+      </ul>
+
+      <h2>附加属性：Workers Script Upload API</h2>
+      <p>对于<a href="../../sections/versions-and-deployments.html">上传并立即部署</a>的场景，还有以下<strong>附加</strong>顶层属性可配。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>除 <code>annotations</code> 外，这些属性在版本上传（version upload）中<strong>不可用</strong>。</p>
+      </div>
+      <ul>
+        <li><code>migrations</code>（object 数组，可选）：要应用的 <a href="https://developers.cloudflare.com/durable-objects/reference/durable-objects-migrations/" target="_blank" rel="noopener">Durable Objects 迁移 ↗</a>。</li>
+        <li><code>logpush</code>（boolean，可选）：是否为该 Worker 开启 Logpush。</li>
+        <li><code>tail_consumers</code>（object 数组，可选）：消费该 Worker 日志的 <a href="../../sections/observability.html">Tail Workers</a>。</li>
+        <li><code>tags</code>（string 数组，可选）：用作该 Worker 标签的字符串列表。</li>
+        <li><code>annotations</code>（object，可选）：本次上传所创建 Worker 版本的注解对象，版本上传 API 同样支持。<code>workers/message</code> 指定版本的自定义描述，<code>workers/tag</code> 指定版本的自定义标识。</li>
+      </ul>
+
+      <h2>附加属性：Version Upload API</h2>
+      <p>对于<a href="../../sections/versions-and-deployments.html">版本上传</a>，以下<strong>附加</strong>顶层属性可配：</p>
+      <ul>
+        <li><code>annotations</code>（object，可选）：该 Worker 版本的注解对象。<code>workers/message</code> 指定自定义描述，<code>workers/tag</code> 指定自定义标识，<code>workers/alias</code> 指定该版本的自定义别名。</li>
+      </ul>
+
+      <h2 id="bindings">绑定</h2>
+      <p>Worker 通过<a href="../../sections/runtime-apis.html">绑定</a>与 Cloudflare 开发者平台上的资源交互。下面的 JSON 示例展示如何在 <code>metadata</code> 部分添加绑定：</p>
+<pre data-lang="json"><code>{
+	"bindings": [
+		{
+			"type": "ai",
+			"name": "&lt;VARIABLE_NAME&gt;"
+		},
+		{
+			"type": "analytics_engine",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"dataset": "&lt;DATASET&gt;"
+		},
+		{
+			"type": "assets",
+			"name": "&lt;VARIABLE_NAME&gt;"
+		},
+		{
+			"type": "browser_rendering",
+			"name": "&lt;VARIABLE_NAME&gt;"
+		},
+		{
+			"type": "d1",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"id": "&lt;D1_ID&gt;"
+		},
+		{
+			"type": "durable_object_namespace",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"class_name": "&lt;DO_CLASS_NAME&gt;"
+		},
+		{
+			"type": "hyperdrive",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"id": "&lt;HYPERDRIVE_ID&gt;"
+		},
+		{
+			"type": "kv_namespace",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"namespace_id": "&lt;KV_ID&gt;"
+		},
+		{
+			"type": "mtls_certificate",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"certificate_id": "&lt;MTLS_CERTIFICATE_ID&gt;"
+		},
+		{
+			"type": "plain_text",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"text": "&lt;VARIABLE_VALUE&gt;"
+		},
+		{
+			"type": "queue",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"queue_name": "&lt;QUEUE_NAME&gt;"
+		},
+		{
+			"type": "r2_bucket",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"bucket_name": "&lt;R2_BUCKET_NAME&gt;"
+		},
+		{
+			"type": "secret_text",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"text": "&lt;SECRET_VALUE&gt;"
+		},
+		{
+			"type": "service",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"service": "&lt;SERVICE_NAME&gt;",
+			"environment": "production"
+		},
+		{
+			"type": "vectorize",
+			"name": "&lt;VARIABLE_NAME&gt;",
+			"index_name": "&lt;INDEX_NAME&gt;"
+		},
+		{
+			"type": "version_metadata",
+			"name": "&lt;VARIABLE_NAME&gt;"
+		}
+	]
+}</code></pre>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/" target="_blank" rel="noopener">configuration/multipart-upload-metadata</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

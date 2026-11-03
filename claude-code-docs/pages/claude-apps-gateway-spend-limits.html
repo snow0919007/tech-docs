@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude 应用网关支出限制 · Claude Code 中文文档</title>
+<meta name="description" content="通过 Claude 应用网关为每个开发者按天、周或月设置支出上限。使用 Admin API 设置限制，网关在每个请求上实时执行这些限制。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="claude-apps-gateway-spend-limits">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/claude-apps-gateway-spend-limits" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link active" href="claude-apps-gateway-spend-limits.html" aria-current="page">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>管理</span> <span class="sep">/</span> <span>网关</span> <span class="sep">/</span> <span>Claude 应用网关</span></div>
+    <article class="prose" id="article"><h1 id="claude">Claude 应用网关支出限制</h1>
+<blockquote>
+<p>通过 Claude 应用网关为每个开发者按天、周或月设置支出上限。使用 Admin API 设置限制，网关在每个请求上实时执行这些限制。</p>
+</blockquote>
+<p>支出限制限制了每个开发者在给定的一天、一周或一个月内通过你的 <a href="claude-apps-gateway.html">Claude 应用网关</a> 可以花费的金额。当开发者超过他们的上限时，网关在他们的下一个请求上返回 <code>429</code>，并阻止他们直到该周期重置或管理员提高上限。使用支出限制为每个开发者、团队或整个组织设置一个共享凭证的上限。</p>
+<p>默认情况下，Claude 应用网关通过一个共享的上游凭证转发所有推理，因此你的提供商的账单将所有内容归属于该凭证，而不是单个开发者。在 Amazon Bedrock 上，<a href="claude-apps-gateway-config.html#per-developer-aws-cost-attribution">按开发者的 AWS 成本归属</a> 改变了这一点。没有按开发者的限制，一个失控的代理群可能会花费组织的整个承诺。支出限制是网关在该共享账单之上的按开发者视图和断路器。</p>
+<h2 id="set-a-cap">设置上限</h2>
+<p>配置了 <a href="claude-apps-gateway-config.html#admin"><code>admin:</code></a> 块在 <code>gateway.yaml</code> 中后，网关在 <code>/v1/organizations/spend_limits</code> 处提供一个 admin API，并在每个推理请求上实时执行上限。上限本身通过该 API 设置，而不是在 <code>gateway.yaml</code> 中；每个 <code>POST /v1/organizations/spend_limits</code> 请求从 <code>{scope, amount, period}</code> 创建或替换一个上限。该 API 镜像了 Anthropic 的公共 <a href="https://platform.claude.com/docs/en/manage-claude/admin-api" target="_blank" rel="noopener">Admin API</a> 支出限制端点的线路形状，因此针对该契约编写的 HTTP 客户端可以通过更改其基础 URL 来针对网关。</p>
+<p>此请求为每个开发者设置了一个组织范围的默认值，每月 \$500：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">curl<span class="w"> </span>-sS<span class="w"> </span>https://claude-gateway.internal.example.com/v1/organizations/spend_limits<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"x-api-key: </span><span class="nv">$GATEWAY_ADMIN_WRITE_KEY</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"scope": {"type": "organization"}, "amount": "50000", "period": "monthly"}'</span>
+</code></pre></div>
+<p>此请求在 <code>contractors</code> 组的每个成员上分层了一个更严格的每天 \$100 的上限：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">curl<span class="w"> </span>-sS<span class="w"> </span>https://claude-gateway.internal.example.com/v1/organizations/spend_limits<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"x-api-key: </span><span class="nv">$GATEWAY_ADMIN_WRITE_KEY</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"scope": {"type": "rbac_group", "rbac_group_id": "contractors"}, "amount": "10000", "period": "daily"}'</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scope.type</code></td>
+<td><code>user</code>, <code>rbac_group</code>, <code>organization</code></td>
+<td><code>user</code> 通过其 OpenID Connect (OIDC) <code>sub</code>（你的身份提供商分配的稳定用户 ID）针对一个开发者；将其作为 <code>scope.user_id</code> 传递。<code>rbac_group</code> 通过名称针对一个 <a href="claude-apps-gateway-config.html#managed">IdP 组</a>；将其作为 <code>scope.rbac_group_id</code> 传递。<code>organization</code> 是组织范围的默认值。网关接受所有三个；Anthropic 的公共 <code>POST</code> 目前仅限用户。</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td>USD 美分的整数字符串，或 <code>null</code></td>
+<td><code>null</code> 是无限制的。<code>"0"</code> 是零上限，它阻止每个请求。</td>
+</tr>
+<tr>
+<td><code>period</code></td>
+<td><code>daily</code>, <code>weekly</code>, <code>monthly</code></td>
+<td>一个作用域可以为每个时期保持一个上限，每个都独立执行：如果开发者超过其中任何一个，他们就会被阻止。</td>
+</tr>
+</tbody>
+</table>
+<p>组或组织上限是每个成员继承的按座位默认值，而不是共享池。每个时期，开发者的有效上限按以下顺序解决：按用户覆盖，然后是其组上限中最严格的，然后是组织默认值，然后是无限制。<a href="claude-apps-gateway-config.html#admin"><code>admin.group_limit_mode: max</code></a> 将多组平局打破翻转为最不严格的。</p>
+<h3 id="authenticate-to-the-admin-api">向 admin API 进行身份验证</h3>
+<p>发送以下之一：</p>
+<ul>
+<li>一个 <code>x-api-key</code> 标头，匹配 <a href="claude-apps-gateway-config.html#admin"><code>admin.write_keys</code></a> 中的一个密钥以获得完全访问权限，或 <code>admin.read_keys</code> 以获得仅 <code>GET</code> 访问权限。每个密钥都有一个 <code>id</code>，在审计日志中显示为 <code>admin-key:&lt;id&gt;</code>，因此为 Terraform、CI 和每个自动化提供自己的密钥。</li>
+<li>一个网关承载令牌，其 <code>groups</code> 声明包括 <a href="claude-apps-gateway-config.html#admin"><code>admin.admin_groups</code></a> 中的一个。这是完全访问权限，审计为 <code>oidc:&lt;sub&gt;</code>，因此对人类管理员更好。</li>
+</ul>
+<h2 id="how-enforcement-works">执行如何工作</h2>
+<p>在每个 <code>/v1/messages</code> 请求上，网关在一个 Postgres 查询中查找开发者的上限和期间至今的支出。超过任何上限的开发者会获得 <code>429</code> 和 <code>error.type: billing_error</code> 以及标头 <code>x-should-retry: false</code>。</p>
+<p>消息命名该期间和重置时间，例如 <code>spend limit reached (daily; resets 2026-08-08 00:00 UTC)</code>，后跟你的 <a href="claude-apps-gateway-config.html#admin"><code>admin.blocked_message</code></a>（如果设置）。当开发者同时超过多个上限时，消息命名最后重置的上限。响应还包含一个 <code>retry-after</code> 标头，其中包含直到该重置的剩余秒数。在网关服务器上的 v2.1.225 之前，消息是 <code>spend limit reached</code>，没有期间、重置时间或 <code>retry-after</code> 标头。</p>
+<p>在 v2.1.227 或更高版本上，<code>&lt;public_url&gt;/protocol</code> 处的协议参考也列出了确切的使用限制响应标头和 <code>429</code> 正文。</p>
+<p>上限在 UTC 日历边界重置：每天在 00:00 UTC、周一和每月的第一天。网关从不阻止 <code>/v1/messages/count_tokens</code>，因为令牌计数是免费的。</p>
+<h3 id="how-requests-are-priced">请求如何定价</h3>
+<p>在每个响应之后，使用计量器读取令牌计数并将成本添加到每日、每周和每月计数器。它从不接触发送给客户端的字节，因此计量失败无法破坏响应。这些金额是美元估计值，是断路器而不是发票；对于计费，请根据你的提供商的使用报告进行协调。</p>
+<p>计量器按以下顺序为每个请求选择费率：</p>
+<ol>
+<li>为提供请求的上游匹配的 <a href="claude-apps-gateway-config.html#pricing"><code>pricing.overrides</code></a> 行。需要 v2.1.227 或更高版本。</li>
+<li>上游模型 ID 的列表价格，即网关发送给提供商的字符串，当 Claude Code 成本表识别它时。该表接受 Anthropic、Amazon Bedrock、Google Cloud 的 Agent Platform 和 Microsoft Foundry ID 形式。</li>
+<li>你映射到该上游 ID 的 <a href="claude-apps-gateway-config.html#models"><code>models[].id</code></a> 的列表价格，对于不包含模型名称的上游字符串，例如 Amazon Bedrock 应用推理配置文件 ARN 或 Microsoft Foundry 部署名称。需要 v2.1.218 或更高版本。</li>
+<li>未知模型层级 \$5/\$25 每百万输入/输出令牌，因此计量器无法识别的 ID 永远不会免费。网关在启动时和运行时每个 ID 一次警告何时使用此层级。</li>
+</ol>
+<p>无论应用哪种费率，计量器然后将金额乘以 <a href="claude-apps-gateway-config.html#pricing"><code>pricing.multiplier</code></a>，默认为 <code>1</code>。</p>
+<p>客户端中止也被计费。当流在没有上游最终使用帧的情况下结束时，计量器为已发送给客户端的文本计费约每输出令牌四个字符的下限估计，因此提前中止请求不会规避上限。</p>
+<h4 id="long-prompt-rates">长提示词费率</h4>
+<p><a href="https://platform.claude.com/docs/en/models/haiku-5-5/overview" target="_blank" rel="noopener">Claude Haiku 5.5</a> 的列表价格对<a href="model-config.html#haiku-5-5-context-window-and-pricing">超过 token 阈值的提示词采用更高费率</a>。当 Haiku 5.5 处理提示词超过该阈值的请求时，运行 Claude Code v2.1.293 或更高版本的网关服务器会按该费率为整个请求定价。计量器将输入 token、缓存读取和缓存写入计入该阈值。</p>
+<p>如果您的某个 <code>pricing.overrides</code> 行与请求匹配，则无论提示词长度如何，都适用该行的费率。</p>
+<h3 id="postgres-availability">Postgres 可用性</h3>
+<p>预检查使用两秒超时查询 Postgres。如果存储无法访问或超时，执行默认情况下失败打开：请求继续，网关记录警告，响应不包含 <code>anthropic-ratelimit-unified-*</code> 标头。设置 <a href="claude-apps-gateway-config.html#enforcement"><code>enforcement.fail_closed_on_error: true</code></a> 改为失败关闭，它返回相同的 <code>429 billing_error</code>，但消息为 <code>spend limit unavailable</code>，没有期间、重置时间或 <code>retry-after</code> 标头。失败打开防止存储中断成为推理中断；失败关闭保证没有无计量支出。</p>
+<p>失败打开仅在你的负载均衡器或编排器仍然将流量路由到网关时有帮助。有关 <code>store.readiness_grace_seconds</code> 的信息，请参阅 <a href="claude-apps-gateway-deploy.html#outage-behavior">Outage behavior</a>，它使副本在短暂中断期间通过其就绪检查。</p>
+<h3 id="usage-warnings-in-claude-code">Claude Code 中的使用警告</h3>
+<p>Claude Code 在开发者接近其上限时向其发出警告：一旦利用率超过 75% 时警告一次，超过其消耗最多的上限的 95% 时再次警告。当网关阻止请求时，Claude Code 按原样显示网关的 <code>429</code> 消息，包括您的 <code>admin.blocked_message</code>。它还会在 <code>/usage</code> 中显示该上限，并将其传递给开发者的<a href="statusline.html#spend-limit-fields">状态栏</a>脚本。</p>
+<p>每种显示都需要开发者机器和网关服务器上具备最低 Claude Code 版本：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">开发者看到的内容</th>
+<th style="text-align: left;">开发者的机器</th>
+<th style="text-align: left;">网关服务器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">75% 和 95% 时的用量警告</td>
+<td style="text-align: left;">v2.1.225 或更高版本</td>
+<td style="text-align: left;">v2.1.225 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/usage</code> 中的 <strong>Spend limit</strong> 栏，显示其上限已使用的百分比和重置时间，以及状态栏输入中的 <code>rate_limits.spend_limit</code> 对象</td>
+<td style="text-align: left;">v2.1.251 或更高版本</td>
+<td style="text-align: left;">v2.1.225 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Spend limit</strong> 栏中以美元表示的估计支出和上限，例如"\$271.40 / \$500.00 spent this month"，以及状态栏输入中的相同金额和上限期间</td>
+<td style="text-align: left;">v2.1.284 或更高版本</td>
+<td style="text-align: left;">v2.1.284 或更高版本</td>
+</tr>
+</tbody>
+</table>
+<p>警告和百分比来自 <code>anthropic-ratelimit-unified-*</code> 标头，网关会将这些标头添加到具有上限的开发者的每个成功 <code>/v1/messages</code> 响应中。标头始终描述开发者自己的上限：网关会剥离上游提供商的速率限制标头（这些标头描述您的共享配额），从不转发它们。</p>
+<p>开发者看到的支出是网关自身的<a href="#how-requests-are-priced">估计值</a>，即网关用于执行上限的同一数值，而不是来自您的提供商账单的金额。Claude Code 通过向网关发送单独的请求来读取美元金额，即使您在开发者的机器上设置了 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code>，它也会发送该请求。在 v2.1.295 之前，设置了该变量时 Claude Code 会跳过该请求，<code>/usage</code> 和状态栏仅显示百分比和重置日期，不显示美元金额。</p>
+<h2 id="admin-api-reference">Admin API 参考</h2>
+<p>下面的端点在 <code>/v1/organizations/spend_limits</code> 下提供。</p>
+<table>
+<thead>
+<tr>
+<th>方法和路径</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /v1/organizations/spend_limits</code></td>
+<td>列出配置的上限，可选地过滤到 <code>organization</code>、<code>rbac_group</code> 或 <code>user</code> 的一个 <code>scope_type</code>。查询：<code>?limit=&amp;after_id=&amp;before_id=&amp;scope_type=</code>。</td>
+</tr>
+<tr>
+<td><code>POST /v1/organizations/spend_limits</code></td>
+<td>为 <code>{scope, period}</code> 创建或替换上限。</td>
+</tr>
+<tr>
+<td><code>GET /v1/organizations/spend_limits/{id}</code></td>
+<td>通过其 <code>spl_</code> 前缀 ID 获取一个上限。</td>
+</tr>
+<tr>
+<td><code>DELETE /v1/organizations/spend_limits/{id}</code></td>
+<td>删除一个上限。返回 <code>{type: "spend_limit_deleted", id}</code>。</td>
+</tr>
+<tr>
+<td><code>GET /v1/organizations/spend_limits/effective</code></td>
+<td>每个主体每个时期的已解决上限和至今支出。</td>
+</tr>
+<tr>
+<td><code>GET /v1/organizations/spend_limits/audit</code></td>
+<td>管理员变更跟踪，最新优先。查询：<code>?limit=&amp;after_id=</code>。</td>
+</tr>
+</tbody>
+</table>
+<p>约定镜像 Anthropic 的 Admin API：</p>
+<ul>
+<li>每个对象上的 <code>type</code></li>
+<li><code>spl_</code> 前缀 ID</li>
+<li>金额为 USD 美分的整数字符串；<code>POST</code> 拒绝任何其他 <code>currency</code>，返回 <code>400</code></li>
+<li><code>{type: "error", error: {type, message}, request_id}</code> 错误信封</li>
+<li>每个管理员响应上的 <code>request-id</code> 响应标头，成功或错误；错误正文也将其作为 <code>request_id</code> 携带</li>
+</ul>
+<p>每个变更在同一事务中向 <code>admin_audit</code> 写入前/后行，归属于 <code>admin-key:&lt;id&gt;</code> 或 <code>oidc:&lt;sub&gt;</code>。</p>
+<p>网关仅提供支出限制端点。其他 Admin API 表面，例如 <code>spend_limit_increase_requests</code> 队列，不是网关 Admin API 的一部分。</p>
+<h3 id="/effective"><code>/effective</code></h3>
+<p><code>GET /v1/organizations/spend_limits/effective</code> 返回 Anthropic 的 <code>SpendSummary</code> 模式：每行是一个主体的一个时期，具有已解决的上限、期间至今的支出和一个 <code>actor</code> 对象。网关特定的差异：</p>
+<ul>
+<li><code>user_id</code> 是 OIDC <code>sub</code>。</li>
+<li><code>actor.name</code> 和 <code>actor.email_address</code> 是 <code>null</code>，直到主体通过网关的第一个推理请求。网关没有用户目录；它从每个用户自己的会话 JWT 记录最后看到的值。</li>
+<li>每行还携带一个 <code>groups</code> 数组，主体的最后看到的 IdP 组。这是一个网关扩展，因此管理员 UI 可以显示应用的每个上限层；Anthropic 形状的客户端忽略它。</li>
+<li>没有 <code>user_ids[]</code> 过滤器，它列出有记录支出的主体，因为网关无法枚举所有组织成员。</li>
+</ul>
+<p>组源上限根据那些最后看到的组解决，具有与执行使用的相同 <code>group_limit_mode</code> 平局打破，因此查看器显示实际应用的上限。</p>
+<table>
+<thead>
+<tr>
+<th>查询参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user_ids[]</code></td>
+<td>可重复。按 OIDC <code>sub</code> 过滤到特定主体。</td>
+</tr>
+<tr>
+<td><code>period[]</code></td>
+<td>可重复。过滤到 <code>daily</code>、<code>weekly</code> 或 <code>monthly</code> 行。</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td><code>spend_desc</code> 首先列出最高支出者。需要恰好一个 <code>period[]</code>。</td>
+</tr>
+<tr>
+<td><code>q</code></td>
+<td>对 OIDC <code>sub</code>、最后看到的电子邮件和最后看到的显示名称的不区分大小写的子字符串过滤。</td>
+</tr>
+<tr>
+<td><code>limit</code> / <code>page</code></td>
+<td>页面大小（1–1000，默认 20）和前一个响应的 <code>next_page</code> 中的不透明游标。</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p><code>q=</code> 和 <code>user_ids[]=</code> 乘坐 GET 查询字符串，因此任何前置代理或负载均衡器在其访问日志中捕获它们。如果你的 PII 日志策略很严格，请在那里清理这些参数。</p></div></div>
+<h3 id="/audit"><code>/audit</code></h3>
+<p>返回支出限制变更跟踪：谁更改了哪个上限，具有前/后快照，最新优先。<code>has_more</code> 是精确的。此端点遵循本地 Admin API 约定，而不是第一方线路形状。</p>
+<h3 id="pagination">分页</h3>
+<p>原始列表按 <code>after_id</code> 和 <code>before_id</code> 分页，它们是互斥的 <code>spl_…</code> ID；结果按创建排序，<code>has_more</code> 反映遍历方向。<code>/effective</code> 按传回的不透明 <code>next_page</code> 令牌分页为 <code>?page=</code>，主体按升序排序，因此在记录支出时页面保持稳定。<code>limit</code> 在两者上都是 1–1000，默认 20，在 <code>/audit</code> 上按 <code>after_id</code>（前一页上最后一个事件的数字 <code>id</code>）分页，其 <code>limit</code> 默认为 100。</p>
+<h2 id="data-lifecycle">数据生命周期</h2>
+<p>网关保持四个支出相关的表；每小时扫描执行保留窗口：</p>
+<table>
+<thead>
+<tr>
+<th>表</th>
+<th>内容</th>
+<th>保留</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spend</code></td>
+<td>按主体期间至今的计数器（美分）</td>
+<td><a href="claude-apps-gateway-config.html#admin"><code>admin.spend_retention_months</code></a>，默认 13</td>
+</tr>
+<tr>
+<td><code>spend_limits</code></td>
+<td>配置的上限</td>
+<td>直到通过 API 删除</td>
+</tr>
+<tr>
+<td><code>admin_audit</code></td>
+<td>变更跟踪</td>
+<td><a href="claude-apps-gateway-config.html#admin"><code>admin.audit_retention_days</code></a>，默认 365</td>
+</tr>
+<tr>
+<td><code>principal_emails</code></td>
+<td>每个主体的最后看到的电子邮件、显示名称和 IdP 组。包含 PII。</td>
+<td><a href="claude-apps-gateway-config.html#admin"><code>admin.identity_retention_days</code></a> 自上次活动以来，默认 90</td>
+</tr>
+</tbody>
+</table>
+<p>当开发者离开时，通过 <code>DELETE /v1/organizations/spend_limits/{id}</code> 删除任何按用户上限；他们的支出和身份行按上面的保留窗口老化。要立即擦除一个人，用于离职或数据主体访问请求 (DSAR)，直接针对网关数据库运行 <code>DELETE FROM principal_emails WHERE principal = '&lt;sub&gt;'</code>。这删除了唯一保存其电子邮件、名称和组的表。<code>spend</code> 和 <code>admin_audit</code> 行仅引用伪匿名 OIDC <code>sub</code>，并按其自己的窗口老化。</p>
+<h2 id="related">相关</h2>
+<ul>
+<li><a href="claude-apps-gateway-config.html#admin"><code>admin</code> 和 <code>enforcement</code> 配置</a>：启用 admin API 和调整保留</li>
+<li><a href="claude-apps-gateway-deploy.html#postgres">部署指南</a>：Postgres 模式和备份指导</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="claude-apps-gateway-config.html"><span class="pager-dir">← 上一页</span><span class="pager-name">Claude 应用网关配置</span></a><a class="pager-link next" href="claude-apps-gateway-deploy.html"><span class="pager-dir">下一页 →</span><span class="pager-name">Claude 应用网关部署和运维</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#set-a-cap">设置上限</a><a class="toc-l3" href="#authenticate-to-the-admin-api">向 admin API 进行身份验证</a><a class="toc-l2" href="#how-enforcement-works">执行如何工作</a><a class="toc-l3" href="#how-requests-are-priced">请求如何定价</a><a class="toc-l3" href="#postgres-availability">Postgres 可用性</a><a class="toc-l3" href="#usage-warnings-in-claude-code">Claude Code 中的使用警告</a><a class="toc-l2" href="#admin-api-reference">Admin API 参考</a><a class="toc-l3" href="#/effective">/effective</a><a class="toc-l3" href="#/audit">/audit</a><a class="toc-l3" href="#pagination">分页</a><a class="toc-l2" href="#data-lifecycle">数据生命周期</a><a class="toc-l2" href="#related">相关</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

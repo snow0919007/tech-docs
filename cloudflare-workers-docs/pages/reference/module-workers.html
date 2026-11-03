@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>从 Service Worker 迁移到 ES Modules · Workers 文档（中文版）</title>
+<meta name="description" content="把 Worker 从 Service Worker 写法改成 ES modules 写法，换取更快的执行与更多能力。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>从 Service Worker 迁移到 ES Modules</h1>
+      <p class="lead">把 Worker 从 Service Worker 写法改成 ES modules 写法，换取更快的执行与更多能力。</p>
+      <div class="page-meta">
+        <span class="tag">参考</span>
+        <span>原文更新于 2026-07-03</span>
+        <span>对应页面：reference/migrate-to-module-workers</span>
+      </div>
+
+<p>本指南演示如何把 Worker 从 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API" target="_blank" rel="noopener">Service Worker ↗</a> 格式迁移到 <a href="https://blog.cloudflare.com/workers-javascript-modules/" target="_blank" rel="noopener">ES modules ↗</a> 格式。</p>
+
+      <h2>迁移的好处</h2>
+      <p>把 Worker 迁到 ES modules 格式，有几个原因：</p>
+      <ol>
+        <li><strong>运行更快。</strong>Service Worker 写法把绑定暴露成全局变量，这意味着每个请求都必须创建一个新的 JavaScript 执行上下文，增加开销与耗时；用 ES modules 写的 Worker 可以在多个请求间复用同一个执行上下文。</li>
+        <li>实现 <a href="https://developers.cloudflare.com/durable-objects/" target="_blank" rel="noopener">Durable Objects ↗</a> 要求 Worker 使用 ES modules。</li>
+        <li><a href="https://developers.cloudflare.com/d1/" target="_blank" rel="noopener">D1 ↗</a>、<a href="https://developers.cloudflare.com/workers-ai/" target="_blank" rel="noopener">Workers AI ↗</a>、<a href="https://developers.cloudflare.com/vectorize/" target="_blank" rel="noopener">Vectorize ↗</a>、<a href="https://developers.cloudflare.com/workflows/" target="_blank" rel="noopener">Workflows ↗</a>、<a href="https://developers.cloudflare.com/images/optimization/binding/" target="_blank" rel="noopener">Images ↗</a> 的绑定只能在 ES modules 写的 Worker 中使用。</li>
+        <li>使用 ES modules 格式时，你可以<a href="../../sections/versions-and-deployments.html">渐进式部署改动</a>。</li>
+        <li>可以方便地把 ES modules 格式的 Worker 发布到 <code>npm</code>，从而在代码库中导入、复用。</li>
+      </ol>
+
+      <h2>迁移一个 Worker</h2>
+      <p>下面的例子是一个把所有入站请求以 <code>301</code> 状态码重定向到某个 URL 的 Worker。</p>
+
+      <div class="warn-box">
+        <span class="box-title">Service Worker 写法已废弃</span>
+        <p>Service Worker 写法已废弃，但仍然受支持。我们建议改用 <a href="module-workers.html">模块化 Worker（Module Workers）</a>。新特性可能不再支持 Service Worker 写法。</p>
+      </div>
+
+      <p>用 Service Worker 语法，这个例子的写法是：</p>
+<pre data-lang="js"><code>async function handler(request) {
+  const base = 'https://example.com';
+  const statusCode = 301;
+
+  const destination = new URL(request.url, base);
+  return Response.redirect(destination.toString(), statusCode);
+}
+
+// Initialize Worker
+addEventListener('fetch', event =&gt; {
+  event.respondWith(handler(event.request));
+});</code></pre>
+
+      <p>用 ES modules 格式的 Worker 把 <code>addEventListener</code> 语法换成对象定义，该对象必须是文件的默认导出（<code>export default</code>）。上面的代码变成：</p>
+<pre data-lang="js"><code>export default {
+  fetch(request) {
+    const base = "https://example.com";
+    const statusCode = 301;
+
+    const source = new URL(request.url);
+    const destination = new URL(source.pathname, base);
+    return Response.redirect(destination.toString(), statusCode);
+  },
+};</code></pre>
+
+      <h2>绑定</h2>
+      <p><a href="../../sections/runtime-apis.html">绑定</a>让 Worker 能与 Cloudflare 开发者平台上的资源交互。</p>
+      <p>ES modules 格式的 Worker 不依赖任何全局绑定；而 Service Worker 语法是从全局作用域上取绑定的。</p>
+      <p>为了讲清楚绑定，下面以 <code>TODO</code> 这个 KV 命名空间绑定为例。创建该绑定需要：</p>
+      <ol>
+        <li>创建一个名为 <code>My Tasks</code> 的 KV 命名空间，拿到一个 ID，稍后用于绑定。</li>
+        <li>创建一个 Worker。</li>
+        <li>找到 Worker 的 <a href="../../sections/wrangler.html">Wrangler 配置文件</a>，加上 KV 命名空间绑定：</li>
+      </ol>
+<pre data-lang="jsonc"><code>{
+	"kv_namespaces": [
+		{
+			"binding": "TODO",
+			"id": "&lt;ID&gt;"
+		}
+	]
+}</code></pre>
+<pre data-lang="toml"><code>[[kv_namespaces]]
+binding = "TODO"
+id = "&lt;ID&gt;"</code></pre>
+
+      <p>下面两节分别演示在 Service Worker 与 ES modules 格式中如何使用这个绑定。</p>
+
+      <div class="note-box">
+        <span class="box-title">从 Durable Objects 与 Workers 中引用 KV</span>
+        <p>想了解如何在 Worker 中引用 KV，参见 <a href="https://developers.cloudflare.com/kv/concepts/kv-bindings/" target="_blank" rel="noopener">KV 绑定文档 ↗</a>。</p>
+      </div>
+
+      <h3>Service Worker 格式中的绑定</h3>
+      <p>在 Service Worker 语法里，<code>TODO</code> 这个 KV 命名空间绑定定义在 Worker 的全局作用域上，应用代码的任何位置都能直接用。</p>
+<pre data-lang="js"><code>addEventListener("fetch", async (event) =&gt; {
+  return await getTodos()
+});
+
+async function getTodos() {
+  // Get the value for the "to-do:123" key
+  // NOTE: Relies on the TODO KV binding that maps to the "My Tasks" namespace.
+  let value = await TODO.get("to-do:123");
+
+  // Return the value, as is, for the Response
+  event.respondWith(new Response(value));
+}</code></pre>
+
+      <h3>ES modules 格式中的绑定</h3>
+      <p>在 ES modules 格式中，绑定只在 Worker 入口处提供的 <code>env</code> 参数里可用。</p>
+      <p>要在代码里访问 <code>TODO</code> 这个 KV 命名空间绑定，必须把 <code>env</code> 参数从 Worker 的 <code>fetch</code> 处理器传到 <code>getTodos</code> 函数。</p>
+<pre data-lang="js"><code>import { getTodos } from './todos'
+
+export default {
+  async fetch(request, env, ctx) {
+    // Passing the env parameter so other functions
+    // can reference the bindings available in the Workers application
+    return await getTodos(env)
+  },
+};</code></pre>
+
+      <p>下面这个 <code>getTodos</code> 函数在 <code>TODO</code> 这个 KV 绑定上调用了 <code>get</code>。</p>
+<pre data-lang="js"><code>async function getTodos(env) {
+  // NOTE: Relies on the TODO KV binding which has been provided inside of
+  // the env parameter of the `getTodos` function
+  let value = await env.TODO.get("to-do:123");
+  return new Response(value);
+}
+
+export { getTodos }</code></pre>
+
+      <h2>环境变量</h2>
+      <p>ES modules 格式与 Service Worker 格式在代码中访问<a href="../../sections/configuration.html">环境变量</a>的方式不同。</p>
+      <p>先看下面的环境变量配置（位于 <a href="../../sections/wrangler.html">Wrangler 配置文件</a>）：</p>
+<pre data-lang="jsonc"><code>{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "my-worker-dev",
+	// Define top-level environment variables
+	// using the {"vars": "key": "value"} format
+	"vars": {
+		"API_ACCOUNT_ID": "&lt;EXAMPLE-ACCOUNT-ID&gt;"
+	}
+}</code></pre>
+<pre data-lang="toml"><code>"$schema" = "./node_modules/wrangler/config-schema.json"
+name = "my-worker-dev"
+
+[vars]
+API_ACCOUNT_ID = "&lt;EXAMPLE-ACCOUNT-ID&gt;"</code></pre>
+
+      <h3>Service Worker 格式中的环境变量</h3>
+      <p>在 Service Worker 格式中，<code>API_ACCOUNT_ID</code> 定义在 Worker 应用的全局作用域上，代码任何位置都能用。</p>
+<pre data-lang="js"><code>addEventListener("fetch", async (event) =&gt; {
+  console.log(API_ACCOUNT_ID) // Logs "&lt;EXAMPLE-ACCOUNT-ID&gt;"
+  return new Response("Hello, world!")
+})</code></pre>
+
+      <h3>ES modules 格式中的环境变量</h3>
+      <p>在 ES modules 格式中，环境变量通过 Worker 应用入口处提供的 <code>env</code> 参数访问：</p>
+<pre data-lang="js"><code>export default {
+  async fetch(request, env, ctx) {
+    console.log(env.API_ACCOUNT_ID) // Logs "&lt;EXAMPLE-ACCOUNT-ID&gt;"
+    return new Response("Hello, world!")
+  },
+};</code></pre>
+
+      <p>你也可以从 <code>cloudflare:workers</code> 导入 <code>env</code>，从而在代码的任何位置（包括顶层作用域）访问环境变量：</p>
+<pre data-lang="js"><code>import { env } from "cloudflare:workers";
+
+// Access environment variables at the top level
+const accountId = env.API_ACCOUNT_ID;
+
+export default {
+	async fetch(request) {
+		console.log(accountId); // Logs "&lt;EXAMPLE-ACCOUNT-ID&gt;"
+		return new Response("Hello, world!");
+	},
+};</code></pre>
+<pre data-lang="ts"><code>import { env } from "cloudflare:workers";
+
+// Access environment variables at the top level
+const accountId = env.API_ACCOUNT_ID;
+
+export default {
+  async fetch(request: Request): Promise&lt;Response&gt; {
+    console.log(accountId) // Logs "&lt;EXAMPLE-ACCOUNT-ID&gt;"
+    return new Response("Hello, world!")
+  },
+};</code></pre>
+
+      <p>这种做法适合在初始化配置时使用，也适合从深层嵌套的函数里访问环境变量，而无需在每次函数调用时层层传递 <code>env</code>。更多细节见<a href="../../sections/runtime-apis.html">把 <code>env</code> 作为全局导入</a>。</p>
+
+      <h2>Cron 触发器</h2>
+      <p>要在 ES modules 语法的 Worker 里处理 <a href="../../sections/configuration.html">Cron 触发器</a>事件，请实现 <a href="../../sections/runtime-apis.html"><code>scheduled()</code> 事件处理器</a>，它相当于 Service Worker 语法里监听 <code>scheduled</code> 事件。</p>
+      <p>下面这段代码：</p>
+<pre data-lang="js"><code>addEventListener("scheduled", (event) =&gt; {
+  // ...
+});</code></pre>
+      <p>变成：</p>
+<pre data-lang="js"><code>export default {
+  async scheduled(event, env, ctx) {
+    // ...
+  },
+};</code></pre>
+
+      <h2>访问 <code>event</code> 或 <code>context</code> 上的数据</h2>
+      <p>Worker 经常需要访问 <code>request</code> 对象之外的数据。例如有时会用 <a href="../../sections/runtime-apis.html"><code>waitUntil</code></a> 延迟执行。ES modules 格式的 Worker 通过 <code>context</code> 参数访问 <code>waitUntil</code>。更多信息见 <a href="../../sections/runtime-apis.html">ES modules 参数说明</a>。</p>
+      <p>下面这段代码：</p>
+<pre data-lang="js"><code>async function triggerEvent(event) {
+  // Fetch some data
+  console.log('cron processed', event.scheduledTime);
+}
+
+// Initialize Worker
+addEventListener('scheduled', event =&gt; {
+  event.waitUntil(triggerEvent(event));
+});</code></pre>
+      <p>变成：</p>
+<pre data-lang="js"><code>async function triggerEvent(event) {
+  // Fetch some data
+  console.log('cron processed', event.scheduledTime);
+}
+
+export default {
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(triggerEvent(event));
+  },
+};</code></pre>
+
+      <h2>Service Worker 语法</h2>
+      <p>用 Service Worker 语法写的 Worker 由两部分组成：</p>
+      <ol>
+        <li>一个监听 <code>FetchEvents</code> 的事件监听器；</li>
+        <li>一个事件处理器，返回的 <a href="../../sections/runtime-apis.html">Response</a> 对象会传给事件的 <code>.respondWith()</code> 方法。</li>
+      </ol>
+      <p>当某个匹配该 Worker 的 URL 请求抵达 Cloudflare 全球网络上的服务器时，Cloudflare 的服务器会把请求交给 Workers 运行时，从而在 Worker 所在的 <a href="how-workers-works.html">isolate</a> 中派发一个 <code>FetchEvent</code>。</p>
+<pre data-lang="js"><code>addEventListener('fetch', event =&gt; {
+  event.respondWith(handleRequest(event.request));
+});
+
+async function handleRequest(request) {
+  return new Response('Hello worker!', {
+    headers: { 'content-type': 'text/plain' },
+  });
+}</code></pre>
+
+      <p>下面是这套请求响应流程的说明：</p>
+      <ol>
+        <li>针对 <code>FetchEvent</code> 的事件监听器告诉脚本：监听所有抵达该 Worker 的请求。监听器会收到 <code>event</code> 对象，其中包含 <code>event.request</code>——一个 <a href="../../sections/runtime-apis.html">Request</a> 对象，代表触发该 <code>FetchEvent</code> 的 HTTP 请求。</li>
+        <li>调用 <code>.respondWith()</code> 让 Workers 运行时拦截该请求，并返回自定义响应（本例中是纯文本 <code>'Hello worker!'</code>）。
+          <ul>
+            <li><code>FetchEvent</code> 处理器通常最终会以 <code>.respondWith()</code> 收尾，传入 <a href="../../sections/runtime-apis.html">Response</a> 或 <code>Promise&lt;Response&gt;</code> 来决定响应。</li>
+            <li><code>FetchEvent</code> 对象还提供<a href="../../sections/runtime-apis.html">另外两个方法</a>，用于处理意外异常，以及在响应返回之后才完成的操作。</li>
+          </ul>
+        </li>
+      </ol>
+      <p>进一步了解 <a href="../../sections/runtime-apis.html"><code>fetch()</code> 处理器的生命周期方法</a>。</p>
+
+      <h3>受支持的 <code>FetchEvent</code> 属性</h3>
+      <ul>
+        <li><code>event.type</code>（string）：事件类型，始终返回 <code>"fetch"</code>。</li>
+        <li><code>event.request</code>（Request）：传入的 HTTP 请求。</li>
+        <li><code>event.respondWith(response: Response | Promise)</code>：void，见<a href="#respondwith"><code>respondWith</code></a>。</li>
+        <li><code>event.waitUntil(promise: Promise)</code>：void，见 <a href="#waituntil"><code>waitUntil</code></a>。</li>
+        <li><code>event.passThroughOnException()</code>：void，见 <a href="#passthroughonexception"><code>passThroughOnException</code></a>。</li>
+      </ul>
+
+      <h3 id="respondwith"><code>respondWith</code></h3>
+      <p>拦截请求，让 Worker 能够返回自定义响应。</p>
+      <p>如果某个 <code>fetch</code> 事件处理器没有调用 <code>respondWith</code>，运行时会把这个事件交给下一个注册的 <code>fetch</code> 事件处理器。换句话说，虽然不推荐，但你确实可以在一个 Worker 里放多个 <code>fetch</code> 事件处理器。</p>
+      <p>如果所有 <code>fetch</code> 事件处理器都没有调用 <code>respondWith</code>，运行时会把请求转发给源站，就像没有这个 Worker 一样。但如果<em>没有</em>源站——或者这个 Worker 本身就是你的源站（对 <code>*.workers.dev</code> 域名来说总是如此）——那么你必须调用 <code>respondWith</code>，才能得到有效响应。</p>
+<pre data-lang="js"><code>// Format: Service Worker
+addEventListener('fetch', event =&gt; {
+  let { pathname } = new URL(event.request.url);
+
+  // Allow "/ignore/*" URLs to hit origin
+  if (pathname.startsWith('/ignore/')) return;
+
+  // Otherwise, respond with something
+  event.respondWith(handler(event));
+});</code></pre>
+
+      <h3 id="waituntil"><code>waitUntil</code></h3>
+      <p><code>waitUntil</code> 会延长 <code>"fetch"</code> 事件的生命周期。它接受一个基于 <code>Promise</code> 的任务，Workers 运行时会在这个处理器结束前执行它，同时不阻塞响应。例如，这很适合用来<a href="../../sections/runtime-apis.html">缓存响应</a>或处理日志。</p>
+      <p>在 Service Worker 格式里，<code>waitUntil</code> 就在 <code>event</code> 上，因为它是 <code>FetchEvent</code> 的原生属性。</p>
+      <p>在 ES modules 格式里，<code>waitUntil</code> 挪到了 <code>context</code> 参数对象上。</p>
+<pre data-lang="js"><code>// Format: Service Worker
+addEventListener('fetch', event =&gt; {
+  event.respondWith(handler(event));
+});
+
+async function handler(event) {
+  // Forward / Proxy original request
+  let res = await fetch(event.request);
+
+  // Add custom header(s)
+  res = new Response(res.body, res);
+  res.headers.set('x-foo', 'bar');
+
+  // Cache the response
+  // NOTE: Does NOT block / wait
+  event.waitUntil(caches.default.put(event.request, res.clone()));
+
+  // Done
+  return res;
+}</code></pre>
+
+      <h3 id="passthroughonexception"><code>passThroughOnException</code></h3>
+      <p>当 Worker 抛出未处理的异常时，<code>passThroughOnException</code> 方法可以避免返回一个运行时错误响应，转而让脚本<a href="https://community.microfocus.com/cyberres/b/sws-22/posts/security-fundamentals-part-1-fail-open-vs-fail-closed" target="_blank" rel="noopener">失效放行（fail open）↗</a>，把请求代理到源站，就像这个 Worker 从未被调用过。</p>
+      <p>为了避免 JavaScript 错误在未捕获异常时导致整个请求失败，<code>passThroughOnException()</code> 会让 Workers 运行时把控制权交给源站。</p>
+      <p>在 Service Worker 格式里，<code>passThroughOnException</code> 被加到 <code>FetchEvent</code> 接口上，因此在 <code>event</code> 上可用。</p>
+      <p>在 ES modules 格式里，<code>passThroughOnException</code> 位于 <code>context</code> 参数对象上。</p>
+<pre data-lang="js"><code>// Format: Service Worker
+addEventListener('fetch', event =&gt; {
+  // Proxy to origin on unhandled/uncaught exceptions
+  event.passThroughOnException();
+  throw new Error('Oops');
+});</code></pre>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/" target="_blank" rel="noopener">reference/migrate-to-module-workers</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

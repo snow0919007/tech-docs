@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cloudflare Access 保护 · Workers 文档（中文版）</title>
+<meta name="description" content="在请求抵达 Worker 之前先验身份：让指定的人进来，其他人挡在门外。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>Cloudflare Access 保护</h1>
+      <p class="lead">在请求抵达 Worker 之前先验身份：让指定的人进来，其他人挡在门外。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-10-12</span>
+        <span>对应页面：configuration/cloudflare-access</span>
+      </div>
+
+<p>借助 Cloudflare Access，你可以限定谁有权访问自己的应用。由你决定放行谁，且每个请求都会在你的 Worker 运行<strong>之前</strong>被校验：通过的访问者被放行，其余人被带到登录页或直接拦下。</p>
+      <p>可以保护的范围：</p>
+      <ul>
+        <li><strong>单个应用</strong>：要求访问其预览 URL、生产 URL 或两者都要登录。</li>
+        <li><strong>账户下所有 Worker</strong>：默认保护现存与将来新建的所有 Worker。</li>
+        <li><strong>特定自定义域名与主机名</strong>：在主机名或路由层面限制访问。</li>
+      </ul>
+
+      <h2>准备工作</h2>
+      <p>要在 Workers 上使用 Access，你需要：</p>
+      <ul>
+        <li>账户已启用 Zero Trust。若尚未开启，请先完成 <a href="https://developers.cloudflare.com/cloudflare-one/setup/" target="_blank" rel="noopener">Zero Trust 设置 ↗</a>，再回到 Workers 控制台。</li>
+        <li>具备管理 Workers 与 Access 应用的权限。</li>
+      </ul>
+
+      <h2>选择保护对象</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>我想保护…</th><th>对应章节</th><th>API 目标类型</th></tr></thead>
+          <tbody>
+            <tr><td><strong>所有 Worker</strong>的预览部署</td><td><a href="#all">保护所有 Worker</a></td><td><code>all_preview_workers</code></td></tr>
+            <tr><td><strong>所有 Worker</strong>的生产与预览部署</td><td><a href="#all">保护所有 Worker</a></td><td><code>all_workers</code></td></tr>
+            <tr><td><strong>单个 Worker</strong>的预览部署</td><td><a href="#one">保护单个 Worker</a></td><td><code>preview_worker</code></td></tr>
+            <tr><td><strong>单个 Worker</strong>的生产与预览部署</td><td><a href="#one">保护单个 Worker</a></td><td><code>worker</code></td></tr>
+            <tr><td>特定主机名——可以是 <code>workers.dev</code>、自定义域名或路径</td><td><a href="#host">保护特定主机名、自定义域名或路径</a></td><td>自托管应用域名</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="all">保护所有 Worker</h2>
+      <p>要求账户下每个 Worker（包括你将来部署的）都先登录。可以只要求预览部署登录，也可以生产与预览都要求。</p>
+      <p>控制台路径：<strong>Workers &amp; Pages</strong> 概览页 &gt; <strong>Protect all Workers</strong>。</p>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>找到 <strong>Protect all Workers</strong> 卡片。</li>
+        <li>如果卡片显示 <strong>Not enabled</strong>，选择 <strong>Enable Access</strong>。</li>
+        <li>选择 <strong>Previews only</strong>（仅预览）或 <strong>All traffic</strong>（全部流量）。</li>
+        <li>在 <strong>Authentication policy</strong> 下选择已有策略，或配置下文<a href="#policy">策略选项</a>之一。</li>
+        <li>选择 <strong>Enable Access</strong>。</li>
+        <li>（可选）查看会话时长。</li>
+        <li>选择 <strong>Apply Access</strong>。</li>
+      </ol>
+      <p>如果只想保护所有 Worker 的预览部署，创建一个目标类型为 <code>all_preview_workers</code> 的自托管 Access 应用：</p>
+<pre data-lang="json"><code>"destinations": [
+  {
+    "type": "all_preview_workers"
+  }
+]</code></pre>
+      <p>要保护每个 Worker 的生产与预览部署，改用 <code>all_workers</code>：</p>
+<pre data-lang="json"><code>"destinations": [
+  {
+    "type": "all_workers"
+  }
+]</code></pre>
+      <p>把这些 <code>destinations</code> 放进 <code>POST /accounts/{account_id}/access/apps</code> 请求。完整请求结构（含<a href="#policy">策略选项</a>、会话设置与进阶 Access 选项）见 <a href="https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/create/" target="_blank" rel="noopener">Access applications API ↗</a>。</p>
+
+      <h2 id="one">保护单个 Worker</h2>
+      <p>要求单个 Worker 先登录。这会自动保护与该 Worker 关联的所有域名，包括它的路由、自定义域名、<code>workers.dev</code> 主机名与预览。可以只要求预览部署登录，也可以生产与预览都要求。</p>
+      <div class="warn-box">
+        <span class="box-title">WebSocket 限制</span>
+        <p>Worker 级 Access 策略目前<strong>不支持 WebSocket 连接</strong>。对受 Worker 级策略保护的 Worker 发起 WebSocket 升级请求，会以 <code>403</code> 失败。</p>
+        <p>如果你的 Worker 用到 WebSocket（包括 Durable Objects、实时应用或基于 WebSocket 的 RDP），请改用<a href="#host">基于主机名的 Access 应用</a>来保护。</p>
+      </div>
+      <p>控制台路径：<strong>Workers &amp; Pages</strong> &gt; 选择你的 Worker &gt; <strong>Access</strong>。</p>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>从应用列表中选择你的 Worker。</li>
+        <li>选择 <strong>Access</strong> 标签页。</li>
+        <li>选择 <strong>Protect this Worker behind Access</strong>。</li>
+        <li>选择 <strong>Previews only</strong> 或 <strong>All traffic</strong>。</li>
+        <li>在 <strong>Authentication policy</strong> 下选择已有策略，或配置<a href="#policy">策略选项</a>。</li>
+        <li>（可选）查看会话时长。</li>
+        <li>选择 <strong>Apply Access</strong>。</li>
+      </ol>
+      <p>如果只想保护单个 Worker 的预览部署，创建目标类型为 <code>preview_worker</code> 的自托管 Access 应用，并把 <code>worker_id</code> 设为该 Worker 的 ID：</p>
+<pre data-lang="bash"><code>curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/apps" \
+  --request POST \
+  --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  --json '{
+    "type": "self_hosted",
+    "name": "Access for my-worker",
+    "destinations": [
+      {
+        "type": "preview_worker",
+        "worker_id": "c81a2d22c29840ed9d61681a3270dbff"
+      }
+    ],
+    "policies": [
+      {
+        "decision": "allow",
+        "include": [
+          {
+            "email_domain": {
+              "domain": "example.com"
+            }
+          }
+        ]
+      }
+    ]
+  }'</code></pre>
+      <p>要连同生产部署一起保护，把目标类型改成 <code>worker</code>：</p>
+<pre data-lang="json"><code>"destinations": [
+  {
+    "type": "worker",
+    "worker_id": "c81a2d22c29840ed9d61681a3270dbff"
+  }
+]</code></pre>
+      <p>完整请求结构见 <a href="https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/create/" target="_blank" rel="noopener">Access applications API ↗</a>。</p>
+
+      <h2 id="host">保护特定主机名、自定义域名或路径</h2>
+      <p>当只有某个路由到 Worker 的特定 URL 需要登录时（例如某个 <code>workers.dev</code> 主机名、某个自定义域名、子域或路径），用基于主机名的 Access。它只保护那一个确切 URL；而<a href="#one">保护整个 Worker</a>则不管通过什么方式访问都会生效。例如用主机名方式，你可以只保护 <code>my-worker.example.workers.dev</code>、<code>admin.example.com</code>，或 <code>example.com/login</code> 这一个路径，从而只让 Worker 的一部分变成私有。</p>
+      <p>无论在控制台还是 API，保护主机名或路径的方式都是创建一个<a href="https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/" target="_blank" rel="noopener">自托管应用 ↗</a>，并把该主机名或路径作为应用域名。</p>
+      <p>在 <strong>Zero Trust</strong> &gt; <strong>Access</strong> &gt; <strong>Applications</strong> 中创建自托管应用。要匹配子域、多路径或通配符，见<a href="https://developers.cloudflare.com/cloudflare-one/access-controls/policies/app-paths/" target="_blank" rel="noopener">应用路径 ↗</a>。</p>
+      <p>也可以用 <code>POST /accounts/{account_id}/access/apps</code> 请求创建，把应用域名设为主机名或路径。完整请求结构见 <a href="https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/create/" target="_blank" rel="noopener">Access applications API ↗</a>。</p>
+
+      <h2>在所有 Worker 受保护时让某个 Worker 公开</h2>
+      <p>如果账户级 Access 保护了所有 Worker，你可以为某个 Worker 添加 <strong>Worker 级旁路（bypass）</strong>，让它变为公开——旁路意味着 Access 不再要求该 Worker 登录。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>这仅在账户级 Access 已经保护该 Worker 时才有意义。若没有账户级 Access 策略，公开的 Worker 本就无需旁路。</p>
+      </div>
+      <p>控制台路径：<strong>Workers &amp; Pages</strong> &gt; 选择你的 Worker &gt; <strong>Access</strong>。</p>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>从应用列表中选择你的 Worker。</li>
+        <li>选择 <strong>Access</strong> 标签页。</li>
+        <li>选择把该 Worker 设为公开、或绕过账户级 Access 的选项。</li>
+        <li>确认改动。</li>
+      </ol>
+      <p>用 API 的做法是创建一个带旁路策略的 Worker 级 Access 应用：用 <code>worker</code> 目标、把 <code>worker_id</code> 设为该 Worker 的 ID，并把策略 <code>decision</code> 设为 <code>bypass</code>，<code>include</code> 规则匹配所有人：</p>
+<pre data-lang="json"><code>"policies": [
+  {
+    "decision": "bypass",
+    "include": [
+      {
+        "everyone": {}
+      }
+    ]
+  }
+]</code></pre>
+
+      <h2 id="policy">策略选项</h2>
+      <p>开启 Access 时，要选择谁能登录。无论保护所有 Worker 还是单个 Worker，可选的策略都一样。</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>策略选项</th><th>结果</th></tr></thead>
+          <tbody>
+            <tr><td>Cloudflare 账户</td><td>允许该 Cloudflare 账户的成员登录。当你希望访问仅限已属于该账户的人时使用。</td></tr>
+            <tr><td>邮箱域名</td><td>允许任何在你填入的域名（如 <code>example.com</code>）下拥有已验证邮箱的人登录。当你希望某公司或组织的人都能访问、即便他们不是 Cloudflare 账户成员时使用。</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>可以添加一条或多条策略；匹配任一被选中策略的访问者即可登录。</p>
+      <p>若需要进阶策略配置（多个身份提供方、设备状态规则、服务令牌、复杂策略排序、自定义登录页或拦截页），在创建之后到 Zero Trust 里编辑该 Access 应用。完整选项见<a href="https://developers.cloudflare.com/cloudflare-one/access-controls/policies/" target="_blank" rel="noopener">Access 策略 ↗</a>。</p>
+
+      <h2>用 ctx.access 读取已认证的用户身份</h2>
+      <p>当 Cloudflare Access 对一次<strong>直接调用你的 Worker</strong>的请求完成认证后，Worker 可以通过 <code>ctx.access</code> 读取已登录用户的身份——包括邮箱、用户组、设备状态，以及<a href="https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/#user-identity" target="_blank" rel="noopener">更多身份字段 ↗</a>。无需额外配置，也不用自己解析 JWT。</p>
+      <p>可以用它做响应个性化、细粒度权限控制，或按用户记录活动。</p>
+      <p>如果 Access 并未对该请求完成认证，<code>ctx.access</code> 为 <code>undefined</code>。</p>
+<pre data-lang="js"><code>export default {
+	async fetch(request, env, ctx) {
+		if (!ctx.access) {
+			return new Response("Access required", { status: 403 });
+		}
+
+		const identity = await ctx.access.getIdentity();
+		const email = identity?.email ?? "unknown";
+
+		return new Response(`Hello, ${email}`);
+	},
+};</code></pre>
+
+      <h3><code>ctx.access</code> 的限制</h3>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p><code>ctx.access</code> 只作用于被 Access 认证的那一次 Worker 调用。Cloudflare Access <strong>不会</strong>把 <code>ctx.access</code> 透过<a href="../../sections/runtime-apis.html">服务绑定</a>的 HTTP 请求或 RPC 调用传递下去——下游 Worker 收不到调用方的 Access 上下文。</p>
+      </div>
+      <p>如果调用方改为向受 Access 保护的主机名发起 <code>fetch()</code> 子请求，并带上有效的<a href="https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/service-tokens/" target="_blank" rel="noopener">服务令牌头 ↗</a>或有效的 <a href="https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/" target="_blank" rel="noopener"><code>CF_Authorization</code> cookie ↗</a>，Access 会重新评估这个新请求，并为下游 Worker 创建一个新的 <code>ctx.access</code>。那是新认证的上下文，不是从调用方传过来的上下文。</p>
+      <p>使用<a href="../../sections/static-assets.html">静态资源</a>的 Worker 运行在一个内部路由 Worker 之后。Access 仍然保护应用及其资源，但该路由<strong>不会</strong>把 <code>ctx.access</code> 传给用户 Worker。</p>
+      <p>当输入的 Wrangler 配置里没有 <code>assets</code> 时，Cloudflare Vite 插件会把它补进生成的部署配置。因此使用该插件的框架（包括 TanStack Start）即使源码配置没有声明静态资源，也可能受到影响。</p>
+
+      <h2>本地测试 ctx.access</h2>
+      <p>用 <code>wrangler dev</code> 或 Cloudflare Vite 插件本地开发时，可以模拟已通过 Cloudflare Access 认证的身份，而无需部署或走一遍登录流程。</p>
+      <p>在 <code>wrangler.jsonc</code> 的 <code>access</code> 配置里加一个 <code>dev</code> 块：</p>
+<pre data-lang="jsonc"><code>{
+	"access": {
+		"dev": {
+			"aud": "my-app",
+			"identity": { "email": "admin@example.com" }
+		}
+	}
+}</code></pre>
+<pre data-lang="toml"><code>[access.dev]
+aud = "my-app"
+
+  [access.dev.identity]
+  email = "admin@example.com"</code></pre>
+      <ul>
+        <li><code>aud</code>（必填）：你的 Access 应用受众标签，可通过 <code>ctx.access.aud</code> 读取。缺少它 Wrangler 不会启动。</li>
+        <li><code>identity</code>（可选）：模拟已认证用户的身份声明（邮箱、姓名、用户组等），由 <code>ctx.access.getIdentity()</code> 返回。若 Worker 会读取用户身份就填上；若只判断 Access 是否启用，可以省略。</li>
+      </ul>
+      <p>要换成别的用户测试，改身份字段后重启即可。要测未认证请求，删掉 <code>dev</code> 块——<code>ctx.access</code> 会变成 <code>undefined</code>，与生产环境中未经过 Access 的请求一致。</p>
+
+      <h4>示例 Worker</h4>
+<pre data-lang="js"><code>export default {
+	async fetch(request, env, ctx) {
+		if (!ctx.access) {
+			return new Response("Not authenticated", { status: 403 });
+		}
+
+		const identity = await ctx.access.getIdentity();
+		const email = identity?.email ?? "unknown";
+
+		return new Response(`Hello, ${email}`);
+	},
+};</code></pre>
+      <p>配上上面的配置，访问 <code>localhost:8787</code> 会返回 <code>Hello, admin@example.com</code>。</p>
+
+      <h4>身份字段</h4>
+      <p>identity 对象接受任何符合生产 Access 身份结构的字段。完整列表见<a href="https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/" target="_blank" rel="noopener">应用令牌——用户身份 ↗</a>。</p>
+
+      <h2>禁用 Access</h2>
+      <p>要禁用 Worker 级或账户级 Access，打开该 Worker 的 <strong>Access</strong> 标签页或 <strong>Protect all Workers</strong> 卡片，关闭相应规则。</p>
+      <p>或者删除那个保护该 Worker、保护所有 Worker、或保护路由到该 Worker 的主机名/路径的 Access 应用。</p>
+
+      <h2>理解 Access 的层级</h2>
+      <p>一个 Worker 可能同时受多条 Access 规则保护。当多条规则都可能适用于同一个请求时，<strong>最具体的规则先生效</strong>：</p>
+      <ol>
+        <li><strong>基于主机名或路径的 Access</strong>：请求匹配该主机名或路径时最先适用，例如 <code>admin.example.com</code> 或 <code>example.com/login</code>。</li>
+        <li><strong>Worker 级 Access</strong>：其次适用于所选 Worker 的全部路由、自定义域名、<code>workers.dev</code> 主机名与预览。</li>
+        <li><strong>账户级 Worker Access</strong>：最后作为兜底，适用于账户下所有 Worker 或所有 Worker 预览。</li>
+      </ol>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/cloudflare-access/" target="_blank" rel="noopener">configuration/cloudflare-access</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>路由（Routes） · Workers 文档（中文版）</title>
+<meta name="description" content="把 URL 模式映射到 Worker，只让匹配的请求跑你的代码。">
+<link rel="stylesheet" href="../../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>路由（Routes）</h1>
+      <p class="lead">把 URL 模式映射到 Worker，只让匹配的请求跑你的代码。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-10-18</span>
+        <span>对应页面：configuration/routing/routes</span>
+      </div>
+
+<h2>背景</h2>
+      <p>路由（Routes）让你把 URL 模式映射到某个 Worker。当抵达 Cloudflare 网络的请求匹配指定 URL 模式时，你的 Worker 就会在这条路由上执行。</p>
+      <p>路由是一组针对请求 URL 进行求值的规则。如果你有一台需要始终与之通信的指定应用服务器，推荐用路由：对入站 <code>Request</code> 对象调用 <code>fetch()</code>，就会向该应用服务器发起子请求——目标由 Cloudflare 区域的 <strong>DNS</strong> 设置决定。</p>
+      <p>路由为你在 Cloudflare 上已代理的主机名（在应用服务器之前）加上 Workers 能力，让 Worker 充当代理，在访问 Cloudflare 后面的应用服务器之前先完成必要的工作。</p>
+      <div class="note-box">
+        <span class="box-title">原站示意图</span>
+        <p>原文此处配有一张图，说明路由与你在 Cloudflare DNS 中定义的应用之间的关系。</p>
+      </div>
+      <p>路由可以对自定义域名发起 <code>fetch()</code>，并且当同一主机名上两者都配置时，<strong>路由优先</strong>。例如你想在应用前面跑一个记日志的 Worker，就可以给应用 Worker 在 <code>app.example.com</code> 上建自定义域名，再给日志 Worker 建一条 <code>app.example.com/*</code> 的路由：调用 <code>fetch()</code> 就会调起自定义域名上的应用 Worker。注意，路由<strong>不能</strong>作为同区 <code>fetch()</code> 调用的目标。</p>
+
+      <h2>设置路由</h2>
+      <p>要添加路由，你需要：</p>
+      <ol>
+        <li>一个<a href="https://developers.cloudflare.com/dns/zone-setups/" target="_blank" rel="noopener">处于活跃状态的 Cloudflare 区域 ↗</a>；</li>
+        <li>一个可被调用的 Worker；</li>
+        <li>为你要路由到的<a href="https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-zone-apex/" target="_blank" rel="noopener">域名</a>或<a href="https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-subdomain/" target="_blank" rel="noopener">子域</a>配置好的 DNS 记录，并且该记录经 Cloudflare 代理（即<a href="https://developers.cloudflare.com/dns/proxy-status/#benefits" target="_blank" rel="noopener">橙云代理</a>）。</li>
+      </ol>
+      <div class="warn-box">
+        <span class="box-title">谨慎</span>
+        <p>路由的配置方式取决于是不是你应用的源站。如果 Worker <strong>就是</strong>你应用的源站，请改用<a href="custom-domains.html">自定义域名</a>。</p>
+        <p>如果 Worker <strong>不是</strong>应用源站，按下面的步骤设置路由。</p>
+      </div>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>路由也可以通过 API 创建，详见 <a href="https://developers.cloudflare.com/api/resources/workers/subresources/routes/methods/create/" target="_blank" rel="noopener">Workers Routes API ↗</a>。</p>
+      </div>
+
+      <h3>在控制台设置路由</h3>
+      <p>设置之前，先确认你要路由到的<a href="https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-zone-apex/" target="_blank" rel="noopener">域名</a>或<a href="https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-subdomain/" target="_blank" rel="noopener">子域</a>已有 DNS 记录。</p>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>在 <strong>Overview</strong> 中选择你的 Worker。</li>
+        <li>进入 <strong>Settings</strong> &gt; <strong>Domains &amp; Routes</strong> &gt; <strong>Add</strong> &gt; <strong>Route</strong>。</li>
+        <li>选择区域并填入路由模式。</li>
+        <li>选择 <strong>Add route</strong>。</li>
+      </ol>
+
+      <h3>在 Wrangler 配置文件中设置路由</h3>
+      <p>同样，先确认要路由到的域名或子域已有 DNS 记录。<a href="../../../sections/wrangler.html">Wrangler 配置文件</a>里的写法如下：</p>
+<pre data-lang="jsonc"><code>{
+	"routes": [
+		{
+			"pattern": "subdomain.example.com/*",
+			"zone_name": "example.com"
+		},
+		// or
+		{
+			"pattern": "subdomain.example.com/*",
+			"zone_id": "&lt;YOUR_ZONE_ID&gt;"
+		}
+	]
+}</code></pre>
+<pre data-lang="toml"><code>[[routes]]
+pattern = "subdomain.example.com/*"
+zone_name = "example.com"
+
+[[routes]]
+pattern = "subdomain.example.com/*"
+zone_id = "&lt;YOUR_ZONE_ID&gt;"</code></pre>
+      <p>每条路由后面都要加 <code>zone_name</code> 或 <code>zone_id</code>，两者可以互换。用 <code>zone_id</code> 时，这样找：</p>
+      <ol>
+        <li>在 Cloudflare 控制台打开该区域的 Overview 页面。<a href="https://dash.cloudflare.com/?to=/:account/:zone/" target="_blank" rel="noopener">前往 Overview ↗</a></li>
+        <li>在 <strong>Overview</strong> 页面左侧找到 <strong>Zone ID</strong>。</li>
+      </ol>
+      <p>添加多条路由：</p>
+<pre data-lang="jsonc"><code>{
+	"routes": [
+		{
+			"pattern": "subdomain.example.com/*",
+			"zone_name": "example.com"
+		},
+		{
+			"pattern": "subdomain-two.example.com/example",
+			"zone_id": "&lt;YOUR_ZONE_ID&gt;"
+		}
+	]
+}</code></pre>
+<pre data-lang="toml"><code>[[routes]]
+pattern = "subdomain.example.com/*"
+zone_name = "example.com"
+
+[[routes]]
+pattern = "subdomain-two.example.com/example"
+zone_id = "&lt;YOUR_ZONE_ID&gt;"</code></pre>
+
+      <h2>匹配行为</h2>
+      <p>路由模式长这样：</p>
+<pre data-lang="txt"><code>https://*.example.com/images/*</code></pre>
+      <p>这个模式会匹配所有发往 example.com 的某个子主机、且路径以 <code>/images/</code> 开头的 HTTPS 请求。</p>
+      <p>要匹配所有请求，模式写成：</p>
+<pre data-lang="txt"><code>*example.com/*</code></pre>
+      <p>虽然看起来像<a href="https://en.wikipedia.org/wiki/Regular_expression" target="_blank" rel="noopener">正则 ↗</a>，但路由模式遵循的是一套专门规则：</p>
+      <ul>
+        <li>唯一支持的运算符是通配符 <code>*</code>，匹配零个或多个任意字符。</li>
+        <li>路由模式不能包含中缀通配符或查询参数。例如 <code>example.com/*.jpg</code> 与 <code>example.com/?foo=*</code> 都不是合法的路由模式。</li>
+        <li>当多个模式都能匹配某个请求 URL 时，<strong>最具体的模式胜出</strong>。例如匹配 <code>https://www.example.com/</code> 时，<code>www.example.com/*</code> 优先于 <code>*.example.com/*</code>；匹配 <code>example.com/hello/world</code> 时，<code>example.com/hello/*</code> 优先于 <code>example.com/*</code>。</li>
+        <li>匹配会把整个请求 URL（包括查询字符串）纳入考量。由于路由模式不能含查询参数，想让模式匹配带查询参数的 URL，唯一办法是用通配符 <code>*</code> 收尾。</li>
+        <li>路由模式的<strong>路径</strong>部分区分大小写，例如 <code>example.com/Images/*</code> 与 <code>example.com/images/*</code> 是两条不同的路由。</li>
+        <li>2023 年 10 月 15 日之前创建的路由，其模式中<strong>主机</strong>部分区分大小写，例如 <code>example.com/*</code> 与 <code>Example.com/*</code> 是两条不同的路由。</li>
+        <li>2023 年 10 月 15 日及之后创建的路由，主机部分不区分大小写，<code>example.com/*</code> 与 <code>Example.com/*</code> 等价。</li>
+      </ul>
+      <p>一条路由可以不绑定任何 Worker——它的作用是「排除」更宽泛的模式。例如这一对模式，一个带脚本、一个不带：</p>
+<pre data-lang="txt"><code>*example.com/images/cat.png -&gt; &lt;no script&gt;
+*example.com/images/*       -&gt; worker-script</code></pre>
+      <p>在这个例子里，所有发往 example.com 且路径以 <code>/images/</code> 开头的请求都会走 <code>worker-script</code>，<strong>唯独</strong> <code>/images/cat.png</code> 例外——它会完全绕过 Workers。而 <code>/images/cat.png?foo=bar</code> 因为带了查询字符串，仍会被路由到 <code>worker-script</code>。</p>
+
+      <h2>合法性规则</h2>
+      <p>下面这些规则决定路由模式是否合法。</p>
+
+      <h4>模式必须包含你的区域</h4>
+      <p>如果你的区域是 <code>example.com</code>，最简单的模式就是 <code>example.com</code>，它只匹配 <code>http://example.com/</code> 与 <code>https://example.com/</code>，别的一概不匹配。与 URL 一样，不写路径时隐含路径为 <code>/</code>。</p>
+
+      <h4>不能包含查询参数</h4>
+      <p>例如 <code>https://example.com/?anything</code> 不是合法的路由模式。</p>
+
+      <h4>可以可选地以 <code>http://</code> 或 <code>https://</code> 开头</h4>
+      <p>省略协议时，会同时匹配 <code>http://</code> 与 <code>https://</code>；写了 <code>http://</code> 就只匹配 HTTP，写了 <code>https://</code> 就只匹配 HTTPS。</p>
+      <ul>
+        <li><code>https://*.example.com/</code> 匹配 <code>https://www.example.com/</code>，但不匹配 <code>http://www.example.com/</code>。</li>
+        <li><code>*.example.com/</code> 两者都匹配。</li>
+      </ul>
+
+      <h4>主机名可以可选地以 <code>*</code> 开头</h4>
+      <p>模式的主机名以 <code>*</code> 开头时，匹配该主机及其所有子主机；以 <code>*.</code> 开头时，<strong>只</strong>匹配所有子主机。</p>
+      <ul>
+        <li><code>*example.com/</code> 匹配 <code>https://example.com/</code> 与 <code>https://www.example.com/</code>。</li>
+        <li><code>*.example.com/</code> 匹配 <code>https://www.example.com/</code>，但不匹配 <code>https://example.com/</code>。</li>
+      </ul>
+      <div class="warn-box">
+        <span class="box-title">谨慎</span>
+        <p>因为 <code>*</code> 匹配的是<strong>任意字符</strong>（不只是子域部分）的零次或多次出现，<code>*example.com</code> 会匹配任何以 <code>example.com</code> 结尾的主机名，包括 <code>myexample.com</code> 与 <code>not-example.com</code>。若只想匹配 <code>example.com</code> 及其子域，请写两条路由：<code>example.com/*</code> 与 <code>*.example.com/*</code>。</p>
+      </div>
+      <p>下面这张表说明 <code>*example.com/*</code> 与 <code>*.example.com/*</code> 的差别：</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>请求 URL</th><th><code>*example.com/*</code></th><th><code>*.example.com/*</code></th></tr></thead>
+          <tbody>
+            <tr><td><code>https://example.com/</code></td><td>匹配</td><td>不匹配</td></tr>
+            <tr><td><code>https://www.example.com/path</code></td><td>匹配</td><td>匹配</td></tr>
+            <tr><td><code>https://myexample.com/</code></td><td>匹配</td><td>不匹配</td></tr>
+            <tr><td><code>https://not-example.com/</code></td><td>匹配</td><td>不匹配</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note-box">
+        <span class="box-title">区域范围</span>
+        <p>Cloudflare 只在你创建路由的那个<a href="https://developers.cloudflare.com/dns/zone-setups/" target="_blank" rel="noopener">区域</a>内求值 Workers 路由。就普通区域路由而言，某个模式匹配并不代表 <code>myexample.com</code>、<code>not-example.com</code> 这类无关域名会去用 <code>example.com</code> 区域的路由——上表只是演示通配符的字符串匹配行为。</p>
+        <p><a href="https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/start/advanced-settings/worker-as-origin/#how-custom-hostname-traffic-reaches-your-worker" target="_blank" rel="noopener">Cloudflare for SaaS 的自定义主机名 ↗</a>则可以把流量送经服务商自己的区域，在那里按该区域的 Workers 路由求值。</p>
+      </div>
+      <p>这个区分对区域内的子域模式很关键：例如 <code>example.com</code> 区域里的 <code>*sub.example.com/*</code> 会匹配 <code>sub.example.com</code>、<code>foo.sub.example.com</code> 与 <code>notsub.example.com</code>。</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>请求 URL</th><th><code>*sub.example.com/*</code></th><th><code>*.sub.example.com/*</code></th></tr></thead>
+          <tbody>
+            <tr><td><code>https://sub.example.com/</code></td><td>匹配</td><td>不匹配</td></tr>
+            <tr><td><code>https://foo.sub.example.com/path</code></td><td>匹配</td><td>匹配</td></tr>
+            <tr><td><code>https://notsub.example.com/</code></td><td>匹配</td><td>不匹配</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>路径可以可选地以 <code>*</code> 结尾</h4>
+      <p>模式的路径以 <code>*</code> 结尾时，匹配该路径的所有后缀：</p>
+      <ul>
+        <li><code>https://example.com/path*</code> 匹配 <code>https://example.com/path</code>、<code>https://example.com/path2</code> 与 <code>https://example.com/path/readme.txt</code>。</li>
+      </ul>
+      <div class="warn-box">
+        <span class="box-title">谨慎</span>
+        <p>路径匹配在通配符 <code>*</code> 与正斜杠 <code>/</code> 上有一个已知 bug，记录在<a href="../../../sections/platform.html">已知问题</a>中。</p>
+      </div>
+
+      <h4>域名与子域必须有 DNS 记录</h4>
+      <p>所有域名与子域都必须有 <a href="https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/" target="_blank" rel="noopener">DNS 记录</a>，才能经 Cloudflare 代理并用它调用 Worker。例如你想把 Worker 放到 <code>myname.example.com</code>，而 <code>example.com</code> 已接入 Cloudflare、却没有为 <code>myname.example.com</code> 添加任何 DNS 记录，那么发往该主机名的请求都会以 <code>ERR_NAME_NOT_RESOLVED</code> 失败。</p>
+      <div class="warn-box">
+        <span class="box-title">谨慎</span>
+        <p>如果你之前用 Cloudflare 控制台为 <code>example.com</code> 下的 <code>myname</code> 添加过指向 <code>100::</code>（<a href="https://tools.ietf.org/html/rfc6666" target="_blank" rel="noopener">保留的 IPv6 丢弃前缀 ↗</a>）的 <code>AAAA</code> 记录，Cloudflare 建议改为创建一个指向 Worker 的<a href="custom-domains.html">自定义域名</a>。</p>
+      </div>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/routing/routes/" target="_blank" rel="noopener">configuration/routing/routes</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../../assets/nav-data-1.js"></script>
+<script src="../../../assets/nav-data-2.js"></script>
+<script src="../../../assets/site.js"></script>
+</body>
+</html>

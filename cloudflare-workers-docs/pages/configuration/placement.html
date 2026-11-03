@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>部署位置（Placement） · Workers 文档（中文版）</title>
+<meta name="description" content="让 Worker 跑在离后端更近的地方，而不是离用户更近的地方。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>部署位置（Placement）</h1>
+      <p class="lead">让 Worker 跑在离后端更近的地方，而不是离用户更近的地方。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-10-12</span>
+        <span>对应页面：configuration/placement</span>
+      </div>
+
+<p>默认情况下，<a href="../../pages/overview.html">Workers</a> 与 Pages Functions 运行在离请求接收地最近的数据中心。但如果你的 Worker 需要请求数据库、API 这类后端基础设施，那么把 Worker 放在<strong>离后端更近</strong>而不是离终端用户更近的位置，性能可能更好。</p>
+
+<pre data-lang="jsonc"><code>{
+	"placement": {
+		// Use one of the following options (mutually exclusive):
+		"mode": "smart", // Cloudflare automatically places your Worker closest to the upstream with the most requests
+		"region": "gcp:us-east4", // Explicit cloud region to run your Worker closest to - e.g. "gcp:us-east4" or "aws:us-east-1"
+		"host": "db.example.com:5432", // A host to probe (TCP/layer 4) - e.g. a database host - and place your Worker closest to
+		"hostname": "api.example.com", // A hostname to probe (HTTP/layer 7) - e.g. an API endpoint - and place your Worker closest to
+	},
+}</code></pre>
+<pre data-lang="toml"><code>[placement]
+mode = "smart"
+region = "gcp:us-east4"
+host = "db.example.com:5432"
+hostname = "api.example.com"</code></pre>
+
+      <p>Placement 通过最小化 Worker 与后端服务之间的往返延迟，降低一次 Worker 请求的整体耗时。对跑在传统云基础设施上的数据库、API 与其他服务，可以做到个位数毫秒的延迟。</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>选项</th><th>适用场景</th><th>配置</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Smart</strong></td><td>多个后端服务，或不清楚基础设施位置</td><td><code>mode = "smart"</code></td></tr>
+            <tr><td><strong>Region</strong></td><td>单个后端服务，且位于已知云区域</td><td><code>region</code></td></tr>
+            <tr><td><strong>Host</strong></td><td>单个后端服务，且不在主流云厂商</td><td><code>host</code> 或 <code>hostname</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>理解 Placement</h2>
+      <p>设想一位悉尼的用户访问跑在 Workers 上的应用，而这个应用要多次往返访问位于法兰克福的数据库。</p>
+      <p>悉尼与法兰克福之间多次往返的延迟会叠加。把 Worker 放到数据库附近，Cloudflare 就能缩短请求总时长。</p>
+      <div class="note-box">
+        <span class="box-title">原站示意图</span>
+        <p>原文此处有两张对比图：未启用 Smart Placement 时，Worker 在用户所在区域、每次查询都要跨洲往返数据库；启用后，Worker 被放到法兰克福（数据库所在处），用户只承受一次跨洲往返。</p>
+      </div>
+
+      <h2>启用 Smart Placement</h2>
+      <p>Smart Placement 会自动分析 Worker 的流量模式，把它放到最优位置。适合这些情况：</p>
+      <ul>
+        <li>Worker 连接多个后端服务；</li>
+        <li>你不清楚基础设施的确切位置；</li>
+        <li>后端服务是分布式或有多副本的。</li>
+      </ul>
+      <p>Smart Placement 按 Worker 单独启用。启用后，它会定期分析该 Worker 在不同 Cloudflare 节点上的<a href="../../sections/observability.html">请求耗时</a>。</p>
+      <p>对每个候选位置，Smart Placement 会权衡 Worker 在该处的表现与转发请求带来的网络延迟。如果某个候选位置明显更快，就把请求转发过去；否则 Worker 仍在离请求最近的默认位置运行。</p>
+      <p>Smart Placement 只考虑该 Worker 曾经运行过的位置，无法把它放到通常收不到流量的节点。</p>
+
+      <h3>限制</h3>
+      <ul>
+        <li>Smart Placement 只影响 <a href="../../sections/runtime-apis.html">fetch 事件处理器</a>的执行，不影响 <a href="../../sections/runtime-apis.html">RPC 方法</a>或命名入口点。</li>
+        <li>没有 fetch 事件处理器的 Worker 会被 Smart Placement 忽略。</li>
+        <li><a href="../../sections/static-assets.html">静态资源</a>始终从离入站请求最近的节点提供；如果你的代码通过<a href="../../sections/static-assets.html">静态资源绑定</a>取资源，则从 Worker 运行的节点提供。</li>
+      </ul>
+
+      <h3>启用 Smart Placement</h3>
+      <p>所有 Workers 套餐都可使用 Smart Placement。</p>
+      <h4>用 Wrangler 配置</h4>
+<pre data-lang="jsonc"><code>{
+	"placement": {
+		"mode": "smart",
+	},
+}</code></pre>
+<pre data-lang="toml"><code>[placement]
+mode = "smart"</code></pre>
+      <p>部署后，Smart Placement 最长可能需要 15 分钟来分析你的 Worker。</p>
+
+      <h4>在控制台配置</h4>
+      <ol>
+        <li>进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>选择你的 Worker。</li>
+        <li>进入 <strong>Settings</strong> &gt; <strong>General</strong>。</li>
+        <li>在 <strong>Placement</strong> 下选择 <strong>Smart</strong>。</li>
+      </ol>
+      <p>Smart Placement 需要 Worker 有来自多个地点的稳定流量才能做出决策，分析过程最长可能需要 15 分钟。</p>
+
+      <h3>查看部署位置状态</h3>
+      <p>通过 Workers API 查询该 Worker 的 placement 状态：</p>
+<pre data-lang="bash"><code>curl -X GET https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/services/$WORKER_NAME \
+-H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+-H "Content-Type: application/json" | jq .</code></pre>
+      <p>可能的状态：</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>状态</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><em>（无该字段）</em></td><td>尚未分析该 Worker，它跑在离请求最近的默认位置。</td></tr>
+            <tr><td><code>SUCCESS</code></td><td>已分析完成，Smart Placement 会对它做优化。</td></tr>
+            <tr><td><code>INSUFFICIENT_INVOCATIONS</code></td><td>来自多个地点的请求量不足以做出放置决策。</td></tr>
+            <tr><td><code>UNSUPPORTED_APPLICATION</code></td><td>Smart Placement 反而让 Worker 变慢，已回退原放置。这种情况很少见（不足 1% 的 Worker）。</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>查看请求耗时分析</h3>
+      <p>启用 Smart Placement 后，系统会采集请求耗时数据。耗时是在离终端用户最近的数据中心测量的。默认有 1% 的请求不走 Smart Placement，用作对比基线。</p>
+      <p>查看 Worker 的<a href="../../sections/observability.html">请求耗时分析</a>，衡量 Smart Placement 的实际效果。</p>
+
+      <h3>查看 <code>cf-placement</code> 响应头</h3>
+      <p>启用 placement 后，Cloudflare 会给所有请求加上 <code>cf-placement</code> 头。可以用它判断某个请求是否走了 Smart Placement、以及 Worker 在哪里处理了这个请求。</p>
+      <p>该头的值包含放置类型与表示数据中心位置的机场代码：</p>
+      <ul>
+        <li><code>remote-LHR</code>：请求经 Smart Placement 路由到伦敦附近的数据中心。</li>
+        <li><code>local-EWR</code>：请求未走 Smart Placement，Worker 在纽瓦克附近的默认位置运行。</li>
+      </ul>
+      <div class="warn-box">
+        <span class="box-title">谨慎</span>
+        <p>在 Smart Placement 退出 beta 之前，<code>cf-placement</code> 头可能会被移除。</p>
+      </div>
+
+      <h2>配置显式的 Placement Hints</h2>
+      <p>Placement Hints 让你明确指定 Worker 在哪里运行。适合这些情况：</p>
+      <ul>
+        <li>你知道后端基础设施的确切位置；</li>
+        <li>Worker 只连接一个数据库、API 或服务；</li>
+        <li>你的基础设施是单点部署的（没有副本，也不是 anycast）。</li>
+      </ul>
+      <p>典型例子是某个区域里的一台主数据库、一台虚拟机或一个 Kubernetes 集群。把每次查询的往返延迟从 20～30 毫秒降到 1～3 毫秒，响应时间会有明显改善。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>Workers 运行在 <a href="https://www.cloudflare.com/network/" target="_blank" rel="noopener">Cloudflare 的全球网络 ↗</a>上，而不是云厂商的区域内部。Placement Hints 会把 Worker 放到离你指定云区域延迟最低的数据中心。在极高请求量下（每秒数十万次以上），Cloudflare 可能会把实例分散到更大范围的节点上以平衡流量。</p>
+      </div>
+
+      <h3>指定云区域</h3>
+      <p>如果你的基础设施跑在 AWS、GCP 或 Azure 上，用 <code>{provider}:{region}</code> 格式设置 <code>placement.region</code>：</p>
+<pre data-lang="jsonc"><code>{
+	"placement": {
+		"region": "aws:us-east-1", // Explicit cloud region to run your Worker closest to - e.g. "gcp:us-east4" or "aws:us-east-1"
+	},
+}</code></pre>
+<pre data-lang="toml"><code>[placement]
+region = "aws:us-east-1"</code></pre>
+      <p>Cloudflare 会把指定的云区域映射到离它延迟最低的数据中心，并自动根据网络维护或变化调整放置，你不需要额外指定故障转移区域。</p>
+
+      <h3>指定主机端点</h3>
+      <p>如果你的基础设施不在主流云厂商，可以给 Cloudflare 一个可探测的端点。Cloudflare 会三角定位这台外部主机的方位，把 Worker 放到附近区域。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>基于主机（host）的放置属于实验性功能。</p>
+      </div>
+      <p>用 <code>placement.host</code> 指定第 4 层服务。Cloudflare 通过 TCP CONNECT 探测测量延迟，选出最优数据中心。</p>
+<pre data-lang="jsonc"><code>{
+	"placement": {
+		"host": "my_database_host.com:5432", // A host to probe (TCP/layer 4) - e.g. a database host - and place your Worker closest to
+	},
+}</code></pre>
+<pre data-lang="toml"><code>[placement]
+host = "my_database_host.com:5432"</code></pre>
+      <p>用 <code>placement.hostname</code> 指定第 7 层服务。Cloudflare 通过 HTTP HEAD 探测测量延迟，选出最优数据中心。</p>
+<pre data-lang="jsonc"><code>{
+	"placement": {
+		"hostname": "my_api_server.com", // A hostname to probe (HTTP/layer 7) - e.g. an API endpoint - and place your Worker closest to
+	},
+}</code></pre>
+<pre data-lang="toml"><code>[placement]
+hostname = "my_api_server.com"</code></pre>
+      <p>探测来自公网 IP 段，而不是 Cloudflare 的 IP 段。Cloudflare 会定期重新检查服务位置。这些探测用于定位单点部署的资源，对广播、anycast、组播或多副本资源并不适用。</p>
+
+      <h3>支持的云区域</h3>
+      <p>Placement Hints 支持 Amazon Web Services（AWS）、Google Cloud Platform（GCP）与 Microsoft Azure 的区域标识：</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>厂商</th><th>格式</th><th>示例</th></tr></thead>
+          <tbody>
+            <tr><td>AWS</td><td><code>aws:{region}</code></td><td><code>aws:us-east-1</code>、<code>aws:us-west-2</code>、<code>aws:eu-central-1</code></td></tr>
+            <tr><td>GCP</td><td><code>gcp:{region}</code></td><td><code>gcp:us-east4</code>、<code>gcp:europe-west1</code>、<code>gcp:asia-east1</code></td></tr>
+            <tr><td>Azure</td><td><code>azure:{region}</code></td><td><code>azure:westeurope</code>、<code>azure:eastus</code>、<code>azure:southeastasia</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>完整的区域编码列表见 <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html" target="_blank" rel="noopener">AWS 区域 ↗</a>、<a href="https://cloud.google.com/compute/docs/regions-zones" target="_blank" rel="noopener">GCP 区域 ↗</a> 或 <a href="https://learn.microsoft.com/en-us/azure/reliability/regions-list" target="_blank" rel="noopener">Azure 区域 ↗</a>。</p>
+
+      <h2>Placement 行为</h2>
+      <p>无论用 Smart Placement 还是 Placement Hints，Worker 的放置行为都相似。以下说明对两者都适用。</p>
+
+      <h3>限制</h3>
+      <ul>
+        <li>Placement 只影响 <a href="../../sections/runtime-apis.html">fetch 事件处理器</a>的执行，不影响 <a href="../../sections/runtime-apis.html">RPC 方法</a>或命名入口点；没有 fetch 事件处理器的 Worker 会被忽略。</li>
+        <li><a href="../../sections/static-assets.html">静态资源</a>始终从离入站请求最近的节点提供；若通过静态资源绑定取资源，则从 Worker 运行处提供。</li>
+      </ul>
+
+      <h3><code>cf-placement</code> 响应头</h3>
+      <p>启用 placement 后，Cloudflare 会给所有请求加上 <code>cf-placement</code> 头，用于判断请求是否经 placement 路由、以及 Worker 在何处处理它。<code>remote-LHR</code> 表示经 Smart Placement 路由到伦敦附近；<code>local-EWR</code> 表示未走 placement，在纽瓦克附近运行。</p>
+      <div class="warn-box">
+        <span class="box-title">谨慎</span>
+        <p>在 Smart Placement 退出 beta 之前，<code>cf-placement</code> 头可能会被移除。</p>
+      </div>
+
+      <h2>多 Worker 架构</h2>
+      <p>在 Workers 上构建全栈应用时，把边缘逻辑（认证、路由）与后端逻辑（数据库查询、API 调用）拆成不同的 Worker，并用<a href="../../sections/runtime-apis.html">服务绑定</a>以类型安全的 RPC 连接它们。</p>
+      <p>把 placement 配在后端 Worker 上，让它靠近数据库执行；边缘 Worker 则在离用户近的地方完成认证。</p>
+      <div class="note-box">
+        <span class="box-title">原站示意图</span>
+        <p>原文此处配有一张图，展示 Smart Placement 与服务绑定配合时的请求路径。</p>
+      </div>
+
+      <h3>示例：边缘认证 + 就近放置的后端</h3>
+      <p>这个例子包含两个 Worker：</p>
+      <ul>
+        <li><code>auth-worker</code>：跑在边缘（不设 placement），负责认证；</li>
+        <li><code>app-worker</code>：放在数据库附近，负责数据查询。</li>
+      </ul>
+<pre data-lang="jsonc"><code>{
+	"name": "auth-worker",
+	"main": "src/index.ts",
+	"upload_source_maps": true,
+	"services": [{ "binding": "APP", "service": "app-worker" }],
+}</code></pre>
+<pre data-lang="toml"><code>name = "auth-worker"
+main = "src/index.ts"
+upload_source_maps = true
+
+[[services]]
+binding = "APP"
+service = "app-worker"</code></pre>
+<pre data-lang="ts"><code>import { AppWorker } from "../app-worker/src/index";
+
+interface Env {
+	APP: Service&lt;AppWorker&gt;;
+}
+
+export default {
+	async fetch(request: Request, env: Env): Promise&lt;Response&gt; {
+		const authHeader = request.headers.get("Authorization");
+		if (!authHeader?.startsWith("Bearer ")) {
+			return new Response("Unauthorized", { status: 401 });
+		}
+
+		const userId = await validateToken(authHeader.slice(7));
+		if (!userId) {
+			return new Response("Invalid token", { status: 403 });
+		}
+
+		// Call the placed back-end Worker via RPC
+		const data = await env.APP.getUser(userId);
+		return Response.json(data);
+	},
+};
+
+async function validateToken(token: string): Promise&lt;string | null&gt; {
+	return token === "valid" ? "user-123" : null;
+}</code></pre>
+<pre data-lang="jsonc"><code>{
+	"name": "app-worker",
+	"main": "src/index.ts",
+	"upload_source_maps": true,
+	"placement": {
+		// Use one of the following options (mutually exclusive):
+		// "mode": "smart", // Cloudflare automatically places your Worker closest to the upstream with the most requests
+		"region": "aws:us-east-1", // Explicit cloud region to run your Worker closest to - e.g. "gcp:us-east4" or "aws:us-east-1"
+		// "host": "db.example.com:5432", // A host to probe (TCP/layer 4) - e.g. a database host - and place your Worker closest to
+		// "hostname": "api.example.com", // A hostname to probe (HTTP/layer 7) - e.g. an API endpoint - and place your Worker closest to
+	},
+}</code></pre>
+<pre data-lang="toml"><code>name = "app-worker"
+main = "src/index.ts"
+upload_source_maps = true
+
+[placement]
+region = "aws:us-east-1"</code></pre>
+<pre data-lang="ts"><code>import { WorkerEntrypoint } from "cloudflare:workers";
+
+export default class AppWorker extends WorkerEntrypoint {
+	async fetch() {
+		return new Response(null, { status: 404 });
+	}
+
+	// Each method runs near your database - multiple queries stay fast
+	async getUser(userId: string) {
+		const user = await this.env.DB.prepare("SELECT * FROM users WHERE id = ?")
+			.bind(userId)
+			.first();
+		return user;
+	}
+
+	async getUserListings(userId: string) {
+		// Multiple round-trips to the DB are low-latency when placed nearby
+		const user = await this.env.DB.prepare("SELECT * FROM users WHERE id = ?")
+			.bind(userId)
+			.first();
+		const listings = await this.env.DB.prepare(
+			"SELECT * FROM listings WHERE owner_id = ?",
+		)
+			.bind(userId)
+			.all();
+		const reviews = await this.env.DB.prepare(
+			"SELECT * FROM reviews WHERE listing_id IN (SELECT id FROM listings WHERE owner_id = ?)",
+		)
+			.bind(userId)
+			.all();
+
+		return { user, listings: listings.results, reviews: reviews.results };
+	}
+}</code></pre>
+      <p><code>auth-worker</code> 跑在边缘，快速拒绝未授权请求；已认证的请求通过 RPC 转发给 <code>app-worker</code>，后者靠近数据库运行，查询更快。</p>
+
+      <h3>Durable Objects</h3>
+      <p><a href="https://developers.cloudflare.com/durable-objects/" target="_blank" rel="noopener">Durable Objects ↗</a> 无需配置就能自动放置。对 Durable Object 内置 <a href="https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/" target="_blank" rel="noopener">SQLite 数据库 ↗</a> 的查询几乎<a href="https://blog.cloudflare.com/sqlite-in-durable-objects/" target="_blank" rel="noopener">零延迟 ↗</a>——因为计算与数据在同一进程内。</p>
+      <p>尽量把工作放在 Durable Object 内部一次做完、返回组合结果，而不是从 Worker 里多次往返：</p>
+<pre data-lang="ts"><code>import { DurableObject } from "cloudflare:workers";
+
+type Session = { id: string; user_id: string; created_at: number };
+type PromptHistory = {
+	id: string;
+	session_id: string;
+	role: string;
+	content: string;
+};
+
+export class AgentHistory extends DurableObject {
+	async getSessionContext(sessionId: string) {
+		// All queries execute with zero network latency — compute and data are colocated
+		const session = this.ctx.storage.sql
+			.exec&lt;Session&gt;("SELECT * FROM sessions WHERE id = ?", sessionId)
+			.one();
+		const prompts = this.ctx.storage.sql
+			.exec&lt;PromptHistory&gt;(
+				"SELECT * FROM prompt_history WHERE session_id = ? ORDER BY created_at",
+				sessionId,
+			)
+			.toArray();
+
+		return { session, prompts };
+	}
+}</code></pre>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/placement/" target="_blank" rel="noopener">configuration/placement</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

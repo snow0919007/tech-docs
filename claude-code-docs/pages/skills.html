@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用 skills 扩展 Claude · Claude Code 中文文档</title>
+<meta name="description" content="创建、管理和共享 skills 以在 Claude Code 中扩展 Claude 的功能。包括自定义命令和捆绑的 skills。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="skills">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/skills" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link active" href="skills.html" aria-current="page">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>使用 Claude Code 构建</span> <span class="sep">/</span> <span>Skills</span></div>
+    <article class="prose" id="article"><h1 id="skills-claude">使用 skills 扩展 Claude</h1>
+<blockquote>
+<p>创建、管理和共享 skills 以在 Claude Code 中扩展 Claude 的功能。包括自定义命令和捆绑的 skills。</p>
+</blockquote>
+<p>Skills 扩展了 Claude 能做的事情。创建一个 <code>SKILL.md</code> 文件，其中包含说明，Claude 会将其添加到其工具包中。Claude 在相关时使用 skills，或者你可以使用 <code>/skill-name</code> 直接调用一个。</p>
+<p>当你不断将相同的说明、检查清单或多步骤程序粘贴到聊天中时，或者当 CLAUDE.md 的某个部分已经演变成一个程序而不是事实时，就创建一个 skill。与 CLAUDE.md 内容不同，skill 的主体仅在使用时加载，因此长参考资料在你需要之前几乎不花费任何成本。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>对于内置命令如 <code>/help</code> 和 <code>/compact</code>，以及捆绑的 skills 如 <code>/debug</code> 和 <code>/code-review</code>，请参阅<a href="commands.html">命令参考</a>。</p>
+<p><strong>自定义命令已合并到 skills 中。</strong> <code>.claude/commands/deploy.md</code> 中的文件和 <code>.claude/skills/deploy/SKILL.md</code> 中的 skill 都会创建 <code>/deploy</code> 并以相同的方式工作。你现有的 <code>.claude/commands/</code> 文件继续工作。Skills 添加了可选功能：支持文件的目录、用于<a href="#control-who-invokes-a-skill">控制你或 Claude 是否调用它们</a>的 frontmatter，以及 Claude 在相关时自动加载它们的能力。</p></div></div>
+<p>Claude Code skills 遵循 <a href="https://agentskills.io" target="_blank" rel="noopener">Agent Skills</a> 开放标准，该标准适用于多个 AI 工具。Claude Code 使用额外功能扩展了该标准，如<a href="#control-who-invokes-a-skill">调用控制</a>、<a href="#run-skills-in-a-subagent">子代理执行</a>和<a href="#inject-dynamic-context">动态上下文注入</a>。请参阅<a href="#using-skill-frontmatter-outside-claude-code">在 Claude Code 外使用 skill frontmatter</a>，了解哪些 frontmatter 字段是标准的一部分，哪些是 Claude Code 扩展。</p>
+<h2 id="bundled-skills">捆绑技能</h2>
+<p>Claude Code 包含一组捆绑技能，例如 <code>/doctor</code>、<code>/code-review</code>、<code>/batch</code>、<code>/debug</code>、<code>/loop</code> 和 <code>/claude-api</code>。捆绑技能是基于提示的：它们为 Claude 提供详细的指令，让它使用其工具来协调工作。大多数内置命令则直接执行固定逻辑。</p>
+<p>您调用捆绑技能的方式与调用任何其他技能相同，即输入 <code>/</code> 后跟技能名称。Claude 在相关时会自动调用某些捆绑技能；其他技能（包括 <code>/verify</code>）仅在您调用它们时运行，这样可以让您控制这些耗时较长的检查何时花费时间和令牌。</p>
+<p>大多数捆绑技能在每个会话中都可用。少数技能取决于特定功能：例如，<code>/workflow-authoring</code> 仅在<a href="workflows.html">动态工作流</a>启用时可用。</p>
+<p>要关闭捆绑技能，请使用 <a href="settings-reference.html#disablebundledskills"><code>disableBundledSkills</code></a> 设置。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>当 <code>disableBundledSkills</code> 打开时，<a href="commands.html#all-commands"><code>/doctor</code></a> 设置检查仍然可以输入。要隐藏它，请设置 <code>DISABLE_DOCTOR_COMMAND</code> 环境变量或 <a href="#override-skill-visibility-from-settings"><code>skillOverrides</code></a> 条目 <code>"doctor": "off"</code>。</p></div></div>
+<p>捆绑技能与内置命令一起列在<a href="commands.html">命令参考</a>中，在"目的"列中标记为<strong>技能</strong>。</p>
+<h3 id="check-your-setup-with-/doctor">使用 <code>/doctor</code> 检查您的设置</h3>
+<p>在 Claude Code 输入框中运行 <code>/doctor</code>，进行设置检查，诊断问题并可以修复它们。Claude 会先报告其发现，并在更改任何内容之前请求确认。检查涵盖以下方面：</p>
+<ul>
+<li><strong>安装健康状况</strong>：重复或残留的安装、<code>PATH</code> 问题、无法解析的设置文件，以及您的<a href="setup.html#configure-release-channel">发布渠道</a>上是否有更新版本可用</li>
+<li><strong>扩展</strong>：未使用的 skill、MCP 服务器和插件与其上下文成本的对比，以及缓慢的 <a href="hooks.html">hook</a></li>
+<li><strong><code>CLAUDE.md</code> 文件</strong>：与已签入文件重复的本地 <code>CLAUDE.md</code> 文件、已签入的 <a href="memory.html#my-claude-md-is-too-large">Claude 可以从代码库推导出的 <code>CLAUDE.md</code> 内容</a>，以及其余始终加载的指导内容，Claude 会提议将其迁移到按需加载的 skill 和嵌套 <code>CLAUDE.md</code> 文件中</li>
+<li><strong>权限</strong>：提议将<a href="permissions.html#permission-modes">自动模式</a>设为您的默认权限模式，并<a href="permissions.html">预先批准</a>您经常拒绝的只读命令</li>
+<li><strong>用量</strong>：在 Pro、Max、Ultra、Team 或 Enterprise 套餐上，检查 <a href="costs.html#plan-usage-breakdown"><code>/usage</code> 建议的更改</a>以降低您的套餐用量，基于过去 7 天的数据衡量。Claude 会提议它自己可以进行的更改，并将其余部分作为建议报告，例如供您运行的命令。用量检查需要 Claude Code v2.1.305 或更高版本，并且在 <a href="remote-control.html">Remote Control</a> 已连接时，<code>/doctor</code> 会跳过该检查。</li>
+</ul>
+<p>如需在不启动会话的情况下进行只读安装诊断，请改为在终端中运行 <code>claude doctor</code>。</p>
+<p>要审核您的指令而不是您的设置，请在 Claude Code 输入框中运行 <code>/doctor prompt-audit</code>。Claude 会<a href="memory.html#audit-your-instruction-files">检查您的 <code>CLAUDE.md</code> 文件、skill 和其他配置</a>中是否存在过时或相互冲突的指令，而不是运行设置检查。<code>prompt-audit</code> 子命令需要 Claude Code v2.1.283 或更高版本。</p>
+<h3 id="run-and-verify-your-app">运行并验证您的应用</h3>
+<p>三个随附 skill 协同工作来启动您的应用并根据运行中的应用而不仅仅是测试来确认更改：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">技能</th>
+<th style="text-align: left;">目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/run</code></td>
+<td style="text-align: left;">启动并驱动您的应用以查看更改是否有效</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/verify</code></td>
+<td style="text-align: left;">构建并运行您的应用以确认代码更改是否按预期工作，无需回退到测试或类型检查</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/run-skill-generator</code></td>
+<td style="text-align: left;">教 <code>/run</code> 和 <code>/verify</code> 如何构建和启动您的项目</td>
+</tr>
+</tbody>
+</table>
+<p><code>/run</code> 和 <code>/verify</code> 无需设置即可工作。它们从您的项目类型（CLI、服务器、TUI、浏览器驱动）以及 README、<code>package.json</code> 或 <code>Makefile</code> 中的内容推断启动。对于需要超出标准启动范围的任何内容的项目，该推断变得不可靠：数据库、env 文件、图形会话、多步骤构建。</p>
+<p><code>/run-skill-generator</code> 改为记录配方。它从干净的环境中让您的应用运行，捕获有效的内容（安装命令、环境变量、启动脚本），并将其作为每个项目的技能提交到 <code>.claude/skills/run-&lt;name&gt;/</code>。之后，<code>/run</code>、<code>/verify</code> 和存储库中的任何其他代理都遵循记录的配方而不是重新发现它。每个项目运行一次 <code>/run-skill-generator</code>，如果构建或启动过程更改，则再次运行。</p>
+<p><code>/verify</code> 也可以记录自己的配方。当它必须在没有记录的配方的情况下构建和驱动您的应用时，它会将有效的内容写入存储库根目录的 <code>.claude/skills/verify/SKILL.md</code>，或在 monorepo 中的受触及的包目录中，以便后续运行和其他 Agent 遵循相同的步骤。在存储库根目录，记录的 skill 替换随附的 <code>/verify</code>。</p>
+<p>Claude 仅在它引导运行出错时编辑记录的文件，例如失败的命令或缺少的步骤，因此您可以提交该文件而不会产生每个会话的 diff。</p>
+<h3 id="run-your-checks-before-each-commit">在每次提交前运行检查</h3>
+<p>当会话启动时已存在名为 <code>verify</code> 或 <code>simplify</code> 的 skill，Claude Code 的提交指令会告诉 Claude 在每次提交之前运行它，但对文档或测试的更改除外。这需要 Claude Code v2.1.286 或更高版本。当会话开始时满足以下条件，Claude 会收到该指令：</p>
+<ul>
+<li><strong>位置</strong>：该 skill 从企业、个人、项目或附加目录<a href="#where-skills-live">位置</a>加载，或来自具有该名称的 <code>.claude/commands/</code> 文件。<code>/verify</code> 在您的存储库根目录记录的配方是项目 skill，因此也算在内。随附的 <code>/verify</code> 和 <code>/simplify</code>、插件 skill 以及来自您 claude.ai 账户的 skill 不算在内。</li>
+<li><strong>调用</strong>：Claude 可以调用该 skill。如果您已<a href="#control-who-invokes-a-skill">阻止 Claude 调用它</a>，例如使用 <code>disable-model-invocation: true</code>，Claude 不会收到该指令。</li>
+<li><strong>Git 指令</strong>：您没有关闭 <a href="settings-reference.html#includegitinstructions"><code>includeGitInstructions</code></a>。关闭它会将此指令与其余内置提交和 PR 指令一起移除。</li>
+</ul>
+<h3 id="work-on-claude-api-projects">处理 Claude API 项目</h3>
+<p>捆绑的 <code>/claude-api</code> 技能为您的项目语言加载 <a href="https://platform.claude.com/docs/en/api/overview" target="_blank" rel="noopener">Claude API</a> 和<a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank" rel="noopener">托管代理</a>参考资料。当您的代码导入 <code>anthropic</code> 或 <code>@anthropic-ai/sdk</code> 时，Claude 也会自动激活它。</p>
+<p>要启动技能的工作流之一，请在 Claude Code 提示符处的技能名称后键入子命令，例如 <code>/claude-api migrate</code>。该表列出了每个子命令的作用以及包含它的最早 Claude Code 版本。<code>migrate</code> 和 <code>managed-agents-onboard</code> 早于 v2.1.221，这是该表跟踪的最早版本。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">子命令</th>
+<th style="text-align: left;">作用</th>
+<th style="text-align: left;">最低版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>migrate</code></td>
+<td style="text-align: left;">将您现有的 Claude API 代码更新到更新的模型</td>
+<td style="text-align: left;">早于 v2.1.221</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>upgrade</code></td>
+<td style="text-align: left;">将您项目的 Anthropic SDK 升级到新的主要版本，并针对其破坏性变更更新您的代码</td>
+<td style="text-align: left;">v2.1.236 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>api-version</code></td>
+<td style="text-align: left;">针对更新的 <a href="https://platform.claude.com/docs/en/api/versioning" target="_blank" rel="noopener">API 版本</a>更新您的 Claude API 代码，然后将您的请求切换到该版本</td>
+<td style="text-align: left;">v2.1.307 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>managed-agents-onboard</code></td>
+<td style="text-align: left;">逐步完成创建新的托管代理</td>
+<td style="text-align: left;">早于 v2.1.221</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>managed-agents-onboard &lt;url&gt;</code></td>
+<td style="text-align: left;">构建该 URL 所指页面描述的 Managed Agent，例如 <a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank" rel="noopener">Managed Agents 文档</a>中的某个页面</td>
+<td style="text-align: left;">v2.1.290 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>managed-agents-onboard &lt;quickstart-name&gt;</code></td>
+<td style="text-align: left;">构建 Console 的某个快速入门模板，例如 <code>deep-researcher</code>。如果您提供的单个词不是模板名称，Claude 会列出有效的名称</td>
+<td style="text-align: left;">v2.1.290 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>managed-agents-secure [&lt;agent-id&gt;]</code></td>
+<td style="text-align: left;">读取某个 Managed Agent 的设置，并报告其中哪些与<a href="https://platform.claude.com/docs/en/managed-agents/secure-deployment" target="_blank" rel="noopener">保护您的 Managed Agents 部署</a>指南相符、哪些与之不同。需要 <a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/quickstart" target="_blank" rel="noopener"><code>ant</code> CLI</a></td>
+<td style="text-align: left;">v2.1.304 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt-audit</code></td>
+<td style="text-align: left;">标记为旧模型编写的指令在您的提示、技能和工具描述中，并提议修复作为差异</td>
+<td style="text-align: left;">v2.1.221 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>cost-optimize</code></td>
+<td style="text-align: left;">分析您的项目的 Claude API 支出去向，并提议从提示缓存、修剪不需要的输入和输出令牌、批处理、工作量和模型选择等选项中节省成本，一次一个更改</td>
+<td style="text-align: left;">v2.1.247 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>build-eval</code></td>
+<td style="text-align: left;">为您的 Claude 驱动的应用构建评估集</td>
+<td style="text-align: left;">v2.1.259 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hillclimb</code></td>
+<td style="text-align: left;">针对现有评估迭代改进您的应用</td>
+<td style="text-align: left;">v2.1.259 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>preserved-thinking-migration</code></td>
+<td style="text-align: left;">查找您的集成对早期轮次、其系统提示或其工具列表所做的编辑，这些编辑使<a href="https://platform.claude.com/docs/en/build-with-claude/preserved-thinking" target="_blank" rel="noopener">保留的思考</a>块失效，测量每个块丢弃多少推理，并提议一次一个修复，在每次更改后重新测量</td>
+<td style="text-align: left;">v2.1.282 或更高版本</td>
+</tr>
+</tbody>
+</table>
+<h2 id="getting-started">开始使用</h2>
+<h3 id="create-your-first-skill">创建你的第一个 skill</h3>
+<p>这个示例创建了一个 skill，它总结你的 git 仓库中未提交的更改，并标记任何有风险的内容。它在 Claude 读取之前将实时差异拉入提示中，因此响应基于你的实际工作树，而不是 Claude 从打开的文件中猜测的内容。当你询问你的更改时，Claude 会自动加载该 skill，或者你可以使用 <code>/summarize-changes</code> 直接调用它。</p>
+<p><strong>1. 创建 skill 目录</strong></p>
+<p>在你的个人 skills 文件夹中为该 skill 创建一个目录。个人 skills 在所有项目中都可用。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">mkdir<span class="w"> </span>-p<span class="w"> </span>~/.claude/skills/summarize-changes
+</code></pre></div>
+<p><strong>2. 编写 SKILL.md</strong></p>
+<p>每个 skill 都需要一个 <code>SKILL.md</code> 文件，包含两部分：<code>---</code> 标记之间的 YAML frontmatter，告诉 Claude 何时使用该 skill，以及包含 Claude 在 skill 运行时遵循的说明的 markdown 内容。目录名称或你设置的 frontmatter <code>name</code> 会成为你输入的命令，<code>description</code> 帮助 Claude 决定何时自动加载该 skill。</p>
+<p>将其保存到 <code>~/.claude/skills/summarize-changes/SKILL.md</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Summarizes uncommitted changes and flags anything risky. Use when the user asks what changed, wants a commit message, or asks to review their diff.</span>
+<span class="nn">---</span>
+
+<span class="c1">## Current changes</span>
+
+<span class="kt">!</span><span class="err">`</span><span class="l l-Scalar l-Scalar-Plain">git diff HEAD`</span>
+
+<span class="l l-Scalar l-Scalar-Plain">## Instructions</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Summarize the changes above in two or three bullet points, then list any risks you notice such as missing error handling, hardcoded values, or tests that need updating. If the diff is empty, say there are no uncommitted changes.</span>
+</code></pre></div>
+<p><code>!`git diff HEAD`</code> 行使用<a href="#inject-dynamic-context">动态上下文注入</a>：Claude Code 运行该命令，并在 Claude 看到 skill 内容之前将该行替换为其输出，因此说明会随着当前差异已内联而到达。</p>
+<p><strong>3. 测试 skill</strong></p>
+<p>打开一个 git 项目，对任何文件进行小的编辑，并通过运行 <code>claude</code> 启动 Claude Code。你可以通过两种方式测试该 skill。</p>
+<p><strong>让 Claude 自动调用它</strong>，通过询问与描述匹配的内容：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">What did I change?
+</code></pre></div>
+<p><strong>或直接使用 skill 名称调用它</strong>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/summarize-changes
+</code></pre></div>
+<p>无论哪种方式，Claude 都应该用你的编辑的简短摘要和风险列表进行响应。</p>
+<h2 id="where-skills-live">选择 skills 的加载位置</h2>
+<p>skills 的保存位置决定了哪些会话会加载它。将其保存在主目录下可在每个项目中使用，将其提交到存储库可与该处的所有人共享，或通过插件或托管设置分发以覆盖整个团队。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">位置</th>
+<th style="text-align: left;">路径</th>
+<th style="text-align: left;">加载位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Enterprise</td>
+<td style="text-align: left;"><code>.claude/skills/&lt;skill-name&gt;/SKILL.md</code> 在 <a href="managed-settings.html#delivery-mechanisms">托管设置目录</a></td>
+<td style="text-align: left;">您的组织部署它的所有机器上的所有用户</td>
+</tr>
+<tr>
+<td style="text-align: left;">Personal</td>
+<td style="text-align: left;"><code>~/.claude/skills/&lt;skill-name&gt;/SKILL.md</code></td>
+<td style="text-align: left;">此机器上的所有项目，但不包括 <a href="#skills-in-cowork-and-cloud-sessions">Cowork 或云会话</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Project</td>
+<td style="text-align: left;"><code>.claude/skills/&lt;skill-name&gt;/SKILL.md</code></td>
+<td style="text-align: left;">此仓库中的会话，但不包括 <a href="claude-projects.html#what-threads-pick-up-from-your-repositories">项目中的云端线程</a>。提交它以便您的团队也能获得它</td>
+</tr>
+<tr>
+<td style="text-align: left;">Nested</td>
+<td style="text-align: left;"><code>&lt;subdir&gt;/.claude/skills/&lt;skill-name&gt;/SKILL.md</code></td>
+<td style="text-align: left;">在 <code>&lt;subdir&gt;</code> 中或其下方启动的会话，但不包括项目中的云端线程。在这些线程之外，在其上方启动的会话会在 Claude 处理该处的文件时加载该 skill。请参阅 <a href="#discovery-from-parent-and-nested-directories">monorepos 和子目录</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Additional directory</td>
+<td style="text-align: left;"><code>.claude/skills/&lt;skill-name&gt;/SKILL.md</code> 在使用 <code>--add-dir</code> 传递的目录中</td>
+<td style="text-align: left;">该会话。请参阅 <a href="#skills-from-additional-directories">项目外的目录</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Plugin</td>
+<td style="text-align: left;"><code>&lt;plugin&gt;/skills/&lt;skill-name&gt;/SKILL.md</code></td>
+<td style="text-align: left;">在 <a href="plugins-overview.html">插件</a> 启用的任何位置，作为 <code>/plugin-name:skill-name</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">claude.ai account</td>
+<td style="text-align: left;">为您的 claude.ai 账户启用的 skills</td>
+<td style="text-align: left;">Cowork 会话、云会话和使用该账户登录的终端会话。请参阅 <a href="#how-synced-skills-behave">从 claude.ai 同步的 Skills</a></td>
+</tr>
+</tbody>
+</table>
+<p>Skill 文件夹还遵循以下规则：</p>
+<ul>
+<li><strong>符号链接文件夹</strong>：enterprise、personal 或 project 位置中的 <code>&lt;skill-name&gt;</code> 条目可以是指向磁盘上其他位置的目录的符号链接。Claude Code 从目标读取 <code>SKILL.md</code> 并加载 skill，即使多个位置指向同一目标也只加载一次。插件 skills <a href="plugins-host-marketplace.html#share-files-within-a-marketplace-with-symlinks">以不同方式处理符号链接</a>。</li>
+<li><strong>保留名称 <code>synced</code></strong>：不要将 skill 文件夹命名为 <code>synced</code>，无论大小写如何。Claude Code 使用 <code>~/.claude/skills/synced/</code> 来存放 <a href="#where-synced-skills-load">从 claude.ai 下载的 skills</a>，并跳过您在 enterprise、personal 和 project 位置中以该名称创作的 skill。</li>
+<li><strong>保留名称 <code>anthropic-skills</code></strong>：在插件外，名称为 <code>anthropic-skills</code> 或以 <code>anthropic-skills:</code> 开头的 skill 文件夹或命令文件不会加载。请参阅 <a href="#names-reserved-for-synced-skills">为同步 skills 保留的名称</a>。</li>
+<li><strong>名称中的字符</strong>：在插件外，当 skill 文件夹的名称包含零宽空格或 <code>&lt;</code> 等字符时，它不会加载。请参阅 <a href="#characters-a-skill-name-cant-hold">skill 名称不能包含的字符</a>。</li>
+<li><strong>命令文件</strong>：<code>.claude/commands/</code> 中的 Markdown 文件是较旧的格式，仍然有效。它支持相同的 <a href="#frontmatter-reference">frontmatter</a>，除了 <code>name</code> 和 <code>paths</code>。要找到您输入以调用它的名称，请参阅 <a href="#how-a-skill-gets-its-command-name">skill 如何获得其命令名称</a>。对于新工作，更倾向于使用 skill，因为 skills 还支持 <a href="#add-supporting-files">支持文件</a>。</li>
+<li><strong>Skill 文件夹作为插件</strong>：将 <code>.claude-plugin/plugin.json</code> 添加到 personal 或 project skill 文件夹，Claude Code 即可将其作为名为 <code>&lt;name&gt;@skills-dir</code> 的 <a href="plugins-loading.html#plugins-shared-through-a-repository">插件</a> 加载，并带有其自己的 Agent、hook 和 MCP 服务器。在项目的 <code>.claude/skills/</code> 中，这需要首先接受工作区信任对话框；在这两个位置中，这都要求您的管理员未 <a href="plugins-loading.html#skills-directory-plugins-blocked-by-managed-settings">阻止 skills 目录插件</a>。</li>
+</ul>
+<h3 id="discovery-from-parent-and-nested-directories">在 monorepos 和子目录中加载 skills</h3>
+<p>Claude Code 从启动它的目录和每个父目录（直到存储库根目录）中的 <code>.claude/skills/</code> 加载项目 skills，因此在 <code>packages/frontend/</code> 中启动仍会获取在根目录定义的 skills。当您在 v2.1.246 或更高版本上 <a href="permissions.html#move-the-session-to-another-directory">使用 <code>/cd</code> 移动会话</a> 时，Claude Code 会添加新目录的项目 skills。</p>
+<p>在您使用 <code>--worktree</code> 或 <code>git worktree add</code> 创建的链接 <a href="worktrees.html">git worktree</a> 中运行的会话中，Claude Code 仅在 worktree 根目录之前搜索父目录。在 Claude Code v2.1.277 或更高版本上，当 worktree 检出在其根目录没有 <code>.claude/skills</code> 目录时，Claude Code 会改为加载主检出的项目 skill。请参阅 <a href="worktrees.html#what-worktrees-share-with-the-main-checkout">worktrees 与主检出共享的内容</a>。</p>
+<p><code>.claude/skills/</code> 目录中启动位置下方的 skill 在启动时不会加载。它们在 Claude 首次读取或编辑该子目录中的文件时加载，并在会话的其余时间保持可用。在此之前，它们不会出现在 <code>/</code> 菜单中，您也无法按名称调用它们。要更早加载它们，请使用子目录的路径运行 <code>/add-dir</code>，这需要 Claude Code v2.1.257 或更高版本。对于从桌面应用启动的 worktree 会话，请参阅 <a href="worktrees.html#what-worktrees-share-with-the-main-checkout">worktrees 与主检出共享的内容</a>。</p>
+<p>当嵌套 skill 的目录名称与另一个 skill 的名称匹配时，两者都保持可用。在存储库根目录有一个 <code>deploy</code> skill，在 <code>apps/web/.claude/skills/</code> 中有另一个：</p>
+<ul>
+<li><code>/deploy</code> 运行根 skill。Claude Code 还为 Claude 列出目录限定的变体，并指示调用其目录包含它正在处理的文件的那个，因此嵌套 skill 仍然适用于 <code>apps/web/</code> 中的工作。</li>
+<li><code>/apps/web:deploy</code> 单独运行嵌套 skill。其描述命名了它适用的目录。</li>
+</ul>
+<h3 id="skills-from-additional-directories">从项目外的目录加载 skills</h3>
+<p>当您使用 <code>--add-dir</code> 或 <code>/add-dir</code> 添加目录时，Claude Code 会加载该目录的 <code>.claude/skills/</code> 中的 skills，以及其 <code>.claude/commands/</code> 和 <code>.claude/agents/</code>。Agent SDK 通过 TypeScript 中的 <a href="agent-sdk-typescript.html#options"><code>additionalDirectories</code></a> 或 Python 中的 <a href="agent-sdk-python.html#claudeagentoptions"><code>add_dirs</code></a> 添加的目录以相同方式加载，因为 SDK 将它们作为 <code>--add-dir</code> 传递。<code>settings.json</code> 中的 <code>permissions.additionalDirectories</code> 设置仅授予文件访问权限，不加载这些中的任何一个。</p>
+<p>Claude Code 在启动时使用 <code>--add-dir</code> 传递的目录中监视 <code>.claude/skills/</code>，如 <a href="#live-change-detection">在会话期间编辑 skill</a> 所述。它不监视添加目录的 <code>.claude/commands/</code> 或 <code>.claude/agents/</code>，因此在更改该处的文件后重新启动会话。</p>
+<p>这些加载取决于 <code>project</code> <a href="agent-sdk-claude-code-features.html#control-filesystem-settings-with-settingsources">设置源</a>，默认情况下处于启用状态。<a href="settings-reference.html#strictpluginonlycustomization"><code>strictPluginOnlyCustomization</code></a> 策略、<a href="headless.html#start-faster-with-bare-mode">bare mode</a> 和 <a href="cli-reference.html#cli-flags"><code>--safe-mode</code></a> 各自进一步限制它们，如这些页面所述。请参阅 <a href="permissions.html#additional-directories-grant-file-access-not-configuration">其他目录授予文件访问权限，而不是配置</a> 以获取添加目录加载的完整表格，包括 <code>CLAUDE.md</code> 和插件设置。</p>
+<h4 id="run-a-same-named-skill-from-an-added-directory">运行已添加目录中的同名 skill</h4>
+<p>当已添加目录中 skill 的文件夹名称与 enterprise、personal 或 project skill，或较早添加的目录中的 skill 冲突时，该 skill 会获得一个前缀。要运行它，请在 Claude Code 输入框中输入 <code>/&lt;prefix&gt;:&lt;skill-name&gt;</code>。<code>/</code> 菜单以其带前缀的名称列出该 skill，<a href="#how-a-skill-gets-its-command-name">skill 如何获得其命令名称</a> 介绍了前缀的来源。该名称需要 Claude Code v2.1.309 或更高版本。</p>
+<p>例如，使用 <code>--add-dir ../cli</code>，并且您的项目和 <code>../cli</code> 中都有 <code>verify</code> skill：</p>
+<ul>
+<li><code>/verify</code> 运行您项目的 skill</li>
+<li><code>/cli:verify</code> 运行来自 <code>../cli</code> 的 skill</li>
+</ul>
+<h3 id="resolve-skills-that-share-a-name">解决共享名称的 skills</h3>
+<p>当两个 skill 共享目录或文件名称时，每个来自的位置决定了 <code>/name</code> 运行哪一个。对于由 frontmatter <code>name</code> 字段设置的名称，请参阅 <a href="#how-a-skill-gets-its-command-name">skill 如何获得其命令名称</a>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">相同名称在</th>
+<th style="text-align: left;">运行哪一个</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Enterprise、personal 和 project 中的两个</td>
+<td style="text-align: left;">Enterprise 优先于 personal，personal 优先于 project。在 <code>~/.claude/skills/</code> 和项目的 <code>.claude/skills/</code> 中都有 <code>deploy</code> 时，<code>/deploy</code> 运行 personal 的</td>
+</tr>
+<tr>
+<td style="text-align: left;">这些位置中的任何一个和 <a href="#bundled-skills">捆绑 skill</a></td>
+<td style="text-align: left;">您的 skill 替换捆绑命令，但不替换其别名。项目 <code>code-review</code> skill 替换 <code>/code-review</code>，捆绑别名 <code>/review</code> 永远不会运行您的 skill</td>
+</tr>
+<tr>
+<td style="text-align: left;">这些位置中的任何一个和 <a href="commands.html">内置命令</a></td>
+<td style="text-align: left;">在本地终端会话中，您的 skill 替换内置命令，但不替换其别名。项目 <code>usage</code> skill 替换 <code>/usage</code>，内置别名 <code>/cost</code> 仍然运行内置命令</td>
+</tr>
+<tr>
+<td style="text-align: left;">Skill 和 <code>.claude/commands/</code> 中的文件</td>
+<td style="text-align: left;">Skill</td>
+</tr>
+<tr>
+<td style="text-align: left;">项目根 skill 和嵌套 skill</td>
+<td style="text-align: left;">两者都加载。请参阅 <a href="#discovery-from-parent-and-nested-directories">monorepos 和子目录</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Enterprise、personal 或 project skill 和 <a href="#skills-from-additional-directories">项目外已添加目录</a> 中的 skill</td>
+<td style="text-align: left;">Enterprise、personal 或 project skill，而已添加目录中的 skill 以带前缀的名称运行。请参阅 <a href="#run-a-same-named-skill-from-an-added-directory">运行已添加目录中的同名 skill</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">项目外的两个 <a href="#skills-from-additional-directories">已添加目录</a></td>
+<td style="text-align: left;">按 <code>--add-dir</code> 或 <code>/add-dir</code> 的顺序，最先添加的目录中的 skill。另一个以 <a href="#run-a-same-named-skill-from-an-added-directory">带前缀的名称</a> 运行</td>
+</tr>
+<tr>
+<td style="text-align: left;">插件 skill 和上述任何位置的 skill</td>
+<td style="text-align: left;">两者都加载，因为插件 skills 被命名为 <code>/plugin-name:skill-name</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">上述任何一个和 <a href="#how-synced-skills-behave">从您的 claude.ai 账户同步的 skill</a> 的短名称</td>
+<td style="text-align: left;">其他 skill 或命令。同步 skill 随后被列出并仅在其完整名称下运行。请参阅 <a href="#when-a-synced-skill-name-matches-another-command">当同步 skill 名称与另一个命令匹配时</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="skills-in-cowork-and-cloud-sessions">在 Cowork 和云会话中使用 skills</h3>
+<p><a href="https://claude.com/product/cowork" target="_blank" rel="noopener">Cowork</a> 会话和 <a href="cloud-environments.html#what-carries-over-from-your-setup">云端会话</a>（包括 <a href="routines.html">云端定时任务</a>）不会读取您机器上的 <code>~/.claude/skills/</code>。交互式和定时的 Cowork 会话都加载为您的 claude.ai 账户启用的 skill，在会话启动时同步。从 Desktop 应用侧边栏中的 <strong>Customize</strong> 或从 claude.ai 上的 skill 设置管理它们。</p>
+<p>如果 skill 仅存在于您机器上的 <code>~/.claude/skills/</code> 中，当 <a href="routines.html">云端定时任务</a> 调用它时，Claude Code 会报告找不到该 skill。这是因为每次运行都作为新的云端会话启动。要在这些会话中使用个人 skill：</p>
+<ul>
+<li>对于 Cowork 会话、云端会话以及 <a href="claude-projects.html#what-threads-pick-up-from-your-repositories">项目</a> 中的云端线程，为您的 claude.ai 账户启用该 skill。在项目的云端线程中，提交到仓库 <code>.claude/skills/</code> 的 skill 不可用。<a href="self-hosted-environments-configuration.html#how-each-session’s-config-is-assembled">自托管环境中的某些会话</a> 不会加载您账户的 skill。</li>
+<li>对于项目线程以外的云端会话，您可以改为将 skill 提交到仓库的 <code>.claude/skills/</code>。在仓库的 <code>.claude/settings.json</code> 中声明的插件和仅在您的用户设置中启用的插件 <a href="cloud-environments.html#what-carries-over-from-your-setup">不会在云端会话中加载</a>。</li>
+</ul>
+<p><a href="desktop-scheduled-tasks.html">Desktop 计划任务</a> 在您的机器上本地运行，因此它们确实加载 <code>~/.claude/skills/</code>。</p>
+<h3 id="how-synced-skills-behave">从 claude.ai 同步的 Skills</h3>
+<p>如果您使用 Cowork 或云会话，或使用 claude.ai 账户在终端中登录 Claude Code，本部分适用于您。在这些会话中，Claude Code 加载为您的 claude.ai 账户启用的 skills，无需您进行任何设置，如 <a href="#where-synced-skills-load">同步 skills 加载的位置</a> 所述。这些 skills 包括您在 claude.ai 设置中创建或打开的 skills、您的组织在那里提供的 skills 以及 Anthropic 的内置 skills，例如 <code>pdf</code> 和 <code>xlsx</code>。</p>
+<p>Claude Code 从您的账户下载同步 skill，而不是读取您在会话运行的机器上编写的文件，因此它对同步 skills 应用不适用于您存储在 <a href="#where-skills-live">skills 位置</a> 中的 skills 的规则。</p>
+<h4 id="where-synced-skills-load">同步 skills 加载的位置</h4>
+<p>在 Cowork 或云会话中，Claude Code 加载为您的 claude.ai 账户启用的 skills，<a href="#skills-in-cowork-and-cloud-sessions">Cowork 和云会话中的 Skills</a> 说明了如何选择这些会话获得哪些 skills。</p>
+<p>在您的终端中，Claude Code 在您使用 claude.ai 账户登录的会话中同步这些 skill。会话启动时，Claude Code 在后台将您账户的 skill 下载到 <code>~/.claude/skills/synced/</code> 中，然后在会话运行期间检查 claude.ai 是否有更改。当检查发现 skill 在 claude.ai 上被添加、编辑或关闭时，Claude Code 在运行的会话中添加、更新或删除它，无需重新启动。终端会话中的同步需要 Claude Code v2.1.273 或更高版本。</p>
+<p>会话空闲时，检查运行得不那么频繁：</p>
+<ul>
+<li><strong>当您或 Claude 在会话中工作时</strong>：大约每 10 分钟运行一次检查。</li>
+<li><strong>当会话空闲时</strong>：大约每 40 分钟运行一次检查。当您再次在会话中输入时，如果上次检查已超过 10 分钟，Claude Code 会在几分钟内进行检查。</li>
+</ul>
+<p>同步永远不会延迟启动，因为 Claude 仅在调用 skill 时等待其下载。因此，短 <a href="headless.html">非交互式</a> 运行可能在新添加的 skill 下载之前完成，在这种情况下，稍后的会话会下载它。要使非交互式运行下载您的 skill 并在回答提示词之前等待列表，请将 <a href="env-vars.html#variables"><code>CLAUDE_CODE_SYNC_SKILLS</code></a> 设置为 <code>1</code>。在 v2.1.273 之前，终端会话仅在设置了此变量的 <code>-p</code> 运行中下载它们。</p>
+<p>Claude Code 仅在使用您的 claude.ai 账户登录的会话中同步，并 <a href="env-vars.html#features-that-need-feature-flag-fetching">从 Anthropic 获取功能标志</a>。它不在这些会话中同步：</p>
+<ul>
+<li>不使用由 <code>/login</code> 存储的登录的会话，例如使用 API 密钥进行身份验证的会话，或 <code>ANTHROPIC_AUTH_TOKEN</code>、<code>CLAUDE_CODE_OAUTH_TOKEN</code> 或 <code>apiKeyHelper</code> 脚本提供凭证的会话</li>
+<li>不获取功能标志的会话，例如 Amazon Bedrock 上的会话或您设置 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> 的会话</li>
+<li><a href="headless.html#start-faster-with-bare-mode">bare mode</a> 中的会话或您使用 <code>--safe-mode</code> 启动的会话</li>
+<li>您的组织的托管设置 <a href="settings-reference.html#strictpluginonlycustomization-skills">将 skills 锁定到插件源</a> 的会话，或您使用 <a href="cli-reference.html#cli-flags"><code>--setting-sources</code></a> 列表启动的会话，该列表省略了 <code>user</code></li>
+</ul>
+<p>如果您在会话期间使用 <code>/login</code> 登录，请重新启动 Claude Code 以开始同步。</p>
+<p>较早会话同步的 skills 保留在磁盘上。Claude Code 在稍后登录到同一账户的会话中加载它们，即使它无法到达 claude.ai。</p>
+<p>Claude Code 下载同步 skills，从不上传它们。如果您或 Claude 编辑 <code>~/.claude/skills/synced/</code> 下的文件，更改不会保存到您的 claude.ai 账户，稍后的同步可能会覆盖或删除它。要更改同步 skill，请在 claude.ai 上更新它；下一次同步会下载新版本。</p>
+<p>要查看哪些 skills 已同步，请运行 <code>/skills</code>。菜单在 <code>claude.ai sync</code> 下列出它们。</p>
+<p>Anthropic 的某些 skills，例如 <code>pdf</code> 和 <code>xlsx</code>，总是同步。对于其余的，在 claude.ai 上的 skills 设置中打开或关闭 skill 以更改是否同步。</p>
+<p>要停止在机器上同步，请在您的用户设置中将 <a href="settings-reference.html#syncclaudeaiskills"><code>syncClaudeAiSkills</code></a> 设置为 <code>false</code>。Claude Code 停止下载，下次启动时它会将已同步的 skills 移动到 <code>~/.claude/skills/.trash/</code>，不再加载它们。您的组织可以通过在 claude.ai 上关闭 Skills 来为所有人关闭同步。要在保持 Skills 打开的情况下停止同步，它可以在 <a href="managed-settings.html">托管设置</a> 中设置相同的密钥。</p>
+<p>如果您的组织在 claude.ai 上关闭 Skills，Claude Code 会删除下载的 skills，它们停止加载。删除的 skills 移动到 <code>~/.claude/skills/.trash/</code>，您可以在 <a href="claude-directory.html#cleaned-up-automatically">保留扫描</a> 删除它们之前恢复文件。一旦您的组织重新打开 Skills，Claude Code 会在下一次同步时下载您启用的 skills。</p>
+<h4 id="when-a-synced-skill-name-matches-another-command">当同步 skill 名称与另一个命令匹配时</h4>
+<p>您可以通过其短名称 <code>/&lt;name&gt;</code> 或完整名称 <code>/anthropic-skills:&lt;name&gt;</code> 调用同步 skill。当另一个命令使用短名称时，<code>/&lt;name&gt;</code> 运行另一个命令，同步 skill 仅作为 <code>/anthropic-skills:&lt;name&gt;</code> 运行。使用本地 <code>deploy</code> skill 和同步 <code>deploy</code> 时，<code>/deploy</code> 运行本地 skill，<code>/anthropic-skills:deploy</code> 运行同步的。在 v2.1.269 之前，同步 skill 仅有其短名称。</p>
+<p>在 <code>/</code> 菜单、<code>/skills</code> 和 <code>/context</code> 中，同步 skill 出现在其短名称下，或在另一个命令使用短名称时出现在其完整名称下。在您的会话中运行 <code>/skills</code>。列表下的注释解释了每个失去其短名称的同步 skill。如果您在 <code>~/.claude/</code> 中的个人 skills 或命令文件之一使用该名称，注释还会说明要重命名或删除什么以释放它。</p>
+<p>从 v2.1.269 到 v2.1.280，这些列表在其完整名称下显示每个同步 skill，<code>/skills</code> 没有这样的注释；两者都在 v2.1.281 中更改。</p>
+<p>使用短名称的命令可以是以下任何一个：</p>
+<ul>
+<li>内置命令或 <a href="#bundled-skills">捆绑 skill</a>，包括在您的会话中不可用的，例如在您关闭捆绑 skills 后</li>
+<li>任何 <a href="#where-skills-live">本地级别</a> 的 skill 或 <code>.claude/commands/</code> 中的文件</li>
+<li>插件 skill</li>
+<li><a href="mcp.html#use-mcp-prompts-as-commands">MCP 提示</a></li>
+</ul>
+<p>Claude Code 标记同步 skills，以便您可以看出它们来自何处。<code>/skills</code> 菜单和 <code>/context</code> 在 <code>claude.ai sync</code> 下分组同步 skills，<code>/</code> 命令菜单将它们标记为来自 claude.ai。</p>
+<p>比较名称时，Claude Code 忽略大小写、间距和不可见字符，并将兼容性形式（如全宽字母和破折号变体）视为其纯等效形式。例如，名为 <code>Commit</code> 的同步 skill 和名为 <code>commit</code> 的本地 skill 计为相同名称，因此 <code>/commit</code> 继续运行您的本地 skill。</p>
+<p>仅因另一个字母表中的相似字母而不同的名称计为不同名称，<code>claude.ai sync</code> 标签是您区分两者的方式。这些检查和标签需要 Claude Code v2.1.228 或更高版本。</p>
+<h4 id="names-reserved-for-synced-skills">为同步 skills 保留的名称</h4>
+<p>Claude Code 保留名称 <code>anthropic-skills</code> 和该命名空间内的每个名称（例如 <code>anthropic-skills:pdf</code>）用于从 claude.ai 同步的 skills，因此同步 skill 的完整名称永远不会运行其他任何东西。该名称在每个会话中保留，无论您是否使用 claude.ai 账户登录。</p>
+<ul>
+<li><strong>Skill 文件夹、frontmatter <code>name</code>、<code>.claude/commands/</code> 中的文件或子文件夹，或 <a href="workflows.html#save-the-workflow-for-reuse">保存的工作流</a></strong>：它不加载。<a href="errors.html#a-skill-command-or-workflow-wasnt-loaded-because-its-name-is-reserved">启动通知</a> 命名要重命名或编辑的第一项。</li>
+<li><strong>名为 <code>anthropic-skills</code> 的插件</strong>：它加载。当其 skills 之一和同步 skill 都命名为 <code>&lt;name&gt;</code> 时，<code>/anthropic-skills:&lt;name&gt;</code> 运行同步 skill。</li>
+<li><strong>名为 <code>anthropic-skills</code> 的 MCP 服务器</strong>：它连接并且其工具有效，但 <a href="mcp.html#use-mcp-prompts-as-commands">其提示不显示为命令</a>。在您的 MCP 配置中重命名服务器以列出它们。</li>
+</ul>
+<h4 id="how-claude-code-handles-the-frontmatter-of-a-synced-skill">Claude Code 如何处理同步 skill 的 frontmatter</h4>
+<p>Claude Code 对同步 skill 的 frontmatter 应用两条规则：</p>
+<ul>
+<li>frontmatter 在每种会话中都适用，因此 <code>allowed-tools</code> 授予通过正常 <a href="permissions.html">权限流</a> 进行。如果您的组织设置了 <code>allowManagedPermissionRulesOnly</code>，该授予 <a href="#when-only-managed-permission-rules-apply">不适用</a>。</li>
+<li>Claude Code 清理 skill 提供的显示文本，例如其描述。它删除控制字符，在到达 Claude 的文本（例如描述）中，它还转义尖括号，以便文本无法模仿 Claude Code 的内部格式。此清理需要 Claude Code v2.1.228 或更高版本。</li>
+</ul>
+<h4 id="how-claude-code-handles-the-body-of-a-synced-skill">Claude Code 如何处理同步 skill 的正文</h4>
+<p>Claude Code 对同步 skill 的正文的处理取决于会话运行的位置：</p>
+<ul>
+<li>在云会话中，正文保持本地 skill 具有的行为，因为会话在隔离容器中运行。</li>
+<li>在您桌面上的 Cowork 会话中，正文保持本地 skill 具有的行为，除了 Claude Code 将每个 <code>!</code> 命令行替换为 <a href="#inject-dynamic-context"><code>disableSkillShellExecution</code> 占位符</a>，就像它对您在那里提供的每个 skill 所做的那样。</li>
+<li>在您机器上的任何其他会话中，Claude Code 不运行 <a href="#inject-dynamic-context"><code>!</code> 命令</a>，不附加 <code>@</code> 引用命名的文件（就像它对本地 skill 所做的那样），不替换 <code>${CLAUDE_PROJECT_DIR}</code> 和 <code>${CLAUDE_SESSION_ID}</code> 占位符，因此 <code>@</code> 引用和两个占位符都作为文字文本到达 Claude。<code>!</code> 命令行也作为文字文本到达 Claude，或当 <code>disableSkillShellExecution</code> 打开时作为该占位符。此处理需要 Claude Code v2.1.228 或更高版本。</li>
+</ul>
+<h3 id="live-change-detection">在会话期间编辑 skill</h3>
+<p>Claude Code 监视 skill 目录的文件更改，除了在 <a href="headless.html#start-faster-with-bare-mode">bare mode</a> 中。当您在 <code>~/.claude/skills/</code>、项目 <code>.claude/skills/</code> 或 <code>--add-dir</code> 目录内的 <code>.claude/skills/</code> 中添加、编辑或删除 skill 时，Claude Code 在当前会话中获取更改，无需重新启动。</p>
+<p>如果您创建了会话启动时不存在的顶级 skills 目录，请运行 <a href="commands.html#all-commands"><code>/reload-skills</code></a> 以获取您放在那里的 skills。Claude Code 还没有监视该目录，因此在稍后每次更改后再次运行 <code>/reload-skills</code>。</p>
+<p>实时更改检测仅涵盖 <code>SKILL.md</code> 文本。对于也是 <a href="plugins-loading.html#plugins-shared-through-a-repository">插件</a> 的 skill 文件夹，对 <code>hooks/</code>、<code>.mcp.json</code>、<code>agents/</code> 和 <code>output-styles/</code> 的更改需要 <code>/reload-plugins</code> 才能生效。</p>
+<h3 id="remove-a-skill">删除 skill</h3>
+<p>删除 skill 的方式取决于它来自何处：</p>
+<ul>
+<li><strong>Personal 或 project skill</strong>：删除 skill 的目录，<code>~/.claude/skills/&lt;skill-name&gt;/</code> 或 <code>.claude/skills/&lt;skill-name&gt;/</code>。Claude Code <a href="#live-change-detection">在当前会话中从 <code>/skills</code> 中删除它</a>；Claude Code 已从中加载的内容遵循 <a href="#skill-content-lifecycle">skill 内容生命周期</a>。</li>
+<li><strong>Enterprise skill</strong>：管理员从 <a href="managed-settings.html#delivery-mechanisms">托管设置目录</a> 内的 <code>.claude/skills/</code> 删除 skill 的目录，例如 Linux 上的 <code>/etc/claude-code/.claude/skills/&lt;skill-name&gt;/</code>。</li>
+<li><strong>Plugin skill</strong>：从 <code>/plugin</code> 菜单禁用或卸载提供它的插件，或使用 <code>/plugin uninstall &lt;plugin-name&gt;@&lt;marketplace-name&gt;</code>。Claude Code 在 <a href="plugins-cli-reference.html#reload-plugins">更改应用</a> 时或重新启动时卸载插件的 skills。</li>
+<li><strong>从 claude.ai 同步的 Skill</strong>：在您 <a href="#skills-in-cowork-and-cloud-sessions">启用它</a> 的同一位置为您的 claude.ai 账户关闭该 skill。Claude Code 在下一次 <a href="#where-synced-skills-load">同步您的 skills</a> 时从 <code>~/.claude/skills/synced/</code> 中删除它。如果您改为手动删除目录，下一次同步会在 skill 在 claude.ai 上保持启用时再次下载它。</li>
+<li><strong>Bundled skill</strong>：将 <a href="#bundled-skills"><code>disableBundledSkills</code></a> 设置为 <code>true</code> 以关闭捆绑 skills，或在 <a href="#override-skill-visibility-from-settings"><code>skillOverrides</code></a> 中将一个 skill 设置为 <code>"off"</code> 以隐藏它。</li>
+</ul>
+<p>要保留 personal 或 project skill 但阻止 Claude 自动调用它，请在其 frontmatter 中设置 <a href="#control-who-invokes-a-skill"><code>disable-model-invocation: true</code></a>，或在不想编辑文件时在 <a href="#override-skill-visibility-from-settings"><code>skillOverrides</code></a> 中设置 <code>"user-invocable-only"</code>。</p>
+<h2 id="configure-skills">配置 skill</h2>
+<p>skill 通过 <code>SKILL.md</code> 顶部的 YAML frontmatter 及其后的 markdown 内容进行配置。</p>
+<h3 id="types-of-skill-content">skill 内容的类型</h3>
+<p>skill 文件可以包含任何指令，但思考您希望如何调用它们有助于确定应包含哪些内容：</p>
+<p><strong>参考内容</strong>为 Claude 添加可应用于当前工作的知识，例如约定、模式、风格指南、领域知识。此类内容以内联方式运行，因此 Claude 可以将其与对话上下文结合使用。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-conventions</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API design patterns for this codebase</span>
+<span class="nn">---</span>
+
+<span class="nt">When writing API endpoints</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use RESTful naming conventions</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Return consistent error formats</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Include request validation</span>
+</code></pre></div>
+<p><strong>任务内容</strong>为 Claude 提供执行特定操作的分步指令，例如部署、提交或代码生成。这些通常是您希望通过 <code>/skill-name</code> 直接调用的操作，而不是让 Claude 决定何时运行。添加 <code>disable-model-invocation: true</code> 可防止 Claude 自动触发它。下面的示例添加了 <code>context: fork</code>，它会在 skill 自己的子代理上下文中运行该 skill；请参阅<a href="#run-skills-in-a-subagent">在子代理中运行 skill</a>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy the application to production</span>
+<span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fork</span>
+<span class="nt">disable-model-invocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nn">---</span>
+
+<span class="nt">Deploy the application</span><span class="p">:</span>
+<span class="l l-Scalar l-Scalar-Plain">1. Run the test suite</span>
+<span class="l l-Scalar l-Scalar-Plain">2. Build the application</span>
+<span class="l l-Scalar l-Scalar-Plain">3. Push to the deployment target</span>
+</code></pre></div>
+<p>请保持正文本身简洁。skill 加载后，其内容会<a href="#skill-content-lifecycle">在各轮次之间保留在上下文中</a>，因此每一行都是重复的 token 开销。说明要做什么，而不是叙述如何做或为什么做，并采用与 <a href="best-practices.html#keep-claude-md-short">CLAUDE.md 内容</a>相同的简洁性标准。</p>
+<h3 id="frontmatter-reference">Frontmatter 参考</h3>
+<p>在 <code>SKILL.md</code> 顶部的 <code>---</code> 标记之间使用 YAML <a href="glossary.html#frontmatter">frontmatter</a> 配置 skill，并在结束的 <code>---</code> 之后以 Markdown 编写 skill 的指令。字段名使用以连字符分隔的小写单词，<code>when_to_use</code> 除外。<code>.claude/commands/</code> 中的<a href="#where-skills-live">命令文件</a>接受相同的字段，但 <code>name</code> 和 <code>paths</code> 除外。此示例设置了四个字段：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-skill</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">What this skill does</span>
+<span class="nt">disable-model-invocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">allowed-tools</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Read Grep</span>
+<span class="nn">---</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Your skill instructions here...</span>
+</code></pre></div>
+<p>所有字段都是可选的。仅建议设置 <code>description</code>，以便 Claude 知道何时使用该 skill。字段名必须与表格完全一致，包括连字符：Claude Code 会忽略无法识别的字段，且不会报告错误。除 <code>true</code> 和 <code>false</code> 外，布尔字段还接受任意大小写的 <code>yes</code>、<code>no</code>、<code>on</code>、<code>off</code>、<code>1</code> 和 <code>0</code>。</p>
+<p>仅当开头的 <code>---</code> 位于文件第一行时，Claude Code 才会读取 frontmatter。否则，它会将整个文件（包括 <code>---</code> 标记）视为 skill 内容。如果标记之间的 YAML 无法解析，skill 仍会加载，但不会设置任何字段；请参阅 <a href="#skill-not-triggering">Skill 未触发</a>以查找并修复错误。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">必需</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>name</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">在 <code>/</code> 菜单中显示的命令名称。默认为目录名称。有关该字段如何与您为调用 skill 而输入的名称交互，请参阅 <a href="#how-a-skill-gets-its-command-name">skill 如何获得其命令名称</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>description</code></td>
+<td style="text-align: left;">建议</td>
+<td style="text-align: left;">skill 的功能以及何时使用它。Claude 据此决定何时应用该 skill。如果省略，则使用 markdown 内容的第一个非空行。请将关键用例放在最前面：为减少上下文占用，<code>description</code> 和 <code>when_to_use</code> 的合并文本在 skill 列表中会被截断为 1,536 个字符。文本中的尖括号会<a href="#angle-brackets-in-a-skill-description">显示为 <code>&amp;lt;</code> 和 <code>&amp;gt;</code></a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>when_to_use</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">关于 Claude 何时应调用该 skill 的附加上下文，例如触发短语或示例请求。在 skill 列表中附加到 <code>description</code> 之后，并计入 1,536 个字符的上限。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>argument-hint</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">自动补全期间显示的提示，用于指示预期的参数。示例：<code>[issue-number]</code> 或 <code>[filename] [format]</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>arguments</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">用于 skill 内容中 <a href="#available-string-substitutions"><code>$name</code> 替换</a>的命名位置参数。接受以空格分隔的字符串或 YAML 列表。名称按顺序映射到参数位置。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disable-model-invocation</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">设置为 <code>true</code> 可防止 Claude 自动加载此 skill。适用于您希望通过 <code>/name</code> 手动触发的工作流。还会阻止该 skill <a href="sub-agents.html#preload-skills-into-subagents">预加载到子代理中</a>，并在以该 skill 作为提示词的<a href="scheduled-tasks.html">会话范围定时任务</a>触发时阻止其运行。默认值：<code>false</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>user-invocable</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">当只有 Claude 应调用该 skill 时设置为 <code>false</code>：Claude Code 会将其从 <code>/</code> 菜单中隐藏，并且在您输入 <code>/name</code> 时不会运行它。适用于用户不应直接调用的背景知识。默认值：<code>true</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>allowed-tools</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">在调用此 skill 的轮次中，Claude 无需请求权限即可使用的工具。当您发送下一条消息时，该授予即被清除。接受以空格或逗号分隔的字符串，或 YAML 列表。请参阅<a href="#pre-approve-tools-for-a-skill">为 skill 预先批准工具</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disallowed-tools</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">在此 skill 处于活动状态时，从 Claude 可用工具池中移除的工具。适用于永远不应调用某些工具的自主 skill，例如对后台循环禁用 <code>AskUserQuestion</code>。接受以空格或逗号分隔的字符串，或 YAML 列表。当您发送下一条消息时，该限制即被清除。与拒绝规则一样，只要还有其他工具存在，该字段就无法移除 <a href="tools-reference.html#endconversation-tool-behavior"><code>EndConversation</code></a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>model</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">此 skill 处于活动状态时使用的模型。该覆盖适用于当前轮次的剩余部分，且不会保存到设置中。当您发送下一个提示词时，会话模型即恢复。接受与 <a href="model-config.html"><code>/model</code></a> 相同的值，或使用 <code>inherit</code> 保留当前活动的模型。被组织的 <a href="model-config.html#restrict-model-selection"><code>availableModels</code></a> 允许列表排除的值不会被使用，会话将保留其当前模型。在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>下，以及在<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">分类器审查命令时的计划模式</a>下，自动模式不支持的模型同样不会被使用，会话将保留其当前模型。使用 <code>context: fork</code> 时，该值改为设置<a href="#run-skills-in-a-subagent">分叉子代理的模型</a>，被排除的值遵循<a href="model-config.html#restrict-model-selection">与子代理模型覆盖相同的规则</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>effort</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">当前轮次剩余部分的 <a href="model-config.html#adjust-effort-level">effort 级别</a>。覆盖会话的 effort 级别，但不会覆盖 <a href="env-vars.html#variables"><code>CLAUDE_CODE_EFFORT_LEVEL</code></a> 环境变量。使用 <code>context: fork</code> 时，该值改为设置分叉子代理的 effort 级别。省略该字段时，级别由 <a href="model-config.html#adjust-effort-level">effort 解析顺序</a>决定。选项：<code>low</code>、<code>medium</code>、<code>high</code>、<code>xhigh</code>、<code>max</code>；可用级别取决于模型。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>context</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">设置为 <code>fork</code> 可在分叉的子代理上下文中运行。请参阅<a href="#run-skills-in-a-subagent">在子代理中运行 skill</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>agent</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">设置 <code>context: fork</code> 时使用的子代理类型。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>background</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">仅在使用 <code>context: fork</code> 时适用。设置为 <code>false</code> 可在调用该 skill 的轮次中等待分叉子代理的结果，而不是<a href="#run-skills-in-a-subagent">在后台运行它</a>。默认值：<code>true</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hooks</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">Claude Code 在调用该 skill 时注册并在会话剩余时间内持续运行的 hook。有关配置格式、<code>once</code> 选项以及 <a href="hooks.html#limits-on-skill-hooks">skill hook 的限制</a>，请参阅 <a href="hooks.html#hooks-in-skills-and-agents">skill 和 Agent 中的 hook</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>paths</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">限制此 skill 何时激活的 Glob 模式。接受以逗号分隔的字符串或 YAML 列表。设置后，仅当处理与这些模式匹配的文件时，Claude 才会自动加载该 skill。模式相对于 Claude 的当前工作目录，该目录之外的文件不会匹配。使用与<a href="memory.html#path-specific-rules">特定路径规则</a>相同的 glob 格式。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>shell</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">此 skill 中 <code>!`command`</code> 和 <code>```!</code> 块使用的 shell。接受 <code>bash</code>（默认）或 <code>powershell</code>。当 <a href="tools-reference.html#powershell-tool">PowerShell 工具</a>启用时，设置 <code>powershell</code> 会通过 PowerShell 运行内联 shell 命令：在没有 Git Bash 的 Windows 上默认启用，对于 claude.ai 和 Console 账户在有 Git Bash 时默认启用，而在 Amazon Bedrock、Google Cloud 的 Agent Platform 和 Microsoft Foundry 会话中以及在 macOS、Linux 和 WSL 上需要设置 <code>CLAUDE_CODE_USE_POWERSHELL_TOOL=1</code>。将其设置为 <code>0</code> 可关闭该工具。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>metadata</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">用于存放您自己的键值数据的自由格式 YAML 映射，例如权益或目录字段，由您自己的工具从 <code>SKILL.md</code> 中读取。Claude Code 不会处理其内容，并会丢弃非映射类型的值。请勿将 <code>paths</code> 等 frontmatter 字段名用作键。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>license</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">适用于该 skill 的许可证。属于 <a href="https://agentskills.io" target="_blank" rel="noopener">Agent Skills</a> 规范的一部分；请参阅<a href="#using-skill-frontmatter-outside-claude-code">在 Claude Code 之外使用 skill frontmatter</a>。Claude Code 接受该字段，但不会对其进行处理。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>compatibility</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">skill 的环境要求，例如目标产品或系统前提条件，由 <a href="https://agentskills.io" target="_blank" rel="noopener">Agent Skills</a> 规范定义；请参阅<a href="#using-skill-frontmatter-outside-claude-code">在 Claude Code 之外使用 skill frontmatter</a>。接受最多 500 个字符的字符串。Claude Code 接受该字段，但不会对其进行处理。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="additional-resources">在 Claude Code 之外使用 skill frontmatter</h4>
+<p>Claude Code 接受上表中的所有字段。在 Claude Code 之外，您只能使用 <a href="https://agentskills.io" target="_blank" rel="noopener">Agent Skills</a> 规范中的字段：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">分发途径</th>
+<th style="text-align: left;">可使用的 frontmatter 字段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="#where-skills-live">任意级别</a>的 Claude Code skill，包括<a href="plugins-overview.html">插件</a> skill</td>
+<td style="text-align: left;">上表中的所有字段</td>
+</tr>
+<tr>
+<td style="text-align: left;">claude.ai skill 上传、Skills API，以及使用 <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">anthropics/skills</a> 中的 <code>package_skill.py</code> 打包</td>
+<td style="text-align: left;"><code>name</code>、<code>description</code>、<code>license</code>、<code>compatibility</code>、<code>metadata</code>、<code>allowed-tools</code></td>
+</tr>
+</tbody>
+</table>
+<p>当您为 claude.ai 账户启用个人 skill 时（例如在 <a href="#skills-in-cowork-and-cloud-sessions">Cowork 和云端会话</a>以及定时任务中使用），您会将其上传到 claude.ai。该上传同样适用相同的规则。</p>
+<p>如果您包含了规范不允许的任何字段，打包或上传将以硬错误失败，而不是忽略该字段：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Unexpected key(s) in SKILL.md frontmatter: argument-hint. Allowed properties are: allowed-tools, compatibility, description, license, metadata, name
+</code></pre></div>
+<p>将 frontmatter 限制为规范中的六个字段可避免上述意外键错误。<a href="https://agentskills.io" target="_blank" rel="noopener">Agent Skills 规范</a>和 <a href="https://docs.claude.com/en/api/skills-guide" target="_blank" rel="noopener">Skills API 要求</a>定义了这些途径所验证的其他所有内容。仅限 Claude Code 的正文功能（例如<a href="#inject-dynamic-context">动态上下文注入</a>）在 claude.ai 聊天中或通过 API 无法发挥作用。Claude Code 接受全部六个字段，因此遵循规范的 frontmatter 无需修改即可在 Claude Code 中加载。</p>
+<h4 id="pull-request-context">skill 如何获得其命令名称</h4>
+<p>您为调用 skill 而输入的命令取决于 skill 文件所在的位置，对于 skill 目录和插件 skill，还取决于 frontmatter 的 <code>name</code> 字段。在个人或项目 skill 目录中，<code>name</code> 设置 <code>/</code> 菜单中显示且由您输入的命令，除非已有其他命令使用该名称。目录名称同样可以调用该 skill。在插件 skill 中，<code>name</code> 设置命令的最后一段，插件前缀保持不变。</p>
+<p>下表显示了每种布局下命令名称的来源：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Skill 位置</th>
+<th style="text-align: left;">命令名称来源</th>
+<th style="text-align: left;">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>~/.claude/skills/</code> 或 <code>.claude/skills/</code> 下的 skill 目录</td>
+<td style="text-align: left;">Frontmatter <code>name</code> 或目录名称</td>
+<td style="text-align: left;"><code>.claude/skills/deploy-staging/SKILL.md</code> → <code>/deploy-staging</code>，或使用 <code>name: deploy</code> 时为 <code>/deploy</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#where-skills-live">嵌套的</a> <code>.claude/skills/</code> 目录，当目录名称与其他 skill 冲突时</td>
+<td style="text-align: left;">相对于工作目录的子目录路径，然后是 skill 目录名称</td>
+<td style="text-align: left;"><code>apps/web/.claude/skills/deploy/SKILL.md</code> → <code>/apps/web:deploy</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#skills-from-additional-directories">项目之外添加的目录</a>中的 <code>.claude/skills/</code>，当 skill 目录名称与企业、个人或项目 skill，或较早添加的目录中的 skill 冲突时</td>
+<td style="text-align: left;">所添加目录的文件夹名称，然后是 skill 目录名称。当两个添加的目录具有相同的文件夹名称时，前缀以父文件夹的名称开头。需要 v2.1.309 或更高版本</td>
+<td style="text-align: left;">使用 <code>--add-dir ../cli</code> 时，<code>../cli/.claude/skills/verify/SKILL.md</code> → <code>/cli:verify</code>。使用 <code>--add-dir ../a/cli --add-dir ../b/cli</code>，且每个目录中各有一个 <code>verify</code> skill、其他位置均没有时，<code>../a/cli</code> 中的那个 → <code>/verify</code>，另一个 → <code>/b/cli:verify</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.claude/commands/</code> 下的文件</td>
+<td style="text-align: left;">不含扩展名的文件名</td>
+<td style="text-align: left;"><code>.claude/commands/deploy.md</code> → <code>/deploy</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.claude/commands/</code> 子目录中的文件</td>
+<td style="text-align: left;">相对于 <code>commands/</code> 的子目录路径（每个 <code>/</code> 替换为 <code>:</code>），然后是不含扩展名的文件名</td>
+<td style="text-align: left;"><code>.claude/commands/frontend/component.md</code> → <code>/frontend:component</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">插件 <code>skills/</code> 子目录</td>
+<td style="text-align: left;">Frontmatter <code>name</code> 或目录名称，以插件作为命名空间</td>
+<td style="text-align: left;"><code>my-plugin/skills/review/SKILL.md</code> → <code>/my-plugin:review</code>，或使用 <code>name: fancy</code> 时为 <code>/my-plugin:fancy</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">插件根目录 <code>SKILL.md</code></td>
+<td style="text-align: left;">Frontmatter <code>name</code>，以插件目录名称作为回退</td>
+<td style="text-align: left;">带有 <code>name: review</code> 的 <code>my-plugin/SKILL.md</code> → <code>/my-plugin:review</code>。请参阅<a href="plugins-components.html#skills">插件根目录下的单个 skill</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#how-synced-skills-behave">从 claude.ai 同步的</a> skill</td>
+<td style="text-align: left;">该 skill 在您 claude.ai 账户中的名称，加上 <code>anthropic-skills:</code> 前缀</td>
+<td style="text-align: left;">账户 skill <code>deploy</code> → <code>/anthropic-skills:deploy</code>，或在没有其他命令使用该名称时为 <code>/deploy</code></td>
+</tr>
+</tbody>
+</table>
+<p>在插件 skill 中，frontmatter <code>name</code> 会替换命令最后一段中的目录名称，因此带有 <code>name: fancy</code> 的 <code>my-plugin/skills/review/SKILL.md</code> 会变为 <code>/my-plugin:fancy</code>。除非已有其他命令使用该名称，否则不带前缀的 <code>/fancy</code> 也可以调用该 skill。在 v2.1.246 或更高版本中，如果您编写的 <code>name</code> 已经以插件自身的前缀开头，Claude Code 不会再次添加该前缀。例如，<code>name: my-plugin:fancy</code> 仍会变为 <code>/my-plugin:fancy</code>。在 v2.1.216 至 v2.1.245 中，当 <code>name</code> 已带有前缀时，Claude Code 会重复添加前缀。</p>
+<p>在<a href="headless.html">非交互式会话</a>中，名称 <code>help</code> 和 <code>feedback</code> 不会为其仅限终端的内置命令保留，因此使用这两个名称之一的插件 skill 在此类会话中会保留其不带前缀的命令。其他所有仅限终端的内置命令的名称（例如 <code>/login</code>）仍会保留，即使该命令无法在此类会话中运行。</p>
+<p>对于插件根目录的 <code>SKILL.md</code>，没有可供获取名称的 skill 目录，因此由 <code>name</code> 提供整个最后一段。如果没有 <code>name</code> 字段，Claude Code 会回退到插件的目录名称。</p>
+<h4 id="your-task">skill 名称不能包含的字符</h4>
+<p>如果某个 skill 或自定义命令没有出现在 <code>/</code> 菜单中，或者菜单未显示 skill 的 frontmatter <code>name</code>，请检查该名称。如果命令名称或 frontmatter <code>name</code> 包含以下这类字符，Claude Code 会拒绝该名称：</p>
+<ul>
+<li>零宽空格或控制字符</li>
+<li>私用区字符或未分配字符，例如图标字体中的字形</li>
+<li>会改变其周围文本方向的字符</li>
+<li>除单词之间的单个普通空格以外的空白，例如不间断空格、连续两个空格，或位于开头或结尾的空格</li>
+<li><code>&lt;</code> 或 <code>&gt;</code></li>
+</ul>
+<p>当 Claude Code 拒绝自定义命令或 skill 的目录名或文件名时，该命令或 skill 不会加载。请重命名该文件夹或文件以移除这些字符。如果这些字符仅出现在插件 skill 文件夹的名称或其 frontmatter <code>name</code> 中，skill 仍会加载：</p>
+<ul>
+<li><strong>插件 <code>skills/</code> 目录或其清单的 <a href="plugins-components.html#skills"><code>skills</code> 路径</a>中的文件夹</strong>：无需重命名该文件夹。这些字符在 skill 的命令名称中会变为连字符，因此输入命令时请使用连字符。</li>
+<li><strong>Frontmatter <code>name</code></strong>：<code>/</code> 菜单不会显示该 <code>name</code> 值，输入它也无法调用该 skill。请编辑 <code>name:</code> 行以移除这些字符。</li>
+</ul>
+<p>要找出 Claude Code 拒绝了哪个名称，请在 shell 中使用 <a href="cli-reference.html#cli-flags"><code>claude --debug</code></a> 启动它，并在<a href="debug-your-config.html">调试日志</a>中搜索 <code>[names]</code>。在交互式会话中，<a href="errors.html#skill-or-command-name-refused">启动通知</a>也会告知您有名称被拒绝。重命名或编辑 <code>name:</code> 行后，请重新启动会话，除非该文件位于 Claude Code <a href="#live-change-detection">监视更改</a>的目录中。</p>
+<h4 id="how-injected-commands-run">可用的字符串替换</h4>
+<p>skill 支持对 skill 内容中的动态值进行字符串替换：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">变量</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$ARGUMENTS</code></td>
+<td style="text-align: left;">调用 skill 时传递的所有参数。当没有占位符接收参数时，Claude Code 会将其以 <code>ARGUMENTS: &lt;value&gt;</code> 的形式附加。请参阅<a href="#pass-arguments-to-skills">向 skill 传递参数</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$ARGUMENTS[N]</code></td>
+<td style="text-align: left;">按从 0 开始的索引访问特定参数，例如 <code>$ARGUMENTS[0]</code> 表示第一个参数。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$N</code></td>
+<td style="text-align: left;"><code>$ARGUMENTS[N]</code> 的简写，例如 <code>$0</code> 表示第一个参数，<code>$1</code> 表示第二个参数。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$name</code></td>
+<td style="text-align: left;">在 <a href="#frontmatter-reference"><code>arguments</code></a> frontmatter 列表中声明的命名参数。名称按顺序映射到位置，因此使用 <code>arguments: [issue, branch]</code> 时，占位符 <code>$issue</code> 展开为第一个参数，<code>$branch</code> 展开为第二个参数。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>${CLAUDE_SESSION_ID}</code></td>
+<td style="text-align: left;">当前会话 ID。可用于记录日志、创建会话专属文件，或将 skill 输出与会话关联。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>${CLAUDE_EFFORT}</code></td>
+<td style="text-align: left;">当前 effort 级别：<code>low</code>、<code>medium</code>、<code>high</code>、<code>xhigh</code> 或 <code>max</code>。可用于根据当前的 effort 设置调整 skill 指令。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>${CLAUDE_SKILL_DIR}</code></td>
+<td style="text-align: left;">包含该 skill 的 <code>SKILL.md</code> 文件的目录。对于插件 skill，这是该 skill 在插件中的子目录，而不是插件根目录。在 bash 注入命令中使用此变量，可引用与 skill 捆绑的脚本或文件，而不受当前工作目录影响。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>${CLAUDE_PROJECT_DIR}</code></td>
+<td style="text-align: left;">项目根目录。这与 <a href="hooks.html#reference-scripts-by-path">hook</a> 和 MCP 服务器作为 <code>CLAUDE_PROJECT_DIR</code> 接收的路径相同。使用此变量可引用项目本地的脚本或文件，例如 <code>${CLAUDE_PROJECT_DIR}/.claude/hooks/helper.sh</code>，而不受 skill 安装位置的影响。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>${CLAUDE_PLUGIN_ROOT}</code></td>
+<td style="text-align: left;">插件的安装目录。仅在插件 skill 中进行替换。使用此变量可引用捆绑在插件中任意位置的脚本或文件，包括插件各 skill 之间共享的资源。请参阅<a href="plugins-manifest-reference.html#environment-variables">插件环境变量</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>${CLAUDE_PLUGIN_DATA}</code></td>
+<td style="text-align: left;">插件的<a href="plugins-components.html#path-variables-and-persistent-data">持久数据目录</a>，在插件更新后仍会保留。仅在插件 skill 中进行替换。使用此变量可引用已安装的依赖、生成的文件或必须在更新后保留的缓存。</td>
+</tr>
+</tbody>
+</table>
+<p>Claude Code 会在两个位置替换 <code>${CLAUDE_SKILL_DIR}</code> 和 <code>${CLAUDE_PROJECT_DIR}</code>：skill 的 markdown 内容，以及 <a href="#frontmatter-reference"><code>allowed-tools</code></a> frontmatter 中的 Bash 规则。在插件 skill 中，Claude Code 会在相同的两个位置替换 <code>${CLAUDE_PLUGIN_ROOT}</code> 和 <code>${CLAUDE_PLUGIN_DATA}</code>。在这两个位置使用相同的变量，可让 skill 运行捆绑的脚本而不出现权限提示。以下 skill 展示了这种模式：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">render-chart</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Render a chart from a CSV file</span>
+<span class="nt">allowed-tools</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bash(${CLAUDE_SKILL_DIR}/scripts/render.sh *)</span>
+<span class="nn">---</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Run `${CLAUDE_SKILL_DIR}/scripts/render.sh &lt;csv-file&gt;` to render the chart.</span>
+</code></pre></div>
+<p>如果此 skill 安装在 <code>~/.claude/skills/render-chart/</code>，则两处 <code>${CLAUDE_SKILL_DIR}</code> 都会展开为该目录。这样，<code>allowed-tools</code> 规则就会与 skill 正文指示 Claude 运行的命令完全匹配，因此脚本运行时无需提示。</p>
+<p>索引参数使用 shell 风格的引号规则，因此请将多词值用引号括起来，以将其作为单个参数传递。例如，<code>/my-skill "hello world" second</code> 会使 <code>$0</code> 展开为 <code>hello world</code>，<code>$1</code> 展开为 <code>second</code>。<code>$ARGUMENTS</code> 占位符始终展开为输入时的完整参数字符串。</p>
+<p>没有对应参数的索引占位符（例如仅传递了一个参数时的 <code>$2</code>）会原样保留在内容中。来自 <a href="#frontmatter-reference"><code>arguments</code></a> frontmatter 的命名占位符如果没有匹配的参数，则展开为空字符串。</p>
+<p>如果您传递的参数值本身包含 <code>$1</code> 或 <code>$ARGUMENTS</code> 之类的文本，Claude Code 会将其作为字面文本插入，而不会展开它。例如，如果 skill 正文包含 <code>Summarize $0</code>，而您运行 <code>/summarize "$ARGUMENTS from yesterday"</code>，则 Claude 收到的是 <code>Summarize $ARGUMENTS from yesterday</code>。在插入参数之后，Claude Code 仍会替换 <code>${CLAUDE_*}</code> 变量，例如 <code>${CLAUDE_SKILL_DIR}</code>。</p>
+<p>要在数字、<code>ARGUMENTS</code> 或已声明的参数名之前包含字面 <code>$</code>（例如正文中的 <code>$1.00</code>），请使用反斜杠对其进行转义：<code>\$1.00</code>。其他任何 <code>$</code> 之前的反斜杠都保持不变。只有紧接在标记之前的单个反斜杠才会对其进行转义。双反斜杠（例如 <code>\\$1</code>）会保留两个反斜杠，且 <code>$1</code> 仍会展开为参数值。反斜杠转义仅适用于这些参数占位符。在 <code>${CLAUDE_*}</code> 变量适用的位置，反斜杠无法阻止对该变量的替换。</p>
+<p><strong>使用替换的示例：</strong></p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session-logger</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Log activity for this session</span>
+<span class="nn">---</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Log the following to logs/${CLAUDE_SESSION_ID}.log</span><span class="p p-Indicator">:</span>
+
+<span class="l l-Scalar l-Scalar-Plain">$ARGUMENTS</span>
+</code></pre></div>
+<h3 id="when-an-injected-command-fails">添加支持文件</h3>
+<p>skill 可以在其目录中包含多个文件。这样可以使 <code>SKILL.md</code> 专注于核心内容，同时让 Claude 仅在需要时访问详细的参考资料。大型参考文档、API 规范或示例集合无需在每次运行 skill 时都加载到上下文中。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">my-skill/
+├── SKILL.md (required - overview and navigation)
+├── reference.md (detailed API docs - loaded when needed)
+├── examples.md (usage examples - loaded when needed)
+└── scripts/
+    └── helper.py (utility script - executed, not loaded)
+</code></pre></div>
+<p>在 <code>SKILL.md</code> 中引用支持文件，以便 Claude 知道每个文件包含什么内容以及何时加载它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown"><span class="gu">## Additional resources</span>
+
+<span class="k">-</span><span class="w"> </span>For complete API details, see [<span class="nt">reference.md</span>](<span class="na">reference.md</span>)
+<span class="k">-</span><span class="w"> </span>For usage examples, see [<span class="nt">examples.md</span>](<span class="na">examples.md</span>)
+</code></pre></div>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>请将 <code>SKILL.md</code> 保持在 500 行以内。将详细的参考资料移到单独的文件中。</p></div></div>
+<h3 id="control-characters-in-injected-commands">控制谁可以调用 skill</h3>
+<p>默认情况下，您和 Claude 都可以调用任何 skill。您可以输入 <code>/skill-name</code> 直接调用它，Claude 也可以在与您的对话相关时自动加载它。有两个 frontmatter 字段可用于限制这一点：</p>
+<ul>
+<li>
+<p><strong><code>disable-model-invocation: true</code></strong>：Claude 无法自行调用该 skill。适用于具有副作用或您希望控制时机的工作流，例如 <code>/commit</code>、<code>/deploy</code> 或 <code>/send-slack-message</code>。您不会希望 Claude 因为代码看起来已准备就绪就决定进行部署。</p>
+</li>
+<li>
+<p><strong><code>user-invocable: false</code></strong>：只有 Claude 可以调用该 skill。适用于无法作为命令执行的背景知识。例如，<code>legacy-system-context</code> skill 解释旧系统的工作原理。Claude 应在相关时了解这些内容，但 <code>/legacy-system-context</code> 对用户而言并不是一个有意义的操作。</p>
+</li>
+</ul>
+<p>此示例创建了一个部署 skill。如果您设置 <code>disable-model-invocation: true</code>，Claude 就无法自动运行该 skill：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy the application to production</span>
+<span class="nt">disable-model-invocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nn">---</span>
+
+<span class="nt">Deploy $ARGUMENTS to production</span><span class="p">:</span>
+
+<span class="l l-Scalar l-Scalar-Plain">1. Run the test suite</span>
+<span class="l l-Scalar l-Scalar-Plain">2. Build the application</span>
+<span class="l l-Scalar l-Scalar-Plain">3. Push to the deployment target</span>
+<span class="l l-Scalar l-Scalar-Plain">4. Verify the deployment succeeded</span>
+</code></pre></div>
+<p>如果 Claude 仍然尝试调用，Claude Code 会阻止该调用，并指示它不要以其他方式重现部署步骤，因此 Claude 通常会建议您自行运行 <code>/deploy</code>。</p>
+<p>以下是这两个字段对调用和上下文加载的影响：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Frontmatter</th>
+<th style="text-align: left;">您可以调用</th>
+<th style="text-align: left;">Claude 可以调用</th>
+<th style="text-align: left;">何时加载到上下文中</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">（默认）</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">描述始终在上下文中，调用时加载完整 skill</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disable-model-invocation: true</code></td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">不能自行调用</td>
+<td style="text-align: left;">描述不在上下文中，调用时加载完整 skill</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>user-invocable: false</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">描述始终在上下文中，调用时加载完整 skill</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>在常规会话中，skill 描述会加载到上下文中，以便 Claude 知道有哪些可用的 skill，但完整的 skill 内容仅在调用时加载。<a href="sub-agents.html#preload-skills-into-subagents">预加载了 skill 的子代理</a>的工作方式不同：完整的 skill 内容会在启动时注入。</p></div></div>
+<h4 id="permission-checks-on-injected-commands">在何处写 skill 名称</h4>
+<p>要直接运行 skill，请将其名称放在消息开头。如果放在普通文本之后，该名称会授予 Claude 运行该 skill 的权限，但不会直接运行它：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">位置</th>
+<th style="text-align: left;">示例</th>
+<th style="text-align: left;">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">消息开头</td>
+<td style="text-align: left;"><code>/deploy staging</code></td>
+<td style="text-align: left;">Claude Code 直接运行该 skill</td>
+</tr>
+<tr>
+<td style="text-align: left;">普通文本之后，作为单独的词且不附带任何标点</td>
+<td style="text-align: left;"><code>go ahead and /deploy to staging</code></td>
+<td style="text-align: left;">不会直接运行任何内容。该名称视为您针对该消息授予的权限：Claude 可以在回复时运行该 skill，并根据您的措辞判断您是否要求它这样做</td>
+</tr>
+</tbody>
+</table>
+<p>如果只是想提及该 skill 而不允许其运行，请省略斜杠。</p>
+<h3 id="run-skills-in-a-subagent">Skill 内容生命周期</h3>
+<p>当您或 Claude 调用 skill 时，渲染后的 <code>SKILL.md</code> 内容会作为一条消息进入对话，并在后续轮次中保留。这种持久性适用于 skill 的指令，而不适用于其权限：<a href="#pre-approve-tools-for-a-skill"><code>allowed-tools</code></a> 授予会在您发送下一条消息时清除。Claude Code 不会在后续轮次中重新读取 skill 文件，因此请将应在整个任务中适用的指导写成持续有效的指令，而不是一次性步骤。</p>
+<p>当 Claude 重新调用某个 skill，且其渲染后的内容与上下文中已有的副本完全相同时，Claude Code 会添加一条简短说明，指出该 skill 已加载，而不是添加第二份内容副本。当渲染后的内容不同时（因为参数发生了变化，或<a href="#inject-dynamic-context">动态上下文</a>命令产生了新的输出），Claude Code 会再次附加完整内容。</p>
+<p><a href="how-claude-code-works.html#when-context-fills-up">自动压缩</a>会在 token 预算范围内保留已调用的 skill。当对话被总结以释放上下文时，Claude Code 会在总结之后重新附加每个 skill 的最近一次调用，每个保留前 5,000 个 token。重新附加的 skill 共享 25,000 个 token 的总预算。Claude Code 从最近调用的 skill 开始填充该预算，因此如果您在一个会话中调用了许多 skill，较早的 skill 可能会在压缩后被完全丢弃。</p>
+<p>如果 Claude 在会话中途停止遵循某个 skill，请参阅 <a href="#claude-stops-following-a-skill">Claude 停止遵循 skill</a>。</p>
+<h3 id="example-research-skill-using-explore-agent">为 skill 预先批准工具</h3>
+<p><code>allowed-tools</code> 字段会在调用该 skill 的轮次中为列出的工具授予权限，因此 Claude 可以使用这些工具而无需提示您批准。即使 skill 内容<a href="#skill-content-lifecycle">保留在上下文中</a>，该授予也会在您发送下一条消息时清除；再次调用该 skill 会在该轮次中重新应用授予。它不会限制哪些工具可用：所有工具仍然可以调用，未列出的工具仍受您的<a href="permissions.html">权限设置</a>约束。要为整个会话而非单个轮次预先批准工具，请改为在这些权限设置中添加允许规则。</p>
+<p>工作区信任不会限制此字段。即使在您从未信任过的文件夹中进行 <code>-p</code> 运行，Claude Code 也会应用项目 skill 的 <code>allowed-tools</code>。skill 可以为自身授予广泛的工具访问权限，因此在仓库中运行 Claude Code 之前，请检查提交到该仓库的 skill 的 <code>allowed-tools</code>。要在整个组织范围内对仓库 skill 禁用该字段，请参阅<a href="#when-only-managed-permission-rules-apply">仅适用托管权限规则时</a>。</p>
+<p>每当您调用此 skill 时，它都允许 Claude 运行 git 命令而无需逐次批准：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commit</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stage and commit the current changes</span>
+<span class="nt">disable-model-invocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">allowed-tools</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bash(git add *) Bash(git commit *) Bash(git status *)</span>
+<span class="nn">---</span>
+</code></pre></div>
+<p>要在 skill 处于活动状态时从 Claude 的可用工具池中移除工具，请在 skill 的 frontmatter 中的 <code>disallowed-tools</code> 里列出这些工具。当您发送下一条消息时，该限制即被清除。与拒绝规则一样，只要还有其他工具存在，该字段就无法移除 <a href="tools-reference.html#endconversation-tool-behavior"><code>EndConversation</code></a>。要在所有 skill 和提示词中阻止工具，请在您的<a href="permissions.html">权限设置</a>中添加拒绝规则。</p>
+<h4 id="restrict-claude’s-skill-access">当托管设置将 hook 限定于插件时</h4>
+<p>当您组织的托管设置在 <code>strictPluginOnlyCustomization</code> 中列出 <code>hooks</code> 时，在 frontmatter 中声明了 <code>hooks</code> 的个人或项目 skill 会失去其 <code>allowed-tools</code> 预先批准，<a href="settings-reference.html#strictpluginonlycustomization-hooks">保留该预先批准的 skill</a> 除外。</p>
+<ul>
+<li><strong>检查</strong>：在 Claude Code 会话中输入 <code>/status</code>。如果 <code>/status</code> 显示 <a href="settings.html#check-what-your-organization-enforces"><code>Enterprise managed settings</code></a>，请询问您的管理员 <code>strictPluginOnlyCustomization</code> 是否列出了 <code>hooks</code>。</li>
+<li><strong>修复</strong>：从该 skill 的 frontmatter 中移除 <code>hooks</code>，因为在该设置下其 hook 不会运行。要保留这些 hook，请将该 skill <a href="hooks.html#limits-on-skill-hooks">移入插件</a>，并从市场安装该插件。</li>
+</ul>
+<h4 id="override-skill-visibility-from-settings">仅适用托管权限规则时</h4>
+<p>当您的组织在托管设置中设置了 <code>allowManagedPermissionRulesOnly</code> 时，Claude Code 会忽略项目和个人 skill 中的 <code>allowed-tools</code>，以及<a href="settings-reference.html#allowmanagedpermissionrulesonly">该设置条目所列的其他来源</a>中的 <code>allowed-tools</code>。这需要 Claude Code v2.1.282 或更高版本。</p>
+<p>受影响的 skill 所列出的工具会改为经过您组织的托管规则和常规权限提示。运行 <code>/status</code> 可列出在当前会话中到目前为止 Claude Code 已忽略其 <code>allowed-tools</code> 的每个 skill。skill 中不被任何托管规则允许的注入命令遵循<a href="#permission-checks-on-injected-commands">注入命令的权限检查</a>。</p>
+<h3 id="find-unused-skills">向 skill 传递参数</h3>
+<p>您和 Claude 都可以在调用 skill 时传递参数。参数可通过 <code>$ARGUMENTS</code> 占位符获取。</p>
+<p>此 skill 按编号修复 GitHub issue。<code>$ARGUMENTS</code> 占位符会被替换为 skill 名称之后的任何内容：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fix-issue</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Fix a GitHub issue</span>
+<span class="nt">disable-model-invocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nn">---</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Fix GitHub issue $ARGUMENTS following our coding standards.</span>
+
+<span class="l l-Scalar l-Scalar-Plain">1. Read the issue description</span>
+<span class="l l-Scalar l-Scalar-Plain">2. Understand the requirements</span>
+<span class="l l-Scalar l-Scalar-Plain">3. Implement the fix</span>
+<span class="l l-Scalar l-Scalar-Plain">4. Write tests</span>
+<span class="l l-Scalar l-Scalar-Plain">5. Create a commit</span>
+</code></pre></div>
+<p>当您运行 <code>/fix-issue 123</code> 时，Claude 会收到 "Fix GitHub issue 123 following our coding standards..."</p>
+<p>如果您在调用 skill 时传递了参数，但 skill 内容中没有占位符接收参数，Claude Code 会将 <code>ARGUMENTS: &lt;your input&gt;</code> 附加到 skill 内容的末尾，以便 Claude 仍能看到您输入的内容。占位符是指 <code>$ARGUMENTS</code>、索引形式（例如 <code>$1</code>）或命名参数。在其位置上没有参数的索引占位符会保留为字面文本，不算作接收了参数。命名占位符即使在其位置上没有参数也算作接收了参数，因为它会展开为空字符串。</p>
+<p>要按位置访问单个参数，请使用 <code>$ARGUMENTS[N]</code> 或更简短的 <code>$N</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">migrate-component</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Migrate a component from one language to another</span>
+<span class="nn">---</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Migrate the $ARGUMENTS[0] component from $ARGUMENTS[1] to $ARGUMENTS[2].</span>
+<span class="l l-Scalar l-Scalar-Plain">Preserve all existing behavior and tests.</span>
+</code></pre></div>
+<p>运行 <code>/migrate-component SearchBar JavaScript TypeScript</code> 会将 <code>$ARGUMENTS[0]</code> 替换为 <code>SearchBar</code>，<code>$ARGUMENTS[1]</code> 替换为 <code>JavaScript</code>，<code>$ARGUMENTS[2]</code> 替换为 <code>TypeScript</code>。使用 <code>$N</code> 简写的同一 skill：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">migrate-component</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Migrate a component from one language to another</span>
+<span class="nn">---</span>
+
+<span class="l l-Scalar l-Scalar-Plain">Migrate the $0 component from $1 to $2.</span>
+<span class="l l-Scalar l-Scalar-Plain">Preserve all existing behavior and tests.</span>
+</code></pre></div>
+<h4 id="evaluate-and-iterate-on-a-skill">在一条消息中叠加多个 skill</h4>
+<p>在终端的 Claude Code 输入框中输入时，您可以在一条消息的开头叠加多个 skill。通过 Agent SDK 或 <code>claude -p</code> 时，Claude Code 只会加载第一个 skill，并将该行的其余部分作为其参数。在终端输入框中，输入 <code>/write-tests /fix-issue 123</code> 会加载这两个 skill，并将末尾的文本 <code>123</code> 作为 <code>$ARGUMENTS</code> 传递给每个 skill。</p>
+<p>Claude Code 会展开第一个 skill 以及其后叠加的最多五个 skill。展开会在第一个不是内联用户可调用 skill 的标记处停止。如果您叠加了以<a href="#run-skills-in-a-subagent">分叉子代理</a>方式运行的 skill（例如 <a href="code-review-local.html"><code>/code-review</code></a>），或其参数可能以另一个命令开头的 skill（例如 <code>/loop</code>），展开会在该处终止。该标记及其后的所有内容会成为每个已展开 skill 的参数文本。</p>
+<h2 id="run-evals-with-skill-creator">高级模式</h2>
+<h3 id="share-skills">注入动态上下文</h3>
+<p><code>!`&lt;command&gt;`</code> 语法在技能内容发送给 Claude 之前运行 shell 命令。命令输出替换占位符，因此 Claude 接收实际数据，而不是命令本身。当技能从你的 claude.ai 账户<a href="#how-claude-code-handles-the-body-of-a-synced-skill">同步</a>时，Claude Code 不会在你的机器上运行这些命令。这个限制需要 Claude Code v2.1.228 或更高版本。</p>
+<p>这个技能通过使用 GitHub CLI 获取实时 PR 数据来总结拉取请求。<code>!`gh pr diff`</code> 和其他命令首先运行，它们的输出被插入到提示中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pr-summary</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Summarize changes in a pull request</span>
+<span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fork</span>
+<span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Explore</span>
+<span class="nt">allowed-tools</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bash(gh *)</span>
+<span class="nn">---</span>
+
+<span class="c1">## Pull request context</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">PR diff</span><span class="p">:</span><span class="w"> </span><span class="kt">!</span><span class="err">`</span><span class="l l-Scalar l-Scalar-Plain">gh pr diff`</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">PR comments</span><span class="p">:</span><span class="w"> </span><span class="kt">!</span><span class="err">`</span><span class="l l-Scalar l-Scalar-Plain">gh pr view --comments`</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Changed files</span><span class="p">:</span><span class="w"> </span><span class="kt">!</span><span class="err">`</span><span class="l l-Scalar l-Scalar-Plain">gh pr diff --name-only`</span>
+
+<span class="c1">## Your task</span>
+<span class="l l-Scalar l-Scalar-Plain">Summarize this pull request...</span>
+</code></pre></div>
+<p>替换在原始文件上运行一次。命令输出作为纯文本插入，不会重新扫描以查找进一步的 <code>!`&lt;command&gt;`</code> 占位符，因此命令无法为后续传递发出占位符来扩展。</p>
+<p>内联形式仅在 <code>!</code> 出现在行首或紧跟在空格后时被识别。如果 <code>!</code> 跟在另一个字符后面，如 <code>KEY=!`cmd`</code>，占位符保留为字面文本，命令不运行。</p>
+<p>对于多行命令，使用以 <code>```!</code> 开头的围栏代码块而不是内联形式：</p>
+<p>````markdown theme={null}</p>
+<h2 id="generate-visual-output">Environment</h2>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">!</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-!">node --version
+git status --short
+</code></pre></div>
+<pre><code>
+要为来自用户、项目、插件或[附加目录](#skills-from-additional-directories)源的技能和自定义命令禁用此行为，请在[设置](https://code.claude.com/docs/zh-CN/settings.md)中设置 `&quot;disableSkillShellExecution&quot;: true`。每个命令都被替换为 `[shell command execution disabled by policy]` 而不是被运行。捆绑和托管技能不受影响。此设置在[托管设置](https://code.claude.com/docs/zh-CN/managed-settings.md)中最有用，用户无法覆盖它。
+
+当命令出现在从你的 claude.ai 账户[同步](#how-synced-skills-behave)的技能中时，Claude Code 永远不会在你的机器上运行这些命令，无论此设置如何。这个限制需要 Claude Code v2.1.228 或更高版本。[Claude Code 如何处理同步技能的主体](#how-claude-code-handles-the-body-of-a-synced-skill)说明了在每种会话中 Claude 接收什么来代替命令。
+
+
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>要在技能运行时请求更深入的推理，请在技能内容中的任何地方包含 <code>ultrathink</code>。请参阅<a href="model-config.html#use-ultrathink-for-one-off-deep-reasoning">使用 ultrathink 进行一次性深入推理</a>。</p></div></div>
+
+
+#### 注入命令如何运行 {#troubleshooting}
+Claude Code 从技能的 frontmatter 中的 `shell` 键和你的环境中选择运行技能的注入命令的工具。除了一个会直接导致调用失败的组合外，每个组合都通过 Bash 工具或 PowerShell 工具运行命令：
+
+* `shell: powershell`，启用了 [PowerShell 工具](https://code.claude.com/docs/zh-CN/tools-reference.md#powershell-tool)：命令通过 PowerShell 工具运行。
+* `shell: bash` 当 bash 不可用时：调用在任何命令运行之前失败。这发生在没有 Git Bash 的 Windows 上。Claude Code 显示 ``Skill &lt;name&gt; requires bash (`shell: bash` in frontmatter) but Git Bash was not found``。
+* 任何其他组合：当 bash 可用时，命令通过 Bash 工具运行。当它不可用时，它们通过 PowerShell 工具运行。
+
+任一工具运行命令的方式与它运行 Claude 自己的 shell 命令的方式相同。它们共享工作目录、超时和输出处理：
+
+* **工作目录**：Claude Code 在会话 shell 的当前工作目录中运行每个命令。当 Claude 运行 `cd` 时，该目录会移动。在必须每次都以相同方式解析的路径中使用 [`${CLAUDE_SKILL_DIR}` 或 `${CLAUDE_PROJECT_DIR}`](#available-string-substitutions)。
+* **stderr**：使用默认的 `bash` shell，Claude Code 将 stderr 合并到 stdout。命令写入 stderr 的任何内容都会出现在注入的文本中。
+* **超时**：每个命令在 Bash 工具的默认 2 分钟[超时](https://code.claude.com/docs/zh-CN/tools-reference.md#timeout-and-output-limits)下运行。当 Bash 工具[将超时的命令移到后台](https://code.claude.com/docs/zh-CN/tools-reference.md#foreground-commands-that-move-to-the-background)时，技能仍然呈现。注入的文本报告移动并命名后台任务和收集命令输出的文件。当命令是 Bash 工具从不自动后台化的命令之一时，Claude Code 在超时时杀死它。该失败[中止调用](#when-an-injected-command-fails)。
+* **输出大小**：超过 Bash 工具内联上限的输出作为文件路径加短预览到达，而不是截断的文本。[输出限制](https://code.claude.com/docs/zh-CN/tools-reference.md#output-limits)涵盖上限以及如何调整每个边界。
+
+PowerShell 工具对它运行的命令应用相同的超时、后台化和输出上限行为。有关其具体信息，请参阅 [PowerShell 工具](https://code.claude.com/docs/zh-CN/tools-reference.md#powershell-tool)部分。
+
+#### 当注入命令失败时 {#skill-not-triggering}
+失败的命令会中止整个 skill 调用，而不仅仅是其自身的占位符。Claude 永远看不到该次调用的 skill 内容。中止时会显示 `Shell command failed for pattern &quot;...&quot;`。错误消息会包含该命令的输出。
+
+使用默认的 `bash` shell，任何非零退出代码都算作失败。一个例外适用：Claude Code 将来自[搜索和比较命令](https://code.claude.com/docs/zh-CN/tools-reference.md#output-limits)的退出代码 1 视为正常结果并注入其输出。退出代码 2 或更高的代码即使对于这些命令也会失败。
+
+哪些命令获得例外取决于 shell：
+
+* 默认 `bash` shell：[输出限制](https://code.claude.com/docs/zh-CN/tools-reference.md#output-limits)下列出的命令
+* `shell: powershell`，且已启用 PowerShell 工具：一个[不同的集合](https://code.claude.com/docs/zh-CN/tools-reference.md#exit-code-1-from-searches-and-git-diff-in-powershell)，包括 `grep` 和 `git diff`，但不包括 `find` 或 `diff`
+
+使用默认的 `bash` shell，将 `|| true` 附加到任何你期望退出非零的其他命令。一个在发现问题时退出 1 的检查脚本就是一个例子。
+
+#### 未运行任何 shell 命令时 {#skill-triggers-too-often}
+`No shell command in &lt;name&gt; was run` 表示其中某个 shell 命令包含该工具不接受的字符。要查找并删除该字符，请参阅[错误参考](https://code.claude.com/docs/zh-CN/errors.md#no-shell-command-was-run)。
+
+#### 注入命令的权限检查 {#claude-stops-following-a-skill}
+注入命令在技能呈现时永远不会提示权限。Claude Code 首先根据你的[权限规则](https://code.claude.com/docs/zh-CN/permissions.md)检查每一个。命令与拒绝规则匹配的命令会中止调用，显示 `Shell command permission check failed for pattern &quot;...&quot;`。
+
+在[自动模式](https://code.claude.com/docs/zh-CN/permission-modes.md#eliminate-prompts-with-auto-mode)之外，当命令的权限检查返回除允许之外的任何结果时，Claude Code 都会以相同的错误中止调用。这包括通常会询问您的规则。为避免未匹配的命令在此处导致中止，请使用 [`allowed-tools`](#pre-approve-tools-for-a-skill) 预先批准它。如果您的组织将权限规则限制为仅来自托管设置，请参阅[仅应用托管权限规则时](#when-only-managed-permission-rules-apply)。拒绝规则和询问规则仍然会覆盖 `allowed-tools`。请参阅[管理权限](https://code.claude.com/docs/zh-CN/permissions.md#manage-permissions)。
+
+在自动模式中，原本需要你批准的命令不会中止调用。技能加载时带有指令，告诉 Claude 首先运行该命令，然后 Claude 自己的调用通过[自动模式的常规检查](https://code.claude.com/docs/zh-CN/permission-modes.md#how-the-classifier-evaluates-actions)。调用仍然会在[分叉技能](#run-skills-in-a-subagent)中中止，该技能设置 `agent`，以及在 Claude 没有[运行注入命令的 shell 工具](#how-injected-commands-run)的会话中。
+
+### 在子代理中运行技能 {#skill-descriptions-are-cut-short}
+当你希望技能在隔离中运行时，将 `context: fork` 添加到你的 frontmatter。Claude Code 启动 `agent` 字段中设置的类型的新子代理，并将技能内容作为其提示提供给它。子代理看不到你的对话历史，因此技能的说明必须独立存在。
+
+
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>尽管名称如此，具有 <code>context: fork</code> 的技能不会在<a href="sub-agents.html#fork-the-current-conversation">当前对话的分叉</a>中运行，这会将你迄今为止讨论的所有内容交给子代理。当任务依赖于该历史时，分叉对话而不是使用 <code>context: fork</code>。</p></div></div>
+
+
+分叉的子代理在[后台](https://code.claude.com/docs/zh-CN/sub-agents.md#run-subagents-in-foreground-or-background)运行：它运行期间您可以继续工作，完成后其结果会出现在您的对话中。在 frontmatter 中设置 `background: false`，即可改为在调用 skill 的轮次中等待结果。
+
+Claude Code 也会等待结果，即使技能没有设置 `background: false`，在这些情况下：
+
+* 在非交互模式中，使用 `-p` 标志或 Agent SDK
+* 当您将 [`CLAUDE_CODE_DISABLE_BACKGROUND_TASKS`](https://code.claude.com/docs/zh-CN/env-vars) 设置为 `1` 时，这也会关闭其他后台任务功能
+* 当你在同一技能的早期调用仍在运行时调用分叉技能时
+* 当以该 skill 作为提示词的[会话范围定时任务](https://code.claude.com/docs/zh-CN/scheduled-tasks.md)触发时
+
+当[动态工作流](https://code.claude.com/docs/zh-CN/workflows.md)中的 Agent 调用分叉 skill 时，即使该 skill 没有设置 `background: false`，该 Agent 也会等待并接收结果。在 v2.1.295 之前，当 skill 在后台运行时，该 Agent 不会等待它。skill 的结果随后会出现在您的主对话中，而不会到达该 Agent。
+
+后台化的分叉也使用[适用于后台子代理的更窄工具集](https://code.claude.com/docs/zh-CN/sub-agents.md#run-subagents-in-foreground-or-background)运行：技能的子代理是常规代理类型，因此分叉对话的子代理的豁免不适用于它。如果你的技能的步骤依赖于该集合之外的工具，请设置 `background: false` 以保持完整的工具集。
+
+在后台运行的分叉 skill 会在您会话的[检查点](https://code.claude.com/docs/zh-CN/checkpointing.md#subagent-edits-not-restored)之外应用其编辑。此后，`/rewind` 只会恢复 Claude 已在您的对话中编辑过的文件。该 skill 对其他文件的编辑会保留，因此请使用 git 来还原它们。
+
+
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p><code>context: fork</code> 仅对具有明确说明的技能有意义。如果你的技能包含"使用这些 API 约定"之类的指南而没有任务，子代理会收到指南但没有可操作的提示，并返回而没有有意义的输出。</p></div></div>
+
+
+技能和[子代理](https://code.claude.com/docs/zh-CN/sub-agents.md)在两个方向上协同工作：
+
+| 方法 | 系统提示 | 任务 | 也加载 |
+| :- | :- | :- | :- |
+| 具有 `context: fork` 的技能 | 来自代理类型 | SKILL.md 内容 | CLAUDE.md，根据代理的[启动上下文](https://code.claude.com/docs/zh-CN/sub-agents.md#what-loads-at-startup) |
+| 具有 `skills` 字段的子代理 | 子代理的 markdown 主体 | Claude 的委派消息 | 预加载的技能 + CLAUDE.md，根据子代理的[启动上下文](https://code.claude.com/docs/zh-CN/sub-agents.md#what-loads-at-startup) |
+
+使用 `context: fork` 时，您在 skill 中编写任务，并选择一个 Agent 类型来执行它。内置的 Explore 和 Plan Agent [启动时不加载 CLAUDE.md 和 git 状态](https://code.claude.com/docs/zh-CN/sub-agents.md#what-loads-at-startup)，以保持其上下文精简。请将任务所需的一切都放在您的 SKILL.md 中。使用 `agent: Explore` 的分叉 skill 启动时只包含该内容和 Agent 自己的系统提示词，不包含您的任何 CLAUDE.md 文件。
+
+对于相反的情况，即定义一个将 skill 用作参考材料的自定义子代理，请参阅[子代理](https://code.claude.com/docs/zh-CN/sub-agents.md#preload-skills-into-subagents)。
+
+#### 示例：使用 Explore 代理的研究技能 {#angle-brackets-in-a-skill-description}
+这个技能在分叉的 Explore 代理中运行研究。技能内容成为任务，代理提供针对代码库探索优化的只读工具：
+
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deep-research</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Research a topic thoroughly</span>
+<span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fork</span>
+<span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Explore</span>
+<span class="nn">---</span>
+
+<span class="nt">Research $ARGUMENTS thoroughly</span><span class="p">:</span>
+
+<span class="l l-Scalar l-Scalar-Plain">1. Find relevant files using Glob and Grep</span>
+<span class="l l-Scalar l-Scalar-Plain">2. Read and analyze the code</span>
+<span class="l l-Scalar l-Scalar-Plain">3. Summarize findings with specific file references</span>
+</code></pre></div>
+
+当这个技能运行时：
+
+1. 创建一个新的隔离上下文
+2. 子代理接收技能内容作为其提示（&quot;Research \$ARGUMENTS thoroughly...&quot;）
+3. `agent` 字段确定执行环境（模型、工具和权限）
+4. 子代理总结其结果并在完成时将其返回到你的主对话
+
+`agent` 字段指定要使用的子代理配置。选项包括内置代理（`Explore`、`Plan`、`general-purpose`）或来自 `.claude/agents/` 的任何自定义子代理。如果省略，使用 `general-purpose`。
+
+### 限制 Claude 的技能访问 {#personal-skills-disappeared}
+默认情况下，Claude 可以调用任何未设置 `disable-model-invocation: true` 的 skill。定义了 [`allowed-tools`](#pre-approve-tools-for-a-skill) 的 skill 会在调用该 skill 的轮次中授予 Claude 使用这些工具的权限，无需逐次批准；当您发送下一条消息时，该授予即被清除。您的[权限设置](https://code.claude.com/docs/zh-CN/permissions.md)仍然管理所有其他工具的基线批准行为。一些内置命令也可以通过 Skill 工具使用，包括 `/init` 和 `/security-review`。其他内置命令（例如 `/compact`）则不可用。
+
+控制 Claude 可以调用哪些技能的三种方法：
+
+**通过在 `/permissions` 中拒绝 Skill 工具来禁用所有技能**：
+
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text"># Add to deny rules:
+Skill
+</code></pre></div>
+
+**使用[权限规则](https://code.claude.com/docs/zh-CN/permissions.md)允许或拒绝特定技能**：
+
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text"># Allow only specific skills
+Skill(commit)
+Skill(review-pr *)
+
+# Deny specific skills
+Skill(deploy *)
+</code></pre></div>
+
+权限语法：`Skill(name)` 用于精确匹配，`Skill(name *)` 用于带任何参数的前缀匹配。
+
+下表显示了你的 `deny` 规则命名的名称类型，Claude Code 除了你写的名称外还会阻止什么。
+
+| 你的 `deny` 规则名称 | 示例规则 | Claude Code 也会阻止 |
+| :- | :- | :- |
+| 别名 | `Skill(review)` | 捆绑的 `/code-review`，通过其 `/review` 别名 |
+| 不合格的名称 | `Skill(deploy)` | 列为 `apps/web:deploy` 的[嵌套技能](#where-skills-live) |
+| [从 claude.ai 同步的技能](#how-synced-skills-behave) | `Skill(anthropic-skills:deploy)` | 当 Claude Desktop 将其作为插件交付给会话时的该技能 |
+| 同步技能的插件形式 | `Skill(deploy:deploy)` | 同步的技能 |
+| [参数形式](https://code.claude.com/docs/zh-CN/permissions.md#match-by-input-parameter)中的技能 | `Skill(skill:deploy)` | 该技能无论 Claude 以哪个名称调用它，包括其别名和显示名称 |
+
+在 v2.1.260 之前，当拒绝规则仅命名不合格的名称时，Claude Code 不会阻止列在其合格名称下的嵌套技能。
+
+Claude Code 仅针对技能自己的名称和 Claude 调用中的名称匹配 `allow` 规则。要在不提示的情况下批准[同步技能](#how-synced-skills-behave)，请在其[保留命名空间](#names-reserved-for-synced-skills)内命名它：
+
+* `Skill(anthropic-skills:pdf)` 批准同步的 `pdf` 技能
+* `Skill(anthropic-skills *)` 批准每个同步的技能
+* `Skill(anthropic *)` 不涵盖 `anthropic-skills:pdf`，因为命名空间外的前缀不匹配其中的名称
+
+**通过向其 frontmatter 添加 `disable-model-invocation: true` 来隐藏单个技能**。这将技能从 Claude 的上下文中完全删除。
+
+
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>使用 <code>user-invocable: false</code>，你无法调用该技能，但 Claude 仍然可以。要防止 Claude 通过 Skill 工具调用它，请设置 <code>disable-model-invocation: true</code>。</p></div></div>
+
+
+### 从设置覆盖技能可见性 {#related-resources}
+`skillOverrides` 设置从你的[设置](https://code.claude.com/docs/zh-CN/settings.md)而不是技能自己的 frontmatter 控制技能可见性。将其用于你不想编辑 SKILL.md 的技能，例如检入共享项目仓库的技能。`/skills` 菜单为你编写它：突出显示一个技能并按 `Space` 循环状态，然后按 `Esc` 保存到 `.claude/settings.local.json`。
+
+每个键是一个技能名称，每个值是四种状态之一：
+
+| 值 | 列出给 Claude | 在 `/` 菜单中 |
+| :- | :- | :- |
+| `&quot;on&quot;` | 名称和描述 | 是 |
+| `&quot;name-only&quot;` | 仅名称 | 是 |
+| `&quot;user-invocable-only&quot;` | 隐藏 | 是 |
+| `&quot;off&quot;` | 隐藏 | 隐藏 |
+
+`/skills` 菜单将 `&quot;user-invocable-only&quot;` 状态标记为 `user-only`。
+
+除了终端的 `/` 菜单之外，`&quot;off&quot;` 还会将该 skill 从提供给 [Remote Control](https://code.claude.com/docs/zh-CN/remote-control.md) 客户端和 [Agent SDK](https://code.claude.com/docs/zh-CN/agent-sdk/skills.md#discover-available-commands) 调用方的命令列表中隐藏。按全名调用已隐藏的 skill 会返回 `skillOverrides` 错误，而不会运行它。
+
+不在 `skillOverrides` 中的技能被视为 `&quot;on&quot;`。下面的示例将一个技能折叠为其名称，并完全关闭另一个：
+
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"skillOverrides"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"legacy-context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name-only"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"deploy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"off"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+一些捆绑的技能有别名，例如 `checkup` 用于 `/doctor`。如果你在[托管设置](https://code.claude.com/docs/zh-CN/managed-settings.md)中或在你使用 `--settings` 标志传递的文件中的别名下设置 `skillOverrides` 条目，Claude Code 会将其应用于别名后面的技能。你只能通过别名进一步限制技能，永远不能使其更可见，如果你也在托管设置中的技能自己的名称下设置条目，该条目优先。在 v2.1.260 之前，Claude Code 不会在任何设置源中的别名下应用条目到技能。
+
+在用户、项目和本地设置中，Claude Code 仅针对技能名称匹配条目。如果你在那里为 `review` 设置条目，它适用于名为 `review` 的技能，而不是通过其 `/review` 别名的捆绑 `/code-review`。
+
+插件技能不受 `skillOverrides` 影响。通过 `/plugin` 管理那些。
+
+### 查找未使用的技能
+[技能列表](#skill-descriptions-are-cut-short)中的每个技能都会在每个轮次上添加到你的上下文中，无论 Claude 是否曾使用过它。运行 `/skill-doctor` 以查看每个技能的成本以及它被使用的频率，以便你可以决定关闭哪些。在交互式会话中，报告在 `/plugin` 管理器的 **Stats** 选项卡中打开。在[非交互模式](https://code.claude.com/docs/zh-CN/headless.md)中使用 `-p`，Claude Code 将其打印为文本。
+
+该报告涵盖你的会话中的技能，除了捆绑技能和企业技能。它标记列表中从未被调用的技能，并说明在哪里关闭它们。在它告诉你在哪里关闭的技能中，从具有最高上下文成本的技能开始。该报告还列出你最近未使用的插件。
+
+`/skill-doctor` 需要 Claude Code v2.1.252 或更高版本，在跳过[功能标志获取](https://code.claude.com/docs/zh-CN/env-vars.md#features-that-need-feature-flag-fetching)的会话中不可用。如果你从你的手机或浏览器通过[远程控制](https://code.claude.com/docs/zh-CN/remote-control.md)运行 `/skill-doctor`，Claude Code 回复[`Skill usage reports are not available on this connection.`](https://code.claude.com/docs/zh-CN/errors#skill-usage-reports-are-not-available-on-this-connection)。在运行会话的机器上的终端中运行 `/skill-doctor`。
+
+## 评估和迭代技能
+看到技能触发告诉你 Claude 找到了它，但不代表它做了你想要的事情。要知道技能是否有效，需要分别测量两件事：Claude 是否在应该调用的提示上调用它，以及当它调用时输出是否与你的预期相符。
+
+两者的检查都是基线比较。收集几个现实的提示，在启用技能的新会话中运行每个提示，然后在禁用技能的情况下再运行一次，并比较结果。新会话很重要，因为编写技能时留下的上下文会掩盖书面说明中的差距。
+
+关闭技能进行第二次运行的方式取决于它来自何处：
+
+* **个人或项目技能**：在 [`skillOverrides`](#override-skill-visibility-from-settings) 中将其设置为 `&quot;off&quot;`。
+* **插件提供的技能**：`skillOverrides` 不适用于插件技能。改用 [`claude plugin eval`](https://code.claude.com/docs/zh-CN/plugin-evals#the-no-plugin-baseline)，它在没有加载任何插件的情况下重复每次运行。
+
+两个工具可以自动化基线比较。对于在[插件](https://code.claude.com/docs/zh-CN/plugins/overview.md)中发布的技能，[`claude plugin eval`](https://code.claude.com/docs/zh-CN/plugin-evals) 在隔离会话中运行每个提示，既有插件也没有插件，使用你定义的或它为你编写的评分器对其进行评分，并在低于阈值时以非零状态退出，以便你可以在 CI 上对其进行门控。对于在 Claude Code 对话中迭代单个技能，下面的 skill-creator 插件使用其自己的 `evals/evals.json` 格式运行类似的循环。这两种格式不可互换。
+
+### 使用 skill-creator 运行评估
+[`skill-creator` 插件](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/skill-creator)可在 Claude Code 内自动执行比较循环。在 VS Code 扩展或桌面应用中，请按照[安装插件](https://code.claude.com/docs/zh-CN/plugins/install.md#install-a-plugin)从官方市场安装它。在终端中，运行 `claude` 启动 Claude Code，然后在其提示符处输入：
+
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/plugin install skill-creator@claude-plugins-official
+</code></pre></div>
+
+如果安装失败，请匹配 Claude Code 报告的消息：
+
+* `Marketplace &quot;claude-plugins-official&quot; not found`：使用 `/plugin marketplace add anthropics/claude-plugins-official` 添加市场，然后重试安装。
+* `Plugin &quot;&lt;name&gt;&quot; not found in marketplace &quot;claude-plugins-official&quot;`：您本地的市场目录副本可能已过期。使用 `/plugin marketplace update claude-plugins-official` 刷新它，然后重试安装。如果重试后仍显示相同的消息，请参阅[插件在市场中找不到](https://code.claude.com/docs/zh-CN/plugins/troubleshooting.md#plugin-not-found-in-marketplace)。
+
+如果安装摘要报告 `Run /reload-plugins to apply.`，Claude Code 随后会为您执行该重新加载。如果重新加载警告您的下一条消息会重新读取对话，请运行 `/reload-plugins --force`，使插件的 skill 在当前会话中可用。然后让 Claude 评估现有 skill，例如 `evaluate my summarize-changes skill with skill-creator`。该插件会引导您编写测试用例并运行循环：
+
+* **测试用例**：在技能目录内的 `evals/evals.json` 中存储提示、输入文件和预期行为
+* **隔离运行**：为每个测试用例生成一个[子代理](https://code.claude.com/docs/zh-CN/sub-agents.md)，以便每次运行都从干净的上下文开始，并记录令牌计数和持续时间
+* **评分**：针对输出检查每个断言，并将通过或失败以及证据写入 `grading.json`
+* **基准**：将有技能与无技能的通过率、时间和令牌聚合到 `benchmark.json` 中，以便你可以比较通过率改进与令牌和时间开销
+* **版本比较**：在技能的两个版本之间运行盲 A/B 测试，以便你可以在提交编辑之前确认它是一个改进
+* **描述调整**：生成应该触发和不应该触发的提示，测量命中率，并在技能在错误的请求上激活时提议描述编辑
+* **审查查看器**：打开一个 HTML 报告，你可以在其中检查每个输出并记录下一次迭代读取的定性反馈
+
+有关评估文件格式和完整迭代工作流，请参阅 agentskills.io 上的[评估技能输出质量](https://agentskills.io/skill-creation/evaluating-skills)。有关基准和比较模式的背景，请参阅 [skill-creator 公告](https://claude.com/blog/improving-skill-creator-test-measure-and-refine-agent-skills)。
+
+## 分享 skills
+Skills 可以根据你的受众在不同的范围内分发：
+
+* **项目 skills**：将 `.claude/skills/` 提交到版本控制
+* **Plugins**：在你的 [plugin](https://code.claude.com/docs/zh-CN/plugins/overview.md) 中创建 `skills/` 目录
+* **托管**：通过 [托管设置](https://code.claude.com/docs/zh-CN/managed-settings.md) 在整个组织范围内部署
+
+### 生成可视化输出
+Skills 可以捆绑并运行任何语言的脚本，为 Claude 提供超越单个提示符可能实现的功能。一种模式是生成可视化输出：在浏览器中打开的交互式 HTML 文件，用于探索数据、调试或创建报告。
+
+此示例创建一个代码库浏览器：一个交互式树形视图，你可以在其中展开和折叠目录、一目了然地查看文件大小，并通过颜色识别文件类型。
+
+创建 Skill 目录：
+
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">mkdir<span class="w"> </span>-p<span class="w"> </span>~/.claude/skills/codebase-visualizer/scripts
+</code></pre></div>
+
+将其保存到 `~/.claude/skills/codebase-visualizer/SKILL.md`。描述告诉 Claude 何时激活此 Skill，说明告诉 Claude 运行捆绑的脚本。脚本路径使用 [`${CLAUDE_SKILL_DIR}`](#available-string-substitutions)，因此无论 skill 是在个人、项目还是 plugin 级别安装，它都能正确解析：
+
+````yaml theme={null}
+---
+name: codebase-visualizer
+description: Generate an interactive collapsible tree visualization of your codebase. Use when exploring a new repo, understanding project structure, or identifying large files.
+allowed-tools: Bash(python3 *)
+---
+
+# Codebase Visualizer
+
+Generate an interactive HTML tree view that shows your project's file structure with collapsible directories.
+
+## Usage
+Run the visualization script from your project root:
+
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">python3<span class="w"> </span><span class="si">${</span><span class="nv">CLAUDE_SKILL_DIR</span><span class="si">}</span>/scripts/visualize.py<span class="w"> </span>.
+</code></pre></div>
+
+This creates `codebase-map.html` in the current directory and opens it in your default browser.
+
+## What the visualization shows
+- **Collapsible directories**: Click folders to expand/collapse
+- **File sizes**: Displayed next to each file
+- **Colors**: Different colors for different file types
+- **Directory totals**: Shows aggregate size of each folder
+</code></pre>
+<p>将其保存到 <code>~/.claude/skills/codebase-visualizer/scripts/visualize.py</code>。此脚本扫描目录树并生成一个自包含的 HTML 文件，包含：</p>
+<ul>
+<li>一个<strong>摘要侧边栏</strong>，显示文件计数、目录计数、总大小和文件类型数量</li>
+<li>一个<strong>条形图</strong>，按文件类型（按大小排名前 8）分解代码库</li>
+<li>一个<strong>可折叠树</strong>，你可以在其中展开和折叠目录，带有颜色编码的文件类型指示器</li>
+</ul>
+<p>该脚本需要 Python 3，但仅使用内置库，因此无需安装任何包：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">"""Generate an interactive collapsible tree visualization of a codebase."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">webbrowser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">html</span><span class="w"> </span><span class="kn">import</span> <span class="n">escape</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="n">IGNORE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'.git'</span><span class="p">,</span> <span class="s1">'node_modules'</span><span class="p">,</span> <span class="s1">'__pycache__'</span><span class="p">,</span> <span class="s1">'.venv'</span><span class="p">,</span> <span class="s1">'venv'</span><span class="p">,</span> <span class="s1">'dist'</span><span class="p">,</span> <span class="s1">'build'</span><span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">scan</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">"children"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"size"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">IGNORE</span> <span class="ow">or</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'.'</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="n">size</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span>
+                <span class="n">ext</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="s1">'(no ext)'</span>
+                <span class="n">result</span><span class="p">[</span><span class="s2">"children"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">"size"</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span> <span class="s2">"ext"</span><span class="p">:</span> <span class="n">ext</span><span class="p">})</span>
+                <span class="n">result</span><span class="p">[</span><span class="s2">"size"</span><span class="p">]</span> <span class="o">+=</span> <span class="n">size</span>
+                <span class="n">stats</span><span class="p">[</span><span class="s2">"files"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">stats</span><span class="p">[</span><span class="s2">"extensions"</span><span class="p">][</span><span class="n">ext</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">stats</span><span class="p">[</span><span class="s2">"ext_sizes"</span><span class="p">][</span><span class="n">ext</span><span class="p">]</span> <span class="o">+=</span> <span class="n">size</span>
+            <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+                <span class="n">stats</span><span class="p">[</span><span class="s2">"dirs"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">child</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">stats</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">child</span><span class="p">[</span><span class="s2">"children"</span><span class="p">]:</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s2">"children"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s2">"size"</span><span class="p">]</span> <span class="o">+=</span> <span class="n">child</span><span class="p">[</span><span class="s2">"size"</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_html</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ext_sizes</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s2">"ext_sizes"</span><span class="p">]</span>
+    <span class="n">total_size</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ext_sizes</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="ow">or</span> <span class="mi">1</span>
+    <span class="n">sorted_exts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ext_sizes</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])[:</span><span class="mi">8</span><span class="p">]</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'.js'</span><span class="p">:</span> <span class="s1">'#f7df1e'</span><span class="p">,</span> <span class="s1">'.ts'</span><span class="p">:</span> <span class="s1">'#3178c6'</span><span class="p">,</span> <span class="s1">'.py'</span><span class="p">:</span> <span class="s1">'#3776ab'</span><span class="p">,</span> <span class="s1">'.go'</span><span class="p">:</span> <span class="s1">'#00add8'</span><span class="p">,</span>
+        <span class="s1">'.rs'</span><span class="p">:</span> <span class="s1">'#dea584'</span><span class="p">,</span> <span class="s1">'.rb'</span><span class="p">:</span> <span class="s1">'#cc342d'</span><span class="p">,</span> <span class="s1">'.css'</span><span class="p">:</span> <span class="s1">'#264de4'</span><span class="p">,</span> <span class="s1">'.html'</span><span class="p">:</span> <span class="s1">'#e34c26'</span><span class="p">,</span>
+        <span class="s1">'.json'</span><span class="p">:</span> <span class="s1">'#6b7280'</span><span class="p">,</span> <span class="s1">'.md'</span><span class="p">:</span> <span class="s1">'#083fa1'</span><span class="p">,</span> <span class="s1">'.yaml'</span><span class="p">:</span> <span class="s1">'#cb171e'</span><span class="p">,</span> <span class="s1">'.yml'</span><span class="p">:</span> <span class="s1">'#cb171e'</span><span class="p">,</span>
+        <span class="s1">'.mdx'</span><span class="p">:</span> <span class="s1">'#083fa1'</span><span class="p">,</span> <span class="s1">'.tsx'</span><span class="p">:</span> <span class="s1">'#3178c6'</span><span class="p">,</span> <span class="s1">'.jsx'</span><span class="p">:</span> <span class="s1">'#61dafb'</span><span class="p">,</span> <span class="s1">'.sh'</span><span class="p">:</span> <span class="s1">'#4eaa25'</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">lang_bars</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s1">'&lt;div class="bar-row"&gt;&lt;span class="bar-label"&gt;</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&lt;/span&gt;'</span>
+        <span class="sa">f</span><span class="s1">'&lt;div class="bar" style="width:</span><span class="si">{</span><span class="p">(</span><span class="n">size</span><span class="o">/</span><span class="n">total_size</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="si">}</span><span class="s1">%;background:</span><span class="si">{</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span><span class="s2">"#6b7280"</span><span class="p">)</span><span class="si">}</span><span class="s1">"&gt;&lt;/div&gt;'</span>
+        <span class="sa">f</span><span class="s1">'&lt;span class="bar-pct"&gt;</span><span class="si">{</span><span class="p">(</span><span class="n">size</span><span class="o">/</span><span class="n">total_size</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">%&lt;/span&gt;&lt;/div&gt;'</span>
+        <span class="k">for</span> <span class="n">ext</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">sorted_exts</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fmt</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">1024</span><span class="p">:</span> <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2"> B"</span>
+        <span class="k">if</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">1048576</span><span class="p">:</span> <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">b</span><span class="o">/</span><span class="mi">1024</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> KB"</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">b</span><span class="o">/</span><span class="mi">1048576</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB"</span>
+
+    <span class="n">html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'''&lt;!DOCTYPE html&gt;</span>
+<span class="s1">&lt;html&gt;&lt;head&gt;</span>
+<span class="s1">  &lt;meta charset="utf-8"&gt;&lt;title&gt;Codebase Explorer&lt;/title&gt;</span>
+<span class="s1">  &lt;style&gt;</span>
+<span class="s1">    body </span><span class="se">{{</span><span class="s1"> font: 14px/1.5 system-ui, sans-serif; margin: 0; background: #1a1a2e; color: #eee; </span><span class="se">}}</span>
+<span class="s1">    .container </span><span class="se">{{</span><span class="s1"> display: flex; height: 100vh; </span><span class="se">}}</span>
+<span class="s1">    .sidebar </span><span class="se">{{</span><span class="s1"> width: 280px; background: #252542; padding: 20px; border-right: 1px solid #3d3d5c; overflow-y: auto; flex-shrink: 0; </span><span class="se">}}</span>
+<span class="s1">    .main </span><span class="se">{{</span><span class="s1"> flex: 1; padding: 20px; overflow-y: auto; </span><span class="se">}}</span>
+<span class="s1">    h1 </span><span class="se">{{</span><span class="s1"> margin: 0 0 10px 0; font-size: 18px; </span><span class="se">}}</span>
+<span class="s1">    h2 </span><span class="se">{{</span><span class="s1"> margin: 20px 0 10px 0; font-size: 14px; color: #888; text-transform: uppercase; </span><span class="se">}}</span>
+<span class="s1">    .stat </span><span class="se">{{</span><span class="s1"> display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #3d3d5c; </span><span class="se">}}</span>
+<span class="s1">    .stat-value </span><span class="se">{{</span><span class="s1"> font-weight: bold; </span><span class="se">}}</span>
+<span class="s1">    .bar-row </span><span class="se">{{</span><span class="s1"> display: flex; align-items: center; margin: 6px 0; </span><span class="se">}}</span>
+<span class="s1">    .bar-label </span><span class="se">{{</span><span class="s1"> width: 55px; font-size: 12px; color: #aaa; </span><span class="se">}}</span>
+<span class="s1">    .bar </span><span class="se">{{</span><span class="s1"> height: 18px; border-radius: 3px; </span><span class="se">}}</span>
+<span class="s1">    .bar-pct </span><span class="se">{{</span><span class="s1"> margin-left: 8px; font-size: 12px; color: #666; </span><span class="se">}}</span>
+<span class="s1">    .tree </span><span class="se">{{</span><span class="s1"> list-style: none; padding-left: 20px; </span><span class="se">}}</span>
+<span class="s1">    details </span><span class="se">{{</span><span class="s1"> cursor: pointer; </span><span class="se">}}</span>
+<span class="s1">    summary </span><span class="se">{{</span><span class="s1"> padding: 4px 8px; border-radius: 4px; </span><span class="se">}}</span>
+<span class="s1">    summary:hover </span><span class="se">{{</span><span class="s1"> background: #2d2d44; </span><span class="se">}}</span>
+<span class="s1">    .folder </span><span class="se">{{</span><span class="s1"> color: #ffd700; </span><span class="se">}}</span>
+<span class="s1">    .file </span><span class="se">{{</span><span class="s1"> display: flex; align-items: center; padding: 4px 8px; border-radius: 4px; </span><span class="se">}}</span>
+<span class="s1">    .file:hover </span><span class="se">{{</span><span class="s1"> background: #2d2d44; </span><span class="se">}}</span>
+<span class="s1">    .size </span><span class="se">{{</span><span class="s1"> color: #888; margin-left: auto; font-size: 12px; </span><span class="se">}}</span>
+<span class="s1">    .dot </span><span class="se">{{</span><span class="s1"> width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; </span><span class="se">}}</span>
+<span class="s1">  &lt;/style&gt;</span>
+<span class="s1">&lt;/head&gt;&lt;body&gt;</span>
+<span class="s1">  &lt;div class="container"&gt;</span>
+<span class="s1">    &lt;div class="sidebar"&gt;</span>
+<span class="s1">      &lt;h1&gt;📊 Summary&lt;/h1&gt;</span>
+<span class="s1">      &lt;div class="stat"&gt;&lt;span&gt;Files&lt;/span&gt;&lt;span class="stat-value"&gt;</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"files"</span><span class="p">]</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&lt;/span&gt;&lt;/div&gt;</span>
+<span class="s1">      &lt;div class="stat"&gt;&lt;span&gt;Directories&lt;/span&gt;&lt;span class="stat-value"&gt;</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s2">"dirs"</span><span class="p">]</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&lt;/span&gt;&lt;/div&gt;</span>
+<span class="s1">      &lt;div class="stat"&gt;&lt;span&gt;Total size&lt;/span&gt;&lt;span class="stat-value"&gt;</span><span class="si">{</span><span class="n">fmt</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"size"</span><span class="p">])</span><span class="si">}</span><span class="s1">&lt;/span&gt;&lt;/div&gt;</span>
+<span class="s1">      &lt;div class="stat"&gt;&lt;span&gt;File types&lt;/span&gt;&lt;span class="stat-value"&gt;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s2">"extensions"</span><span class="p">])</span><span class="si">}</span><span class="s1">&lt;/span&gt;&lt;/div&gt;</span>
+<span class="s1">      &lt;h2&gt;By file type&lt;/h2&gt;</span>
+<span class="s1">      </span><span class="si">{</span><span class="n">lang_bars</span><span class="si">}</span>
+<span class="s1">    &lt;/div&gt;</span>
+<span class="s1">    &lt;div class="main"&gt;</span>
+<span class="s1">      &lt;h1&gt;📁 </span><span class="si">{</span><span class="n">escape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"name"</span><span class="p">])</span><span class="si">}</span><span class="s1">&lt;/h1&gt;</span>
+<span class="s1">      &lt;ul class="tree" id="root"&gt;&lt;/ul&gt;</span>
+<span class="s1">    &lt;/div&gt;</span>
+<span class="s1">  &lt;/div&gt;</span>
+<span class="s1">  &lt;script&gt;</span>
+<span class="s1">    const data = </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s1">;</span>
+<span class="s1">    const colors = </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span><span class="si">}</span><span class="s1">;</span>
+<span class="s1">    function fmt(b) </span><span class="se">{{</span><span class="s1"> if (b &lt; 1024) return b + ' B'; if (b &lt; 1048576) return (b/1024).toFixed(1) + ' KB'; return (b/1048576).toFixed(1) + ' MB'; </span><span class="se">}}</span>
+<span class="s1">    function esc(s) </span><span class="se">{{</span><span class="s1"> return s.replace(/[&amp;&lt;&gt;"']/g, c =&gt; (</span><span class="se">{{</span><span class="s1">"&amp;":"&amp;amp;","&lt;":"&amp;lt;","&gt;":"&amp;gt;",'"':"&amp;quot;","'":"&amp;#39;"</span><span class="se">}}</span><span class="s1">[c])); </span><span class="se">}}</span>
+<span class="s1">    function render(node, parent) </span><span class="se">{{</span>
+<span class="s1">      if (node.children) </span><span class="se">{{</span>
+<span class="s1">        const det = document.createElement('details');</span>
+<span class="s1">        det.open = parent === document.getElementById('root');</span>
+<span class="s1">        det.innerHTML = `&lt;summary&gt;&lt;span class="folder"&gt;📁 $</span><span class="se">{{</span><span class="s1">esc(node.name)</span><span class="se">}}</span><span class="s1">&lt;/span&gt;&lt;span class="size"&gt;$</span><span class="se">{{</span><span class="s1">fmt(node.size)</span><span class="se">}}</span><span class="s1">&lt;/span&gt;&lt;/summary&gt;`;</span>
+<span class="s1">        const ul = document.createElement('ul'); ul.className = 'tree';</span>
+<span class="s1">        node.children.sort((a,b) =&gt; (b.children?1:0)-(a.children?1:0) || a.name.localeCompare(b.name));</span>
+<span class="s1">        node.children.forEach(c =&gt; render(c, ul));</span>
+<span class="s1">        det.appendChild(ul);</span>
+<span class="s1">        const li = document.createElement('li'); li.appendChild(det); parent.appendChild(li);</span>
+<span class="s1">      </span><span class="se">}}</span><span class="s1"> else </span><span class="se">{{</span>
+<span class="s1">        const li = document.createElement('li'); li.className = 'file';</span>
+<span class="s1">        li.innerHTML = `&lt;span class="dot" style="background:$</span><span class="se">{{</span><span class="s1">colors[node.ext]||'#6b7280'</span><span class="se">}}</span><span class="s1">"&gt;&lt;/span&gt;$</span><span class="se">{{</span><span class="s1">esc(node.name)</span><span class="se">}}</span><span class="s1">&lt;span class="size"&gt;$</span><span class="se">{{</span><span class="s1">fmt(node.size)</span><span class="se">}}</span><span class="s1">&lt;/span&gt;`;</span>
+<span class="s1">        parent.appendChild(li);</span>
+<span class="s1">      </span><span class="se">}}</span>
+<span class="s1">    </span><span class="se">}}</span>
+<span class="s1">    data.children.forEach(c =&gt; render(c, document.getElementById('root')));</span>
+<span class="s1">  &lt;/script&gt;</span>
+<span class="s1">&lt;/body&gt;&lt;/html&gt;'''</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">'.'</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"files"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"dirs"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"extensions"</span><span class="p">:</span> <span class="n">Counter</span><span class="p">(),</span> <span class="s2">"ext_sizes"</span><span class="p">:</span> <span class="n">Counter</span><span class="p">()}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">stats</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'codebase-map.html'</span><span class="p">)</span>
+    <span class="n">generate_html</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Generated </span><span class="si">{</span><span class="n">out</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">'file://</span><span class="si">{</span><span class="n">out</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</code></pre></div>
+<p>要测试，在任何项目中打开 Claude Code 并询问"可视化此代码库。"Claude 运行脚本，该脚本打印生成的文件的路径，例如 <code>Generated /path/to/codebase-map.html</code>，并在浏览器中打开它。如果你在无浏览器环境中工作，其中没有浏览器打开，打印的路径确认脚本成功。</p>
+<p>此模式适用于任何可视化输出：依赖关系图、测试覆盖率报告、API 文档或数据库架构可视化。捆绑的脚本完成工作，而 Claude 处理编排。</p>
+<h2 id="_1">故障排除</h2>
+<h3 id="skill">Skill 未触发</h3>
+<p>如果 Claude 在预期时没有使用你的 skill：</p>
+<ol>
+<li>检查描述是否包含用户会自然说出的关键词</li>
+<li>验证 skill 是否出现在 <code>What skills are available?</code> 中</li>
+<li>尝试重新表述你的请求以更接近描述</li>
+<li>如果 skill 是用户可调用的，使用 <code>/skill-name</code> 直接调用它</li>
+<li>如果 <code>/skill-name</code> 也无法被识别，请检查 Claude Code 是否<a href="#characters-a-skill-name-cant-hold">拒绝了该 skill 的名称</a></li>
+<li>如果 skill 设置了 <code>paths</code>，请检查 Claude 读取、编辑或写入的文件是否位于 Claude 当前的工作目录内。对于该目录之外的文件，例如同级 git worktree 中的文件（即使是您使用 <code>/add-dir</code> 添加的 worktree），skill 不会激活。要让 skill 对这些文件激活，请在该 worktree 中启动 Claude Code，或<a href="permissions.html#move-the-session-to-another-directory">使用 <code>/cd</code> 将会话移至该处</a>。</li>
+</ol>
+<p>如果 frontmatter YAML 格式不正确，Claude Code 会加载 skill 主体但元数据为空，所以 <code>/skill-name</code> 仍然有效，但 Claude 无法匹配你的 <code>description</code>。使用 <code>--debug</code> 运行以查看解析错误。</p>
+<p>如果 skill 在 plugin 中，你可以在现实提示中测量它触发的频率，而不是逐个检查：使用 <a href="plugin-evals.html#create-your-first-eval-suite"><code>tool_used: Skill</code> grader</a> 编写一个 eval case，并在每次描述更改后使用 <code>claude plugin eval</code> 运行它。</p>
+<p>要找到 frontmatter 无法解析的 <code>SKILL.md</code> 文件，在 skills 目录上运行 <a href="plugins-cli-reference.html#validate-a-directory"><code>claude plugin validate</code></a>，例如对于项目 skills 运行 <code>claude plugin validate .claude/skills</code>，或对于个人 skills 运行 <code>claude plugin validate ~/.claude/skills</code>。需要 Claude Code v2.1.233 或更高版本。</p>
+<h3 id="skill_1">Skill 触发过于频繁</h3>
+<p>如果 Claude 在你不想要的时候使用你的 skill：</p>
+<ol>
+<li>使描述更具体</li>
+<li>如果你只想要手动调用，添加 <code>disable-model-invocation: true</code></li>
+</ol>
+<h3 id="claude-skill">Claude 停止遵循 skill</h3>
+<p>如果 Claude 在其第一个响应中遵循 skill，但之后停止遵循它，请从与你的情况相匹配的以下任何一种情况开始：</p>
+<ul>
+<li><strong>Claude 跳过了必须每次都成立的规则</strong>：将规则移到 <a href="hooks-guide.html">hook</a> 中。Claude Code 在其事件发生时每次都运行 hook，例如在每次文件编辑之前，无论 Claude 是否遵循 skill。要将规则与 skill 保持在一起，在 skill 的 <a href="hooks.html#hooks-in-skills-and-agents"><code>hooks</code> frontmatter</a> 中定义 hook。该 hook 从 skill 被调用时开始应用，直到会话结束。</li>
+<li><strong>Claude 跳过了应该有判断力地应用的指导</strong>：措辞指导使其适用于整个任务，例如"在每次编辑后运行测试"而不是"运行测试"。Claude Code 在 skill 被调用时将 skill 的内容添加到对话中，并且 <a href="#skill-content-lifecycle">不会在后续轮次重新读取文件</a>。</li>
+<li><strong>对话被压缩了</strong>：再次调用 skill 以恢复其完整内容。在 <a href="how-claude-code-works.html#when-context-fills-up">压缩</a> 之后，Claude Code <a href="#skill-content-lifecycle">只能保留被调用的 skill 的开始部分</a>，所以将最重要的说明放在 <code>SKILL.md</code> 的顶部。</li>
+</ul>
+<h3 id="skill_2">Skill 描述被截断</h3>
+<p>Claude Code 将 skill 名称和描述的列表加载到上下文中，以便 Claude 知道有哪些可用。列表始终包含每个 skill 名称，但如果你有很多 skills，Claude Code 会缩短描述以适应列表的字符预算，这可能会删除 Claude 需要匹配你的请求的关键词。预算按模型上下文窗口的 1% 进行缩放。当列表溢出时，Claude Code 从你调用最少的 skills 开始删除描述，所以你使用最多的 skills 保持其完整文本。</p>
+<p>运行 <code>/doctor</code> 以估计列表的上下文成本及其最大贡献者。要找到值得关闭的 skills，运行 <a href="#find-unused-skills"><code>/skill-doctor</code></a>。当列表超过其预算时，Claude Code 也会向调试日志写入警告，可通过 <a href="cli-reference.html#cli-flags"><code>--debug</code></a> 查看。</p>
+<p><code>/context</code> 中的 Skills 行报告应用预算后列表的大小，因此它与模型接收的内容相匹配。在 v2.1.196 之前，该行计算每个描述的完整文本，可能显示的值比配置的预算大几倍。</p>
+<p>要提高预算，设置 <a href="settings-reference.html#skilllistingbudgetfraction"><code>skillListingBudgetFraction</code></a> 设置（例如 <code>0.02</code> = 2%）或 <code>SLASH_COMMAND_TOOL_CHAR_BUDGET</code> 环境变量为固定字符数。要为其他 skills 释放预算，在 <a href="#override-skill-visibility-from-settings"><code>skillOverrides</code></a> 中将低优先级条目设置为 <code>"name-only"</code>，以便它们在没有描述的情况下列出。你也可以在源处修剪 <code>description</code> 和 <code>when_to_use</code> 文本：将关键用例放在首位，因为每个条目的组合文本被限制在 1,536 个字符，无论预算如何。该上限可通过 <a href="settings-reference.html#skilllistingmaxdescchars"><code>skillListingMaxDescChars</code></a> 配置。</p>
+<h3 id="skill-lt-gt">Skill 描述中的尖括号显示为 <code>&amp;lt;</code> 和 <code>&amp;gt;</code></h3>
+<p>Claude Code 会将 <code>description</code> 和 <code>when_to_use</code> 字段中的 <code>&lt;</code> 和 <code>&gt;</code> 显示为 <code>&amp;lt;</code> 和 <code>&amp;gt;</code>。要显示诸如 <code>&lt;branch&gt;</code> 之类的占位符，请使用方括号或 <a href="#frontmatter-reference"><code>argument-hint</code></a>：</p>
+<ul>
+<li><strong>方括号</strong>：将 <code>&lt;branch&gt;</code> 替换为 <code>[branch]</code>，它会按输入原样显示</li>
+<li><strong><code>argument-hint</code></strong>：将占位符移到新的 <code>argument-hint: &lt;branch&gt;</code> 行中。它会显示在命令名称之后。如果您还将该 skill 上传到 claude.ai 或 Skills API，请先<a href="#using-skill-frontmatter-outside-claude-code">检查那里是否接受 <code>argument-hint</code></a>。</li>
+</ul>
+<h3 id="skills">个人 skills 消失了</h3>
+<p>如果你在 <code>~/.claude/skills/</code> 中创建的 skill 文件夹消失了，请查看 <code>~/.claude/skills/.trash/</code>。当 Claude Code <a href="#how-synced-skills-behave">从 claude.ai 同步 skills</a> 时，它会将它们下载到单独的 <code>synced</code> 子文件夹中，不会移动或删除你创建的文件夹。</p>
+<p>在 v2.1.280 之前，<code>~/.claude/skills/</code> 中名为 <code>manifest.json</code> 的文件会导致 Claude Code 将该文件列出的 skill 文件夹移动到 <code>~/.claude/skills/.trash/</code> 下的带时间戳的文件夹中，这些 skills 停止加载。</p>
+<p>要恢复一个 skill，将其文件夹从带时间戳的文件夹移回 <code>~/.claude/skills/</code>。在 <a href="claude-directory.html#cleaned-up-automatically">保留扫描</a> 删除垃圾条目之前执行此操作，默认情况下在移动到垃圾箱后 30 天。</p>
+<h2 id="_2">相关资源</h2>
+<ul>
+<li><strong><a href="debug-your-config.html">调试你的配置</a></strong>：诊断为什么 skill 没有出现或触发</li>
+<li><strong><a href="https://agentskills.io/skill-creation/evaluating-skills" target="_blank" rel="noopener">在 agentskills.io 上评估 skill 输出质量</a></strong>：eval 文件格式和迭代工作流</li>
+<li><strong><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank" rel="noopener">Skill 创作最佳实践</a></strong>：适用于 Claude 产品的写作指导</li>
+<li><strong><a href="sub-agents.html">Subagents</a></strong>：将任务委派给专门的代理</li>
+<li><strong><a href="plugins-overview.html">Plugins</a></strong>：打包和分发 skills 与其他扩展</li>
+<li><strong><a href="hooks.html">Hooks</a></strong>：围绕工具事件自动化工作流</li>
+<li><strong><a href="memory.html">Memory</a></strong>：管理 CLAUDE.md 文件以获得持久上下文</li>
+<li><strong><a href="commands.html">Commands</a></strong>：内置命令和捆绑 skills 的参考</li>
+<li><strong><a href="permissions.html">Permissions</a></strong>：控制工具和 skill 访问</li>
+<li><strong><a href="https://claude.com/docs/claude-tag/admins/skills-repo" target="_blank" rel="noopener">Claude Tag skills</a></strong>：提交到仓库的项目 skills 在该仓库在 Claude Tag 频道中使用时也会加载</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="mcp.html"><span class="pager-dir">← 上一页</span><span class="pager-name">通过 MCP 将 Claude Code 连接到工具</span></a><a class="pager-link next" href="artifacts.html"><span class="pager-dir">下一页 →</span><span class="pager-name">将会话输出作为 artifacts 共享</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#bundled-skills">捆绑技能</a><a class="toc-l3" href="#check-your-setup-with-/doctor">使用 /doctor 检查您的设置</a><a class="toc-l3" href="#run-and-verify-your-app">运行并验证您的应用</a><a class="toc-l3" href="#run-your-checks-before-each-commit">在每次提交前运行检查</a><a class="toc-l3" href="#work-on-claude-api-projects">处理 Claude API 项目</a><a class="toc-l2" href="#getting-started">开始使用</a><a class="toc-l3" href="#create-your-first-skill">创建你的第一个 skill</a><a class="toc-l2" href="#where-skills-live">选择 skills 的加载位置</a><a class="toc-l3" href="#discovery-from-parent-and-nested-directories">在 monorepos 和子目录中加载 skills</a><a class="toc-l3" href="#skills-from-additional-directories">从项目外的目录加载 skills</a><a class="toc-l3" href="#resolve-skills-that-share-a-name">解决共享名称的 skills</a><a class="toc-l3" href="#skills-in-cowork-and-cloud-sessions">在 Cowork 和云会话中使用 skills</a><a class="toc-l3" href="#how-synced-skills-behave">从 claude.ai 同步的 Skills</a><a class="toc-l3" href="#live-change-detection">在会话期间编辑 skill</a><a class="toc-l3" href="#remove-a-skill">删除 skill</a><a class="toc-l2" href="#configure-skills">配置 skill</a><a class="toc-l3" href="#types-of-skill-content">skill 内容的类型</a><a class="toc-l3" href="#frontmatter-reference">Frontmatter 参考</a><a class="toc-l3" href="#when-an-injected-command-fails">添加支持文件</a><a class="toc-l3" href="#control-characters-in-injected-commands">控制谁可以调用 skill</a><a class="toc-l3" href="#run-skills-in-a-subagent">Skill 内容生命周期</a><a class="toc-l3" href="#example-research-skill-using-explore-agent">为 skill 预先批准工具</a><a class="toc-l3" href="#find-unused-skills">向 skill 传递参数</a><a class="toc-l2" href="#run-evals-with-skill-creator">高级模式</a><a class="toc-l3" href="#share-skills">注入动态上下文</a><a class="toc-l2" href="#generate-visual-output">Environment</a><a class="toc-l2" href="#_1">故障排除</a><a class="toc-l3" href="#skill">Skill 未触发</a><a class="toc-l3" href="#skill_1">Skill 触发过于频繁</a><a class="toc-l3" href="#claude-skill">Claude 停止遵循 skill</a><a class="toc-l3" href="#skill_2">Skill 描述被截断</a><a class="toc-l3" href="#skill-lt-gt">Skill 描述中的尖括号显示为 &amp;amp;lt; 和 &amp;amp;gt;</a><a class="toc-l3" href="#skills">个人 skills 消失了</a><a class="toc-l2" href="#_2">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

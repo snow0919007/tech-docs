@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cloudflare Workers 文档 · 简体中文版</title>
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>Cloudflare Workers 文档</h1>
+      <p class="lead">一个无服务器平台：用一条命令就能在 Cloudflare 全球网络上构建、部署和扩展应用——无需管理基础设施，也不必写复杂的配置。</p>
+      <div class="page-meta">
+        <span class="tag">中文版 · v1.1</span>
+        <span>原文：developers.cloudflare.com/workers</span>
+        <span>26 个主章节 · 约 480 篇页面</span>
+      </div>
+
+      <div class="info-box">
+        <span class="box-title">关于本中文版</span>
+        <p>本版覆盖原站<strong>全部 26 个主导航章节</strong>的目录结构与核心页面正文，逐页精译，页面层级、代码块、命令与 API 名称均与原文一致。当前已交付 <strong>38 篇正文译文</strong>：概览、快速开始（4 篇）、最佳实践、本地开发（3 篇）、在线演练场、术语表、参考（5 篇），以及<strong>配置章全 22 页</strong>。其余章节的页面已在导航中列出并标注<strong>待译</strong>，按批次继续补齐。</p>
+        <p>译文遵循两条原则：技术术语首现时以「中文（English）」标注，之后统一用中文；代码、命令、配置键、API 与产品名一律保留英文原文。</p>
+      </div>
+
+      <h2>从这里开始</h2>
+      <div class="card-grid">
+        <a class="card" href="pages/overview.html">
+          <h4>Workers 是什么</h4>
+          <p>平台定位、能力边界，以及它和传统服务器的区别。</p>
+        </a>
+        <a class="card" href="pages/get-started/cli.html">
+          <h4>用 Wrangler 部署第一个 Worker</h4>
+          <p>从安装 CLI 到 wrangler deploy 的完整流程。</p>
+        </a>
+        <a class="card" href="pages/get-started/dashboard.html">
+          <h4>在控制台创建 Worker</h4>
+          <p>不装任何工具，在浏览器里写代码并发布。</p>
+        </a>
+        <a class="card" href="pages/reference/how-workers-works.html">
+          <h4>Workers 的运行原理</h4>
+          <p>V8 isolate 模型，与浏览器和 Node.js 的差异。</p>
+        </a>
+      </div>
+
+      <h2>全部章节</h2>
+      <p>点击任一章节进入该章索引，可查看全部子页及其译文状态。</p>
+      <div class="card-grid" id="home-chapters"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档（developers.cloudflare.com/workers）整理，仅供学习参考；产品行为以<a href="https://developers.cloudflare.com/workers/" target="_blank" rel="noopener">英文原文</a>为准。
+      </div>
+    </article>
+  </div>
+</div>
+
+<script src="assets/nav-data-1.js"></script>
+<script src="assets/nav-data-2.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var box = document.getElementById("home-chapters");
+  if (!box || !window.NAV) return;
+  box.innerHTML = window.NAV.map(function (ch, i) {
+    var done = ch.pages.filter(function (p) { return p[1]; }).length;
+    return '<a class="card" href="sections/' + ch.id + '.html">' +
+      '<span class="card-num">' + (i + 1 < 10 ? "0" + (i + 1) : i + 1) + " · " + ch.pages.length + " 页" +
+      (done ? " · 已译 " + done : "") + "</span>" +
+      "<h4>" + ch.zh + "</h4><p>" + (ch.desc || "") + "</p></a>";
+  }).join("");
+})();
+</script>
+</body>
+</html>

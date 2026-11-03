@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>部署已有静态站点 · Workers 文档（中文版）</title>
+<meta name="description" content="给已有的静态站点项目接上 Wrangler 与 Workers Sites。">
+<link rel="stylesheet" href="../../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>部署已有静态站点</h1>
+      <p class="lead">给已有的静态站点项目接上 Wrangler 与 Workers Sites。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-04-23</span>
+        <span>对应页面：configuration/sites/start-from-existing</span>
+      </div>
+
+<div class="warn-box">
+        <span class="box-title">请改用 Workers 静态资源</span>
+        <p>托管全栈应用请用 <a href="../../../sections/static-assets.html">Workers 静态资源</a>，而不是 Workers Sites。Workers Sites 在 Wrangler v4 中已被废弃，<a href="../../../sections/vite-plugin.html">Cloudflare Vite 插件</a>也不支持它。新项目不要使用 Workers Sites。</p>
+      </div>
+
+      <p>Workers Sites 依赖 <a href="https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler" target="_blank" rel="noopener">Wrangler ↗</a>，请务必使用<a href="../../../sections/wrangler.html">最新版本</a>。</p>
+      <p>要部署一个已有的静态站点项目，先从生成好的站点开始。Workers Sites 与所有静态站点生成器都能配合，例如：</p>
+      <ul>
+        <li><a href="https://gohugo.io/getting-started/quick-start/" target="_blank" rel="noopener">Hugo ↗</a></li>
+        <li><a href="https://www.gatsbyjs.org/docs/quick-start/" target="_blank" rel="noopener">Gatsby ↗</a>（需要 Node）</li>
+        <li><a href="https://jekyllrb.com/docs/" target="_blank" rel="noopener">Jekyll ↗</a>（需要 Ruby）</li>
+        <li><a href="https://www.11ty.io/#quick-start" target="_blank" rel="noopener">Eleventy ↗</a>（需要 Node）</li>
+        <li><a href="https://wordpress.org" target="_blank" rel="noopener">WordPress ↗</a>（参见<a href="https://developers.cloudflare.com/pages/how-to/deploy-a-wordpress-site/" target="_blank" rel="noopener">用 Pages 部署静态 WordPress 站点 ↗</a>教程）</li>
+      </ul>
+
+      <h2>开始</h2>
+      <ol>
+        <li>在项目目录根下运行 <code>wrangler init</code>，生成一个基础 Worker：
+<pre data-lang="sh"><code>wrangler init -y</code></pre>
+          该命令会新增或更新这些文件：<code>wrangler.jsonc</code>（项目配置）、<code>package.json</code>（加入 Wrangler 的 <code>devDependencies</code>）、<code>tsconfig.json</code>（若原本没有则添加，以便用 TypeScript 写 Worker）、<code>src/index.ts</code>（一个用 TypeScript 写的基础 Worker）。
+        </li>
+        <li>把站点的构建输出目录写进 Wrangler 文件：
+<pre data-lang="jsonc"><code>{
+  "site": {
+    "bucket": "./public" // &lt;-- Add your build directory name here.
+  }
+}</code></pre>
+<pre data-lang="toml"><code>[site]
+bucket = "./public"</code></pre>
+          常见静态站点生成器的默认输出目录：Hugo 为 <code>public</code>、Gatsby 为 <code>public</code>、Jekyll 为 <code>_site</code>、Eleventy 为 <code>_site</code>。
+        </li>
+        <li>安装 <code>@cloudflare/kv-asset-handler</code>：
+<pre data-lang="sh"><code>npm i -D @cloudflare/kv-asset-handler</code></pre>
+        </li>
+        <li>把 <code>src/index.ts</code> 的内容替换为下面的代码：
+<pre data-lang="js"><code>import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
+import manifestJSON from "__STATIC_CONTENT_MANIFEST";
+const assetManifest = JSON.parse(manifestJSON);
+
+export default {
+	async fetch(request, env, ctx) {
+		try {
+			// Add logic to decide whether to serve an asset or run your original Worker code
+			return await getAssetFromKV(
+				{
+					request,
+					waitUntil: ctx.waitUntil.bind(ctx),
+				},
+				{
+					ASSET_NAMESPACE: env.__STATIC_CONTENT,
+					ASSET_MANIFEST: assetManifest,
+				},
+			);
+		} catch (e) {
+			let pathname = new URL(request.url).pathname;
+			return new Response(`"${pathname}" not found`, {
+				status: 404,
+				statusText: "not found",
+			});
+		}
+	},
+};</code></pre>
+        </li>
+      </ol>
+      <p>如果你写的是 Service Worker 格式（已废弃但仍受支持，建议迁到<a href="../../../pages/reference/module-workers.html">模块化 Worker</a>），等价写法是：</p>
+<pre data-lang="js"><code>import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
+
+addEventListener("fetch", (event) =&gt; {
+	event.respondWith(handleEvent(event));
+});
+
+async function handleEvent(event) {
+	try {
+		// Add logic to decide whether to serve an asset or run your original Worker code
+		return await getAssetFromKV(event);
+	} catch (e) {
+		let pathname = new URL(event.request.url).pathname;
+		return new Response(`"${pathname}" not found`, {
+			status: 404,
+			statusText: "not found",
+		});
+	}
+}</code></pre>
+      <p><code>getAssetFromKV()</code> 的可配置项见 <a href="https://github.com/cloudflare/workers-sdk/tree/main/packages/kv-asset-handler" target="_blank" rel="noopener">kv-asset-handler 文档 ↗</a>。</p>
+      <p>最后，像平时部署 Worker 项目那样运行 <code>wrangler deploy</code> 或 <code>npx wrangler deploy</code>。Wrangler 会自动上传配置目录中的资源：</p>
+<pre data-lang="sh"><code>npx wrangler deploy</code></pre>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/sites/start-from-existing/" target="_blank" rel="noopener">configuration/sites/start-from-existing</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../../assets/nav-data-1.js"></script>
+<script src="../../../assets/nav-data-2.js"></script>
+<script src="../../../assets/site.js"></script>
+</body>
+</html>

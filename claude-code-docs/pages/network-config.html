@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>企业网络配置 · Claude Code 中文文档</title>
+<meta name="description" content="为企业环境配置 Claude Code，支持代理服务器、自定义证书颁发机构 (CA) 和相互传输层安全 (mTLS) 身份验证。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="network-config">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/network-config" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link active" href="network-config.html" aria-current="page">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>管理</span> <span class="sep">/</span> <span>部署</span></div>
+    <article class="prose" id="article"><h1 id="_1">企业网络配置</h1>
+<blockquote>
+<p>为企业环境配置 Claude Code，支持代理服务器、自定义证书颁发机构 (CA) 和相互传输层安全 (mTLS) 身份验证。</p>
+</blockquote>
+<p>Claude Code 通过环境变量支持各种企业网络和安全配置。这包括通过公司代理服务器路由流量、信任自定义证书颁发机构 (CA)，以及使用相互传输层安全 (mTLS) 证书进行身份验证以增强安全性。</p>
+<p>在启动 Claude Code 之前设置这些环境变量。在 shell 中导出的变量在启动时读取一次，因此运行中的会话不会获取 shell 环境的后续更改。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>本页面显示的所有环境变量也可以在 <a href="settings.html"><code>settings.json</code></a> 中配置。</p></div></div>
+<h2 id="proxy-configuration">代理配置</h2>
+<h3 id="environment-variables">环境变量</h3>
+<p>Claude Code 遵守标准代理环境变量。在 Claude Desktop 会话中，当应用管理提供商连接时，Claude Code 仅从托管设置和 <code>~/.claude/settings.json</code> 中读取它们；有关范围规则，请参阅 <a href="#mtls-authentication">mTLS 身份验证</a>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># HTTPS 代理（推荐）</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">HTTPS_PROXY</span><span class="o">=</span>https://proxy.example.com:8080
+
+<span class="c1"># HTTP 代理（如果 HTTPS 不可用）</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">HTTP_PROXY</span><span class="o">=</span>http://proxy.example.com:8080
+
+<span class="c1"># 绕过特定请求的代理 - 空格分隔格式</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">NO_PROXY</span><span class="o">=</span><span class="s2">"localhost 192.168.1.1 example.com .example.com"</span>
+<span class="c1"># 绕过特定请求的代理 - 逗号分隔格式</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">NO_PROXY</span><span class="o">=</span><span class="s2">"localhost,192.168.1.1,example.com,.example.com"</span>
+<span class="c1"># 绕过所有请求的代理</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">NO_PROXY</span><span class="o">=</span><span class="s2">"*"</span>
+</code></pre></div>
+<p>小写变体也可以工作，Claude Code 按照 <code>https_proxy</code>、<code>HTTPS_PROXY</code>、<code>http_proxy</code>、<code>HTTP_PROXY</code> 的顺序使用第一个已设置的变量。</p>
+<p>Claude Code 永远不会通过代理发送其 WebSocket 连接到 <code>localhost</code>、<code>::1</code> 或 <code>127.0.0.0/8</code>，因此您不需要在 <code>NO_PROXY</code> 中为它们添加环回条目。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Claude Code 不支持 SOCKS 代理。</p></div></div>
+<h3 id="basic-authentication">基本身份验证</h3>
+<p>如果您的代理需要基本身份验证，请在代理 URL 中包含凭证：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">HTTPS_PROXY</span><span class="o">=</span>http://username:password@proxy.example.com:8080
+</code></pre></div>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>避免在脚本中硬编码密码。改用环境变量或安全凭证存储。</p>
+<p>[!TIP]</p>
+<p>对于需要高级身份验证（NTLM、Kerberos 等）的代理，请考虑使用支持您的身份验证方法的 LLM 网关服务。</p></div></div>
+<h2 id="ca-certificate-store">CA 证书存储</h2>
+<p>默认情况下，Claude Code 信任其捆绑的 Mozilla CA 证书和您的操作系统的证书存储。读取操作系统存储需要具有 <code>tls.getCACertificates</code> 的运行时：本机安装程序始终具有它，npm 安装需要 Node 22.15 或更高版本。在较旧的 Node 版本上，仅捆绑的集合和 <code>NODE_EXTRA_CA_CERTS</code> 适用。企业 TLS 检查代理在其根证书安装在操作系统信任存储中且运行时可以读取它时无需额外配置即可工作。如果此类代理无法正确处理 gzip 压缩的请求正文，请设置 <a href="env-vars.html"><code>CLAUDE_CODE_GZIP_REQUEST_BODIES=0</code></a>，以关闭 Claude API、遥测和 Artifact 发布请求的压缩。</p>
+<p><code>CLAUDE_CODE_CERT_STORE</code> 接受逗号分隔的源列表。识别的值为 <code>bundled</code>（Claude Code 附带的 Mozilla CA 集）和 <code>system</code>（操作系统信任存储）。默认值为 <code>bundled,system</code>。</p>
+<p>仅信任捆绑的 Mozilla CA 集：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_CERT_STORE</span><span class="o">=</span>bundled
+</code></pre></div>
+<p>仅信任操作系统证书存储：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_CERT_STORE</span><span class="o">=</span>system
+</code></pre></div>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><code>CLAUDE_CODE_CERT_STORE</code> 没有专用的 <code>settings.json</code> 架构密钥。通过 <code>~/.claude/settings.json</code> 中的 <code>env</code> 块或直接在进程环境中设置它。</p></div></div>
+<h2 id="custom-ca-certificates">自定义 CA 证书</h2>
+<p>如果您的企业环境使用自定义 CA，请配置 Claude Code 以直接信任它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">NODE_EXTRA_CA_CERTS</span><span class="o">=</span>/path/to/ca-cert.pem
+</code></pre></div>
+<h2 id="mtls-authentication">mTLS 身份验证</h2>
+<p>对于需要客户端证书身份验证的企业环境：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 用于身份验证的客户端证书</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_CLIENT_CERT</span><span class="o">=</span>/path/to/client-cert.pem
+
+<span class="c1"># 客户端私钥</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_CLIENT_KEY</span><span class="o">=</span>/path/to/client-key.pem
+
+<span class="c1"># 可选：加密私钥的密码短语</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_CLIENT_KEY_PASSPHRASE</span><span class="o">=</span><span class="s2">"your-passphrase"</span>
+</code></pre></div>
+<p>Claude Code 在启动时读取证书和密钥文件，并在每次应用设置时重新读取它们，例如当您的组织在会话中期更改<a href="server-managed-settings.html">托管设置</a>中的 <code>env</code> 块时。</p>
+<p>要轮换证书和密钥，请替换相同路径上的文件。Claude Code 在运行会话中无需重启即可获取替换。当 API 请求因连接级错误（如连接重置或 TLS 握手错误）失败时，它会重新读取两个文件并使用新的密钥对重试请求。在 v2.1.232 之前，Claude Code 不会在连接错误时重新读取，因此它会保持已加载的密钥对，直到下次应用设置或您重启为止。</p>
+<p>Claude Code 根据失败的请求重新读取文件，而不是通过监视文件更改：</p>
+<ul>
+<li><strong>时间</strong>：Claude Code 在您替换文件时不执行任何操作。它在符合条件的失败后的重试时或在下次应用设置时呈现新的密钥对，以先发生者为准。</li>
+<li><strong>网关拒绝</strong>：当您的网关重置连接或在停止接受旧密钥对后拒绝 TLS 握手时，Claude Code 会重新读取。当网关完成握手并用 HTTP 错误响应时，它不会重新读取。在这种情况下，Claude Code 在下次应用设置时或重启时加载新的密钥对。</li>
+<li><strong>半写入轮换</strong>：当 Claude Code 在您的轮换进行中期重新读取时，例如读取不匹配的证书和密钥，它会保持之前的密钥对并在下次失败时重新读取。</li>
+<li><strong>OTLP 遥测导出器</strong>：Claude Code 保持<a href="monitoring-usage.html#mtls-authentication">导出器</a>在首次使用时加载的证书，因此请重启 Claude Code 以使轮换的证书到达您的遥测收集器。</li>
+<li><strong>关闭重新加载</strong>：设置 <a href="env-vars.html#variables"><code>CLAUDE_CODE_DISABLE_MTLS_RELOAD_ON_STALE_CONNECTION=1</code></a> 以关闭连接错误重新读取。Claude Code 然后仅在下次应用设置或下次启动时获取轮换的文件。</li>
+</ul>
+<p>要确认 Claude Code 已获取轮换，请<a href="#verify-your-configuration">使用调试日志启动会话</a>并在日志中查找 <code>Stale connection — reloaded rotated mTLS client material</code>。当 Claude Code 在应用设置时获取轮换时，它不会记录此行，因此仅缺少一行并不意味着轮换失败。</p>
+<p>在当前密钥对过期之前替换文件，以便 Claude Code 在下次启动时不会加载已过期的密钥对。</p>
+<p>在<a href="claude-code-on-the-web.html">云会话</a>中，托管环境管理与 API 的连接，因此当这些变量来自设置文件 <code>env</code> 块时，Claude Code 会忽略以下变量：</p>
+<ul>
+<li><code>CLAUDE_CODE_CLIENT_CERT</code></li>
+<li><code>CLAUDE_CODE_CLIENT_KEY</code></li>
+<li><code>CLAUDE_CODE_CLIENT_KEY_PASSPHRASE</code></li>
+<li><code>NODE_EXTRA_CA_CERTS</code></li>
+<li><code>NODE_TLS_REJECT_UNAUTHORIZED</code></li>
+<li><code>CLAUDE_CODE_OAUTH_SCOPES</code></li>
+</ul>
+<p>Claude Code 在会话的调试日志中记录每个被忽略的密钥。</p>
+<p>在<a href="desktop.html">Claude Desktop</a>会话中，应用管理提供商连接，例如<a href="third-party-integrations.html">第三方提供商</a>上的代码选项卡和 Cowork 会话，Claude Code 仅从<a href="managed-settings.html">托管设置</a>和 <code>~/.claude/settings.json</code> 读取这些变量和代理变量 <code>HTTP_PROXY</code>、<code>HTTPS_PROXY</code> 和 <code>NO_PROXY</code>：它忽略存储库自己的设置文件中的这些变量，因此已检出的存储库无法重定向凭证来自应用的会话的 TLS 或代理路径。在通过 claude.ai 登录的本地、SSH 或 WSL 代码选项卡会话中，应用不管理连接，Claude Code 从每个设置范围读取这些变量，就像任何终端会话一样；<a href="claude-code-on-the-web.html">云会话</a>无论您在何处启动它们，都遵循上述云会话规则。在 v2.1.217 之前，当应用管理连接时，Claude Code 忽略每个设置文件中的这些变量。</p>
+<h2 id="verify-your-configuration">验证你的配置</h2>
+<p>你通常会从后续请求中的<a href="errors.html#network-and-connection-errors">连接或证书错误</a>发现代理地址错误或证书路径不正确的问题，因为 Claude Code 在读取这些设置时不会验证大多数设置。它在启动时检查的唯一设置是代理 URL：当它无法解析该值（例如缺少 <code>http://</code> 方案）时，Claude Code 会停止启动并显示一个错误，指出需要修复的变量。</p>
+<p>要在发送请求之前确认你的配置已加载，请使用调试日志启动 Claude Code：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--debug
+</code></pre></div>
+<p>调试输出会进入 <code>~/.claude/debug/&lt;session-id&gt;.txt</code> 而不是终端，或进入你使用 <code>--debug-file &lt;path&gt;</code> 设置的路径。在日志中，查找确认每个文件已加载的行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">CA certs: Appended extra certificates from NODE_EXTRA_CA_CERTS (/etc/ssl/certs/corp-ca.pem)
+mTLS: Loaded client certificate from CLAUDE_CODE_CLIENT_CERT
+mTLS: Loaded client key from CLAUDE_CODE_CLIENT_KEY
+</code></pre></div>
+<p>如果 Claude Code 无法读取其中一个文件，日志会显示 <code>Failed to read</code> 或 <code>Failed to load</code> 行以及原因。</p>
+<p>你也可以在交互式会话中运行 <code>/status</code> 并检查这些行：</p>
+<ul>
+<li><strong>Proxy</strong>：显示活跃的代理 URL，并将无法解析的值标记为无效且被忽略。</li>
+<li><strong>mTLS client cert</strong> 和 <strong>mTLS client key</strong>：仅在文件加载时出现，所以缺少该行意味着加载失败，调试日志中有原因。</li>
+<li><strong>Additional CA cert(s)</strong>：显示 <code>NODE_EXTRA_CA_CERTS</code> 路径而不检查文件是否已加载，所以请在调试日志中确认这一项。</li>
+</ul>
+<h2 id="apply-network-settings-to-background-agents">为后台代理应用网络设置</h2>
+<p><a href="agent-view.html">后台代理</a>不在分派它们的终端内运行。一个按用户的监督进程按需启动，生命周期超过你的 shell，并托管每个 <code>claude agents</code>、<code>--bg</code> 和 <code>/background</code> 会话。请参阅<a href="agent-view.html#how-background-sessions-are-hosted">后台会话如何被托管</a>。这改变了此页面上的配置如何到达这些会话的方式。</p>
+<h3 id="set-network-variables-in-settings-not-the-shell">在设置中设置网络变量，而不是在 shell 中</h3>
+<p>监督进程是由每个终端共享的一个进程。它继承最先启动它的那个 shell 的环境。如果您仅在 shell 中导出代理、CA 路径或 mTLS 变量，当该 shell 碰巧冷启动监督进程时，这些变量会到达后台 Agent；而当由另一个 shell 启动监督进程时，它们会无声地无法到达。</p>
+<p>将相同的变量放在 <code>~/.claude/settings.json</code> 的 <code>env</code> 块中或<a href="settings.html">托管设置</a>中。此页面上的每个变量都可以在那里设置，设置是唯一到达每台机器上每个后台会话的配置。</p>
+<h3 id="configure-a-corporate-launcher-as-a-setting">将企业启动器配置为设置</h3>
+<p>某些组织要求每个 Claude Code 进程都通过应用沙箱、网络控制或凭证注入的企业启动器启动。监督进程及其工作进程从固定路径启动 Claude Code，而不是在 <code>PATH</code> 上查找 <code>claude</code>，因此每个后台代理都绕过你在 <code>PATH</code> 上放置的包装器。</p>
+<p>设置 <a href="settings-reference.html#processwrapper"><code>processWrapper</code></a> 设置以使用你的启动器为监督进程、其工作进程和<a href="corporate-launcher.html#what-the-launcher-covers">启动器覆盖的内容</a>下列出的其他后台进程添加前缀。等效的 <a href="env-vars.html"><code>CLAUDE_CODE_PROCESS_WRAPPER</code></a> 环境变量在两者都设置时优先，它受相同规则约束：通过托管设置或 <code>~/.claude/settings.json</code> 传递它，而不是 shell 导出。<a href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a>涵盖启动器必须满足的合同、它做什么和不做什么，以及如何推出它。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>已运行的监督进程保持它启动时的启动配置。部署启动器设置后，运行 <a href="agent-view.html#the-supervisor-process"><code>claude daemon stop --any</code></a>，以便下一个 <code>claude agents</code> 或 <code>--bg</code> 启动一个遵循该设置的监督进程。</p></div></div>
+<h2 id="streaming-idle-watchdogs">流式空闲监视器</h2>
+<p>Claude Code 运行四个独立的计时器，当流式模型响应变得安静时会中止该响应，因此死连接会失败并重试，而不是挂起。完全没有收到响应头的请求会以以下两种方式之一结束：</p>
+<ul>
+<li><strong>在运行首字节截止时间的连接上</strong>：第一次尝试最迟会在该截止时间结束。要更改它，请设置 <code>CLAUDE_STREAM_FIRST_BYTE_TIMEOUT_MS</code>。有关重试的等待时间，请参阅 <a href="errors.html#no-response-from-api">API 无响应</a>。</li>
+<li><strong>在其他连接上</strong>：请求会在 5 到 6 分钟后、主体空闲超时触发时结束，除非您已关闭该超时。要更早结束请求，请降低 <code>API_TIMEOUT_MS</code>。在 <a href="claude-apps-gateway.html">Claude apps gateway</a> 会话中，您也可以改为通过<a href="claude-apps-gateway-deploy.html#retry-an-unanswered-request-sooner-with-the-first-byte-deadline">启用首字节截止时间</a>来更早结束第一次尝试。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">计时器</th>
+<th style="text-align: left;">中止条件</th>
+<th style="text-align: left;">运行位置</th>
+<th style="text-align: left;">默认超时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">首字节截止时间</td>
+<td style="text-align: left;">Claude Code 发送请求后没有响应头到达</td>
+<td style="text-align: left;">直接 Anthropic API 和 <a href="claude-platform-on-aws.html">Claude Platform on AWS</a>，包括通过 HTTPS 代理，但不包括当 <code>ANTHROPIC_BASE_URL</code> 或 <code>ANTHROPIC_AWS_BASE_URL</code> 通过<a href="gateways.html">网关</a>路由时。在 <a href="claude-apps-gateway-deploy.html#retry-an-unanswered-request-sooner-with-the-first-byte-deadline">Claude apps gateway 会话</a>中可选，在 Amazon Bedrock 上使用 <code>CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK=1</code> 时可选；不在 Google Cloud 的 Agent Platform 或 Microsoft Foundry 上运行</td>
+<td style="text-align: left;">直接 Anthropic API 上为 180 秒，Claude Platform on AWS 或 Amazon Bedrock 上为 300 秒，加上每 32KB 请求体一秒</td>
+</tr>
+<tr>
+<td style="text-align: left;">事件级监视器</td>
+<td style="text-align: left;">没有响应事件解析。在字节级监视器运行在 Amazon Bedrock 以外的连接上的情况下，到达的字节（包括保活 ping）也会重置此监视器，但在没有解析事件的情况下仅限一段有限的时间。当字节至少每 10 秒到达一次时，该时间约为五分钟。对于 Claude apps gateway 每 15 秒一次的 ping，该时间约为 7.5 分钟，因此在默认超时下，仅有 ping 的流会在约 12.5 分钟后结束。</td>
+<td style="text-align: left;">每个提供商</td>
+<td style="text-align: left;">300 秒</td>
+</tr>
+<tr>
+<td style="text-align: left;">字节级监视器</td>
+<td style="text-align: left;">线路上没有字节到达，包括 SSE 保活 ping</td>
+<td style="text-align: left;">直接 Anthropic API、<a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 和<a href="gateways.html">网关</a>连接，包括自定义 <code>ANTHROPIC_BASE_URL</code>。在 Amazon Bedrock <code>vnd.amazon.eventstream</code> 响应上可选，使用 <code>CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK=1</code>；不在 Google Cloud 的 Agent Platform 或 Microsoft Foundry 上运行</td>
+<td style="text-align: left;">直接 Anthropic API 上为 180 秒。在 Claude Platform on AWS、Amazon Bedrock、<a href="claude-apps-gateway.html">Claude apps gateway</a> 会话中以及通过自定义 <code>ANTHROPIC_BASE_URL</code> 时为 300 秒</td>
+</tr>
+<tr>
+<td style="text-align: left;">主体空闲超时</td>
+<td style="text-align: left;">5 分钟内没有字节到达，包括等待响应头的时间</td>
+<td style="text-align: left;">除了直接 Anthropic API、Claude Platform on AWS 和设置了 <code>CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK=1</code> 的 Amazon Bedrock 之外的提供商，除非 <a href="env-vars.html"><code>API_FORCE_IDLE_TIMEOUT</code></a> 改变这一点</td>
+<td style="text-align: left;">5 分钟</td>
+</tr>
+</tbody>
+</table>
+<p>如果设置 <code>CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK=1</code>，字节级监视器会在 Bedrock 上替换主体空闲超时，而不是与其并行运行。<code>CLAUDE_STREAM_IDLE_TIMEOUT_MS</code> 随后也会控制 Bedrock 流在 Claude Code 将连接视为死连接之前可以保持沉默多长时间，在下面列出的限制范围内。到达的字节仍然不会在 Bedrock 上重置事件级监视器。启用调试日志后，每个 Bedrock 流随后会记录一条以 <code>wire-heartbeat: _chunkTimes absent</code> 开头的调试消息。</p>
+<p>使用这些变量配置计时器，每个变量在 <a href="env-vars.html">环境变量参考</a> 中详细说明：</p>
+<ul>
+<li><code>CLAUDE_ENABLE_STREAM_WATCHDOG</code> 和 <code>CLAUDE_ENABLE_BYTE_WATCHDOG</code> 在表列出的连接范围内，使用 <code>1</code> 强制打开相应的监视器或使用 <code>0</code> 关闭；这两个变量都不会将监视器扩展到它不覆盖的连接类型。<code>CLAUDE_ENABLE_BYTE_WATCHDOG</code> 设置为 <code>0</code> 也会关闭首字节截止时间。</li>
+<li><code>CLAUDE_STREAM_IDLE_TIMEOUT_MS</code> 设置两个监视器的超时。Claude Code 将低于 5 分钟的值提高到 5 分钟，并将字节级监视器的值上限设为 30 分钟。</li>
+<li><code>CLAUDE_BYTE_STREAM_IDLE_TIMEOUT_MS</code> 设置字节级监视器的超时，而不改变事件级监视器的超时，限制在 10 秒到 30 分钟之间，并优先于 <code>CLAUDE_STREAM_IDLE_TIMEOUT_MS</code> 用于该监视器。</li>
+<li><code>CLAUDE_STREAM_FIRST_BYTE_TIMEOUT_MS</code> 设置首字节截止时间。在 Claude apps gateway 会话中，设置此变量即可<a href="claude-apps-gateway-deploy.html#retry-an-unanswered-request-sooner-with-the-first-byte-deadline">启用该截止时间</a>。在其他运行该截止时间的连接上，如果保持此变量未设置，Claude Code 会使用字节级监视器的超时，因此 <code>CLAUDE_STREAM_IDLE_TIMEOUT_MS</code> 和 <code>CLAUDE_BYTE_STREAM_IDLE_TIMEOUT_MS</code> 也会改变截止时间。有关该值的限制，请参阅 <a href="errors.html#no-response-from-api">API 无响应</a>。</li>
+<li><code>API_TIMEOUT_MS</code> 限制等待响应头的时间，而不是响应头到达后响应可以流式传输多长时间。在首字节截止时间不运行的情况下，将 <code>API_TIMEOUT_MS</code> 设置为低于 <code>300000</code> 的正值，以便在 5 分钟内重试未得到应答的请求。请将 <code>API_TIMEOUT_MS</code> 保持在您预期的最长响应头等待时间以及最长<a href="errors.html#streaming-response-ended-before-any-complete-data-was-received">非流式请求</a>所需时间之上：需要更长时间的请求会在每次重试时再次超时。</li>
+<li><code>API_FORCE_IDLE_TIMEOUT</code> 设置为 <code>0</code> 会关闭主体空闲超时，设置为 <code>1</code> 会为每个提供商打开它。监视器独立于它运行，因此要让流暂停超过其阈值，也要提高或禁用它们。</li>
+</ul>
+<p>当监视器中止停滞的流时，Claude Code 将中止视为中流失败，你看到的内容取决于响应已进行到多远。Claude Code 重试请求或以错误结束轮次，保留已完成的输出并显示 <a href="errors.html#the-response-above-may-be-incomplete">不完整响应通知</a>，或正常结束轮次。<a href="errors.html#automatic-retries">自动重试</a> 说明每个结果适用的位置。</p>
+<p>在 <a href="headless.html">非交互式会话</a> 中，以及在任何会话中的子代理响应中，Claude Code 可能首先提示 Claude 继续被切断的响应；<a href="errors.html#the-response-above-may-be-incomplete">该通知的条目</a> 说明何时执行此操作以及何时仍然看到通知。</p>
+<p>当首字节截止时间触发时，没有响应已开始，因此没有部分输出可保留。有关 Claude Code 如何重新发送请求以及何时轮次改为结束，请参阅 <a href="errors.html#no-response-from-api">API 无响应</a>。</p>
+<h2 id="network-access-requirements">网络访问要求</h2>
+<p>Claude Code 需要访问以下 URL。在代理配置和防火墙规则中将这些 URL 加入白名单，特别是在容器化或受限网络环境中。当首次运行设置无法连接到 <code>api.anthropic.com</code> 或 <code>platform.claude.com</code> 时，连接性检查会指向这里；有关检查消息和恢复步骤，请参阅<a href="errors.html#unable-to-connect-to-anthropic-services">无法连接到 Anthropic 服务</a>。</p>
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>api.anthropic.com</code></td>
+<td>Claude API 请求，包括 WebFetch <a href="data-usage.html#webfetch-domain-safety-check">域名安全检查</a>、功能标志获取和遥测事件日志记录</td>
+</tr>
+<tr>
+<td><code>claude.ai</code></td>
+<td>claude.ai 账户身份验证</td>
+</tr>
+<tr>
+<td><code>claude.com</code></td>
+<td>claude.ai 账户登录在浏览器中打开 <code>claude.com</code> 页面，该页面重定向到 <code>claude.ai</code>；预先批准的 WebFetch 文档查询也从 CLI 访问此主机</td>
+</tr>
+<tr>
+<td><code>platform.claude.com</code></td>
+<td>Anthropic Console 账户身份验证。OAuth 令牌交换、刷新和撤销也会转到此主机以用于 claude.ai 账户，因此 Console 和 claude.ai 登录都需要它</td>
+</tr>
+<tr>
+<td><code>sso.claude.com</code></td>
+<td>使用单点登录（SSO）的组织的浏览器登录流程的一部分。如果代理阻止此主机，这些登录可能会失败</td>
+</tr>
+<tr>
+<td><code>mcp-proxy.anthropic.com</code></td>
+<td><a href="mcp.html#use-mcp-servers-from-claude-ai">来自 claude.ai 的 MCP 连接器</a>，包括组织管理员配置的连接器。连接器流量通过此代理路由；对于 claude.ai 认证用户，连接器默认启用。要停止 Claude Code 获取它们，请设置 <a href="env-vars.html"><code>ENABLE_CLAUDEAI_MCP_SERVERS=false</code></a> 或 <a href="settings-reference.html#disableclaudeaiconnectors"><code>disableClaudeAiConnectors</code></a> 设置</td>
+</tr>
+<tr>
+<td><code>downloads.claude.ai</code></td>
+<td>插件可执行文件下载；本机安装程序、本机自动更新程序和更新版本检查</td>
+</tr>
+<tr>
+<td><code>storage.googleapis.com</code></td>
+<td><code>/plugin</code> 中显示的插件安装计数和元数据</td>
+</tr>
+<tr>
+<td><code>storage.googleapis.com</code></td>
+<td>2.1.116 之前版本的本机安装程序和本机自动更新程序</td>
+</tr>
+<tr>
+<td><code>registry.npmjs.org</code></td>
+<td>插件安装（获取 npm 源插件包和安装插件的 Node.js 包依赖项）、<code>npx</code> 启动的 MCP 服务器以及 npm 和 bun 安装 Claude Code 本身的包注册表</td>
+</tr>
+<tr>
+<td><code>bridge.claudeusercontent.com</code></td>
+<td><a href="chrome.html">Chrome 中的 Claude</a> 扩展 WebSocket 桥接</td>
+</tr>
+<tr>
+<td><code>*.frame.claudeusercontent.com</code></td>
+<td><a href="artifacts.html">Artifact</a> 内容读取。当 Claude 打开 Artifact 时，CLI 从此主机获取 Artifact 的文件，仅当 Artifact 工具对您的账户<a href="artifacts.html#availability">可用</a>时。要关闭该工具并删除此要求，请设置 <a href="settings-reference.html#enableartifact"><code>"enableArtifact": false</code></a> 或 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_ARTIFACT=1</code></a></td>
+</tr>
+<tr>
+<td><code>github.com</code></td>
+<td>克隆 GitHub 托管的<a href="plugins-overview.html">插件市场</a>和插件，包括官方 Anthropic 市场，通过 HTTPS 或 SSH。要仅通过 HTTPS 克隆 GitHub <code>owner/repo</code> 源，请设置 <a href="env-vars.html"><code>CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1</code></a></td>
+</tr>
+<tr>
+<td><code>raw.githubusercontent.com</code></td>
+<td><a href="commands.html"><code>/release-notes</code></a> 的更新日志源。在交互式会话中，当 Claude Code 的缓存更新日志尚未涵盖运行版本时（例如更新后的首次启动），Claude Code 也会在启动时在后台获取它；非交互式和云会话永远不会获取它</td>
+</tr>
+<tr>
+<td><code>*-review.googlesource.com</code></td>
+<td><code>googlesource.com</code> 检出上的 Gerrit 更改查询。当 Claude Desktop Code 标签会话在<a href="permissions.html#project-allow-rules-and-workspace-trust">受信任</a>的检出上启动或恢复，且其 <code>origin</code> 是 <code>googlesource.com</code> 主机时，Claude Code 会匿名向该主机的 <code>-review</code> 服务器查询与 HEAD 的 <code>Change-Id</code> 匹配的开放更改，每次启动或恢复一次。其他会话类型跳过查询，不会联系其他 Gerrit 主机。可选：使用 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code></a> 禁用</td>
+</tr>
+<tr>
+<td><code>http-intake.logs.us5.datadoghq.com</code></td>
+<td>操作遥测事件，仅在 CLI 直接使用 Anthropic API 时发送，不适用于 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry。可选：使用 <a href="data-usage.html#telemetry-services"><code>DISABLE_TELEMETRY</code></a> 或 <code>DO_NOT_TRACK</code> 禁用</td>
+</tr>
+<tr>
+<td><code>browser-intake-us5-datadoghq.com</code></td>
+<td>操作错误报告，在 CLI 直接使用 Anthropic API 且服务器端推出门启用时发送。可选：使用 <code>DISABLE_ERROR_REPORTING</code> 或 <code>DISABLE_TELEMETRY</code> 禁用；请参阅<a href="data-usage.html#telemetry-services">遥测服务</a></td>
+</tr>
+<tr>
+<td><code>formulae.brew.sh</code></td>
+<td>Homebrew 安装上的更新版本检查。其他安装方法不会联系此主机</td>
+</tr>
+<tr>
+<td><code>code.claude.com</code></td>
+<td>内置 claude-code-guide 代理和预先批准的 WebFetch 请求进行的 Claude Code 文档查询。阻止此主机仅影响文档查询</td>
+</tr>
+</tbody>
+</table>
+<p>如果您通过 npm 安装 Claude Code 或管理自己的二进制分发，最终用户不需要 <code>downloads.claude.ai</code> 的本机安装程序和自动更新程序用途，但 npm 和 bun 安装需要其包注册表 <code>registry.npmjs.org</code>，除非您的组织镜像它。表中的其他用途适用于任何安装方法。</p>
+<p>两个 Datadog 摄取主机仅携带可选的操作遥测，设置 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code></a> 会禁用两者。第三方提供商上的会话永远不会发送到这些主机，即使平台设置了 <a href="env-vars.html"><code>CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST</code></a> 且遥测指标默认启用。有关 Claude Code 发送的所有内容以及如何在最终确定白名单之前禁用它，请参阅<a href="data-usage.html#telemetry-services">遥测服务</a>。</p>
+<h3 id="cloud-provider-and-llm-gateway-routing">云提供商和 LLM 网关路由</h3>
+<p>使用 <a href="amazon-bedrock.html">Amazon Bedrock</a>、<a href="google-vertex-ai.html">Google Cloud 的 Agent Platform</a>、<a href="microsoft-foundry.html">Microsoft Foundry</a> 或已登录的 <a href="claude-apps-gateway.html">Claude 应用网关</a>会话时，模型流量和身份验证转到您的提供商或网关，而不是 <code>api.anthropic.com</code>、<code>claude.ai</code> 或 <code>platform.claude.com</code>。WebFetch 工具仍会调用 <code>api.anthropic.com</code> 进行其<a href="data-usage.html#webfetch-domain-safety-check">域名安全检查</a>，除非您在<a href="settings.html">设置</a>中设置 <code>skipWebFetchPreflight: true</code>。</p>
+<p>如果您的开发人员在通过 <a href="llm-gateway-connect.html#set-the-base-url-and-credential"><code>ANTHROPIC_BASE_URL</code></a> 设置的 <a href="llm-gateway.html">LLM 网关</a>后面使用<a href="fast-mode.html">快速模式</a>，请确保通过您的代理可以访问 <code>api.anthropic.com</code>。当 Claude Code 发送快速模式可用性检查时，该检查会通过任何已配置的 HTTP 代理发送到该主机，而永远不会发送到网关。有关何时不发送该检查，以及在每种情况下恢复快速模式的变量，请参阅<a href="fast-mode.html#use-fast-mode-behind-proxies-and-llm-gateways">在代理和 LLM 网关后面使用快速模式</a>。</p>
+<h3 id="organization-ip-allowlists-and-proxy-egress">组织 IP 白名单和代理出口</h3>
+<p>如果您的组织为 Claude 启用了 <a href="https://support.claude.com/en/articles/13200993-restrict-access-to-claude-with-ip-allowlisting" target="_blank" rel="noopener">IP 白名单</a>，请通过与 <code>claude.ai</code> 和 <code>api.anthropic.com</code> 相同的代理出口路由 <code>bridge.claudeusercontent.com</code>，例如将其放在相同的 Zscaler 应用段或 Netskope 转向策略中。如果您无法以这种方式路由它，请将代理用于该主机的出口地址添加到您的组织的 IP 白名单中，但仅当该地址专用于您的组织时：共享代理出口范围也允许代理供应商的其他客户。</p>
+<p>Anthropic 使用它们到达的地址检查与您的组织 IP 白名单的 <code>bridge.claudeusercontent.com</code> 连接。如果您的代理通过不在该白名单上的地址为该主机发送流量，Claude Code 无法连接到 <a href="chrome.html">Chrome 中的 Claude</a> 扩展，即使 Claude Code 的其余部分有效。</p>
+<h3 id="github-allow-lists-and-firewalls">GitHub 白名单和防火墙</h3>
+<p>Anthropic 托管环境中的 <a href="claude-code-on-the-web.html">Web 上的 Claude Code</a> 和 <a href="code-review.html">Code Review</a> 从 Anthropic 管理的基础设施连接到您的存储库；<a href="self-hosted-environments.html">自托管环境</a>中的会话从您的网络内部连接，除非运行程序选择加入 <a href="self-hosted-environments-deploy.html#use-the-anthropic-git-proxy">Anthropic git 代理</a>，该代理从 Anthropic 一侧获取。</p>
+<p>如果您的 GitHub Enterprise Cloud 组织按 IP 地址限制访问，请启用<a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-allowed-ip-addresses-for-your-organization#allowing-access-by-github-apps" target="_blank" rel="noopener">已安装 GitHub App 的 IP 白名单继承</a>，并且还要<a href="https://docs.github.com/en/enterprise-cloud@latest/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/managing-allowed-ip-addresses-for-your-organization#adding-an-allowed-ip-address" target="_blank" rel="noopener">添加白名单条目</a>以用于 Anthropic 的<a href="https://platform.claude.com/docs/en/api/ip-addresses#outbound-ip-addresses" target="_blank" rel="noopener">出站 IP 地址</a>。继承仅涵盖 Claude GitHub App 作为安装进行的请求，不涵盖它代表您的用户进行的请求。对于其他防火墙，请参阅 <a href="https://platform.claude.com/docs/en/api/ip-addresses" target="_blank" rel="noopener">Anthropic API IP 地址</a>。</p>
+<p>对于防火墙后的自托管 <a href="github-enterprise-server.html">GitHub Enterprise Server</a> 实例，白名单 Anthropic 的<a href="https://platform.claude.com/docs/en/api/ip-addresses#outbound-ip-addresses" target="_blank" rel="noopener">出站 IP 地址</a>，以便 Anthropic 基础设施可以访问您的 GHES 主机来克隆存储库和发布审查评论。<a href="self-hosted-environments-deploy.html#configure-git">自托管环境</a>中的会话从您的网络内部访问您的 GHES 主机，因此该暴露仅适用于 Anthropic 托管会话、托管的会话前流程（如存储库选择器）以及选择加入 <a href="self-hosted-environments-deploy.html#use-the-anthropic-git-proxy">Anthropic git 代理</a>的自托管运行程序，该代理从 Anthropic 一侧获取。<a href="self-hosted-environments-reference.html#scm-connector-flags">SCM 连接器</a>不可用，因此托管的会话前流程无法访问仅在您的网络内可路由的 GHES 主机。</p>
+<h3 id="desktop-and-claude-ai">Desktop 和 claude.ai</h3>
+<p>前面的表格涵盖了独立 CLI。Claude Desktop 应用和浏览器中的 claude.ai 从其他 Anthropic CDN 主机加载其应用代码和用户内容，包括 <code>assets-proxy.anthropic.com</code> 和其他在这些应用中提供 <a href="artifacts.html">Artifact</a> 的 <code>*.claudeusercontent.com</code> 源。允许 <code>claude.ai</code> 同时阻止这些主机会产生空白页面而不是错误。请参阅 Desktop 页面上的<a href="desktop.html#network-access-requirements">网络访问要求</a>。</p>
+<p>Claude Desktop 和 claude.ai 还会将对话中的某些工具结果呈现为交互式小组件，例如某些连接器提供的 <a href="https://claude.com/docs/connectors/building/mcp-apps/getting-started" target="_blank" rel="noopener">MCP Apps</a>。这些小组件从 <code>claudemcpcontent.com</code> 的生成子域加载，因此请允许 <code>*.claudemcpcontent.com</code> 并保留通配符。如果您阻止它，应用的其余部分仍可正常工作，但这些小组件不会加载。</p>
+<h4 id="third-party-hosts-for-artifact-fonts-and-libraries">用于 Artifact 字体和库的第三方主机</h4>
+<p>从 <a href="artifacts.html#improve-the-visual-design">Google Fonts</a> 加载字体的 <a href="artifacts.html">Artifact</a> 也会请求 <code>fonts.googleapis.com</code> 和 <code>fonts.gstatic.com</code>。两个主机都是可选的。如果您阻止它们，Artifact 会以备用字体呈现。使用快速拒绝而不是静默丢弃来阻止，以便字体请求立即失败，而不是延迟页面的首次呈现。</p>
+<p>Artifact 还可以从 <code>cdnjs.cloudflare.com</code>、<code>cdn.jsdelivr.net</code>、<code>cdn.tailwindcss.com</code>、<code>code.jquery.com</code> 和 <code>unpkg.com</code> 加载 JavaScript 库（如 React 或图表包），而不能从其他外部主机加载。如果您阻止这些主机，Artifact 中依赖库的部分将无法工作，与阻止的字体不同，阻止的库没有备用。也在这里使用快速拒绝，以便阻止的库请求立即失败，而不是挂起直到超时。</p>
+<h2 id="additional-resources">其他资源</h2>
+<ul>
+<li><a href="settings.html">设置文件和优先级</a></li>
+<li><a href="env-vars.html">环境变量参考</a></li>
+<li><a href="troubleshooting.html">故障排除指南</a></li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="microsoft-foundry.html"><span class="pager-dir">← 上一页</span><span class="pager-name">Microsoft Foundry 上的 Claude Code</span></a><a class="pager-link next" href="corporate-launcher.html"><span class="pager-dir">下一页 →</span><span class="pager-name">在企业启动器后面运行 Claude Code</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#proxy-configuration">代理配置</a><a class="toc-l3" href="#environment-variables">环境变量</a><a class="toc-l3" href="#basic-authentication">基本身份验证</a><a class="toc-l2" href="#ca-certificate-store">CA 证书存储</a><a class="toc-l2" href="#custom-ca-certificates">自定义 CA 证书</a><a class="toc-l2" href="#mtls-authentication">mTLS 身份验证</a><a class="toc-l2" href="#verify-your-configuration">验证你的配置</a><a class="toc-l2" href="#apply-network-settings-to-background-agents">为后台代理应用网络设置</a><a class="toc-l3" href="#set-network-variables-in-settings-not-the-shell">在设置中设置网络变量，而不是在 shell 中</a><a class="toc-l3" href="#configure-a-corporate-launcher-as-a-setting">将企业启动器配置为设置</a><a class="toc-l2" href="#streaming-idle-watchdogs">流式空闲监视器</a><a class="toc-l2" href="#network-access-requirements">网络访问要求</a><a class="toc-l3" href="#cloud-provider-and-llm-gateway-routing">云提供商和 LLM 网关路由</a><a class="toc-l3" href="#organization-ip-allowlists-and-proxy-egress">组织 IP 白名单和代理出口</a><a class="toc-l3" href="#github-allow-lists-and-firewalls">GitHub 白名单和防火墙</a><a class="toc-l3" href="#desktop-and-claude-ai">Desktop 和 claude.ai</a><a class="toc-l2" href="#additional-resources">其他资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,2473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>监控 · Claude Code 中文文档</title>
+<meta name="description" content="了解如何为 Claude Code 启用和配置 OpenTelemetry。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="monitoring-usage">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/monitoring-usage" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link active" href="monitoring-usage.html" aria-current="page">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>管理</span> <span class="sep">/</span> <span>用量与费用</span></div>
+    <article class="prose" id="article"><h1 id="_1">监控</h1>
+<blockquote>
+<p>了解如何为 Claude Code 启用和配置 OpenTelemetry。</p>
+</blockquote>
+<p>通过 OpenTelemetry (OTel) 导出遥测数据，跨组织跟踪 Claude Code 使用情况、成本和工具活动。Claude Code 通过标准指标协议导出指标作为时间序列数据，通过日志/事件协议导出事件，并可选地导出<a href="#traces-beta">通过 OpenTelemetry 的分布式跟踪</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>如需了解 Claude API 或 Managed Agents，请参阅 <a href="https://platform.claude.com/docs/en/manage-claude/opentelemetry" target="_blank" rel="noopener">Claude API 的 OpenTelemetry</a>。</p></div></div>
+<h2 id="quick-start">快速开始</h2>
+<p>使用环境变量配置 OpenTelemetry：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 1. 启用遥测</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_ENABLE_TELEMETRY</span><span class="o">=</span><span class="m">1</span>
+
+<span class="c1"># 2. 选择导出器（两者都是可选的 - 仅配置您需要的）</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_METRICS_EXPORTER</span><span class="o">=</span>otlp<span class="w">       </span><span class="c1"># 选项：otlp、prometheus、console、none</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_LOGS_EXPORTER</span><span class="o">=</span>otlp<span class="w">          </span><span class="c1"># 选项：otlp、console、none</span>
+
+<span class="c1"># 3. 配置 OTLP 端点（用于 OTLP 导出器）</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>grpc
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>http://localhost:4317
+
+<span class="c1"># 4. 设置身份验证（如果需要）</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_HEADERS</span><span class="o">=</span><span class="s2">"Authorization=Bearer your-token"</span>
+
+<span class="c1"># 5. 用于调试：减少导出间隔，并为生产使用重置它们</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_METRIC_EXPORT_INTERVAL</span><span class="o">=</span><span class="m">10000</span><span class="w">  </span><span class="c1"># 10 秒（默认：60000ms）</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_LOGS_EXPORT_INTERVAL</span><span class="o">=</span><span class="m">5000</span><span class="w">     </span><span class="c1"># 5 秒（默认：5000ms）</span>
+
+<span class="c1"># 6. 运行 Claude Code</span>
+claude
+</code></pre></div>
+<p>要验证导出指标的设置，请检查您的后端是否有 <code>claude_code.session.count</code> 指标，Claude Code 在会话启动时会发出该指标。要验证仅日志的设置，请提交提示并检查 <code>claude_code.user_prompt</code> 事件。</p>
+<p>如果没有任何内容到达，请使用 <code>claude --debug-file &lt;path&gt;</code> 启动 Claude Code 并检查它写入该路径的日志。Claude Code 将您配置的导出器的失败报告为 <code>[3P telemetry]</code> 错误，其中 3P 表示第三方。以 <code>[Anthropic telemetry]</code> 为前缀的行描述 <a href="data-usage.html#telemetry-services">Anthropic 的单独操作遥测</a>，不表示您的设置存在问题。</p>
+<p>有关完整配置选项，请参阅 <a href="https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/exporter.md#configuration-options" target="_blank" rel="noopener">OpenTelemetry 规范</a>。</p>
+<h2 id="administrator-configuration">管理员配置</h2>
+<p>管理员可以通过 <a href="managed-settings.html#delivery-mechanisms">托管设置文件</a> 为所有用户配置 OpenTelemetry 设置。有关设置如何应用的更多信息，请参阅 <a href="settings.html#settings-precedence">设置优先级</a>。</p>
+<p>示例托管设置配置：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"CLAUDE_CODE_ENABLE_TELEMETRY"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_METRICS_EXPORTER"</span><span class="p">:</span><span class="w"> </span><span class="s2">"otlp"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_LOGS_EXPORTER"</span><span class="p">:</span><span class="w"> </span><span class="s2">"otlp"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_EXPORTER_OTLP_PROTOCOL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"grpc"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_EXPORTER_OTLP_ENDPOINT"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://collector.example.com:4317"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_EXPORTER_OTLP_HEADERS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Authorization=Bearer example-token"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>在 Claude Desktop 应用中，Code 标签页会话从 <a href="desktop.html#managed-settings">到达每种 Desktop 会话的源</a> 读取这些托管设置。Cowork 在管理员控制台的 <a href="https://claude.ai/admin-settings/data-privacy-controls" target="_blank" rel="noopener">数据和隐私设置</a> 中的 <strong>监控</strong> 下的 OpenTelemetry 表单仅适用于 Cowork 会话，因此终端 CLI 和 Code 标签页都不会导出到您在那里设置的收集器。</p>
+<p>Claude Code 忽略存储库的 <code>.claude/settings.json</code> 和 <code>.claude/settings.local.json</code> 中的 <a href="settings-reference.html#variables-claude-code-ignores-in-env">OpenTelemetry 导出器变量</a>，因此存储库无法使用它们来打开遥测、选择其去向或捕获内容。在托管设置中设置它们，或让每个开发者在其 shell 或 <code>~/.claude/settings.json</code> 中设置它们。存储库仍然可以通过将其导出器选择器（如 <code>OTEL_LOGS_EXPORTER</code>）设置为 <code>none</code> 来关闭信号，除非托管设置、<code>--settings</code> 文件或启动 Claude Code 的环境设置了该变量。</p>
+<p>Claude Code 不会将 <code>OTEL_*</code> 环境变量传递给它生成的子进程，包括 Bash 工具、hooks、MCP 服务器和语言服务器。通过 Bash 工具运行的已进行 OpenTelemetry 检测的应用程序不会继承 Claude Code 的导出器端点或标头，因此如果该应用程序需要导出自己的遥测，请直接在命令中设置这些变量。</p>
+<h3 id="how-managed-settings-lock-the-otlp-destination">托管设置如何锁定 OTLP 目标</h3>
+<p>当您在托管设置中设置 <code>OTEL_EXPORTER_OTLP_*</code> 变量时，Claude Code 会在启动时删除冲突的开发者设置变量，并在调试日志中记录一条警告。它删除的内容取决于您设置的变量：</p>
+<ul>
+<li><strong>端点</strong>：当您设置 <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> 时，Claude Code 会删除每个开发者设置的每信号端点。开发者无法将一个信号指向不同的收集器，因此您不需要在托管设置中也设置每信号端点变量。</li>
+<li><strong>协议</strong>：当您设置 <code>OTEL_EXPORTER_OTLP_PROTOCOL</code> 时，Claude Code 会删除每个开发者设置的每信号协议。</li>
+<li><strong>凭证</strong>：当您设置 <code>OTEL_EXPORTER_OTLP_HEADERS</code>、<code>OTEL_EXPORTER_OTLP_CLIENT_KEY</code> 或 <code>OTEL_EXPORTER_OTLP_CLIENT_CERTIFICATE</code> 时，Claude Code 会删除开发者设置的该变量的每信号版本，以及每个开发者设置的端点变量（通用或每信号），因为这些凭证否则会到达托管设置未选择的收集器。</li>
+<li><strong>导出器选择器</strong>：<code>OTEL_METRICS_EXPORTER</code>、<code>OTEL_LOGS_EXPORTER</code> 和测试版 <code>OTEL_TRACES_EXPORTER</code> 遵循正常的每键优先级。开发者的设置仍然可以禁用信号或将其切换到控制台导出器，因此如果您需要锁定选择器，也请在托管设置中设置它们。在 <a href="managed-settings.html#precedence-within-the-managed-tier">管理员源</a> 中，<code>OTEL_LOGS_EXPORTER</code> 遵循 <a href="server-managed-settings.html#per-key-exceptions-across-managed-sources">遥测单元</a>，而其他两个选择器按键合并。需要 Claude Code v2.1.223 或更高版本。</li>
+<li>
+<p><strong>测试版追踪端点</strong>：当 <a href="#traces-beta">详细测试版追踪</a> 处于活动状态时，Claude Code 将日志和追踪导出到 <code>BETA_TRACING_ENDPOINT</code> 而不是通过日志和追踪导出器。因此，当这些托管设置中的任何一个决定任一信号的目标时，Claude Code 会删除开发者设置的 <code>BETA_TRACING_ENDPOINT</code>：</p>
+</li>
+<li>
+<p>通用或日志/追踪端点或凭证</p>
+</li>
+<li>一个 <a href="settings-reference.html#otelheadershelper"><code>otelHeadersHelper</code></a></li>
+<li>日志或追踪导出器选择器设置为 <code>none</code>、<code>console</code> 或空，这些值使信号远离收集器</li>
+<li><code>CLAUDE_CODE_ENABLE_TELEMETRY</code> 关闭</li>
+</ul>
+<p>仅限指标的端点或凭证不会删除它。在 v2.1.251 之前，开发者设置的 <code>BETA_TRACING_ENDPOINT</code> 会重定向详细测试版追踪导出的日志和追踪，即使托管设置固定了收集器。</p>
+<p>Claude Code 不会删除您在托管设置中自己设置的每信号变量，因此您可以通过在那里设置其变量来将一个信号路由到不同的收集器，如 <a href="#send-events-to-a-siem">SIEM 示例</a> 所示。如果您在那里设置每信号凭证，Claude Code 会删除该信号的开发者设置端点。</p>
+<p>此删除行为改变了遥测的传递位置，而不是 Claude Code 收集的内容。</p>
+<p>在 v2.1.217 之前，每个变量独立遵循每键设置优先级，因此在用户设置或 shell 中设置的信号特定端点会将该信号重定向到离开托管收集器。</p>
+<p>当桌面应用或 <a href="self-hosted-environments.html">自托管环境</a> 运行器启动 Claude Code 并在其提供的环境中命名 OTLP 端点时，Claude Code 以相同的方式固定目标：启动器的遥测变量删除开发者设置的变量，就像托管设置一样。Claude Code 不会删除启动器本身设置的变量。需要 Claude Code v2.1.251 或更高版本。</p>
+<h2 id="configuration-details">配置详情</h2>
+<h3 id="common-configuration-variables">常见配置变量</h3>
+<p>这些变量为所有部署配置导出器、端点和导出行为。</p>
+<p>如果您设置了按信号的端点或协议变量，例如 <code>OTEL_EXPORTER_OTLP_METRICS_ENDPOINT</code>，Claude Code 会使用它而不是该信号的通用变量。如果您设置了按信号的标头变量，例如 <code>OTEL_EXPORTER_OTLP_METRICS_HEADERS</code>，Claude Code 会将其与该信号的通用 <code>OTEL_EXPORTER_OTLP_HEADERS</code> 合并。</p>
+<p>在具有托管设置的机器上，请参阅<a href="#how-managed-settings-lock-the-otlp-destination">托管设置如何锁定 OTLP 目标</a>了解 Claude Code 删除的内容。</p>
+<table>
+<thead>
+<tr>
+<th>环境变量</th>
+<th>描述</th>
+<th>示例值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLAUDE_CODE_ENABLE_TELEMETRY</code></td>
+<td>启用遥测收集（必需）</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>OTEL_METRICS_EXPORTER</code></td>
+<td>指标导出器类型，以逗号分隔。使用 <code>none</code> 禁用</td>
+<td><code>console</code>、<code>otlp</code>、<code>prometheus</code>、<code>none</code></td>
+</tr>
+<tr>
+<td><code>OTEL_LOGS_EXPORTER</code></td>
+<td>日志/事件导出器类型，以逗号分隔。使用 <code>none</code> 禁用</td>
+<td><code>console</code>、<code>otlp</code>、<code>none</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_PROTOCOL</code></td>
+<td>OTLP 导出器的协议，适用于所有信号。Claude Code 没有默认协议，因此请为启用的每个 <code>otlp</code> 导出器设置此变量或按信号的协议变量</td>
+<td><code>grpc</code>、<code>http/json</code>、<code>http/protobuf</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_ENDPOINT</code></td>
+<td>所有信号的 OTLP 收集器端点</td>
+<td><code>http://localhost:4317</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_METRICS_PROTOCOL</code></td>
+<td>指标协议，覆盖常规设置</td>
+<td><code>grpc</code>、<code>http/json</code>、<code>http/protobuf</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_METRICS_ENDPOINT</code></td>
+<td>OTLP 指标端点，覆盖常规设置</td>
+<td><code>http://localhost:4318/v1/metrics</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_LOGS_PROTOCOL</code></td>
+<td>日志协议，覆盖常规设置</td>
+<td><code>grpc</code>、<code>http/json</code>、<code>http/protobuf</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_LOGS_ENDPOINT</code></td>
+<td>OTLP 日志端点，覆盖常规设置</td>
+<td><code>http://localhost:4318/v1/logs</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_HEADERS</code></td>
+<td>OTLP 的身份验证标头</td>
+<td><code>Authorization=Bearer token</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_METRICS_HEADERS</code></td>
+<td>指标的身份验证标头，与常规标头合并</td>
+<td><code>Authorization=Bearer token</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_LOGS_HEADERS</code></td>
+<td>日志的身份验证标头，与常规标头合并</td>
+<td><code>Authorization=Bearer token</code></td>
+</tr>
+<tr>
+<td><code>OTEL_METRIC_EXPORT_INTERVAL</code></td>
+<td>导出间隔（毫秒）（默认值：60000）</td>
+<td><code>5000</code>、<code>60000</code></td>
+</tr>
+<tr>
+<td><code>OTEL_LOGS_EXPORT_INTERVAL</code></td>
+<td>日志导出间隔（毫秒）（默认值：5000）</td>
+<td><code>1000</code>、<code>10000</code></td>
+</tr>
+<tr>
+<td><code>OTEL_LOG_USER_PROMPTS</code></td>
+<td>启用用户提示内容的日志记录（默认值：禁用）</td>
+<td><code>1</code> 启用</td>
+</tr>
+<tr>
+<td><code>OTEL_LOG_ASSISTANT_RESPONSES</code></td>
+<td>在 <code>assistant_response</code> 事件上启用助手响应文本的日志记录（默认值：禁用）。未设置时，回退到 <code>OTEL_LOG_USER_PROMPTS</code> 的值</td>
+<td><code>1</code> 启用，<code>0</code> 保持脱敏</td>
+</tr>
+<tr>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+<td>在工具事件和跟踪跨度属性中启用工具参数和输入参数的日志记录：Bash 命令、MCP 服务器和工具名称、技能名称、用户编写的工作流名称和工具输入。还在 <code>user_prompt</code> 事件上启用自定义、插件和 MCP 命令名称，以及在<a href="#cost-counter">成本和令牌计数器</a>上启用真实代理、技能、插件和 MCP 服务器和工具名称（默认值：禁用）。对于 Claude Desktop 的内置服务器，在 Claude Desktop 拥有的会话中，即使关闭标志，<code>mcp_server_name</code>/<code>mcp_tool_name</code> 也会在 <code>tool_decision</code>/<code>tool_result</code> 上发出。该异常需要 Claude Code v2.1.214 或更高版本</td>
+<td><code>1</code> 启用</td>
+</tr>
+<tr>
+<td><code>OTEL_LOG_TOOL_CONTENT</code></td>
+<td>在 <a href="#tool-output-span-event"><code>tool.output</code> 跨度事件</a>中启用工具内容的日志记录（默认值：禁用）。跨度属性在<a href="#new-context-gates">其自己的门</a>下携带工具内容。需要<a href="#traces-beta">跟踪</a>。内容在内容限制处截断（默认值 60 KB）</td>
+<td><code>1</code> 启用</td>
+</tr>
+<tr>
+<td><code>OTEL_LOG_MANAGED_SETTINGS</code></td>
+<td>将编辑的托管设置和编辑前设置的 SHA-256 摘要添加到<a href="#managed-settings-resolved-event">托管设置已解决</a>事件（默认值：禁用）。项目或本地设置中的值不会将其打开。需要 Claude Code v2.1.274 或更高版本</td>
+<td><code>1</code> 启用</td>
+</tr>
+<tr>
+<td><code>OTEL_LOG_RAW_API_BODIES</code></td>
+<td>将完整的 Anthropic Messages API 请求和响应 JSON 作为 <code>api_request_body</code> / <code>api_response_body</code> 日志事件发出（默认值：禁用）。正文包括整个对话历史记录。启用此选项意味着同意 <code>OTEL_LOG_USER_PROMPTS</code>、<code>OTEL_LOG_TOOL_DETAILS</code> 和 <code>OTEL_LOG_TOOL_CONTENT</code> 会揭示的所有内容</td>
+<td><code>1</code> 表示在内容限制处截断的内联正文（默认值 60 KB），或 <code>file:&lt;dir&gt;</code> 表示磁盘上的未截断正文，事件中有 <code>body_ref</code> 指针</td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH</code></td>
+<td>内容限制：内容承载属性（如模型响应、工具内容、系统提示词和原始 API 正文）的最大长度，包括截断标记，以 UTF-16 代码单位为单位（默认值：61440，即 60 KB）。默认值针对将属性值上限设为 64 KB 的后端进行了调整；仅当您的后端接受更大的值时才提高它，或降低它以减少遥测量。当设置了 OpenTelemetry SDK 属性限制 <code>OTEL_ATTRIBUTE_VALUE_LENGTH_LIMIT</code> 或其日志记录和跨度变体之一且其值更低时，Claude Code 在该较小的值处截断，以便 <code>[TRUNCATED ...]</code> 标记保持在 SDK 限制内</td>
+<td><code>262144</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE</code></td>
+<td>指标时间性偏好（默认值：<code>delta</code>）。如果您的后端期望累积时间性，请设置为 <code>cumulative</code></td>
+<td><code>delta</code>、<code>cumulative</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_OTEL_HEADERS_HELPER_DEBOUNCE_MS</code></td>
+<td>刷新动态标头的间隔（默认值：1740000ms / 29 分钟）</td>
+<td><code>900000</code></td>
+</tr>
+</tbody>
+</table>
+<p>对于 <code>http/protobuf</code> 和 <code>http/json</code> 协议，Claude Code 使用 <code>Content-Length</code> 标头发送每个导出请求。</p>
+<h3 id="mtls-authentication">mTLS 身份验证</h3>
+<p>您如何为 OTLP 导出器配置客户端证书取决于用于该信号的 OTLP 协议，通过 <code>OTEL_EXPORTER_OTLP_PROTOCOL</code> 或按信号的覆盖设置。相同的配置适用于指标、日志和跟踪。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">协议</th>
+<th style="text-align: left;">客户端证书变量</th>
+<th style="text-align: left;">信任收集器的 CA 使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>http/protobuf</code>、<code>http/json</code></td>
+<td style="text-align: left;"><code>CLAUDE_CODE_CLIENT_CERT</code>、<code>CLAUDE_CODE_CLIENT_KEY</code> 和可选的 <code>CLAUDE_CODE_CLIENT_KEY_PASSPHRASE</code>。请参阅<a href="network-config.html#mtls-authentication">网络配置</a></td>
+<td style="text-align: left;"><code>NODE_EXTRA_CA_CERTS</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>grpc</code></td>
+<td style="text-align: left;"><code>OTEL_EXPORTER_OTLP_CLIENT_KEY</code> 和 <code>OTEL_EXPORTER_OTLP_CLIENT_CERTIFICATE</code>，或按信号的变体，例如 <code>OTEL_EXPORTER_OTLP_METRICS_CLIENT_KEY</code> 以对每个信号使用不同的证书</td>
+<td style="text-align: left;"><code>OTEL_EXPORTER_OTLP_CERTIFICATE</code></td>
+</tr>
+</tbody>
+</table>
+<p>对于 <code>grpc</code>，OpenTelemetry SDK 直接读取标准 OTLP 变量，因此设置按信号指标变量的现有配置继续有效。在具有托管设置的机器上，Claude Code <a href="#how-managed-settings-lock-the-otlp-destination">可能在启动时删除开发人员设置的按信号凭证和端点</a>。</p>
+<h3 id="metrics-cardinality-control">指标基数控制</h3>
+<p>以下环境变量控制指标中包含哪些属性以管理基数：</p>
+<table>
+<thead>
+<tr>
+<th>环境变量</th>
+<th>描述</th>
+<th>默认值</th>
+<th>禁用示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OTEL_METRICS_INCLUDE_SESSION_ID</code></td>
+<td>在指标中包含 session.id 和云会话上的 ccr.session.id 属性</td>
+<td><code>true</code></td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>OTEL_METRICS_INCLUDE_VERSION</code></td>
+<td>在指标中包含 app.version 属性</td>
+<td><code>false</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>OTEL_METRICS_INCLUDE_ACCOUNT_UUID</code></td>
+<td>在指标中包含 user.account_uuid 和 user.account_id 属性</td>
+<td><code>true</code></td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>OTEL_METRICS_INCLUDE_ENTRYPOINT</code></td>
+<td>在指标中包含 app.entrypoint 属性</td>
+<td><code>false</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>OTEL_METRICS_INCLUDE_RESOURCE_ATTRIBUTES</code></td>
+<td>将 <code>OTEL_RESOURCE_ATTRIBUTES</code> 中的键作为属性包含在指标数据点上</td>
+<td><code>true</code></td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>OTEL_METRICS_INCLUDE_REPOSITORY</code></td>
+<td>在指标和事件上包含 <code>vcs.*</code> <a href="#repository-attributes">存储库身份属性</a>。需要 Claude Code v2.1.269 或更高版本</td>
+<td><code>false</code></td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p>较低的基数通常意味着更好的性能和更低的存储成本，但分析的数据粒度较低。</p>
+<h3 id="traces-beta">Traces（测试版）</h3>
+<p>分布式跟踪导出跨度，将每个用户提示链接到它触发的 API 请求和工具执行，因此您可以在跟踪后端中将完整请求视为单个跟踪。</p>
+<p>跟踪默认关闭。要启用它，请同时设置 <code>CLAUDE_CODE_ENABLE_TELEMETRY=1</code> 和 <code>CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1</code>，然后设置 <code>OTEL_TRACES_EXPORTER</code> 以选择跨度的发送位置。跟踪重用<a href="#common-configuration-variables">常见 OTLP 配置</a>用于端点、协议、标头和 <a href="#mtls-authentication">mTLS</a>。在具有托管设置的机器上，Claude Code <a href="#how-managed-settings-lock-the-otlp-destination">可能在启动时删除开发人员设置的按信号凭证和端点</a>。</p>
+<table>
+<thead>
+<tr>
+<th>环境变量</th>
+<th>描述</th>
+<th>示例值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLAUDE_CODE_ENHANCED_TELEMETRY_BETA</code></td>
+<td>启用跨度跟踪（必需）。也接受 <code>ENABLE_ENHANCED_TELEMETRY_BETA</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>OTEL_TRACES_EXPORTER</code></td>
+<td>跟踪导出器类型，以逗号分隔。使用 <code>none</code> 禁用</td>
+<td><code>console</code>、<code>otlp</code>、<code>none</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_TRACES_PROTOCOL</code></td>
+<td>跟踪协议，覆盖 <code>OTEL_EXPORTER_OTLP_PROTOCOL</code></td>
+<td><code>grpc</code>、<code>http/json</code>、<code>http/protobuf</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_TRACES_ENDPOINT</code></td>
+<td>OTLP 跟踪端点，覆盖 <code>OTEL_EXPORTER_OTLP_ENDPOINT</code></td>
+<td><code>http://localhost:4318/v1/traces</code></td>
+</tr>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_TRACES_HEADERS</code></td>
+<td>跟踪的身份验证标头，与 <code>OTEL_EXPORTER_OTLP_HEADERS</code> 合并</td>
+<td><code>Authorization=Bearer token</code></td>
+</tr>
+<tr>
+<td><code>OTEL_TRACES_EXPORT_INTERVAL</code></td>
+<td>跨度批导出间隔（毫秒）（默认值：5000）</td>
+<td><code>1000</code>、<code>10000</code></td>
+</tr>
+</tbody>
+</table>
+<p>跨度默认编辑用户提示文本、工具输入详情和工具内容。设置 <code>OTEL_LOG_USER_PROMPTS=1</code>、<code>OTEL_LOG_TOOL_DETAILS=1</code> 和 <code>OTEL_LOG_TOOL_CONTENT=1</code> 以包含它们。</p>
+<p>当跟踪处于活动状态时，Bash 和 PowerShell 子进程会自动继承包含活动工具执行跨度的 W3C 跟踪上下文的 <code>TRACEPARENT</code> 环境变量。这允许任何读取 <code>TRACEPARENT</code> 的子进程在同一跟踪下将其自己的跨度作为父级，通过 Claude 运行的脚本和命令启用端到端分布式跟踪。</p>
+<p>当跟踪处于活动状态且 Claude Code 直接连接到 Anthropic API 时，每个模型请求都携带设置为 <code>claude_code.llm_request</code> 跨度上下文的 W3C <code>traceparent</code> 标头，API 的 <code>traceresponse</code> 标头被记录为跨度链接。这些一起通过任何兼容的中介将 Claude Code 的客户端跨度连接到服务器端跟踪。出站 HTTP MCP 请求以相同方式携带 <code>traceparent</code>。标头不会发送给第三方提供商。</p>
+<p>默认情况下，模型和 HTTP MCP 请求上的 <code>traceparent</code> 标头仅在 <code>ANTHROPIC_BASE_URL</code> 未设置或指向 Anthropic API 时发送，因为某些代理拒绝无法识别的标头。子进程 <code>TRACEPARENT</code> 变量由相同的开关控制以保持一致性。如果您通过自定义 <code>ANTHROPIC_BASE_URL</code> 代理运行 Claude Code 并希望传播跟踪上下文，请设置 <code>CLAUDE_CODE_PROPAGATE_TRACEPARENT=1</code>。</p>
+<p>在 Agent SDK 和使用 <code>-p</code> 启动的非交互式会话中，Claude Code 还在启动每个交互跨度时从其自己的环境中读取 <code>TRACEPARENT</code> 和 <code>TRACESTATE</code>。这允许嵌入过程将其活动 W3C 跟踪上下文传递到子进程中，以便 Claude Code 的跨度显示为调用者分布式跟踪的子级。交互式会话忽略入站 <code>TRACEPARENT</code> 以避免意外继承来自 CI 或容器环境的环境值。</p>
+<p>入站跟踪上下文也适用于<a href="#events">事件</a>。在设置了 <code>TRACEPARENT</code> 的 Agent SDK 和 <code>-p</code> 会话中，每个 OTLP 事件日志记录都携带 <code>trace_id</code> 和 <code>span_id</code> 值，将其加入您的应用程序跟踪，即使未配置跟踪导出器，您的日志后端也可以将事件与跟踪的其余部分关联。</p>
+<p>在交互处于活动状态时发出的记录携带交互跨度的 ID，即使 Claude Code 在跨度的异步上下文之外发出它，例如在权限提示回调中或对在启动期间缓冲并稍后导出的记录。在没有活动交互跨度的情况下发出的记录直接携带入站 <code>TRACEPARENT</code> ID。</p>
+<h4 id="span-hierarchy">跨度层次结构</h4>
+<p>每个用户提示启动一个 <code>claude_code.interaction</code> 根跨度。API 调用、工具调用和钩子执行被记录为其子级。工具跨度有两个自己的子跨度：一个用于等待权限决定的时间，一个用于执行本身。当 Agent 工具或旧版 Task 工具生成子代理时，子代理的 API 和工具跨度嵌套在父级的 <code>claude_code.tool</code> 跨度下。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">claude_code.interaction
+├── claude_code.llm_request
+├── claude_code.hook                    (requires detailed beta tracing)
+└── claude_code.tool
+    ├── claude_code.tool.blocked_on_user
+    ├── claude_code.tool.execution
+    └── (Agent tool) subagent claude_code.llm_request / claude_code.tool spans
+</code></pre></div>
+<p>在 Agent SDK 和 <code>claude -p</code> 会话中，当在环境中设置 <code>TRACEPARENT</code> 时，<code>claude_code.interaction</code> 本身成为调用者跨度的子级。</p>
+<p>当 <code>PreToolUse</code> 钩子<a href="hooks.html#defer-a-tool-call-for-later">延迟工具调用</a>时，Claude Code 保存延迟它的转向的跟踪上下文。当您恢复会话并且工具重新运行时，工具的跨度加入该较早转向的跟踪作为转向的 <code>claude_code.interaction</code> 跨度的子级。</p>
+<h4 id="span-attributes">跨度属性</h4>
+<p>每个跨度都携带<a href="#standard-attributes">标准属性</a>加上与其名称匹配的 <code>span.type</code> 属性。下表列出了在每个跨度上设置的其他属性。<code>llm_request</code>、<code>tool.execution</code> 和 <code>hook</code> 跨度在记录失败时设置 OpenTelemetry 状态 <code>ERROR</code>；其他跨度始终以状态 <code>UNSET</code> 结束。</p>
+<p><strong><code>claude_code.interaction</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+<th>门控</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user_prompt</code></td>
+<td>提示文本。除非设置了门，否则值为 <code>&lt;REDACTED&gt;</code></td>
+<td><code>OTEL_LOG_USER_PROMPTS</code></td>
+</tr>
+<tr>
+<td><code>user_prompt_length</code></td>
+<td>提示长度（字符）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>interaction.sequence</code></td>
+<td>交互的 1 基计数器，按 Claude Code 进程而不是按会话计数，如 <a href="#event-correlation-attributes"><code>event.sequence</code></a> 所述</td>
+<td></td>
+</tr>
+<tr>
+<td><code>parent.source</code></td>
+<td>跨度如何获得其跟踪父级：当它在入站 <code>TRACEPARENT</code> 下作为父级时为 <code>env</code>，当它启动自己的跟踪时为 <code>none</code>。需要 Claude Code v2.1.268 或更高版本</td>
+<td></td>
+</tr>
+<tr>
+<td><code>interaction.duration_ms</code></td>
+<td>转向的挂钟持续时间</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>claude_code.llm_request</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+<th>门控</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td>模型标识符</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gen_ai.system</code></td>
+<td>始终为 <code>anthropic</code>。OpenTelemetry GenAI 语义约定</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gen_ai.request.model</code></td>
+<td>与 <code>model</code> 相同的值。OpenTelemetry GenAI 语义约定</td>
+<td></td>
+</tr>
+<tr>
+<td><code>query_source</code></td>
+<td>发出请求的子系统，例如 <code>repl_main_thread</code> 或子代理名称</td>
+<td><code>ENABLE_BETA_TRACING_DETAILED</code></td>
+</tr>
+<tr>
+<td><code>query_source_safe</code></td>
+<td><code>query_source</code> 的有界形式，无论是否启用详细测试版跟踪都会发出，具有 <code>repl_main_thread</code> 或 <code>agent.builtin.general-purpose</code> 等值。<code>:</code> 变为 <code>.</code>，用户命名的代理显示为 <code>agent.custom</code>。需要 Claude Code v2.1.268 或更高版本</td>
+<td></td>
+</tr>
+<tr>
+<td><code>agent_id</code></td>
+<td>发出请求的子代理或队友的标识符。在主会话上不存在</td>
+<td></td>
+</tr>
+<tr>
+<td><code>parent_agent_id</code></td>
+<td>生成此代理的代理的标识符。对于主会话和直接从其生成的代理不存在</td>
+<td></td>
+</tr>
+<tr>
+<td><code>workflow.run_id</code></td>
+<td>生成此代理的<a href="workflows.html">工作流</a>工具运行的运行标识符，前缀为 <code>wf_</code>。对于不是由工作流生成的代理不存在</td>
+<td></td>
+</tr>
+<tr>
+<td><code>workflow.name</code></td>
+<td>生成此代理的工作流的名称。用户编写的名称被替换为 <code>custom</code>，除非设置了门</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+<tr>
+<td><code>speed</code></td>
+<td><code>fast</code> 或 <code>normal</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>effort</code></td>
+<td>应用于请求的<a href="model-config.html#adjust-effort-level">努力级别</a>：<code>low</code>、<code>medium</code>、<code>high</code>、<code>xhigh</code> 或 <code>max</code>。当 Claude Code 不发送努力级别时不存在，例如在不支持努力的模型上。需要 Claude Code v2.1.274 或更高版本</td>
+<td></td>
+</tr>
+<tr>
+<td><code>llm_request.context</code></td>
+<td><code>interaction</code>、<code>tool</code> 或 <code>standalone</code>，取决于父跨度</td>
+<td></td>
+</tr>
+<tr>
+<td><code>duration_ms</code></td>
+<td>包括重试的挂钟持续时间</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ttft_ms</code></td>
+<td>首个令牌的时间（毫秒）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>first_content_ms</code></td>
+<td>从请求开始到成功尝试的第一个内容块的时间（毫秒）。在回退到非流式路径的请求上不存在。需要 Claude Code v2.1.268 或更高版本</td>
+<td></td>
+</tr>
+<tr>
+<td><code>input_tokens</code></td>
+<td>API 使用块中的输入 token 计数。不包括从提示词缓存读取或写入提示词缓存的 token，这些 token 分别在 <code>cache_read_tokens</code> 和 <code>cache_creation_tokens</code> 中报告</td>
+<td></td>
+</tr>
+<tr>
+<td><code>output_tokens</code></td>
+<td>输出令牌计数</td>
+<td></td>
+</tr>
+<tr>
+<td><code>cache_read_tokens</code></td>
+<td>从提示缓存读取的令牌</td>
+<td></td>
+</tr>
+<tr>
+<td><code>cache_creation_tokens</code></td>
+<td>写入提示缓存的令牌</td>
+<td></td>
+</tr>
+<tr>
+<td><code>request_id</code></td>
+<td>API 请求 ID。与 <code>request_id</code> <a href="#event-correlation-attributes">事件关联属性</a>相同的值</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gen_ai.response.id</code></td>
+<td>与 <code>request_id</code> 相同的值。OpenTelemetry GenAI 语义约定</td>
+<td></td>
+</tr>
+<tr>
+<td><code>client_request_id</code></td>
+<td>最终尝试的客户端生成的 <code>x-client-request-id</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>attempt</code></td>
+<td>为此请求进行的总尝试次数</td>
+<td></td>
+</tr>
+<tr>
+<td><code>success</code></td>
+<td><code>true</code> 或 <code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>status_code</code></td>
+<td>请求失败时的 HTTP 状态代码</td>
+<td></td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>请求失败时的错误消息</td>
+<td></td>
+</tr>
+<tr>
+<td><code>error_class</code></td>
+<td>请求失败时的短错误类令牌，例如 <code>api_timeout</code> 或 <code>server_overload</code>。需要 Claude Code v2.1.268 或更高版本</td>
+<td></td>
+</tr>
+<tr>
+<td><code>response.has_tool_call</code></td>
+<td>当响应包含工具使用块时为 <code>true</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>stop_reason</code></td>
+<td>API 响应 <code>stop_reason</code>，例如 <code>end_turn</code>、<code>tool_use</code>、<code>max_tokens</code>、<code>stop_sequence</code>、<code>pause_turn</code> 或 <code>refusal</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>gen_ai.response.finish_reasons</code></td>
+<td>与 <code>stop_reason</code> 相同的值，包装在字符串数组中。OpenTelemetry GenAI 语义约定</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>每次重试尝试也被记录为具有 <code>attempt</code> 和 <code>client_request_id</code> 属性的 <code>gen_ai.request.attempt</code> 跨度事件。</p>
+<p><strong><code>claude_code.tool</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+<th>门控</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool_name</code></td>
+<td>工具名称</td>
+<td></td>
+</tr>
+<tr>
+<td><code>tool_name_safe</code></td>
+<td><code>tool_name</code> 的形式，不携带任何用户选择的名称。内置工具名称逐字通过。MCP 工具名称显示为 <code>mcp_other</code>，除了与几个固定形状匹配的工具名称，例如名为 <code>browser_*</code> 的 <code>playwright</code> 工具，它们逐字通过。需要 Claude Code v2.1.268 或更高版本</td>
+<td></td>
+</tr>
+<tr>
+<td><code>bash_command_class</code></td>
+<td>对于 Bash 工具：命令的第一个程序的类别，来自固定列表，例如 <code>vcs</code> 或 <code>package_manager</code>。<code>other</code> 表示列表外的程序，<code>unparsed</code> 表示无法解析该行。需要 Claude Code v2.1.268 或更高版本</td>
+<td></td>
+</tr>
+<tr>
+<td><code>bash_argv0</code></td>
+<td>对于 Bash 工具：当命令的第一个程序在同一固定列表上时，例如 <code>git</code> 或 <code>npm</code>。<code>other</code> 表示列表外的任何程序。需要 Claude Code v2.1.268 或更高版本</td>
+<td></td>
+</tr>
+<tr>
+<td><code>duration_ms</code></td>
+<td>包括权限等待和执行的挂钟持续时间</td>
+<td></td>
+</tr>
+<tr>
+<td><code>result_tokens</code></td>
+<td>工具结果的近似令牌大小</td>
+<td></td>
+</tr>
+<tr>
+<td><code>agent_id</code></td>
+<td>运行工具的子代理或队友的标识符。在主会话上不存在</td>
+<td></td>
+</tr>
+<tr>
+<td><code>parent_agent_id</code></td>
+<td>生成此代理的代理的标识符。对于主会话和直接从其生成的代理不存在</td>
+<td></td>
+</tr>
+<tr>
+<td><code>workflow.run_id</code></td>
+<td>生成此代理的工作流工具运行的运行标识符，前缀为 <code>wf_</code>。对于不是由工作流生成的代理不存在</td>
+<td></td>
+</tr>
+<tr>
+<td><code>workflow.name</code></td>
+<td>生成此代理的工作流的名称。用户编写的名称被替换为 <code>custom</code>，除非设置了门</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+<tr>
+<td><code>tool_use_id</code></td>
+<td>此调用的模型 <code>tool_use</code> 块 id。与<a href="#tool-result-event">tool_result</a>和<a href="#tool-decision-event">tool_decision</a>事件上的 <code>tool_use_id</code> 以及钩子有效负载中的匹配，因此您可以将跨度加入这些记录</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gen_ai.tool.call.id</code></td>
+<td>与 <code>tool_use_id</code> 相同的值。OpenTelemetry GenAI 语义约定</td>
+<td></td>
+</tr>
+<tr>
+<td><code>file_path</code></td>
+<td>Read、Edit 和 Write 工具的目标文件路径</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+<tr>
+<td><code>full_command</code></td>
+<td>Bash 工具的命令字符串</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+<tr>
+<td><code>skill_name</code></td>
+<td>Skill 工具的技能名称</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+<tr>
+<td><code>subagent_type</code></td>
+<td>Agent 工具或旧版 Task 工具的子代理类型</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>claude_code.tool</code> 上的 <code>tool.output</code> 跨度事件</strong></p>
+<p>如果您设置 <code>OTEL_LOG_TOOL_CONTENT=1</code>，Read 和 Bash 调用可以在 <code>claude_code.tool</code> 跨度上记录 <code>tool.output</code> 跨度事件。Edit 和 Write 调用仅在您也设置 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时才记录一个。该变量不限于这两个工具，因此请检查其<a href="#common-configuration-variables">配置表中的行</a>以了解它在其他地方添加的参数。</p>
+<p>MCP 工具、WebFetch 和 WebSearch 也记录此事件，在 Claude Code v2.1.283 或更高版本上。</p>
+<p>Claude Code 从工具调用的成功返回时写入此事件，因此引发错误的调用不记录任何内容，无论工具如何。在确实返回的调用中，它不为以下内容记录 <code>tool.output</code> 事件：</p>
+<ul>
+<li>对除 Read、Edit、Write、Bash、WebFetch、WebSearch 和 MCP 工具之外的任何工具的调用</li>
+<li>返回除文件文本之外的任何内容的 Read，例如图像、PDF 或重新读取内容未更改的文件</li>
+<li>Edit 或 Write 调用，除非您也设置 <code>OTEL_LOG_TOOL_DETAILS=1</code></li>
+<li>Claude Code 在运行期间移到后台、以便等待中的消息能够送达 Claude 的 WebFetch 或 WebSearch 调用。稍后到达的结果也不会被记录。要了解 Claude Code 何时移动调用，对于终端请参阅<a href="interactive-mode.html#when-claude-code-sends-what-you-queued">Claude Code 何时发送您排队的内容</a>，对于 Agent SDK 会话请参阅 <a href="agent-sdk-typescript.html#sdkusermessage"><code>priority</code> 字段</a></li>
+</ul>
+<p>该事件携带这些属性，每个都在内容限制处截断（默认值 60 KB）。<code>门控</code> 命名变量一个属性需要在 <code>OTEL_LOG_TOOL_CONTENT=1</code> 之上，对于 Edit 和 Write，该变量门控事件本身而不是属性。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+<th>门控</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>content</code></td>
+<td>Read 工具返回的文本，或 Write 调用被要求写入的文本</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code> 用于 Write 工具</td>
+</tr>
+<tr>
+<td><code>output</code></td>
+<td>对于 Bash 工具，命令的组合输出，stderr 交错到 stdout。对于 MCP 工具、WebFetch 或 WebSearch，工具返回的结果：文本块由换行符连接，图像或文档被替换为占位符，例如 <code>[image]</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>diff</code></td>
+<td>Edit 工具应用的结构化补丁</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+<tr>
+<td><code>file_path</code></td>
+<td>Read、Edit 和 Write 工具的目标文件路径，重复相同名称的跨度属性</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+<tr>
+<td><code>bash_command</code></td>
+<td>Bash 工具的命令字符串</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+</tbody>
+</table>
+<p>父跨度的 <code>tool_name</code> 属性告诉您事件来自哪个工具。在内容限制处切割的属性伴随 <code>&lt;attribute&gt;_truncated</code> 和 <code>&lt;attribute&gt;_original_length</code>。</p>
+<p><strong><code>claude_code.tool.blocked_on_user</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+<th>门控</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>duration_ms</code></td>
+<td>等待权限决定所花费的时间</td>
+<td></td>
+</tr>
+<tr>
+<td><code>decision</code></td>
+<td><code>accept</code>、<code>reject</code> 或 <code>cancelled</code>，其中 <code>cancelled</code> 表示 Claude Code 停止等待该工具调用的权限决定，并且未运行该工具</td>
+<td></td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td>对于 <code>accept</code> 或 <code>reject</code>，表示决定的来源，例如 <code>config</code>、<code>hook</code> 或 <code>user_temporary</code>，其含义见<a href="#tool-decision-event">工具决定事件</a>。对于 <code>cancelled</code>，表示在做出任何决定之前结束等待的原因，例如 <code>user_abort</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><code>source</code> 为 <code>user_abort</code> 的 <code>cancelled</code> 决定表示：在权限提示或<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>检查尚未完成时，一条需要立即送达的消息中断了该轮次。例如，在自动模式检查期间，用户有一条排队的消息并<a href="interactive-mode.html#when-claude-code-sends-what-you-queued">立即发送了它</a>。</p>
+<p><strong><code>claude_code.tool.execution</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+<th>门控</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>duration_ms</code></td>
+<td>运行工具主体所花费的时间</td>
+<td></td>
+</tr>
+<tr>
+<td><code>tool_use_id</code></td>
+<td>与父 <code>claude_code.tool</code> 跨度上的相同值</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gen_ai.tool.call.id</code></td>
+<td>与 <code>tool_use_id</code> 相同的值。OpenTelemetry GenAI 语义约定</td>
+<td></td>
+</tr>
+<tr>
+<td><code>success</code></td>
+<td><code>true</code> 或 <code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>执行失败时的错误类别字符串，例如 <code>Error:ENOENT</code> 或 <code>ShellError</code>。当设置了门时包含完整的错误消息</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+<tr>
+<td><code>error_class</code></td>
+<td>标识符形式的错误类别，字母、数字和下划线之外的字符被替换为 <code>_</code>，例如 <code>Error_ENOENT</code> 或 <code>ShellError</code>。即使 <code>error</code> 携带完整消息也携带类别。需要 Claude Code v2.1.268 或更高版本</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>claude_code.hook</code></strong></p>
+<p>此跨度仅在启用详细测试版跟踪时出现，这需要 <code>ENABLE_BETA_TRACING_DETAILED=1</code> 和 <code>BETA_TRACING_ENDPOINT</code>，一对也<a href="env-vars.html#variables">改变日志和跟踪的去向</a>。在您的 shell、用户设置或托管设置中设置该对；两个变量都在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中被忽略。<code>CLAUDE_CODE_ENHANCED_TELEMETRY_BETA</code> 单独不会产生它。</p>
+<p>在交互式 CLI 会话中，详细测试版跟踪还需要您的组织被列入该功能的白名单。Agent SDK 和非交互式 <code>-p</code> 会话不需要白名单。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+<th>门控</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hook_event</code></td>
+<td>钩子事件类型，例如 <code>PreToolUse</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>hook_name</code></td>
+<td>完整钩子名称，例如 <code>PreToolUse:Write</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>num_hooks</code></td>
+<td>执行的匹配钩子命令数</td>
+<td></td>
+</tr>
+<tr>
+<td><code>hook_definitions</code></td>
+<td>JSON 序列化的钩子配置</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+<tr>
+<td><code>duration_ms</code></td>
+<td>所有匹配钩子的挂钟持续时间</td>
+<td></td>
+</tr>
+<tr>
+<td><code>num_success</code></td>
+<td>成功完成的钩子计数</td>
+<td></td>
+</tr>
+<tr>
+<td><code>num_blocking</code></td>
+<td>返回阻止决定的钩子计数</td>
+<td></td>
+</tr>
+<tr>
+<td><code>num_non_blocking_error</code></td>
+<td>失败而不阻止的钩子计数</td>
+<td></td>
+</tr>
+<tr>
+<td><code>num_cancelled</code></td>
+<td>在完成前取消的钩子计数</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>详细测试版跟踪下的内容属性</strong></p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>其他内容承载属性，例如 <code>new_context</code>、<code>system_reminders</code>、<code>system_prompt_preview</code>、<code>user_system_prompt</code>、<code>tool_input</code> 和 <code>response.model_output</code>，仅在启用详细测试版跟踪时发出。它们不是稳定跨度 schema 的一部分。</p></div></div>
+<p>这些属性出现在下列跨度上，<code>门控</code> 列指出属性在详细测试版跟踪之外还需要的变量。长度超过内容限制（默认值 60 KB）的值会被截断。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>跨度</th>
+<th>描述</th>
+<th>门控</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>new_context</code></td>
+<td><code>claude_code.interaction</code></td>
+<td>用户提示词</td>
+<td><code>OTEL_LOG_USER_PROMPTS</code></td>
+</tr>
+<tr>
+<td><code>new_context</code></td>
+<td><code>claude_code.llm_request</code></td>
+<td>随请求发送的新用户消息和工具结果</td>
+<td><code>OTEL_LOG_USER_PROMPTS</code></td>
+</tr>
+<tr>
+<td><code>system_reminders</code></td>
+<td><code>claude_code.llm_request</code></td>
+<td>请求的新消息中<a href="glossary.html#system-reminder">系统提醒</a>的文本</td>
+<td><code>OTEL_LOG_USER_PROMPTS</code></td>
+</tr>
+<tr>
+<td><code>system_prompt_preview</code></td>
+<td><code>claude_code.llm_request</code></td>
+<td>随请求发送的完整系统提示词的前 500 个字符</td>
+<td><code>OTEL_LOG_USER_PROMPTS</code></td>
+</tr>
+<tr>
+<td><code>user_system_prompt</code></td>
+<td><code>claude_code.llm_request</code></td>
+<td>仅包含您通过 <code>systemPrompt</code> SDK 选项或 <code>--system-prompt</code> 和 <code>--append-system-prompt</code> 标志提供的系统提示词文本。每个会话发出一次，而不是每个请求发出一次</td>
+<td><code>OTEL_LOG_USER_PROMPTS</code></td>
+</tr>
+<tr>
+<td><code>response.model_output</code></td>
+<td><code>claude_code.llm_request</code></td>
+<td>模型对该请求的响应文本</td>
+<td><code>OTEL_LOG_USER_PROMPTS</code></td>
+</tr>
+<tr>
+<td><code>new_context</code></td>
+<td><code>claude_code.tool</code></td>
+<td>工具调用的结果，无论是哪个工具</td>
+<td><code>OTEL_LOG_TOOL_CONTENT</code></td>
+</tr>
+<tr>
+<td><code>tool_input</code></td>
+<td><code>claude_code.tool</code></td>
+<td>工具调用的序列化输入</td>
+<td><code>OTEL_LOG_TOOL_DETAILS</code></td>
+</tr>
+</tbody>
+</table>
+<p>在详细测试版跟踪下且设置了 <code>OTEL_LOG_USER_PROMPTS=1</code> 时，Claude Code 还会发出一个 <code>claude_code.system_prompt</code> 事件，该事件携带完整的系统提示词，并在内容限制处截断。会话每次首次发送某个不同的系统提示词时都会发出该事件，压缩之后也会再次发出。</p>
+<h3 id="dynamic-headers">动态标头</h3>
+<p>对于需要动态身份验证的企业环境，您可以配置脚本以动态生成标头。动态标头仅适用于 <code>http/protobuf</code> 和 <code>http/json</code> 协议。使用 <code>grpc</code> 协议，Claude Code 仅使用静态标头变量 <code>OTEL_EXPORTER_OTLP_HEADERS</code> 及其按信号的变体。</p>
+<h4 id="settings-configuration">设置配置</h4>
+<p>添加到您的 <code>.claude/settings.json</code>，用您自己的脚本替换路径：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"otelHeadersHelper"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/path/to/generate-otel-headers.sh"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>该值可以是可执行文件的路径，包括包含空格的路径，或带有参数的 shell 命令行。在 Windows 上，该值始终通过 shell 运行，因此在 JSON 值内引用包含空格的路径。</p>
+<h4 id="script-requirements">脚本要求</h4>
+<p>脚本必须输出有效的 JSON，其中包含代表 HTTP 标头的字符串键值对：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="ch">#!/bin/bash</span>
+<span class="c1"># 示例：多个标头</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"{\"Authorization\": \"Bearer </span><span class="k">$(</span>get-token.sh<span class="k">)</span><span class="s2">\", \"X-API-Key\": \"</span><span class="k">$(</span>get-api-key.sh<span class="k">)</span><span class="s2">\"}"</span>
+</code></pre></div>
+<p>如果助手失败或打印不符合这些要求的输出，导出失败，您的遥测后端在会话中不会收到任何内容，直到助手再次工作。Claude Code 在以下位置报告失败：</p>
+<ul>
+<li>交互式会话中的警告通知，<a href="errors.html#otelheadershelper-failed"><code>otelHeadersHelper failed; telemetry is not being exported</code></a>，在助手首次失败时每个会话显示一次</li>
+<li><code>/status</code> 输出</li>
+<li>调试日志，当使用 <a href="cli-reference.html#cli-flags"><code>--debug</code></a> 运行或在会话中运行 <code>/debug</code> 后</li>
+<li>stderr，在使用 <code>-p</code> 启动的非交互式会话中</li>
+</ul>
+<h4 id="refresh-behavior">刷新行为</h4>
+<p>标头助手脚本在启动时运行，然后定期运行以支持令牌刷新。默认情况下，脚本每 29 分钟运行一次。使用 <code>CLAUDE_CODE_OTEL_HEADERS_HELPER_DEBOUNCE_MS</code> 环境变量自定义间隔。</p>
+<h3 id="multi-team-organization-support">多团队组织支持</h3>
+<p>具有多个团队或部门的组织可以使用 <code>OTEL_RESOURCE_ATTRIBUTES</code> 环境变量添加自定义属性以区分不同的组：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 添加用于团队识别的自定义属性</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_RESOURCE_ATTRIBUTES</span><span class="o">=</span><span class="s2">"department=engineering,team.id=platform,cost_center=eng-123"</span>
+</code></pre></div>
+<p>这些自定义属性包含在所有指标和事件中，允许您：</p>
+<ul>
+<li>按团队或部门过滤指标</li>
+<li>按成本中心跟踪成本</li>
+<li>创建特定于团队的仪表板</li>
+<li>为特定团队设置警报</li>
+</ul>
+<p>Claude Code 将这些值作为属性附加到每个指标数据点和事件记录，除了在 OTLP 资源块中发送它们。因为大多数指标后端将数据点属性公开为可查询的标签，您可以直接按自定义键对指标进行分组和过滤。除了 <code>vcs.*</code> <a href="#repository-attributes">存储库属性</a>，自定义键永远不会覆盖<a href="#standard-attributes">标准属性</a>，例如 <code>user.id</code> 或 <code>session.id</code>：当键冲突时，Claude Code 保留内置值。</p>
+<p>每个自定义键成为每个指标系列上的标签，因此高基数值会增加指标后端中的存储成本。要仅在资源块中发送自定义属性并从数据点标签中省略它们，请设置 <code>OTEL_METRICS_INCLUDE_RESOURCE_ATTRIBUTES=false</code>。请参阅<a href="#metrics-cardinality-control">指标基数控制</a>。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p><code>OTEL_RESOURCE_ATTRIBUTES</code> 环境变量使用逗号分隔的键=值对，具有严格的格式要求：</p>
+<ul>
+<li><strong>不允许空格</strong>：值不能包含空格。例如，<code>user.organizationName=My Company</code> 无效</li>
+<li><strong>格式</strong>：必须是逗号分隔的键=值对：<code>key1=value1,key2=value2</code></li>
+<li><strong>允许的字符</strong>：仅限 US-ASCII 字符，不包括控制字符、空格、双引号、逗号、分号和反斜杠</li>
+<li><strong>特殊字符</strong>：允许范围之外的字符必须进行百分比编码</li>
+</ul>
+<p>对于需要空格的值，请改用下划线或 camelCase。以下示例使用每种形式设置 <code>org.name</code>：</p>
+<p>```bash theme={null}<br />
+export OTEL_RESOURCE_ATTRIBUTES="org.name=Johns_Organization"<br />
+export OTEL_RESOURCE_ATTRIBUTES="org.name=JohnsOrganization"</p>
+<pre><code>
+您可以对任何字符进行百分比编码，而不仅仅是被排除的字符。此示例对空格和撇号进行编码：
+
+```bash theme={null}
+export OTEL_RESOURCE_ATTRIBUTES=&quot;org.name=John%27s%20Organization&quot;
+</code></pre>
+<p>用引号包装值不会转义空格。例如，<code>org.name="My Company"</code> 导致文字值 <code>"My Company"</code>（包括引号），而不是 <code>My Company</code>。</p></div></div>
+<h3 id="attribute-telemetry-to-desktop-ssh-sessions">将遥测归因到 Desktop SSH 会话</h3>
+<p>要查看 <a href="desktop.html#ssh-sessions">Desktop SSH 会话</a>在哪台远程机器上运行，请在自定义属性中为每台机器命名。指标和事件不会指明会话运行所在的机器。</p>
+<p>在每台远程机器上，将 <a href="#multi-team-organization-support"><code>OTEL_RESOURCE_ATTRIBUTES</code></a> 添加到<a href="desktop.html#managed-settings">会话读取的托管设置文件</a>中启用遥测的 <code>env</code> 块。在每台机器的文件中写出名称。Claude Code 不会展开该值，因此 <code>host.name=$(hostname)</code> 会按这些字符原样到达。</p>
+<p>以下示例将机器命名为 <code>build-7</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"CLAUDE_CODE_ENABLE_TELEMETRY"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_METRICS_EXPORTER"</span><span class="p">:</span><span class="w"> </span><span class="s2">"otlp"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_LOGS_EXPORTER"</span><span class="p">:</span><span class="w"> </span><span class="s2">"otlp"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_EXPORTER_OTLP_PROTOCOL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"grpc"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_EXPORTER_OTLP_ENDPOINT"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://collector.example.com:4317"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_RESOURCE_ATTRIBUTES"</span><span class="p">:</span><span class="w"> </span><span class="s2">"host.name=build-7"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>当没有其他来源设置该变量时，<code>host.name</code> 会出现在资源块中，适用于 Desktop SSH 会话以及该机器上的 CLI。有关自定义属性还会出现在哪些位置，请参阅<a href="#multi-team-organization-support">多团队组织支持</a>。</p>
+<p>如果名称没有到达，请检查是否存在以下原因之一：</p>
+<ul>
+<li><strong>您在运行 Desktop 的计算机上设置了它</strong>：Desktop 不会将您在那里设置的值传递给 SSH 会话</li>
+<li><strong>您在 <code>/etc/profile</code> 或其他只有登录 shell 才会读取的文件中导出了它</strong>：从登录 shell 运行 <code>claude</code> 时名称会到达，但在 Desktop SSH 会话中不会。Desktop 不通过登录 shell 启动 Claude Code。请改为在远程机器上的<a href="desktop.html#managed-settings">托管设置文件</a>中的 <code>env</code> 下设置该变量。</li>
+<li><strong>某个值内部包含空格</strong>：此时 Claude Code 不会将任何键复制到事件或数据点上，也不会报告错误。<a href="#multi-team-organization-support">从值中去掉空格</a>。</li>
+<li><strong>其他来源已经设置了该变量</strong>：在桌面应用启动的会话中，启动环境中已设置的变量<a href="settings-reference.html#how-env-values-interact-with-your-shell">优先于设置文件</a>。<a href="debug-your-config.html">调试日志</a>会列出每个被忽略的变量。当第三方 Desktop 部署在其提供的环境中<a href="#how-managed-settings-lock-the-otlp-destination">指定 OTLP 端点</a>时，该环境会带有 Desktop 自己的 <code>OTEL_RESOURCE_ATTRIBUTES</code>。</li>
+</ul>
+<h3 id="example-configurations">示例配置</h3>
+<p>在运行 <code>claude</code> 之前设置这些环境变量。下面的每个场景显示完整的配置，每个变量在<a href="#common-configuration-variables">常见配置变量</a>下进行了描述。要确认配置生效，请在启动会话后检查后端中的 <code>claude_code.session.count</code> 指标；<a href="#quick-start">快速入门</a>涵盖仅日志验证以及当没有内容到达时要检查的内容。</p>
+<p>对于使用 1 秒导出间隔的控制台调试：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_ENABLE_TELEMETRY</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_METRICS_EXPORTER</span><span class="o">=</span>console
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_METRIC_EXPORT_INTERVAL</span><span class="o">=</span><span class="m">1000</span>
+</code></pre></div>
+<p>对于 OTLP over gRPC：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_ENABLE_TELEMETRY</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_METRICS_EXPORTER</span><span class="o">=</span>otlp
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>grpc
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>http://localhost:4317
+</code></pre></div>
+<p>对于 Prometheus，从 <code>http://localhost:9464/metrics</code> 抓取：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_ENABLE_TELEMETRY</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_METRICS_EXPORTER</span><span class="o">=</span>prometheus
+</code></pre></div>
+<p>在<a href="self-hosted-environments-reference.html#pass-through-session-child-metrics">自托管环境</a>上，会话仅在运行器的默认容量为 1 时绑定端口 9464。在更高的容量下，运行器改为在其自己的 <code>/metrics</code> 端点上重新公开会话计数器和仪表。</p>
+<p>要将指标发送到多个导出器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_ENABLE_TELEMETRY</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_METRICS_EXPORTER</span><span class="o">=</span>console,otlp
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>http/json
+</code></pre></div>
+<p>要将指标和日志发送到不同的端点或后端：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_ENABLE_TELEMETRY</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_METRICS_EXPORTER</span><span class="o">=</span>otlp
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_LOGS_EXPORTER</span><span class="o">=</span>otlp
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_METRICS_PROTOCOL</span><span class="o">=</span>http/protobuf
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_METRICS_ENDPOINT</span><span class="o">=</span>http://metrics.example.com:4318
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_LOGS_PROTOCOL</span><span class="o">=</span>grpc
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_LOGS_ENDPOINT</span><span class="o">=</span>http://logs.example.com:4317
+</code></pre></div>
+<p>仅导出指标，不导出事件或日志：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_ENABLE_TELEMETRY</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_METRICS_EXPORTER</span><span class="o">=</span>otlp
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>grpc
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>http://localhost:4317
+</code></pre></div>
+<p>仅导出事件和日志，不导出指标：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_CODE_ENABLE_TELEMETRY</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_LOGS_EXPORTER</span><span class="o">=</span>otlp
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>grpc
+<span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>http://localhost:4317
+</code></pre></div>
+<h2 id="telemetry-from-cloud-sessions-and-claude-tag">云会话和 Claude Tag 的遥测</h2>
+<p><a href="claude-code-on-the-web.html">云会话</a>（包括 <a href="https://claude.com/docs/claude-tag/overview" target="_blank" rel="noopener">Claude Tag</a> 频道会话）在<a href="cloud-environments.html">云环境</a>中运行，而不是在用户的设备上运行，因此设备上的托管设置文件或 shell 配置文件不会配置其遥测。对于在 Anthropic 托管环境中的会话，本部分介绍了在何处设置遥测变量、如何使收集器可从环境访问，以及如何在导出的数据中区分云会话和 Claude Tag 会话。</p>
+<p>要从这些会话导出遥测，请使用与<a href="#administrator-configuration">管理员配置</a>示例相同的密钥，在以下两个位置之一中设置 <code>CLAUDE_CODE_ENABLE_TELEMETRY</code> 和 <code>OTEL_*</code> 变量：</p>
+<ul>
+<li><strong>服务器管理的设置</strong>：将它们添加到您组织的<a href="server-managed-settings.html">服务器管理的设置</a>的 <code>env</code> 块中。Claude Code 在启动时会在<a href="model-config.html#surface-coverage">服务器管理的设置适用</a>的任何地方获取这些设置，这包括您用户的机器和除 Claude Tag 频道会话外的云会话。Claude Tag 会话不会接收您的服务器管理的设置，因此此路由不会配置它们。</li>
+<li><strong>环境的变量</strong>：将它们添加到云环境的<a href="cloud-environments.html#set-environment-variables">环境变量</a>中，以仅配置在该环境中运行的会话。这是到达 Claude Tag 会话的路由。</li>
+</ul>
+<p>任何使用环境的人都可以读取其变量，因此不要在其中放置凭据，例如 <code>OTEL_EXPORTER_OTLP_HEADERS</code> 中的收集器令牌。环境上的<a href="cloud-environments.html#add-network-secrets">网络密钥</a>也无济于事，因为 Claude Code 自己的遥测导出是<a href="cloud-environments.html#requests-that-never-get-the-credential">从不获得该密钥的请求</a>之一。如果您的收集器需要凭据，请改为通过服务器管理的设置配置整个导出，因为当您在那里设置凭据时，<a href="#how-managed-settings-lock-the-otlp-destination">Claude Code 会删除在托管设置外设置的端点变量</a>。</p>
+<p>在为云会话配置遥测时，请记住这些约束：</p>
+<ul>
+<li><strong>让会话到达收集器</strong>：Claude Code 通过会话的网络发送导出，因此它是否到达您的 <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> 中的主机取决于环境的<a href="cloud-environments.html#access-levels">网络访问级别</a>。如果会话无法在您选择的级别上到达收集器的域，请<a href="cloud-environments.html#allow-specific-domains">将域添加到环境的允许列表</a>，因为没有服务器管理的设置会将域添加到环境的网络允许列表。</li>
+<li><strong>Claude Tag 频道</strong>：请在设置为您组织默认环境或固定到频道的<a href="cloud-environments.html#organization-shared-environments">共享环境</a>上进行允许列表和任何环境变量更改。</li>
+<li><strong>Cowork 单独配置</strong>：如<a href="model-config.html#surface-coverage">表面覆盖表</a>所示，Cowork 会话不会接收服务器管理的设置，因此服务器管理的 <code>env</code> 块不会配置其遥测。</li>
+</ul>
+<h3 id="attribute-telemetry-to-cloud-sessions">将遥测属性分配给云会话</h3>
+<p>默认情况下，来自云会话的指标和事件携带<a href="#standard-attributes">标准属性</a>，包括 <code>session.id</code>、<code>ccr.session.id</code> 和 <code>organization.id</code>，因此您可以按会话或组织进行筛选，无需额外配置。<code>ccr.session.id</code> 值是会话的 <code>CLAUDE_CODE_REMOTE_SESSION_ID</code>。要将其转换为会话的成绩单 URL，请参阅<a href="cloud-environments.html#link-output-back-to-the-session">将输出链接回会话</a>。</p>
+<p>要区分不同的云端会话，请按 <code>ccr.session.id</code>（而不是 <code>session.id</code>）进行分组或筛选。</p>
+<p>要更详细地属性化遥测，请使用这些选项：</p>
+<ul>
+<li><strong>识别 Claude Tag 会话</strong>：设置 <code>OTEL_METRICS_INCLUDE_ENTRYPOINT=true</code>，如<a href="#metrics-cardinality-control">指标基数控制</a>下所述。指标随后会携带 <code>app.entrypoint</code>，其值对于 Claude Tag 会话为 <code>claude-in-slack</code>。</li>
+<li><strong>添加自定义属性</strong>：在设置这些会话的其他 <code>OTEL_*</code> 变量的同一位置设置 <a href="#multi-team-organization-support"><code>OTEL_RESOURCE_ATTRIBUTES</code></a>。如果您改为在环境的<a href="cloud-environments.html#setup-scripts">设置脚本</a>中 <code>export</code> 它，该值不会到达 Claude Code：设置脚本是在 Claude Code 启动前运行的单独 Bash 脚本，它导出的变量随之结束。</li>
+</ul>
+<p>在 Claude Tag 频道会话中，Claude 作为您组织的<a href="cloud-environments.html#set-the-environment-a-claude-tag-channel-uses">共享身份</a>工作，而不是作为任何成员，因此不要依赖 <code>user.*</code> 属性来识别谁标记了 Claude。</p>
+<h2 id="available-metrics-and-events">可用的指标和事件</h2>
+<h3 id="standard-attributes">标准属性</h3>
+<p>所有指标和事件都共享以下标准属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+<th>控制方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>session.id</code></td>
+<td>Claude Code 自身的会话 ID，<code>/clear</code> 会替换它</td>
+<td><code>OTEL_METRICS_INCLUDE_SESSION_ID</code>（默认值：true）</td>
+</tr>
+<tr>
+<td><code>ccr.session.id</code></td>
+<td>云端会话标识符，即 <code>CLAUDE_CODE_REMOTE_SESSION_ID</code> 的值，仅出现在运行于<a href="cloud-environments.html">云环境</a>中的会话上</td>
+<td><code>OTEL_METRICS_INCLUDE_SESSION_ID</code>（默认值：true）</td>
+</tr>
+<tr>
+<td><code>app.version</code></td>
+<td>当前 Claude Code 版本</td>
+<td><code>OTEL_METRICS_INCLUDE_VERSION</code>（默认值：false）</td>
+</tr>
+<tr>
+<td><code>app.entrypoint</code></td>
+<td>会话的启动方式，例如 <code>cli</code>、<code>sdk-cli</code>、<code>sdk-ts</code>、<code>sdk-py</code>、<code>claude-vscode</code>，或用于 Claude Tag 会话的 <code>claude-in-slack</code></td>
+<td><code>OTEL_METRICS_INCLUDE_ENTRYPOINT</code>（默认值：false）</td>
+</tr>
+<tr>
+<td><code>organization.id</code></td>
+<td>组织 UUID（已进行身份验证时）</td>
+<td>可用时始终包含</td>
+</tr>
+<tr>
+<td><code>user.account_uuid</code></td>
+<td>账户 UUID（已进行身份验证时）</td>
+<td><code>OTEL_METRICS_INCLUDE_ACCOUNT_UUID</code>（默认值：true）</td>
+</tr>
+<tr>
+<td><code>user.account_id</code></td>
+<td>与 Anthropic 管理 API 匹配的带标签格式账户 ID（已进行身份验证时），例如 <code>user_01BWBeN28...</code></td>
+<td><code>OTEL_METRICS_INCLUDE_ACCOUNT_UUID</code>（默认值：true）</td>
+</tr>
+<tr>
+<td><code>user.id</code></td>
+<td>首次运行时生成并持久保存在 <code>~/.claude.json</code> 中的随机匿名标识符。它不包含任何个人信息，也不是从您的 Claude 账户派生的。删除该文件后，下次运行时会生成一个新的、不相关的值。</td>
+<td>始终包含</td>
+</tr>
+<tr>
+<td><code>user.email</code></td>
+<td>用户电子邮件地址，来自您的登录信息，或者在<a href="claude-code-on-the-web.html">云端会话</a>中来自该会话自身的凭据</td>
+<td>可用时始终包含</td>
+</tr>
+<tr>
+<td><code>terminal.type</code></td>
+<td>终端类型，例如 <code>iTerm.app</code>、<code>vscode</code>、<code>cursor</code> 或 <code>tmux</code></td>
+<td>检测到时始终包含</td>
+</tr>
+<tr>
+<td><code>OTEL_RESOURCE_ATTRIBUTES</code> 中的键</td>
+<td>您设置的自定义属性，例如 <code>department</code> 或 <code>team.id</code>。请参阅<a href="#multi-team-organization-support">多团队组织支持</a></td>
+<td><code>OTEL_METRICS_INCLUDE_RESOURCE_ATTRIBUTES</code>（默认值：true）</td>
+</tr>
+<tr>
+<td><code>vcs.repository.url.full</code>、<code>vcs.owner.name</code>、<code>vcs.repository.name</code>、<code>vcs.provider.name</code></td>
+<td>会话仓库的身份，从其 <code>origin</code> 远程派生。请参阅<a href="#repository-attributes">仓库属性</a></td>
+<td><code>OTEL_METRICS_INCLUDE_REPOSITORY</code>（默认值：false）。需要 Claude Code v2.1.269 或更高版本</td>
+</tr>
+</tbody>
+</table>
+<p>在通过 <code>/login</code> 登录到 <a href="claude-apps-gateway.html">Claude apps 网关</a>的会话中，CLI 会在导出数据上标记经过身份验证的身份：<code>user.id</code> 是 IdP 主体，<code>user.email</code> 是登录的电子邮件，<code>user.groups</code> 以逗号分隔字符串的形式携带 IdP 组成员身份。每次导出还会携带 <code>identity.source: gateway-oidc</code>。网关身份最后应用，因此在这些会话中，通过 <code>OTEL_RESOURCE_ATTRIBUTES</code> 设置的 <code>user.*</code> 和 <code>identity.*</code> 键会被忽略。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Claude Code 在开发者登录之前记录的事件不携带网关身份。当 Claude Code 在未登录网关的状态下打开会话时（例如在<a href="errors.html#cloud-gateway-session-expired">网关结束登录</a>之后），登录前记录的启动事件携带匿名的 <code>user.id</code>，且不带 <code>identity.source</code>。这些事件包括 <a href="#managed-settings-resolved-event"><code>managed_settings_resolved</code></a>、<a href="#plugin-loaded-event"><code>plugin_loaded</code></a> 和 <a href="#mcp-server-connection-event"><code>mcp_server_connection</code></a>。</p></div></div>
+<p>有关通过网关连接的 Claude Desktop 和 Cowork 会话上的身份属性，请参阅<a href="claude-apps-gateway-config.html#telemetry">网关 <code>telemetry</code> 参考</a>。</p>
+<p>事件还额外包含以下属性。这些属性永远不会附加到指标上，因为它们会导致无界基数：</p>
+<ul>
+<li><code>prompt.id</code>：将用户提示词与其后直到下一个提示词之前的所有事件关联起来的 UUID。请参阅<a href="#event-correlation-attributes">事件关联属性</a>。</li>
+<li><code>workspace.host_paths</code>：在桌面应用中选择的主机工作区目录，以字符串数组形式表示</li>
+<li><code>workflow.run_id</code>：运行标识符，前缀为 <code>wf_</code>，出现在属于某次 <a href="workflows.html">Workflow</a> 工具运行的 Agent 所发出的 API 和工具事件上。按某个 <code>workflow.run_id</code> 筛选事件，即可重建该次运行的 API 请求和工具结果。该标识符涵盖工作流脚本生成的 Agent，以及这些 Agent 进一步生成的任何 Agent（例如 skill 调用）。它与 Workflow 工具结果中报告的运行标识符一致。</li>
+<li><code>workflow.name</code>：工作流的名称，即其脚本的 <code>meta.name</code>，与 <code>workflow.run_id</code> 一起发出。当运行执行未经修改的内置脚本时，内置工作流名称按原样显示。用户编写的名称（包括内置脚本的编辑副本）会被替换为 <code>custom</code>，除非设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code>。</li>
+<li><code>agent_id</code>：引发该事件的<a href="sub-agents.html">子代理</a>的标识符，例如 <code>a3f2c1b4d5e6f7a80</code>。携带该属性的事件包括子代理的 API 和工具事件、其 <a href="#assistant-response-event"><code>assistant_response</code></a> 事件，以及已完成子代理的 <a href="#subagent-completed-event"><code>subagent_completed</code></a>。主会话事件和<a href="agent-teams.html#choose-a-display-mode">进程内队友</a>事件上不包含该属性。子代理的 <a href="#span-attributes">span <code>agent_id</code></a> 与此值相同，或在开头的 <code>a</code> 之后添加一个标签，如 <code>acompact-3f2c1b4d5e6f7a80</code>。需要 Claude Code v2.1.310 或更高版本</li>
+<li><code>parent_agent_id</code>：生成或最近一次恢复引发该事件的子代理的 Agent 的 <code>agent_id</code>。当该 Agent 为主会话时不包含此属性。需要 Claude Code v2.1.310 或更高版本</li>
+</ul>
+<h4 id="repository-attributes">仓库属性</h4>
+<p>设置 <code>OTEL_METRICS_INCLUDE_REPOSITORY=true</code> 可以用会话仓库的身份来标记指标和事件，以便共享收集器能够按仓库归因使用情况。需要 Claude Code v2.1.269 或更高版本。</p>
+<p>Claude Code 每个会话从仓库的 <code>origin</code> 远程派生一次这些属性。当仓库的 HTTPS 和 SSH 远程指向相同的主机和相同的路径时（如在 GitHub、GitLab 和 Bitbucket Cloud 上），两者会产生相同的值：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vcs.repository.url.full</code></td>
+<td>不带 <code>.git</code> 的仓库浏览器 URL，例如 <code>https://github.com/example-org/example-repo</code></td>
+</tr>
+<tr>
+<td><code>vcs.owner.name</code></td>
+<td>所有者或组路径，例如 <code>example-org</code>；当远程路径只有一个段时省略</td>
+</tr>
+<tr>
+<td><code>vcs.repository.name</code></td>
+<td>纯仓库名称，例如 <code>example-repo</code></td>
+</tr>
+<tr>
+<td><code>vcs.provider.name</code></td>
+<td>当 Claude Code 将远程的主机或 URL 形式识别为 <code>github</code>、<code>gitlab</code>、<code>bitbucket</code> 或 <code>gitea</code> 之一时为相应的值；否则省略</td>
+</tr>
+</tbody>
+</table>
+<p>这些值会转换为小写，且远程 URL 中的凭据、查询字符串和片段永远不会出现在其中。当会话没有 <code>origin</code> 远程、远程不是 URL 形式，或者唯一的外层仓库是您的主目录时，这些属性会被省略。</p>
+<p>要从<a href="claude-code-on-the-web.html">云端会话</a>获取这些属性，请在其<a href="cloud-environments.html#set-environment-variables">云环境</a>中设置遥测变量，包括 <code>OTEL_METRICS_INCLUDE_REPOSITORY</code>。还需要在该环境的<a href="cloud-environments.html#network-access">网络访问</a>中允许您的收集器域名。</p>
+<p>您在 <a href="#multi-team-organization-support"><code>OTEL_RESOURCE_ATTRIBUTES</code></a> 中声明的 <code>vcs.*</code> 键会替换该键的派生值。如果您声明了 <code>vcs.repository.url.full</code>，Claude Code 将永远不会读取远程，并且只报告您声明的键。</p>
+<p>如果同一仓库的 HTTPS 和 SSH 克隆报告不同的值（例如在自托管安装中，HTTPS 克隆 URL 带有 SSH URL 所没有的路径前缀），请在 <code>OTEL_RESOURCE_ATTRIBUTES</code> 中声明 <code>vcs.repository.url.full</code> 以及您希望报告的所有其他 <code>vcs.*</code> 键。之后每个克隆都会报告您声明的身份。</p>
+<p>这些属性只会流向您自己的导出器；Anthropic 的遥测会丢弃所有 <code>vcs.*</code> 键。</p>
+<h3 id="metrics">指标</h3>
+<p>Claude Code 导出以下指标。"单位"列显示附加到每个指标的 OpenTelemetry 单位字符串；计数类指标不带单位。</p>
+<table>
+<thead>
+<tr>
+<th>指标名称</th>
+<th>描述</th>
+<th>单位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>claude_code.session.count</code></td>
+<td>已启动的 CLI 会话计数</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>claude_code.lines_of_code.count</code></td>
+<td>已修改的代码行数计数</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>claude_code.pull_request.count</code></td>
+<td>已创建的 Pull Request 数量</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>claude_code.commit.count</code></td>
+<td>已创建的 git 提交数量</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>claude_code.cost.usage</code></td>
+<td>Claude Code 会话的成本</td>
+<td>USD</td>
+</tr>
+<tr>
+<td><code>claude_code.token.usage</code></td>
+<td>使用的 token 数量</td>
+<td>tokens</td>
+</tr>
+<tr>
+<td><code>claude_code.code_edit_tool.decision</code></td>
+<td>代码编辑工具权限决策的计数</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>claude_code.active_time.total</code></td>
+<td>总活跃时间</td>
+<td>s</td>
+</tr>
+</tbody>
+</table>
+<p>当 <code>prometheus</code> 是 <code>OTEL_METRICS_EXPORTER</code> 中列出的唯一导出器时，Claude Code 会从导出的指标中省略 <code>USD</code>、<code>tokens</code> 和 <code>s</code> 单位，以使抓取结果保持为有效的 Prometheus 文本格式。指标名称不会改变，组合多个导出器的配置（例如 <code>otlp,prometheus</code>）会保留单位。</p>
+<h3 id="metric-details">指标详情</h3>
+<p>每个指标都包含上面列出的标准属性。下面注明了带有额外上下文特定属性的指标。</p>
+<h4 id="session-counter">会话计数器</h4>
+<p>在每个会话开始时递增。</p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>start_type</code>：会话的启动方式。取值为 <code>"fresh"</code>、<code>"resume"</code>、<code>"continue"</code> 或 <code>"agents_view"</code> 之一。<code>"agents_view"</code> 值标识 <code>claude agents</code> 仪表板进程，这是一个由用户启动的本地 UI，而不是对话会话。在仪表板中按此值过滤，可以将 UI 进程启动与对话会话区分开来。</li>
+</ul>
+<h4 id="lines-of-code-counter">代码行数计数器</h4>
+<p>在添加或删除代码时递增。</p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>type</code>：（<code>"added"</code>、<code>"removed"</code>）</li>
+<li><code>model</code>：进行更改的模型的模型标识符（例如 "claude-sonnet-5"）</li>
+</ul>
+<h4 id="pull-request-counter">Pull Request 计数器</h4>
+<p>当 Claude Code 通过 shell 命令或 MCP 工具创建 Pull Request 或合并请求时递增。</p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+</ul>
+<h4 id="commit-counter">提交计数器</h4>
+<p>通过 Claude Code 创建 git 提交时递增。</p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+</ul>
+<h4 id="cost-counter">成本计数器</h4>
+<p>在每次 API 请求后递增。</p>
+<p><code>agent.name</code>、<code>skill.name</code>、<code>plugin.name</code>、<code>mcp_server.name</code> 和 <code>mcp_tool.name</code> 属性默认都会将某些名称编辑为 <code>"custom"</code> 或 <code>"third-party"</code> 占位符。如果您设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code>，它们会改为携带真实名称。在 v2.1.273 之前，即使设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code>，成本和 token 计数器以及 <code>api_request</code>、<code>api_error</code> 和 <code>api_refusal</code> 事件仍携带编辑后的值。</p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>model</code>：模型标识符（例如 "claude-sonnet-5"）</li>
+<li><code>query_source</code>：发出请求的子系统类别。取值为 <code>"main"</code>、<code>"subagent"</code> 或 <code>"auxiliary"</code> 之一</li>
+<li><code>speed</code>：当请求使用快速模式时为 <code>"fast"</code>。否则不存在</li>
+<li><code>effort</code>：应用于请求的 <a href="model-config.html#adjust-effort-level">effort 级别</a>：<code>"low"</code>、<code>"medium"</code>、<code>"high"</code>、<code>"xhigh"</code> 或 <code>"max"</code>。当 Claude Code 未发送 effort 级别时不存在，例如在不支持 effort 的模型上。</li>
+<li><code>agent.name</code>：发出请求的子代理类型。内置 Agent 名称和来自官方市场插件的 Agent 按原样显示。其他用户定义的 Agent 名称会被替换为 <code>"custom"</code>。当请求不是由命名的子代理类型发出时不存在。</li>
+<li><code>skill.name</code>：请求活跃的 skill，由 Skill 工具或 <code>/</code> 命令设置，或由生成的子代理继承。内置、捆绑、用户定义以及官方市场插件的 skill 名称按原样显示。第三方插件的 skill 名称会被替换为 <code>"third-party"</code>。当没有活跃的 skill 时不存在。</li>
+<li><code>plugin.name</code>：当活跃的 skill 或子代理由插件提供时，为所属插件。官方市场插件名称按原样显示。第三方插件名称会被替换为 <code>"third-party"</code>。当 skill 和子代理都没有所属插件时不存在。</li>
+<li><code>marketplace.name</code>：所属插件的安装来源市场。即使设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code>，也仅针对官方市场插件发出。否则不存在。</li>
+<li><code>mcp_server.name</code>：此请求所使用的工具结果对应的 MCP 服务器。内置、claude.ai 代理以及官方注册表的服务器名称按原样显示。用户配置的服务器名称会被替换为 <code>"custom"</code>。当请求未使用任何 MCP 工具结果时不存在。在 v2.1.222 之前，Claude Code 会在 MCP 工具调用之后的每个请求上设置此属性，而不仅仅是在使用了工具结果的请求上，因此在您升级后，聚合此属性的仪表板会显示数值下降。</li>
+<li><code>mcp_tool.name</code>：此请求所使用的结果对应的 MCP 工具，其编辑和版本行为与 <code>mcp_server.name</code> 相同。当请求未使用任何 MCP 工具结果时不存在。</li>
+</ul>
+<h4 id="token-counter">Token 计数器</h4>
+<p>在每次 API 请求后递增。</p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>type</code>：（<code>"input"</code>、<code>"output"</code>、<code>"cacheRead"</code>、<code>"cacheCreation"</code>）。<code>"input"</code> 类型不包括从提示缓存读取或写入提示缓存的 token，这些 token 计入 <code>"cacheRead"</code> 和 <code>"cacheCreation"</code>。<code>"cacheCreation"</code> 类型将五分钟和一小时<a href="prompt-caching.html#cache-lifetime">缓存生命周期</a>的缓存写入合并计数。</li>
+<li><code>model</code>：模型标识符（例如 "claude-sonnet-5"）</li>
+<li><code>query_source</code>：发出请求的子系统类别。取值为 <code>"main"</code>、<code>"subagent"</code> 或 <code>"auxiliary"</code> 之一</li>
+<li><code>speed</code>：当请求使用快速模式时为 <code>"fast"</code>。否则不存在</li>
+<li><code>effort</code>：应用于请求的 <a href="model-config.html#adjust-effort-level">effort 级别</a>。详情请参阅<a href="#cost-counter">成本计数器</a>。</li>
+<li><code>agent.name</code>、<code>skill.name</code>、<code>plugin.name</code>、<code>marketplace.name</code>、<code>mcp_server.name</code>、<code>mcp_tool.name</code>：请求的 skill、插件、Agent 和 MCP 归因。有关定义和编辑行为，请参阅<a href="#cost-counter">成本计数器</a>。</li>
+</ul>
+<h4 id="code-edit-tool-decision-counter">代码编辑工具决策计数器</h4>
+<p>当用户接受或拒绝 Edit、Write 或 NotebookEdit 工具的使用时递增。</p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>tool_name</code>：工具名称（<code>"Edit"</code>、<code>"Write"</code>、<code>"NotebookEdit"</code>）</li>
+<li><code>decision</code>：用户决策（<code>"accept"</code>、<code>"reject"</code>）</li>
+<li><code>source</code>：决策的来源。取值为 <code>"config"</code>、<code>"hook"</code>、<code>"user_permanent"</code>、<code>"user_temporary"</code>、<code>"user_abort"</code> 或 <code>"user_reject"</code> 之一。有关每个值的含义，请参阅<a href="#tool-decision-event">工具决策事件</a>。</li>
+<li><code>language</code>：被编辑文件的编程语言，例如 <code>"TypeScript"</code>、<code>"Python"</code>、<code>"JavaScript"</code> 或 <code>"Markdown"</code>。对于无法识别的文件扩展名，返回 <code>"unknown"</code>。</li>
+</ul>
+<h4 id="active-time-counter">活跃时间计数器</h4>
+<p>跟踪实际主动使用 Claude Code 的时间，不包括空闲时间。此指标在用户交互期间（例如输入和阅读回复）以及 CLI 处理期间（例如工具执行和 AI 回复生成）递增。</p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>type</code>：<code>"user"</code> 表示键盘交互，<code>"cli"</code> 表示工具执行和 AI 回复</li>
+</ul>
+<h3 id="events">事件</h3>
+<p>Claude Code 通过 OpenTelemetry 日志/事件导出以下事件（当配置了 <code>OTEL_LOGS_EXPORTER</code> 时）：</p>
+<h4 id="event-correlation-attributes">事件关联属性</h4>
+<p>当用户提交提示词时，Claude Code 可能会进行多次 API 调用并运行多个工具。<code>prompt.id</code> 属性可以将所有这些事件关联回触发它们的单个提示词。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prompt.id</code></td>
+<td>UUID v4 标识符，关联处理单个用户提示词期间产生的所有事件</td>
+</tr>
+<tr>
+<td><code>event.sequence</code></td>
+<td>用于对事件排序的从 0 开始的计数器，按 Claude Code 进程计数，而不是按会话计数</td>
+</tr>
+<tr>
+<td><code>message.uuid</code></td>
+<td>持久保存在会话记录（<code>~/.claude/projects/*/*.jsonl</code> 文件）中的消息的 UUID。出现在 <code>assistant_response</code>、<code>api_response_body</code> 以及 <code>user_prompt</code> 上，但命令分派除外，因为命令分派可能产生零条或多条消息。在 <code>assistant_response</code> 和 <code>api_response_body</code> 上，这是该响应的最后一条会话记录条目，下一轮的 <code>parentUuid</code> 从它链接。在 <code>api_response_body</code> 上需要 Claude Code v2.1.274 或更高版本</td>
+</tr>
+<tr>
+<td><code>request_id</code></td>
+<td>服务器分配的 API 请求 ID，从 <code>request-id</code> 响应头读取，例如 <code>req_011...</code>。对于没有 <code>request-id</code> 响应头的响应（如在 <a href="amazon-bedrock.html">Amazon Bedrock</a> 上），该值改为取自 <code>x-amzn-requestid</code> 响应头。当响应携带其中任一响应头时，出现在 <code>api_request</code>、<code>api_error</code>、<code>api_refusal</code>、<code>assistant_response</code>、<code>api_response_body</code>、<a href="#tool-result-event"><code>tool_result</code></a> 和 <a href="#tool-decision-event"><code>tool_decision</code></a> 上。与 <code>llm_request</code> 追踪 span 上的同名属性一致。<code>x-amzn-requestid</code> 来源需要 Claude Code v2.1.282 或更高版本</td>
+</tr>
+<tr>
+<td><code>client_request_id</code></td>
+<td>客户端生成的 UUID，作为 <code>x-client-request-id</code> 请求头发送。在第一方 API 连接上出现于 <code>api_request</code> 和 <code>api_error</code>；在第三方提供商后端上，以及当请求通过非流式回退方式重试时不存在。它将请求与其响应配对，并且对于超时等从未产生服务器 <code>request_id</code> 的失败仍然可用。与 <code>llm_request</code> 追踪 span 上的同名属性一致</td>
+</tr>
+</tbody>
+</table>
+<p>要追踪由单个提示词触发的所有活动，请按特定的 <code>prompt.id</code> 值过滤您的事件。这会返回处理该提示词期间发生的 user_prompt 事件、所有 api_request 事件以及所有 tool_result 事件。</p>
+<p><code>event.sequence</code> 在每次 Claude Code 进程启动时从 0 开始，并在该进程的生命周期内递增。它在 <code>/clear</code>（会分配新的 <code>session.id</code>）之后继续计数。如果您<a href="how-claude-code-works.html#resume-or-fork-sessions">在不分叉的情况下恢复会话</a>，会话会保留其 <code>session.id</code>，但其 <code>event.sequence</code> 值取自恢复它的进程，因此在同一会话中，较晚的事件可能携带比较早事件更小的值，或者重复某个值。要对会话的事件进行排序，请按 <code>event.timestamp</code> 排序，并使用 <code>event.sequence</code> 对共享同一时间戳的事件进行排序。</p>
+<p>为了进行消息级别的重建，每类事件都携带一个与会话记录中某个字段匹配的键。会话记录的条目格式<a href="sessions.html#where-transcripts-are-stored">属于 Claude Code 内部实现</a>，并且会在版本之间变化，因此基于这些字段进行关联的管道可能在任何版本发布时失效；请将这些关联视为特定于版本的，而不是稳定的约定：</p>
+<ul>
+<li><code>user_prompt</code>、<code>assistant_response</code> 和 <code>api_response_body</code> 上的 <code>message.uuid</code></li>
+<li>API 事件上的 <code>request_id</code>，在会话记录的 assistant 条目中持久保存为 <code>requestId</code></li>
+<li><code>tool_result</code> 和 <code>tool_decision</code> 事件上的 <code>tool_use_id</code>，以及 <code>safety_event</code> 事件上的 <code>tool_use_id</code>（针对<a href="#safety-event">轮次结束</a>的事件除外）</li>
+</ul>
+<h4 id="user-prompt-event">用户提示词事件</h4>
+<p>在提交提示词时记录，包括 Claude Code 自行启动的轮次。</p>
+<p><strong>事件名称</strong>：<code>claude_code.user_prompt</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"user_prompt"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>prompt_length</code>：提示词的长度</li>
+<li><code>prompt</code>：提示词内容。默认已编辑。设置 <code>OTEL_LOG_USER_PROMPTS=1</code> 以包含它</li>
+<li><code>prompt_text</code>：与 <code>prompt</code> 相同的值，在相同的条件下编辑。将带点的属性名称存储为嵌套对象的后端会将 <code>prompt.id</code> 读取为名为 <code>prompt</code> 的对象中的 <code>id</code>，从而可能丢失提示词字符串。在这种情况下请改为读取 <code>prompt_text</code>。需要 Claude Code v2.1.287 或更高版本</li>
+<li><code>message.uuid</code>：生成的用户消息的 UUID，与持久保存的会话记录条目一致。在命令分派上不存在，因为命令分派可能产生零条或多条消息。</li>
+<li><code>command_name</code>：当提示词调用命令时的命令名称。内置和捆绑的命令名称（例如 <code>compact</code> 或 <code>debug</code>）按原样发出；别名（例如 <code>reset</code>）按输入的形式发出，而不是规范名称。自定义、插件和 MCP 命令名称会折叠为 <code>custom</code> 或 <code>mcp</code>，除非设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code></li>
+<li><code>command_source</code>：存在命令时命令的来源：<code>builtin</code>、<code>custom</code> 或 <code>mcp</code>。插件提供的命令报告为 <code>custom</code></li>
+</ul>
+<h4 id="assistant-response-event">助手回复事件</h4>
+<p>在每次从模型返回文本内容的 API 请求之后记录。仅包含响应的文本块；思考块和工具使用块被排除在外。</p>
+<p><strong>事件名称</strong>：<code>claude_code.assistant_response</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"assistant_response"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>response_length</code>：回复文本的长度（以字符为单位）</li>
+<li><code>response</code>：回复文本，在内容限制处截断（默认 60 KB）。默认编辑为 <code>&lt;REDACTED&gt;</code>。设置 <code>OTEL_LOG_ASSISTANT_RESPONSES=1</code> 以包含它。当未设置 <code>OTEL_LOG_ASSISTANT_RESPONSES</code> 时，改由 <code>OTEL_LOG_USER_PROMPTS</code> 控制，因此如果要在启用提示词日志记录的同时保持回复被编辑，请设置 <code>OTEL_LOG_ASSISTANT_RESPONSES=0</code></li>
+<li><code>model</code>：模型标识符（例如 "claude-sonnet-5"）</li>
+<li><code>request_id</code>：API 请求 ID，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>message.uuid</code>：该响应最后一条会话记录条目的 UUID。API 响应按每个内容块一条会话记录条目的方式持久保存；这是最后一条，下一轮的 <code>parentUuid</code> 从它链接。</li>
+<li><code>query_source</code>：发出请求的子系统，例如 <code>"repl_main_thread"</code>、<code>"compact"</code> 或子代理名称</li>
+</ul>
+<h4 id="tool-result-event">工具结果事件</h4>
+<p>在工具完成执行时记录。如果工具调用被拒绝则不会发出；有关拒绝，请参阅<a href="#tool-decision-event">工具决策事件</a>。</p>
+<p><strong>事件名称</strong>：<code>claude_code.tool_result</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"tool_result"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>tool_name</code>：工具的名称</li>
+<li><code>tool_use_id</code>：此次工具调用的唯一标识符。与传递给 hook 的 <code>tool_use_id</code> 相匹配，从而可以在 OTel 事件和 hook 捕获的数据之间建立关联。</li>
+<li><code>request_id</code>：包含此工具调用的 API 响应的 <a href="#event-correlation-attributes"><code>request_id</code></a>，以便您将该调用与该响应的 API 事件关联起来。当该响应没有请求 ID，或没有任何 API 响应包含该调用时不包含。需要 Claude Code v2.1.310 或更高版本</li>
+<li><code>success</code>：<code>"true"</code> 或 <code>"false"</code></li>
+<li><code>duration_ms</code>：执行时间（以毫秒为单位）</li>
+<li><code>error_type</code>：工具失败时的错误类别字符串，例如 <code>"Error:ENOENT"</code> 或 <code>"ShellError"</code></li>
+<li><code>error</code>（当 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时）：工具失败时的完整错误消息</li>
+<li><code>decision_type</code>：始终为 <code>"accept"</code>，因为此事件仅在工具运行后发出。被拒绝的调用不会产生工具结果</li>
+<li><code>decision_source</code>：权限决策的来源。取值为 <code>"config"</code>、<code>"hook"</code>、<code>"user_permanent"</code> 或 <code>"user_temporary"</code> 之一。有关每个值的含义，请参阅<a href="#tool-decision-event">工具决策事件</a>。仅用于拒绝的来源 <code>"user_abort"</code> 和 <code>"user_reject"</code> 永远不会出现在此事件上。</li>
+<li><code>tool_input_size_bytes</code>：JSON 序列化后的工具输入大小（以字节为单位）</li>
+<li><code>tool_result_size_bytes</code>：工具结果的大小（以字节为单位）</li>
+<li><code>mcp_server_scope</code>：MCP 服务器作用域标识符（针对 MCP 工具）</li>
+<li><code>vcs.ref.head.revision</code>、<code>vcs.ref.head.name</code>、<code>vcs.ref.head.type</code>（当 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时）：由 Bash 或 PowerShell 工具运行的成功 <code>git commit</code> 的提交身份。<code>vcs.ref.head.revision</code> 是提交 SHA，<code>vcs.ref.head.name</code> 是提交所在的分支，<code>vcs.ref.head.type</code> 为 <code>branch</code>。当提交是在分离的 HEAD 上进行时，名称和类型会被省略。需要 Claude Code v2.1.269 或更高版本</li>
+<li><code>tool_parameters</code>（当 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时）：包含工具特定参数的 JSON 字符串。对于 Claude Desktop 的内置服务器，在 Claude Desktop 拥有的会话中，即使该标志关闭，也会包含 <code>mcp_server_name</code>/<code>mcp_tool_name</code> 对，这与<a href="#tool-decision-event">工具决策事件</a>中由宿主定义的例外情况相同。参数因工具而异：</li>
+<li>对于 Bash 工具：包括 <code>bash_command</code>、<code>full_command</code>、<code>timeout</code>、<code>description</code> 和 <code>dangerouslyDisableSandbox</code>，当 <code>git commit</code> 命令成功时还包括 <code>git_commit_id</code> 和 <code>git_branch</code>。当该提交是会话工作目录的 HEAD 时，<code>git_commit_id</code> 是完整的提交 SHA，否则是 git 的缩写 SHA。<code>git_branch</code> 是提交所在的分支，在分离的 HEAD 上省略</li>
+<li>对于桌面应用的工作区 Bash 工具（它同样将 <code>tool_name</code> 报告为 <code>Bash</code>）：仅包括 <code>bash_command</code>、<code>full_command</code> 和 <code>timeout</code></li>
+<li>对于 MCP 工具：包括 <code>mcp_server_name</code>、<code>mcp_tool_name</code></li>
+<li>对于 Skill 工具：包括 <code>skill_name</code></li>
+<li>对于 Agent 工具或旧版 Task 工具：包括 <code>subagent_type</code></li>
+<li><code>tool_input</code>（当 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时）：JSON 序列化的工具参数。超过 512 个字符的单个值会被截断，完整的 JSON 数据限制在约 4 K 个字符以内。适用于所有工具，包括 MCP 工具。</li>
+</ul>
+<h4 id="api-request-event">API 请求事件</h4>
+<p>针对每个发往 Claude 的 API 请求记录。</p>
+<p><strong>事件名称</strong>：<code>claude_code.api_request</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"api_request"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>model</code>：使用的模型（例如 "claude-sonnet-5"）</li>
+<li><code>cost_usd</code>：以美元计的估算成本</li>
+<li><code>cost_usd_micros</code>：以百万分之一美元计的估算成本，以整数形式发出</li>
+<li><code>duration_ms</code>：请求持续时间（以毫秒为单位）</li>
+<li><code>input_tokens</code>：输入 token 数量，不包括从提示词缓存读取或写入提示词缓存的 token</li>
+<li><code>output_tokens</code>：输出 token 数量</li>
+<li><code>cache_read_tokens</code>：从缓存读取的 token 数量</li>
+<li><code>cache_creation_tokens</code>：用于创建缓存的 token 数量</li>
+<li><code>cache_creation_5m_tokens</code>、<code>cache_creation_1h_tokens</code>：API 响应报告的以五分钟<a href="prompt-caching.html#cache-lifetime">缓存生命周期</a>写入缓存的 token 数量，以及以一小时生命周期写入的数量。当 API 响应未报告这两项时，两者均为 <code>0</code>，即使 <code>cache_creation_tokens</code> 大于零也是如此。需要 Claude Code v2.1.300 或更高版本</li>
+<li><code>request_id</code>：API 请求 ID，例如 <code>"req_011..."</code>，详见<a href="#event-correlation-attributes">事件关联属性</a>。</li>
+<li><code>client_request_id</code>：客户端生成的 UUID，作为 <code>x-client-request-id</code> 请求头发送；有关其出现的条件，请参阅<a href="#event-correlation-attributes">事件关联属性</a>表</li>
+<li><code>speed</code>：<code>"fast"</code> 或 <code>"normal"</code>，表示快速模式是否处于活跃状态</li>
+<li><code>query_source</code>：发出请求的子系统，例如 <code>"repl_main_thread"</code>、<code>"compact"</code> 或子代理名称</li>
+<li><code>effort</code>：应用于请求的 <a href="model-config.html#adjust-effort-level">effort 级别</a>：<code>"low"</code>、<code>"medium"</code>、<code>"high"</code>、<code>"xhigh"</code> 或 <code>"max"</code>。当 Claude Code 未发送 effort 级别时不存在，例如在不支持 effort 的模型上。</li>
+<li><code>agent.name</code>、<code>skill.name</code>、<code>plugin.name</code>、<code>marketplace.name</code>、<code>mcp_server.name</code>、<code>mcp_tool.name</code>：请求的 skill、插件、Agent 和 MCP 归因。有关定义和编辑行为，请参阅<a href="#cost-counter">成本计数器</a>。</li>
+</ul>
+<h4 id="api-error-event">API 错误事件</h4>
+<p>当发往 Claude 的 API 请求失败时记录。</p>
+<p><strong>事件名称</strong>：<code>claude_code.api_error</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"api_error"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>model</code>：使用的模型（例如 "claude-sonnet-5"）</li>
+<li><code>error</code>：错误消息</li>
+<li><code>status_code</code>：以数字表示的 HTTP 状态码。对于非 HTTP 错误（例如连接失败）不存在。</li>
+<li><code>duration_ms</code>：请求持续时间（以毫秒为单位）</li>
+<li><code>attempt</code>：已进行的尝试次数，包括初始请求。<a href="#detect-retry-exhaustion">检测重试耗尽</a>说明了计数何时重新开始</li>
+<li><code>request_id</code>：API 请求 ID，例如 <code>"req_011..."</code>，详见<a href="#event-correlation-attributes">事件关联属性</a>。</li>
+<li><code>client_request_id</code>：客户端生成的 UUID，作为 <code>x-client-request-id</code> 请求头发送。即使超时或连接错误等失败从未产生服务器 <code>request_id</code>，它也可用；有关其出现的条件，请参阅<a href="#event-correlation-attributes">事件关联属性</a>表。</li>
+<li><code>speed</code>：<code>"fast"</code> 或 <code>"normal"</code>，表示快速模式是否处于活跃状态</li>
+<li><code>query_source</code>：发出请求的子系统，例如 <code>"repl_main_thread"</code>、<code>"compact"</code> 或子代理名称</li>
+<li><code>effort</code>：应用于请求的 <a href="model-config.html#adjust-effort-level">effort 级别</a>。当 Claude Code 未发送 effort 级别时不存在，例如在不支持 effort 的模型上。</li>
+<li><code>agent.name</code>、<code>skill.name</code>、<code>plugin.name</code>、<code>marketplace.name</code>、<code>mcp_server.name</code>、<code>mcp_tool.name</code>：请求的 skill、插件、Agent 和 MCP 归因。有关定义和编辑行为，请参阅<a href="#cost-counter">成本计数器</a>。</li>
+</ul>
+<h4 id="api-refusal-event">API 拒绝事件</h4>
+<p>当 API 请求返回 <code>stop_reason: "refusal"</code> 时记录。拒绝是在成功的响应流中到达的，而不是作为 HTTP 错误，因此 <code>api_error</code> 事件不会为它们触发。此事件可让您跟踪拒绝频率，并按与 <code>api_request</code> 和 <code>api_error</code> 相同的属性对拒绝进行分组。</p>
+<p><strong>事件名称</strong>：<code>claude_code.api_refusal</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"api_refusal"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>model</code>：来自请求的模型标识符</li>
+<li><code>request_id</code>：API 请求 ID，例如 <code>"req_011..."</code>，详见<a href="#event-correlation-attributes">事件关联属性</a>。</li>
+<li><code>query_source</code>：发出请求的子系统，例如 <code>"repl_main_thread"</code>、<code>"compact"</code> 或子代理名称。有关定义，请参阅 <a href="#api-request-event"><code>api_request</code></a>。</li>
+<li><code>speed</code>：当<a href="fast-mode.html">快速模式</a>处于活跃状态时为 <code>"fast"</code>，否则为 <code>"normal"</code></li>
+<li><code>attempt</code>：重试尝试次数。第一次尝试为 <code>1</code>。</li>
+<li><code>effort</code>：应用于请求的 <a href="model-config.html#adjust-effort-level">effort 级别</a>。当 Claude Code 未发送 effort 级别时不存在，例如在不支持 effort 的模型上。</li>
+<li><code>server_fallback_hop</code>：当 API 的服务器端模型回退已经在另一个模型上重试了此次拒绝（因此用户没有看到这次特定的拒绝）时为 <code>true</code>。当请求以拒绝结束时为 <code>false</code>。当备用模型也拒绝时，单个轮次可以同时发出一个 <code>true</code> 跳转事件和一个随后的 <code>false</code> 最终事件。</li>
+<li><code>has_category</code>：当 API 响应携带的 <code>stop_details.category</code> 为 <code>"cyber"</code>、<code>"bio"</code>、<code>"frontier_llm"</code> 或 <code>"reasoning_extraction"</code> 时为 <code>true</code>。当响应未携带类别或携带的值不在该集合中时为 <code>false</code>。当 <code>server_fallback_hop</code> 为 <code>true</code> 时不存在，因为跳转块不携带 <code>stop_details</code>。</li>
+<li><code>has_explanation</code>：当 API 响应携带 <code>stop_details.explanation</code> 时为 <code>true</code>，否则为 <code>false</code>。当 <code>server_fallback_hop</code> 为 <code>true</code> 时不存在。</li>
+<li><code>category</code>：来自 API 响应的 <code>stop_details.category</code> 值。取值为 <code>"cyber"</code>、<code>"bio"</code>、<code>"frontier_llm"</code> 或 <code>"reasoning_extraction"</code> 之一。仅当设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code> 且 <code>has_category</code> 为 <code>true</code> 时存在。</li>
+<li><code>agent.name</code>、<code>skill.name</code>、<code>plugin.name</code>、<code>marketplace.name</code>、<code>mcp_server.name</code>、<code>mcp_tool.name</code>：请求的 skill、插件、Agent 和 MCP 归因。有关定义和编辑行为，请参阅<a href="#cost-counter">成本计数器</a>。</li>
+</ul>
+<h4 id="api-request-body-event">API 请求体事件</h4>
+<p>当设置了 <code>OTEL_LOG_RAW_API_BODIES</code> 时，针对每次 API 请求尝试记录。每次尝试发出一个事件，因此使用调整后参数进行的重试各自产生自己的事件。</p>
+<p><strong>事件名称</strong>：<code>claude_code.api_request_body</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"api_request_body"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>body</code>：JSON 序列化的 Messages API 请求参数，例如系统提示词、消息和工具，在内容限制处截断（默认 60 KB）。之前 assistant 轮次中的扩展思考内容会被编辑。仅在内联模式（<code>OTEL_LOG_RAW_API_BODIES=1</code>）下发出。</li>
+<li><code>body_ref</code>：包含未截断请求体的 <code>&lt;dir&gt;/&lt;uuid&gt;.request.json</code> 文件的绝对路径。仅在文件模式（<code>OTEL_LOG_RAW_API_BODIES=file:&lt;dir&gt;</code>）下发出。</li>
+<li><code>body_length</code>：未截断的请求体长度。当 <code>OTEL_LOG_RAW_API_BODIES=file:&lt;dir&gt;</code> 时为 UTF-8 字节数，当 <code>=1</code> 时为 UTF-16 代码单元数</li>
+<li><code>body_truncated</code>：当发生内联截断时为 <code>"true"</code>。在文件模式下以及未发生截断时不存在。</li>
+<li><code>model</code>：来自请求参数的模型标识符</li>
+<li><code>query_source</code>：发出请求的子系统（例如 <code>"compact"</code>）</li>
+<li><code>request_body_id</code>：标识此次尝试请求体的 UUID。成功的那次尝试对应的 <a href="#api-response-body-event"><code>api_response_body</code> 事件</a>携带相同的值，因此您可以将响应与产生它的确切请求配对。需要 Claude Code v2.1.274 或更高版本</li>
+</ul>
+<h4 id="api-response-body-event">API 响应体事件</h4>
+<p>当设置了 <code>OTEL_LOG_RAW_API_BODIES</code> 时，针对每个成功的 API 响应记录。</p>
+<p>在文件模式（<code>OTEL_LOG_RAW_API_BODIES=file:&lt;dir&gt;</code>）下，Claude Code 还会针对每个成功的响应向 <code>&lt;dir&gt;/index.jsonl</code> 追加一行 JSON，包含字段 <code>timestamp</code>、<code>session_id</code>、<code>query_source</code>、<code>model</code>、<code>request_id</code>、<code>message_id</code>、<code>message_uuid</code>、<code>request_file</code> 和 <code>response_file</code>。读取该文件即可找到给定会话记录消息背后的请求和响应文件，而无需查询您的遥测后端。索引文件需要 Claude Code v2.1.274 或更高版本。</p>
+<p><strong>事件名称</strong>：<code>claude_code.api_response_body</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"api_response_body"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>body</code>：JSON 序列化的 Messages API 响应，包括 id、内容块、用量和停止原因，在内容限制处截断（默认 60 KB）。扩展思考内容会被编辑。仅在内联模式（<code>OTEL_LOG_RAW_API_BODIES=1</code>）下发出。</li>
+<li><code>body_ref</code>：包含未截断响应体的 <code>&lt;dir&gt;/&lt;request_id&gt;.response.json</code> 文件的绝对路径。仅在文件模式（<code>OTEL_LOG_RAW_API_BODIES=file:&lt;dir&gt;</code>）下发出。</li>
+<li><code>body_length</code>：未截断的响应体长度。当 <code>OTEL_LOG_RAW_API_BODIES=file:&lt;dir&gt;</code> 时为 UTF-8 字节数，当 <code>=1</code> 时为 UTF-16 代码单元数</li>
+<li><code>body_truncated</code>：当发生内联截断时为 <code>"true"</code>。在文件模式下以及未发生截断时不存在。</li>
+<li><code>model</code>：模型标识符</li>
+<li><code>query_source</code>：发出请求的子系统</li>
+<li><code>request_id</code>：API 请求 ID，例如 <code>"req_011..."</code>，详见<a href="#event-correlation-attributes">事件关联属性</a>。</li>
+<li><code>request_body_id</code>：此响应所对应的 <a href="#api-request-body-event"><code>api_request_body</code> 事件</a>的 <code>request_body_id</code>。需要 Claude Code v2.1.274 或更高版本</li>
+<li><code>message.id</code>：API 为响应分配的消息 ID，即响应体的 <code>id</code> 字段。需要 Claude Code v2.1.274 或更高版本</li>
+<li><code>message.uuid</code>：响应的最后一个会话记录条目的 UUID。它与 <code>request_body_id</code> 一起，将会话记录消息与其背后的请求体和响应体关联起来。需要 Claude Code v2.1.274 或更高版本</li>
+</ul>
+<h4 id="tool-decision-event">工具决策事件</h4>
+<p>在做出工具权限决策（接受/拒绝）时记录。</p>
+<p><strong>事件名称</strong>：<code>claude_code.tool_decision</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"tool_decision"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>tool_name</code>：工具的名称（例如 "Read"、"Edit"、"Write"、"NotebookEdit"）</li>
+<li><code>tool_use_id</code>：此次工具调用的唯一标识符。与传递给 hook 的 <code>tool_use_id</code> 相匹配，从而可以在 OTel 事件和 hook 捕获的数据之间建立关联。</li>
+<li><code>request_id</code>：包含此工具调用的 API 响应的 <a href="#event-correlation-attributes"><code>request_id</code></a>，以便您将该调用与该响应的 API 事件关联起来。当该响应没有请求 ID，或没有任何 API 响应包含该调用时不包含。需要 Claude Code v2.1.310 或更高版本</li>
+<li><code>decision</code>：<code>"accept"</code> 或 <code>"reject"</code></li>
+<li><code>tool_source</code>：始终存在。工具的来源，是由 CLI 定义的封闭值集合：</li>
+<li><code>"builtin"</code>：CLI 自身的工具</li>
+<li><code>"mcp"</code>：一般的 MCP 服务器</li>
+<li><code>"sdk_host_builtin_mcp"</code>：内置于 Claude Desktop 本身的进程内服务器，位于 Claude Desktop 拥有的会话中。当 Claude Desktop 从其自身的某个入口点（<code>claude-desktop</code>、<code>claude-desktop-3p</code> 或 <code>local-agent</code>）启动会话，且该会话不是嵌套子会话时，Claude Desktop 拥有该会话；嵌套会话（包括 Claude Code 自身生成的会话）将这些服务器报告为 <code>"mcp"</code></li>
+<li><code>source</code>：决策的来源：</li>
+<li>
+<p><code>"config"</code>：无需提示即自动决定，由以下来源之一决定：</p>
+<ul>
+<li>项目设置</li>
+<li>用户个人设置中的允许或拒绝规则</li>
+<li>企业托管策略</li>
+<li><code>--allowedTools</code> 或 <code>--disallowedTools</code> 标志</li>
+<li>当前的权限模式</li>
+<li>自动模式分类器，同一事件会在 <code>classifier_verdict</code> 中记录其判定结果</li>
+<li>在同一交互式 CLI 会话中较早的权限提示中授予的、在会话剩余时间内有效的授权</li>
+<li>工具本身是安全的</li>
+</ul>
+<p><code>source</code> 值并不表明匹配的是其中哪个来源。要查明是哪个来源拒绝了调用，请查找具有相同 <code>tool_use_id</code> 的<a href="#safety-event">安全事件</a>，并读取其 <code>category</code> 和 <code>rule_source</code> 属性。部分被拒绝的调用<a href="#calls-without-a-safety-event">没有安全事件</a>。</p>
+<p>当权限提示请求本身失败时，Claude Code 也会报告 <code>"config"</code>。例如，当 Agent SDK 的 <a href="agent-sdk-typescript.html#canusetool"><code>canUseTool</code></a> 回调或 <a href="cli-reference.html#cli-flags"><code>--permission-prompt-tool</code></a> 工具返回无效结果时，或者当请求挂起期间输入流关闭时，该请求都会失败。<br />
+  * <code>"hook"</code>：由 <code>PreToolUse</code> 或 <code>PermissionRequest</code> hook 返回了该决策。<br />
+  * <code>"user_permanent"</code>：当用户在权限提示中选择 "Yes, and don't ask again for ..." 时发出，这会将一条允许规则保存到其个人设置中。在交互式 CLI 中，仅针对该选择本身发出；之后匹配已保存规则的调用会改为发出 <code>"config"</code>。在 Agent SDK 或非交互式 <code>-p</code> 会话中，初始选择和之后的规则匹配都会发出 <code>"user_permanent"</code>。视为接受。<br />
+  * <code>"user_temporary"</code>：当用户在权限提示中选择 "Yes" 进行一次性批准，或在文件编辑或读取提示中选择了在会话剩余时间内授予访问权限的选项时发出。在交互式 CLI 中，仅针对该选择本身发出；之后由该会话范围许可允许的调用会改为发出 <code>"config"</code>。在 Agent SDK 或非交互式 <code>-p</code> 会话中，该选择和之后的匹配都会发出 <code>"user_temporary"</code>。视为接受。<br />
+  * <code>"user_abort"</code>：当用户未作回答就关闭了权限提示时发出。在 Agent SDK 和非交互式 <code>-p</code> 会话中，这包括在 <code>canUseTool</code> 或 <code>--permission-prompt-tool</code> 权限请求挂起期间中断轮次。视为拒绝。<br />
+  * <code>"user_reject"</code>：当用户在提示时选择 "No" 时发出。在交互式 CLI 中，仅针对该选择本身发出；匹配用户个人设置中拒绝规则的调用会改为发出 <code>"config"</code>。在 Agent SDK 或非交互式 <code>-p</code> 会话中，匹配个人设置中拒绝规则的调用会发出 <code>"user_reject"</code>。视为拒绝。<br />
+* <code>classifier_verdict</code>：自动模式<a href="permission-modes.html#how-the-classifier-evaluates-actions">分类器</a>对该调用的判定结果，或在没有判定结果时 Claude Code 拒绝该调用的原因。需要 Claude Code v2.1.301 或更高版本</p>
+</li>
+<li>
+<p><code>"allow"</code>：分类器批准了该调用</p>
+</li>
+<li><code>"block"</code>：分类器阻止了该调用。中途失败的分类器检查也可能以 <code>"block"</code> 结束，因此分类器部分中断可能表现为阻止次数增多，而不是 <code>"unavailable"</code></li>
+<li><code>"no_verdict"</code>：检查已运行，但<a href="errors.html#auto-mode-cannot-determine-the-safety-of-an-action">没有给出可用的判定结果</a>，因此 Claude Code 拒绝了该调用。该拒绝并不意味着分类器认为该调用不安全</li>
+<li><code>"unavailable"</code>：发往分类器的请求失败，例如遇到速率限制、超时或连接错误，因此 Claude Code 拒绝了该调用。在使用<a href="permission-modes.html#server-side-classifier-review">服务器端分类器审查</a>时，它还标记因<a href="errors.html#the-server-returned-no-safety-verdict">服务器未返回安全判定结果</a>而被拒绝的调用</li>
+</ul>
+<p>当<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">分类器在计划模式下审查命令</a>时，该属性也会出现在计划模式的调用上。在以下情况下该属性不存在：</p>
+<ul>
+<li>由允许或拒绝<a href="permissions.html#manage-permissions">权限规则</a>决定了该调用</li>
+<li>Claude Code 在自动模式下未询问分类器就批准了该调用</li>
+<li>用户回答了 Claude Code 在<a href="permission-modes.html#repeated-block-thresholds">多次阻止</a>后显示的提示</li>
+<li>在不带 <code>--permission-prompt-tool</code> 的 <code>-p</code> 运行中，由于没有人可以回答提示，Claude Code 在多次阻止后拒绝了该调用。该事件将 <code>decision</code> 报告为 <code>"reject"</code>，将 <code>source</code> 报告为 <code>"config"</code></li>
+<li>
+<p><code>classifier_category</code>（当 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时）：分类器阻止该调用时指明的<a href="auto-mode-config.html#inspect-the-defaults-and-your-effective-config">内置规则</a>名称，采用小写加下划线形式，例如 Data Exfiltration 规则对应 <code>"data_exfiltration"</code>。需要 Claude Code v2.1.301 或更高版本。当以下两个条件同时成立时，该属性存在：</p>
+</li>
+<li>
+<p><code>classifier_verdict</code> 为 <code>"block"</code></p>
+</li>
+<li>分类器恰好指明了一条规则，且该规则是内置规则而非您编写的规则</li>
+</ul>
+<p>在 v2.1.302 之前，对于由<a href="permission-modes.html#server-side-classifier-review">服务器端分类器审查</a>决定的任何阻止，该属性也不存在。<br />
+* <code>permission_mode</code>：此调用的权限检查开始时处于活动状态的<a href="permission-modes.html">权限模式</a>：<code>"default"</code>、<code>"plan"</code>、<code>"acceptEdits"</code>、<code>"bypassPermissions"</code>、<code>"dontAsk"</code> 或 <code>"auto"</code>。手动模式显示为 <code>"default"</code>。<a href="sub-agents.html#permission-modes">子代理</a>的调用报告的是子代理的权限模式，而不是会话的权限模式。需要 Claude Code v2.1.301 或更高版本<br />
+* <code>tool_parameters</code>（当 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时）：包含工具特定参数的 JSON 字符串。结构与<a href="#tool-result-event">工具结果事件</a>相同，但不含 <code>git_commit_id</code> 等执行后字段。如果权限决策通过 <code>updatedInput</code> 重写了工具输入，对于被接受的调用，其值可能与 <code>tool_result</code> 不同。当 <code>decision</code> 为 <code>"reject"</code> 时，可使用此属性查看哪个命令被拒绝。<br />
+  * 对于 <code>"sdk_host_builtin_mcp"</code> 工具：即使 <code>OTEL_LOG_TOOL_DETAILS</code> 关闭，也会包含 <code>mcp_server_name</code> 和 <code>mcp_tool_name</code>，因为这些名称由宿主应用定义；如果没有它们，对这些内置服务器之一的被拒绝调用在默认数据流中将无法归属。对于用户配置的 MCP 服务器，事件的 <code>tool_name</code> 始终为字面值 <code>"mcp_tool"</code>，服务器和工具名称仅在启用该标志时出现在 <code>tool_parameters</code> 中；参数内容在任何情况下都需要该标志。<br />
+  * 对于 Bash 工具：包括 <code>bash_command</code>、<code>full_command</code>、<code>timeout</code>、<code>description</code>、<code>dangerouslyDisableSandbox</code>。桌面应用的工作区 bash 工具同样将 <code>tool_name</code> 报告为 <code>Bash</code>，但仅包括 <code>bash_command</code>、<code>full_command</code> 和 <code>timeout</code><br />
+  * 对于 MCP 工具：包括 <code>mcp_server_name</code>、<code>mcp_tool_name</code><br />
+  * 对于 Skill 工具：包括 <code>skill_name</code><br />
+  * 对于 Agent 工具或旧版 Task 工具：包括 <code>subagent_type</code></p>
+<p>如果您将 OpenTelemetry SDK 的 <code>OTEL_LOGRECORD_ATTRIBUTE_COUNT_LIMIT</code> 降低到低于 <code>tool_decision</code> 事件上的属性数量，SDK 会丢弃 Claude Code 最后设置的属性。SDK 会先于任何其他属性按以下顺序丢弃这些属性，并跳过事件未携带的属性：</p>
+<ol>
+<li><code>parent_agent_id</code></li>
+<li><code>agent_id</code></li>
+<li><code>request_id</code></li>
+<li><code>permission_mode</code></li>
+<li><code>classifier_category</code></li>
+<li><code>classifier_verdict</code></li>
+</ol>
+<p>在 Claude Code v2.1.302 或更高版本上，<code>permission_mode</code>、<code>classifier_category</code> 和 <code>classifier_verdict</code> 按此顺序丢弃。<code>parent_agent_id</code>、<code>agent_id</code> 和 <code>request_id</code> 需要 v2.1.310 或更高版本。</p>
+<h4 id="safety-event">安全事件</h4>
+<p>当某项检查拒绝工具调用或要求权限提示时记录，但<a href="#calls-without-a-safety-event">没有安全事件的调用</a>除外。当<a href="sandboxing.html#network-isolation">沙箱的网络代理</a>拒绝连接或请求时，以及当 hook 阻止结果时，也会记录。需要 Claude Code v2.1.307 或更高版本。</p>
+<p>该事件与其他事件一起导出，没有单独的设置。该事件自身的属性不包含命令文本、文件路径、主机名或 MCP 服务器和工具名称。该记录还携带每个事件都有的<a href="#standard-attributes">标准属性</a>，其中可能包括 <code>workspace.host_paths</code> 和<a href="#repository-attributes">仓库属性</a>。要查看事件背后的命令或 MCP 工具，请设置 <code>OTEL_LOG_TOOL_DETAILS=1</code>，并读取匹配的 <code>tool_decision</code> 事件上的 <code>tool_parameters</code>。</p>
+<p><strong>事件名称</strong>：<code>claude_code.safety_event</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"safety_event"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>category</code>：检查或结果，为一个<a href="#safety-event-categories">类别值</a></li>
+<li><code>decision</code>：<code>"accept"</code>、<code>"reject"</code>，或当 hook 阻止了结果或轮次结束时为 <code>"sent_back"</code></li>
+<li><code>decision_source</code>：由谁或什么做出决定，为 <a href="#tool-decision-event"><code>tool_decision</code></a> 的某个 <code>source</code> 值或 <code>"other"</code></li>
+<li><code>reason_code</code>：检查的原因，例如 <code>"rule:policySettings"</code>、<code>"mode:dontAsk"</code>、<code>"hook:PreToolUse"</code>、<code>"classifier:auto-mode"</code>、<code>"bashMiss:too-complex"</code> 或 <code>"unknown"</code></li>
+<li><code>reason_type</code>：检查的原因类型，例如 <code>"rule"</code>、<code>"subcommandResults"</code>、<code>"mode"</code>、<code>"hook"</code>、<code>"classifier"</code> 或 <code>"asyncAgent"</code></li>
+<li><code>rule_source</code>：所涉及规则的设置来源，例如 <code>"policySettings"</code>、<code>"userSettings"</code>、<code>"projectSettings"</code>、<code>"localSettings"</code>、<code>"flagSettings"</code>、<code>"cliArg"</code> 或 <code>"session"</code></li>
+<li><code>grant_scope</code>：对于未将规则保存到设置文件即获批准的提示，为 <code>"once"</code> 或 <code>"session"</code></li>
+<li><code>circuit_breaker</code>：内置安全检查，例如 <code>"dangerousRemoval"</code>、<code>"outsideReadsBlocked"</code> 或 <code>"claudeSettingsFile"</code></li>
+<li><code>classifier_category</code>：在 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时，为自动模式阻止背后的<a href="auto-mode-config.html#inspect-the-defaults-and-your-effective-config">内置规则</a>，例如 <code>"data_exfiltration"</code></li>
+<li><code>hook_event</code>：对于 <code>PreToolUse</code> hook 为 <code>"pre_tool_use"</code>，在 <code>"hook_review"</code> 事件上为 <code>"post_tool_use"</code>、<code>"post_tool_use_failure"</code>、<code>"stop"</code> 或 <code>"subagent_stop"</code></li>
+<li><code>tool_class</code>：Bash 和 <a href="tools-reference.html#monitor-tool">Monitor</a> 为 <code>"bash"</code>，<code>"powershell"</code>，Read、Edit、Write、NotebookEdit、Glob 和 Grep 为 <code>"file"</code>，WebFetch 和 WebSearch 为 <code>"web"</code>，<code>"mcp"</code>，或 <code>"other"</code></li>
+<li><code>tool_name</code>：工具的名称，例如内置工具为 <code>"Bash"</code>，或为 <code>"mcp_tool"</code>、<code>"skill_tool"</code>、<code>"dynamic_tool"</code> 或 <code>"other_tool"</code></li>
+<li><code>tool_source</code>：<code>"builtin"</code>、<code>"mcp"</code> 或 <code>"sdk_host_builtin_mcp"</code>，与 <a href="#tool-decision-event"><code>tool_decision</code></a> 上的相同</li>
+<li><code>permission_mode</code>：检查时该调用的<a href="permission-modes.html">权限模式</a>：<code>"default"</code>、<code>"plan"</code>、<code>"acceptEdits"</code>、<code>"bypassPermissions"</code>、<code>"dontAsk"</code> 或 <code>"auto"</code></li>
+<li><code>tool_use_id</code>：该调用的 ID，与 <code>tool_decision</code> 和 <code>tool_result</code> 上的相同</li>
+<li><code>sandbox_violation_count</code>：沙箱的网络代理拒绝了来自该调用命令的多少个不同连接或请求，为 <code>"0"</code> 到 <code>"20"</code> 的字符串。针对在前台完成的沙箱化命令统计拒绝次数</li>
+<li><code>sandbox_enabled</code>：如果会话启用了<a href="sandboxing.html">沙箱隔离</a>，则为 <code>"true"</code>，否则为 <code>"false"</code></li>
+</ul>
+<p>以下是托管设置中的拒绝规则拒绝一条 Bash 命令时该事件自身的属性：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"event.name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"safety_event"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"managed_policy"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"decision"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reject"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"decision_source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"config"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"reason_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rule:policySettings"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"rule_source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policySettings"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tool_class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bash"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tool_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bash"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tool_source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"builtin"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"permission_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tool_use_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"toolu_01ABC123..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sandbox_violation_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sandbox_enabled"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h5 id="safety-event-categories">安全事件类别</h5>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>检查或结果</th>
+<th>详情属性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"permission_rule"</code></td>
+<td>托管设置之外的拒绝或询问<a href="permissions.html#manage-permissions">权限规则</a></td>
+<td><code>rule_source</code></td>
+</tr>
+<tr>
+<td><code>"managed_policy"</code></td>
+<td>来自<a href="permissions.html#managed-settings">托管设置</a>的拒绝或询问规则</td>
+<td><code>rule_source</code></td>
+</tr>
+<tr>
+<td><code>"permission_mode"</code></td>
+<td><a href="permission-modes.html#allow-only-pre-approved-tools-with-dontask-mode"><code>dontAsk</code></a> 或<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划</a>模式，或者在无法显示提示的会话中（例如使用 <a href="headless.html#turn-off-permission-prompts-in-unattended-runs"><code>--permission-prompts none</code></a> 时）出现的<a href="#prompts-with-no-category">无类别</a>提示</td>
+<td><code>reason_code</code>、<code>reason_type</code></td>
+</tr>
+<tr>
+<td><code>"hook"</code></td>
+<td>某个 hook，例如 <a href="hooks.html#pretooluse"><code>PreToolUse</code></a> 或 <a href="hooks.html#permissionrequest"><code>PermissionRequest</code></a></td>
+<td><code>hook_event</code>、<code>reason_code</code></td>
+</tr>
+<tr>
+<td><code>"auto_mode_block"</code></td>
+<td>自动模式<a href="permission-modes.html#how-the-classifier-evaluates-actions">分类器</a>阻止了该调用</td>
+<td><code>classifier_category</code></td>
+</tr>
+<tr>
+<td><code>"auto_mode_no_verdict"</code></td>
+<td>没有可用的<a href="errors.html#auto-mode-cannot-determine-the-safety-of-an-action">分类器判定结果</a>，例如在请求失败之后</td>
+<td><code>reason_code</code></td>
+</tr>
+<tr>
+<td><code>"safety_check"</code></td>
+<td>内置安全检查，例如针对在您的<a href="permissions.html#working-directories">工作目录</a>之外执行的 Read、Edit 或 Write</td>
+<td><code>circuit_breaker</code></td>
+</tr>
+<tr>
+<td><code>"static_analysis"</code></td>
+<td>Bash 或 Monitor 命令的写法，例如过于复杂而无法分析的命令</td>
+<td><code>reason_code</code></td>
+</tr>
+<tr>
+<td><code>"sandbox_override"</code></td>
+<td><a href="sandboxing.html#the-unsandboxed-retry-escape-hatch">在沙箱之外运行命令</a>的提示</td>
+<td><code>reason_code</code></td>
+</tr>
+<tr>
+<td><code>"user_rejected"</code></td>
+<td>有人拒绝或关闭了<a href="#prompts-with-no-category">无类别</a>的提示或仅由 hook 要求的提示，或者 <code>canUseTool</code> 回调或 <code>--permission-prompt-tool</code> 工具拒绝了此类提示</td>
+<td><code>decision_source</code></td>
+</tr>
+<tr>
+<td><code>"sandbox_network"</code></td>
+<td>调用已运行，且<a href="sandboxing.html#network-isolation">沙箱的网络代理</a>拒绝了某个连接或请求</td>
+<td><code>sandbox_violation_count</code></td>
+</tr>
+<tr>
+<td><code>"sandbox_other"</code></td>
+<td>类似 <code>"sandbox_network"</code>，但没有任何被拒绝的目标可识别为主机名或 IP 地址</td>
+<td><code>sandbox_violation_count</code></td>
+</tr>
+<tr>
+<td><code>"hook_review"</code></td>
+<td>某个 hook <a href="hooks.html#posttooluse-decision-control">阻止了调用的结果</a>或<a href="hooks.html#stop-decision-control">轮次的结束</a></td>
+<td><code>hook_event</code></td>
+</tr>
+<tr>
+<td><code>"other"</code></td>
+<td>其他任何值都无法描述的拒绝</td>
+<td><code>reason_code</code></td>
+</tr>
+</tbody>
+</table>
+<p>要在任何 <code>category</code> 下查找代理拒绝，请筛选存在且不为 <code>"0"</code> 的 <code>sandbox_violation_count</code>。</p>
+<h5 id="calls-without-a-safety-event">没有安全事件的调用</h5>
+<p>要查找因无人能回答<a href="#prompts-with-no-category">无类别提示</a>而被拒绝的调用，请查找报告 <code>"reject"</code> 且 <code>source</code> 为 <code>"config"</code>、并且没有安全事件与其共享 <code>tool_use_id</code> 的 <a href="#tool-decision-event"><code>tool_decision</code></a> 事件。此类拒绝发生在既未使用 <a href="cli-reference.html#cli-flags"><code>--permission-prompt-tool</code></a> 也未使用 <code>--permission-prompts none</code> 的 <code>-p</code> 运行中。</p>
+<p>对于以下这类调用，请检查其 <code>tool_decision</code> 事件，因为除了在其运行后发出的 <a href="#safety-event-categories"><code>"sandbox_network"</code>、<code>"sandbox_other"</code> 或 <code>"hook_review"</code> 事件</a>之外，它们没有安全事件：</p>
+<ul>
+<li>在无类别提示中获得批准的调用</li>
+<li>在仅由 <code>PreToolUse</code> hook 要求的提示中，由 <code>canUseTool</code> 回调或 <code>--permission-prompt-tool</code> 工具批准的调用</li>
+<li><a href="tools-reference.html#askuserquestion-tool-behavior"><code>AskUserQuestion</code></a> 或 <code>ExitPlanMode</code> 调用，无论是否被拒绝</li>
+</ul>
+<h5 id="prompts-with-no-category">无类别的提示</h5>
+<p>当没有任何 <a href="#safety-event-categories"><code>category</code> 值</a>命名某个提示的检查时，该提示即无类别，例如针对工作目录内编辑的 <code>default</code> 模式提示。</p>
+<h4 id="permission-mode-changed-event">权限模式变更事件</h4>
+<p>在权限模式发生变化时记录，例如通过 <code>Shift+Tab</code> 循环切换、退出计划模式或自动模式门控检查。</p>
+<p>要按每个工具调用接受检查时所处的权限模式对其分组，请使用<a href="#tool-decision-event">工具决策事件</a>上的 <code>permission_mode</code>。</p>
+<p><strong>事件名称</strong>：<code>claude_code.permission_mode_changed</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"permission_mode_changed"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>from_mode</code>：先前的权限模式，例如 <code>"default"</code>、<code>"plan"</code>、<code>"acceptEdits"</code>、<code>"auto"</code> 或 <code>"bypassPermissions"</code></li>
+<li><code>to_mode</code>：新的权限模式</li>
+<li><code>trigger</code>：导致变更的原因，例如 <code>"shift_tab"</code>、<code>"exit_plan_mode"</code> 或 <code>"auto_gate_denied"</code>。对于某些变更不存在，例如当 SDK 通过 <a href="agent-sdk-typescript.html#query-object"><code>setPermissionMode()</code></a> 设置权限模式时</li>
+</ul>
+<h4 id="auth-event">身份验证事件</h4>
+<p>在 <code>/login</code> 或 <code>/logout</code> 完成时记录。</p>
+<p><strong>事件名称</strong>：<code>claude_code.auth</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"auth"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>action</code>：<code>"login"</code> 或 <code>"logout"</code></li>
+<li><code>success</code>：<code>"true"</code> 或 <code>"false"</code></li>
+<li><code>auth_method</code>：身份验证方法，例如 <code>"oauth"</code></li>
+<li><code>error_category</code>：操作失败时的错误类别。永远不会包含原始错误消息</li>
+<li><code>status_code</code>：当操作因 HTTP 错误而失败时，以字符串表示的 HTTP 状态码</li>
+</ul>
+<h4 id="mcp-server-connection-event">MCP 服务器连接事件</h4>
+<p>在 MCP 服务器连接、断开连接或连接失败时记录。</p>
+<p><strong>事件名称</strong>：<code>claude_code.mcp_server_connection</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"mcp_server_connection"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>status</code>：<code>"connected"</code>、<code>"failed"</code> 或 <code>"disconnected"</code></li>
+<li><code>transport_type</code>：服务器传输方式，例如 <code>"stdio"</code>、<code>"sse"</code> 或 <code>"http"</code></li>
+<li><code>server_scope</code>：服务器所配置的作用域，例如 <code>"user"</code>、<code>"project"</code> 或 <code>"local"</code></li>
+<li><code>duration_ms</code>：连接尝试持续时间（以毫秒为单位）</li>
+<li><code>error_code</code>：连接失败时的错误代码</li>
+<li><code>is_plugin</code>：当服务器由插件提供时为 <code>true</code>，否则为 <code>false</code></li>
+<li><code>plugin_id_hash</code>（当 <code>is_plugin</code> 为 <code>true</code> 时）：插件名称和市场的稳定哈希，用于在不暴露名称的情况下按插件对事件进行分组。Claude Code 按照<a href="#plugin-loaded-event">插件已加载事件</a>中描述的方式计算它</li>
+<li><code>plugin.name</code>（当 <code>is_plugin</code> 为 <code>true</code> 时）：提供该服务器的插件名称。对于第三方插件，除非设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code>，否则这是字面字符串 <code>"third-party"</code>；这可以防止第三方插件名称默认出现在日志中。来自 Anthropic 官方来源的插件始终以名称标识。<code>plugin_id_hash</code> 和 <code>plugin.name</code> 属性会流向您自己的监控后端，不会发送给 Anthropic</li>
+<li><code>server_name</code>（当 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时）：配置的服务器名称</li>
+<li><code>error</code>（当 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时）：连接失败时的完整错误消息</li>
+</ul>
+<h4 id="internal-error-event">内部错误事件</h4>
+<p>当 Claude Code 捕获到意外的内部错误时记录。仅记录错误类名和 errno 风格的代码。永远不会包含错误消息和堆栈跟踪。在针对 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 运行时，或者设置了 <code>DISABLE_ERROR_REPORTING</code> 时，不会发出此事件。</p>
+<p><strong>事件名称</strong>：<code>claude_code.internal_error</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"internal_error"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>error_name</code>：错误类名，例如 <code>"TypeError"</code> 或 <code>"SyntaxError"</code></li>
+<li><code>error_code</code>：错误上存在时的 Node.js errno 代码，例如 <code>"ENOENT"</code></li>
+</ul>
+<h4 id="plugin-installed-event">插件已安装事件</h4>
+<p>在插件完成安装时记录，来源包括 <code>claude plugin install</code> CLI 命令和交互式 <code>/plugin</code> UI。</p>
+<p><strong>事件名称</strong>：<code>claude_code.plugin_installed</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"plugin_installed"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>marketplace.is_official</code>：如果市场是 Anthropic 官方市场则为 <code>"true"</code>，否则为 <code>"false"</code></li>
+<li><code>install.trigger</code>：<code>"cli"</code> 或 <code>"ui"</code></li>
+<li><code>plugin.name</code>：已安装插件的名称。对于第三方市场，仅在 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时包含</li>
+<li><code>plugin.version</code>：在市场条目中声明的插件版本。对于第三方市场，仅在 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时包含</li>
+<li><code>marketplace.name</code>：插件的安装来源市场。对于第三方市场，仅在 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时包含</li>
+</ul>
+<h4 id="plugin-loaded-event">插件已加载事件</h4>
+<p>在会话开始时针对每个已启用的插件记录一次。使用此事件可以盘点整个设备群中哪些插件处于活跃状态，作为记录安装操作本身的 <code>plugin_installed</code> 的补充。</p>
+<p><strong>事件名称</strong>：<code>claude_code.plugin_loaded</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"plugin_loaded"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>plugin.name</code>：插件的名称。对于官方市场和内置捆绑包之外的插件，除非设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code>，否则值为 <code>"third-party"</code></li>
+<li><code>marketplace.name</code>：插件的安装来源市场（已知时）。在与 <code>plugin.name</code> 相同的条件下编辑为 <code>"third-party"</code></li>
+<li><code>plugin.version</code>：来自插件清单的版本。仅当名称未被编辑且清单声明了版本时包含</li>
+<li><code>plugin.scope</code>：插件的来源类别：<code>"official"</code>、<code>"community"</code>、<code>"org"</code>、<code>"user-local"</code> 或 <code>"default-bundle"</code></li>
+<li><code>enabled_via</code>：插件被启用的方式：<code>"default-enable"</code>、<code>"org-policy"</code>、<code>"admin-install"</code>、<code>"seed-mount"</code> 或 <code>"user-install"</code>。<code>"admin-install"</code> 值表示该插件在 <a href="https://claude.ai/admin-settings/skills?tab=inventory" target="_blank" rel="noopener"><strong>Organization settings &gt; Plugins &amp; skills</strong></a> 中被设置为您组织的必需或自动安装插件。在 v2.1.246 之前，Claude Code 将这些插件报告为 <code>"user-install"</code> 或 <code>"seed-mount"</code></li>
+<li><code>plugin_id_hash</code>：插件名称和市场的确定性哈希，仅发送到您配置的导出器。使您能够在不记录名称的情况下统计整个设备群中加载的不同第三方插件的数量。对于<a href="plugins-loading.html#synced-plugins">从 claude.ai 同步的插件</a>，Claude Code 会将插件名称与 claude.ai 为该插件报告的市场名称一起进行哈希，否则与 <code>synced</code> 一起进行哈希。在 v2.1.246 之前，Claude Code 在哈希中不使用 claude.ai 报告的市场名称</li>
+<li><code>has_hooks</code>：插件是否通过 <a href="plugins-components.html#hooks">hook 配置</a>或作为 <a href="plugins-mods-overview.html#how-a-mod-works">mod</a> 提供 hook</li>
+<li><code>has_mcp</code>：插件是否提供 MCP 服务器</li>
+<li><code>host_owned_mcp</code>：当 SDK 主机管理此插件的 MCP 连接且 Claude Code 跳过了读取插件的 MCP 服务器配置时为 <code>true</code>，否则为 <code>false</code></li>
+<li><code>skill_path_count</code>：插件声明的 skill 目录数量</li>
+<li><code>command_path_count</code>：插件声明的命令目录数量</li>
+<li><code>agent_path_count</code>：插件声明的 Agent 目录数量</li>
+<li><code>safe_mode</code>：当会话使用 <a href="cli-reference.html"><code>--safe-mode</code></a> 启动时为 <code>"true"</code>，否则为 <code>"false"</code>。在安全模式下，此事件仅报告已配置的清单；插件的命令、skill、hook 和 MCP 服务器不会加载。需要 Claude Code v2.1.169 或更高版本</li>
+</ul>
+<h4 id="skill-activated-event">Skill 已激活事件</h4>
+<p>在调用 skill 时记录，无论是 Claude 通过 Skill 工具调用它，还是您以 <code>/</code> 命令的形式运行它。</p>
+<p><strong>事件名称</strong>：<code>claude_code.skill_activated</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"skill_activated"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>skill.name</code>：skill 的名称。对于用户定义的和第三方插件的 skill，除非设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code>，否则值为占位符 <code>"custom_skill"</code></li>
+<li><code>invocation_trigger</code>：skill 的触发方式（<code>"user-slash"</code>、<code>"claude-proactive"</code> 或 <code>"nested-skill"</code>）</li>
+<li><code>skill.source</code>：skill 的加载来源（例如 <code>"bundled"</code>、<code>"userSettings"</code>、<code>"projectSettings"</code>、<code>"plugin"</code>）</li>
+<li><code>skill.kind</code>：当 skill 是工作流 skill 时为 <code>"workflow"</code>。否则不存在</li>
+<li><code>plugin.name</code>（当 <code>OTEL_LOG_TOOL_DETAILS=1</code> 或插件来自官方市场时）：当 skill 由插件提供时，所属插件的名称</li>
+<li><code>marketplace.name</code>（当 <code>OTEL_LOG_TOOL_DETAILS=1</code> 或插件来自官方市场时）：当 skill 由插件提供时，所属插件的安装来源市场</li>
+</ul>
+<h4 id="at-mention-event">@ 提及事件</h4>
+<p>当 Claude Code 解析提示词中的 <code>@</code> 提及时记录。并非每个提及都会发出事件：提前退出的路径，例如权限拒绝、文件过大、PDF 引用附件以及目录列表失败，会在不记录日志的情况下返回。</p>
+<p>每次 Claude Code 读取一个提示词时，最多记录 100 个 <code>mention_type</code> 为 <code>"agent"</code> 的事件和 100 个 <code>"mcp_resource"</code> 的事件。超过任一限制的提及仍会被解析，但不会发出事件。</p>
+<p><strong>事件名称</strong>：<code>claude_code.at_mention</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"at_mention"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>mention_type</code>：提及的类型（<code>"file"</code>、<code>"directory"</code>、<code>"agent"</code>、<code>"mcp_resource"</code>、<code>"peer"</code>）。<code>"peer"</code> 值表示您提及了<a href="cross-session-messaging.html">您的另一个 Claude Code 会话</a>。需要 Claude Code v2.1.232 或更高版本</li>
+<li><code>success</code>：提及是否成功解析（<code>"true"</code> 或 <code>"false"</code>）</li>
+</ul>
+<h4 id="api-retries-exhausted-event">API 重试耗尽事件</h4>
+<p>当 API 请求在多次尝试后失败时记录一次。与最终的 <code>api_error</code> 事件一起发出。</p>
+<p><strong>事件名称</strong>：<code>claude_code.api_retries_exhausted</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"api_retries_exhausted"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>model</code>：使用的模型</li>
+<li><code>error</code>：最终错误消息</li>
+<li><code>status_code</code>：以数字表示的 HTTP 状态码。对于非 HTTP 错误不存在。</li>
+<li><code>total_attempts</code>：已进行的尝试总次数</li>
+<li><code>total_retry_duration_ms</code>：所有尝试的总挂钟时间</li>
+<li><code>speed</code>：<code>"fast"</code> 或 <code>"normal"</code></li>
+</ul>
+<h4 id="hook-registered-event">Hook 已注册事件</h4>
+<p>在会话开始时针对每个已配置的 hook 记录一次。使用此事件可以盘点整个设备群中哪些 hook 处于活跃状态，作为按执行记录的 <code>hook_execution_start</code> 和 <code>hook_execution_complete</code> 事件的补充。</p>
+<p><strong>事件名称</strong>：<code>claude_code.hook_registered</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"hook_registered"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>hook_event</code>：hook 事件类型，例如 <code>"PreToolUse"</code> 或 <code>"PostToolUse"</code></li>
+<li><code>hook_type</code>：hook 实现类型：<code>"command"</code>、<code>"prompt"</code>、<code>"mcp_tool"</code>、<code>"http"</code> 或 <code>"agent"</code></li>
+<li><code>hook_source</code>：hook 的定义位置：<code>"userSettings"</code>、<code>"projectSettings"</code>、<code>"localSettings"</code>、<code>"flagSettings"</code>、<code>"policySettings"</code> 或 <code>"pluginHook"</code></li>
+<li><code>safe_mode</code>：当会话使用 <a href="cli-reference.html"><code>--safe-mode</code></a> 启动时为 <code>"true"</code>，否则为 <code>"false"</code>。需要 Claude Code v2.1.169 或更高版本</li>
+<li><code>hook_matcher</code>（当 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时）：hook 配置中的匹配器字符串（如果设置了的话）</li>
+<li><code>plugin.name</code>（当 <code>hook_source</code> 为 <code>"pluginHook"</code> 时）：提供该 hook 的插件名称。对于官方市场和内置捆绑包之外的插件，除非设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code>，否则值为 <code>"third-party"</code></li>
+<li><code>plugin_id_hash</code>（当 <code>hook_source</code> 为 <code>"pluginHook"</code> 时）：插件名称和市场的确定性哈希，仅发送到您配置的导出器。使您能够在不记录名称的情况下统计提供 hook 的不同插件的数量。Claude Code 按照<a href="#plugin-loaded-event">插件已加载事件</a>中描述的方式计算它</li>
+</ul>
+<h4 id="hook-execution-start-event">Hook 执行开始事件</h4>
+<p>当一个或多个 hook 开始为某个 hook 事件执行时记录。</p>
+<p><strong>事件名称</strong>：<code>claude_code.hook_execution_start</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"hook_execution_start"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>hook_event</code>：hook 事件类型，例如 <code>"PreToolUse"</code> 或 <code>"PostToolUse"</code></li>
+<li><code>hook_name</code>：包含匹配器的完整 hook 名称，例如 <code>"PreToolUse:Write"</code></li>
+<li><code>num_hooks</code>：匹配的 hook 命令数量</li>
+<li><code>managed_only</code>：当仅允许托管策略 hook 时为 <code>"true"</code></li>
+<li><code>hook_source</code>：<code>"policySettings"</code> 或 <code>"merged"</code></li>
+<li><code>safe_mode</code>：当会话使用 <a href="cli-reference.html"><code>--safe-mode</code></a> 启动时为 <code>"true"</code>，否则为 <code>"false"</code>。需要 Claude Code v2.1.169 或更高版本</li>
+<li><code>hook_definitions</code>：JSON 序列化的 hook 配置。仅当同时启用了详细 beta 追踪和 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时包含</li>
+</ul>
+<h4 id="hook-execution-complete-event">Hook 执行完成事件</h4>
+<p>当某个 hook 事件的所有 hook 都已完成时记录。</p>
+<p><strong>事件名称</strong>：<code>claude_code.hook_execution_complete</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"hook_execution_complete"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>hook_event</code>：hook 事件类型</li>
+<li><code>hook_name</code>：包含匹配器的完整 hook 名称</li>
+<li><code>num_hooks</code>：匹配的 hook 命令数量</li>
+<li><code>num_success</code>：成功完成的数量</li>
+<li><code>num_blocking</code>：返回阻止决策的数量</li>
+<li><code>num_non_blocking_error</code>：失败但未阻止的数量</li>
+<li><code>num_cancelled</code>：在完成前被取消的数量</li>
+<li><code>total_duration_ms</code>：所有匹配 hook 的挂钟持续时间</li>
+<li><code>stdout_chars</code>：成功执行的匹配 hook 的 stdout 总字符数。需要 Claude Code v2.1.280 或更高版本</li>
+<li><code>additional_context_chars</code>：匹配 hook 返回的 <code>additionalContext</code> 总字符数。需要 Claude Code v2.1.280 或更高版本</li>
+<li><code>system_message_chars</code>：匹配 hook 返回的 <code>systemMessage</code> 总字符数。需要 Claude Code v2.1.280 或更高版本</li>
+<li><code>initial_user_message_chars</code>：匹配 hook 返回的 <code>initialUserMessage</code> 总字符数。需要 Claude Code v2.1.280 或更高版本</li>
+<li><code>num_outputs_persisted</code>：超过 <a href="hooks.html#json-output">10,000 字符上限</a>并被 Claude Code 保存到文件中的 hook 输出数量。需要 Claude Code v2.1.280 或更高版本</li>
+<li><code>managed_only</code>：当仅允许托管策略 hook 时为 <code>"true"</code></li>
+<li><code>hook_source</code>：<code>"policySettings"</code> 或 <code>"merged"</code></li>
+<li><code>safe_mode</code>：当会话使用 <a href="cli-reference.html"><code>--safe-mode</code></a> 启动时为 <code>"true"</code>，否则为 <code>"false"</code>。需要 Claude Code v2.1.169 或更高版本</li>
+<li><code>hook_definitions</code>：JSON 序列化的 hook 配置。仅当同时启用了详细 beta 追踪和 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时包含</li>
+</ul>
+<h4 id="hook-plugin-metrics-event">Hook 插件指标事件</h4>
+<p>当官方市场插件的 hook 发出每次调用的指标时记录。只有从 Anthropic 官方市场安装的插件才能发出这些指标。第三方市场插件和用户配置的 hook 不会向此事件发出数据。使用此事件可以从您自己的可观测性技术栈监控插件行为，例如发现率、成本和持续时间。</p>
+<p><strong>事件名称</strong>：<code>claude_code.hook_plugin_metrics</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"hook_plugin_metrics"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>plugin_id</code>：<code>&lt;name&gt;@&lt;marketplace&gt;</code> 形式的插件标识符</li>
+<li><code>hook_event</code>：发出指标的 hook 事件类型</li>
+<li>最多 20 个由插件发出的指标键。名称匹配 <code>^[a-z][a-z0-9_]{0,39}$</code>。值为布尔值或数字。</li>
+</ul>
+<h4 id="compaction-event">上下文压缩事件</h4>
+<p>在对话压缩完成时记录。</p>
+<p><strong>事件名称</strong>：<code>claude_code.compaction</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"compaction"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>trigger</code>：<code>"auto"</code> 或 <code>"manual"</code></li>
+<li><code>success</code>：<code>"true"</code> 或 <code>"false"</code></li>
+<li><code>duration_ms</code>：压缩持续时间</li>
+<li><code>pre_tokens</code>：压缩前的大致 token 数量</li>
+<li><code>post_tokens</code>：压缩后的大致 token 数量</li>
+<li><code>error</code>：压缩失败时的错误消息</li>
+<li><code>precompute_reuse</code>：仅在 <code>trigger</code> 为 <code>"manual"</code> 时设置，或在交互式终端会话中进行<a href="settings-reference.html#idlecompaction">空闲压缩</a>且 <code>trigger</code> 为 <code>"auto"</code> 时设置。自动压缩可以在上下文窗口填满之前在后台预先准备摘要，此属性记录压缩是否复用了该预先准备的摘要。<code>"hit"</code> 表示已复用；<code>"miss_custom_instructions"</code>、<code>"miss_hook"</code> 和 <code>"miss_not_ready"</code> 给出改为重新计算摘要的原因</li>
+</ul>
+<h4 id="subagent-completed-event">子代理完成事件</h4>
+<p>当<a href="sub-agents.html">子代理</a>完成并将其结果返回给启动它的对话时记录。可使用此事件按子代理类型汇总工具使用情况和运行时间；如需汇总 token 或成本，请使用按 <code>query_source</code> <code>"subagent"</code> 筛选的 <a href="#token-counter">token 计数器</a>和<a href="#cost-counter">成本计数器</a>，因为此事件的 <code>total_tokens</code> 仅涵盖最后一个请求。<code>"subagent"</code> 类别还会统计来自基于 Agent 的 hook 的请求，这类 hook 不会发出子代理事件。</p>
+<p><strong>事件名称</strong>：<code>claude_code.subagent_completed</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"subagent_completed"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>agent_type</code>：子代理类型。内置 Agent 名称以及来自官方市场插件的 Agent 会原样显示；除非设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code>，否则其他 Agent 名称会被替换为 <code>"custom"</code></li>
+<li><code>agent.source</code>：Agent 定义的来源：<code>built-in</code>、<code>plugin</code>，或定义自定义 Agent 的设置来源，例如 <code>userSettings</code> 或 <code>projectSettings</code></li>
+<li><code>is_built_in</code>：该子代理是否为内置 Agent 类型</li>
+<li><code>is_async</code>：该子代理是否在<a href="sub-agents.html#run-subagents-in-foreground-or-background">后台</a>运行</li>
+<li><code>total_tokens</code>：子代理最后一个 API 请求的 token 占用量：即该单个请求的输入、缓存创建、缓存读取和输出 token，大致相当于子代理完成时的上下文大小。并非整个运行过程的总和</li>
+<li><code>total_tool_uses</code>：子代理在整个运行过程中进行的工具调用次数</li>
+<li><code>duration_ms</code>：运行时间（毫秒）</li>
+<li><code>model</code>：子代理被解析为运行的模型</li>
+<li><code>final_model</code>：生成子代理最终响应的模型；在运行中途发生切换（例如回退）后，它会与 <code>model</code> 不同</li>
+<li><code>model_swapped</code>：是否有多个模型处理了该子代理的请求</li>
+<li><code>plugin_id_hash</code>、<code>plugin.name</code>：对于由插件提供的 Agent 存在。官方市场插件名称会原样显示；除非设置了 <code>OTEL_LOG_TOOL_DETAILS=1</code>，否则其他插件名称会被替换为 <code>"third-party"</code></li>
+</ul>
+<h4 id="feedback-survey-event">反馈调查事件</h4>
+<p>在显示或回答会话质量调查时记录。有关调查收集的内容以及如何控制调查，请参阅<a href="data-usage.html#session-quality-surveys">会话质量调查</a>。</p>
+<p><strong>事件名称</strong>：<code>claude_code.feedback_survey</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"feedback_survey"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>event_type</code>：调查生命周期事件，例如 <code>"appeared"</code>、<code>"responded"</code> 或 <code>"transcript_prompt_appeared"</code></li>
+<li><code>appearance_id</code>：关联同一调查实例所发出事件的唯一 ID</li>
+<li><code>survey_type</code>：生成该事件的调查。<code>"session"</code> 是 "How is Claude doing?" 评分提示</li>
+<li><code>response</code>：用户在 <code>responded</code> 事件中的选择</li>
+<li><code>enabled_via_override</code>：设置了 <a href="env-vars.html"><code>CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL</code></a> 时为 <code>true</code>。以布尔值而非字符串形式发出。存在于 <code>session</code> 调查事件中。可按此属性筛选，以确认该覆盖已在整个设备群中生效</li>
+</ul>
+<h4 id="retention-sweep-event">保留清理事件</h4>
+<p>保留清理每运行一次记录一次。该清理会删除早于 <a href="settings-reference.html#cleanupperioddays"><code>cleanupPeriodDays</code></a> 设置的<a href="claude-directory.html#cleaned-up-automatically">会话记录和其他应用程序数据</a>。Claude Code 在后台运行清理，每个会话最多运行一次，即使某次运行未删除任何内容，也会发出该事件。如果 Claude Code 在过去 24 小时内已在同一台机器上的任何会话中运行过清理，则会将本会话的清理延迟至少 10 分钟，因此提前退出的会话不会发出任何事件。当您使用 <code>--bare</code> 运行 <code>claude -p</code> 时，Claude Code 不会运行清理，也不会发出任何事件。</p>
+<p>与本页上的所有 OTel 事件一样，该事件仅发送到您配置的遥测后端。需要 Claude Code v2.1.227 或更高版本。</p>
+<p>当 Claude Code 无法安全地确定保留期限时，会暂停清理，并发出 <code>result</code> 设置为 <code>"skipped"</code> 且带有 <code>skip_reason</code> 的事件。当<a href="server-managed-settings.html">托管设置</a>设置了 <code>cleanupPeriodDays</code> 时，托管值会固定保留期限，即使较低优先级作用域中的设置文件损坏或无效，清理也会运行。当 <code>managed-settings.json</code> 本身无法读取时，Claude Code 仍会暂停清理，除非<a href="managed-settings.html#how-claude-code-combines-managed-sources">托管层级</a>从其他位置提供了 <code>cleanupPeriodDays</code>，例如服务器托管设置，或位于损坏文件旁的 <code>managed-settings.d/</code> 附加文件。删除计数器属性仅在 <code>result</code> 为 <code>"complete"</code> 时存在。</p>
+<p><strong>事件名称</strong>：<code>claude_code.retention_sweep</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"retention_sweep"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>result</code>：清理已运行时为 <code>"complete"</code>，Claude Code 暂停清理时为 <code>"skipped"</code></li>
+<li><code>period_days</code>：合并后设置中的 <code>cleanupPeriodDays</code> 值（以天为单位），如果没有任何来源设置该值，则为 <code>30</code>。在 skipped 事件中，为清理本应使用的值，根据 Claude Code 能够读取的设置来源计算得出</li>
+<li><code>used_default</code>：没有可读取的设置来源设置 <code>cleanupPeriodDays</code> 时为 <code>"true"</code>，否则为 <code>"false"</code>。在 complete 事件中，<code>"true"</code> 表示应用了 30 天的默认值</li>
+<li><code>skip_reason</code>：Claude Code 暂停清理的原因。仅当 <code>result</code> 为 <code>"skipped"</code> 时存在：</li>
+<li><code>"user_source_disabled"</code>：用户设置被排除（例如通过 <a href="cli-reference.html#cli-flags"><code>--setting-sources</code></a> 标志或 SDK 的 <a href="agent-sdk-typescript.html#options"><code>settingSources</code></a> 选项），且没有启用的来源提供 <code>cleanupPeriodDays</code></li>
+<li><code>"settings_unknowable"</code>：某个设置文件无法读取或解析，因此 <code>cleanupPeriodDays</code> 或 <code>desktopSessionCleanupPeriodDays</code> 可能被设置为 Claude Code 看不到的值</li>
+<li><code>"settings_invalid_key_set"</code>：设置存在验证错误，且显式设置了 <code>cleanupPeriodDays</code> 或 <code>desktopSessionCleanupPeriodDays</code>，因此回退到默认值可能会违背该设置删除或保留文件</li>
+<li><code>"remote_settings_unknowable"</code>：第三方部署上 Claude Desktop 的 Code 选项卡中的某个会话请求了<a href="server-managed-settings.html">服务器托管设置</a>。它没有收到可用的响应，因此 <code>cleanupPeriodDays</code> 可能被设置为 Claude Code 看不到的值</li>
+<li><code>transcripts_deleted</code>：清理删除的会话记录数量，即顶层的 <code>~/.claude/projects/*/*.jsonl</code> 文件</li>
+<li><code>transcripts_exempted_desktop</code>：已超过保留期限、但清理根据 <a href="claude-directory.html#cleaned-up-automatically">Claude Desktop 和 Cowork 规则</a>予以保留的会话记录数量。这些不计入 <code>files_past_cutoff</code>。需要 Claude Code v2.1.248 或更高版本</li>
+<li><code>session_files_deleted</code>：会话文件清理删除的文件数量：会话记录加上每个会话的配套文件，例如附属文件、录制文件和工具结果</li>
+<li><code>artifacts_deleted</code>：清理在其覆盖的数据目录中删除的项目总数，包括会话文件。某些清理会将整个被删除的目录树计为一项，少数清理过程不会计入该计数器，因此应将该值视为下限，而非精确的文件数量</li>
+<li><code>files_retained_fresh</code>：已检查并因仍在保留期限内而保留的文件。只有逐文件清理会统计这些文件，因此该值为下限；非零值是正常的稳定状态</li>
+<li><code>files_past_cutoff</code>：早于保留期限、但清理未能删除的文件，例如由于权限错误或文件被占用。该计数还包括清理在 <code>skills/synced/</code> 或 <code>plugins/synced/</code> 下发现的每个过期文件夹，无论是否将该文件夹移至回收站。除这些文件夹外，大于零的值表示有文件超出了配置的保留期限仍然存在；零并不能证明没有此类文件，因为删除整个目录失败时会计入 <code>error_count</code></li>
+<li><code>error_count</code>：清理在列出或删除文件时遇到的错误数量</li>
+</ul>
+<h4 id="managed-settings-resolved-event">托管设置解析事件</h4>
+<p>记录会话解析出的<a href="managed-settings.html">托管设置</a>：在会话开始时记录一次；在会话期间托管设置或<a href="managed-settings.html#compute-the-policy-with-a-helper-program">策略辅助程序</a>的状态发生变化时再次记录；以及当 Claude Code 因 <code>error.type</code> 属性列出的某个原因拒绝启动或结束会话时记录。<br />
+可使用此事件查找运行在意外托管来源上的机器、策略辅助程序出现故障的机器，以及机器拒绝启动的原因。<br />
+需要 Claude Code v2.1.274 或更高版本。</p>
+<p>默认情况下，该事件包含托管来源和策略辅助程序的状态，但不包含设置本身。要添加经过脱敏的 <code>managed_settings.settings</code> 属性和 <code>managed_settings.resolved_sha256</code> 摘要，请设置 <code>OTEL_LOG_MANAGED_SETTINGS=1</code>：</p>
+<ul>
+<li>在托管设置、用户设置或 <code>--settings</code> 的 <code>env</code> 块中设置，或在启动 Claude Code 的环境中设置。项目设置或本地设置中的值不会启用它，因为克隆的仓库可以写入这些设置。</li>
+<li>服务器托管设置可以设置它，而无需显示<a href="server-managed-settings.html#security-approval-dialogs">安全批准对话框</a>，因为该变量只是将您组织自己的脱敏策略添加到您组织已在接收的事件中。</li>
+</ul>
+<p>在您尚未<a href="permissions.html#what-runs-before-you-trust-a-folder">信任</a>的文件夹中的交互式会话里，Claude Code 不会导出拒绝事件。</p>
+<p><strong>事件名称</strong>：<code>claude_code.managed_settings_resolved</code></p>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>所有<a href="#standard-attributes">标准属性</a></li>
+<li><code>event.name</code>：<code>"managed_settings_resolved"</code></li>
+<li><code>event.timestamp</code>：ISO 8601 时间戳</li>
+<li><code>event.sequence</code>：用于对事件排序的按进程计数器，详见<a href="#event-correlation-attributes">事件关联属性</a></li>
+<li><code>managed_settings.trigger</code>：会话开始事件为 <code>"startup"</code>；托管设置或策略辅助程序的状态在会话后期发生变化时为 <code>"change"</code>；托管设置策略阻止会话时为 <code>"refused"</code>。仅当某个属性与上次发送的事件不同时，Claude Code 才会发送 <code>change</code> 事件；即使 <code>OTEL_LOG_MANAGED_SETTINGS</code> 处于关闭状态，设置值的变化也会计入</li>
+<li><code>error.type</code>：Claude Code 停止会话的原因。仅存在于 <code>refused</code> 事件中：</li>
+<li><code>"helper_failed"</code>：<a href="settings-reference.html#helper-failures">策略辅助程序运行失败</a></li>
+<li><code>"policy_invalid"</code>：托管设置包含阻止 Claude Code 启动的错误，或某个管理员来源因读取被拒绝以外的原因加载失败，导致 Claude Code 无法检查组织登录或提供商强制要求</li>
+<li><code>"provider_not_allowed"</code>：会话将使用托管 <a href="settings-reference.html#allowedproviders"><code>allowedProviders</code></a> 列表不允许的 API 提供商，或将某个提供商的流量发送到该列表不允许的主机。需要 Claude Code v2.1.285 或更高版本</li>
+<li><code>"consent_rejected"</code>：用户拒绝了服务器托管设置的<a href="server-managed-settings.html#security-approval-dialogs">安全批准对话框</a></li>
+<li><code>"force_refresh_failed"</code>：<a href="settings-reference.html#forceremotesettingsrefresh"><code>forceRemoteSettingsRefresh</code></a> 所要求的设置获取失败</li>
+<li><code>"gateway_rejected"</code>：<a href="claude-apps-gateway.html">Claude apps gateway</a> 对托管设置加载返回了 HTTP 403</li>
+<li><code>"version_below_minimum"</code>：此版本的 Claude Code 低于 <a href="settings-reference.html#requiredminimumversion"><code>requiredMinimumVersion</code></a> 或高于 <a href="settings-reference.html#requiredmaximumversion"><code>requiredMaximumVersion</code></a></li>
+<li><code>"_OTHER"</code>：Claude apps gateway 托管设置加载因其他原因失败</li>
+<li><code>managed_settings.sources</code>：提供至少一个<a href="managed-settings.html#how-claude-code-combines-managed-sources">策略键</a>的每个托管来源，按优先级从高到低排列，包括在 <code>first-wins</code> 下其键不生效的来源。取值为：<code>"remote"</code>；<code>"plist"</code> 或 <code>"hklm"</code> 表示 MDM 或操作系统级策略；<code>"file"</code> 表示托管设置文件和附加文件；<code>"parent"</code> 表示由<a href="managed-settings.html#let-an-embedding-host-add-policy">嵌入宿主</a>提供设置；<code>"hkcu"</code> 表示 Claude Code <a href="managed-settings.html#how-claude-code-combines-managed-sources">读取</a>的 <a href="managed-settings.html#where-each-mechanism-stores-the-policy">Windows HKCU 注册表值</a>。仅包含控制键的来源或 Claude Code 无法读取的来源不会列出。以字符串数组形式发出，没有托管来源提供策略键时为空</li>
+<li><code>managed_settings.source_behavior</code>：Claude Code 读取到的 <a href="settings-reference.html#managedsourcesbehavior"><code>managedSourcesBehavior</code></a> 值，为 <code>"first-wins"</code> 或 <code>"merge"</code>。没有来源设置该键时为 <code>"first-wins"</code></li>
+<li><code>managed_settings.helper.state</code>：所选 MDM 或文件来源所配置的策略辅助程序的状态：</li>
+<li><code>"ok"</code>：辅助程序的输出用作托管设置</li>
+<li><code>"bad_path"</code>、<code>"not_a_file"</code>、<code>"exit_nonzero"</code>、<code>"timed_out"</code>、<code>"oversize"</code>、<code>"parse_failed"</code>、<code>"envelope_invalid"</code> 或 <code>"schema_rejected"</code>：辅助程序上次运行失败。<a href="settings-reference.html#helper-failures">辅助程序故障</a>介绍了这些情况</li>
+<li><code>"none"</code>：未配置辅助程序，或配置辅助程序的来源不是 MDM 策略或托管设置文件</li>
+<li><code>managed_settings.helper.applied</code>：辅助程序自身的输出用作托管设置时为 <code>"output"</code>，否则为 <code>"none"</code></li>
+<li><code>managed_settings.helper.entry</code>：Claude Code 选择了 <a href="settings-reference.html#policyhelper"><code>policyHelper</code></a> 时为 <code>"policyHelper"</code>。未选择辅助程序时不存在</li>
+<li><code>managed_settings.helper.path</code>：辅助程序配置的 <a href="settings-reference.html#policyhelper-path"><code>path</code></a>。只要 Claude Code 选择了辅助程序即存在，无论是否设置了 <code>OTEL_LOG_MANAGED_SETTINGS</code></li>
+<li><code>managed_settings.resolved_sha256</code>（当 <code>OTEL_LOG_MANAGED_SETTINGS=1</code> 时）：脱敏前已解析托管设置的 SHA-256，序列化为键按递归排序且不含空白的 JSON。摘要相同的机器运行相同的策略。Claude Code 仅在选择启用时发送摘要，因为较短的策略可以通过对猜测值进行哈希来还原。没有解析出托管设置时不存在，在 <code>refused</code> 事件中也不存在</li>
+<li>
+<p><code>managed_settings.settings</code>（当 <code>OTEL_LOG_MANAGED_SETTINGS=1</code> 时）：以 JSON 字符串形式表示的已解析托管设置的名称和结构，其中的值已脱敏。在 <code>refused</code> 事件中不存在。Claude Code 根据其设置 schema 构建该值：</p>
+</li>
+<li>
+<p>schema 声明的设置名称会被导出，schema 未声明的键会被省略</p>
+</li>
+<li>布尔值、数字以及 schema 限定为固定选项集的字符串值（例如 <code>permissions.defaultMode</code>）按原样导出。<code>sandbox.network.httpProxyPort</code> 和 <code>sandbox.network.socksProxyPort</code> 导出为 <code>"[REDACTED]"</code></li>
+<li>其他所有字符串，例如 <code>model</code>、<code>apiKeyHelper</code>、每个 <code>env</code> 值、每个 URL 以及每个命令，均导出为 <code>"[REDACTED]"</code></li>
+<li>映射的条目名称（例如 <code>env</code> 变量名和插件 ID）按原样导出。schema 未对其条目定义类型的设置（例如 <code>vimInsertModeRemaps</code>）导出为单个 <code>"[REDACTED]"</code>，<code>sandbox.ignoreViolations</code> 导出为其路径列表的列表，不含命令模式</li>
+<li>列表保留其长度，每个条目按相同规则脱敏</li>
+<li>当工具内置于此版本的 Claude Code 中，或是 <code>mcp__</code> 引用（例如 <code>mcp__jira__create_issue</code>）时，<code>permissions.allow</code>、<code>permissions.deny</code> 或 <code>permissions.ask</code> 规则导出为其工具名称，内容脱敏，例如 <code>Read([REDACTED])</code>。其他任何规则导出为 <code>"[REDACTED]"</code></li>
+<li>hook 遵循相同的规则，因此固定选项字段和数值字段（例如 <code>type</code> 和 <code>timeout</code>）会显示，而每个命令、URL、<code>matcher</code> 和 <code>if</code> 条件均导出为 <code>"[REDACTED]"</code></li>
+</ul>
+<p>例如，包含 <code>apiKeyHelper</code>、两个 <code>env</code> 变量和一条拒绝规则的托管设置导出为 <code>{"apiKeyHelper":"[REDACTED]","env":{"HTTPS_PROXY":"[REDACTED]","CLAUDE_CODE_ENABLE_TELEMETRY":"[REDACTED]"},"permissions":{"deny":["Read([REDACTED])"]}}</code>。</p>
+<p>Claude Code 会在 UTF-8 编码 8 KB 处截断该值，截断后的值不是有效的 JSON<br />
+* <code>managed_settings.settings_truncated</code>（当存在 <code>managed_settings.settings</code> 时）：Claude Code 在 8 KB 处截断了 <code>managed_settings.settings</code> 时为 <code>true</code>，否则为 <code>false</code>。以布尔值而非字符串形式发出</p>
+<h2 id="interpret-metrics-and-events-data">解释指标和事件数据</h2>
+<p>导出的指标和事件支持一系列分析：</p>
+<h3 id="usage-monitoring">使用情况监控</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>分析机会</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>claude_code.token.usage</code></td>
+<td>按 token <a href="#token-counter"><code>type</code></a>、用户、团队、模型、<code>skill.name</code>、<code>plugin.name</code> 或 <code>agent.name</code> 分解</td>
+</tr>
+<tr>
+<td><code>claude_code.session.count</code></td>
+<td>跟踪随时间推移的采用和参与度</td>
+</tr>
+<tr>
+<td><code>claude_code.lines_of_code.count</code></td>
+<td>通过跟踪代码添加和删除来衡量生产力，按模型分解</td>
+</tr>
+<tr>
+<td><code>claude_code.commit.count</code> &amp; <code>claude_code.pull_request.count</code></td>
+<td>了解对开发工作流的影响</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cost-monitoring">成本监控</h3>
+<p><code>claude_code.cost.usage</code> 指标有助于：</p>
+<ul>
+<li>跟踪团队或个人的使用趋势</li>
+<li>识别高使用会话以进行优化</li>
+<li>通过 <code>skill.name</code>、<code>plugin.name</code> 和 <code>agent.name</code> 属性将支出归属于特定技能、插件或子代理类型</li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>成本指标是近似值。有关官方计费数据，请参阅您的 API 提供商（Claude 控制台、Amazon Bedrock 或 Google Cloud 的 Agent Platform）。</p></div></div>
+<p>Claude Code 将每个流式响应计入成本和 token 指标，恰好一次，包括当网关或代理在 <code>ANTHROPIC_BASE_URL</code> 后面跨多个帧逐步流式传输使用情况时。</p>
+<h3 id="alerting-and-segmentation">警报和分段</h3>
+<p>要考虑的常见警报：</p>
+<ul>
+<li>成本激增</li>
+<li>异常的令牌消耗</li>
+<li>来自特定用户的高会话量</li>
+</ul>
+<p>所有指标都可以按<a href="#standard-attributes">标准属性</a>进行分段。<code>model</code> 属性在 <code>claude_code.token.usage</code>、<code>claude_code.cost.usage</code> 和 <code>claude_code.lines_of_code.count</code> 上可用。</p>
+<p>按模型的提交分解只能通过在 <code>session.id</code> 上与令牌或成本指标进行联接来近似，因为一个会话可以跨越多个模型。筛选令牌或成本端的行，使 <code>query_source</code> 为 <code>"main"</code>，以便辅助和子代理请求不会将会话的提交归属于未进行这些提交的模型。</p>
+<h3 id="detect-retry-exhaustion">检测重试耗尽</h3>
+<p>Claude Code 在内部重试失败的 API 请求，仅在放弃后才发出单个 <code>claude_code.api_error</code> 事件，因此事件本身是该请求的终端信号。中间重试尝试不会作为单独的事件记录。</p>
+<p>事件上的 <code>attempt</code> 属性记录尝试次数。<code>CLAUDE_CODE_MAX_RETRIES</code> 默认为 10，上限为 15；如果设置了 <a href="env-vars.html"><code>CLAUDE_CODE_RETRY_WATCHDOG</code></a>，默认值会更高，并且没有上限。</p>
+<p>当请求在瞬时错误上耗尽所有重试时，<code>attempt</code> 最多等于该有效限制加一：默认为 11。</p>
+<p>较低的值仍可能表示重试已耗尽：每次 Claude Code 在流式传输失败后重新发出请求时，<code>attempt</code> 都会从 <code>1</code> 重新开始计数。</p>
+<p>要区分从一个恢复的会话与停滞的会话，按 <code>session.id</code> 分组事件，并检查错误后是否存在更晚的 <code>api_request</code> 事件。</p>
+<h3 id="event-analysis">事件分析</h3>
+<p>事件数据提供了对 Claude Code 交互的详细见解：</p>
+<p><strong>工具使用模式</strong>：分析工具结果事件以识别：</p>
+<ul>
+<li>最常用的工具</li>
+<li>工具成功率</li>
+<li>平均工具执行时间</li>
+<li>按工具类型的错误模式</li>
+</ul>
+<p><strong>性能监控</strong>：跟踪 API 请求持续时间和工具执行时间以识别性能瓶颈。</p>
+<h3 id="map-input-tokens-to-opentelemetry-genai-semantic-conventions">将输入 token 映射到 OpenTelemetry GenAI 语义约定</h3>
+<p>Claude Code 按照 API 响应的 usage 块中的数值导出输入 token 计数，因此这些值不包括从<a href="prompt-caching.html">提示缓存</a>读取或写入的 token：</p>
+<ul>
+<li><a href="#span-attributes"><code>claude_code.llm_request</code></a> span 和 <a href="#api-request-event"><code>api_request</code></a> 事件上的 <code>input_tokens</code></li>
+<li><a href="#token-counter"><code>claude_code.token.usage</code></a> 指标的 <code>"input"</code> 类型</li>
+</ul>
+<p>Claude Code 不设置 <code>gen_ai.usage.*</code> 属性。<a href="https://github.com/open-telemetry/semantic-conventions-genai" target="_blank" rel="noopener">OpenTelemetry GenAI 语义约定</a>规定 <code>gen_ai.usage.input_tokens</code> 应包括从缓存读取和写入缓存的 token。要计算该总数：</p>
+<ul>
+<li>从 span 或事件：将 <code>input_tokens</code>、<code>cache_read_tokens</code> 和 <code>cache_creation_tokens</code> 相加</li>
+<li>从 <code>claude_code.token.usage</code> 指标：将其 <code>"input"</code>、<code>"cacheRead"</code> 和 <code>"cacheCreation"</code> 类型相加</li>
+</ul>
+<p>这些约定还为缓存读取和缓存写入定义了单独的属性：</p>
+<ul>
+<li><code>cache_read_tokens</code> 映射到 <code>gen_ai.usage.cache_read.input_tokens</code></li>
+<li><code>cache_creation_tokens</code> 映射到 <code>gen_ai.usage.cache_write.input_tokens</code>。旧版本的约定将缓存写入属性命名为 <code>gen_ai.usage.cache_creation.input_tokens</code>，因此请使用您的后端所期望的名称。</li>
+</ul>
+<h2 id="audit-security-events">审计安全事件</h2>
+<p>OpenTelemetry 事件是 Claude Code 活动的审计数据源。每个事件都携带身份属性，将工具调用、MCP 活动和权限决策与触发它们的用户联系起来。OTLP 日志导出器可以将这些事件传递到任何具有 OTLP 接收器的安全信息和事件管理 (SIEM) 平台，或转发到您的 SIEM 的 OpenTelemetry Collector。</p>
+<h3 id="attribute-actions-to-users">将操作归属到用户</h3>
+<p>每个事件上的 <a href="#standard-attributes">标准属性</a> 包括已认证用户的身份：<code>user.email</code>、<code>user.account_uuid</code>、<code>user.account_id</code> 和 <code>organization.id</code>（使用 Claude 账户登录时或在 <a href="claude-code-on-the-web.html">云端会话</a> 中，当会话自己的凭据携带它们时），加上 <code>user.id</code> 和每会话的 <code>session.id</code>。<code>user.id</code> 是安装范围的标识符，除了在 <a href="claude-apps-gateway.html">Claude apps gateway</a> 会话上通过 <code>/login</code> 登录时，其中它是来自网关颁发的令牌的 IdP 主体。</p>
+<p>在开发人员启动的会话中，MCP 工具调用、Bash 命令和文件编辑因此归属于该开发人员。Claude Code 不在单独的服务账户下运行；每个事件上记录的身份是开发人员自己的 Claude 账户，或开发人员在 <a href="claude-apps-gateway.html">Claude apps gateway</a> 会话上的 IdP 身份。在 Claude Tag 频道会话中，Claude 改为作为您组织的 <a href="cloud-environments.html#set-the-environment-a-claude-tag-channel-uses">共享身份</a> 工作。</p>
+<p>当 Claude Code 使用直接 API 密钥进行身份验证，或针对 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 进行身份验证时，会话中没有 Claude 账户，仅填充 <code>user.id</code> 和 <code>session.id</code>。在这些部署中，使用 <code>OTEL_RESOURCE_ATTRIBUTES</code> 自己附加用户身份，通过 <a href="#administrator-configuration">托管设置</a> 文件或启动包装器按用户设置。Claude apps gateway 会话不需要任何这些：请参阅 <a href="#standard-attributes">标准属性</a> 了解其导出携带的身份。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_RESOURCE_ATTRIBUTES</span><span class="o">=</span><span class="s2">"enduser.id=jdoe@example.com,enduser.directory_id=S-1-5-21-..."</span>
+</code></pre></div>
+<h3 id="audit-mcp-activity">审计 MCP 活动</h3>
+<p>要使用完整的调用详情捕获 MCP 服务器活动，启用日志导出器并设置 <code>OTEL_LOG_TOOL_DETAILS=1</code>。每个 MCP 操作然后产生结构化事件，携带服务器名称、工具名称和调用参数以及标准身份属性：</p>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>它为 MCP 记录的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mcp_server_connection</code></td>
+<td>服务器连接、断开连接和连接失败，带有 <code>server_name</code>、<code>transport_type</code>、<code>server_scope</code> 和错误详情</td>
+</tr>
+<tr>
+<td><code>tool_result</code></td>
+<td>每个 MCP 工具调用，带有 <code>tool_name</code> 和 <code>mcp_server_scope</code>，包含 <code>mcp_server_name</code> 和 <code>mcp_tool_name</code> 的 <code>tool_parameters</code> 负载，以及包含调用参数的 <code>tool_input</code> 负载</td>
+</tr>
+<tr>
+<td><code>tool_decision</code></td>
+<td>调用是否被允许或拒绝，以及决策是来自配置、hook 还是用户，以及包含 <code>mcp_server_name</code> 和 <code>mcp_tool_name</code> 的 <code>tool_parameters</code> 负载</td>
+</tr>
+</tbody>
+</table>
+<p>没有 <code>OTEL_LOG_TOOL_DETAILS</code>，这些事件会丢弃识别详情：</p>
+<ul>
+<li><code>tool_result</code>：保留 <code>mcp_server_scope</code> 和一个对用户配置的服务器编辑为字面值 <code>"mcp_tool"</code> 的 <code>tool_name</code>，省略参数内容。对于 Claude Desktop 的内置服务器，在 Claude Desktop 拥有的会话中，它还保留 <code>tool_parameters</code> 内的 <code>mcp_server_name</code>/<code>mcp_tool_name</code> 对，与 <code>tool_decision</code> 相同的主机编写异常</li>
+<li><code>tool_decision</code>：保留 <code>tool_source</code> 和一个对用户配置的服务器编辑为字面值 <code>"mcp_tool"</code> 的 <code>tool_name</code>，省略参数内容。对于 Claude Desktop 的内置服务器，在 Claude Desktop 拥有的会话中，它还保留 <code>tool_parameters</code> 内的 <code>mcp_server_name</code>/<code>mcp_tool_name</code> 对</li>
+<li><code>mcp_server_connection</code>：省略 <code>server_name</code> 和错误消息，但保留 <code>is_plugin</code>、<code>plugin_id_hash</code> 和 <code>plugin.name</code>，非 Anthropic 插件名称被编辑为字面值 <code>"third-party"</code>，因此插件提供的服务器在没有详细日志的情况下仍然可以区分</li>
+</ul>
+<h3 id="map-security-questions-to-events">将安全问题映射到事件</h3>
+<p>构建检测规则时，查找您想要监控的信号并查询您的后端以获取相应的事件和属性：</p>
+<table>
+<thead>
+<tr>
+<th>信号</th>
+<th>事件</th>
+<th>关键属性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工具调用被允许或拒绝，以及决策的来源，例如配置、hook 或用户</td>
+<td><a href="#tool-decision-event"><code>tool_decision</code></a></td>
+<td><code>decision</code>、<code>source</code>、<code>classifier_verdict</code>、<code>permission_mode</code>、<code>tool_name</code>；设置 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时还有 <code>tool_parameters</code></td>
+</tr>
+<tr>
+<td>哪项检查拒绝了工具调用或要求对其进行权限提示</td>
+<td><a href="#safety-event"><code>safety_event</code></a>，其中 <code>category</code> 指明该检查，例如 <code>"managed_policy"</code>、<code>"permission_rule"</code>、<code>"hook"</code> 或 <code>"auto_mode_block"</code>。对于未运行的调用，<code>decision</code> 为 <code>"reject"</code>。某些调用<a href="#calls-without-a-safety-event">没有安全事件</a></td>
+<td><code>category</code>、<code>decision</code>、<code>reason_code</code>、<code>rule_source</code>、<code>tool_name</code>、<code>tool_use_id</code></td>
+</tr>
+<tr>
+<td>自动模式分类器允许或阻止了工具调用，或 Claude Code 在没有分类器判定的情况下拒绝了调用</td>
+<td>存在 <code>classifier_verdict</code> 的 <a href="#tool-decision-event"><code>tool_decision</code></a>。对于没有判定的拒绝，<code>classifier_verdict</code> 为 <code>"no_verdict"</code> 或 <code>"unavailable"</code></td>
+<td><code>classifier_verdict</code>、<code>permission_mode</code>、<code>tool_name</code>；设置 <code>OTEL_LOG_TOOL_DETAILS=1</code> 时还有 <code>classifier_category</code></td>
+</tr>
+<tr>
+<td>权限模式升级</td>
+<td><code>permission_mode_changed</code></td>
+<td><code>from_mode</code>、<code>to_mode</code>、<code>trigger</code></td>
+</tr>
+<tr>
+<td>每个工具调用在哪种权限模式下接受检查，包括子代理发起的调用</td>
+<td><a href="#tool-decision-event"><code>tool_decision</code></a></td>
+<td><code>permission_mode</code>、<code>session.id</code></td>
+</tr>
+<tr>
+<td>策略 hook 阻止了操作</td>
+<td><code>hook_execution_complete</code></td>
+<td><code>hook_event</code>、<code>num_blocking</code></td>
+</tr>
+<tr>
+<td>hook 拒绝了哪个工具调用，以及 hook 阻止了哪个结果或轮次结束</td>
+<td><a href="#safety-event"><code>safety_event</code></a>，对于被拒绝的调用，其 <code>category</code> 为 <code>"hook"</code> 且 <code>decision</code> 为 <code>"reject"</code>；对于被阻止的结果或轮次结束，其 <code>category</code> 为 <code>"hook_review"</code></td>
+<td><code>category</code>、<code>decision</code>、<code>hook_event</code>；工具调用还有 <code>tool_use_id</code></td>
+</tr>
+<tr>
+<td>沙箱的网络代理拒绝了来自 Bash 或 PowerShell 命令的连接或请求</td>
+<td>存在 <code>sandbox_violation_count</code> 且其值不为 <code>"0"</code> 的 <a href="#safety-event"><code>safety_event</code></a></td>
+<td><code>sandbox_violation_count</code>、<code>category</code>、<code>sandbox_enabled</code>、<code>tool_use_id</code></td>
+</tr>
+<tr>
+<td>登录、注销和身份验证失败</td>
+<td><code>auth</code></td>
+<td><code>action</code>、<code>success</code>、<code>error_category</code></td>
+</tr>
+<tr>
+<td>MCP 服务器连接或失败</td>
+<td><code>mcp_server_connection</code></td>
+<td><code>status</code>、<code>server_name</code>、<code>is_plugin</code>、<code>error_code</code></td>
+</tr>
+<tr>
+<td>插件已安装及其来源</td>
+<td><code>plugin_installed</code></td>
+<td><code>plugin.name</code>、<code>marketplace.name</code>、<code>marketplace.is_official</code></td>
+</tr>
+<tr>
+<td>运行的命令和触及的文件</td>
+<td><code>tool_result</code>（已执行）或 <code>tool_decision</code>（已拒绝），带有 <code>OTEL_LOG_TOOL_DETAILS=1</code></td>
+<td><code>tool_parameters</code>；<code>tool_input</code>（仅 <code>tool_result</code>）</td>
+</tr>
+<tr>
+<td>机器使用哪些托管设置源、其策略助手是否健康，以及机器拒绝启动的原因</td>
+<td><code>managed_settings_resolved</code></td>
+<td><code>managed_settings.trigger</code>、<code>managed_settings.sources</code>、<code>managed_settings.source_behavior</code>、<code>managed_settings.helper.state</code>、<code>error.type</code>；<code>managed_settings.settings</code> 和 <code>managed_settings.resolved_sha256</code>，带有 <code>OTEL_LOG_MANAGED_SETTINGS=1</code></td>
+</tr>
+</tbody>
+</table>
+<p>Claude Code 仅发出原始事件流。异常检测、基线化、跨会话关联和警报是您的 SIEM 或可观测性后端的责任。</p>
+<h3 id="map-egress-paths-to-managed-controls-and-events">将出站路径映射到托管控制项和事件</h3>
+<p>下表将可能把会话内容带出机器的路径以及本地保留，与限制它们的 <a href="managed-settings.html">托管设置</a> 键和记录它们的事件对应起来。关于 Claude Code 本身发送给 Anthropic 的内容（例如 <code>/feedback</code> 报告），请参阅 <a href="data-usage.html">数据使用</a>。名称链接到各自的参考条目，其中给出了取值和默认值。</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>托管控制项</th>
+<th>事件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bash 和 PowerShell 命令</td>
+<td><a href="settings-reference.html#sandbox-enabled"><code>sandbox.enabled</code></a>、<a href="settings-reference.html#sandbox-failifunavailable"><code>sandbox.failIfUnavailable</code></a>、<a href="settings-reference.html#sandbox-allowunsandboxedcommands"><code>sandbox.allowUnsandboxedCommands</code></a>、<a href="settings-reference.html#sandbox-network-allowmanageddomainsonly"><code>sandbox.network.allowManagedDomainsOnly</code></a>、<a href="settings-reference.html#sandbox-network-alloweddomains"><code>sandbox.network.allowedDomains</code></a></td>
+<td><a href="#tool-decision-event"><code>tool_decision</code></a>、<a href="#tool-result-event"><code>tool_result</code></a></td>
+</tr>
+<tr>
+<td>MCP 服务器</td>
+<td><a href="settings-reference.html#allowedmcpservers"><code>allowedMcpServers</code></a>、<a href="settings-reference.html#allowmanagedmcpserversonly"><code>allowManagedMcpServersOnly</code></a>、<a href="settings-reference.html#deniedmcpservers"><code>deniedMcpServers</code></a>、<a href="managed-mcp.html"><code>managed-mcp.json</code></a></td>
+<td><a href="#mcp-server-connection-event"><code>mcp_server_connection</code></a>、<code>tool_decision</code>、<code>tool_result</code></td>
+</tr>
+<tr>
+<td>Hook</td>
+<td><a href="settings-reference.html#allowmanagedhooksonly"><code>allowManagedHooksOnly</code></a>、<a href="settings-reference.html#allowedhttphookurls"><code>allowedHttpHookUrls</code></a></td>
+<td><a href="#hook-registered-event"><code>hook_registered</code></a>、<a href="#hook-execution-start-event"><code>hook_execution_start</code></a>、<a href="#hook-execution-complete-event"><code>hook_execution_complete</code></a></td>
+</tr>
+<tr>
+<td>插件</td>
+<td><a href="settings-reference.html#strictknownmarketplaces"><code>strictKnownMarketplaces</code></a>、<a href="settings-reference.html#disablesideloadflags"><code>disableSideloadFlags</code></a>、<a href="settings-reference.html#syncclaudeaiplugins"><code>syncClaudeAiPlugins</code></a>、<a href="settings-reference.html#syncclaudeaiskills"><code>syncClaudeAiSkills</code></a></td>
+<td><a href="#plugin-installed-event"><code>plugin_installed</code></a>、<a href="#plugin-loaded-event"><code>plugin_loaded</code></a></td>
+</tr>
+<tr>
+<td><a href="permissions.html#webfetch">WebFetch</a></td>
+<td><a href="settings-reference.html#permissions-deny"><code>permissions.deny</code></a>、<a href="settings-reference.html#allowmanagedpermissionrulesonly"><code>allowManagedPermissionRulesOnly</code></a></td>
+<td><code>tool_decision</code>、<code>tool_result</code></td>
+</tr>
+<tr>
+<td>上传到 claude.ai 的工具，例如 Artifact</td>
+<td><code>permissions.deny</code>、<a href="settings-reference.html#enableartifact"><code>enableArtifact</code></a></td>
+<td><code>tool_decision</code>、<code>tool_result</code></td>
+</tr>
+<tr>
+<td>Remote Control</td>
+<td><a href="settings-reference.html#disableremotecontrol"><code>disableRemoteControl</code></a></td>
+<td>无专用事件</td>
+</tr>
+<tr>
+<td>本地会话记录保留</td>
+<td><a href="settings-reference.html#cleanupperioddays"><code>cleanupPeriodDays</code></a></td>
+<td><a href="#retention-sweep-event"><code>retention_sweep</code></a></td>
+</tr>
+</tbody>
+</table>
+<p><code>allowedHttpHookUrls</code>、<code>managed-mcp.json</code> 和 hook 事件这几项需要的信息超出了表中所示：</p>
+<ul>
+<li><strong><code>allowedHttpHookUrls</code></strong>：条目会在各设置文件之间合并，因此开发人员可以向空的托管列表中添加条目。由 <code>allowManagedHooksOnly</code> 决定哪些 hook 运行</li>
+<li><strong><code>managed-mcp.json</code></strong>：要关闭 MCP，请参阅 <a href="managed-mcp.html#disable-mcp-entirely">完全禁用 MCP</a>。要确认 Claude Code 读取了该文件，请参阅 <a href="managed-mcp.html#validate-the-configuration">验证配置</a></li>
+<li><strong>Hook 事件</strong>：Claude Code 对每个 hook 事件记录一次 <code>hook_execution_start</code> 和 <code>hook_execution_complete</code>，涵盖所有匹配的 hook。仅靠 <code>OTEL_LOG_TOOL_DETAILS=1</code> 不会记录 HTTP hook 的 URL。hook 配置只出现在 <code>hook_definitions</code> 中，而这还需要启用详细的 beta 追踪</li>
+</ul>
+<p><code>OTEL_LOG_TOOL_DETAILS=1</code> 会向这些事件添加命令字符串、服务器和工具名称以及工具输入。这些详情可能包含与会话本身相同的敏感内容，因此仅当您的收集器获准保存此类内容时才启用它。</p>
+<h3 id="check-the-retention-sweep">检查保留清理</h3>
+<p>要为每台机器设置相同的保留期，请在 <a href="managed-settings.html">托管设置</a> 中设置 <a href="settings-reference.html#cleanupperioddays"><code>cleanupPeriodDays</code></a>。要检查机器是否使用该值运行清理，请收集 <a href="#retention-sweep-event"><code>retention_sweep</code></a> 事件。<code>period_days</code> 和各计数器是字符串，因此在比较之前请先将它们转换为数字。</p>
+<table>
+<thead>
+<tr>
+<th>机器报告的内容</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>result</code> 为 <code>"skipped"</code></td>
+<td>Claude Code 暂停了清理。<code>skip_reason</code> 给出原因</td>
+</tr>
+<tr>
+<td><code>used_default</code> 为 <code>"true"</code>，或 <code>period_days</code> 与您的托管值不同</td>
+<td>该机器未应用您托管的 <code>cleanupPeriodDays</code></td>
+</tr>
+<tr>
+<td><code>error_count</code> 大于零</td>
+<td>清理在列出或删除文件时遇到错误，因此超过保留期的数据可能仍然存在</td>
+</tr>
+<tr>
+<td><code>files_past_cutoff</code> 大于零</td>
+<td>清理未能删除超过保留期的文件，或发现了过期的已同步 skill 和插件文件夹。请结合 <code>error_count</code> 解读</td>
+</tr>
+<tr>
+<td>没有事件</td>
+<td>本身并不代表失败</td>
+</tr>
+</tbody>
+</table>
+<p>按预期工作的机器也可能因以下原因没有事件：</p>
+<ul>
+<li><strong>没有人启动 Claude Code</strong>：不会运行清理，机器会保留其数据直到下次启动</li>
+<li><strong>会话保持打开</strong>：Claude Code 每个会话最多运行一次清理</li>
+<li><strong>会话提前结束</strong>：会话退出时尚未完成的清理不会发出任何事件，因意外错误而停止的清理也不会</li>
+</ul>
+<p>清理并不覆盖所有路径。<a href="claude-directory.html#kept-until-you-delete-them">保留直到您删除</a> 列出了会保留的内容，<a href="claude-directory.html#clear-local-data">清除本地数据</a> 说明了如何删除它们。</p>
+<h3 id="send-events-to-a-siem">将事件发送到 SIEM</h3>
+<p>将 <code>OTEL_EXPORTER_OTLP_LOGS_ENDPOINT</code> 指向您的 SIEM 的 OTLP 接收器，或指向转发到您的 SIEM 的本机摄取 API 的 OpenTelemetry Collector。以下托管设置示例仅导出事件，启用了完整的工具详情用于 MCP 和 Bash 审计：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"CLAUDE_CODE_ENABLE_TELEMETRY"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_LOGS_EXPORTER"</span><span class="p">:</span><span class="w"> </span><span class="s2">"otlp"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_LOG_TOOL_DETAILS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_EXPORTER_OTLP_LOGS_PROTOCOL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http/protobuf"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_EXPORTER_OTLP_LOGS_ENDPOINT"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://siem.example.com:4318/v1/logs"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"OTEL_EXPORTER_OTLP_HEADERS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Authorization=Bearer your-siem-token"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>要确认事件到达，在运行此配置的会话中提交提示词，并在您的 SIEM 中检查 <code>claude_code.user_prompt</code> 事件。如果没有任何内容到达，使用 <code>claude --debug-file &lt;path&gt;</code> 启动 Claude Code 并在该日志中检查 <code>[3P telemetry]</code> 导出错误。</p>
+<h2 id="backend-considerations">后端考虑事项</h2>
+<p>您选择的指标、日志和跟踪后端决定了您可以执行的分析类型：</p>
+<h3 id="backends-for-metrics">用于指标的后端</h3>
+<ul>
+<li><strong>时间序列数据库</strong>：速率计算、聚合指标</li>
+<li><strong>列式存储</strong>：复杂查询、唯一用户分析</li>
+<li><strong>全功能可观测性平台</strong>：高级查询、可视化、警报</li>
+</ul>
+<h3 id="backends-for-events-and-logs">用于事件和日志的后端</h3>
+<ul>
+<li><strong>日志聚合系统</strong>：全文搜索、日志分析</li>
+<li><strong>列式存储</strong>：结构化事件分析</li>
+<li><strong>全功能可观测性平台</strong>：指标和事件之间的关联</li>
+</ul>
+<h3 id="backends-for-traces">用于跟踪的后端</h3>
+<p>选择支持分布式跟踪存储和 span 关联的后端：</p>
+<ul>
+<li><strong>分布式跟踪系统</strong>：Span 可视化、请求瀑布、延迟分析</li>
+<li><strong>全功能可观测性平台</strong>：跟踪搜索和与指标和日志的关联</li>
+</ul>
+<p>对于需要日活跃用户/周活跃用户/月活跃用户 (DAU/WAU/MAU) 指标的组织，请考虑支持高效唯一值查询的后端。</p>
+<h2 id="service-information">服务信息</h2>
+<p>所有指标和事件都使用以下资源属性导出：</p>
+<ul>
+<li><code>service.name</code>：终端会话为 <code>claude-code</code>，从 <a href="desktop.html">Claude Desktop 应用</a>中的代码选项卡启动的本地会话为 <code>claude-code-desktop</code></li>
+<li><code>service.version</code>：当前 Claude Code 版本，或本地代码选项卡会话的 Desktop 应用版本</li>
+<li><code>os.type</code>：操作系统类型（例如，<code>linux</code>、<code>darwin</code>、<code>windows</code>）</li>
+<li><code>os.version</code>：操作系统版本字符串</li>
+<li><code>host.arch</code>：主机架构（例如，<code>amd64</code>、<code>arm64</code>）</li>
+<li><code>wsl.version</code>：WSL 版本号（仅在 Windows Subsystem for Linux 上运行时出现）</li>
+<li>仪表名称：<code>com.anthropic.claude_code</code></li>
+</ul>
+<p>如果您的收集器管道或仪表板在 <code>service.name = claude-code</code> 上进行过滤，请将 <code>claude-code-desktop</code> 添加到过滤器中，以便也捕获来自本地代码选项卡会话的遥测数据。</p>
+<h2 id="roi-measurement-resources">ROI 测量资源</h2>
+<p>有关测量 Claude Code 投资回报率的综合指南，包括遥测设置、成本分析、生产力指标和自动化报告，请参阅 <a href="https://github.com/anthropics/claude-code-monitoring-guide" target="_blank" rel="noopener">Claude Code ROI 测量指南</a>。此存储库提供了现成的 Docker Compose 配置、Prometheus 和 OpenTelemetry 设置，以及用于生成与 Linear 等工具集成的生产力报告的模板。</p>
+<h2 id="security-and-privacy">安全和隐私</h2>
+<ul>
+<li>OpenTelemetry 导出到您的后端是可选的，需要显式配置。有关 Anthropic 的单独操作遥测以及如何禁用它，请参阅 <a href="data-usage.html#telemetry-services">数据使用</a></li>
+<li>原始文件内容和代码片段不包含在指标或事件中。Trace spans 是一个单独的数据路径：请参阅下面的 <code>OTEL_LOG_TOOL_CONTENT</code> 项目符号</li>
+<li>通过 OAuth 认证时，<code>user.email</code> 包含在遥测属性中，仅发送到您配置的 OTel 端点，永远不会发送到 Anthropic。如果这对您的组织是一个问题，请与您的遥测后端合作以过滤或编辑此字段</li>
+<li>默认情况下不收集用户提示词内容。仅记录提示词长度。要包含提示词内容，请设置 <code>OTEL_LOG_USER_PROMPTS=1</code>。启用后：</li>
+<li>
+<p><code>user_prompt</code> 事件在两个属性中携带提示词文本：<code>prompt</code> 和 <a href="#user-prompt-event"><code>prompt_text</code></a>。如果您在收集器中按属性名称删除或屏蔽该事件的提示词文本，请在规则中同时指定这两个属性</p>
+<p>此 OpenTelemetry Collector <code>attributes</code> 处理器会在列出它的管道中删除这两个属性：</p>
+</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">yaml</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-yaml"><span class="w">    </span><span class="nt">processors</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">attributes/drop-prompt-text</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">actions</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prompt</span>
+<span class="w">            </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">delete</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prompt_text</span>
+<span class="w">            </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">delete</span>
+</code></pre></div>
+<ul>
+<li>
+<p>启用<a href="#traces-beta">追踪</a>后，<code>claude_code.interaction</code> span 在其 <code>user_prompt</code> 属性中携带提示词文本</p>
+</li>
+<li>
+<p>在详细的 beta 追踪下，spans 还会携带每个请求发送的新用户消息、工具结果和系统提醒、系统提示词文本以及模型输出。<a href="#new-context-gates">详细 beta 追踪下的内容属性</a>列出了每个属性。<code>claude_code.system_prompt</code> 事件携带完整的系统提示词</p>
+</li>
+<li>默认情况下不收集助手响应文本。仅记录响应长度。要包含响应文本，请设置 <code>OTEL_LOG_ASSISTANT_RESPONSES=1</code>。与来自 Claude Code 的所有 OpenTelemetry 数据一样，响应文本仅发送到您配置的 OTel 端点，永远不会发送到 Anthropic。当此变量未设置时，会回退到 <code>OTEL_LOG_USER_PROMPTS</code>，因此如果您希望事件中包含提示词内容而不包含响应内容，请设置 <code>OTEL_LOG_ASSISTANT_RESPONSES=0</code>。在详细的 beta 追踪下，<code>claude_code.llm_request</code> span 仍会在 <a href="#new-context-gates"><code>response.model_output</code></a> 中携带模型输出，该属性遵循 <code>OTEL_LOG_USER_PROMPTS</code> 而非此变量</li>
+<li>默认情况下不记录工具输入参数和参数。要包含它们，请设置 <code>OTEL_LOG_TOOL_DETAILS=1</code>。对于 Claude Desktop 的内置服务器，在 Claude Desktop 拥有的会话中，<code>tool_decision</code> 和 <code>tool_result</code> 携带 <code>mcp_server_name</code>/<code>mcp_tool_name</code> 对，即主机编写的名称而非参数内容，即使关闭该标志也是如此。此数据仅发送到您配置的 OTEL 端点，永远不会发送到 Anthropic。参数仍可能包含敏感值，因此请根据需要配置您的遥测后端以过滤或编辑这些属性。启用后：</li>
+<li><code>tool_result</code> 和 <code>tool_decision</code> 事件包含 <code>tool_parameters</code> 属性，其中包含 Bash 命令、MCP 服务器和工具名称以及 skill 名称。<code>full_command</code> 等字段以未截断的形式发出</li>
+<li><code>tool_result</code> 事件另外包含 <code>tool_input</code> 属性，其中包含文件路径、URL、搜索模式和其他参数。超过 512 个字符的单个值被截断，总数限制为约 4 K 字符</li>
+<li><code>user_prompt</code> 事件包含自定义、插件和 MCP 命令的逐字 <code>command_name</code></li>
+<li><a href="#cost-counter">成本和 token 计数器</a>以及 <code>api_request</code>、<code>api_error</code> 和 <code>api_refusal</code> 事件在其归属属性中携带真实的 Agent、skill、插件和 MCP 服务器以及工具名称</li>
+<li><code>claude_code.tool</code> span 携带输入派生属性（如 <code>file_path</code>）。在详细的 beta 追踪下，它还携带 <a href="#new-context-gates"><code>tool_input</code></a> 属性</li>
+<li>默认情况下，trace spans 中不记录工具内容。要包含它，请设置 <code>OTEL_LOG_TOOL_CONTENT=1</code>。<code>claude_code.tool</code> span 随后携带一个 <a href="#tool-output-span-event"><code>tool.output</code> span 事件</a>，其中包含原始文件内容、Bash 命令输出以及 MCP 工具、WebFetch 和 WebSearch 返回的内容，在内容限制处截断（默认为 60 KB）每个属性。来自 MCP 工具、WebFetch 和 WebSearch 的结果需要 Claude Code v2.1.283 或更高版本。工具内容也通过 <a href="#new-context-gates"><code>new_context</code> 到达 spans，其门控因 span 而异</a>。根据需要配置您的遥测后端以过滤或编辑这些属性</li>
+<li>默认情况下不记录原始 Anthropic Messages API 请求和响应主体。要包含它们，请在您的 shell、用户设置或托管设置中设置 <code>OTEL_LOG_RAW_API_BODIES</code>。在 <a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a> 中被忽略。主体包含完整的对话历史，包括系统提示、每个先前的用户和助手轮次以及工具结果，因此启用此选项意味着同意其他 <code>OTEL_LOG_*</code> 内容标志会揭示的所有内容。Claude Code 始终从这些主体中编辑 Claude 的扩展思考内容，无论其他设置如何。您设置的值决定了 Claude Code 如何传递主体：</li>
+<li>使用 <code>=1</code> 时，Claude Code 为每个 API 调用发出 <code>api_request_body</code> 和 <code>api_response_body</code> 日志事件。事件的 <code>body</code> 属性携带 JSON 序列化的有效负载，在内容限制处截断（默认为 60 KB）</li>
+<li>
+<p>使用 <code>=file:&lt;dir&gt;</code> 时，Claude Code 将未截断的主体写入该目录下的 <code>.request.json</code> 和 <code>.response.json</code> 文件，事件携带 <code>body_ref</code> 路径而不是内联主体。使用日志收集器或 sidecar 传输目录，而不是通过遥测流</p>
+<p>对于每个成功的响应，Claude Code 还会在该目录中的 <code>index.jsonl</code> 中追加一行，将响应文件链接到生成它的请求文件以及它成为的记录消息。每行不包含任何消息内容，<a href="#api-response-body-event">API 响应主体事件</a>部分列出了其字段。索引文件需要 Claude Code v2.1.274 或更高版本</p>
+</li>
+</ul>
+<h2 id="monitor-claude-code-on-amazon-bedrock">在 Amazon Bedrock 上监控 Claude Code</h2>
+<p>有关 Amazon Bedrock 的 Claude Code 使用情况监控指南的详细信息，请参阅 <a href="https://github.com/aws-solutions-library-samples/guidance-for-claude-code-with-amazon-bedrock/blob/main/assets/docs/MONITORING.md" target="_blank" rel="noopener">Claude Code 监控实现 (Amazon Bedrock)</a>。</p></article>
+    <div class="pager"><a class="pager-link prev" href="llm-gateway-protocol.html"><span class="pager-dir">← 上一页</span><span class="pager-name">Claude Code 网关兼容性指南</span></a><a class="pager-link next" href="costs.html"><span class="pager-dir">下一页 →</span><span class="pager-name">有效管理成本</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#quick-start">快速开始</a><a class="toc-l2" href="#administrator-configuration">管理员配置</a><a class="toc-l3" href="#how-managed-settings-lock-the-otlp-destination">托管设置如何锁定 OTLP 目标</a><a class="toc-l2" href="#configuration-details">配置详情</a><a class="toc-l3" href="#common-configuration-variables">常见配置变量</a><a class="toc-l3" href="#mtls-authentication">mTLS 身份验证</a><a class="toc-l3" href="#metrics-cardinality-control">指标基数控制</a><a class="toc-l3" href="#traces-beta">Traces（测试版）</a><a class="toc-l3" href="#dynamic-headers">动态标头</a><a class="toc-l3" href="#multi-team-organization-support">多团队组织支持</a><a class="toc-l3" href="#attribute-telemetry-to-desktop-ssh-sessions">将遥测归因到 Desktop SSH 会话</a><a class="toc-l3" href="#example-configurations">示例配置</a><a class="toc-l2" href="#telemetry-from-cloud-sessions-and-claude-tag">云会话和 Claude Tag 的遥测</a><a class="toc-l3" href="#attribute-telemetry-to-cloud-sessions">将遥测属性分配给云会话</a><a class="toc-l2" href="#available-metrics-and-events">可用的指标和事件</a><a class="toc-l3" href="#standard-attributes">标准属性</a><a class="toc-l3" href="#metrics">指标</a><a class="toc-l3" href="#metric-details">指标详情</a><a class="toc-l3" href="#events">事件</a><a class="toc-l2" href="#interpret-metrics-and-events-data">解释指标和事件数据</a><a class="toc-l3" href="#usage-monitoring">使用情况监控</a><a class="toc-l3" href="#cost-monitoring">成本监控</a><a class="toc-l3" href="#alerting-and-segmentation">警报和分段</a><a class="toc-l3" href="#detect-retry-exhaustion">检测重试耗尽</a><a class="toc-l3" href="#event-analysis">事件分析</a><a class="toc-l3" href="#map-input-tokens-to-opentelemetry-genai-semantic-conventions">将输入 token 映射到 OpenTelemetry GenAI 语义约定</a><a class="toc-l2" href="#audit-security-events">审计安全事件</a><a class="toc-l3" href="#attribute-actions-to-users">将操作归属到用户</a><a class="toc-l3" href="#audit-mcp-activity">审计 MCP 活动</a><a class="toc-l3" href="#map-security-questions-to-events">将安全问题映射到事件</a><a class="toc-l3" href="#map-egress-paths-to-managed-controls-and-events">将出站路径映射到托管控制项和事件</a><a class="toc-l3" href="#check-the-retention-sweep">检查保留清理</a><a class="toc-l3" href="#send-events-to-a-siem">将事件发送到 SIEM</a><a class="toc-l2" href="#backend-considerations">后端考虑事项</a><a class="toc-l3" href="#backends-for-metrics">用于指标的后端</a><a class="toc-l3" href="#backends-for-events-and-logs">用于事件和日志的后端</a><a class="toc-l3" href="#backends-for-traces">用于跟踪的后端</a><a class="toc-l2" href="#service-information">服务信息</a><a class="toc-l2" href="#roi-measurement-resources">ROI 测量资源</a><a class="toc-l2" href="#security-and-privacy">安全和隐私</a><a class="toc-l2" href="#monitor-claude-code-on-amazon-bedrock">在 Amazon Bedrock 上监控 Claude Code</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

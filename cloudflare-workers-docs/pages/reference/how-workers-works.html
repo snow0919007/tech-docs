@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workers 的运行原理 · Workers 文档（中文版）</title>
+<meta name="description" content="Workers 运行时与浏览器、Node.js 的差异：isolate、按请求计算、分布式执行。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>Workers 的运行原理</h1>
+      <p class="lead">Workers 运行时与浏览器里的 JavaScript、Node.js 有什么不同。</p>
+      <div class="page-meta">
+        <span class="tag">参考</span>
+        <span>原文更新于 2026-09-18</span>
+        <span>对应页面：reference/how-workers-works</span>
+      </div>
+
+      <p>虽然 Cloudflare Workers 的行为与浏览器里或 Node.js 里的 <a href="https://www.cloudflare.com/learning/serverless/serverless-javascript/" target="_blank" rel="noopener">JavaScript ↗</a> 很像，但在思考代码的方式上仍有几处不同。在底层，Workers 运行时使用 <a href="https://www.cloudflare.com/learning/serverless/glossary/what-is-chrome-v8/" target="_blank" rel="noopener">V8 引擎 ↗</a>——与 Chromium 和 Node.js 相同的引擎；同时它也实现了现代浏览器中常见的大量标准 <a href="../../sections/runtime-apis.html">API</a>。</p>
+
+      <p>为浏览器或 Node.js 编写的 JavaScript，与 Workers 的差异出现在<strong>运行环境</strong>这一层。Workers 函数并不跑在某台个人机器上（例如<a href="https://www.cloudflare.com/learning/serverless/glossary/client-side-vs-server-side/" target="_blank" rel="noopener">浏览器应用或集中式服务器 ↗</a>），而是跑在 <a href="https://www.cloudflare.com/network" target="_blank" rel="noopener">Cloudflare 的全球网络 ↗</a>上——一张由数千台机器组成、分布在数百个地点的、仍在扩张的网络。</p>
+
+      <p>这些机器每一台都承载一个 Workers 运行时实例，而每个运行时都能同时运行成千上万个用户定义的应用。本文梳理其中几处关键差异。</p>
+
+      <p>更多背景可参考 <a href="https://blog.cloudflare.com/cloud-computing-without-containers" target="_blank" rel="noopener">《Cloud Computing without Containers》↗</a> 一文。</p>
+
+      <p>最大的三处差异是：<strong>Isolate（隔离实例）</strong>、<strong>按请求计算</strong>、<strong>分布式执行</strong>。</p>
+
+      <h2>Isolate</h2>
+      <p><a href="https://v8.dev" target="_blank" rel="noopener">V8 ↗</a> 负责调度 isolate：这是一种轻量上下文，为你的代码提供可访问的变量，以及一个可安全执行的环境。你完全可以把 isolate 理解成让你的函数运行的沙箱。</p>
+
+      <p>一个运行时实例可以运行成百上千个 isolate，并在它们之间无缝切换。每个 isolate 的内存完全隔离，因此每一段代码都受到保护，不会被运行时上其他不可信或用户编写的代码影响。isolate 的启动也非常快：它不是为每个函数新建一台虚拟机，而是在已有环境内部创建。这一模型消除了虚拟机模型里的冷启动（cold start）问题。</p>
+
+      <p>其他无服务器服务商通常使用<a href="https://www.cloudflare.com/learning/serverless/serverless-vs-containers/" target="_blank" rel="noopener">容器化进程 ↗</a>，每个进程跑一个语言运行时实例。而 Workers 只需在容器启动时支付一次 JavaScript 运行时的开销，之后各个 Workers 进程几乎不产生单实例开销，能运行数量近乎无限的脚本。任何一个 isolate 的启动速度，都可以比容器或虚拟机上的 Node 进程快约一百倍；更值得注意的是，启动时 isolate 占用的内存要低一个数量级。</p>
+
+      <div class="note-box">
+        <span class="box-title">原站示意图</span>
+        <p>原文此处配有一张「传统架构 vs Workers V8 isolates」的对比图（用户代码与进程开销的分层示意）。本译文以文字保留其结论：传统架构中每个请求都背着一层进程开销，而 isolate 模型把这层开销摊薄到几乎可以忽略。</p>
+      </div>
+
+      <p>一个 isolate 有自己的作用域，但并不一定长期存活。它可能因为若干原因被回收、被驱逐：</p>
+      <ul>
+        <li>机器资源受限。</li>
+        <li>脚本可疑——例如有任何试图突破 isolate 沙箱的行为。</li>
+        <li>触碰到单项<a href="../../sections/platform.html">资源限额</a>。</li>
+      </ul>
+      <p>因此在全局作用域里保存可变状态一般不被推荐，除非你已经针对这种情况做了兜底处理。</p>
+      <p>如果你关心 Cloudflare 在 Workers 运行时上如何处理安全问题，可以进一步阅读<a href="security-model.html">Isolate 与安全、Spectre 威胁缓解的关系</a>。</p>
+
+      <h2>按请求计算</h2>
+      <p>大多数 Worker 都是默认流程的变体：</p>
+<pre data-lang="js"><code>export default {
+	async fetch(request, env, ctx) {
+		return new Response('Hello World!');
+	},
+};</pre>
+<pre data-lang="ts"><code>export default {
+	async fetch(request, env, ctx): Promise&lt;Response&gt; {
+		return new Response('Hello World!');
+	},
+} satisfies ExportedHandler&lt;Env&gt;;</code></pre>
+
+      <p>对于用 <a href="module-workers.html">ES modules 语法</a>编写的 Worker：当发往你的 <code>*.workers.dev</code> 子域或 Cloudflare 托管域名的请求抵达 Cloudflare 的任一数据中心时，这个请求会调用你在 Worker 代码中定义的 <a href="../../sections/runtime-apis.html"><code>fetch()</code> 处理器</a>；你通过返回一个 <a href="../../sections/runtime-apis.html"><code>Response</code></a> 对象来响应它。</p>
+
+      <h2>分布式执行</h2>
+      <p>isolate 具备韧性，在一次请求期间持续可用；但在极少数情况下，isolate 仍可能被驱逐。当 Worker 触达官方<a href="../../sections/platform.html">限额</a>，或请求所在机器的资源异常紧张时，运行时会在这批事件被妥善处理完之后，有选择地驱逐 isolate。</p>
+
+      <p>与其他所有 JavaScript 平台一样，单个 Workers 实例可以在单线程事件循环中处理多个请求（包括并发请求）。这意味着：在处理某个请求期间，如果有其他请求进来，那些请求可能会（也可能不会）在你 await 某个 <code>async</code> 任务（例如 <code>fetch</code>）时被处理。由于无法保证任意两个用户请求会被路由到同一个或不同的 Worker 实例，Cloudflare 建议<strong>不要使用或修改全局状态</strong>。</p>
+
+      <h2>相关资源</h2>
+      <ul>
+        <li><a href="../../sections/runtime-apis.html"><code>fetch()</code> 处理器</a>——了解发往 Worker 的 HTTP 请求如何被交给 <code>fetch()</code> 处理器。</li>
+        <li><a href="../../sections/runtime-apis.html">Request</a>——了解传入的 HTTP 请求如何传给 <code>fetch()</code> 处理器。</li>
+        <li><a href="../../sections/platform.html">Workers 限额</a>——了解 Worker 体积、启动时间等限制。</li>
+      </ul>
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/reference/how-workers-works/" target="_blank" rel="noopener">reference/how-workers-works</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

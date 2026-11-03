@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>向插件添加组件 · Claude Code 中文文档</title>
+<meta name="description" content="向 Claude Code 插件添加 skills、hooks、MCP 服务器和其他所有组件类型，并提供针对每种类型的验证示例。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/components">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/components" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link active" href="plugins-components.html" aria-current="page">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>创建插件</span></div>
+    <article class="prose" id="article"><h1 id="_1">向插件添加组件</h1>
+<blockquote>
+<p>向 Claude Code 插件添加 skills、hooks、MCP 服务器和其他所有组件类型，并提供针对每种类型的验证示例。</p>
+</blockquote>
+<p>Claude Code 插件由多个组件构建而成，例如 skills、agents、hooks 和 MCP 服务器。每个组件在插件中都有一个默认文件夹，在 <code>.claude-plugin/plugin.json</code> 中有一个可选的清单键来替换或添加到该文件夹，以及用户看到的名称。有关每个键的完整字段表，请参阅<a href="plugins-manifest-reference.html#fields">清单参考</a>。</p>
+<p>使用此页面向已加载的插件添加组件。</p>
+<p>添加组件后，在运行中的会话中运行 <code>/reload-plugins</code> 或启动新会话，以便 Claude Code 加载它。要在加载前检查组件的文件，请从插件目录在 shell 中运行 <a href="plugins-cli-reference.html#plugin-validate"><code>claude plugin validate .</code></a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>这些情况在其他页面上有介绍：</p>
+<ul>
+<li><strong>构建您的第一个插件</strong>：从<a href="plugins-create.html">创建插件</a>开始</li>
+<li><strong>安装他人的插件</strong>：请参阅<a href="plugins-install.html">安装插件</a></li>
+<li><strong>您的插件用户在 claude.ai 或 Cowork 中</strong>：那里加载的是不同的组件集。请参阅<a href="https://claude.com/docs/plugins/build" target="_blank" rel="noopener">插件结构和测试</a>和<a href="https://claude.com/docs/plugins/platform-support#compare-component-support-by-app" target="_blank" rel="noopener">组件支持表</a></li>
+</ul></div></div>
+<h2 id="explore-the-plugin-directory">浏览插件目录</h2>
+<p>浏览器显示了一个示例插件 <code>my-plugin</code>，它在其默认位置拥有每种组件的一个副本：</p>
+<ul>
+<li>一个审查 skill 和一个 <code>about</code> 命令</li>
+<li>一个 security-review 子代理</li>
+<li>一个在 Claude 编辑文件后格式化文件的 hook，以及它调用的 <code>scripts/</code> 文件夹</li>
+<li>一个日志监视器</li>
+<li>一个输出样式和一个颜色主题</li>
+<li>一个 route-audit 工作流</li>
+<li>一个 <code>hello-plugin</code> 可执行文件</li>
+<li>默认设置</li>
+<li>一个本地 MCP 服务器和一个 Go 语言服务器</li>
+</ul>
+<p>每个文件都是其格式的最小有效示例，用于展示形状而不是实用性：真实的 skill 或 agent 包含完整的说明，通常还有支持文件，真实的 hook 或监视器执行真实的工作。浏览器后的部分使用与浏览器相同的文件作为示例，并链接到更完整的文件。选择一个文件或文件夹来阅读其用途、查看其内容，并找到涵盖它的部分。</p>
+<p>What goes in a plugin</p>
+<p>This example plugin, <code>my-plugin</code>, has one of every kind of component, each in its default location. Select a file or folder to read what it’s for and see what goes in it.</p>
+<p>Plugin directory</p>
+<p>my-plugin/</p>
+<p>Selected piece</p>
+<p><a href="plugins-manifest-reference.html">清单</a>是插件 <code>.claude-plugin/</code> 目录中的 <code>plugin.json</code> 文件。它包含插件的元数据和 Claude Code 提示用户的 <code>userConfig</code> 值。Claude Code 可以在没有清单的情况下加载插件。在文件中，只有 <code>name</code> 是必需的。在这个文件中，<code>description</code> 是用户在 <code>/plugin</code> 中看到的插件文本，<code>version</code> 使用户保持在该版本，直到您更改它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-plugin"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Review, formatting, and database tools for this team"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>一个 <a href="skills.html">skill</a> 是一个 <code>SKILL.md</code> 文件。将每个 skill 保存在 <code>skills/</code> 下的自己的目录中。Claude 读取每个 skill 的 <code>description</code>，当用户要求的内容与其匹配时，例如在这里要求 Claude 审查拉取请求，Claude 加载 skill 的说明并遵循它们。用户也可以直接将其作为 <code>/my-plugin:review</code> 运行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown">---
+<span class="gu">description: Reviews a pull request for style and test coverage. Use when asked to review code.</span>
+<span class="gu">---</span>
+
+Review the changed files. Report style problems first, then missing tests.
+</code></pre></div>
+<p>命令是用户按名称运行的单个 Markdown 文件。命令是较旧的格式：skill 以相同的方式按名称运行，也可以在其自己的目录中携带支持文件，因此将新的写成 skills，并为您已有的文件保留 <code>commands/</code>。此文件变成 <code>/my-plugin:about</code> 并采用与 skill 相同的 frontmatter：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown">---
+<span class="gu">description: Summarize the repository</span>
+<span class="gu">---</span>
+
+Summarize what this repository does in three sentences.
+</code></pre></div>
+<p>一个<a href="sub-agents.html">子代理</a>是一个单独的助手，拥有自己的说明和自己的上下文窗口，Claude 可以将任务委托给它并获得结果。<code>agents/</code> 下的每个 Markdown 文件定义一个：frontmatter 命名它并说明何时使用它，正文是其系统提示。这个被命名为 <code>my-plugin:security-reviewer</code>，用户可以使用 <code>@agent-my-plugin:security-reviewer</code> 调用它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown">---
+name: security-reviewer
+description: Reviews code changes for security issues. Use after edits to authentication or input handling.
+<span class="gu">model: sonnet</span>
+<span class="gu">---</span>
+
+You are a security reviewer. Read the changed files and report injection, authentication, and secrets-handling risks.
+</code></pre></div>
+<p>一个 <a href="hooks-guide.html">hook</a> 在 Claude Code 生命周期中的某个点自动运行某些内容，例如在每次文件编辑后：shell 命令、HTTP 请求、MCP 工具调用、对模型的提示或子代理。将插件的 hooks 保存在插件根目录的 <code>hooks/hooks.json</code> 中。这个在 Claude 写入或编辑文件后运行插件的 <code>scripts/format.sh</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PostToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Write|Edit"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"\"${CLAUDE_PLUGIN_ROOT}/scripts/format.sh\""</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>监视器是一个 shell 命令，Claude Code 在会话启动时在后台启动它，并保持运行直到会话结束。它打印的内容作为通知到达 Claude。<code>when</code> 字段可以改为在命名 skill 首次运行时启动它。这个跟踪错误日志：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error-log"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail -F ./logs/error.log"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Application error log"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<p>插件可以包含<a href="output-styles.html">输出样式</a>，这改变了 Claude 如何格式化和表述其回复。将每个输出样式保存为 <code>output-styles/&lt;name&gt;.md</code>。这个在 <code>/output-style</code> 中显示为 <code>my-plugin:terse</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown">---
+name: terse
+description: Answer in as few words as possible
+<span class="gu">keep-coding-instructions: true</span>
+<span class="gu">---</span>
+
+Keep every reply short. Skip preambles and summaries.
+</code></pre></div>
+<p>插件可以包含 <a href="terminal-config.html#create-a-custom-theme">Claude Code 界面的颜色主题</a>。将每个主题保存为 <code>themes/&lt;slug&gt;.json</code>。这个在 <code>/theme</code> 中显示为 <code>Dracula</code>，标记为来自 <code>my-plugin</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dracula"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"base"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dark"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"overrides"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"claude"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#bd93f9"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#ff5555"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>workflows/</code> 文件夹包含 <a href="workflows.html">workflow</a> <code>.js</code> 文件：一个 <code>meta</code> 块，然后是协调多个子代理的脚本正文。这个作为 <code>/my-plugin:audit-routes</code> 运行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">meta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'audit-routes'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'Audit every route handler for missing auth checks'</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">agent</span><span class="p">(</span><span class="s1">'List every .ts file under src/routes/.'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'object'</span><span class="p">,</span><span class="w"> </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">'files'</span><span class="p">],</span><span class="w"> </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'array'</span><span class="p">,</span><span class="w"> </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'string'</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="p">})</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">audits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pipeline</span><span class="p">(</span><span class="nx">found</span><span class="p">.</span><span class="nx">files</span><span class="p">,</span><span class="w"> </span><span class="nx">file</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">  </span><span class="nx">agent</span><span class="p">(</span><span class="sb">`Audit </span><span class="si">${</span><span class="nx">file</span><span class="si">}</span><span class="sb"> for missing authentication checks.`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="nx">file</span><span class="w"> </span><span class="p">}),</span>
+<span class="p">)</span>
+
+<span class="k">return</span><span class="w"> </span><span class="nx">audits</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nb">Boolean</span><span class="p">)</span>
+</code></pre></div>
+<p><code>bin/</code> 是插件如何提供命令行工具的方式。启用插件时，Claude Code 将此文件夹放在它运行命令的 shell 的 <code>PATH</code> 上，因此 Claude 或 skill 的说明可以按名称运行该工具，而无需用户安装任何东西。有了这个<a href="#executables">可执行文件</a>，<code>hello-plugin</code> 是 Claude 可以运行的命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="ch">#!/bin/bash</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"hello from my-plugin"</span>
+</code></pre></div>
+<p><code>hooks/hooks.json</code> 中的 hook 运行一个脚本，这个文件夹是示例保留它的地方。名称 <code>scripts/</code> 是一个约定，不是 Claude Code 查找的东西：hook 通过其路径指向文件，<code>${CLAUDE_PLUGIN_ROOT}/scripts/format.sh</code>。格式化脚本可能看起来像这样：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="ch">#!/bin/bash</span>
+npx<span class="w"> </span>prettier<span class="w"> </span>--write<span class="w"> </span>.
+</code></pre></div>
+<p>插件根目录中的 <code>settings.json</code> 包含在启用插件时应用的<a href="settings-reference.html">设置</a>，因此插件可以改变会话的行为方式，而不仅仅是添加组件。只有两个键从插件生效，<a href="settings-reference.html#agent"><code>agent</code></a> 和 <a href="settings-reference.html#subagentstatusline"><code>subagentStatusLine</code></a>；所有其他键都被丢弃。请参阅<a href="#default-settings">默认设置</a>。</p>
+<p>这个设置 <code>agent</code>，它将会话的主线程作为插件自己的 <code>security-reviewer</code> agent 运行，因此该 agent 的系统提示、工具限制和模型应用于整个会话：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"security-reviewer"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>一个 <a href="mcp.html">MCP 服务器</a>从外部系统为 Claude 提供工具。在插件根目录的 <code>.mcp.json</code> 中声明它。这个从插件内的脚本启动本地服务器，并在 <code>/mcp</code> 中显示为 <code>plugin:my-plugin:db</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"db"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"${CLAUDE_PLUGIN_ROOT}/server.js"</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>LSP 服务器为 Claude 提供<a href="plugins-code-intelligence.html">诊断和代码导航</a>。在插件根目录的 <code>.lsp.json</code> 中声明服务器。这个为 <code>.go</code> 文件连接 Go 语言服务器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"gopls"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gopls"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"extensionToLanguage"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">".go"</span><span class="p">:</span><span class="w"> </span><span class="s2">"go"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="add-each-kind-of-component">添加每种组件</h2>
+<p>下面的每个部分涵盖一种组件：其文件在插件中的位置、一个验证示例、插件加载后用户看到的内容，以及更改默认位置的清单键。添加你的插件需要的组件；没有任何组件是必需的。</p>
+<h3 id="skills">Skills</h3>
+<p>一个 <a href="skills.html">skill</a> 是一个 <code>SKILL.md</code> 文件，当其描述与任务匹配时，Claude 可以加载它。用户也可以将其作为命令运行。将每个 skill 保存在 <code>skills/</code> 下的自己的目录中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">my-plugin/
+├── .claude-plugin/
+│   └── plugin.json
+└── skills/
+    └── review/
+        └── SKILL.md
+</code></pre></div>
+<p>给 <code>SKILL.md</code> 一个 <code>description</code>，以便 Claude 知道何时使用它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown">---
+<span class="gu">description: Reviews a pull request for style and test coverage. Use when asked to review code.</span>
+<span class="gu">---</span>
+
+Review the changed files. Report style problems first, then missing tests.
+</code></pre></div>
+<p>加载插件后，<code>/my-plugin:review</code> 运行该 skill。命令名称和谁可以调用它遵循以下规则：</p>
+<ul>
+<li><strong>命令名称</strong>：<code>/&lt;plugin&gt;:&lt;directory&gt;</code>，所以 <code>my-plugin</code> 中的 <code>skills/review/SKILL.md</code> 是 <code>/my-plugin:review</code>。如果你在 frontmatter 中设置 <code>name</code>，它会替换最后一段，插件前缀保持不变。参见 <a href="skills.html#how-a-skill-gets-its-command-name">skill 如何获得其命令名称</a></li>
+<li><strong>谁调用它</strong>：Claude、用户或两者，由 frontmatter 控制。参见 <a href="skills.html#control-who-invokes-a-skill">控制谁调用 skill</a></li>
+</ul>
+<p>你也可以将 skills 放在默认 <code>skills/</code> 目录之外：</p>
+<ul>
+<li><strong>其他目录</strong>：在 <code>skills</code> 清单键中列出它们。它们添加到默认 <code>skills/</code> 扫描中，而不是替换它，不同于 <code>commands</code> 和 <code>agents</code></li>
+<li><strong>插件根目录中的单个 skill</strong>：没有 <code>skills/</code> 目录且没有 <code>skills</code> 清单键的情况下，插件根目录中的 <code>SKILL.md</code> 作为一个 skill 加载。在其 frontmatter 中设置 <code>name</code>，因为否则 marketplace 安装会根据其 <a href="plugins-loading.html#find-plugins-on-disk">缓存目录</a> 而不是你的插件来命名该 skill</li>
+</ul>
+<p>要在插件中包含说明，将其写成 skill。Claude Code 不会在插件根目录加载 <code>CLAUDE.md</code>，<code>claude plugin validate</code> 会警告 <code>CLAUDE.md at the plugin root is not loaded as project context</code>。</p>
+<p>如果规则必须每次都成立，例如 <a href="hooks-guide.html#block-edits-to-protected-files">阻止编辑受保护的文件</a>，将其添加到插件作为 <a href="#hooks">hook</a> 而不是 skill。要在两者之间选择，参见 <a href="features-overview.html#compare-similar-features">比较相似功能</a> 下的 Hook vs Skill 标签页。</p>
+<p>对于 frontmatter 字段和支持文件，参见 <a href="skills.html">Skills</a>。</p>
+<h3 id="commands">Commands</h3>
+<p>命令是用户按名称运行的单个 Markdown 文件，例如 <code>/my-plugin:about</code>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Commands 是较旧的格式，<a href="#skills">skills</a> 对新工作已经取代了它们。skill 以相同的方式按名称运行，它也可以在其目录中携带支持文件。对于你从 <code>.claude/commands/</code> 迁移过来的文件，保留 <code>commands/</code>。</p></div></div>
+<p>在 <code>commands/&lt;file&gt;.md</code> 保存命令，它变成 <code>/&lt;plugin&gt;:&lt;file&gt;</code>。子目录添加一个段，所以 <code>commands/db/migrate.md</code> 是 <code>/my-plugin:db:migrate</code>。</p>
+<p>命令文件采用与 skills 相同的 frontmatter。</p>
+<h4 id="define-commands-in-the-manifest">在清单中定义命令</h4>
+<p>只有当你想将命令文件保存在 <code>commands/</code> 之外的地方，或在 <code>plugin.json</code> 中定义一个短命令而不需要单独的 Markdown 文件时，你才需要这样做。设置 <code>commands</code> 清单键，Claude Code 会读取它而不是扫描 <code>commands/</code>。该键接受一个路径、路径数组或一个对象，该对象将每个命令名称映射到 <code>source</code> 文件或内联 <code>content</code>。</p>
+<p>此清单内联定义 <code>/my-plugin:about</code>，没有 Markdown 文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-plugin"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"about"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Summarize what this repository does in three sentences."</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Summarize the repository"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>加载插件并在会话中运行 <code>/my-plugin:about</code> 以确认它已加载。</p>
+<p>对于完整的键语法，参见 <a href="plugins-manifest-reference.html#commands"><code>commands</code></a>。</p>
+<h3 id="agents">Agents</h3>
+<p>一个 <a href="sub-agents.html">subagent</a> 是一个单独的助手，有自己的说明和上下文窗口，Claude 可以将任务委托给它。<code>agents/</code> 下的每个 Markdown 文件定义一个：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown">---
+name: security-reviewer
+description: Reviews code changes for security issues. Use after edits to authentication or input handling.
+<span class="gu">model: sonnet</span>
+<span class="gu">---</span>
+
+You are a security reviewer. Read the changed files and report injection, authentication, and secrets-handling risks.
+</code></pre></div>
+<p>此 Agent 名为 <code>my-plugin:security-reviewer</code>，用户可以使用 <code>@agent-my-plugin:security-reviewer</code> <a href="sub-agents.html#invoke-subagents-explicitly">显式调用它</a>。名称形式是 <code>&lt;plugin&gt;:&lt;name&gt;</code>，其中 <code>&lt;name&gt;</code> 来自 frontmatter 的 <code>name</code> 字段，或在该字段缺失时来自文件名。</p>
+<p><code>agents</code> 清单键替换 <code>agents/</code> 扫描。</p>
+<h4 id="organize-agents-in-subfolders">在子文件夹中组织代理</h4>
+<p>你可以将插件代理文件放在 <code>agents/</code> 的子文件夹中。Claude Code <a href="sub-agents.html#choose-the-subagent-scope">递归加载它们</a>，并用冒号连接插件名称、每个子文件夹名称和文件名，以形成代理的作用域名称。例如，<code>my-plugin</code> 插件中的 <code>agents/review/security.md</code> 加载为 <code>my-plugin:review:security</code>。两个设置改变该名称：</p>
+<ul>
+<li>Frontmatter <code>name</code>：它仅替换文件名，所以 <code>agents/review/security.md</code> 中的 <code>name: audit</code> 加载为 <code>my-plugin:review:audit</code></li>
+<li>清单 <a href="plugins-manifest-reference.html#fields"><code>agents</code></a> 字段：你在那里列出的文件加载时不带子文件夹名称，所以 <code>"agents": "./custom/review/security.md"</code> 加载为 <code>my-plugin:security</code></li>
+</ul>
+<h4 id="frontmatter-fields-in-plugin-agents">插件代理中的 Frontmatter 字段</h4>
+<p>插件代理的 frontmatter 遵循以下规则：</p>
+<ul>
+<li><strong>支持的字段</strong>：<code>name</code>、<code>description</code>、<code>model</code>、<code>effort</code>、<code>maxTurns</code>、<code>autoCompactWindow</code>、<code>tools</code>、<code>disallowedTools</code>、<code>skills</code>、<code>memory</code>、<code>background</code>、<code>omitClaudeMd</code>、<code>isolation</code>、<code>color</code> 和 <code>experimental</code> 的 <code>cacheTtl</code> 键。唯一有效的 <code>isolation</code> 值是 <code>"worktree"</code>。参见 <a href="sub-agents.html#supported-frontmatter-fields">支持的 frontmatter 字段</a> 了解每个字段的作用</li>
+<li><strong>忽略的字段</strong>：<code>permissionMode</code>、<code>hooks</code>、<code>mcpServers</code> 和 <code>initialPrompt</code>。代理文件不能自己添加 hooks 或 MCP 服务器，所以改为添加为插件 <a href="#hooks">hooks</a> 和 <a href="#mcp-servers">MCP 服务器</a></li>
+<li><strong>长度超过 256 个字符的 <code>name</code></strong>：Claude Code 会忽略它，并以文件名命名该 Agent，与该字段缺失时的处理方式相同</li>
+<li><strong>不解析的 Frontmatter</strong>：代理仍然加载，每个字段都被忽略。它以文件名命名，其描述读作 <code>Agent from my-plugin plugin</code>。在你的 shell 中运行 <a href="plugins-cli-reference.html#plugin-validate"><code>claude plugin validate</code></a> 来找到这些文件</li>
+</ul>
+<p>对于每个字段的作用和优先级规则，参见 <a href="sub-agents.html#supported-frontmatter-fields">Subagents</a>。</p>
+<h3 id="hooks">Hooks</h3>
+<p>一个 <a href="hooks-guide.html">hook</a> 在 Claude Code 生命周期中的某个点自动运行某些东西，例如在每次文件编辑后：shell 命令、HTTP 请求、MCP 工具调用、对模型的提示或 subagent。在插件根目录的 <code>hooks/hooks.json</code> 中保存插件的 hooks，在顶级 <code>"hooks"</code> 键下，形状与 <code>settings.json</code> 中的 <code>hooks</code> 对象相同。这让你可以复制现有的设置 hook 而不做任何改变。</p>
+<p>此 hook 在每次 <code>Write</code> 或 <code>Edit</code> 后运行一个捆绑脚本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PostToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Write|Edit"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"\"${CLAUDE_PLUGIN_ROOT}/scripts/format.sh\""</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>在 <code>scripts/format.sh</code> 保存脚本并使其可执行。</p>
+<p>加载插件并要求 Claude 编辑文件。退出 0 的 <code>PostToolUse</code> hook 在记录中不显示任何内容，所以用 <a href="hooks.html#debug-hooks">调试日志</a> 或脚本本身所做的更改来确认它运行了。</p>
+<p><code>hooks/hooks.json</code> 和 <code>hooks</code> 清单键中的 hooks 都会加载。对于每个事件及其有效负载，参见 <a href="hooks.html#hook-events">Hook 事件</a>。</p>
+<p>当另一个已启用的插件具有相同名称时，两者中只有一个会注册其 <code>hooks/hooks.json</code> 中的 hook，另一个的 hook 会被排除。关于是哪一个，以及 <code>/plugin</code> 中告知您此情况的提示，参见 <a href="plugins-loading.html#hooks-when-two-enabled-plugins-share-a-name">两个已启用插件同名时的 hook</a>。</p>
+<p>要将 hooks 写成在 Claude Code 内运行并可以在其界面中绘制的 JavaScript 函数，在同一 <code>hooks/hooks.json</code> 中的 <code>modules</code> 键下列出一个模块文件。具有一个的插件是 mod。参见 <a href="plugins-mods-create.html">创建 mod</a>。</p>
+<h4 id="when-plugin-hooks-fire">插件 hooks 何时触发</h4>
+<p>插件的 hooks 不会等待使用插件的某个 skill 或命令。Claude Code 在会话加载插件时注册它们，从那时起它们在其事件上触发。要限制 hook 何时运行，缩小其 <code>matcher</code>。</p>
+<p>如果 hook 从不触发，参见 <a href="plugins-troubleshooting.html#failed-to-load-hooks-from-and-hooks-that-dont-fire">不触发的 hooks</a>。</p>
+<h4 id="environment-quoting-and-matching-mcp-tools">环境、引用和匹配 MCP 工具</h4>
+<p>hook 的环境、<code>${CLAUDE_PLUGIN_ROOT}</code> 的引用和插件自己的 MCP 工具的匹配器工作如下：</p>
+<ul>
+<li><strong>环境</strong>：每个 hook 进程在其环境中接收 <code>CLAUDE_PLUGIN_ROOT</code> 和 <code>CLAUDE_PLUGIN_DATA</code>，加上每个 <a href="#user-configuration">用户配置</a> 值的 <code>CLAUDE_PLUGIN_OPTION_&lt;KEY&gt;</code>，所以你的脚本可以从那里读取它们</li>
+<li><strong>引用</strong>：当 <code>command</code> 没有 <code>args</code> 时，它通过 shell 运行，所以用双引号包装 <code>${CLAUDE_PLUGIN_ROOT}</code> 路径，如 <a href="#hooks">Hooks</a> 下的 <code>hooks/hooks.json</code> 示例所做的那样，以保持展开的路径为一个 shell 单词。当你改为传递 <code>args</code> 时，每个元素作为一个参数传递，没有 shell，不需要引用。参见 <a href="hooks.html#exec-form-and-shell-form">exec 形式和 shell 形式</a></li>
+<li><strong>匹配插件自己的 MCP 工具</strong>：来自此插件声明的 <a href="#mcp-servers">MCP 服务器</a> 的工具名为 <code>mcp__plugin_&lt;plugin&gt;_&lt;server&gt;__&lt;tool&gt;</code>，所以在匹配器中写入该完整名称。仅在服务器名称上的匹配器从不触发。参见 <a href="hooks.html#match-mcp-tools">匹配 MCP 工具</a></li>
+</ul>
+<h3 id="mcp-servers">MCP servers</h3>
+<p>MCP 服务器从外部系统为 Claude 提供工具。在插件根目录的 <code>.mcp.json</code> 中声明它，形状与 <a href="mcp.html#project-scope">项目 <code>.mcp.json</code></a> 相同。此 <code>.mcp.json</code> 声明一个名为 <code>db</code> 的服务器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"db"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"${CLAUDE_PLUGIN_ROOT}/server.js"</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>你也可以省略 <code>mcpServers</code> 包装器，将 <code>db</code> 放在文件的顶级。</p>
+<p>加载插件并运行 <code>/mcp</code> 以确认服务器显示为 <code>plugin:my-plugin:db</code>。</p>
+<p><code>claude plugin validate</code> 检查 <code>.mcp.json</code> 并报告 Claude Code 在加载时会丢弃的服务器条目为错误。需要 Claude Code v2.1.281 或更高版本。</p>
+<p>对于坏条目在加载时显示的位置，参见 <a href="plugins-troubleshooting.html#invalid-mcp-server-config-for-and-mcp-servers-that-dont-start">不启动的 MCP 服务器</a>。</p>
+<p><code>mcpServers</code> 清单键接受内联服务器映射、JSON 文件的路径或这些的数组。当清单服务器与 <code>.mcp.json</code> 中的服务器同名时，清单服务器替换它。</p>
+<h4 id="reach-users-on-claude-ai-and-cowork">到达 claude.ai 和 Cowork 上的用户</h4>
+<p>本地 stdio 服务器，例如 <a href="#mcp-servers">MCP 服务器</a> 下的 <code>db</code> 服务器，在 Claude Code 和在 Claude Desktop 应用中在你的机器上运行的 Cowork 会话中运行，但不在 claude.ai 上。要到达那里的用户，通过其 <code>https://</code> URL 引用远程服务器，claude.ai 和 Cowork 将其作为连接器提供给用户，如 <a href="https://claude.com/docs/plugins/build#bundle-an-mcp-connector-with-its-skill" target="_blank" rel="noopener">将 MCP 连接器与其 skill 捆绑</a> 所示。</p>
+<h4 id="server-names-tool-names-and-reloads">服务器名称、工具名称和重新加载</h4>
+<p>服务器的名称、变量替换和重新加载行为遵循以下规则：</p>
+<ul>
+<li><strong>服务器名称</strong>：<code>plugin:&lt;plugin&gt;:&lt;server&gt;</code>，所以 <code>my-plugin</code> 中的 <code>db</code> 服务器在 <code>/mcp</code> 中是 <code>plugin:my-plugin:db</code>。使用相同的形式在 <a href="hooks.html#mcp-tool-hook-fields"><code>mcp_tool</code> hook</a> 中命名服务器</li>
+<li><strong>工具名称</strong>：<code>mcp__plugin_&lt;plugin&gt;_&lt;server&gt;__&lt;tool&gt;</code>，所以该 <code>db</code> 服务器上的 <code>query</code> 工具是 <code>mcp__plugin_my-plugin_db__query</code>。这是在 <a href="permissions.html">权限规则</a> 和 <a href="#hooks">hook 匹配器</a> 中使用的名称</li>
+<li><strong>替换</strong>：<code>${CLAUDE_PLUGIN_ROOT}</code> 和其他 <a href="#path-variables-and-persistent-data">路径变量</a> 在 <code>command</code>、<code>args</code> 和 <code>env</code> 中被替换。<code>args</code> 中不需要引用，因为每个元素作为一个参数传递</li>
+<li><strong>重新加载</strong>：当用户运行 <code>/reload-plugins</code> 且 <a href="plugins-cli-reference.html#reloads-that-change-mcp-tools">重新加载适用</a> 时，配置未更改的服务器保持其连接。配置已更改的服务器重新连接，你删除的服务器断开连接</li>
+</ul>
+<h4 id="include-a-packaged-mcpb-server">包含打包的 MCPB 服务器</h4>
+<p><code>mcpServers</code> 键也接受打包的服务器作为 <a href="https://github.com/modelcontextprotocol/mcpb" target="_blank" rel="noopener">MCPB 文件</a>，其扩展名为 <code>.mcpb</code> 或较旧的 <code>.dxt</code>。将键指向文件，作为插件内的路径或 <code>https://</code> URL：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-plugin"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./servers/db.mcpb"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>服务器从捆绑清单中的 <code>name</code> 获取其名称。</p>
+<p>捆绑的自己的清单可以在 <code>user_config</code> 块中声明服务器需要的用户设置。具有必需设置但没有保存值的捆绑服务器不启动。<code>/plugin</code> <strong>Errors</strong> 标签显示 <code>Bundled MCP server "&lt;name&gt;" was not started: it needs configuration</code>。</p>
+<p>用户可以通过以下两种方式之一提供值：</p>
+<ul>
+<li><strong>在 <code>/plugin</code> 中</strong>：在 <strong>Installed</strong> 标签上选择插件并选择 <strong>Configure</strong></li>
+<li><strong>在安装时，从 shell</strong>：将 <a href="plugins-cli-reference.html#plugin-install"><code>--config &lt;server&gt;.&lt;key&gt;=&lt;value&gt;</code></a> 传递给 <code>claude plugin install</code>。需要 Claude Code v2.1.285 或更高版本，仅适用于打包在插件内的捆绑。</li>
+</ul>
+<p>对于传输和身份验证，参见 <a href="mcp.html#plugin-provided-mcp-servers">MCP</a>。</p>
+<h3 id="lsp-servers">LSP servers</h3>
+<p>LSP 服务器为 Claude 提供诊断和代码导航。如果 <a href="plugins-code-intelligence.html">官方代码智能插件</a> 已经涵盖你的语言，安装那个而不是写一个。否则在插件根目录的 <code>.lsp.json</code> 中声明服务器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"gopls"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gopls"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"extensionToLanguage"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">".go"</span><span class="p">:</span><span class="w"> </span><span class="s2">"go"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>文件直接将每个服务器名称映射到其配置，映射周围没有包装对象。<code>command</code> 是二进制文件的名称，其参数在 <code>args</code> 中。<code>extensionToLanguage</code> 需要至少一个扩展名，每个都以 <code>.</code> 开头。</p>
+<p><code>claude plugin validate</code> 不读取此文件。当任何条目无效时，整个文件在加载时被跳过，<code>Invalid LSP server config for ".lsp.json"</code> 出现在 <code>/plugin</code> <strong>Errors</strong> 标签中。</p>
+<p>你的插件配置连接但不安装服务器二进制文件，每个文件扩展名获得一个服务器：</p>
+<ul>
+<li><strong>缺少二进制文件</strong>：Claude Code 从用户的 <code>PATH</code> 按名称启动 <code>command</code>。当二进制文件不存在时，服务器启动失败，<code>claude --debug</code> 记录 <code>LSP server &lt;name&gt; failed to start</code></li>
+<li><strong>扩展名冲突</strong>：当两个启用的服务器声称相同的扩展名时，首先注册的处理这些文件，另一个不用于它们，无论服务器来自一个插件还是两个。<code>/plugin</code> <strong>Errors</strong> 标签显示警告 <code>LSP server "&lt;name&gt;" is not used for &lt;ext&gt; files</code></li>
+</ul>
+<p><code>lspServers</code> 清单键接受相同的映射内联、JSON 文件的路径或这些的数组，其服务器添加到 <code>.lsp.json</code> 中的服务器。当清单服务器与 <code>.lsp.json</code> 中的服务器同名时，清单服务器替换它。</p>
+<p>对于 <code>transport</code>、超时、重启和其他字段，参见 <a href="plugins-manifest-reference.html#lspservers"><code>lspServers</code></a>。</p>
+<p>将日志输出发送到 stderr，而不是 stdout。Claude Code 仅将服务器的 stdout 读取为协议消息，并接受最多 64 KiB 的消息头和最多 32 MiB 的消息体。</p>
+<p>Claude Code 断开超过任一限制或向 stdout 写入非协议输出的服务器，并将断开连接计为 <code>restartOnCrash</code> 和 <code>maxRestarts</code> 的崩溃。当你使用 <code>--debug</code> 运行时，Claude Code 将命名原因的错误写入调试日志。</p>
+<h3 id="executables">Executables</h3>
+<p>插件根目录中 <code>bin/</code> 中的文件在启用插件时位于 Bash 工具的 shell 的 <code>PATH</code> 上，所以 Claude 可以将它们作为裸命令运行。Claude 在 <a href="sandboxing.html">沙箱</a> 之外使用 <a href="tools-reference.html#powershell-tool">PowerShell 工具</a> 运行的命令也能在其 <code>PATH</code> 上找到它们，而在沙箱中运行的 PowerShell 命令则不能。添加一个可执行脚本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="ch">#!/bin/bash</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"hello from my-plugin"</span>
+</code></pre></div>
+<p>用 <code>chmod +x bin/hello-plugin</code> 使其可执行并加载插件。当你要求 Claude 运行 <code>hello-plugin</code> 时，Bash 工具结果显示脚本的输出。</p>
+<p>插件 <code>bin/</code> 目录位于用户自己的 <code>PATH</code> 条目之后，所以插件不能遮蔽 <code>git</code>、<code>ls</code> 或另一个系统命令。</p>
+<p>claude.ai 和 Cowork 不安装具有顶级 <code>bin/</code> 目录的插件，包括你 <a href="https://claude.com/docs/plugins/org-sync#keep-executables-out-of-the-top-level-bin-directory" target="_blank" rel="noopener">通过 claude.ai 组织设置分发的</a> 插件。</p>
+<h3 id="default-settings">Default settings</h3>
+<p>要设置在启用插件时应用的默认值，在插件根目录添加 <code>settings.json</code>，或将相同的对象内联放在 <code>settings</code> 清单键中。两个键生效，<code>agent</code> 和 <code>subagentStatusLine</code>，每个其他键都被丢弃。</p>
+<p>设置 <code>agent</code> 以将插件自己的一个代理作为主线程运行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"security-reviewer"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>加载插件并启动会话。Claude 然后在主对话中用 <code>security-reviewer</code> 代理的系统提示和模型回答。</p>
+<p>对于该键控制的所有内容，参见 <a href="settings-reference.html#agent"><code>agent</code> 设置</a>。</p>
+<p>当相同的键在多个地方设置时，这些规则决定哪个值适用：</p>
+<ul>
+<li><strong>文件优于清单</strong>：当两者都存在且 <code>settings.json</code> 设置至少一个支持的键时，<code>settings.json</code> 适用，清单的 <code>settings</code> 被忽略</li>
+<li><strong>用户设置优于插件默认值</strong>：跨设置源，插件默认值是最低层，所以用户自己在 <code>~/.claude/settings.json</code> 中的 <code>agent</code> 覆盖你的</li>
+<li><strong>两个插件设置相同的键</strong>：来自最后加载的插件的值适用，<code>claude --debug</code> 记录 <code>overrides setting</code></li>
+</ul>
+<p>对于 <code>subagentStatusLine</code> 形状，参见 <a href="statusline.html#subagent-status-lines">subagent 状态行</a>。</p>
+<h3 id="themes-and-output-styles">Themes and output styles</h3>
+<p>插件可以包含颜色主题和输出样式。两者都出现在与用户自己相同的选择器中。对于任一个，设置清单键替换文件夹扫描。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">组件</th>
+<th style="text-align: left;">保存为</th>
+<th style="text-align: left;">格式</th>
+<th style="text-align: left;">出现在</th>
+<th style="text-align: left;">清单键</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">主题</td>
+<td style="text-align: left;"><code>themes/&lt;slug&gt;.json</code></td>
+<td style="text-align: left;">用户在 <code>~/.claude/themes/</code> 中写入的 <a href="terminal-config.html#create-a-custom-theme">自定义主题文件</a> 格式</td>
+<td style="text-align: left;"><code>/theme</code>，在文件的 <code>name</code> 下</td>
+<td style="text-align: left;"><code>experimental.themes</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">输出样式</td>
+<td style="text-align: left;"><code>output-styles/&lt;name&gt;.md</code></td>
+<td style="text-align: left;"><a href="output-styles.html#create-a-custom-output-style">自定义输出样式</a> 格式，带有 <code>name</code> 和 <code>description</code> frontmatter</td>
+<td style="text-align: left;"><code>/output-style</code>，作为 <code>&lt;plugin&gt;:&lt;name&gt;</code></td>
+<td style="text-align: left;"><code>outputStyles</code></td>
+</tr>
+</tbody>
+</table>
+<p>插件主题是只读的，所以当用户在 <code>/theme</code> 中编辑一个时，编辑被保存为其自己的主题目录中的副本。</p>
+<p>此主题在深色预设上重新着色提示符强调和错误文本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dracula"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"base"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dark"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"overrides"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"claude"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#bd93f9"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#ff5555"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="channels">Channels</h3>
+<p>一个 <a href="channels.html">channel</a> 让外部系统（如聊天应用）将消息发送到会话中。在插件中，channel 是 MCP 服务器之一加上一个 <code>channels</code> 条目，该条目绑定到它并可以提示其自己的配置。此清单将 channel 绑定到 <code>telegram</code> 服务器并要求机器人令牌：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-plugin"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"telegram"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"${CLAUDE_PLUGIN_ROOT}/server.js"</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"BOT_TOKEN"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${user_config.bot_token}"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"channels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"telegram"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"userConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"bot_token"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bot token"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Telegram bot token"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"sensitive"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>server</code> 必须匹配 <code>mcpServers</code> 中的键。每个 channel 的 <code>userConfig</code> 采用与 <a href="#user-configuration">顶级 <code>userConfig</code> 键</a> 相同的形状。</p>
+<p>对于服务器必须实现的内容以及用户如何启用 channel 插件，参见 channels 参考中的 <a href="channels-reference.html#package-as-a-plugin">打包为插件</a>。对于字段表，参见 <a href="plugins-manifest-reference.html#channels"><code>channels</code></a>。</p>
+<h3 id="monitors">Monitors</h3>
+<p>monitor 是在整个会话中在后台运行的 shell 命令。它打印的内容作为通知到达 Claude，所以 Claude 可以对日志或状态更改做出反应，而无需被要求观看它。在 <code>monitors/monitors.json</code> 中保存条目：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error-log"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail -F ./logs/error.log"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Application error log"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<p>命令在 shell 中运行，位于会话的当前工作目录中。它以您的完整用户权限运行，并且在 <a href="sandboxing.html">沙箱</a> 之外运行。</p>
+<p>monitor 的命令在其启动位置和可以引用的内容方面受到限制：</p>
+<ul>
+<li><strong>交互式会话</strong>：插件 monitor 不会在使用 <code>-p</code> 标志的非交互模式中启动</li>
+<li><strong>最低版本</strong>：在 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 或 Microsoft Foundry 上，或设置了 <code>DISABLE_TELEMETRY</code> 或 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> 时，monitor 需要 Claude Code v2.1.310 或更高版本。该要求在 <a href="env-vars.html#features-that-need-feature-flag-fetching">功能标志获取</a> 关闭时适用</li>
+<li><strong>无用户配置</strong>：<code>command</code> 从环境中获取 <a href="#path-variables-and-persistent-data">路径变量</a> 和 <code>${ENV_VAR}</code>，但从不获取 <code>${user_config.*}</code>。引用一个的 monitor 不启动，monitor 进程也不接收 <code>CLAUDE_PLUGIN_OPTION_&lt;KEY&gt;</code></li>
+<li><strong>会话中期禁用</strong>：如果你在会话中期禁用插件，Claude Code 不会停止已经运行的 monitors。它们在会话结束时停止</li>
+</ul>
+<p><code>experimental.monitors</code> 清单键接受相同的数组内联或 JSON 文件的路径，并被读取而不是 <code>monitors/monitors.json</code>。</p>
+<p>对于 <code>when</code> 触发器和其他字段，参见 <a href="plugins-manifest-reference.html#monitors"><code>monitors</code></a>。</p>
+<h2 id="user-configuration">要求用户提供配置值</h2>
+<p>在 <code>userConfig</code> 清单键中声明您的插件需要的值，以便用户不自己编辑 <code>settings.json</code>。每个选项显示在一个对话框中，其 <code>title</code> 作为标签，其 <code>description</code> 在下方。</p>
+<p>为令牌或密码设置 <code>"sensitive": true</code>。对话框然后掩盖输入，值存储在安全存储中而不是 <code>settings.json</code>。</p>
+<p>此清单要求端点和令牌：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-plugin"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"userConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"api_url"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API URL"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Base URL of your team's API"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"api_token"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API token"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Token for your team's API"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"sensitive"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="when-the-configuration-dialog-appears">配置对话框何时出现</h3>
+<p>对话框是交互式 <code>/plugin</code> 界面的一部分。当用户执行以下任何操作时，它为任何尚未设置的选项打开：</p>
+<ul>
+<li>在 <code>/plugin</code> 中安装插件</li>
+<li>在会话内运行 <code>/plugin install &lt;plugin&gt;@&lt;marketplace&gt;</code></li>
+<li>从 <code>/plugin</code> 中的 <strong>Installed</strong> 标签启用插件</li>
+</ul>
+<p>要在任何时间打开相同的对话框，用户运行 <code>/plugin configure &lt;plugin&gt;@&lt;marketplace&gt;</code>。</p>
+<p>VS Code 扩展的<a href="vs-code.html#install-plugins">管理插件对话框</a>在安装后作为表单请求未设置的选项，插件行上的齿轮图标再次打开包含每个选项的表单。</p>
+<p><code>claude plugin install</code> shell 命令从不提示 <code>userConfig</code> 值。要从 shell 设置值，在安装时将每个值作为 <code>--config KEY=VALUE</code> 传递，或之后将 JSON 对象管道传输到 <a href="plugins-cli-reference.html#plugin-configure"><code>claude plugin configure --values-stdin</code></a>。</p>
+<p>当选项保持未设置时，<code>claude plugin install</code> 打印一个 <code>userConfig options not yet set</code> 行。有关该行的确切文本，请参阅<a href="plugins-troubleshooting.html#the-userconfig-dialog-never-appears"><code>userConfig</code> 对话框从不出现</a>。</p>
+<p>对于选项字段、每个值存储的位置、组件如何引用保存的值以及哪些字段拒绝 <code>${user_config.*}</code>，请参阅<a href="plugins-manifest-reference.html#user-configuration">用户配置</a>。</p>
+<h2 id="path-variables-and-persistent-data">引用插件路径和存储数据</h2>
+<p>您不知道您的插件将被安装在哪里，所以通过这些变量而不是固定路径引用其文件和数据。它们在 skill、命令和 agent 内容、hook 和监视器命令以及 MCP 和 LSP 服务器配置中被替换。它们也被导出到 hook、MCP 和 LSP 进程：</p>
+<ul>
+<li><strong><code>${CLAUDE_PLUGIN_ROOT}</code></strong>：插件的安装目录。每个版本都有自己的<a href="plugins-loading.html#find-plugins-on-disk">缓存目录</a>，所以当插件更新时路径改变。不要在那里写状态</li>
+<li><strong><code>${CLAUDE_PLUGIN_DATA}</code></strong>：一个在更新中存活的目录，用于 <code>node_modules</code>、虚拟环境和缓存。它解析为 <code>~/.claude/plugins/data/&lt;id&gt;/</code> 并在首次引用时创建</li>
+<li><strong><code>${CLAUDE_PROJECT_DIR}</code></strong>：项目根目录，hooks 接收的相同值</li>
+</ul>
+<p>在数据目录路径中，<code>&lt;id&gt;</code> 是插件标识符，每个字符除了字母、数字、<code>_</code> 和 <code>-</code> 被替换为 <code>-</code>，所以 <code>my-plugin@my-marketplace</code> 变成 <code>my-plugin-my-marketplace</code>。</p>
+<p>在 Windows 上，大多数替换的路径使用正斜杠，例如 <code>C:/Users/you/...</code>。在 <a href="hooks.html#exec-form-and-shell-form">exec 形式的 hook</a> 以及通过 PowerShell 运行的 hook 中，它们保留原生的反斜杠；在未安装 Git Bash 时，PowerShell 是 Windows 上的默认 shell。</p>
+<h3 id="install-dependencies-into-the-data-directory">将依赖项安装到数据目录</h3>
+<p>对于市场安装的插件，Claude Code 在缓存插件时自动安装符合条件的 <a href="plugins-loading.html#node-js-package-dependencies">Node.js 包依赖项</a>，所以您可能不需要自己安装它们。当您这样做时，此 <code>SessionStart</code> hook 在首次运行时将 <code>node_modules</code> 安装到 <code>${CLAUDE_PLUGIN_DATA}</code> 中，并在更新改变 <code>package.json</code> 后再次安装：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"SessionStart"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diff -q \"${CLAUDE_PLUGIN_ROOT}/package.json\" \"${CLAUDE_PLUGIN_DATA}/package.json\" &gt;/dev/null 2&gt;&amp;1 || (cd \"${CLAUDE_PLUGIN_DATA}\" &amp;&amp; cp \"${CLAUDE_PLUGIN_ROOT}/package.json\" . &amp;&amp; npm install) || rm -f \"${CLAUDE_PLUGIN_DATA}/package.json\""</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>在第一个会话后，<code>~/.claude/plugins/data/&lt;id&gt;/node_modules</code> 存在。MCP 服务器然后可以在其 <code>env</code> 中设置 <code>NODE_PATH</code> 为 <code>${CLAUDE_PLUGIN_DATA}/node_modules</code>。对于哪些字段替换哪个变量，请参阅<a href="plugins-manifest-reference.html#environment-variables">环境变量</a>。</p>
+<h2 id="next-steps">后续步骤</h2>
+<ul>
+<li><a href="plugins-manifest-reference.html">插件清单参考</a>：<code>plugin.json</code> 字段、路径规则和标准布局</li>
+<li><a href="plugin-evals.html">使用 evals 测试插件</a>：检查您添加的组件以您打算的方式改变 Claude 的行为</li>
+<li><a href="plugins-publish.html">发布和分发插件</a>：版本化插件并将其放在市场中</li>
+<li><a href="plugins-troubleshooting.html">排查插件问题</a>：当组件不加载或 hook 不触发时该怎么办</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-create.html"><span class="pager-dir">← 上一页</span><span class="pager-name">创建 Claude Code 插件</span></a><a class="pager-link next" href="plugins-dependencies.html"><span class="pager-dir">下一页 →</span><span class="pager-name">插件依赖</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#explore-the-plugin-directory">浏览插件目录</a><a class="toc-l2" href="#add-each-kind-of-component">添加每种组件</a><a class="toc-l3" href="#skills">Skills</a><a class="toc-l3" href="#commands">Commands</a><a class="toc-l3" href="#agents">Agents</a><a class="toc-l3" href="#hooks">Hooks</a><a class="toc-l3" href="#mcp-servers">MCP servers</a><a class="toc-l3" href="#lsp-servers">LSP servers</a><a class="toc-l3" href="#executables">Executables</a><a class="toc-l3" href="#default-settings">Default settings</a><a class="toc-l3" href="#themes-and-output-styles">Themes and output styles</a><a class="toc-l3" href="#channels">Channels</a><a class="toc-l3" href="#monitors">Monitors</a><a class="toc-l2" href="#user-configuration">要求用户提供配置值</a><a class="toc-l3" href="#when-the-configuration-dialog-appears">配置对话框何时出现</a><a class="toc-l2" href="#path-variables-and-persistent-data">引用插件路径和存储数据</a><a class="toc-l3" href="#install-dependencies-into-the-data-directory">将依赖项安装到数据目录</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

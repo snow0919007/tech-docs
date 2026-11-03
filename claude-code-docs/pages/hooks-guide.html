@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用 hooks 自动化操作 · Claude Code 中文文档</title>
+<meta name="description" content="当 Claude Code 编辑文件、完成任务或需要输入时自动运行 shell 命令。格式化代码、发送通知、验证命令并强制执行项目规则。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="hooks-guide">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/hooks-guide" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link active" href="hooks-guide.html" aria-current="page">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>使用 Claude Code 构建</span> <span class="sep">/</span> <span>自动化</span></div>
+    <article class="prose" id="article"><h1 id="hooks">使用 hooks 自动化操作</h1>
+<blockquote>
+<p>当 Claude Code 编辑文件、完成任务或需要输入时自动运行 shell 命令。格式化代码、发送通知、验证命令并强制执行项目规则。</p>
+</blockquote>
+<p>Hooks 是用户定义的 shell 命令。Claude Code 在其生命周期中的特定点运行它们，这为你提供确定性控制：某些操作总是会发生，而不是依赖 LLM 选择运行它们。使用 hooks 来强制执行项目规则、自动化重复任务，并将 Claude Code 与现有工具集成。</p>
+<p>对于需要判断而不是确定性规则的决策，你也可以使用 <a href="#prompt-based-hooks">基于提示的 hooks</a> 或 <a href="#agent-based-hooks">基于代理的 hooks</a>，它们使用 Claude 模型来评估条件。</p>
+<p>有关扩展 Claude Code 的其他方式，请参阅 <a href="skills.html">skills</a> 用于为 Claude 提供额外的指令和可执行命令，<a href="sub-agents.html">subagents</a> 用于在隔离的上下文中运行任务，以及 <a href="plugins-overview.html">plugins</a> 用于打包要在项目间共享的扩展。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>本指南涵盖常见用例和入门方法。有关完整的事件架构、JSON 输入/输出格式和异步 hooks 和 MCP 工具 hooks 等高级功能，请参阅 <a href="hooks.html">Hooks 参考</a>。</p></div></div>
+<h2 id="set-up-your-first-hook">设置你的第一个 hook</h2>
+<p>要创建 hook，请将 <code>hooks</code> 块添加到 <a href="#configure-hook-location">设置文件</a>。本演练创建一个桌面通知 hook，这样每当 Claude 等待你的输入而不是监视终端时，你都会收到警报。</p>
+<p><strong>1. 将 hook 添加到你的设置</strong></p>
+<p>打开 <code>~/.claude/settings.json</code> 并添加一个 <code>Notification</code> hook。如果文件不存在，请创建它。下面的示例使用 <code>osascript</code> 用于 macOS；有关 Linux 和 Windows 命令，请参阅 <a href="#get-notified-when-claude-needs-input">在 Claude 需要输入时获得通知</a>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"Notification"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"osascript -e 'display notification \"Claude Code needs your attention\" with title \"Claude Code\"'"</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>如果你的设置文件已经有一个 <code>hooks</code> 键，请将 <code>Notification</code> 作为现有事件键的同级添加，而不是替换整个对象。每个事件名称是单个 <code>hooks</code> 对象内的一个键：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PostToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Edit|Write"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w"> </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jq -r '.tool_input.file_path' | xargs npx prettier --write"</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"Notification"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w"> </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"osascript -e 'display notification \"Claude Code needs your attention\" with title \"Claude Code\"'"</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>您也可以通过在 CLI 中描述您想要的内容来要求 Claude 为您编写 hook。</p>
+<p><strong>2. 验证配置</strong></p>
+<p>在 Claude Code 输入框中输入 <code>/hooks</code> 以打开 hook 浏览器。您的新 hook 会出现在 <code>Notification</code> 下的列表中。</p>
+<p><strong>3. 测试 hook</strong></p>
+<p>按 <code>Esc</code> 返回 CLI。按 <code>Shift+Tab</code> 直到状态栏显示 <code>⏸ manual mode on</code>，要求 Claude 做需要权限的事情，然后切换离开终端。您应该会收到桌面通知。</p>
+<h2 id="what-you-can-automate">可以自动化的内容</h2>
+<p>hook 让您可以在 Claude Code 生命周期的关键节点运行代码：在编辑后格式化文件、在命令执行前阻止命令、在 Claude 需要输入时发送通知、在会话开始时注入上下文，等等。有关 hook 事件的完整列表，请参阅 <a href="hooks.html#hook-lifecycle">Hooks 参考</a>。</p>
+<p>每个示例都包含一个可直接使用的配置块，您可以将其添加到<a href="#configure-hook-location">设置文件</a>中。</p>
+<p>有关运行独立模型审查并将发现结果反馈回会话的 hook 的生产示例，请参阅 <a href="security-guidance.html#how-the-plugin-integrates-with-claude-code"><code>security-guidance</code> 插件如何与 Claude Code 集成</a>。</p>
+<h3 id="get-notified-when-claude-needs-input">在 Claude 需要输入时收到通知</h3>
+<p>每当 Claude 完成工作并需要您输入时，都会收到桌面通知，这样您就可以切换到其他任务，而无需时刻查看终端。</p>
+<p>此 hook 使用 <code>Notification</code> 事件，Claude Code 会在 Claude 等待输入或权限时触发该事件。有关确切的触发时机，请参阅<a href="hooks.html#notification">各通知类型的触发时机</a>。</p>
+<p>下面的每个选项卡都使用该平台的原生通知命令。将以下内容添加到 <code>~/.claude/settings.json</code>：</p>
+<blockquote>
+<p>[tab] macOS</p>
+<p><code>json theme={null}
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude Code needs your attention\" with title \"Claude Code\"'"
+          }
+        ]
+      }
+    ]
+  }
+}</code></p>
+<blockquote>
+<p>[accordion] 如果没有出现通知</p>
+<p><code>osascript</code> 通过内置的“脚本编辑器”应用发送通知。如果“脚本编辑器”没有通知权限，该命令会静默失败，并且 macOS 不会提示您授予权限。</p>
+<p>在终端中运行一次以下命令，使“脚本编辑器”出现在通知设置中：</p>
+<p><code>bash theme={null}
+osascript -e 'display notification "test"'</code></p>
+<p>此时还不会显示任何内容。打开 <strong>System Settings &gt; Notifications</strong>，在列表中找到 <strong>Script Editor</strong>，然后打开 <strong>Allow Notifications</strong>。再次运行该命令，确认测试通知出现。</p>
+</blockquote>
+<p>[tab] Linux</p>
+<p><code>json theme={null}
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send 'Claude Code' 'Claude Code needs your attention'"
+          }
+        ]
+      }
+    ]
+  }
+}</code></p>
+<blockquote>
+<p>[accordion] 如果没有出现通知</p>
+<p><code>notify-send</code> 需要桌面通知守护进程，而无头服务器、SSH 会话和大多数容器都没有该进程。请先直接测试该命令：</p>
+<p><code>bash theme={null}
+notify-send 'Claude Code' 'test'</code></p>
+<p>如果找不到该命令，请在 Debian 和 Ubuntu 上安装 <code>libnotify-bin</code> 软件包，或安装您所用发行版中的等效软件包。</p>
+</blockquote>
+<p>[tab] Windows (PowerShell)</p>
+<p><code>json theme={null}
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('Claude Code needs your attention', 'Claude Code')\""
+          }
+        ]
+      }
+    ]
+  }
+}</code></p>
+<blockquote>
+<p>[accordion] 如果没有出现对话框</p>
+<p>此命令打开的是一个对话框，而不是屏幕角落的通知，因此该对话框可能会在终端窗口后面打开。请先在 PowerShell 中直接测试该命令。</p>
+<p>如果您在 WSL 中运行 Claude Code，则 <code>powershell.exe</code> 必须能够通过 Windows 互操作在您的 <code>PATH</code> 中使用。</p>
+</blockquote>
+</blockquote>
+<p>空的 <code>matcher</code> 会对所有通知类型触发。若只想在特定事件时触发，请将其设置为以下值之一：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">匹配器</th>
+<th style="text-align: left;">触发时机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>permission_prompt</code></td>
+<td style="text-align: left;">Claude 需要您批准某次工具使用或某个沙箱命令的<a href="sandboxing.html#network-isolation">网络请求</a>，且该提示已等待约六秒</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>idle_prompt</code></td>
+<td style="text-align: left;">Claude 大约 60 秒前已完成回复，且您此后一直没有输入</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>auth_success</code></td>
+<td style="text-align: left;">身份验证完成</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>elicitation_dialog</code></td>
+<td style="text-align: left;">MCP 服务器打开了一个信息征询表单，且您约六秒没有输入</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>elicitation_url_dialog</code></td>
+<td style="text-align: left;">MCP 服务器要求您在浏览器中打开某个 URL，且您约六秒没有输入</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>elicitation_complete</code></td>
+<td style="text-align: left;">MCP 服务器报告某个 <a href="hooks.html#elicitation-input">URL 模式信息征询</a>已完成</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>elicitation_response</code></td>
+<td style="text-align: left;">MCP 信息征询的响应被发回服务器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>agent_needs_input</code></td>
+<td style="text-align: left;">在 <a href="agent-view.html">Agent 视图</a>打开时，某个后台会话开始等待您的输入。当终端会话向您显示 <a href="agent-teams.html#choose-a-display-mode">agent team 队友的终端设置问题</a>或自动模式关于<a href="auto-mode-classifier-billing.html">分类器请求费用</a>的通知，且您约六秒没有输入时，也会触发</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>agent_completed</code></td>
+<td style="text-align: left;">某个后台会话完成或失败。仅在 <a href="agent-view.html">Agent 视图</a>打开时触发</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>quota_auto_resume_fired</code></td>
+<td style="text-align: left;">在 claude.ai 用量限制暂停任务后，Claude Code 继续执行您的任务：在重置时继续，或者当您在等待期间于 Claude Code 中执行的某些操作（例如添加使用额度、升级套餐或切换模型）使用量重新可用时更早继续，<a href="interactive-mode.html#wait-for-a-usage-limit-to-reset">模型设置例外</a>除外</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>quota_auto_resume_stale</code></td>
+<td style="text-align: left;">在您的计算机休眠超过约 30 分钟期间，claude.ai 用量限制已重置。Claude Code 会等待您按 <code>Enter</code>，而不是继续执行。如果休眠时间较短，它会继续执行并改为触发 <code>quota_auto_resume_fired</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>quota_auto_resume_disabled</code></td>
+<td style="text-align: left;">Claude Code 结束对 claude.ai 用量限制的等待，但没有继续您的任务：<a href="settings-reference.html#autocontinueatusagelimit"><code>autoContinueAtUsageLimit</code></a> 被关闭，或者在 Claude Code 自行开始的等待期间重置时间被推迟到 24 小时以后，继续执行的任务不断触及限制，或者继续执行在到达模型之前被阻止。当您按 <code>Esc</code> 或 <code>Ctrl+C</code>，或选择 <strong>Don't continue automatically</strong> 时不会触发</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>plugin_notification</code></td>
+<td style="text-align: left;">某个 <a href="plugins-mods-api.html#show-something-without-starting-a-turn">mod</a> 通过 <code>$.ui.notify</code> 发出通知。除非 mod 设置了 <code>title</code>，否则该 hook 的 <code>title</code> 为 mod 的名称</td>
+</tr>
+</tbody>
+</table>
+<p>在终端中，与在 Claude Desktop、VS Code 扩展以及其他通过 Agent SDK 响应权限请求的宿主中，Claude Code 对 <code>permission_prompt</code> 的计时方式不同。有关两种计时方式，请参阅<a href="hooks.html#notification">各通知类型的触发时机</a>。</p>
+<p><code>quota_auto_resume_fired</code>、<code>quota_auto_resume_stale</code> 和 <code>quota_auto_resume_disabled</code> 匹配器需要 Claude Code v2.1.234 或更高版本。</p>
+<p>在终端会话中，针对沙箱命令网络请求的 <code>permission_prompt</code> 需要 Claude Code v2.1.246 或更高版本。</p>
+<p>针对队友终端设置问题的 <code>agent_needs_input</code> 需要 Claude Code v2.1.248 或更高版本。</p>
+<p>在 Claude Code 输入框中键入 <code>/hooks</code>，确认该 hook 出现在 <code>Notification</code> 下。</p>
+<h3 id="auto-format-code-after-edits">编辑后自动格式化代码</h3>
+<p>对 Claude 编辑的每个文件自动运行 <a href="https://prettier.io/" target="_blank" rel="noopener">Prettier</a>，从而无需手动干预即可保持格式一致。</p>
+<p>此 hook 使用带有 <code>Edit|Write</code> 匹配器的 <code>PostToolUse</code> 事件，因此仅在文件编辑工具之后运行。该命令使用 <a href="https://jqlang.org/" target="_blank" rel="noopener"><code>jq</code></a> 提取被编辑文件的路径，并将其传递给 Prettier。将以下内容添加到项目根目录中的 <code>.claude/settings.json</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PostToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Edit|Write"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jq -r '.tool_input.file_path' | xargs npx prettier --write"</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>要测试该 hook，请让 Claude 向某个 JavaScript 文件添加一行包含单引号字符串的代码，然后打开该文件：在 Prettier 的默认设置下，该 hook 会将它们改写为双引号。</p>
+<p>hook 成功执行时，Claude Code 不会在对话中显示任何内容。要确认 hook 已运行，请检查被编辑的文件是否已重新格式化，或参阅<a href="#check-what-a-hook-did">检查 hook 执行了什么</a>。</p>
+<p>若要在特定文件发生任何变更时（包括被 <code>Bash</code> 命令改写时）重新格式化该文件，请改用 <a href="hooks.html#filechanged">FileChanged</a> hook。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>本页的 Bash 示例使用 <code>jq</code> 解析 JSON。在 macOS 上使用 <code>brew install jq</code> 安装，在 Debian 和 Ubuntu 上使用 <code>apt-get install jq</code> 安装，或参阅 <a href="https://jqlang.org/download/" target="_blank" rel="noopener"><code>jq</code> 下载</a>。</p></div></div>
+<h3 id="block-edits-to-protected-files">阻止编辑受保护的文件</h3>
+<p>防止 Claude 修改敏感文件，例如 <code>.env</code>、<code>package-lock.json</code> 或 <code>.git/</code> 中的任何内容。Claude 会收到说明编辑被阻止原因的反馈，从而可以调整其做法。</p>
+<p>此示例使用一个由 hook 调用的独立脚本文件。该脚本将目标文件路径与受保护模式列表进行比对，并以退出码 2 退出以阻止编辑。</p>
+<p><strong>1. 创建 hook 脚本</strong></p>
+<p>将以下内容保存到 <code>.claude/hooks/protect-files.sh</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="ch">#!/bin/bash</span>
+<span class="c1"># protect-files.sh</span>
+
+<span class="nv">INPUT</span><span class="o">=</span><span class="k">$(</span>cat<span class="k">)</span>
+<span class="nv">FILE_PATH</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$INPUT</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.tool_input.file_path // empty'</span><span class="k">)</span>
+
+<span class="c1"># Normalize Windows backslash separators so the patterns below match</span>
+<span class="nv">FILE_PATH</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">FILE_PATH</span><span class="p">//</span><span class="se">\\</span><span class="p">//</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="nv">PROTECTED_PATTERNS</span><span class="o">=(</span><span class="s2">".env"</span><span class="w"> </span><span class="s2">"package-lock.json"</span><span class="w"> </span><span class="s2">".git/"</span><span class="o">)</span>
+
+<span class="k">for</span><span class="w"> </span>pattern<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">PROTECTED_PATTERNS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$FILE_PATH</span><span class="s2">"</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">"</span><span class="nv">$pattern</span><span class="s2">"</span>*<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Blocked: </span><span class="nv">$FILE_PATH</span><span class="s2"> matches protected pattern '</span><span class="nv">$pattern</span><span class="s2">'"</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">2</span>
+<span class="w">  </span><span class="k">fi</span>
+<span class="k">done</span>
+
+<span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<p><strong>2. 在 macOS 和 Linux 上使脚本可执行</strong></p>
+<p>hook 脚本必须具有可执行权限，Claude Code 才能运行它们：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">chmod<span class="w"> </span>+x<span class="w"> </span>.claude/hooks/protect-files.sh
+</code></pre></div>
+<p><strong>3. 注册 hook</strong></p>
+<p>向 <code>.claude/settings.json</code> 添加一个 <code>PreToolUse</code> hook，在任何 <code>Edit</code> 或 <code>Write</code> 工具调用之前运行该脚本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PreToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Edit|Write"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-files.sh"</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>4. 测试 hook</strong></p>
+<p>让 Claude 向您的 <code>.env</code> 文件添加一条注释。Claude Code 会在编辑执行前将其阻止，并将脚本的 <code>Blocked:</code> 消息作为反馈传递给 Claude。</p>
+<h3 id="re-inject-context-after-compaction">上下文压缩后重新注入上下文</h3>
+<p>当 Claude 的上下文窗口填满时，压缩会总结对话以释放空间。这可能会丢失重要细节。使用带有 <code>compact</code> 匹配器的 <code>SessionStart</code> hook，在每次压缩后重新注入关键上下文。</p>
+<p>Claude Code 会将您的命令写入 stdout 的纯文本添加到 Claude 的上下文中。此示例提醒 Claude 项目约定和近期工作。将以下内容添加到项目根目录中的 <code>.claude/settings.json</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"SessionStart"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"compact"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"echo 'Reminder: use Bun, not npm. Run bun test before committing. Current sprint: auth refactor.'"</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>您可以将 <code>echo</code> 替换为任何产生动态输出的命令，例如使用 <code>git log --oneline -5</code> 显示最近的提交。若要在每次会话开始时注入上下文，请考虑改用 <a href="memory.html">CLAUDE.md</a>。有关环境变量，请参阅参考中的 <a href="hooks.html#persist-environment-variables"><code>CLAUDE_ENV_FILE</code></a>。</p>
+<h3 id="audit-configuration-changes">审计配置变更</h3>
+<p>跟踪会话期间设置文件或 skill 文件何时发生变更。当外部进程或编辑器修改配置文件时，会触发 <code>ConfigChange</code> 事件，因此您可以记录变更以满足合规要求，或阻止未经授权的修改。</p>
+<p>此示例将每次变更追加到审计日志中。将以下内容添加到 <code>~/.claude/settings.json</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"ConfigChange"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jq -c '{timestamp: now | todate, source: .source, file: .file_path}' &gt;&gt; ~/claude-config-audit.log"</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>匹配器按配置类型进行筛选：<code>user_settings</code>、<code>project_settings</code>、<code>local_settings</code>、<code>policy_settings</code> 或 <code>skills</code>。若要阻止变更生效，请以退出码 2 退出或返回 <code>{"decision": "block"}</code>。有关完整的输入 schema，请参阅 <a href="hooks.html#configchange">ConfigChange 参考</a>。</p>
+<p>要确认该 hook 会记录变更，请在会话运行期间用另一个编辑器编辑某个设置文件，然后打开 <code>~/claude-config-audit.log</code>：该 hook 会为每次变更追加一行 JSON，其中包含时间戳、来源和文件路径。</p>
+<h3 id="reload-environment-when-directory-or-files-change">目录或文件变更时重新加载环境</h3>
+<p>有些项目会根据您所在的目录设置不同的环境变量。<a href="https://direnv.net/" target="_blank" rel="noopener">direnv</a> 等工具会在您的 shell 中自动完成此操作，但 Claude 的 Bash 工具本身不会获取这些变更。</p>
+<p>将 <code>SessionStart</code> hook 与 <code>CwdChanged</code> hook 搭配使用即可解决此问题。<code>SessionStart</code> 加载您启动时所在目录的变量，而 <code>CwdChanged</code> 会在 Claude 每次切换目录时重新加载这些变量。两者都会写入 <code>CLAUDE_ENV_FILE</code>，Claude Code 会在每个 Bash 命令之前将其作为脚本前导运行。将以下内容添加到 <code>~/.claude/settings.json</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"SessionStart"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"direnv export bash &gt; \"$CLAUDE_ENV_FILE\""</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"CwdChanged"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"direnv export bash &gt; \"$CLAUDE_ENV_FILE\""</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>在每个包含 <code>.envrc</code> 的目录中运行一次 <code>direnv allow</code>，以允许 direnv 加载它。如果您使用 devbox 或 nix 而不是 direnv，同样的模式也适用，只需用 <code>devbox shellenv</code> 或 <code>devbox global shellenv</code> 替换 <code>direnv export bash</code>。</p>
+<p>若要对特定文件而不是每次目录变更做出响应，请使用 <code>FileChanged</code>，并在 <code>matcher</code> 中列出要监视的文件名，以 <code>|</code> 分隔。构建监视列表时，Claude Code 会将该值拆分为字面文件名，而不是将其作为正则表达式求值。有关同一个值如何在文件变更时筛选要运行的 hook 组，请参阅 <a href="hooks.html#filechanged">FileChanged</a>。此示例监视工作目录中的 <code>.envrc</code> 和 <code>.env</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"FileChanged"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">".envrc|.env"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"direnv export bash &gt; \"$CLAUDE_ENV_FILE\""</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>有关输入 schema、<code>watchPaths</code> 输出以及 <code>CLAUDE_ENV_FILE</code> 的详细信息，请参阅 <a href="hooks.html#cwdchanged">CwdChanged</a> 和 <a href="hooks.html#filechanged">FileChanged</a> 参考条目。</p>
+<h3 id="auto-approve-specific-permission-prompts">自动批准特定的权限提示</h3>
+<p>对于您始终允许的工具调用，跳过批准对话框。此示例自动批准 <code>ExitPlanMode</code>，即 Claude 在展示完计划并请求继续时调用的工具，这样每次计划就绪时都不会提示您。</p>
+<p>与上面的退出码示例不同，自动批准要求您的 hook 将 JSON 决策写入 stdout。Claude Code 在即将向您请求权限时运行 <code>PermissionRequest</code> hook，如果您的 hook 返回 <code>"behavior": "allow"</code>，Claude Code 就会代表您响应该请求。</p>
+<p>匹配器将该 hook 仅限定于 <code>ExitPlanMode</code>，因此不会影响其他提示。将以下内容添加到 <code>~/.claude/settings.json</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PermissionRequest"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ExitPlanMode"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"echo '{\"hookSpecificOutput\": {\"hookEventName\": \"PermissionRequest\", \"decision\": {\"behavior\": \"allow\"}}}'"</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>当该 hook 批准时，Claude Code 会退出计划模式，并恢复您进入计划模式之前处于活动状态的权限模式。会话记录会在原本出现对话框的位置显示“Allowed by PermissionRequest hook”。hook 路径始终保留当前对话：它无法像对话框那样清除上下文并开始一个全新的实现会话。</p>
+<p>若要改为设置特定的权限模式，您的 hook 输出可以包含一个带有 <code>setMode</code> 条目的 <code>updatedPermissions</code> 数组。<code>mode</code> 值可以是任何权限模式，例如 <code>default</code>、<code>acceptEdits</code> 或 <code>bypassPermissions</code>，而 <code>destination: "session"</code> 会使其仅对当前会话生效。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><code>bypassPermissions</code> 仅在您启动会话时 bypass 模式已可用的情况下才会生效：通过 <code>--dangerously-skip-permissions</code>、<code>--permission-mode bypassPermissions</code>、<code>--allow-dangerously-skip-permissions</code>，或在<a href="settings-reference.html#permissions-defaultmode">用户设置、<code>--settings</code> 或托管设置</a>中设置 <code>permissions.defaultMode: "bypassPermissions"</code>。如果 bypass 模式已被 <a href="permissions.html#managed-settings"><code>permissions.disableBypassPermissionsMode</code></a> 禁用，或者您在<a href="cli-reference.html#cli-flags">受限模式</a>下启动了会话，则它不会生效。</p>
+<p>Claude Code 永远不会将其保存为 <code>defaultMode</code>。</p></div></div>
+<p>若要将会话切换到 <code>acceptEdits</code>，您的 hook 将以下 JSON 写入 stdout：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hookSpecificOutput"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"hookEventName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PermissionRequest"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"decision"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"behavior"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"updatedPermissions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"setMode"</span><span class="p">,</span><span class="w"> </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"acceptEdits"</span><span class="p">,</span><span class="w"> </span><span class="nt">"destination"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>请让匹配器尽可能精确。匹配 <code>.*</code> 或将匹配器留空会自动批准所有工具权限提示，包括文件写入和 shell 命令。有关完整的决策字段集，请参阅 <a href="hooks.html#permissionrequest-decision-control">PermissionRequest 参考</a>。</p>
+<h2 id="how-hooks-work">Hooks 如何工作</h2>
+<p>Claude Code 在其生命周期中的特定点触发 hook 事件。当事件触发时，Claude Code 会并行运行所有匹配的 hook；有关重复处理程序如何处理的信息，请参阅 <a href="hooks.html#hook-handler-fields">Hook 处理程序字段</a>。下表显示每个事件及其触发时间：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">触发时机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>SessionStart</code></td>
+<td style="text-align: left;">当会话开始或恢复时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Setup</code></td>
+<td style="text-align: left;">当你使用 <code>--init-only</code> 启动 Claude Code，或在 <code>-p</code> 模式下使用 <code>--init</code> 或 <code>--maintenance</code> 时。用于 CI 或脚本中的一次性准备</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>UserPromptSubmit</code></td>
+<td style="text-align: left;">当提交提示词时，在 Claude 处理之前。对于 <a href="hooks.html#userpromptsubmit">Claude Code 自行发起的轮次</a>也会触发</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>UserPromptExpansion</code></td>
+<td style="text-align: left;">当用户输入的命令扩展为提示词时，在到达 Claude 之前。可以阻止扩展</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PreToolUse</code></td>
+<td style="text-align: left;">在工具调用执行之前。可以阻止它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PermissionRequest</code></td>
+<td style="text-align: left;">当工具调用需要权限决策时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PermissionDenied</code></td>
+<td style="text-align: left;">当自动模式拒绝工具调用时，包括没有分类器判决的拒绝。使用 JSON <code>hookSpecificOutput.retry: true</code> 来告诉模型它可以重试被拒绝的工具调用。Claude Code 在分类器未产生判决时忽略 <code>retry</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PostToolUse</code></td>
+<td style="text-align: left;">在工具调用成功后</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PostToolUseFailure</code></td>
+<td style="text-align: left;">在工具调用失败后</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PostToolBatch</code></td>
+<td style="text-align: left;">在一整批并行工具调用解决后，在下一次模型调用之前</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Notification</code></td>
+<td style="text-align: left;">当 Claude Code 发送通知时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MessageDisplay</code></td>
+<td style="text-align: left;">当助手消息文本正在显示时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SubagentStart</code></td>
+<td style="text-align: left;">当子代理被生成时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SubagentStop</code></td>
+<td style="text-align: left;">当子代理完成时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TaskCreated</code></td>
+<td style="text-align: left;">当通过 <code>TaskCreate</code> 创建任务时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TaskCompleted</code></td>
+<td style="text-align: left;">当任务被标记为已完成时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Stop</code></td>
+<td style="text-align: left;">当 Claude 完成响应时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>StopFailure</code></td>
+<td style="text-align: left;">当轮次因 API 错误而结束时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TeammateIdle</code></td>
+<td style="text-align: left;">当<a href="agent-teams.html">代理团队</a>队友即将空闲时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>InstructionsLoaded</code></td>
+<td style="text-align: left;">当 CLAUDE.md 或 <code>.claude/rules/*.md</code> 文件被加载到上下文中时。在会话开始时和文件在会话期间被延迟加载时触发</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ConfigChange</code></td>
+<td style="text-align: left;">当配置文件在会话期间更改时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CwdChanged</code></td>
+<td style="text-align: left;">当工作目录更改时，例如当 Claude 执行 <code>cd</code> 命令时。对于使用 direnv 等工具的反应式环境管理很有用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DirectoryAdded</code></td>
+<td style="text-align: left;">当工作目录在会话中期通过 <code>/add-dir</code> 或 SDK <code>register_repo_root</code> 控制请求添加时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>FileChanged</code></td>
+<td style="text-align: left;">当监视的文件在磁盘上更改时。<code>matcher</code> 字段指定要监视的文件名</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>WorktreeCreate</code></td>
+<td style="text-align: left;">当通过 <code>--worktree</code>、<code>isolation: "worktree"</code> 创建工作树时，或用于后台会话。替换默认的 git 行为</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>WorktreeRemove</code></td>
+<td style="text-align: left;">当由 <code>WorktreeCreate</code> hook 创建的 worktree 正在被移除时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PreCompact</code></td>
+<td style="text-align: left;">在上下文压缩之前</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PostCompact</code></td>
+<td style="text-align: left;">在上下文压缩完成后</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PreModelSwitch</code></td>
+<td style="text-align: left;">在 Claude Code 应用你或客户端请求的模型切换之前。可以阻止切换</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PostModelSwitch</code></td>
+<td style="text-align: left;">在会话的模型更改后，包括 Claude Code 自己进行的更改，例如在你恢复会话时恢复模型</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Elicitation</code></td>
+<td style="text-align: left;">当 MCP 服务器在工具调用期间请求用户输入时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ElicitationResult</code></td>
+<td style="text-align: left;">在用户响应 MCP 引出后，在响应发送回服务器之前</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SessionEnd</code></td>
+<td style="text-align: left;">当会话终止时</td>
+</tr>
+</tbody>
+</table>
+<p>每个 hook 都有一个 <code>type</code> 来确定它如何运行。大多数 hooks 使用 <code>"type": "command"</code>，它运行 shell 命令。还有四种其他类型可用：</p>
+<ul>
+<li><code>"type": "http"</code>：将事件数据 POST 到 URL。请参阅 <a href="#http-hooks">HTTP hooks</a>。</li>
+<li><code>"type": "mcp_tool"</code>：在已配置的 MCP 服务器上调用工具。请参阅 <a href="hooks.html#mcp-tool-hook-fields">MCP tool hooks</a>。</li>
+<li><code>"type": "prompt"</code>：单轮 LLM 评估。请参阅 <a href="#prompt-based-hooks">Prompt-based hooks</a>。</li>
+<li><code>"type": "agent"</code>：具有工具访问权限的多轮验证。Agent hooks 是实验性的，可能会改变。请参阅 <a href="#agent-based-hooks">Agent-based hooks</a>。</li>
+</ul>
+<h3 id="combine-results-from-multiple-hooks">合并来自多个 hooks 的结果</h3>
+<p>当多个 hooks 匹配同一事件时，每个 hook 的命令都会运行到完成，然后 Claude Code 合并结果。一个 hook 返回 <code>deny</code> 不会阻止兄弟 hooks 执行。不要依赖一个 hook 的 <code>deny</code> 来抑制另一个 hook 中的副作用。</p>
+<p>所有匹配的 hooks 完成后，Claude Code 合并它们的输出。对于 <code>PreToolUse</code> 权限决策，最严格的答案获胜，顺序为 <code>deny</code>、<code>defer</code>、<code>ask</code>、<code>allow</code>。来自 <code>additionalContext</code> 的文本从每个 hook 保留并一起传递给 Claude。</p>
+<p>下面的示例在 <code>Bash</code> 上注册两个 <code>PreToolUse</code> hooks。第一个将每个命令附加到日志文件并以 0 退出。第二个运行一个脚本，当命令包含 <code>rm -rf</code> 时以 2 退出以拒绝：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PreToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bash"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jq -r .tool_input.command &gt;&gt; ~/.claude/bash.log"</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-rm-rf.sh"</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>当 Claude 尝试运行 <code>rm -rf /tmp/build</code> 时，两个 hooks 并行执行。日志 hook 将命令写入 <code>~/.claude/bash.log</code> 并以 0 退出，这表示没有决策。防护栏 hook 以 2 退出，这拒绝了工具调用。拒绝获胜，所以 Claude Code 阻止命令并向 Claude 显示防护栏的 stderr。日志条目仍然被写入，因为日志 hook 已经运行。</p>
+<h3 id="read-input-and-return-output">读取输入并返回输出</h3>
+<p>Hooks 通过 stdin、stdout、stderr 和退出代码与 Claude Code 通信。当事件触发时，Claude Code 将事件特定的数据作为 JSON 传递到脚本的 stdin。你的脚本读取该数据，完成其工作，并通过退出代码告诉 Claude Code 接下来要做什么。</p>
+<h4 id="hook-input">Hook 输入</h4>
+<p>每个事件都包含常见字段，如 <code>session_id</code>（会话的唯一 ID）和 <code>cwd</code>（事件触发时的工作目录），但每个事件类型添加不同的数据。当 Claude 运行 Bash 命令时，<code>PreToolUse</code> hook 在 stdin 上接收这些字段：</p>
+<ul>
+<li><code>hook_event_name</code>：触发 hook 的事件</li>
+<li><code>tool_name</code>：Claude 即将使用的工具</li>
+<li><code>tool_input</code>：Claude 传递给工具的参数。对于 Bash，其 <code>command</code> 字段包含 shell 命令。</li>
+</ul>
+<p>例如，<code>npm test</code> 命令的 hook 输入看起来像这样：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"session_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc123"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/Users/sarah/myproject"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"hook_event_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PreToolUse"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tool_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bash"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tool_input"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npm test"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>你的脚本可以解析该 JSON 并对任何这些字段进行操作。<code>UserPromptSubmit</code> hooks 获取 <code>prompt</code> 文本，<code>SessionStart</code> hooks 获取 <code>source</code>（<code>startup</code>、<code>resume</code>、<code>clear</code>、<code>compact</code> 或 <code>fork</code>），等等。有关共享字段，请参阅参考中的 <a href="hooks.html#common-input-fields">常见输入字段</a>，以及每个事件的部分了解事件特定的架构。</p>
+<h4 id="hook-output">Hook 输出</h4>
+<p>你的脚本通过写入 stdout 或 stderr 并以特定代码退出来告诉 Claude Code 接下来要做什么。以下 <code>PreToolUse</code> hook 阻止一个命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="ch">#!/bin/bash</span>
+<span class="nv">INPUT</span><span class="o">=</span><span class="k">$(</span>cat<span class="k">)</span>
+<span class="nv">COMMAND</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$INPUT</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.tool_input.command'</span><span class="k">)</span>
+
+<span class="k">if</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$COMMAND</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">"drop table"</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Blocked: dropping tables is not allowed"</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="w">  </span><span class="c1"># stderr becomes Claude's feedback</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="c1"># exit 2 = block the action</span>
+<span class="k">fi</span>
+
+<span class="nb">exit</span><span class="w"> </span><span class="m">0</span><span class="w">  </span><span class="c1"># exit 0 = no decision; the normal permission flow applies</span>
+</code></pre></div>
+<p>当退出码既不是 0 也不是 2，且没有有效的 JSON 输出时，对于大多数事件，操作会继续进行，除非该 hook 属于 <a href="hooks.html#block-the-action-when-a-hook-fails">失败时会阻止操作</a> 的 hook。将 <code>onFailure</code> 设置为 <code>"block"</code> 的 hook 就是一个例子。以 0 退出表示没有异议，以 2 退出则阻止操作：</p>
+<ul>
+<li><strong>退出 0</strong>：如果从 <code>PreToolUse</code> hook 以 0 退出，工具调用仍会经过正常的 <a href="permissions.html">权限流程</a>，因为退出 0 并不会批准它。对于 <code>UserPromptSubmit</code>、<code>UserPromptExpansion</code>、<code>SessionStart</code> 和 <code>PostModelSwitch</code> hook，Claude Code 会将其 <a href="hooks.html#exit-code-0">视为纯文本</a> 的 stdout 添加到 Claude 的上下文中。</li>
+<li><strong>退出 2</strong>：将原因写入 stderr。根据事件的不同，Claude 会将其作为反馈接收以便进行调整，或者向用户显示，或者不显示任何消息（如 <code>ConfigChange</code> 和 <code>Elicitation</code>）。某些事件无法被阻止：对于 <code>SessionStart</code> 等事件，退出 2 会向用户显示 stderr，并继续执行。有关完整列表，请参阅 <a href="hooks.html#exit-code-2-behavior-per-event">每个事件的退出码 2 行为</a>。</li>
+<li><strong>任何其他退出码</strong>：有关每个事件的例外情况（例如 <code>WorktreeCreate</code> 在任何非零退出时都会失败），请参阅 <a href="hooks.html#exit-code-output">退出码输出</a>。对于其他事件，除非该 hook 属于失败时会阻止操作的 hook，否则请根据 hook 打印到 stdout 的内容找到对应的情况：</li>
+<li>通过 schema 验证的已解析对象：Claude Code 忽略退出码，仅由 JSON 决定结果，hook 不会被报告为错误。</li>
+<li>未通过 schema 验证的已解析对象，或 Claude Code <a href="hooks.html#exit-code-0">尝试解析为 JSON</a> 但不是有效 JSON 的 stdout：操作作为非阻止错误继续进行。请查看 <code>&lt;hook name&gt; hook error</code> 通知中的验证或解析消息。</li>
+<li>Claude Code <a href="hooks.html#exit-code-0">视为纯文本</a> 的 stdout，或空 stdout：操作作为非阻止错误继续进行。会话记录显示 <code>&lt;hook name&gt; hook error</code> 通知，然后是 stderr 的第一行，前缀为 <code>Failed with non-blocking status code:</code>。要捕获完整的 stderr，请使用 <code>claude --debug</code> 或在会话中运行 <code>/debug</code> 启用 <a href="hooks.html#debug-hooks">调试日志</a>。</li>
+</ul>
+<h4 id="structured-json-output">结构化 JSON 输出</h4>
+<p>退出代码只让你阻止或保持沉默。为了获得更多控制，退出 0 并改为将 JSON 对象打印到 stdout。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>使用退出 2 以 stderr 消息阻止，或使用 JSON 退出 0 以获得结构化控制。每个 hook 选择一种方法。有关混合它们时会发生什么，请参阅 <a href="hooks.html#exit-code-output">退出代码输出</a>。</p></div></div>
+<p>例如，<code>PreToolUse</code> hook 可以拒绝工具调用并告诉 Claude 为什么，或将其升级给用户以获得批准：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hookSpecificOutput"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"hookEventName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PreToolUse"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"permissionDecision"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deny"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"permissionDecisionReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Use rg instead of grep for better performance"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>使用 <code>"deny"</code>，Claude Code 取消工具调用并将 <code>permissionDecisionReason</code> 反馈给 Claude。</p>
+<p>在 <code>PreToolUse</code> 上，还可以返回 <code>"ask"</code> 以向用户显示正常的权限提示，或返回 <code>"allow"</code> 以跳过交互式权限提示。使用 <code>"allow"</code> 时，拒绝和询问规则（包括企业托管拒绝列表）仍然适用，以下情况的提示也仍然适用：</p>
+<ul>
+<li>从 <a href="permissions.html#network-paths">网络路径</a> 读取</li>
+<li>标记为 <a href="mcp.html#require-approval-for-a-specific-tool"><code>requiresUserInteraction</code></a> 的 MCP 工具</li>
+<li>对 <a href="agent-sdk-custom-tools.html#require-approval-for-specific-tools">Agent SDK 应用标记为 <code>always_ask</code> 的工具</a> 的调用，除非 <a href="agent-sdk-typescript.html#permission-modes-that-can-approve-an-always_ask-call">权限模式批准该调用</a></li>
+<li>在该设置到达 Claude Code 的会话中，<a href="mcp.html#organization-controls-on-connector-tools">您的组织设置为 <code>ask</code></a> 的连接器工具</li>
+</ul>
+<p>有关 <code>"allow"</code> 在计划模式下的作用，请参阅 <a href="permissions.html#hook-approvals-in-plan-mode">计划模式下的 hook 批准</a>。</p>
+<p>第四个值 <code>"defer"</code> 在 <a href="headless.html">非交互模式</a> 中使用 <code>-p</code> 标志时可用。返回该值会结束当前轮次并保留工具调用，以便 Agent SDK 包装器可以收集输入并恢复。请参阅参考中的 <a href="hooks.html#defer-a-tool-call-for-later">延迟工具调用以供稍后使用</a>。</p>
+<p><code>PreModelSwitch</code> hook 返回相同的 <code>permissionDecision</code> 字段：<code>"allow"</code> 让模型切换进行，<code>"deny"</code> 取消它。<code>"ask"</code> 在你在交互式会话中运行 <code>/model</code> 时让你确认切换；在其他地方，Claude Code 将 <code>"ask"</code> 视为拒绝。请参阅 <a href="hooks.html#premodelswitch-decision-control">PreModelSwitch 决策控制</a>。</p>
+<p>其他事件使用不同的决策模式。例如，<code>PostToolUse</code> 和 <code>Stop</code> hooks 使用顶级 <code>decision: "block"</code> 字段，而 <code>PermissionRequest</code> 使用 <code>hookSpecificOutput.decision.behavior</code>。有关按事件的完整分解，请参阅参考中的 <a href="hooks.html#decision-control">摘要表</a>。</p>
+<p>对于 <code>UserPromptSubmit</code> hooks，改用 <code>hookSpecificOutput.additionalContext</code> 将文本注入到 Claude 的上下文中。将 <code>additionalContext</code> 嵌套在 <code>hookSpecificOutput</code> 内；如果你将其放在 JSON 的顶级，Claude Code 会默默忽略它。例如，此输出将当前分支状态添加到每个提示：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hookSpecificOutput"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"hookEventName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UserPromptSubmit"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"additionalContext"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Current branch: release-42. Deploy freeze until Friday."</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>有关完整的输出形状（包括阻止提示和设置会话标题），请参阅 <a href="hooks.html#userpromptsubmit-decision-control">UserPromptSubmit 决策控制</a>。</p>
+<p>具有 <code>type: "prompt"</code> 的 Hooks 处理输出的方式不同：请参阅 <a href="#prompt-based-hooks">Prompt-based hooks</a>。</p>
+<h3 id="filter-hooks-with-matchers">使用匹配器过滤 hooks</h3>
+<p>没有匹配器，hook 会在其事件的每次出现时触发。匹配器让你缩小范围。例如，如果你只想在文件编辑后运行格式化程序（而不是在每个工具调用后），将匹配器添加到你的 <code>PostToolUse</code> hook：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PostToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Edit|Write"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w"> </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prettier --write ..."</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>"Edit|Write"</code> 匹配器仅在 Claude 使用 <code>Edit</code> 或 <code>Write</code> 工具时触发，而不是在它使用 <code>Bash</code>、<code>Read</code> 或任何其他工具时触发。逗号以相同的方式分隔替代项，所以 <code>"Edit, Write"</code> 是等效的。请参阅 <a href="hooks.html#matcher-patterns">匹配器模式</a> 了解纯名称和正则表达式如何被评估。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Claude 也可以通过运行 shell 命令来创建或修改文件。如果你的 hook 必须看到每个文件更改（例如用于合规性扫描或审计日志），添加一个 <a href="hooks.html#stop"><code>Stop</code></a> hook，它每轮扫描一次工作树。为了获得每次调用的覆盖，也匹配 <code>Bash|PowerShell</code> 并让你的脚本使用 <code>git status --porcelain</code> 列出修改和未跟踪的文件。<a href="hooks.html#powershell">PowerShell hook 输入部分</a> 解释了为什么仅匹配 <code>Bash</code> 是不够的。要在特定文件在磁盘上更改时运行 hook（无论是什么写入它），使用 <a href="hooks.html#filechanged">FileChanged</a> hook。</p></div></div>
+<p>每个事件类型在特定字段上匹配：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">匹配器过滤的内容</th>
+<th style="text-align: left;">示例匹配器值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>PreToolUse</code>、<code>PostToolUse</code>、<code>PostToolUseFailure</code>、<code>PermissionRequest</code>、<code>PermissionDenied</code></td>
+<td style="text-align: left;">工具名称</td>
+<td style="text-align: left;"><code>Bash</code>、<code>Edit\|Write</code>、<code>mcp__.*</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SessionStart</code></td>
+<td style="text-align: left;">会话如何启动</td>
+<td style="text-align: left;"><code>startup</code>、<code>resume</code>、<code>clear</code>、<code>compact</code>、<code>fork</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Setup</code></td>
+<td style="text-align: left;">哪个 CLI 标志触发了设置</td>
+<td style="text-align: left;"><code>init</code>、<code>maintenance</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SessionEnd</code></td>
+<td style="text-align: left;">会话为什么结束</td>
+<td style="text-align: left;"><code>clear</code>、<code>resume</code>、<code>logout</code>、<code>prompt_input_exit</code>、<code>other</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Notification</code></td>
+<td style="text-align: left;">通知类型</td>
+<td style="text-align: left;"><code>permission_prompt</code>、<code>idle_prompt</code>、<code>auth_success</code>、<code>elicitation_dialog</code>、<code>elicitation_url_dialog</code>、<code>elicitation_complete</code>、<code>elicitation_response</code>、<code>agent_needs_input</code>、<code>agent_completed</code>、<code>quota_auto_resume_fired</code>、<code>quota_auto_resume_stale</code>、<code>quota_auto_resume_disabled</code>、<code>plugin_notification</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SubagentStart</code></td>
+<td style="text-align: left;">代理类型</td>
+<td style="text-align: left;"><code>general-purpose</code>、<code>Explore</code>、<code>Plan</code> 或自定义代理名称</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PreCompact</code>、<code>PostCompact</code></td>
+<td style="text-align: left;">什么触发了压缩</td>
+<td style="text-align: left;"><code>manual</code>、<code>auto</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PreModelSwitch</code>、<code>PostModelSwitch</code></td>
+<td style="text-align: left;">会话切换到的模型的规范名称，如 <a href="hooks.html#premodelswitch">PreModelSwitch</a> 下所述</td>
+<td style="text-align: left;"><code>claude-opus-5</code>、<code>claude-opus-4-6\|claude-opus-5</code>、<code>.*opus.*</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SubagentStop</code></td>
+<td style="text-align: left;">代理类型</td>
+<td style="text-align: left;">与 <code>SubagentStart</code> 相同的值</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ConfigChange</code></td>
+<td style="text-align: left;">配置源</td>
+<td style="text-align: left;"><code>user_settings</code>、<code>project_settings</code>、<code>local_settings</code>、<code>policy_settings</code>、<code>skills</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DirectoryAdded</code></td>
+<td style="text-align: left;">目录如何被添加</td>
+<td style="text-align: left;"><code>slash_command</code>、<code>register_repo_root</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>StopFailure</code></td>
+<td style="text-align: left;">错误类型</td>
+<td style="text-align: left;"><code>rate_limit</code>、<code>overloaded</code>、<code>authentication_failed</code>、<code>oauth_org_not_allowed</code>、<code>account_on_hold</code>、<code>billing_error</code>、<code>invalid_request</code>、<code>model_not_found</code>、<code>server_error</code>、<code>max_output_tokens</code>、<code>cloud_credential_error</code>、<code>unknown</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>InstructionsLoaded</code></td>
+<td style="text-align: left;">加载原因</td>
+<td style="text-align: left;"><code>session_start</code>、<code>nested_traversal</code>、<code>path_glob_match</code>、<code>include</code>、<code>compact</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Elicitation</code></td>
+<td style="text-align: left;">MCP 服务器名称</td>
+<td style="text-align: left;">你配置的 MCP 服务器名称</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ElicitationResult</code></td>
+<td style="text-align: left;">MCP 服务器名称</td>
+<td style="text-align: left;">与 <code>Elicitation</code> 相同的值</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>FileChanged</code></td>
+<td style="text-align: left;">要监视的文字文件名（请参阅 <a href="hooks.html#filechanged">FileChanged</a>）</td>
+<td style="text-align: left;"><code>.envrc\|.env</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>UserPromptExpansion</code></td>
+<td style="text-align: left;">命令名称</td>
+<td style="text-align: left;">你的 skill 或命令名称</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>UserPromptSubmit</code>、<code>PostToolBatch</code>、<code>Stop</code>、<code>TeammateIdle</code>、<code>TaskCreated</code>、<code>TaskCompleted</code>、<code>WorktreeCreate</code>、<code>WorktreeRemove</code>、<code>CwdChanged</code>、<code>MessageDisplay</code></td>
+<td style="text-align: left;">不支持匹配器</td>
+<td style="text-align: left;">始终在每次出现时触发</td>
+</tr>
+</tbody>
+</table>
+<p>下面的选项卡显示不同事件类型上的更多匹配器示例。</p>
+<blockquote>
+<p>[tab] 记录每个 Bash 命令</p>
+<p>仅匹配 <code>Bash</code> 工具调用并将每个命令记录到文件。<code>PostToolUse</code> 事件在命令完成后触发，因此 <code>tool_input.command</code> 包含运行的内容。hook 在 stdin 上接收事件数据作为 JSON，<code>jq -r '.tool_input.command'</code> 仅提取命令字符串，<code>&gt;&gt;</code> 将其附加到日志文件：</p>
+<p><code>json theme={null}
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.command' &gt;&gt; ~/.claude/command-log.txt"
+          }
+        ]
+      }
+    ]
+  }
+}</code></p>
+<p>[tab] 匹配 MCP 工具</p>
+<p>MCP 工具使用与内置工具不同的命名约定：<code>mcp__&lt;server&gt;__&lt;tool&gt;</code>，其中 <code>&lt;server&gt;</code> 是 MCP 服务器名称，<code>&lt;tool&gt;</code> 是它提供的工具。例如，<code>mcp__github__search_repositories</code> 或 <code>mcp__filesystem__read_file</code>。来自 <a href="mcp.html#plugin-provided-mcp-servers">插件提供的 MCP 服务器</a> 的工具使用作用域服务器段，例如 <code>mcp__plugin_my-plugin_db__query</code>。使用正则表达式匹配器来针对来自特定服务器的所有工具，或使用 <code>mcp__.*__write.*</code> 之类的模式跨服务器匹配。有关完整的示例列表，请参阅参考中的 <a href="hooks.html#match-mcp-tools">匹配 MCP 工具</a>。</p>
+<p>下面的命令使用 <code>jq</code> 从 hook 的 JSON 输入中提取工具名称，并将其写入 stderr。将其写入 stderr 保持 stdout 清洁以用于 JSON 输出，并将消息发送到 <a href="hooks.html#debug-hooks">调试日志</a>：</p>
+<p><code>json theme={null}
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__github__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"GitHub tool called: $(jq -r '.tool_name')\" &gt;&amp;2"
+          }
+        ]
+      }
+    ]
+  }
+}</code></p>
+<p>[tab] 在会话结束时清理</p>
+<p><code>SessionEnd</code> 事件支持会话结束原因的匹配器。此 hook 仅在 <code>clear</code> 原因时触发（当你运行 <code>/clear</code> 时），而不是在正常退出时：</p>
+<p><code>json theme={null}
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "matcher": "clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rm -f /tmp/claude-scratch-*.txt"
+          }
+        ]
+      }
+    ]
+  }
+}</code></p>
+</blockquote>
+<h4 id="filter-by-tool-name-and-arguments-with-the-if-field">使用 <code>if</code> 字段按工具名称和参数过滤</h4>
+<p><code>if</code> 字段使用 <a href="permissions.html">权限规则语法</a> 按工具名称和参数一起过滤 hooks，因此 hook 进程仅在工具调用匹配时生成。这超越了 <code>matcher</code>，它仅在工具名称级别按组过滤。</p>
+<p>例如，这个配置仅在 Claude 使用 <code>git</code> 命令而不是所有 Bash 命令时运行 hook：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PreToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bash"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"if"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bash(git *)"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-git-policy.sh"</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>你的 hook 命令是否运行取决于你的 <code>if</code> 模式的形状和 Claude 正在调用的 Bash 命令：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><code>if</code> 模式</th>
+<th style="text-align: left;">Bash 命令</th>
+<th style="text-align: left;">Hook 运行？</th>
+<th style="text-align: left;">为什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Bash(git *)</code></td>
+<td style="text-align: left;"><code>git push</code></td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">命令名称匹配</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(git *)</code></td>
+<td style="text-align: left;"><code>npm test &amp;&amp; git push</code></td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">每个子命令都被检查；<code>git push</code> 匹配</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(git *)</code></td>
+<td style="text-align: left;"><code>echo $(git log)</code></td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;"><code>$()</code> 和反引号内的命令被检查；<code>git log</code> 匹配</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(git *)</code></td>
+<td style="text-align: left;"><code>echo $(date)</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">没有子命令匹配 <code>git *</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(git push *)</code></td>
+<td style="text-align: left;"><code>echo $(date)</code></td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">指定超过命令名称的模式在 <code>$()</code>、反引号或 <code>$VAR</code> 上运行 hook</td>
+</tr>
+</tbody>
+</table>
+<p>当 Claude Code 无法确定 Bash 输入运行哪些命令时，它无论如何都会运行你的 hook。<a href="hooks.html#bash-if-matching">Bash 匹配表</a> 涵盖 Claude Code 可以和不能按子命令缩小的命令形状。因为过滤器是尽力而为的，使用 <a href="permissions.html">权限系统</a> 而不是 hook 来强制执行硬允许或拒绝。</p>
+<p><code>if</code> 字段接受与权限规则相同的模式：<code>"Bash(git *)"</code>、<code>"Edit(*.ts)"</code> 等。要匹配多个工具名称，使用单独的处理程序，每个都有自己的 <code>if</code> 值，或在 <code>matcher</code> 级别匹配，其中支持管道交替。</p>
+<p><code>if</code> 仅适用于工具事件：<code>PreToolUse</code>、<code>PostToolUse</code>、<code>PostToolUseFailure</code>、<code>PermissionRequest</code> 和 <code>PermissionDenied</code>。将其添加到任何其他事件会阻止 hook 运行。</p>
+<h3 id="configure-hook-location">配置 hook 位置</h3>
+<p>你添加 hook 的位置决定了其范围：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">位置</th>
+<th style="text-align: left;">范围</th>
+<th style="text-align: left;">可共享</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>~/.claude/settings.json</code></td>
+<td style="text-align: left;">所有你的项目</td>
+<td style="text-align: left;">否，本地到你的机器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.claude/settings.json</code></td>
+<td style="text-align: left;">单个项目</td>
+<td style="text-align: left;">是，可以提交到仓库</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.claude/settings.local.json</code></td>
+<td style="text-align: left;">单个项目</td>
+<td style="text-align: left;">否，gitignored 当 Claude Code 保存设置到它时</td>
+</tr>
+<tr>
+<td style="text-align: left;">托管策略设置</td>
+<td style="text-align: left;">组织范围</td>
+<td style="text-align: left;">是，管理员控制</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-overview.html">Plugin</a> <code>hooks/hooks.json</code></td>
+<td style="text-align: left;">启用插件时</td>
+<td style="text-align: left;">是，与插件捆绑</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="skills.html">Skill</a> frontmatter</td>
+<td style="text-align: left;">调用 skill 后的会话的其余部分。请参阅 <a href="hooks.html#hooks-in-skills-and-agents">Skills 和 agents 中的 Hooks</a></td>
+<td style="text-align: left;">是，在 skill 文件中定义</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="sub-agents.html">Subagent</a> frontmatter</td>
+<td style="text-align: left;">该 subagent 运行时</td>
+<td style="text-align: left;">是，在 subagent 文件中定义</td>
+</tr>
+</tbody>
+</table>
+<p>在 Claude Code 中运行 <a href="hooks.html#the-%2Fhooks-menu"><code>/hooks</code></a> 以浏览所有按事件分组的配置 hooks。</p>
+<p>要禁用 hooks，在设置文件中设置 <code>"disableAllHooks": true</code>。Claude Code 读取 <a href="hooks.html#disable-or-remove-hooks">设置优先级</a> 应用后剩余的值，因此项目的设置文件可以覆盖你的。托管设置中配置的 Hooks 仍然运行，除非 <code>disableAllHooks</code> 也在那里设置。有关每个级别的完整范围，请参阅 <a href="settings-reference.html#disableallhooks"><code>disableAllHooks</code></a>。</p>
+<p>如果你在 Claude Code 运行时直接编辑设置文件，文件监视器通常会自动拾取 hook 更改。</p>
+<h2 id="prompt-based-hooks">基于提示的 hooks</h2>
+<p>对于需要判断而不是确定性规则的决策，使用 <code>type: "prompt"</code> hooks。Claude Code 不运行 shell 命令，而是将你的提示和 hook 的输入数据发送到 Claude 模型来做出决策。如果你需要更多功能，可以使用 <code>model</code> 字段指定不同的模型。</p>
+<p>模型的唯一工作是返回其决策作为 JSON：</p>
+<ul>
+<li><code>"ok": true</code>：操作继续</li>
+<li><code>"ok": false</code>：发生的情况取决于事件：</li>
+<li><code>Stop</code> 和 <code>SubagentStop</code>：<code>reason</code> 被反馈给 Claude，以便它继续工作，除非响应也设置 <code>"impossible": true</code> 来标记该条件为永远无法满足的条件，在这种情况下 Claude Code 允许停止并且该轮次结束</li>
+<li><code>PreToolUse</code>：工具调用被拒绝；默认情况下该轮次结束，拒绝 <code>reason</code> 在聊天中显示为警告行。在 hook 上设置 <code>continueOnBlock: true</code> 以改为将 <code>reason</code> 作为工具错误返回给 Claude，以便它可以调整并继续</li>
+<li><code>PostToolUse</code>：默认情况下该轮次结束，<code>reason</code> 在聊天中显示为警告行。设置 <code>continueOnBlock: true</code> 以将 <code>reason</code> 反馈给 Claude 并继续该轮次</li>
+<li><code>PostToolBatch</code>、<code>UserPromptSubmit</code> 和 <code>UserPromptExpansion</code>：该轮次结束，<code>reason</code> 在聊天中显示为警告行</li>
+</ul>
+<p>此示例使用 <code>Stop</code> hook 询问模型是否所有请求的任务都已完成。如果模型返回 <code>"ok": false</code> 因为条件尚未满足，Claude 继续工作并使用 <code>reason</code> 作为其下一条指令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"Stop"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Check if all tasks are complete. If not, respond with {\"ok\": false, \"reason\": \"what remains to be done\"}."</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>有关完整的配置选项，请参阅参考中的 <a href="hooks.html#prompt-based-hooks">基于提示的 hooks</a>。</p>
+<h2 id="agent-based-hooks">基于代理的 hooks</h2>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>代理 hooks 是实验性的。行为和配置可能在未来版本中改变。对于生产工作流，更倾向于 <a href="hooks.html#command-hook-fields">命令 hooks</a>。</p></div></div>
+<p>当验证需要检查文件或运行命令时，使用 <code>type: "agent"</code> hooks。与只进行单个 LLM 调用的提示 hooks 不同，代理 hooks 生成一个 subagent，它可以读取文件、搜索代码和使用其他工具来验证条件，然后返回决策。</p>
+<p>代理 hooks 使用 <code>"ok"</code> / <code>"reason"</code> 响应格式，默认超时更长（60 秒），最多支持 50 个工具使用轮次。它们不支持提示 hook 的 <code>impossible</code> 字段。当 <code>ok: false</code> 时，Claude Code 处理代理 hook 的方式与处理在同一事件上设置 <code>continueOnBlock: true</code> 的提示 hook 相同，因此在 <code>PreToolUse</code> 和 <code>PostToolUse</code> 上轮次继续；代理 hooks 没有 <code>continueOnBlock</code> 字段。有关字段的详细信息，请参阅 <a href="hooks.html#agent-hook-configuration">代理 hook 配置</a>，包括 Claude Code 用 hook 的 JSON 输入替换的 <code>$ARGUMENTS</code> 占位符。</p>
+<p>此示例验证在允许 Claude 停止之前测试通过：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"Stop"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Verify that all unit tests pass. Run the test suite and check the results. $ARGUMENTS"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>当 hook 输入数据本身足以做出决策时使用提示 hooks。当你需要根据代码库的实际状态验证某些内容时使用代理 hooks。</p>
+<p>有关完整的配置选项，请参阅参考中的 <a href="hooks.html#agent-based-hooks">基于代理的 hooks</a>。</p>
+<h2 id="http-hooks">HTTP hooks</h2>
+<p>使用 <code>type: "http"</code> hooks 将事件数据 POST 到 HTTP 端点，而不是运行 shell 命令。端点接收命令 hook 在 stdin 上接收的相同 JSON，并使用相同的 JSON 格式通过 HTTP 响应体返回结果。</p>
+<p>HTTP hooks 在你想要 web 服务器、云函数或外部服务处理 hook 逻辑时很有用：例如，一个跨团队记录工具使用事件的共享审计服务。</p>
+<p>此示例将每个工具使用 POST 到本地日志服务：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PostToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:8080/hooks/tool-use"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">"Authorization"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer $MY_TOKEN"</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">"allowedEnvVars"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"MY_TOKEN"</span><span class="p">]</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>您的端点使用与命令 hook 相同的<a href="hooks.html#json-output">输出格式</a>返回 JSON 响应体，Claude Code 还会检查响应状态：</p>
+<ul>
+<li><strong>2xx 状态</strong>：要阻止工具调用，请在响应体中返回相应的 <code>hookSpecificOutput</code> 字段。</li>
+<li><strong>任何其他状态，或请求失败</strong>：Claude Code 会报告<a href="hooks.html#exit-code-output">非阻塞错误</a>并允许操作继续。要让失败的端点阻止该操作，请在 hook 上设置 <a href="hooks.html#block-the-action-when-a-hook-fails"><code>onFailure: "block"</code></a>。</li>
+</ul>
+<p>标头值支持使用 <code>$VAR_NAME</code> 或 <code>${VAR_NAME}</code> 语法的环境变量插值。仅解析 <code>allowedEnvVars</code> 数组中列出的变量；所有其他 <code>$VAR</code> 引用保持为空。</p>
+<p>有关完整的配置选项和响应处理，请参阅参考中的 <a href="hooks.html#http-hook-fields">HTTP hooks</a>。</p>
+<h2 id="limitations-and-troubleshooting">限制和故障排除</h2>
+<h3 id="limitations">限制</h3>
+<p>设计 hooks 时请记住这些约束：</p>
+<ul>
+<li>命令 hooks 仅通过 stdout、stderr 和退出代码通信。它们无法触发 <code>/</code> 命令或工具调用。通过 <code>additionalContext</code> 返回的文本被注入为 Claude 作为纯文本读取的<a href="glossary.html#system-reminder">系统提醒</a>。HTTP hooks 改为通过响应体通信。</li>
+<li>Hook 超时因类型而异。通过 <code>timeout</code> 字段（以秒为单位）按 hook 覆盖。</li>
+<li><code>command</code>、<code>http</code>、<code>mcp_tool</code>：10 分钟。Claude Code 对 <code>UserPromptSubmit</code>、<code>PreModelSwitch</code> 和 <code>PostModelSwitch</code> hooks 将此默认值降低到 30 秒，对 <code>MessageDisplay</code> 降低到 10 秒。</li>
+<li><code>prompt</code>：30 秒。</li>
+<li><code>agent</code>：60 秒。</li>
+<li><a href="hooks.html#sessionend"><code>SessionEnd</code></a> 任何类型的 hooks 共享 1.5 秒的预算。如果你的设置为每个 hook 设置了更长的 <code>timeout</code>，Claude Code 会将预算提高到匹配，最多 60 秒。</li>
+<li><code>PostToolUse</code> hooks 无法撤销操作，因为工具已经执行。</li>
+<li><a href="hooks.html#permissionrequest"><code>PermissionRequest</code></a> hook 在 Claude Code 即将向您请求权限时触发，或在它原本会自动拒绝无法显示提示的调用时触发。在带 <code>-p</code> 标志的<a href="headless.html">非交互模式</a>中，它们在 <a href="permission-modes.html#allow-only-pre-approved-tools-with-dontask-mode"><code>dontAsk</code> 模式</a>之外仍会运行，而没有 hook 做出决策且无其他方式可以应答的调用会被拒绝。</li>
+<li><code>Stop</code> hooks 在 Claude 完成响应时触发，而不仅仅在任务完成时。它们不在用户中断时触发。API 错误触发 <a href="hooks.html#stopfailure">StopFailure</a> 代替。</li>
+<li>当多个 <code>PreToolUse</code> hook 返回 <a href="hooks.html#pretooluse"><code>updatedInput</code></a> 来改写工具的输入时，Claude Code 不会合并这些改写，也不保证工具使用哪一个改写运行。避免让多个 hook 改写同一工具的输入。</li>
+</ul>
+<h3 id="hooks-and-permission-modes">Hooks 和权限模式</h3>
+<p>通过设置文件或插件的 <code>hooks/hooks.json</code> 中的 hook，您无法将限制放宽到超出权限规则允许的范围，而 hook 的 <code>"deny"</code> 在每种权限模式下都有效：</p>
+<ul>
+<li><strong>对 <code>"allow"</code> 仍然有效的限制</strong>：返回 <code>"allow"</code> 的 hook 不会绕过设置中的拒绝规则，并且在以下情况下也无法抑制提示：</li>
+<li>从<a href="permissions.html#network-paths">网络路径</a>读取</li>
+<li>标记为 <a href="mcp.html#require-approval-for-a-specific-tool"><code>requiresUserInteraction</code></a> 的 MCP 工具</li>
+<li>调用 <a href="agent-sdk-custom-tools.html#require-approval-for-specific-tools">Agent SDK 应用标记为 <code>always_ask</code> 的工具</a>，除非<a href="agent-sdk-typescript.html#permission-modes-that-can-approve-an-always_ask-call">权限模式批准该调用</a></li>
+<li>在该设置会传达到 Claude Code 的会话中，<a href="mcp.html#organization-controls-on-connector-tools">您的组织设置为 <code>ask</code></a> 的连接器工具</li>
+</ul>
+<p>在<a href="permissions.html#hook-approvals-in-plan-mode">计划模式</a>中，如果您的 <code>PreToolUse</code> hook 对文件编辑返回 <code>"allow"</code>，您得到的提示、阻止或批准与没有 hook 时该编辑所得到的相同。要解除对 hook 批准的这一限制，请<a href="permission-modes.html#review-and-approve-a-plan">批准计划</a>或切换到其他权限模式。</p>
+<ul>
+<li><strong><code>"deny"</code> 在每种权限模式下都有效</strong>：返回 <code>permissionDecision: "deny"</code> 的 hook 会阻止工具，即使在 <code>bypassPermissions</code> 模式或使用 <code>--dangerously-skip-permissions</code> 时也是如此。<code>PreToolUse</code> hook 在任何权限模式检查之前触发，在每个<a href="permission-modes.html">权限模式</a>中，包括 <code>dontAsk</code>。这让您能够强制执行用户无法通过更改其权限模式来绕过的策略。</li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>如果您的机器上没有<a href="settings.html#check-what-your-organization-enforces">托管设置</a>，并且您的会话未使用 Team 或 Enterprise 计划的 <a href="authentication.html#authentication-precedence"><code>/login</code> 凭据</a>，那么 <a href="plugins-mods-overview.html">mod</a> 可以批准被您的 <code>PreToolUse</code> hook 阻止的调用。改为使用 API 密钥或长期有效的 <a href="authentication.html#generate-a-long-lived-token"><code>CLAUDE_CODE_OAUTH_TOKEN</code></a> 运行的会话并未使用该登录，即使该登录已存储。</p>
+<p>在计划模式中，仅当此类被阻止的调用为只读（因此不是文件编辑）时，mod 才能批准它。有关 mod 的批准无法越过您的规则和 hook 的情况，请参阅<a href="permissions.html#precedence-among-rules-hooks-and-mods">使用 hook 扩展权限</a>。</p></div></div>
+<h3 id="hook-not-firing">Hook 未触发</h3>
+<p>Hook 已配置但从不执行。</p>
+<ul>
+<li>运行 <code>/hooks</code> 并确认 hook 出现在正确的事件下</li>
+<li>对于 skill frontmatter 中的 hook，请调用该 skill 或让 Claude 调用它，然后再次运行 <code>/hooks</code>。<code>/hooks</code> 不会列出会话中尚未调用的 skill 中的 hook。如果 <code>/hooks</code> 仍未列出该 hook，请检查其他原因，例如<a href="skills.html#skill-not-triggering">未能解析的 frontmatter</a> 或某项 <a href="hooks.html#limits-on-skill-hooks">skill hook 的限制</a></li>
+<li>检查匹配器模式是否与工具名称完全匹配。匹配器区分大小写</li>
+<li>验证你是否触发了正确的事件类型：<code>PreToolUse</code> 在工具执行前触发，<code>PostToolUse</code> 在之后触发。<code>PermissionRequest</code> hook 在 Claude Code 即将要求你获得权限时触发；有关非交互模式情况，请参阅<a href="#limitations">限制</a></li>
+</ul>
+<h3 id="hook-error-in-output">Hook 输出中的错误</h3>
+<p>你在成绩单中看到类似"PreToolUse hook error: ..."的消息。</p>
+<ul>
+<li>你的脚本意外以非零代码退出。通过管道传递示例 JSON 来手动测试它：<br />
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s1">'{"tool_name":"Bash","tool_input":{"command":"ls"}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>./my-hook.sh
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span><span class="w">  </span><span class="c1"># Check the exit code</span>
+</code></pre></div></li>
+<li>如果你看到"command not found"，使用绝对路径或 <code>${CLAUDE_PROJECT_DIR}</code> 来引用脚本。为了完全避免 shell 引用，添加 <code>"args": []</code> 来切换到 <a href="hooks.html#exec-form-and-shell-form">exec 形式</a>，它直接生成脚本而不使用 shell</li>
+<li>如果你看到"jq: command not found"，安装 <code>jq</code> 或使用 Python/Node.js 进行 JSON 解析</li>
+<li>如果消息包含 <code>blocking because Git Bash wasn't found</code>，说明您使用的是 Windows，Claude Code 未找到 Git Bash，并且失败或超时的 hook 阻止了该工具调用。有关修复方法，请参阅<a href="hooks.html#failed-hooks-on-windows-without-git-bash">在没有 Git Bash 的 Windows 上失败的 hook</a></li>
+<li>如果通知显示 JSON 验证消息，你的 hook 的 stdout 解析为 JSON 但未通过架构验证。如果显示 JSON 解析消息，stdout 看起来像 JSON 对象但不是有效的 JSON。即使在退出 0 时也会发生两者。</li>
+</ul>
+<p>要修复解析失败，使用 JSON 编码器（如 <code>jq</code>）而不是字符串连接来构建有效负载，以便值内的引号和反斜杠被转义。参考的<a href="hooks.html#exit-code-output">退出代码输出</a>部分涵盖了退出代码和 JSON 组合<br />
+* 如果脚本根本没有运行，使其可执行：<code>chmod +x ./my-hook.sh</code></p>
+<h3 id="/hooks-shows-no-hooks-configured"><code>/hooks</code> 显示未配置 hooks</h3>
+<p>你编辑了设置文件但 hooks 不出现在菜单中。</p>
+<ul>
+<li>文件编辑通常会自动拾取。如果几秒钟后它们还没有出现，文件监视器可能错过了更改：重新启动你的会话以强制重新加载。</li>
+<li>验证你的 JSON 有效：不允许尾随逗号和注释</li>
+<li>确认设置文件在正确的位置：<code>.claude/settings.json</code> 用于项目 hooks，<code>~/.claude/settings.json</code> 用于全局 hooks</li>
+<li>如果菜单显示 <code>Only hooks from managed settings run here</code>，说明您的组织设置了 <a href="settings-reference.html#allowmanagedhooksonly"><code>allowManagedHooksOnly</code></a>。您的用户、项目和本地设置文件中的 hook 不会运行，也不会列出</li>
+</ul>
+<h3 id="stop-hook-hits-the-block-cap">Stop hook 达到阻止上限</h3>
+<p>Claude 继续工作而不是停止，然后以警告结束该轮，表示 Stop hook 连续阻止了太多次。</p>
+<p>当 Stop hook 连续阻止 8 次、且期间 Claude 没有进行任何工具调用时，Claude Code 会覆盖该 hook。您的 hook 脚本需要检查它是否已经触发过继续。从 JSON 输入中解析 <code>stop_hook_active</code> 字段，如果为 <code>true</code> 则提前退出：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="ch">#!/bin/bash</span>
+<span class="nv">INPUT</span><span class="o">=</span><span class="k">$(</span>cat<span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$INPUT</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.stop_hook_active'</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"true"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span><span class="w">  </span><span class="c1"># Allow Claude to stop</span>
+<span class="k">fi</span>
+<span class="c1"># ... rest of your hook logic</span>
+</code></pre></div>
+<p>如果你的 hook 合理地需要超过八次迭代才能收敛，使用 <a href="env-vars.html"><code>CLAUDE_CODE_STOP_HOOK_BLOCK_CAP</code></a> 提高上限。</p>
+<h3 id="hook-json-has-no-effect">Hook JSON 无效果</h3>
+<p>你的 hook 打印有效的 JSON，但决策没有生效，成绩单中没有出现错误。检查哪个原因适用：</p>
+<ul>
+<li><strong>JSON 前面有额外输出</strong>：有其他内容先写入了 stdout，通常是您的 shell profile 中无条件的 <code>echo</code>，导致输出不再以 <code>{</code> 开头。请参阅 <a href="#shell-profile-output-before-the-json">JSON 之前的 shell profile 输出</a>。</li>
+<li><strong>字段位于错误的层级</strong>：将每个字段的位置与 <a href="hooks.html#json-output">JSON 输出</a>格式进行比较。例如，<code>permissionDecision</code> 应位于 <code>hookSpecificOutput</code> 内部，而不是顶层。请参阅<a href="#fields-at-the-wrong-level">字段位于错误的层级</a>。</li>
+</ul>
+<h4 id="shell-profile-output-before-the-json">JSON 之前的 shell profile 输出</h4>
+<p>Hook 在非交互式 shell 中运行，但 Git Bash 和某些配置（例如 <code>BASH_ENV</code> 指向 <code>~/.bashrc</code>）仍会加载您的 profile，profile 打印的任何内容都会先于 hook 的 JSON 进入 stdout：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Shell ready on arm64
+{"decision": "block", "reason": "Not allowed"}
+</code></pre></div>
+<p>除非该 hook 是<a href="hooks.html#how-async-hooks-execute">异步</a>的，否则 Claude Code 会将不以 <code>{</code> 开头的输出作为纯文本读取，因此您的 JSON 会被忽略。由于 hook 以 0 退出，会话记录中也不会显示错误。要检查是否为此原因，请使用 <code>claude --debug</code> 启动 Claude Code，触发该 hook，然后在<a href="hooks.html#debug-hooks">调试日志</a>中搜索 <code>Hook output does not start with {</code>。要修复此问题，请包装 profile 中的 <code>echo</code> 语句，使其仅在交互式 shell 中运行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 在 ~/.zshrc 或 ~/.bashrc 中</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$-</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*i*<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Shell ready"</span>
+<span class="k">fi</span>
+</code></pre></div>
+<p><code>$-</code> 变量包含 shell 标志，<code>i</code> 表示交互式。Hooks 在非交互式 shell 中运行，因此 echo 被跳过。</p>
+<h4 id="fields-at-the-wrong-level">字段位于错误的层级</h4>
+<p>当你的 hook 返回 <code>permissionDecision</code> 或 <code>additionalContext</code> 在顶级而不是在 <code>hookSpecificOutput</code> 内部时，JSON 仍然解析，Claude Code 忽略错误放置的字段而不报告错误。要查看它忽略了哪些字段，使用 <code>claude --debug</code> 启动 Claude Code 并在<a href="hooks.html#debug-hooks">调试日志</a>中搜索 <code>Hook JSON output had unrecognized keys</code>。</p>
+<h3 id="check-what-a-hook-did">检查 hook 的执行结果</h3>
+<p>按 <code>Ctrl+O</code> 打开会话记录视图，查找 hook 的结果：</p>
+<ul>
+<li><strong>成功</strong>：您看不到任何内容，除非 hook 的 JSON 显示了某些内容，例如 <code>systemMessage</code> 或 Stop hook 反馈。</li>
+<li>要确认 hook 已运行，请检查其效果，例如被重新格式化的文件</li>
+<li><strong>阻止错误</strong>：在大多数事件上，您会看到随阻止一起返回的消息，例如 <code>Blocked: rm commands are not allowed</code>。在少数事件上，例如 <code>ConfigChange</code> 和 <code>Elicitation</code>，您不会看到消息。<a href="hooks.html#exit-code-2">退出码 2</a> 介绍了该消息的来源。</li>
+<li><strong>非阻止错误</strong>：您会看到 <code>&lt;hook name&gt; hook error</code> 通知，其中包含简短说明，例如 <code>Failed with non-blocking status code:</code> 之后的 stderr 第一行，或 JSON 验证或解析消息。操作会继续进行。</li>
+</ul>
+<p>要查询特定退出码和 stdout 对应的结果（包括各事件的例外情况），请参阅参考文档中的<a href="hooks.html#exit-code-output">退出码输出</a>。</p>
+<p>有关完整的执行详情，包括 hook 的退出码、stdout 和 stderr，请阅读<a href="hooks.html#debug-hooks">调试日志</a>。使用 <code>claude --debug-file /tmp/claude.log</code> 启动 Claude Code 以写入已知路径，然后在另一个终端中运行 <code>tail -f /tmp/claude.log</code>。如果您启动时没有使用该标志，请在会话中运行 <code>/debug</code> 以启用日志记录并找到日志路径。</p>
+<h2 id="learn-more">了解更多</h2>
+<ul>
+<li><a href="hooks.html">Hooks 参考</a>：完整的事件架构、JSON 输出格式、异步 hooks 和 MCP 工具 hooks</li>
+<li><a href="hooks.html#security-considerations">安全考虑</a>：在共享或生产环境中部署 hooks 之前查看</li>
+<li><a href="https://github.com/anthropics/claude-code/blob/main/examples/hooks/bash_command_validator_example.py" target="_blank" rel="noopener">Bash 命令验证器示例</a>：完整的参考实现</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="artifacts.html"><span class="pager-dir">← 上一页</span><span class="pager-name">将会话输出作为 artifacts 共享</span></a><a class="pager-link next" href="channels.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用 channels 将事件推送到运行中的会话</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#set-up-your-first-hook">设置你的第一个 hook</a><a class="toc-l2" href="#what-you-can-automate">可以自动化的内容</a><a class="toc-l3" href="#get-notified-when-claude-needs-input">在 Claude 需要输入时收到通知</a><a class="toc-l3" href="#auto-format-code-after-edits">编辑后自动格式化代码</a><a class="toc-l3" href="#block-edits-to-protected-files">阻止编辑受保护的文件</a><a class="toc-l3" href="#re-inject-context-after-compaction">上下文压缩后重新注入上下文</a><a class="toc-l3" href="#audit-configuration-changes">审计配置变更</a><a class="toc-l3" href="#reload-environment-when-directory-or-files-change">目录或文件变更时重新加载环境</a><a class="toc-l3" href="#auto-approve-specific-permission-prompts">自动批准特定的权限提示</a><a class="toc-l2" href="#how-hooks-work">Hooks 如何工作</a><a class="toc-l3" href="#combine-results-from-multiple-hooks">合并来自多个 hooks 的结果</a><a class="toc-l3" href="#read-input-and-return-output">读取输入并返回输出</a><a class="toc-l3" href="#filter-hooks-with-matchers">使用匹配器过滤 hooks</a><a class="toc-l3" href="#configure-hook-location">配置 hook 位置</a><a class="toc-l2" href="#prompt-based-hooks">基于提示的 hooks</a><a class="toc-l2" href="#agent-based-hooks">基于代理的 hooks</a><a class="toc-l2" href="#http-hooks">HTTP hooks</a><a class="toc-l2" href="#limitations-and-troubleshooting">限制和故障排除</a><a class="toc-l3" href="#limitations">限制</a><a class="toc-l3" href="#hooks-and-permission-modes">Hooks 和权限模式</a><a class="toc-l3" href="#hook-not-firing">Hook 未触发</a><a class="toc-l3" href="#hook-error-in-output">Hook 输出中的错误</a><a class="toc-l3" href="#/hooks-shows-no-hooks-configured">/hooks 显示未配置 hooks</a><a class="toc-l3" href="#stop-hook-hits-the-block-cap">Stop hook 达到阻止上限</a><a class="toc-l3" href="#hook-json-has-no-effect">Hook JSON 无效果</a><a class="toc-l3" href="#check-what-a-hook-did">检查 hook 的执行结果</a><a class="toc-l2" href="#learn-more">了解更多</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

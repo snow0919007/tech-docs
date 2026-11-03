@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>配置服务器管理的设置 · Claude Code 中文文档</title>
+<meta name="description" content="通过服务器交付的设置为您的组织集中配置 Claude Code，无需设备管理基础设施。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="server-managed-settings">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/server-managed-settings" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link active" href="server-managed-settings.html" aria-current="page">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>管理</span> <span class="sep">/</span> <span>设置与访问</span></div>
+    <article class="prose" id="article"><h1 id="_1">配置服务器管理的设置</h1>
+<blockquote>
+<p>通过服务器交付的设置为您的组织集中配置 Claude Code，无需设备管理基础设施。</p>
+</blockquote>
+<p>服务器管理的设置允许组织所有者通过 claude.ai 控制台中的 <a href="https://claude.ai/admin-settings/claude-code" target="_blank" rel="noopener"><strong>Organization settings &gt; Claude Code &gt; Managed settings</strong></a> 集中配置 Claude Code。Claude Code 客户端在用户使用符合条件的凭据在支持服务器管理交付的平台上进行身份验证时自动获取这些设置。请参阅<a href="#platform-availability">平台可用性</a>了解符合条件的凭据和平台。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>服务器管理的设置可供 <a href="https://claude.com/pricing?utm_source=claude_code\&amp;utm_medium=docs\&amp;utm_content=server_settings_teams#team-&amp;-enterprise" target="_blank" rel="noopener">Claude for Teams</a> 和 <a href="https://anthropic.com/contact-sales?utm_source=claude_code\&amp;utm_medium=docs\&amp;utm_content=server_settings_enterprise" target="_blank" rel="noopener">Claude for Enterprise</a> 客户使用。</p></div></div>
+<h2 id="requirements">要求</h2>
+<p>要使用服务器管理的设置，您需要：</p>
+<ul>
+<li>Claude for Teams 或 Claude for Enterprise 计划</li>
+<li>您的 Claude 组织中的所有者或主要所有者角色，以查看和编辑配置</li>
+<li>对 <code>api.anthropic.com</code> 的网络访问</li>
+</ul>
+<h2 id="choose-between-server-managed-and-endpoint-managed-settings">在服务器管理和端点管理的设置之间选择</h2>
+<p>Claude Code 支持两种集中配置方法。服务器管理的设置从 Anthropic 的服务器传递配置。<a href="managed-settings.html#delivery-mechanisms">端点管理的设置</a>通过本机操作系统策略（macOS 托管首选项、Windows 注册表）或托管设置文件直接部署到设备。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">方法</th>
+<th style="text-align: left;">最适合</th>
+<th style="text-align: left;">安全模型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>服务器管理的设置</strong></td>
+<td style="text-align: left;">没有 MDM 的组织，或非托管设备上的用户</td>
+<td style="text-align: left;">Claude Code 在启动时从 Anthropic 的服务器获取的设置，并在会话期间每小时刷新一次</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><a href="managed-settings.html#delivery-mechanisms">端点管理的设置</a></strong></td>
+<td style="text-align: left;">具有 MDM 或端点管理的组织</td>
+<td style="text-align: left;">通过 MDM 配置文件、注册表策略或托管设置文件部署到设备的设置</td>
+</tr>
+</tbody>
+</table>
+<p>如果您的设备已在 MDM 或端点管理解决方案中注册，端点管理的设置提供更强的安全保证，因为设置文件可以在操作系统级别受到保护，防止用户修改。端点管理的设置不会到达 Anthropic 托管环境中的<a href="model-config.html#surface-coverage">云会话</a>，因此在网络上使用 Claude Code 的组织也应该配置服务器管理的设置。<a href="self-hosted-environments.html">自托管环境</a>中的会话也会读取运行器镜像中的托管设置文件。下面的<a href="#settings-precedence">设置优先级</a>说明了该文件何时适用。</p>
+<h2 id="configure-server-managed-settings">配置服务器管理的设置</h2>
+<p><strong>1. 打开管理控制台</strong></p>
+<p>在 claude.ai 控制台中，转到 <a href="https://claude.ai/admin-settings/claude-code" target="_blank" rel="noopener"><strong>Organization settings &gt; Claude Code &gt; Managed settings</strong></a>。</p>
+<p>在 Team 或 Enterprise 组织中，如果页面显示您没有访问权限，请让 <a href="#access-control">Owner 或 Primary Owner</a> 进行更改。</p>
+<p><strong>2. 定义您的设置</strong></p>
+<p>将您的配置添加为 JSON。支持 <a href="settings-reference.html#all-settings"><code>settings.json</code> 中可用的所有设置</a>，除了限制于操作系统级别策略传递的设置外；有关该简短列表，请参阅<a href="#current-limitations">当前限制</a>。这包括 <a href="hooks.html">hooks</a>、<a href="env-vars.html">环境变量</a> 和<a href="managed-settings.html#managed-only-settings">仅限托管的设置</a>，如 <code>allowManagedPermissionRulesOnly</code>。</p>
+<p>此示例强制执行权限拒绝列表，防止用户绕过权限，并将权限规则限制为在托管设置中定义的规则。<code>Bash(curl *)</code> 规则匹配 <code>curl</code> <a href="permissions.html#bash-rule-limits">如 Claude 编写的那样</a>，而不是 <code>/usr/bin/curl</code> 或 <code>sh -c 'curl …'</code>；对于不依赖于命令文本的网络强制，添加一个<a href="sandboxing.html#configure-the-sandbox-for-your-organization">带有 <code>allowManagedDomainsOnly</code> 的 <code>sandbox</code> 块</a>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"deny"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"Bash(curl *)"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"Read(./.env)"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"Read(./.env.*)"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"Read(./secrets/**)"</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"disableBypassPermissionsMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"disable"</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"allowManagedPermissionRulesOnly"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Hooks 使用与 <code>settings.json</code> 中相同的格式。</p>
+<p>此示例在整个组织中每次文件编辑后运行审计脚本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PostToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Edit|Write"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w"> </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/usr/local/bin/audit-edit.sh"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>由于 hooks 执行 shell 命令，交互式会话中的用户在 Claude Code 应用它们之前会看到<a href="#security-approval-dialogs">安全批准对话框</a>。</p>
+<p>要配置<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>分类器，使其了解您的组织信任的存储库、存储桶和域，以相同的方式传递 <code>autoMode</code> 块；有关 <code>autoMode</code> 条目如何影响分类器阻止的内容以及关于 <code>environment</code>、<code>allow</code>、<code>soft_deny</code> 和 <code>hard_deny</code> 字段的重要警告，请参阅<a href="auto-mode-config.html">配置自动模式</a>。</p>
+<p><strong>3. 保存并部署</strong></p>
+<p>保存您的更改。Claude Code 客户端在下次启动或每小时轮询周期时接收更新的设置。</p>
+<p>编辑器会根据已发布的 Claude Code 设置 JSON schema 检查您的 JSON。如果在可解析的 JSON 中发现问题，它会显示警告并更改保存按钮的标签。当已保存设置时，标签为 <strong>Update with errors</strong>；当尚未保存任何设置时，标签为 <strong>Add with errors</strong>。该按钮仍然会保存，因为 schema 警告不会阻止保存。</p>
+<p>该 schema <a href="settings.html#edit-a-settings-file">可能落后于最新版本</a>，因此编辑器可能会标记<a href="settings-reference.html#all-settings">设置参考</a>中已记录的键或值。Claude Code 会接收您保存的键和值，并在加载它们时运行<a href="#invalid-entries-in-delivered-settings">自己的验证</a>。</p>
+<h3 id="verify-settings-delivery">验证设置传递</h3>
+<p>要确认设置正在被应用，请要求用户重新启动 Claude Code。如果配置包含触发<a href="#security-approval-dialogs">安全批准对话框</a>的设置，用户会在 Claude Code 下次获取它们时看到描述托管设置的提示：在下次启动时，或在运行的交互式会话中的一小时内。您还可以通过让用户运行 <code>/permissions</code> 来验证托管权限规则是否处于活动状态，以查看其有效的权限规则。</p>
+<p>要检查特定机器上的获取结果，请让用户运行 <code>claude doctor</code> 并读取 <code>Managed settings (remote)</code> 行。需要 Claude Code v2.1.248 或更高版本。该行报告以下四种结果之一：</p>
+<ul>
+<li>传递的设置已加载</li>
+<li>您的组织没有配置服务器管理的设置</li>
+<li>获取失败，包括原因以及缓存的策略是否仍然适用</li>
+<li>Claude Code 跳过了获取，包括原因。有关跳过它的提供商和配置，请参阅<a href="#platform-availability">平台可用性</a></li>
+</ul>
+<p>在获取仍在进行中时，该行会报告这一点。</p>
+<p>在运行的会话中，<code>/status</code> 在获取失败后显示相同的行，对于某些跳过获取的原因，例如第三方提供商变量或用户 shell 中导出的自定义 <code>ANTHROPIC_BASE_URL</code>。</p>
+<h3 id="access-control">访问控制</h3>
+<p>以下角色可以管理服务器管理的设置：</p>
+<ul>
+<li><strong>Primary Owner</strong></li>
+<li><strong>Owner</strong></li>
+</ul>
+<p>限制对受信任人员的访问，因为设置更改适用于组织中的所有用户。</p>
+<h3 id="managed-only-settings">仅限托管的设置</h3>
+<p>大多数<a href="settings-reference.html#all-settings">设置键</a>可在任何范围内工作。少数几个键仅从托管设置中读取，当放置在用户或项目设置文件中时无效。有关权限和插件控制，请参阅<a href="managed-settings.html#managed-only-settings">仅限托管的设置</a>，或读取<a href="settings-reference.html#all-settings">所有设置</a>索引的 Scope 列以获取完整集合。</p>
+<h3 id="current-limitations">当前限制</h3>
+<p>服务器管理的设置有以下限制：</p>
+<ul>
+<li>设置统一应用于组织中的所有用户。尚不支持按组配置。</li>
+<li>您无法通过服务器管理的设置分发 <a href="managed-mcp.html"><code>managed-mcp.json</code></a> 文件。改为在那里传递 <code>allowedMcpServers</code> 和 <code>deniedMcpServers</code> 策略键。在 Claude Code v2.1.259 或更高版本上，您还可以通过 <a href="managed-mcp.html#provide-servers-through-managed-settings"><code>managedMcpServers</code></a> 提供远程服务器，它仅接受 <code>http</code> 和 <code>sse</code> 服务器，并且不会像文件那样获得独占控制。</li>
+</ul>
+<p>Claude Code 在其<a href="managed-mcp.html#exclusive-control-with-managed-mcp-json">系统路径</a>处部署的 <code>managed-mcp.json</code> 与托管设置层分开读取，因此当服务器管理的设置生效时，该文件仍然适用。<br />
+* 限制于操作系统级别策略源的设置，如 <code>policyHelper</code> 和 <code>wslInheritsWindowsSettings</code>，不被遵守。改为通过 MDM 或系统 <code>managed-settings.json</code> 文件部署它们。在<a href="managed-settings.html#precedence-within-the-managed-tier">托管层内的优先级</a>下选择的源是该源时，以这种方式部署的 <code>policyHelper</code> 仅运行。</p>
+<h2 id="settings-delivery">设置分发</h2>
+<h3 id="settings-precedence">设置优先级</h3>
+<p>服务器托管设置和<a href="managed-settings.html#delivery-mechanisms">端点托管设置</a>都位于 Claude Code <a href="settings.html#settings-precedence">设置层级结构</a>中的最高层级。您在此处设置的键优先于用户自己的设置文件或 <code>--settings</code> 值中的同名键，<a href="settings.html#exceptions-to-managed-settings-precedence">托管设置优先级的例外情况</a>除外。</p>
+<p>在托管层级内，Claude Code 默认使用第一个提供至少一个策略键的来源，先检查服务器托管设置，再检查端点托管设置，<a href="#per-key-exceptions-across-managed-sources">下文所述的例外键</a>除外。<a href="managed-settings.html#precedence-within-the-managed-tier">Claude Code 如何组合托管来源</a>介绍了完整的排序规则、控制键的特殊处理，以及应用所有来源的可选启用方式。</p>
+<p>如果所选来源是一个 MDM 策略或托管设置文件，且其 <a href="settings-reference.html#policyhelper"><code>policyHelper</code></a> 提供托管设置，则该 helper 的输出将取代该来源，成为本次运行唯一的托管配置。当服务器托管设置提供策略键时，Claude Code 不会参考在 MDM 或基于文件的设置中配置的 <code>policyHelper</code>。</p>
+<p>如果后续的获取发现服务器托管设置已被移除，Claude Code 会立即运行该 helper，而不是等到下次启动时。<a href="settings-reference.html#policyhelper"><code>policyHelper</code></a> 条目介绍了该运行失败时会发生什么。</p>
+<p>如果您在管理控制台中清除了服务器托管配置，意图回退到端点托管的 plist 或注册表策略，请注意：<a href="#fetch-and-caching-behavior">缓存的设置</a>会在客户端机器上保留，直到下一次成功获取；而<a href="#fetch-and-caching-behavior">仅在下次启动时生效</a>的键（例如 <code>model</code>）会一直有效，直到每个客户端重新启动。运行 <code>/status</code> 可查看当前生效的托管来源。</p>
+<h3 id="per-key-exceptions-across-managed-sources">跨托管来源的按键例外</h3>
+<p>以下键是"不合并"规则的例外：</p>
+<ul>
+<li><strong>跨来源锁定键</strong>：一小组键，例如沙箱允许列表锁定，<a href="managed-settings.html#precedence-within-the-managed-tier">在托管设置页面中列出</a>。当任何由管理员控制的托管来源设置了这些键时，Claude Code 都会遵循它们；用户可写的 HKCU 注册表层级除外。</li>
+</ul>
+<p>当 <a href="settings-reference.html#policyhelper"><code>policyHelper</code></a> 提供托管设置时，其输出是这些检查读取的唯一来源，但 <a href="settings-reference.html#forceremotesettingsrefresh"><code>forceRemoteSettingsRefresh</code></a> 除外，Claude Code 会在启动时直接从管理员来源读取该键。<br />
+* <strong><code>env</code> 块</strong>：除了与凭据键配对的遥测单元和路由变量（均在下文介绍）之外，它会在由管理员控制的来源之间按键合并。对于每个环境变量，定义它的最高优先级来源生效，较低的管理员来源会填补较高来源未设置的变量。因此，只要服务器托管配置未设置某个变量，或者该变量的缓存服务器值正处于<a href="#fetch-and-caching-behavior">等待服务器确认而被暂缓</a>的状态，端点托管的 <code>env</code> 条目就会生效。需要 Claude Code v2.1.223 或更高版本。在 v2.1.223 之前，Claude Code 仅应用所选来源的整个 <code>env</code> 块。<br />
+  * <strong>遥测单元</strong>：<code>OTEL_EXPORTER_OTLP_*</code> 导出器键、<code>OTEL_LOG_*</code> 内容捕获开关、<code>OTEL_LOGS_EXPORTER</code>，以及 beta 追踪变量 <code>ENABLE_BETA_TRACING_DETAILED</code> 和 <code>BETA_TRACING_ENDPOINT</code>，作为一个整体跟随设置了其中任意一个的最高来源。提供 <code>otelHeadersHelper</code> 凭据键的来源也会占据该单元，但只有当它是所选来源时才会落地这些变量：一个未被选中但提供了该键的来源不会贡献其中任何变量，并且仍会阻止较低来源填补它们。无论哪种情况，来自一个来源的导出器端点都绝不会与来自另一个来源的凭据配对。<br />
+  * <strong>与凭据配对的路由</strong>：将路由变量与仅限所选来源的凭据键（例如 <code>apiKeyHelper</code> 或 <code>otelHeadersHelper</code>）配对的来源，只有在赢得该槽位时才会贡献这些路由变量。<br />
+* <strong><code>allowedProviders</code></strong>：机器上设置的列表与服务器托管列表按照<a href="settings-reference.html#allowedproviders">其条目的作用域说明</a>进行组合。需要 Claude Code v2.1.285 或更高版本<br />
+* <strong>第一方登录键</strong>：<a href="settings-reference.html#forceloginorguuid"><code>forceLoginOrgUUID</code></a> 以及 <a href="settings-reference.html#forceloginmethod"><code>forceLoginMethod</code></a> 的 <code>"claudeai"</code> 和 <code>"console"</code> 值。如果您还部署了 MDM 策略或托管设置文件，请在其中以及在 claude.ai 的服务器托管设置中同时设置这些键，直到每个客户端都运行 v2.1.299 或更高版本。有关之后应在何处设置这些键以及哪个来源的值生效，请参阅<a href="managed-settings.html#which-managed-source-supplies-login-keys">哪个托管来源提供登录键</a>。<br />
+* <strong>网关登录键</strong>：Claude Code 从不从服务器托管设置中读取 <a href="settings-reference.html#forcelogingatewayurl"><code>forceLoginGatewayUrl</code></a>、<a href="settings-reference.html#gatewayinternalnetworks"><code>gatewayInternalNetworks</code></a> 或 <a href="settings-reference.html#forceloginmethod"><code>forceLoginMethod</code></a> 的 <code>"gateway"</code> 值，因此那里的值既不会生效，也不会遮蔽在 MDM 策略或托管设置文件中设置的值。<a href="settings-reference.html#managedsourcesbehavior"><code>managedSourcesBehavior</code> 条目</a>说明了由机器上的哪个管理员来源提供这些键。</p>
+<h3 id="fetch-and-caching-behavior">获取和缓存行为</h3>
+<p>Claude Code 在启动时从 Anthropic 的服务器获取设置，并在活动会话期间每小时轮询一次更新。</p>
+<p>通过 <a href="#platform-availability">Claude apps 网关</a>登录的客户端会从网关获取其设置，并在会话开始前等待该获取完成，因此下面列表中的获取不适用于它。<a href="#enforce-fail-closed-startup">强制失败即关闭的启动</a>介绍了该获取失败时会发生什么。</p>
+<p><strong>首次启动且无缓存设置：</strong></p>
+<ul>
+<li>当开发者在启动时登录（例如首次运行或执行 <code>/logout</code> 之后），Claude Code 会在打开会话前等待获取最多五秒。如果策略及时到达，Claude Code 会从第一个屏幕开始执行它，并在该屏幕上显示您的 <a href="settings-reference.html#companyannouncements"><code>companyAnnouncements</code></a>。当负载需要<a href="#security-approval-dialogs">安全批准</a>时，Claude Code 会结束等待，并在开发者批准后应用该负载</li>
+<li>在任何其他启动情况下，以及当这五秒等待结束时，Claude Code 会在获取继续进行的同时打开会话，因此在设置加载和限制生效之前会有一段短暂的时间窗口</li>
+<li>如果获取失败，Claude Code 会在没有服务器托管设置的情况下继续运行，并在交互式会话中警告没有远程策略生效；端点托管设置仍然生效。如果某个托管来源设置了 <a href="#enforce-fail-closed-startup"><code>forceRemoteSettingsRefresh</code></a>，Claude Code 则会退出</li>
+</ul>
+<p><strong>后续启动且有缓存设置：</strong></p>
+<ul>
+<li>缓存的设置在启动时立即生效，但以下情况除外：缓存的 <code>modelPricing</code> 和 <code>managedMcpServers</code> 值；Claude Code 在服务器确认负载之前暂缓的环境变量；缓存的插件列表对<a href="plugins-mods-admin.html#know-what-happens-by-default">内置守卫</a>的移除、重新定位或禁用；以及在端点托管来源自行列出或启用插件的机器上，仅由缓存列表启用的插件的<a href="plugins-mods-admin.html#install-your-organizations-mods">组织归属</a></li>
+<li>缓存的 <a href="settings-reference.html#modelpricing"><code>modelPricing</code></a> 在会话的获取确认负载之前不会生效。在此之前，开发者在 <code>/usage</code> 和状态栏中看到的费用数据按标价计算</li>
+<li>缓存的 <a href="settings-reference.html#managedmcpservers"><code>managedMcpServers</code></a> 块在会话的获取确认负载之前不会生效。Claude Code 会在连接 MCP 服务器之前等待该获取最多 30 秒。如果获取失败或超时，会话将在没有组织服务器的情况下启动，<code>/status</code> 会说明这一点，并且这些服务器会在后续获取确认它们后连接。有关完整行为（包括首次启动），请参阅<a href="managed-mcp.html#when-provided-servers-connect">提供的服务器何时连接</a>。需要 Claude Code v2.1.259 或更高版本</li>
+<li>缓存的 <a href="settings-reference.html#prependplugins"><code>prependPlugins</code></a>、<a href="settings-reference.html#appendplugins"><code>appendPlugins</code></a> 或 <a href="settings-reference.html#enabledplugins"><code>enabledPlugins</code></a> 值在会话的获取确认负载之前，无法移除内置守卫、更改其位置或将其关闭</li>
+<li>在<a href="managed-settings.html#choose-a-delivery-mechanism">端点托管来源</a>自行列出或启用插件的机器上，仅由缓存列表启用的插件在获取确认负载之前被视为<a href="plugins-mods-admin.html#install-your-organizations-mods">用户的</a>插件，而不是您组织的插件</li>
+<li>Claude Code 在后台获取最新设置</li>
+<li>缓存的设置在网络故障期间保持有效。如果启动时的获取失败，Claude Code 会在交互式会话中警告缓存的策略正在生效</li>
+<li>在获取成功之前，启动时暂缓的值保持暂缓</li>
+</ul>
+<p>Claude Code 会暂缓缓存的 <code>env</code> 块中的若干类变量，直到服务器为该会话确认负载。这可以防止缓存的代理、证书颁发机构、端点或凭据值对确认负载的设置获取进行重定向、拦截或重新身份验证。这项加固仅适用于从服务器获取的设置缓存：通过 MDM 或 <code>managed-settings.json</code> 部署的<a href="managed-settings.html#delivery-mechanisms">端点托管设置</a>不受影响。被暂缓的类别包括：</p>
+<ul>
+<li>代理和 TLS 配置，例如 <code>HTTPS_PROXY</code>、<code>NODE_EXTRA_CA_CERTS</code>，以及 mTLS 客户端证书变量 <code>CLAUDE_CODE_CLIENT_CERT</code> 和 <code>CLAUDE_CODE_CLIENT_KEY</code></li>
+<li>API 路由和提供商选择，包括 <code>ANTHROPIC_BASE_URL</code>、提供商选择变量（例如 <code>CLAUDE_CODE_USE_BEDROCK</code> 和 <code>CLAUDE_CODE_USE_VERTEX</code>），以及提供商端点 URL（例如 <code>ANTHROPIC_BEDROCK_BASE_URL</code>）</li>
+<li>身份验证凭据，例如 <code>ANTHROPIC_API_KEY</code>、<code>ANTHROPIC_AUTH_TOKEN</code> 和 <code>CLAUDE_CODE_OAUTH_TOKEN</code></li>
+<li>配置目录选择器 <code>CLAUDE_CONFIG_DIR</code></li>
+<li>凭据来源和配置目录选择器（在 Claude Code v2.1.223 或更高版本中）：Workload Identity Federation 变量（例如 <code>ANTHROPIC_FEDERATION_RULE_ID</code> 和 <code>ANTHROPIC_IDENTITY_TOKEN</code>）、配置文件和配置目录选择器 <code>ANTHROPIC_PROFILE</code> 和 <code>ANTHROPIC_CONFIG_DIR</code>，以及操作系统目录变量 <code>HOME</code>、<code>XDG_CONFIG_HOME</code>、<code>APPDATA</code> 和 <code>USERPROFILE</code></li>
+</ul>
+<p>Claude Code 仅在启动时读取 Workload Identity Federation 变量以及 <code>ANTHROPIC_PROFILE</code> 和 <code>ANTHROPIC_CONFIG_DIR</code> 选择器，因此即使获取成功，服务器提供的这些值也不会切换会话的凭据来源。要在 Claude Code v2.1.223 或更高版本上提供这些选择器，请使用 MDM 或 <code>managed-settings.json</code> 等<a href="managed-settings.html#delivery-mechanisms">端点托管设置</a>。对于 <code>CLAUDE_CONFIG_DIR</code> 和操作系统目录变量，暂缓本身就是保护措施：缓存的值在服务器确认负载之前不会进入环境。</p>
+<p>缓存的 <code>env</code> 块中的其他所有键都在启动时生效。一旦服务器确认负载，并且在需要<a href="#security-approval-dialogs">安全批准</a>时您已批准，被暂缓的变量将在会话的剩余时间内生效。</p>
+<p>如果您的组织需要通过代理访问 <code>api.anthropic.com</code>，暂缓只影响服务器提供的 <code>env</code> 块本身：通过 MDM 或 <code>managed-settings.json</code> 在<a href="managed-settings.html#delivery-mechanisms">端点托管</a>的 <code>env</code> 块中设置的代理、在 shell 环境中设置的代理，或在<a href="settings.html#where-settings-live">用户设置</a>中设置的代理，都会作用于设置获取。端点托管来源需要 Claude Code v2.1.223 或更高版本：缓存的服务器托管代理值在获取确认之前被暂缓，因此端点托管的值会按键填补并作用于获取本身。在 v2.1.223 之前，请使用 shell 环境或用户设置，使代理与缓存的服务器负载同时生效。首次启动时没有缓存，因此初始获取仍需要端点托管来源、shell 环境或用户设置。</p>
+<p>Claude Code 会将大多数设置更新应用到正在运行的会话中，无需重启。某些更新仅在下次启动时生效，包括 OpenTelemetry 导出器配置、<code>model</code> 键，以及从 <code>env</code> 块中移除变量。</p>
+<h3 id="invalid-entries-in-delivered-settings">分发的设置中的无效条目</h3>
+<p>当负载的某部分未通过 schema 验证时，Claude Code 会显示验证错误，并应用其余所有有效设置；<a href="managed-settings.html#invalid-entries-in-managed-settings">托管设置中的无效条目</a>说明了它会丢弃哪些内容，以及哪些键会回退到更严格的值。需要 Claude Code v2.1.169 或更高版本。</p>
+<p>服务器托管分发额外具有以下行为：</p>
+<ul>
+<li>基于 <code>~/.claude/remote-settings.json</code> 中的缓存运行的启动，会按照写入该缓存的那次获取的方式处理无效条目：</li>
+<li>未通过验证的条目保持被丢弃。</li>
+<li><a href="managed-settings.html#keys-that-fail-closed">失败即关闭的键</a>保持其更严格的值。</li>
+<li>无效的 <code>cleanupPeriodDays</code> 或 <code>desktopSessionCleanupPeriodDays</code> 值保留在缓存副本中，且永远不会被应用。</li>
+<li>
+<p>当以下三点全部成立时，Claude Code 不会应用负载中的任何内容，并保持缓存不变：</p>
+</li>
+<li>
+<p>负载中的每个设置都未通过验证。</p>
+</li>
+<li>其中没有任何设置回退到更严格的值。</li>
+<li>负载中包含除这两个保留期键之外的其他键。</li>
+</ul>
+<p>此时，启动通知、<code>/status</code> 和 <code>claude doctor</code> 会报告<a href="errors.html#remote-managed-settings-failed-to-load">加载失败</a>，原因为 <code>no setting in the server response could be applied as written</code>，该条目会说明会话基于哪个策略运行。<a href="#enforce-fail-closed-startup">强制失败即关闭的启动</a>的客户端则会在启动时退出。<br />
+* <a href="#security-approval-dialogs">安全批准对话框</a>评估的是修复后的负载，因此被剥离的无效条目永远不会被提交批准，也永远不会执行。</p>
+<p>要调试分发问题，请运行 <code>claude --debug-file &lt;path&gt;</code> 并在日志中搜索 <code>Remote settings</code>。在将负载更改推广到整个组织之前，请先在测试机器上使用 <code>claude doctor</code> 进行验证。</p>
+<h3 id="enforce-fail-closed-startup">强制失败即关闭的启动</h3>
+<p>默认情况下，如果启动时远程设置获取失败，CLI 会使用上一次成功获取时缓存的设置继续运行，但 Claude Code 在获取成功之前<a href="#fetch-and-caching-behavior">暂缓的值</a>除外。在从未获取过这些设置的机器上，CLI 会在没有服务器托管设置的情况下继续运行，并仍然应用设备上的任何<a href="managed-settings.html#delivery-mechanisms">端点托管设置</a>。</p>
+<p>要阻止客户端在使用缓存的或缺失的服务器托管设置时启动，请在您的托管设置中设置 <code>forceRemoteSettingsRefresh: true</code>。</p>
+<p>通过 <a href="#platform-availability">Claude apps 网关</a>登录的客户端无论是否设置此项都会等待启动时的获取，并按如下方式处理获取失败：</p>
+<ul>
+<li>如果网关对有人值守的交互式启动返回 <code>401</code>，且此设置处于关闭状态，则表示网关已结束该登录。Claude Code 会打印 <a href="errors.html#cloud-gateway-session-expired"><code>Cloud gateway session expired — run /login to reconnect.</code></a>，并在用户运行 <code>/login</code> 之前以未登录网关的状态打开会话。</li>
+<li>当获取以任何其他方式失败时，或在除 <code>claude auth</code> 子命令之外的任何其他类型的启动中，客户端会报错退出。</li>
+</ul>
+<p>当此设置在获取服务器托管设置的会话中生效时，CLI 会在启动时阻塞，直到重新获取远程设置。如果获取失败，CLI 会退出，而不是在没有策略的情况下继续。此设置具有自我延续性：一旦从服务器下发，它也会被缓存到本地，这样后续启动即使在新会话首次成功获取之前也会执行相同的行为。<a href="#platform-availability">不获取服务器托管设置</a>的会话会直接启动，无需等待。</p>
+<p>要启用此功能，请将该键添加到您的托管设置配置中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"forceRemoteSettingsRefresh"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>您也可以在<a href="managed-settings.html#delivery-mechanisms">端点托管</a>的 MDM 配置描述文件或系统 <code>managed-settings.json</code> 文件中设置此键，以便在任何服务器负载到达之前、在首次启动时就执行失败即关闭的行为。此标志是上述<a href="#settings-precedence">优先级规则</a>的一个例外：当任何由管理员控制的托管来源设置了它时，即使同时存在缓存的服务器托管负载，Claude Code 也会遵循它，因此当存在服务器托管设置时，它不会忽略通过 MDM 下发的值。</p>
+<p>当 <a href="settings-reference.html#policyhelper"><code>policyHelper</code></a> 提供托管设置时，对于 Claude Code 在启动后读取的键，其输出会取代所有其他托管来源。有关 Claude Code 从哪些来源读取此键，请参阅<a href="settings-reference.html#forceremotesettingsrefresh">其设置条目</a>。<code>policyHelper</code> 条目说明了 Claude Code 从哪些来源读取该 helper 以及它何时运行。</p>
+<p>设置获取还会发送 <code>Cache-Control: no-cache</code> 标头，以防止中间 HTTP 代理返回过期的响应。</p>
+<p>在启用此设置之前，请确保您的网络策略允许连接到 <code>api.anthropic.com</code>。如果该端点无法访问，CLI 会在启动时退出，用户将无法启动 Claude Code。</p>
+<p><code>claude auth</code> 子命令（例如 <code>claude auth login</code>）不受此检查和网关启动退出的限制，因此当凭据过期导致设置获取失败时，用户可以重新进行身份验证。</p>
+<h3 id="security-approval-dialogs">安全批准对话框</h3>
+<p>某些可能带来安全风险的设置，在 Claude Code 于交互式会话中应用它们之前，需要用户明确批准：</p>
+<ul>
+<li><strong>Shell 命令设置</strong>：执行 shell 命令的设置，例如 <code>apiKeyHelper</code>、<code>statusLine</code> 和 <code>otelHeadersHelper</code></li>
+<li><strong>沙箱二进制文件设置</strong>：<code>sandbox.bwrapPath</code>、<code>sandbox.socatPath</code> 和 <code>sandbox.ripgrep</code>。这些设置各自指向一个可执行文件，Claude Code 会运行该可执行文件</li>
+<li><strong>沙箱网络和隔离设置</strong>：允许沙箱代理读取、重新路由流量或对流量进行身份验证，或削弱沙箱隔离的<a href="sandboxing.html">沙箱</a>设置：<code>sandbox.network.tlsTerminate</code>、<code>sandbox.network.httpProxyPort</code>、<code>sandbox.network.socksProxyPort</code>、<code>sandbox.credentials</code>、<code>sandbox.allowAppleEvents</code>、<code>sandbox.allowNestedUserNamespaces</code>、<code>sandbox.enableWeakerNestedSandbox</code>、<code>sandbox.enableWeakerNetworkIsolation</code>、<code>sandbox.filesystem.disabled</code>、<code>sandbox.network.allowAllUnixSockets</code>、<code>sandbox.network.allowUnixSockets</code> 和 <code>sandbox.network.allowMachLookup</code>。仅包含 <code>deny</code> 规则的 <code>sandbox.credentials</code> 块不需要批准，因为它只限制沙箱，而不会向代理提供凭据。在 v2.1.251 之前，Claude Code 无需批准即可应用这些设置</li>
+<li><strong>自定义环境变量</strong>：需要用户批准的下发 <code>env</code> 变量，例如代理和 base-URL 变量；请参阅<a href="#environment-variables-and-the-approval-dialog">环境变量和批准对话框</a></li>
+<li><strong>Hook 配置</strong>：任何 hook 定义</li>
+</ul>
+<p>当存在这些设置时，用户会看到一个安全对话框，说明正在配置的内容。用户必须批准才能继续。如果用户拒绝这些设置，Claude Code 会退出。</p>
+<p>通过 <a href="settings-reference.html#claudemd"><code>claudeMd</code></a> 键下发的托管 CLAUDE.md 不需要批准，因为它是给 Claude 的指令文本，而不是 Claude Code 运行的命令。Claude Code 仍会检查 Claude 在遵循这些指令时所使用工具的<a href="permissions.html">权限</a>。在 v2.1.260 之前，<code>claudeMd</code> 值也需要批准。</p>
+<h4 id="approval-memory">批准记录</h4>
+<p>Claude Code 会将您的批准记录在您的配置目录中，除非您设置了 <a href="env-vars.html"><code>CLAUDE_CONFIG_DIR</code></a>，否则该目录为 <code>~/.claude</code>。记录的内容取决于设置获取所使用的凭据：</p>
+<ul>
+<li><strong>通过 <code>/login</code> 或 <code>claude auth login</code> 保存的 claude.ai 登录，或<a href="authentication.html#sign-in-without-an-api-key">无密钥 Console 登录</a></strong>：每个组织一个批准，由最近一次批准的账户持有。</li>
+<li><strong><a href="claude-apps-gateway.html">Claude apps 网关</a>登录</strong>：每个网关一个批准。</li>
+</ul>
+<p>如果您注销后重新登录到同一网关，只要需要批准的设置未发生变化，Claude Code 就不会再次显示该对话框。当这些设置发生变化、您登录到其他网关，或您为同一网关接受新证书时，Claude Code 会再次显示该对话框。</p>
+<p>对于通过纯 HTTP 访问的环回开发网关，Claude Code 不会保存批准，因此每次登录后都会再次出现该对话框。<br />
+* <strong>任何其他凭据</strong>，例如 API 密钥或 <code>CLAUDE_CODE_OAUTH_TOKEN</code>：对下发的设置记录一个批准，与该配置目录中设置的缓存副本保存在一起。当需要批准的设置发生变化时，以及在您运行 <code>/logout</code> 或 <code>claude auth logout</code>（两者都会删除缓存副本）之后，Claude Code 会再次显示该对话框。</p>
+<p>对 <code>sandbox.credentials</code> 或 <code>sandbox.network.tlsTerminate</code> 的批准也涵盖同一批下发设置中的 <a href="settings-reference.html#sandbox-network-alloweddomains"><code>sandbox.network.allowedDomains</code></a> 条目，因为这两个设置都作用于该允许列表。当您的管理员添加或删除其中某个条目时，对话框会再次出现，即使 <code>sandbox.network.allowedDomains</code> 本身不需要批准。</p>
+<p>使用已保存的 claude.ai 登录时：</p>
+<ul>
+<li>如果您注销后重新登录，或切换到另一个组织后再切换回来，只要这些设置未发生变化，Claude Code 就不会再次显示该对话框，除非在此期间另一个账户在同一配置目录中为该组织批准了这些设置。</li>
+<li>如果您使用其他账户登录到同一组织，即使设置未发生变化，Claude Code 也会再次显示该对话框。该账户的批准会取代之前的批准，因此当您切换回来时，Claude Code 会再次显示该对话框。</li>
+</ul>
+<p>Claude Code 并非总能显示该对话框。以下各种情况说明了无法显示时哪些设置生效，以及您下次何时会看到该对话框：</p>
+<ul>
+<li><strong>无法显示对话框的交互式会话</strong>：Claude Code 不应用下发的设置，并保留上次批准的设置。对话框会在下一个能够显示它的会话中出现。</li>
+<li><strong><code>claude install</code> 或 <code>claude update</code></strong>：在这两个命令中的任何一个运行期间，Claude Code 都不会显示该对话框。命令会使用上次批准的设置运行，对话框会在您的下一个交互式会话中出现。如果 Claude Code 在启动时等待设置获取（例如设置了 <a href="#enforce-fail-closed-startup"><code>forceRemoteSettingsRefresh</code></a>，或在 <a href="claude-apps-gateway.html">Claude apps 网关</a>部署中），它会改为在命令运行期间显示该对话框，并且从管道运行的安装会失败；请参阅<a href="troubleshoot-install.html#raw-mode-is-not-supported-during-install">安装期间出现 <code>Raw mode is not supported</code></a>。在 v2.1.246 之前，Claude Code 在这两个命令运行期间也会尝试显示该对话框。</li>
+<li><strong>输出到终端但无法从键盘读取的 <code>claude plugin</code> 命令</strong>：当 Claude Code 在启动时不等待设置获取时，该命令不会应用下发的设置。在没有<a href="#fetch-and-caching-behavior">缓存设置</a>的情况下，更改您的插件或市场的命令会<a href="errors.html#managed-settings-need-your-approval">报错停止</a>。在有缓存设置的情况下，它会使用上次批准的设置运行。对话框会在您下次于终端中运行 <code>claude</code> 时出现。</li>
+</ul>
+<p>当您通过管道传入或重定向其输入，并且在 macOS 和 Linux 上它也无法打开 <code>/dev/tty</code> 时，该命令无法从键盘读取。如果您同时通过管道传出或重定向其输出，则该运行会变为非交互式，下发的设置仅对该次运行生效。<br />
+* <strong>错误在您作答之前关闭了对话框</strong>：Claude Code 不应用下发的设置，并保留上次批准的设置。它会在下一个能够显示该对话框的会话中再次显示它。<br />
+* <strong>非交互式运行</strong>，例如 <code>claude -p</code>、Agent SDK 会话，或 VS Code 扩展聊天面板或桌面应用 Code 标签页中的会话：Claude Code 无法显示该对话框。当下发的设置需要批准时，它们仅对该次运行生效。</p>
+<p>Claude Code 不会将这些设置记录为已批准，也不会将它们写入<a href="#fetch-and-caching-behavior">本地缓存</a>，下一个交互式会话会显示该对话框。在用户于交互式会话中批准之前，每次非交互式运行都会在启动时重新获取设置。</p>
+<h4 id="environment-variables-and-the-approval-dialog">环境变量和批准对话框</h4>
+<p>Claude Code 会在不向用户显示批准对话框的情况下应用某些下发的 <code>env</code> 变量，包括：</p>
+<ul>
+<li>功能和命令开关</li>
+<li>模型选择和行为设置，例如 <code>ANTHROPIC_MODEL</code>、<code>DISABLE_PROMPT_CACHING</code> 和 <code>CLAUDE_CODE_EFFORT_LEVEL</code></li>
+<li>上下文窗口和压缩设置，例如 <code>DISABLE_AUTO_COMPACT</code>，但不包括 <code>CLAUDE_CODE_DISABLE_1M_CONTEXT</code></li>
+<li>终端 UI 和无障碍选项</li>
+<li>数值限制、预算和超时时间</li>
+</ul>
+<p>其他下发的变量可能需要用户批准后才能生效。例如，在交互式会话中，以下变量在任何非空值下都始终需要批准：</p>
+<ul>
+<li>代理或 base-URL 变量</li>
+<li><code>OTEL_EXPORTER_OTLP_ENDPOINT</code></li>
+<li><code>CLAUDE_CODE_DISABLE_1M_CONTEXT</code></li>
+</ul>
+<p>当某个下发的变量需要批准时，对话框会列出它的名称，以便用户确切了解策略要求设置的内容。</p>
+<p>对于四个隐私开关，Claude Code 根据下发的值而不是变量名来决定是否需要批准：<code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code>、<code>DISABLE_ERROR_REPORTING</code>、<code>DISABLE_TELEMETRY</code> 和 <code>DO_NOT_TRACK</code>。真值（例如 <code>1</code> 或 <code>true</code>）只会关闭追踪、报告或其他非必要流量，因此 Claude Code 会在不询问用户的情况下应用它。对于任何其他非空值，Claude Code 会显示该对话框。</p>
+<p>Claude Code 同样根据下发的值来决定 <a href="env-vars.html"><code>API_FORCE_IDLE_TIMEOUT</code></a> 是否需要批准：真值只会开启<a href="network-config.html#streaming-idle-watchdogs">响应体空闲超时</a>，因此 Claude Code 会在不询问用户的情况下应用它。对于任何其他非空值，Claude Code 会显示该对话框。在 v2.1.248 之前，任何非空值都会触发该对话框。</p>
+<p><a href="env-vars.html#variables"><code>ANTHROPIC_CUSTOM_HEADERS</code></a> 是否需要批准也取决于下发的值。仅用于标记请求的标头（例如 <code>Accept-Language</code>）无需对话框即可生效。命名凭据、组织或租户选择器、路由或主机覆盖，或 API 行为标头的行（例如 <code>Authorization</code>、<code>X-Api-Key</code>、<code>Host</code>、<code>anthropic-beta</code> 或 <code>X-Amzn-Bedrock-*</code> 标头）需要批准。如果某行的名称不是有效的 HTTP 标头 token，或其值包含 HTTP 标头无法承载的字符，该行也需要批准。该检查会匹配标头名称中的单词，因此包含 <code>client</code> 和 <code>version</code> 的 <code>X-Client-Version</code> 也需要批准。在 v2.1.251 之前，任何 <code>ANTHROPIC_CUSTOM_HEADERS</code> 值都无需批准即可生效。</p>
+<p><a href="env-vars.html#variables"><code>ENABLE_BETA_TRACING_DETAILED</code></a> 或 <a href="env-vars.html#variables"><code>OTEL_LOG_RAW_API_BODIES</code></a> 的假值（例如 <code>0</code> 或 <code>false</code>）无需对话框即可生效，因为它只会关闭详细追踪或原始 API 请求体捕获。这两个变量的任何其他非空值都需要批准。</p>
+<h2 id="platform-availability">平台可用性</h2>
+<p>服务器管理的设置需要直接连接到 <code>api.anthropic.com</code>。交付还需要会话使用以下凭证之一进行身份验证：</p>
+<ul>
+<li>Team 或 Enterprise OAuth 登录</li>
+<li>通过 <code>CLAUDE_CODE_OAUTH_TOKEN</code> 提供的 OAuth 令牌</li>
+<li>直接配置的 API 密钥</li>
+<li>一个 <code>user_oauth</code> <a href="authentication.html#anthropic-profiles-and-federation-credentials">Anthropic 配置文件</a>，除非该配置文件设置了 Anthropic API 以外的 <code>base_url</code>。需要 Claude Code v2.1.257 或更高版本。</li>
+</ul>
+<p>由 <a href="settings-reference.html#apikeyhelper"><code>apiKeyHelper</code></a> 脚本返回的密钥和 <a href="https://platform.claude.com/docs/en/manage-claude/workload-identity-federation" target="_blank" rel="noopener">Workload Identity Federation</a> 凭证都不会触发设置获取。</p>
+<p>会话接收的是其身份验证所用凭据所属组织的托管设置。来自 <a href="https://platform.claude.com" target="_blank" rel="noopener">Claude Console</a> 的 API 密钥属于创建它的 Console 组织，该组织与您的 claude.ai Team 或 Enterprise 组织是相互独立的组织。因此，您在 claude.ai Admin Settings 中配置的设置不会到达使用该密钥进行身份验证的会话，例如使用您公司 Console API 密钥的 CI 作业。要将这些设置应用于该作业，请使用以下选项之一。OAuth 令牌选项不适用于使用 <a href="headless.html#start-faster-with-bare-mode"><code>--bare</code></a> 运行的作业，因为 bare 模式不会读取 <code>CLAUDE_CODE_OAUTH_TOKEN</code>。</p>
+<ul>
+<li><strong>OAuth 令牌</strong>：使用 <a href="authentication.html#generate-a-long-lived-token"><code>claude setup-token</code></a> 生成令牌，为您的 Team 或 Enterprise 组织授权该令牌，并在作业环境中将其设置为 <code>CLAUDE_CODE_OAUTH_TOKEN</code>。从该环境中删除任何<a href="authentication.html#authentication-precedence">优先于</a>该令牌的凭据，例如 <code>ANTHROPIC_API_KEY</code>。</li>
+<li><strong>端点管理的设置</strong>：将<a href="managed-settings.html#delivery-mechanisms">托管设置文件</a>部署到运行该作业的机器上。</li>
+</ul>
+<p>在 Claude Desktop 应用中的 <a href="https://claude.com/docs/cowork/overview" target="_blank" rel="noopener">Cowork</a> 会话中，即使用户使用 Team 或 Enterprise 账户登录，Claude Code 也不会从 claude.ai 管理控制台获取服务器管理的设置。<a href="managed-settings.html#where-and-when-a-policy-applies">策略应用的位置和时间</a> 涵盖了哪些策略到达用户机器上的 Cowork 会话和远程 Cowork 会话。当 Cowork 用户从 claude.ai 上的 git 仓库或从 Cowork 中的<strong>自定义</strong>添加市场时，claude.ai 仍会自行应用您的 <a href="settings-reference.html#strictknownmarketplaces"><code>strictKnownMarketplaces</code></a> 和 <a href="settings-reference.html#blockedmarketplaces"><code>blockedMarketplaces</code></a> 列表。<a href="plugins-org.html#restrict-what-users-can-install">限制如何工作</a> 描述了该检查。</p>
+<p>如果您在 shell 中导出 <code>CLAUDE_CODE_USE_*</code> 提供商变量或非默认的 <code>ANTHROPIC_BASE_URL</code>，Claude Code 将跳过您的会话的设置获取。<a href="#verify-settings-delivery"><code>claude doctor</code> 和 <code>/status</code> 报告跳过的获取及其原因</a>。</p>
+<p>您无法使用服务器管理的 <code>env</code> 块清除导出，因为该块通过导出阻止的获取到达。<a href="managed-settings.html#delivery-mechanisms">端点管理的设置</a> <code>env</code> 块也不会恢复获取：Claude Code 在应用管理的 <code>env</code> 块之前检查资格，因此端点管理的值改变会话的提供商选择，但获取保持跳过。</p>
+<p>要恢复服务器管理的交付，请从 shell 中删除导出，或在用户设置 <code>env</code> 块中将变量设置为 <code>""</code>，该块在资格检查之前应用。要在不依赖用户更改其 shell 的情况下强制执行策略，请改为通过端点管理的通道交付设置。</p>
+<p>对于 Amazon Bedrock、Google Cloud 的 Agent Platform、Microsoft Foundry 和 <a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 部署，自托管的 <a href="claude-apps-gateway.html">Claude apps gateway</a> 提供等效的远程管理设置交付：网关登录的客户端从网关而不是 <code>api.anthropic.com</code> 获取管理设置。启动时的失败语义不同：无法到达网关的网关客户端以错误退出，而不是回退到缓存的设置，而每小时的后台刷新在两个通道上都是故障开放的。</p>
+<h2 id="audit-logging">审计日志</h2>
+<p>设置更改的审计日志事件可通过合规 API 或审计日志导出获得。请联系您的 Anthropic 账户团队以获取访问权限。</p>
+<p>审计事件包括执行的操作类型、执行操作的账户和设备，以及对先前值和新值的引用。</p>
+<h2 id="security-considerations">安全考虑</h2>
+<p>服务器管理的设置提供集中的策略强制执行，但它们作为客户端控制运行，而不是安全边界。在非托管设备上，用户不需要管理员或 sudo 访问权限来绕过它们。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">场景</th>
+<th style="text-align: left;">行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">用户编辑缓存的设置文件</td>
+<td style="text-align: left;">篡改的文件在启动时应用，但 Claude Code 在服务器确认有效负载前暂扣的<a href="#fetch-and-caching-behavior">值</a>除外。下次服务器获取会恢复正确的设置，但<a href="#fetch-and-caching-behavior">仅在下次启动时应用的键</a>除外，例如 <code>model</code> 或添加到 <code>env</code> 块的变量，这些会保持有效直到重新启动</td>
+</tr>
+<tr>
+<td style="text-align: left;">用户删除缓存的设置文件</td>
+<td style="text-align: left;">发生<a href="#fetch-and-caching-behavior">首次启动行为</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">用户运行修改的 Claude Code 二进制文件</td>
+<td style="text-align: left;">能够运行修改的客户端的用户可以绕过任何客户端控制</td>
+</tr>
+<tr>
+<td style="text-align: left;">用户运行较旧的 Claude Code 版本</td>
+<td style="text-align: left;">早于服务器管理设置的版本不会获取或应用它们</td>
+</tr>
+<tr>
+<td style="text-align: left;">API 不可用</td>
+<td style="text-align: left;">如果可用，缓存的设置应用，但 Claude Code 在获取成功前暂扣的<a href="#fetch-and-caching-behavior">值</a>除外。没有缓存的情况下，Claude Code 在下次成功获取前不强制执行任何服务器管理的设置，但仍然在设备上应用任何<a href="managed-settings.html#delivery-mechanisms">端点管理的设置</a>。使用 <code>forceRemoteSettingsRefresh: true</code> 时，CLI 退出而不是继续，但<a href="#enforce-fail-closed-startup"><code>claude auth</code> 子命令</a>除外。通过<a href="#platform-availability">Claude 应用网关</a>登录的客户端在启动时退出而没有该设置，具有相同的 <code>claude auth</code> 豁免</td>
+</tr>
+<tr>
+<td style="text-align: left;">用户使用不同的组织进行身份验证</td>
+<td style="text-align: left;">不为托管组织外的账户传递设置，包括使用 <a href="#platform-availability">Console API 密钥</a>进行身份验证的会话</td>
+</tr>
+<tr>
+<td style="text-align: left;">用户配置<a href="#platform-availability">第三方模型提供商</a></td>
+<td style="text-align: left;">服务器管理的设置被绕过。这包括设置 <code>CLAUDE_CODE_USE_BEDROCK</code>、<code>CLAUDE_CODE_USE_MANTLE</code>、<code>CLAUDE_CODE_USE_VERTEX</code>、<code>CLAUDE_CODE_USE_FOUNDRY</code>、<code>CLAUDE_CODE_USE_ANTHROPIC_AWS</code> 或非默认的 <code>ANTHROPIC_BASE_URL</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">网络流量被拦截或重定向</td>
+<td style="text-align: left;">禁用的 TLS 验证或拦截的流量可以改变客户端接收的设置</td>
+</tr>
+</tbody>
+</table>
+<p>要记录对本地设置文件（包括 <code>managed-settings.json</code>）的编辑，请使用 <a href="hooks.html#configchange"><code>ConfigChange</code> hooks</a>。当服务器管理的设置到达或刷新时，或当 MDM 配置文件或注册表策略更改时，Claude Code 不会运行它们，并且 hook 无法阻止 <code>policy_settings</code> 更改。</p>
+<p>要限制用户可以使用客户端提供的凭证访问的组织，请参阅 Claude 帮助中心中的<a href="https://support.claude.com/en/articles/13198485-enforce-network-level-access-control-with-tenant-restrictions" target="_blank" rel="noopener">使用租户限制强制执行网络级访问控制</a>。为了获得更强的强制执行保证，请在已在 MDM 解决方案中注册的设备上使用<a href="managed-settings.html#delivery-mechanisms">端点管理的设置</a>。</p>
+<h2 id="see-also">另请参阅</h2>
+<p>用于管理 Claude Code 配置的相关页面：</p>
+<ul>
+<li><a href="settings-reference.html">所有设置</a>：每个设置键</li>
+<li><a href="managed-settings.html#delivery-mechanisms">Endpoint-managed settings</a>：由 IT 部门部署到设备的托管设置</li>
+<li><a href="authentication.html">Authentication</a>：设置用户对 Claude Code 的访问</li>
+<li><a href="security.html">Security</a>：安全保障和最佳实践</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="managed-settings.html"><span class="pager-dir">← 上一页</span><span class="pager-name">部署托管设置</span></a><a class="pager-link next" href="managed-mcp.html"><span class="pager-dir">下一页 →</span><span class="pager-name">控制组织的 MCP 服务器访问权限</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#requirements">要求</a><a class="toc-l2" href="#choose-between-server-managed-and-endpoint-managed-settings">在服务器管理和端点管理的设置之间选择</a><a class="toc-l2" href="#configure-server-managed-settings">配置服务器管理的设置</a><a class="toc-l3" href="#verify-settings-delivery">验证设置传递</a><a class="toc-l3" href="#access-control">访问控制</a><a class="toc-l3" href="#managed-only-settings">仅限托管的设置</a><a class="toc-l3" href="#current-limitations">当前限制</a><a class="toc-l2" href="#settings-delivery">设置分发</a><a class="toc-l3" href="#settings-precedence">设置优先级</a><a class="toc-l3" href="#per-key-exceptions-across-managed-sources">跨托管来源的按键例外</a><a class="toc-l3" href="#fetch-and-caching-behavior">获取和缓存行为</a><a class="toc-l3" href="#invalid-entries-in-delivered-settings">分发的设置中的无效条目</a><a class="toc-l3" href="#enforce-fail-closed-startup">强制失败即关闭的启动</a><a class="toc-l3" href="#security-approval-dialogs">安全批准对话框</a><a class="toc-l2" href="#platform-availability">平台可用性</a><a class="toc-l2" href="#audit-logging">审计日志</a><a class="toc-l2" href="#security-considerations">安全考虑</a><a class="toc-l2" href="#see-also">另请参阅</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

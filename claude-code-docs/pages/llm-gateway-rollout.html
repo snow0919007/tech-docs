@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>为您的组织推出 LLM 网关 · Claude Code 中文文档</title>
+<meta name="description" content="为 Claude Code 部署网关产品：配置它以转发 Claude Code 发送的内容，颁发开发者凭证，通过托管设置分发配置，并验证推出。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="llm-gateway-rollout">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/llm-gateway-rollout" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link active" href="llm-gateway-rollout.html" aria-current="page">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>管理</span> <span class="sep">/</span> <span>网关</span> <span class="sep">/</span> <span>其他网关</span></div>
+    <article class="prose" id="article"><h1 id="llm">为您的组织推出 LLM 网关</h1>
+<blockquote>
+<p>为 Claude Code 部署网关产品：配置它以转发 Claude Code 发送的内容，颁发开发者凭证，通过托管设置分发配置，并验证推出。</p>
+</blockquote>
+<p>本页面指导管理员为 Claude Code 推出 LLM 网关。它假设您已部署了满足<a href="#gateway-requirements">网关要求</a>的网关产品。本页面不涵盖部署或运营任何特定产品；请按照您的供应商文档部署您的产品。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><ul>
+<li>要将您自己机器上的 Claude Code 连接到现有网关，请参阅<a href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li>
+<li>有关 Claude Code 发送到网关的内容以及要转发的内容，请参阅<a href="llm-gateway-protocol.html">网关协议参考</a></li>
+</ul></div></div>
+<h2 id="prerequisites">前置条件</h2>
+<p>要完成推出，您需要：</p>
+<ul>
+<li>在您的基础设施上部署的网关，在您将分发给开发者的确切地址上提供 HTTPS，而不是重定向到它的地址，并配置为将 Claude 模型名称路由到您的提供商</li>
+<li>网关转发的提供商凭证：</li>
+<li>对于 Anthropic API：来自 <a href="https://platform.claude.com/settings/keys" target="_blank" rel="noopener">Claude 控制台</a>的 API 密钥</li>
+<li>对于云提供商：具有模型访问权限的云凭证。请参阅 <a href="amazon-bedrock.html#prerequisites">Amazon Bedrock</a>、<a href="google-vertex-ai.html#prerequisites">Google Cloud 的 Agent Platform</a> 或 <a href="microsoft-foundry.html#prerequisites">Microsoft Foundry</a> 页面上的前置条件</li>
+<li>一种向开发者机器交付设置文件的方式，例如 MDM 或配置管理</li>
+<li>如果您还没有，<a href="admin-setup.html#decide-how-settings-reach-devices">设置如何到达设备</a>比较了各种选项</li>
+</ul>
+<h3 id="gateway-requirements">网关要求</h3>
+<p>无论哪种产品提供网关，它必须：</p>
+<ul>
+<li><strong>接受支持的 API 格式</strong>：<a href="llm-gateway-protocol.html#api-formats">API 格式表</a>中的格式之一。下面的推出步骤假设 Anthropic Messages API 位于 <code>POST /v1/messages</code>，大多数网关都提供此格式</li>
+<li><strong>流式传输响应</strong>：按到达时传递服务器发送的事件，包括保活 ping，而不是缓冲整个响应；<a href="llm-gateway-protocol.html#streaming">流式传输</a>涵盖了缓冲或剥离 ping 会破坏什么</li>
+<li><strong>路由 Claude 模型名称</strong>：将开发者使用的每个名称映射到上游模型。Claude Code 在每个请求中发送模型名称，例如 <code>claude-sonnet-4-6</code>；在大多数网关产品中，映射是网关自己配置中的模型列表或路由表</li>
+<li><strong>转发标头和正文不变</strong>：在两个方向上传递 <code>anthropic-beta</code>、<code>anthropic-version</code> 和请求正文；<a href="llm-gateway-protocol.html#feature-pass-through">功能传递表</a>将每个映射到没有它就会中断的功能</li>
+<li><strong>返回未修改的上游错误</strong>：Claude Code 的自动恢复与错误措辞匹配，因此在网关自己的信封中包装错误会破坏它，除非信封的消息包含 <a href="claude-apps-gateway-config.html#upstream-error-messages">Claude apps 网关为云提供商的错误措辞替换</a>的 <code>capability_rejected:</code> 令牌之一</li>
+<li><strong>豁免路径免受请求正文 WAF 检查</strong>：Claude Code 提示包含源代码和 XML 样式标签，与跨站脚本正文规则匹配；网关前面的 WAF 在真实会话中返回 <code>403</code>，而短测试请求通过</li>
+</ul>
+<p>可选地，提供 <code>GET /v1/models</code> 以便 Claude Code 可以使用<a href="llm-gateway-protocol.html#model-discovery">模型发现</a>从您的网关填充模型选择器。</p>
+<h2 id="rollout-steps">推出步骤</h2>
+<p>推出分为五个步骤，每个步骤都有一个检查点：</p>
+<ol>
+<li><a href="#confirm-the-gateway-routes-your-models">确认网关路由您的模型</a></li>
+<li><a href="#issue-developer-credentials">为每个开发者颁发凭证</a></li>
+<li><a href="#test-claude-code-against-the-gateway">针对网关测试 Claude Code</a></li>
+<li><a href="#distribute-the-configuration">分发基础 URL 和凭证</a></li>
+<li><a href="#verify-the-rollout">从开发者机器验证</a></li>
+</ol>
+<p>这些步骤涉及三个不同的凭证，检查点用占位符命名它们，以便您可以在出现问题时判断哪个有问题：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">凭证</th>
+<th style="text-align: left;">谁持有它</th>
+<th style="text-align: left;">检查点中的占位符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">提供商凭证</td>
+<td style="text-align: left;">网关，它将其转发给上游提供商</td>
+<td style="text-align: left;">在网关上配置；从不出现在客户端命令中</td>
+</tr>
+<tr>
+<td style="text-align: left;">网关管理凭证</td>
+<td style="text-align: left;">您，如果您的网关产品为其管理或测试界面颁发一个</td>
+<td style="text-align: left;"><code>&lt;gateway-key&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">开发者密钥</td>
+<td style="text-align: left;">每个开发者，由网关在<a href="#issue-developer-credentials">颁发开发者凭证</a>中颁发</td>
+<td style="text-align: left;"><code>&lt;developer-key&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="confirm-the-gateway-routes-your-models">确认网关路由您的模型</h3>
+<p>您的网关应该已经配置了您的提供商凭证，在其基础 URL 上侦听，并将请求转发到您的提供商的 API。使用最小请求测试路径是否端到端工作，替换来自您的部署的两个值：</p>
+<ul>
+<li><code>&lt;gateway-key&gt;</code> 是任何让您现在调用网关的凭证：管理密钥、测试密钥或您自己的开发者密钥（如果您已经颁发了一个）。并非每个网关产品都有单独的管理凭证；如果您的没有，请先在<a href="#issue-developer-credentials">颁发开发者凭证</a>中为自己颁发开发者密钥</li>
+<li><code>model</code> 是您的网关配置为路由的 Claude 模型名称。示例使用 <code>claude-sonnet-4-6</code>；替换为您配置的名称</li>
+</ul>
+<blockquote>
+<p>[tab] Bash 或 Zsh</p>
+<p><code>bash theme={null}
+curl -X POST "https://llm-gateway.example.com/v1/messages" \
+  -H "Authorization: Bearer &lt;gateway-key&gt;" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d '{"model": "claude-sonnet-4-6", "max_tokens": 1, "messages": [{"role": "user", "content": "."}]}'</code></p>
+<p>[tab] PowerShell</p>
+<p><code>powershell theme={null}
+Invoke-RestMethod -Method Post -Uri "https://llm-gateway.example.com/v1/messages" `
+  -Headers @{ "Authorization" = "Bearer &lt;gateway-key&gt;"; "anthropic-version" = "2023-06-01" } `
+  -ContentType "application/json" `
+  -Body '{"model": "claude-sonnet-4-6", "max_tokens": 1, "messages": [{"role": "user", "content": "."}]}'</code></p>
+</blockquote>
+<p><strong>检查点</strong>：带有 <code>content</code> 字段的 <code>200</code> 意味着网关以该模型名称到达了提供商。<code>404</code> 意味着该名称在网关处未路由；来自提供商的 <code>401</code> 意味着网关的提供商凭证错误。</p>
+<p>对网关路由配置中的每个 Claude 模型名称重复请求一次。网关不路由的名称会向选择它的任何开发者返回 <code>404</code>，因此在推出前测试每个名称。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>避免在重定向后提供网关。重定向可能会在推理请求上丢弃请求正文或剥离凭证标头，<a href="llm-gateway-protocol.html#model-discovery">模型发现</a>将任何重定向视为失败，因此凭证无法泄露到重定向目标。</p></div></div>
+<h3 id="issue-developer-credentials">颁发开发者凭证</h3>
+<p>每个开发者需要自己的网关密钥来进行身份验证。按照您的产品的凭证管理文档在网关处为每个开发者创建凭证。</p>
+<p>使用与<a href="#confirm-the-gateway-routes-your-models">确认网关路由您的模型</a>相同的请求确认新颁发的密钥对网关有效，将 <code>&lt;gateway-key&gt;</code> 替换为新的 <code>&lt;developer-key&gt;</code>：</p>
+<blockquote>
+<p>[tab] Bash 或 Zsh</p>
+<p><code>bash theme={null}
+curl -X POST "https://llm-gateway.example.com/v1/messages" \
+  -H "Authorization: Bearer &lt;developer-key&gt;" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d '{"model": "claude-sonnet-4-6", "max_tokens": 1, "messages": [{"role": "user", "content": "."}]}'</code></p>
+<p>[tab] PowerShell</p>
+<p><code>powershell theme={null}
+Invoke-RestMethod -Method Post -Uri "https://llm-gateway.example.com/v1/messages" `
+  -Headers @{ "Authorization" = "Bearer &lt;developer-key&gt;"; "anthropic-version" = "2023-06-01" } `
+  -ContentType "application/json" `
+  -Body '{"model": "claude-sonnet-4-6", "max_tokens": 1, "messages": [{"role": "user", "content": "."}]}'</code></p>
+</blockquote>
+<p><strong>检查点</strong>：带有 <code>content</code> 字段的 <code>200</code> 意味着开发者密钥到达网关，网关转发它。当<a href="#confirm-the-gateway-routes-your-models">前一步</a>成功时，这里的 <code>401</code> 意味着开发者密钥错误或尚未在网关处生效。</p>
+<p>为每个开发者颁发一个密钥而不是共享密钥是使每个开发者使用归因和个人离职工作的原因。保存密钥的环境变量取决于网关读取的标头。对于在 <code>Authorization: Bearer</code> 标头中检查凭证的网关，开发者在 <code>ANTHROPIC_AUTH_TOKEN</code> 中设置他们的密钥。对于从 <code>x-api-key</code> 标头读取密钥的网关，开发者改为设置 <code>ANTHROPIC_API_KEY</code>；<a href="llm-gateway-connect.html#set-the-credential-variable">凭证表</a>涵盖了映射。</p>
+<h3 id="test-claude-code-against-the-gateway">针对网关测试 Claude Code</h3>
+<p>在分发任何内容之前，使用推出将交付的相同配置自己通过网关运行 Claude Code。直接在终端中键入这些，而不是在 <code>.env</code> 或设置文件中；它们仅在此终端会话中持续，因此关闭它会将您的机器返回到其正常配置。如果您的网关读取 <code>x-api-key</code> 标头，请使用 <code>ANTHROPIC_API_KEY</code> 而不是 <code>ANTHROPIC_AUTH_TOKEN</code>：</p>
+<blockquote>
+<p>[tab] Bash 或 Zsh</p>
+<p><code>bash theme={null}
+export ANTHROPIC_BASE_URL=https://llm-gateway.example.com
+export ANTHROPIC_AUTH_TOKEN="&lt;developer-key&gt;"</code></p>
+<p>[tab] PowerShell</p>
+<p><code>powershell theme={null}
+$env:ANTHROPIC_BASE_URL = "https://llm-gateway.example.com"
+$env:ANTHROPIC_AUTH_TOKEN = "&lt;developer-key&gt;"</code></p>
+</blockquote>
+<p>然后通过网关发送一次性提示：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>-p<span class="w"> </span><span class="s2">"Reply with one word: connected"</span>
+</code></pre></div>
+<p><strong>检查点</strong>：提示返回响应，请求在网关日志中显示为对 <code>/v1/messages</code> 路径的 <code>POST</code>，状态为 <code>200</code>。Claude Code 附加查询字符串，例如 <code>?beta=true</code>，因此匹配路径，而不是完整 URL。两条失败消息指向不同的方向：</p>
+<ul>
+<li><code>Not logged in</code>：检查网关日志以区分两个原因。如果它是空的，没有凭证到达会话，没有请求离开机器；在您测试的 shell 中重新运行导出。如果它显示在 <code>401</code> 正文中带有 <code>x-api-key</code> 的被拒绝请求，网关期望密钥在该标头中；切换到 <code>ANTHROPIC_API_KEY</code></li>
+<li><code>Failed to authenticate. API Error: 401</code> 意味着凭证被发送并被拒绝，网关日志说明了在哪里：命名 <code>api.anthropic.com</code> 或您的提供商端点的 <code>401</code> 意味着网关到达了上游但其提供商凭证被拒绝，因此开发者密钥有效，网关持有的提供商凭证错误或是占位符</li>
+</ul>
+<p>错误或无法到达的基础 URL 会产生不同的症状：Claude Code <a href="errors.html#automatic-retries">以退避方式重试连接</a>，在报告错误之前可能会坐着没有输出几分钟。如果命令似乎挂起，请检查网关日志而不是等待；没有到达的请求意味着 <code>ANTHROPIC_BASE_URL</code> 不指向网关。</p>
+<h3 id="distribute-the-configuration">分发配置</h3>
+<p>每个开发者机器都需要网关地址和凭证。您可以通过<a href="managed-settings.html#delivery-mechanisms">托管设置</a>集中分发它们，以便开发者不配置任何内容，或者手动向开发者提供值以自己设置。</p>
+<h4 id="what-to-distribute">要分发的内容</h4>
+<p>无论您选择哪条路径，都适用相同的变量集。大多数推出只需要 <code>ANTHROPIC_BASE_URL</code> 和凭证；当您的网关设置需要时包括条件行。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">变量或设置</th>
+<th style="text-align: left;">它的作用</th>
+<th style="text-align: left;">包括时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_BASE_URL</code></td>
+<td style="text-align: left;">将 Claude Code 的 API 请求发送到网关而不是 <code>api.anthropic.com</code></td>
+<td style="text-align: left;">总是</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>apiKeyHelper</code>，或 <code>ANTHROPIC_AUTH_TOKEN</code> 或 <code>ANTHROPIC_API_KEY</code> 中的凭证</td>
+<td style="text-align: left;">对网关的每个请求进行身份验证。助手运行命令来获取密钥；变量保存静态密钥，分别作为 <code>Authorization: Bearer</code> 和 <code>x-api-key</code> 发送</td>
+<td style="text-align: left;">总是；三个中的一个</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_CUSTOM_HEADERS</code></td>
+<td style="text-align: left;">向每个 API 请求添加额外的 HTTP 标头</td>
+<td style="text-align: left;">您的网关在每个请求上需要租户或路由标头</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_GATEWAY_HINT_HEADERS</code></td>
+<td style="text-align: left;">发送<a href="llm-gateway-protocol.html#gateway-hint-headers">网关提示标头</a>，它们为网关处的路由和调度决策对每个请求进行分类。需要 Claude Code v2.1.273 或更高版本</td>
+<td style="text-align: left;">您的网关读取提示标头</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY</code></td>
+<td style="text-align: left;">在启动时查询网关的 <code>/v1/models</code> 并将返回的名称添加到 <code>/model</code> 选择器</td>
+<td style="text-align: left;">您的网关提供 <code>/v1/models</code> 并且您希望开发者的选择器从中填充</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS</code></td>
+<td style="text-align: left;">停止 Claude Code 发送预发布功能标头和正文字段。<a href="llm-gateway-protocol.html#disable-pre-release-capabilities">禁用预发布功能</a>涵盖了确切的范围</td>
+<td style="text-align: left;">您的网关转发到拒绝 beta 字段的 Amazon Bedrock 或 Google Cloud 的 Agent Platform 上游。请参阅<a href="#gateway-requirements">网关要求</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS</code> 或 <code>CLAUDE_CODE_SKIP_FAST_MODE_ORG_CHECK</code></td>
+<td style="text-align: left;">当其可用性检查（直接调用 <code>api.anthropic.com</code> 而不是遵循 <code>ANTHROPIC_BASE_URL</code>）失败、被拦截或因缺少 Anthropic 凭证而被跳过时，恢复<a href="fast-mode.html">快速模式</a></td>
+<td style="text-align: left;">您的组织使用快速模式，开发者仅使用 <code>ANTHROPIC_AUTH_TOKEN</code> 进行身份验证，在 <code>ANTHROPIC_API_KEY</code> 中使用网关颁发的密钥或来自 <code>apiKeyHelper</code>，或您的网络阻止或拦截对 <code>api.anthropic.com</code> 的直接请求；<a href="fast-mode.html#use-fast-mode-behind-proxies-and-llm-gateways">在代理和 LLM 网关后面使用快速模式</a>涵盖了哪两个变量中的哪一个与您的配置匹配</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_MODEL</code> 或 <a href="model-config.html"><code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code></a></td>
+<td style="text-align: left;">设置 Claude Code 为主会话和后台流量请求的模型名称</td>
+<td style="text-align: left;">您的网关路由与 Claude Code 默认值不匹配的模型名称，或您将<a href="costs.html#background-token-usage">后台功能</a>路由到不同的模型。在网关处路由覆盖名称和 Claude Code 的内置模型 ID，因为某些后台子调用可以请求内置 ID，无论覆盖如何；<a href="model-config.html">模型配置</a>涵盖了会话的每个部分使用哪个模型</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_BEDROCK_BASE_URL</code>、<code>ANTHROPIC_VERTEX_BASE_URL</code>、<code>ANTHROPIC_FOUNDRY_BASE_URL</code> 或 <code>ANTHROPIC_AWS_BASE_URL</code> 以及<a href="llm-gateway-connect.html#route-to-a-cloud-provider-through-a-gateway">该提供商的变量</a></td>
+<td style="text-align: left;">通过网关将 Claude Code 指向网关。Amazon Bedrock 和 Google Cloud 的 Agent Platform 也切换到这些提供商的本机请求格式</td>
+<td style="text-align: left;">您的网关前置 Amazon Bedrock、Google Cloud 的 Agent Platform、Microsoft Foundry 或 AWS 上的 Claude 平台；请参阅 <a href="llm-gateway-protocol.html#api-formats">API 格式</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="distribute-through-managed-settings">通过托管设置分发</h4>
+<p>通过<a href="managed-settings.html#delivery-mechanisms">托管设置文件</a>的 <code>env</code> 块交付变量，由 MDM、注册表策略或配置管理推送：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"ANTHROPIC_BASE_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://llm-gateway.example.com"</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"apiKeyHelper"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/usr/local/bin/get-gateway-key"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>将表中的条件变量添加到相同的 <code>env</code> 块。托管的 <code>ANTHROPIC_BASE_URL</code> 被强制执行，不能被开发者的 shell 导出覆盖，因为 Claude Code 在进程环境和较低优先级设置上应用它。</p>
+<p>不要在托管设置中与网关凭证一起包括 <code>forceLoginMethod</code>、<code>forceLoginOrgUUID</code> 或 <code>forceLoginGatewayUrl</code>。<code>forceLoginMethod</code> 或 <code>forceLoginOrgUUID</code>，具有任何值，在启动时阻止 <code>ANTHROPIC_API_KEY</code>、<code>ANTHROPIC_AUTH_TOKEN</code> 和 <code>apiKeyHelper</code>，开发者无法继续。他们看到 <code>This machine's managed settings require a first-party login</code>，或当文件将 <code>forceLoginMethod</code> 设置为 <code>"gateway"</code> 或设置 <code>forceLoginGatewayUrl</code> 时看到 <a href="errors.html#administrator-policy-requires-a-cloud-gateway-sign-in"><code>Administrator policy requires a Cloud gateway sign-in</code></a>。</p>
+<p><a href="server-managed-settings.html#platform-availability">服务器管理的设置</a>交付需要直接连接到 <code>api.anthropic.com</code>，因此它不会到达网关路由的会话。网关部署使用这个基于文件的托管设置路径，它强制执行相同的密钥。</p>
+<p>对于凭证，在托管设置文件中分发一个 <a href="llm-gateway-connect.html#rotate-credentials-with-apikeyhelper"><code>apiKeyHelper</code></a> 命令，如上所示；该命令作为本地开发者对您的秘密存储进行身份验证，因此每台机器都接收自己的密钥。或者，通过您现有的秘密流程向每个开发者交付他们的密钥，并让他们自己设置 <code>ANTHROPIC_AUTH_TOKEN</code>。</p>
+<p>某些环境需要单独的交付：</p>
+<ul>
+<li>桌面应用从其第三方推理配置读取网关路由，而不是从托管设置；通过 MDM 部署该文件以及托管设置，以便桌面会话也通过网关路由。请参阅<a href="https://claude.com/docs/third-party/claude-desktop/configuration" target="_blank" rel="noopener">桌面第三方配置文档</a>和<a href="https://claude.com/docs/third-party/claude-desktop/gateway" target="_blank" rel="noopener">桌面网关文档</a></li>
+<li>CI 运行器需要在<a href="llm-gateway-connect.html#configure-each-surface">运行器的环境</a>中设置 <code>ANTHROPIC_BASE_URL</code> 和凭证</li>
+<li>托管 Windows 机器上的 WSL 仅在 <a href="settings-reference.html#wslinheritswindowssettings"><code>wslInheritsWindowsSettings</code></a> 为 <code>true</code> 时读取 Windows 托管设置</li>
+</ul>
+<h4 id="the-hipaa-configuration-behind-a-gateway">网关后的 HIPAA 配置</h4>
+<p>通过网关的会话不符合 HIPAA 配置的条件。<a href="hipaa-setup.html#check-how-developers-sign-in-and-connect">检查开发者如何登录和连接</a>列出了哪些登录和连接方式符合条件。</p>
+<p>要在托管设置文件中为这些会话限制功能，请使用<a href="monitoring-usage.html#map-egress-paths-to-managed-controls-and-events">将出口路径映射到托管控制和事件</a>中的键。这些键不会使会话符合 HIPAA 配置的条件，也不涵盖该配置所更改的全部内容。例如：</p>
+<ul>
+<li><strong>云端会话</strong>：没有任何托管键可以关闭它们。请参阅<a href="desktop.html#admin-console-controls">管理控制台控制</a></li>
+<li><strong>子进程中的 Anthropic 凭据</strong>：该配置会从 Claude Code 启动的进程中<a href="hipaa-setup.html#anthropic-credentials-in-commands-hooks-and-mcp-servers">移除它们</a>，而没有任何设置项只执行这一操作</li>
+</ul>
+<p>不要使用 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> 代替这些键。它会关闭其中一些功能，但也会关闭自动更新程序，并且会让 WebFetch 保持开启。</p>
+<h4 id="hand-developers-the-values-to-set-themselves">手动向开发者提供值以自己设置</h4>
+<p>如果您没有托管设置分发，请向每个开发者发送他们需要的内容以遵循<a href="llm-gateway-connect.html#configure-claude-code-yourself">连接页面</a>：</p>
+<ul>
+<li>网关 URL</li>
+<li>他们的个人凭证</li>
+<li><strong>将凭证放在哪个变量中</strong>：对于 bearer-token 网关为 <code>ANTHROPIC_AUTH_TOKEN</code>，或对于 <code>x-api-key</code> 网关为 <code>ANTHROPIC_API_KEY</code>。告诉开发者哪一个可以节省他们在<a href="llm-gateway-connect.html#set-the-credential-variable">连接页面</a>上描述的试错</li>
+<li><a href="#what-to-distribute">要分发的内容表</a>中的任何条件变量，以及它们的值</li>
+</ul>
+<p><a href="llm-gateway-connect.html#configure-claude-code-yourself">连接页面</a>指导开发者设置每一个。</p>
+<p><strong>检查点</strong>：在开发者机器上，<code>claude</code> 启动会话而不显示登录屏幕，因为分发的凭证满足身份验证。然后运行 <code>/status</code> 并打开<strong>状态</strong>选项卡：<code>Anthropic base URL</code> 行显示网关地址，对于托管分发，<code>Setting sources</code> 行包括托管设置。登录屏幕或缺少 <code>Anthropic base URL</code> 行意味着配置没有到达机器。</p>
+<h3 id="verify-the-rollout">验证推出</h3>
+<p>从开发者机器而不是网关主机确认一切工作，以便测试涵盖开发者使用的网络路径。发送流式请求，它一次检查端点、流式传输传递和模型路由：</p>
+<blockquote>
+<p>[tab] Bash 或 Zsh</p>
+<p><code>bash theme={null}
+curl -N -X POST "https://llm-gateway.example.com/v1/messages" \
+  -H "Authorization: Bearer &lt;developer-key&gt;" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d '{"model": "claude-sonnet-4-6", "max_tokens": 16, "stream": true, "messages": [{"role": "user", "content": "count to 3"}]}'</code></p>
+<p>[tab] PowerShell</p>
+<p><code>powershell theme={null}
+$body = '{"model": "claude-sonnet-4-6", "max_tokens": 16, "stream": true, "messages": [{"role": "user", "content": "count to 3"}]}'
+$body | curl.exe -N -X POST "https://llm-gateway.example.com/v1/messages" `
+  -H "Authorization: Bearer &lt;developer-key&gt;" `
+  -H "anthropic-version: 2023-06-01" `
+  -H "content-type: application/json" `
+  --data-binary '@-'</code></p>
+</blockquote>
+<p>您应该看到 <code>data:</code> 行逐步到达。整个响应在暂停后一次到达意味着网关正在缓冲，这会停滞 Claude Code；<code>404</code> 意味着模型名称未路由。每个模型名称重复。</p>
+<p>然后启动 <code>claude</code> 并发送消息。此步骤的每个症状都有一个原因：</p>
+<ul>
+<li>登录提示意味着凭证缺口。运行 <code>/status</code> 并打开<strong>状态</strong>选项卡：当 <code>Setting sources</code> 行不包括托管设置时，分发没有到达机器；当它包括时，开发者凭证没有被交付，因此设置 <code>ANTHROPIC_AUTH_TOKEN</code> 或 <code>apiKeyHelper</code></li>
+<li><code>Failed to authenticate</code> 错误意味着网关拒绝请求；其日志说明了哪个凭证失败。网关自己记录的拒绝命名开发者密钥，而来自 <code>api.anthropic.com</code> 或您的提供商端点的 <code>401</code> 意味着网关持有的提供商凭证被拒绝</li>
+<li>当网关期望密钥在 <code>x-api-key</code> 标头中时，在首次使用时出现一次性批准提示是预期的，设置为 <code>ANTHROPIC_API_KEY</code>。使用 <code>ANTHROPIC_AUTH_TOKEN</code>，不会出现提示，变量会无声地接管；以前保存的 claude.ai 登录对该会话无效</li>
+</ul>
+<p>如果您的组织使用<a href="fast-mode.html">快速模式</a>，也在这里运行 <code>/fast</code>：可用性检查直接调用 <code>api.anthropic.com</code> 而不是遵循网关基础 URL，因此网关路由的会话可以报告快速模式不可用或禁用，即使推理有效。<a href="fast-mode.html#use-fast-mode-behind-proxies-and-llm-gateways">在代理和 LLM 网关后面使用快速模式</a>将每条消息映射到恢复它的变量，与<a href="#distribute-the-configuration">配置的其余部分</a>一起分发。</p>
+<p>最后，检查网关的日志以查看您发送的消息：凭证标识开发者，<a href="llm-gateway-protocol.html#request-headers"><code>x-claude-code-session-id</code> 标头</a>按会话对请求进行分组。如果功能因<a href="llm-gateway-connect.html#troubleshoot-gateway-errors">故障排除症状</a>而失败，网关正在剥离标头或重写错误；请参阅上面的<a href="#gateway-requirements">网关要求</a>。</p>
+<h2 id="maintain-the-gateway">维护网关</h2>
+<p>推出后，三种变化会随着时间到达网关。每一种都有一个症状要观察和一个要采取的行动。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">变化</th>
+<th style="text-align: left;">当网关没有跟上时的症状</th>
+<th style="text-align: left;">行动</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">新的 Claude Code 版本添加 <code>anthropic-beta</code> 值和请求正文字段</td>
+<td style="text-align: left;">开发者在更新 Claude Code 后报告 <code>400</code> 错误，命名新字段；请参阅<a href="llm-gateway-protocol.html#feature-pass-through">功能传递</a></td>
+<td style="text-align: left;">逐字转发 <code>anthropic-*</code> 标头和请求正文，而不是允许列表；在新 Claude Code 版本到达开发者之前针对网关测试它们，检查<a href="#plan-claude-code-version-upgrades">规划 Claude Code 版本升级</a>中的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;">新的 Claude 模型变得可用</td>
+<td style="text-align: left;">开发者选择新模型名称得到 <code>404</code>；<code>/model</code> 选择器不列出它</td>
+<td style="text-align: left;">将模型名称添加到网关的路由配置，然后重新运行<a href="#confirm-the-gateway-routes-your-models">路由检查</a>。如果您分发 <code>ANTHROPIC_MODEL</code> 或默认模型变量，更新托管设置</td>
+</tr>
+<tr>
+<td style="text-align: left;">凭证过期或需要轮换</td>
+<td style="text-align: left;">所有开发者请求开始从上游失败，出现 <code>401</code></td>
+<td style="text-align: left;">按照自己的计划轮换网关的提供商凭证；开发者密钥在网关处轮换，<a href="llm-gateway-connect.html#rotate-credentials-with-apikeyhelper"><code>apiKeyHelper</code></a> 处理每个开发者的轮换，无需重新分发设置</td>
+</tr>
+</tbody>
+</table>
+<p>在调整每个密钥的速率限制时，考虑客户端<a href="errors.html#automatic-retries">重试瞬时故障</a>，包括 <code>429</code> 响应，最多 10 次，带有退避，遵守 <code>Retry-After</code>。将<a href="llm-gateway-protocol.html">兼容性指南</a>作为每个 Claude Code 版本发送的内容的参考。</p>
+<h3 id="plan-claude-code-version-upgrades">规划 Claude Code 版本升级</h3>
+<p>某些 Claude Code 行为内置于已安装的版本中，而不是在您的网关处设置，因此将开发者移至新版本可以改变整个部署中的行为，即使网关配置没有改变。要控制何时发生这种情况，请使用 <a href="settings-reference.html#requiredmaximumversion"><code>requiredMaximumVersion</code></a> 将开发者固定到已测试的版本，或者如果您通过自己的渠道分发 Claude Code，请使用 <a href="setup.html#disable-auto-updates"><code>DISABLE_UPDATES</code></a>。在提高固定版本之前，请阅读新版本的<a href="changelog.html">更新日志</a>条目并<a href="#test-claude-code-against-the-gateway">针对网关测试它</a>。</p>
+<p>当您测试一个版本时，网关拒绝的新标头或请求字段显示为<a href="#maintain-the-gateway">维护网关</a>中描述的 <code>400</code> 错误。下表涵盖不产生错误的版本相关变化，以及保持每个变化在升级中保持不变的设置。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">区域</th>
+<th style="text-align: left;">开发者升级时可能改变的内容</th>
+<th style="text-align: left;">保持其不变的设置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">功能标志默认值</td>
+<td style="text-align: left;"><a href="env-vars.html#features-that-need-feature-flag-fetching">不从 Anthropic 获取功能标志</a>的会话，例如云提供商上的会话或关闭遥测的会话，使用内置于已安装版本中的标志默认值。当版本改变其中一个默认值时，这些开发者的行为在他们升级后立即改变</td>
+<td style="text-align: left;">版本固定本身，<code>requiredMaximumVersion</code> 或 <code>DISABLE_UPDATES</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">模型能力假设</td>
+<td style="text-align: left;">已安装版本不识别的模型 ID，例如网关别名 <code>prod-opus</code>，对<a href="model-config.html#adaptive-reasoning-and-fixed-thinking-budgets">自适应推理</a>、努力参数和<a href="model-config.html#correct-the-window-for-a-gateway-or-custom-model-id">上下文窗口</a>运行默认假设，直到更高版本识别该 ID 或您映射它</td>
+<td style="text-align: left;">在网关处路由 Anthropic 模型 ID，或添加<a href="model-config.html#override-model-ids-per-version"><code>modelOverrides</code></a>条目，将 Anthropic 模型 ID 映射到您的别名。在云提供商连接上，您可以改为<a href="model-config.html#customize-pinned-model-display-and-capabilities">声明固定模型的能力</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">默认模型和别名</td>
+<td style="text-align: left;">新会话默认启动的模型，以及别名（如 <code>opus</code> 和 <code>sonnet</code>）解析到的模型，<a href="model-config.html#pin-models-for-third-party-deployments">内置于每个版本</a>中，开发者升级时可能改变</td>
+<td style="text-align: left;"><a href="model-config.html#set-a-default-model-for-new-sessions"><code>ANTHROPIC_DEFAULT_MODEL</code></a> 用于新会话启动的模型，以及 <a href="model-config.html#environment-variables"><code>ANTHROPIC_DEFAULT_*_MODEL</code> 变量</a>，例如 <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code>，用于每个别名解析到的内容。<code>ANTHROPIC_DEFAULT_MODEL</code> 需要 Claude Code v2.1.236 或更高版本</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li><a href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a>：面向开发者的设置步骤，具有每个表面的配置和您可以交给开发者的故障排除表</li>
+<li><a href="llm-gateway-protocol.html">网关兼容性指南</a>：网关运营商的参考指南，涵盖端点、要转发的标头以及功能传递表</li>
+<li><a href="settings.html#which-value-claude-code-uses">Claude Code 使用的值</a>：托管、项目和用户设置如何组合</li>
+<li><a href="managed-settings.html#delivery-mechanisms">交付机制</a>：托管文件在每个平台上的位置</li>
+<li><a href="admin-setup.html">为您的组织设置 Claude Code</a>：这个网关是其中一部分的更广泛推出，包括策略强制执行、使用可见性和数据处理</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="llm-gateway-connect.html"><span class="pager-dir">← 上一页</span><span class="pager-name">将 Claude Code 连接到 LLM 网关</span></a><a class="pager-link next" href="llm-gateway-protocol.html"><span class="pager-dir">下一页 →</span><span class="pager-name">Claude Code 网关兼容性指南</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#prerequisites">前置条件</a><a class="toc-l3" href="#gateway-requirements">网关要求</a><a class="toc-l2" href="#rollout-steps">推出步骤</a><a class="toc-l3" href="#confirm-the-gateway-routes-your-models">确认网关路由您的模型</a><a class="toc-l3" href="#issue-developer-credentials">颁发开发者凭证</a><a class="toc-l3" href="#test-claude-code-against-the-gateway">针对网关测试 Claude Code</a><a class="toc-l3" href="#distribute-the-configuration">分发配置</a><a class="toc-l3" href="#verify-the-rollout">验证推出</a><a class="toc-l2" href="#maintain-the-gateway">维护网关</a><a class="toc-l3" href="#plan-claude-code-version-upgrades">规划 Claude Code 版本升级</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

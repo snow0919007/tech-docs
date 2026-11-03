@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>在自托管环境中验证会话身份 · Claude Code 中文文档</title>
+<meta name="description" content="验证 CLAUDE_CODE_SESSION_ACCESS_TOKEN JWT，以便网络上的服务可以信任来自自托管环境中会话的请求。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="self-hosted-environments-identity">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/self-hosted-environments-identity" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link active" href="self-hosted-environments-identity.html" aria-current="page">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>配置</span> <span class="sep">/</span> <span>环境</span> <span class="sep">/</span> <span>自托管环境</span></div>
+    <article class="prose" id="article"><h1 id="_1">在自托管环境中验证会话身份</h1>
+<blockquote>
+<p>验证 CLAUDE_CODE_SESSION_ACCESS_TOKEN JWT，以便网络上的服务可以信任来自自托管环境中会话的请求。</p>
+</blockquote>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>自托管环境在 Team 和 Enterprise 计划上处于公开测试阶段；<a href="cloud-environments.html#organization-shared-environments">所有者</a>可以通过在<a href="https://claude.ai/admin-settings/cloud-environments" target="_blank" rel="noopener"><strong>云环境</strong>管理页面</a>上打开<strong>允许自托管环境</strong>来启用它们。本页面涵盖会话身份验证；有关设置，请参阅<a href="self-hosted-environments-quickstart.html">快速入门</a>，有关舰队配方，请参阅<a href="self-hosted-environments-deploy.html">部署到生产</a>。</p></div></div>
+<p><a href="self-hosted-environments.html">自托管环境</a>让 Claude Code <a href="claude-code-on-the-web.html">云会话</a>在您运营的基础设施上运行，而不是在 Anthropic 的基础设施上运行。由于会话在您的网络内运行，Claude 可以直接调用您的内部服务。这些服务需要一种方式来确认请求来自您环境中的 Claude Code 会话，并识别创建该会话的用户或服务身份。</p>
+<p>自托管环境中的每个会话都会在 <code>CLAUDE_CODE_SESSION_ACCESS_TOKEN</code> 环境变量中收到一个签名的 JSON Web Token (JWT)。会话像任何持有者凭证一样呈现令牌；例如，Claude 运行的脚本可以使用 <code>curl -H "Authorization: Bearer $CLAUDE_CODE_SESSION_ACCESS_TOKEN"</code> 调用您的服务。Anthropic 对令牌进行签名，并在公开 JWKS 端点发布验证密钥。您的服务获取这些密钥，验证签名，并读取声明以决定授予什么访问权限。</p>
+<h2 id="the-session-token">会话令牌</h2>
+<p>在编写验证代码之前，了解令牌建立的内容以及 JWT 库将看到的形状。</p>
+<h3 id="what-the-token-proves">令牌证明的内容</h3>
+<p>有效的令牌建立了一些事实，但故意不建立其他事实：</p>
+<ul>
+<li><strong>证明</strong>：Anthropic 为特定环境中的特定会话发布了令牌，以及会话的创建方式：由您组织中的用户创建，或由您组织的服务身份创建，这是 <a href="https://claude.com/docs/claude-tag/concepts/agent-identity" target="_blank" rel="noopener">Claude Tag 频道会话</a>的启动方式</li>
+<li><strong>不证明</strong>：运行程序主机上的哪个进程呈现它。令牌位于会话内的环境变量中，因此 Claude 运行的任何代码以及会话启动的任何工具或 MCP 服务器都可以读取并呈现它。</li>
+</ul>
+<p>对您的服务的两个后果：</p>
+<ul>
+<li>根据您的环境 ID（在<a href="https://claude.ai/admin-settings/cloud-environments" target="_blank" rel="noopener"><strong>云环境</strong>管理页面</a>上与您的环境一起显示的 <code>ccpool_...</code> 值）验证 <code>aud</code> 声明，以拒绝发布给任何其他组织环境的令牌。</li>
+<li>将从令牌派生的凭证范围限制在单个编码会话应该能够做的事情，而不是会话创建者能够做的一切。请参阅<a href="#scope-derived-credentials">范围派生凭证</a>。</li>
+</ul>
+<h3 id="token-format">令牌格式</h3>
+<p><code>CLAUDE_CODE_SESSION_ACCESS_TOKEN</code> 的值具有 <code>sk-ant-cc-</code> 前缀，后跟标准的三部分 JWT：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">sk-ant-cc-&lt;base64url header&gt;.&lt;base64url payload&gt;.&lt;base64url signature&gt;
+</code></pre></div>
+<p>在将值传递给 JWT 库之前，请删除前缀。发布给 Anthropic 托管云会话的令牌改为携带 <code>sk-ant-si-</code> 前缀，并由不同的密钥集签名，因此拒绝任何不以 <code>sk-ant-cc-</code> 开头的值。</p>
+<p>签名算法是 <code>ES256</code>，这是 P-256 曲线上的 ECDSA，带有 SHA-256。令牌头部携带一个 <code>kid</code>，用于标识 JWKS 中的哪个密钥对其进行了签名。</p>
+<h2 id="verify-the-token">验证令牌</h2>
+<p>验证可以在两个位置之一进行。您网络中的服务可以使用 Anthropic 发布的密钥对令牌进行加密验证，而会话内的包装脚本则可以改用运行器二进制文件内置的解码器。</p>
+<h3 id="verify-the-token-from-your-service">从您的服务验证令牌</h3>
+<p>Anthropic 在一个公开、无需身份验证的端点上发布验证密钥：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">https://api.anthropic.com/v1/code/.well-known/jwks.json
+</code></pre></div>
+<p>响应是标准的 <a href="https://www.rfc-editor.org/rfc/rfc7517" target="_blank" rel="noopener">JSON Web Key Set</a>。Anthropic 会定期轮换签名密钥，轮换前的密钥会在密钥集中保留足够长的时间，使其签发的令牌仍能通过验证，因此请勿固定使用单个密钥。该端点设置了 <code>Cache-Control: public, max-age=300</code>，因此缓存密钥集并每五分钟重新获取一次是安全的。</p>
+<p>请按以下检查项验证每个传入的令牌：</p>
+<p><strong>1. 检查前缀</strong></p>
+<p>如果值不以 <code>sk-ant-cc-</code> 开头，则拒绝该值，否则移除该前缀。剩余部分是一个标准的紧凑格式 JWT。</p>
+<p><strong>2. 验证签名</strong></p>
+<p>获取 JWKS，选择 <code>kid</code> 与令牌头部匹配的密钥，并验证 <code>ES256</code> 签名。拒绝 <code>alg</code> 头部不是 <code>ES256</code> 的令牌。如果传入令牌的 <code>kid</code> 不在您缓存的密钥集中，请在拒绝之前重新获取一次 JWKS：密钥轮换后，新令牌会使用您缓存的密钥集中尚未包含的密钥进行签名。</p>
+<p><strong>3. 验证签发者</strong></p>
+<p>如果 <code>iss</code> 不完全等于 <code>ccr</code>，则拒绝该令牌。</p>
+<p><strong>4. 根据您的环境验证受众</strong></p>
+<p><code>aud</code> 声明是一个数组。除非其中包含您的环境 ID（格式为 <code>ccpool_...</code>），否则拒绝该令牌。环境 ID 显示在 <a href="https://claude.ai/admin-settings/cloud-environments" target="_blank" rel="noopener"><strong>Cloud environments</strong> 管理页面</a>中您环境的详情对话框里，也会作为 <code>ccr:pool_id</code> 声明出现在该环境的任意会话令牌中。正是这项检查将令牌限定在您的环境内，并拒绝签发给其他组织的令牌。</p>
+<p><strong>5. 验证角色</strong></p>
+<p>如果 <code>ccr:role</code> 不完全等于 <code>session_worker</code>，则拒绝该令牌。为自托管环境签发的其他令牌（例如环境密钥、运行器令牌和工单）由同一密钥集签名，但携带不同的角色。</p>
+<p><strong>6. 验证过期时间</strong></p>
+<p>如果 <code>exp</code> 已经过去，则拒绝该令牌。Anthropic 签发的会话令牌默认有效期为四小时，最长为八小时。运行器会在令牌过期前刷新令牌并将新值推送到会话中，因此 Claude 在刷新后启动的子进程会继承新令牌。因此，一个会话在其生命周期内可能会向您的服务出示多个不同的有效令牌。</p>
+<p><strong>7. 读取身份</strong></p>
+<p>创建者的用户身份位于 <code>act</code> 声明中。<code>act.sub</code> 是其 Anthropic 用户 ID，采用带前缀的形式 <code>user:&lt;id&gt;</code>；<code>act.email</code>（当创建会话的使用入口记录了该信息时）是其电子邮件地址。由您组织的服务身份创建的会话则携带 <code>agent:</code> 主体。仅当 <code>act.sub</code> 带有 <code>user:</code> 前缀时才将会话视为用户创建，而不是通过检测身份声明是否缺失来判断。</p>
+<p>有关完整结构和扁平的重复声明，请参阅<a href="#claims-reference">声明参考</a>。</p>
+<p>这些检查可以直接对应到标准 JWT 库。以下示例分别在 Node.js 中使用 <a href="https://www.npmjs.com/package/jose" target="_blank" rel="noopener"><code>jose</code></a>（它负责 JWKS 的获取、缓存和 <code>kid</code> 选择），以及在 Python 中使用 <a href="https://pyjwt.readthedocs.io/" target="_blank" rel="noopener"><code>PyJWT</code></a> 及其内置的 JWKS 客户端，实现了完整的检查流程。</p>
+<blockquote>
+<p>[tab] Node.js (jose)</p>
+<p>```typescript theme={null}<br />
+import { createRemoteJWKSet, jwtVerify } from "jose";</p>
+<p>const JWKS = createRemoteJWKSet(<br />
+  new URL("https://api.anthropic.com/v1/code/.well-known/jwks.json")<br />
+);</p>
+<p>const PREFIX = "sk-ant-cc-";<br />
+const EXPECTED_POOL_ID = "ccpool_...";</p>
+<p>export async function verifySessionToken(raw: string) {<br />
+  if (!raw.startsWith(PREFIX)) {<br />
+    throw new Error("not a self-hosted runner session token");<br />
+  }<br />
+  const jwt = raw.slice(PREFIX.length);</p>
+<p>const { payload } = await jwtVerify(jwt, JWKS, {<br />
+    issuer: "ccr",<br />
+    audience: EXPECTED_POOL_ID,<br />
+    algorithms: ["ES256"],<br />
+  });</p>
+<p>if (payload["ccr:role"] !== "session_worker") {<br />
+    throw new Error("token is not a session_worker token");<br />
+  }</p>
+<p>const act = payload.act as { email?: string; sub?: string };<br />
+  return {<br />
+    sessionId: payload["ccr:session_id"] as string,<br />
+    poolId: payload["ccr:pool_id"] as string,<br />
+    orgId: payload["ccr:org_id"] as string,<br />
+    creatorEmail: act?.email,<br />
+    creatorSub: act?.sub,<br />
+  };<br />
+}<br />
+```</p>
+<p>[tab] Python (PyJWT)</p>
+<p>```python theme={null}<br />
+import jwt<br />
+from jwt import PyJWKClient</p>
+<p>JWKS_URL = "https://api.anthropic.com/v1/code/.well-known/jwks.json"<br />
+PREFIX = "sk-ant-cc-"<br />
+EXPECTED_POOL_ID = "ccpool_..."</p>
+<p>jwks = PyJWKClient(JWKS_URL)</p>
+<p>def verify_session_token(raw: str) -&gt; dict:<br />
+    if not raw.startswith(PREFIX):<br />
+        raise ValueError("not a self-hosted runner session token")<br />
+    token = raw.removeprefix(PREFIX)</p>
+<pre><code>signing_key = jwks.get_signing_key_from_jwt(token)
+payload = jwt.decode(
+    token,
+    signing_key.key,
+    algorithms=["ES256"],
+    issuer="ccr",
+    audience=EXPECTED_POOL_ID,
+)
+
+if payload.get("ccr:role") != "session_worker":
+    raise ValueError("token is not a session_worker token")
+
+act = payload.get("act") or {}
+return {
+    "session_id": payload["ccr:session_id"],
+    "pool_id": payload["ccr:pool_id"],
+    "org_id": payload["ccr:org_id"],
+    "creator_email": act.get("email"),
+    "creator_sub": act.get("sub"),
+}
+</code></pre>
+<p>```</p>
+</blockquote>
+<h3 id="verify-the-token-inside-the-session">在会话内验证令牌</h3>
+<p><a href="self-hosted-environments-configuration.html#wrapper-scripts">包装脚本</a>在会话内、Claude 启动之前运行。它们无需调用 JWT 库，而是可以运行运行器二进制文件的 <code>self-hosted-runner decode-token</code> 子命令。该子命令依次从位置参数、<code>CLAUDE_CODE_SESSION_ACCESS_TOKEN</code> 或通过管道传入的 stdin 读取令牌，然后去除前缀，根据 JWKS 端点验证签名，检查过期时间，并以 JSON 格式打印声明。该子命令仅执行签名和过期检查；它不会检查 <code>iss</code>、<code>aud</code> 或 <code>ccr:role</code>。当您的包装脚本的授权决策依赖于这些声明时，请从打印的 JSON 中读取它们并进行显式比较。</p>
+<p>以下命令提取创建者身份，优先使用电子邮件地址，其次使用创建者的 <code>act.sub</code> 主体（<code>user:&lt;id&gt;</code> 或 <code>agent:&lt;id&gt;</code>）：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="s2">"</span><span class="nv">$CLAUDE_RUNNER_CLAUDE_BIN</span><span class="s2">"</span><span class="w"> </span>self-hosted-runner<span class="w"> </span>decode-token<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-re<span class="w"> </span><span class="s1">'.act.email // .act.sub'</span>
+</code></pre></div>
+<p>包装脚本会通过 <code>CLAUDE_RUNNER_CLAUDE_BIN</code> 获得运行器自身二进制文件的绝对路径；请使用该路径，而不是通过 PATH 解析的 <code>claude</code>，以便解码操作在运行器本身所使用的同一个二进制文件上运行。</p>
+<p>请使用 <code>jq -re</code> 而不是 <code>jq -r</code>，这样缺失的声明会导致非零退出码。如果仅使用 <code>-r</code>，缺失的声明会打印字面字符串 <code>null</code> 并以零退出码退出，从而悄无声息地将错误值传递到下游。</p>
+<p>如果 <code>decode-token</code> 无法从 JWKS 端点获取密钥或无法验证令牌，它会将原因打印到 stderr，不打印任何声明，并以退出码 1 退出。仅在 JWKS 端点无法访问、需要进行离线检查时，才向 <code>decode-token</code> 传递 <code>--no-verify</code>。</p>
+<h2 id="claims-reference">声明参考</h2>
+<p>从 <code>ccr:*</code> 命名空间和 <code>act</code> 链读取身份；平面 <code>account_email</code>、<code>organization_uuid</code> 和 <code>account_uuid</code> 声明是可能被删除的向后兼容性重复项。您组织的服务身份创建的会话在 <code>act.sub</code> 中携带 <code>agent:</code> 主题，并省略 <code>act.email</code>、<code>ccr:account_id</code>、<code>account_email</code> 和 <code>account_uuid</code>。</p>
+<p>两个电子邮件声明对于用户创建的会话也是可选的。Anthropic 仅在创建请求的凭据携带电子邮件时才会在会话创建时记录它们，从 CLI 分派的会话可能两者都缺少。请根据 <code>act.sub</code> 或 <code>ccr:account_id</code> 而不是电子邮件来确定身份。令牌也可以携带此表之外的其他声明；忽略您不认识的声明。下表列出了与验证相关的会话令牌声明。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">声明</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>iss</code></td>
+<td style="text-align: left;">字符串</td>
+<td style="text-align: left;">始终为 <code>ccr</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sub</code></td>
+<td style="text-align: left;">字符串</td>
+<td style="text-align: left;"><code>ccr:session:&lt;session_id&gt;</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>aud</code></td>
+<td style="text-align: left;">字符串数组</td>
+<td style="text-align: left;">始终包含 <code>anthropic-api</code>。对于自托管环境中的会话，数组还包含您的环境 ID，例如 <code>ccpool_...</code>。验证环境 ID，而不是 <code>anthropic-api</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>exp</code></td>
+<td style="text-align: left;">数字</td>
+<td style="text-align: left;">过期时间为 Unix 时间戳。四小时默认生命周期，八小时最大值。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>iat</code></td>
+<td style="text-align: left;">数字</td>
+<td style="text-align: left;">发布时间为 Unix 时间戳。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>jti</code></td>
+<td style="text-align: left;">字符串</td>
+<td style="text-align: left;">唯一令牌标识符。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ccr:role</code></td>
+<td style="text-align: left;">字符串</td>
+<td style="text-align: left;">对于会话令牌始终为 <code>session_worker</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ccr:session_id</code></td>
+<td style="text-align: left;">字符串</td>
+<td style="text-align: left;"><code>cse_...</code> 形式的会话 ID。与 <code>sub</code> 的后缀相同的值，也与 <a href="self-hosted-environments-configuration.html#wrapper-scripts"><code>CLAUDE_CODE_REMOTE_SESSION_ID</code></a> 是相同的字符串。要将其与<a href="self-hosted-environments-configuration.html#lifecycle-hooks">生命周期 hook</a> 接收的 <code>CLAUDE_RUNNER_SESSION_ID</code> 匹配，请将 <code>cse_</code> 前缀替换为 <code>session_</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ccr:pool_id</code></td>
+<td style="text-align: left;">字符串</td>
+<td style="text-align: left;">您的环境 ID。与出现在 <code>aud</code> 中的值相同。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ccr:org_id</code></td>
+<td style="text-align: left;">字符串</td>
+<td style="text-align: left;">您的 Anthropic 组织 ID。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ccr:account_id</code></td>
+<td style="text-align: left;">字符串</td>
+<td style="text-align: left;">创建用户的 Anthropic 账户 ID：<code>act.sub</code> 的值去掉 <code>user:</code> 前缀，一个标记的 <code>user_...</code> ID。与<a href="self-hosted-environments-configuration.html#the-spawn-runner-hook">spawn-runner hook</a> 的 <code>CLAUDE_RUNNER_ACCOUNT_ID</code> 携带的值相同，以及 <a href="self-hosted-environments-reference.html#runner-cli-flags"><code>--lock-to-account</code></a> 接受的值，因此三者作为相等的字符串进行比较。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>account_email</code></td>
+<td style="text-align: left;">字符串</td>
+<td style="text-align: left;"><code>act.email</code> 的重复；每当 <code>act.email</code> 不存在时就不存在。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>organization_uuid</code></td>
+<td style="text-align: left;">字符串</td>
+<td style="text-align: left;">您的 Anthropic 组织 UUID。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>account_uuid</code></td>
+<td style="text-align: left;">字符串</td>
+<td style="text-align: left;">创建用户的 Anthropic 账户 UUID。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>act</code></td>
+<td style="text-align: left;">对象</td>
+<td style="text-align: left;"><a href="https://www.rfc-editor.org/rfc/rfc8693" target="_blank" rel="noopener">RFC 8693</a> 委托链。请参阅<a href="#the-act-chain"><code>act</code> 链</a>。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-act-chain"><code>act</code> 链</h3>
+<p><code>act</code> 声明记录从创建会话的用户或服务身份到<a href="self-hosted-environments.html#key-concepts">环境</a>（其机密允许运行程序）以及创建该机密的身份的完整委托路径。创建者是最外层的参与者，因此 <code>act.sub</code> 直接标识他们。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">路径</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>act.sub</code></td>
+<td style="text-align: left;">创建用户的 Anthropic 用户 ID，形式为 <code>user:&lt;id&gt;</code>，或当您组织的服务身份创建会话时为 <code>agent:&lt;id&gt;</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>act.email</code></td>
+<td style="text-align: left;">创建用户的电子邮件地址，当在会话创建时记录了一个时。不要求它；根据 <code>act.sub</code> 确定身份。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>act.attested_by</code></td>
+<td style="text-align: left;">保留用于上游身份提供程序对创建用户的证明。预期它不存在，请勿依赖它。根据 <code>act.sub</code> 确定身份。如果您需要地址，请在 <code>act.email</code> 存在时读取它。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>act.act</code></td>
+<td style="text-align: left;">生成会话的运行程序。<code>act.act.sub</code> 是 <code>ccr:runner:&lt;runner_id&gt;</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>act.act.act</code></td>
+<td style="text-align: left;">环境。<code>act.act.act.sub</code> 是 <code>ccr:pool:&lt;pool_id&gt;</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>act.act.act.act</code></td>
+<td style="text-align: left;">创建运行程序注册的环境机密的身份。链在此处结束。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="scope-derived-credentials">范围派生凭证</h2>
+<p>会话令牌标识创建会话的用户或服务身份，但不要将其视为等同于该创建者直接登录。令牌位于会话内的环境变量中，因此 Claude 运行的任何代码以及会话启动的任何工具或 MCP 服务器都可以读取并呈现它。</p>
+<p>验证也是离线的：根据 JWKS 验证的令牌在其 <code>exp</code> 之前保持有效，无论自那以后会话发生了什么，Anthropic 不为会话令牌发布撤销源。相应地绑定您从令牌派生的任何内容。</p>
+<p>当您的服务将令牌交换为内部凭证时，发布范围限制在一个编码会话应该能够到达的凭证：</p>
+<ul>
+<li><strong>限制功能</strong>：授予对会话编码任务所需资源的读写访问权限，而不是创建者在其他地方持有的管理功能。</li>
+<li><strong>限制生命周期</strong>：将派生凭证绑定到令牌的 <code>exp</code> 或更短。</li>
+<li><strong>作为会话审计</strong>：记录 <code>ccr:session_id</code> 和 <code>jti</code> 以及创建者身份，以便您可以将操作追踪回特定会话。</li>
+</ul>
+<h2 id="related-environment-variables">相关环境变量</h2>
+<p>创建者身份也以纯环境变量的形式出现在两个从不验证令牌的表面上：</p>
+<ul>
+<li><strong><a href="self-hosted-environments-configuration.html#the-spawn-runner-hook"><code>spawn-runner</code> hook</a>，在编排器上</strong>：hook 在任何运行程序存在于排队会话之前运行，并在 <code>CLAUDE_RUNNER_ACCOUNT_EMAIL</code> 和 <code>CLAUDE_RUNNER_ACCOUNT_ID</code> 等变量中接收创建者身份。编排器从工作订单（授权生成一个运行程序的签名单次使用令牌）读取它们，而不验证工作订单的签名本身；声明是受信任的，因为工作订单通过编排器与 Anthropic 的连接到达，环境机密对其进行身份验证。</li>
+<li><strong><a href="self-hosted-environments-configuration.html#wrapper-scripts">包装脚本</a>，在会话内</strong>：包装脚本接收 <code>CCR_SESSION_ACCOUNT_EMAIL</code>，创建者的电子邮件从令牌中预提取，无需签名验证。该变量适合用于标记，例如提交预告片，而不是用于身份验证决定。</li>
+</ul>
+<p>使用纯变量进行编排器端决定，例如选择机器映像。当下游服务需要独立的加密证明而不是信任运行程序的环境时，使用 <code>CLAUDE_CODE_SESSION_ACCESS_TOKEN</code>。</p>
+<h2 id="what’s-next">接下来</h2>
+<ul>
+<li><a href="self-hosted-environments.html">自托管环境</a>：环境、运行程序和会话模型；<a href="self-hosted-environments-quickstart.html">快速入门</a>和<a href="self-hosted-environments-deploy.html">部署到生产</a>包含设置和操作</li>
+<li><a href="self-hosted-environments-configuration.html">自定义会话</a>：使用令牌的包装脚本和 <code>spawn-runner</code> hook</li>
+<li><a href="self-hosted-environments-reference.html">参考</a>：CLI 标志、环境变量和指标</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="self-hosted-environments-reference.html"><span class="pager-dir">← 上一页</span><span class="pager-name">自托管环境参考</span></a><a class="pager-link next" href="model-config.html"><span class="pager-dir">下一页 →</span><span class="pager-name">模型配置</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#the-session-token">会话令牌</a><a class="toc-l3" href="#what-the-token-proves">令牌证明的内容</a><a class="toc-l3" href="#token-format">令牌格式</a><a class="toc-l2" href="#verify-the-token">验证令牌</a><a class="toc-l3" href="#verify-the-token-from-your-service">从您的服务验证令牌</a><a class="toc-l3" href="#verify-the-token-inside-the-session">在会话内验证令牌</a><a class="toc-l2" href="#claims-reference">声明参考</a><a class="toc-l3" href="#the-act-chain">act 链</a><a class="toc-l2" href="#scope-derived-credentials">范围派生凭证</a><a class="toc-l2" href="#related-environment-variables">相关环境变量</a><a class="toc-l2" href="#what’s-next">接下来</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

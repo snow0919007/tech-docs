@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>插件依赖 · Claude Code 中文文档</title>
+<meta name="description" content="声明你的插件所依赖的其他插件，使用版本范围如 ^1.2，并了解 Claude Code 如何安装、解析和修剪它们。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/dependencies">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/dependencies" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link active" href="plugins-dependencies.html" aria-current="page">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>创建插件</span></div>
+    <article class="prose" id="article"><h1 id="_1">插件依赖</h1>
+<blockquote>
+<p>声明你的插件所依赖的其他插件，使用版本范围如 ^1.2，并了解 Claude Code 如何安装、解析和修剪它们。</p>
+</blockquote>
+<p>插件依赖是你的插件所依赖的另一个插件，例如你调用其 MCP 服务器或技能的插件。每个依赖都会跟踪其市场提供的最新版本，除非你声明版本约束，即你已测试过的语义版本范围，如 <code>^2.0</code> 或 <code>~2.1.0</code>。</p>
+<p>本页面适用于在 <code>plugin.json</code> 中声明依赖的插件作者和标记发布的市场维护者。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>以下情况在其他页面中介绍：</p>
+<ul>
+<li><strong>安装具有依赖的插件</strong>：请参阅 <a href="plugins-install.html#manage-installed-plugins">管理已安装的插件</a></li>
+<li><strong>阅读依赖错误</strong>：请参阅 <a href="plugins-troubleshooting.html#dependency-errors">依赖错误</a></li>
+<li><strong>声明你的插件自身代码所需的 npm 和 Bun 包</strong>：请参阅 <a href="plugins-loading.html#node-js-package-dependencies">Node.js 包依赖</a></li>
+</ul></div></div>
+<p>要添加约束，请从 <a href="#declare-a-dependency-with-a-version-constraint">使用版本约束声明依赖</a> 开始。如果你维护其他人依赖的插件，请 <a href="#tag-plugin-releases-for-version-resolution">标记你的发布</a> 以便他们的约束可以解析。</p>
+<h2 id="declare-dependencies">声明依赖</h2>
+<p>如果没有版本约束，依赖会在用户下次更新时移动到其市场发布的每个新版本。如果该版本重命名了你的 plugin 调用的 MCP 工具，你的 plugin 会对所有更新的用户中断。</p>
+<p>使用约束（如来自 git 支持源的依赖上的 <code>~2.1.0</code>），安装了你的 plugin 的用户会继续接收依赖的 <code>2.1.x</code> 补丁，永远不会移动到 <code>2.2</code>。要按自己的计划升级，请针对较新的版本进行测试，然后发布你的 plugin 的新版本，使用更宽松的约束。</p>
+<h3 id="declare-a-dependency-with-a-version-constraint">使用版本约束声明依赖</h3>
+<p>在你的 plugin 的 <code>.claude-plugin/plugin.json</code> 的 <code>dependencies</code> 数组中列出依赖。以下清单声明了一个无版本依赖和一个受约束的依赖：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deploy-kit"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3.1.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"audit-logger"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"secrets-vault"</span><span class="p">,</span><span class="w"> </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"~2.1.0"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>一个条目可以是一个字符串：仅 plugin 名称，如此清单中的 <code>"audit-logger"</code>，或 <code>"name@marketplace"</code> 以在另一个市场中解析它。使用裸字符串，你的 plugin 依赖于该 plugin 市场提供的任何版本。</p>
+<p>要设置版本约束，请使用具有这些字段的对象，每个字段都是字符串：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>name</code></td>
+<td style="text-align: left;">依赖的 plugin 名称，如其市场条目中所示。Claude Code 在与声明 plugin 相同的市场中查找它，除非你设置 <code>marketplace</code>。必需。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>version</code></td>
+<td style="text-align: left;">一个 <a href="https://github.com/npm/node-semver#ranges" target="_blank" rel="noopener">语义版本范围</a>，如 <code>~2.1.0</code>、<code>^2.0</code>、<code>&gt;=1.4</code> 或 <code>=2.1.0</code>。依赖安装在满足此范围的最高 git 标签处，因此依赖的维护者必须 <a href="#tag-plugin-releases-for-version-resolution">标记发布版本</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>marketplace</code></td>
+<td style="text-align: left;">用于解析 <code>name</code> 的不同市场。允许列表控制跨市场依赖，详见 <a href="#depend-on-a-plugin-from-another-marketplace">依赖来自另一个市场的 plugin</a>。</td>
+</tr>
+</tbody>
+</table>
+<p>范围不匹配预发布版本，如 <code>2.0.0-beta.1</code>，除非你选择使用预发布后缀，如 <code>^2.0.0-0</code>。</p>
+<h3 id="bundle-plugins-for-a-team">为团队捆绑 plugin</h3>
+<p>要让工程师用一个命令安装精选的 plugin 集合，请发布一个清单包含 <code>name</code> 和 <code>dependencies</code> 数组的 plugin。Plugin 清单只需要 <code>name</code>，所以这是一个有效的 plugin，安装它会安装每个依赖。</p>
+<p>例如，平台团队可以在内部市场中发布特定角色的捆绑包，以便工程师运行一个 <code>claude plugin install</code> 而不是分别安装每个 plugin：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"backend-standard"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Standard plugin set for backend engineers"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"secrets-vault"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"deploy-kit"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db-migrate"</span><span class="p">,</span><span class="w"> </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^3.0"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="s2">"oncall-runbook"</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>要稍后向标准集添加 plugin，请发布新的 <code>backend-standard</code> 版本，包含额外的依赖。当市场不 <a href="plugins-loading.html#which-marketplaces-and-plugins-auto-update">默认自动更新</a> 时，工程师要么为市场打开自动更新，要么手动更新：</p>
+<ul>
+<li><strong>为市场打开自动更新</strong>：下一次自动更新会将捆绑包移动到新版本并安装它添加的任何依赖。</li>
+<li><strong>手动更新</strong>：在 shell 中运行 <code>claude plugin update backend-standard</code>，然后在打开的会话中运行 <code>/reload-plugins</code> 以安装新添加的依赖。</li>
+</ul>
+<p>有关工程师端的步骤，请参阅 <a href="plugins-install.html#keep-plugins-updated">保持 plugin 更新</a>。</p>
+<p>要将捆绑包部署给组织中的每个人，管理员将其添加到托管设置中的 <code>enabledPlugins</code>。请参阅 <a href="plugins-org.html#pre-install-and-require-plugins">预安装和要求 plugin</a>。</p>
+<h3 id="depend-on-a-plugin-from-another-marketplace">依赖来自另一个市场的 plugin</h3>
+<p>默认情况下，Claude Code 不会从与声明 plugin 自身不同的市场安装依赖，除非用户已经在同一范围内安装并启用了该依赖。此默认值防止一个市场从用户未审查的源中静默安装 plugin。</p>
+<p>要允许安装，请将目标市场的名称添加到根市场的 <code>marketplace.json</code> 中的 <code>allowCrossMarketplaceDependenciesOn</code>。根市场是托管用户正在安装的 plugin 的市场。仅根市场的允许列表适用。</p>
+<p>以下 <code>marketplace.json</code> 允许 <code>deploy-kit</code> 依赖来自 <code>your-shared-marketplace</code> 的 plugin：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-marketplace"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Your Org"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"allowCrossMarketplaceDependenciesOn"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"your-shared-marketplace"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deploy-kit"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./deploy-kit"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"audit-logger"</span><span class="p">,</span><span class="w"> </span><span class="nt">"marketplace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-shared-marketplace"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>如果 <code>allowCrossMarketplaceDependenciesOn</code> 缺失或不包含目标市场，Claude Code 不会安装依赖。当依赖在市场条目中声明时，安装本身会被拒绝，消息以 <code>Dependency "audit-logger@your-shared-marketplace" (required by deploy-kit@your-marketplace) is in marketplace "your-shared-marketplace", which is not in the allowlist</code> 开头，并命名要设置的字段。当它在 <code>plugin.json</code> 中声明时，安装完成但没有依赖，你的 plugin 随后无法加载。</p>
+<p>允许列表检查不适用于已启用的依赖。如果用户首先从 <code>your-shared-marketplace</code> 自己安装 <code>audit-logger</code>，在同一范围内，<code>deploy-kit</code> 随后安装时无需对允许列表进行任何更改。</p>
+<h3 id="test-a-plugin-and-its-dependency-locally">在本地测试 plugin 及其依赖</h3>
+<p>如果你同时开发一个 plugin 和它所依赖的 plugin，请从你的 shell 启动 Claude Code 并使用 <a href="plugins-cli-reference.html#flags-that-load-a-plugin-for-one-session"><code>--plugin-dir</code></a> 加载两者：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--plugin-dir<span class="w"> </span>./my-dependency<span class="w"> </span>--plugin-dir<span class="w"> </span>./my-plugin
+</code></pre></div>
+<p>依赖的本地副本满足你的 plugin 的依赖条目，所以你不需要从其市场安装依赖。</p>
+<ul>
+<li><strong>不需要 <code>version</code></strong>：依赖的本地 <code>plugin.json</code> 也不需要 <code>version</code>，因为 <a href="#declare-a-dependency-with-a-version-constraint">版本约束</a> 不会针对本地副本进行检查。</li>
+<li><strong>命名市场的条目</strong>：命名市场的条目在 Claude Code v2.1.242 或更高版本上也匹配本地副本。</li>
+</ul>
+<p>在你从其市场安装依赖之前，每当本地副本被禁用或不存在时，你的 plugin 都会停止加载：</p>
+<ul>
+<li><strong>你禁用了本地副本</strong>：你的 plugin 在下一次 plugin 加载时被禁用，错误以 <code>is disabled — enable it or remove the dependency</code> 结尾。当错误将依赖命名为 <code>&lt;name&gt;@inline</code> 时，该标识符指的是 <code>--plugin-dir</code> 副本。</li>
+<li><strong>你启动了一个没有依赖的 <code>--plugin-dir</code> 标志的会话</strong>：错误报告依赖未安装。再次传递标志，或从其市场安装依赖。</li>
+</ul>
+<p>当两个 plugin 都在一个父文件夹中时，你可以将该文件夹传递给 <code>--plugin-dir</code> 一次。如果该文件夹本身不是 plugin，Claude Code 会加载每个具有 <code>.claude-plugin/plugin.json</code> 的子文件夹。需要 Claude Code v2.1.265 或更高版本。</p>
+<h2 id="tag-plugin-releases-for-version-resolution">发布其他人依赖的 plugin</h2>
+<p>如果你维护其他 plugin 使用版本约束依赖的 plugin，请标记其发布版本，以便这些约束可以解析。约束针对托管 plugin 的存储库上的 git 标签进行解析。标记 plugin 的 <a href="plugins-marketplace-reference.html#plugin-sources">plugin 源</a> 在 <code>marketplace.json</code> 中指向的存储库：</p>
+<ul>
+<li><strong><code>github</code>、<code>url</code> 或 <code>git-subdir</code> 源</strong>：plugin 自身的存储库，所以 plugin 的作者创建标签</li>
+<li><strong>相对路径，如 <code>./plugins/secrets-vault</code></strong>：市场存储库，所以市场维护者创建标签</li>
+</ul>
+<h3 id="create-a-release-tag">创建发布标签</h3>
+<p>将每个发布标记为 <code>&lt;plugin-name&gt;--v&lt;version&gt;</code>，其中 <code>&lt;version&gt;</code> 与该提交的 <code>plugin.json</code> 中的 <code>version</code> 字段匹配。plugin-name 前缀让一个市场存储库可以托管多个具有独立版本历史的 plugin。</p>
+<p>从 plugin 目录创建标签，配置 <code>origin</code> 远程以接收推送的标签，使用 <a href="plugins-cli-reference.html#plugin-tag"><code>claude plugin tag</code></a>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>tag<span class="w"> </span>--push
+</code></pre></div>
+<p>该命令从 plugin 的清单构建标签名称。在创建标签之前，它运行这些检查：</p>
+<ul>
+<li>验证 plugin</li>
+<li>检查 <code>plugin.json</code> 和市场条目在版本上是否一致，当 plugin 目录在市场检出内时</li>
+<li>要求 plugin 目录下的工作树干净</li>
+<li>如果标签已存在则拒绝</li>
+</ul>
+<p>成功运行会打印 <code>Created tag secrets-vault--v2.1.0</code>。使用 <code>--push</code>，它还会打印 <code>Pushed to origin</code>。不使用 <code>--push</code>，它会打印你自己运行的 <code>git push</code> 命令。</p>
+<p>传递 <code>--dry-run</code> 以查看计划而不创建任何内容。</p>
+<p><a href="plugins-cli-reference.html#plugin-tag"><code>claude plugin tag</code> 参考</a> 列出了其余标志。</p>
+<p>你也可以直接运行 <code>git tag secrets-vault--v2.1.0</code>，只要你自己保持 <code>plugin.json</code> 中的 <code>version</code> 和市场条目中的版本同步。</p>
+<h3 id="constrain-a-dependency-that-has-a-non-git-source">约束具有非 git 源的依赖</h3>
+<p>基于标签的解析仅适用于 git 支持的源。对于具有 <code>npm</code>、<code>archive</code> 或 <code>command</code> <a href="plugins-marketplace-reference.html#plugin-sources">plugin 源</a> 的依赖，约束不控制获取哪个版本。它在 plugin 加载时仍会被检查，如果安装的版本不满足它，依赖的 plugin 会被禁用。</p>
+<p>对于 <code>npm</code>、<code>archive</code> 和 <code>command</code> 源，检查的版本是依赖的 <code>plugin.json</code> 中的 <code>version</code>。在约束该依赖之前在那里设置一个，因为不设置版本的 <code>plugin.json</code> 不满足任何约束。</p>
+<p>Claude Code 永远不会自己安装具有 <code>command</code> 源的依赖，所以用户 <a href="plugins-marketplace-reference.html#command-plugin-source">首先安装它</a>。它也永远不会运行依赖的 <a href="plugins-host-marketplace.html#authenticate-archive-downloads"><code>headersHelper</code></a>，所以用户也在安装你的 plugin 之前安装其市场条目设置的依赖。</p>
+<p>除了 <code>claude plugin install</code>，这些操作也会安装任何缺失的声明依赖，<code>command</code> 和 <code>headersHelper</code> 限制也适用于它们：</p>
+<ul>
+<li><code>/reload-plugins</code></li>
+<li>依赖 plugin 市场的自动更新</li>
+<li>在依赖 plugin 上重新运行 <code>claude plugin install</code></li>
+<li><code>claude plugin marketplace add</code></li>
+</ul>
+<h2 id="how-dependencies-behave-for-your-users">依赖如何为你的用户表现</h2>
+<p>这些部分描述了一旦你的 plugin 与其他 plugin 一起安装，Claude Code 如何解析、检查和组合你声明的约束。</p>
+<h3 id="how-a-constraint-resolves-against-tags">约束如何针对标签进行解析</h3>
+<p>当用户安装声明 <code>{ "name": "secrets-vault", "version": "~2.1.0" }</code> 的 plugin 时，依赖从满足 <code>~2.1.0</code> 的最高 <code>secrets-vault--v</code> 标签安装在托管 <code>secrets-vault</code> 的存储库上。当没有标签满足范围时，安装要么失败，要么使用市场的当前副本：</p>
+<ul>
+<li><strong>具有自身存储库的 plugin</strong>：安装失败，消息包含 <code>Dependency "secrets-vault@your-marketplace" has no git tag satisfying</code>。</li>
+<li><strong>由相对路径引用的 plugin</strong>：安装改为使用市场的当前副本，约束在 plugin 加载时被检查。如果该副本在范围之外，依赖的 plugin 保持禁用，<code>claude plugin list</code> 显示 <code>Requires "secrets-vault@your-marketplace" ~2.1.0, installed 3.0.0</code>。</li>
+</ul>
+<p>对于市场通过相对路径引用的插件，当您添加为本地文件夹路径的市场所在文件夹是 git 仓库时，该市场也会针对该文件夹的 git 标签解析约束。不是 git 仓库的本地文件夹没有标签，所以 Claude Code 改为从文件夹的当前内容安装依赖。</p>
+<h3 id="confirm-the-resolved-version">确认解析的版本</h3>
+<p>要确认约束解析到哪个版本，请在你的 shell 中运行 <code>claude plugin list</code>。标签解析的依赖显示其版本，带有 12 字符的提交后缀，如 <code>2.1.0-8713c5b11005</code>。</p>
+<p>约束检查使用标签的版本而不是 <code>plugin.json</code> 中的 <code>version</code>，即使该提交处的 <code>plugin.json</code> 滞后。</p>
+<p>如果你强制移动标签到不同的提交，下一次安装会获取该提交的内容而不是重用陈旧的缓存副本。请参阅 <a href="plugins-loading.html#versions-and-updates">版本和更新</a> 了解 plugin 的版本如何成为其缓存键。</p>
+<h3 id="combine-constraints-from-several-plugins">组合来自多个 plugin 的约束</h3>
+<p>当多个已安装的 plugin 约束同一依赖时，依赖解析到满足所有范围的最高版本。常见组合解析如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Plugin A 要求</th>
+<th style="text-align: left;">Plugin B 要求</th>
+<th style="text-align: left;">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>^2.0</code></td>
+<td style="text-align: left;"><code>&gt;=2.1</code></td>
+<td style="text-align: left;">一次安装在最高 <code>2.x</code> 标签处，位于或高于 <code>2.1.0</code>。两个 plugin 都加载。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>~2.1</code></td>
+<td style="text-align: left;"><code>~3.0</code></td>
+<td style="text-align: left;">安装 plugin B 失败，消息为 <code>has conflicting version requirements</code>。Plugin A 和依赖保持原样。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>=2.1.0</code></td>
+<td style="text-align: left;">无</td>
+<td style="text-align: left;">依赖保持在 <code>2.1.0</code>。自动更新在 plugin A 安装时跳过较新版本。</td>
+</tr>
+</tbody>
+</table>
+<p>自动更新在满足每个已安装 plugin 范围的最高 git 标签处获取受约束的依赖，而不是在市场的最新版本处。如果已安装 plugin 的范围不重叠，自动更新将该依赖保持在其当前版本，<code>/plugin</code> <strong>Errors</strong> 标签页显示命名约束 plugin 的条目。如果它们重叠但没有标签落在范围内，自动更新获取市场的当前副本，当该副本的 <code>version</code> 落在任何已安装 plugin 范围之外时跳过更新。</p>
+<p>当用户卸载最后一个约束依赖的 plugin 时，依赖不再被约束到版本范围，并在下一次更新时恢复跟踪其市场条目。</p>
+<h3 id="dependencies-when-your-plugin-loads-from-claude-ai">当您的插件从 claude.ai 加载时的依赖</h3>
+<p>当用户为其 claude.ai 账户启用您的插件时，Claude Code 将其加载为 <code>&lt;name&gt;@synced</code>，<a href="plugins-loading.html#synced-plugins">不关联任何市场</a>。对于您插件的这一副本，当用户具备以下任一条件时，Claude Code 会将指定了市场的依赖条目视为已满足：</p>
+<ul>
+<li><strong>来自其市场的依赖</strong>：从您的条目所指定的市场安装并已启用。Claude Code 会根据已安装副本的版本检查您条目中的 <code>version</code> 范围。</li>
+<li><strong>同名的 claude.ai 插件</strong>：已从其 claude.ai 账户启用。Claude Code 会根据该插件的 <code>version</code> 检查您条目中的 <code>version</code> 范围，未声明 <code>version</code> 的插件会通过检查。</li>
+</ul>
+<p>如果您告知用户从 claude.ai 启用您的插件，请同时告知他们也在那里启用该依赖，或从其市场安装该依赖。</p>
+<p>只有当您的插件也从 claude.ai 加载时，claude.ai 插件才能满足该条目。</p>
+<h2 id="see-also">另请参阅</h2>
+<ul>
+<li><a href="plugins-cli-reference.html#plugin-prune"><code>claude plugin prune</code></a>：删除任何 plugin 不再需要的自动安装依赖</li>
+<li><a href="plugins-host-marketplace.html">托管市场</a>：发布渠道和推荐其他 plugin</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-components.html"><span class="pager-dir">← 上一页</span><span class="pager-name">向插件添加组件</span></a><a class="pager-link next" href="plugin-evals.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用 evals 测试插件</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#declare-dependencies">声明依赖</a><a class="toc-l3" href="#declare-a-dependency-with-a-version-constraint">使用版本约束声明依赖</a><a class="toc-l3" href="#bundle-plugins-for-a-team">为团队捆绑 plugin</a><a class="toc-l3" href="#depend-on-a-plugin-from-another-marketplace">依赖来自另一个市场的 plugin</a><a class="toc-l3" href="#test-a-plugin-and-its-dependency-locally">在本地测试 plugin 及其依赖</a><a class="toc-l2" href="#tag-plugin-releases-for-version-resolution">发布其他人依赖的 plugin</a><a class="toc-l3" href="#create-a-release-tag">创建发布标签</a><a class="toc-l3" href="#constrain-a-dependency-that-has-a-non-git-source">约束具有非 git 源的依赖</a><a class="toc-l2" href="#how-dependencies-behave-for-your-users">依赖如何为你的用户表现</a><a class="toc-l3" href="#how-a-constraint-resolves-against-tags">约束如何针对标签进行解析</a><a class="toc-l3" href="#confirm-the-resolved-version">确认解析的版本</a><a class="toc-l3" href="#combine-constraints-from-several-plugins">组合来自多个 plugin 的约束</a><a class="toc-l3" href="#dependencies-when-your-plugin-loads-from-claude-ai">当您的插件从 claude.ai 加载时的依赖</a><a class="toc-l2" href="#see-also">另请参阅</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

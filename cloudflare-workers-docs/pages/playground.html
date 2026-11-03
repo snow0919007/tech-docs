@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playground（在线演练场） · Workers 文档（中文版）</title>
+<meta name="description" content="无需配置或登录，在浏览器沙箱中预览和测试 Cloudflare Workers 代码。">
+<link rel="stylesheet" href="../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>Playground（在线演练场）</h1>
+      <p class="lead">在基于浏览器的沙箱里预览和测试 Workers 代码，不需要任何配置，也不需要登录。</p>
+      <div class="page-meta">
+        <span class="tag">在线演练场</span>
+        <span>原文更新于 2026-04-23</span>
+        <span>对应页面：playground</span>
+      </div>
+
+      <div class="warn-box">
+        <span class="box-title">浏览器支持</span>
+        <p>Cloudflare Workers Playground 目前仅支持 Firefox 和 Chrome 桌面版浏览器。在 Safari 中会显示 <code>PreviewRequestFailed</code> 错误。</p>
+      </div>
+
+      <p>试用 Cloudflare Workers 最快的方式就是打开<a href="https://workers.cloudflare.com/playground" target="_blank" rel="noopener">演练场（Playground）↗</a>。它不需要任何配置，也不需要身份验证。演练场是一个沙箱，让你能立刻在浏览器里预览和测试 Worker。</p>
+
+      <p>演练场使用的编辑器与登录后的正式体验是同一个。你可以在演练场里<a href="#share">分享</a>自己写的代码，也能把它<a href="#deploy">直接部署</a>到 Cloudflare 的全球网络上——先随意试，准备好了再上线。</p>
+
+      <div class="pager" style="border-top:0;padding-top:0;margin-top:6px;">
+        <a href="https://workers.cloudflare.com/playground" target="_blank" rel="noopener">
+          <span class="pl">workers.cloudflare.com</span>
+          <span class="pt">启动 Playground ↗</span>
+        </a>
+      </div>
+
+      <h2>Hello Cloudflare Workers</h2>
+      <p>进入演练场后，你会看到这段默认代码：</p>
+<pre data-lang="js"><code>import welcome from "welcome.html";
+
+/**
+ * @typedef {Object} Env
+ */
+
+export default {
+	/**
+	 * @param {Request} request
+	 * @param {Env} env
+	 * @param {ExecutionContext} ctx
+	 * @returns {Response}
+	 */
+	fetch(request, env, ctx) {
+		console.log("Hello Cloudflare Workers!");
+
+		return new Response(welcome, {
+			headers: {
+				"content-type": "text/html",
+			},
+		});
+	},
+};</code></pre>
+      <p>这是一个多模块 Worker 的例子：它接收一个<a href="../sections/runtime-apis.html">请求</a>，往控制台打一条日志，然后返回一个<a href="../sections/runtime-apis.html">响应</a>，响应体是 <code>welcome.html</code> 的内容。</p>
+      <p>更多细节参见 <a href="../sections/runtime-apis.html">Fetch 处理器文档</a>。</p>
+
+      <h2>使用演练场</h2>
+      <p>当你修改默认代码时，Worker 会自动更新，右侧预览会像在浏览器里一样展示它的运行效果。如果你的 Worker 使用了 URL 路径，可以在右侧的输入框里填入路径进行访问。演练场通过 JSDoc 注释和 <a href="https://www.npmjs.com/package/@cloudflare/workers-types" target="_blank" rel="noopener"><code>workers-types</code> ↗</a> 提供类型检查，应用出错时还会给出易读的错误页面。</p>
+      <p>要测试原始 HTTP 请求（例如测试一个 <code>POST</code> 请求），切到 <strong>HTTP</strong> 标签页并点击 <strong>Send</strong>。你可以在这个面板里增删和修改请求头，也能编辑请求体。</p>
+
+      <h2>日志查看器</h2>
+      <p>演练场和 Workers 控制台里的快速编辑器，都在预览面板底部提供了一个轻量的日志查看器（log viewer），用来显示预览运行期间所有 <code>console.log</code> 调用的输出。</p>
+      <p>日志查看器目前支持：</p>
+      <ul>
+        <li>记录原始值、对象和数组。</li>
+        <li>在每次运行之间清空日志输出。</li>
+      </ul>
+      <p>目前，日志查看器还不支持记录类实例及其属性（例如 <code>request.url</code>）。</p>
+      <p>如果你需要完整的调试能力和更完整的开发体验，可以在本地使用 <a href="../sections/wrangler.html">Wrangler</a>。想把控制台里已有的 Worker 拉到本地开发：注册账号，部署该 Worker 之后执行 <a href="../sections/wrangler.html"><code>wrangler init --from-dash</code></a> 命令。</p>
+
+      <h2 id="share">分享</h2>
+      <p>要分享你的作品，点击屏幕右上角的 <strong>Copy Link</strong>。它会把一个唯一 URL 复制到剪贴板，你可以发给任何人。这些链接不会过期，可以收藏、随时分享。打开分享链接的人会看到带着这份代码与预览的演练场。</p>
+
+      <h2 id="deploy">部署</h2>
+      <p>你可以直接从演练场部署 Worker。如果已登录，可以在部署前复核这个 Worker；如果没登录，会先走一遍首次使用者的引导流程，然后才能复核并部署。</p>
+      <p>部署完成后，你的 Worker 会获得一个唯一 URL，几乎立刻就能在 Cloudflare 全球网络上访问。此后你可以为它添加<a href="../sections/configuration.html">自定义域名</a>、<a href="../sections/platform.html">存储资源</a>等等。</p>
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/playground/" target="_blank" rel="noopener">workers/playground</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../assets/nav-data-1.js"></script>
+<script src="../assets/nav-data-2.js"></script>
+<script src="../assets/site.js"></script>
+</body>
+</html>

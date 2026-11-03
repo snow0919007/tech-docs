@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>为您的组织管理 mods · Claude Code 中文文档</title>
+<meta name="description" content="使用托管设置控制 Claude Code mods：停止用户安装的 mods、仅允许您自己的 mods、查看 mod 可以执行的操作，以及使用您自己的 mod 强制执行策略。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/mods/admin">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/mods/admin" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link active" href="plugins-mods-admin.html" aria-current="page">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>管理组织的插件</span></div>
+    <article class="prose" id="article"><h1 id="mods">为您的组织管理 mods</h1>
+<blockquote>
+<p>使用托管设置控制 Claude Code mods：停止用户安装的 mods、仅允许您自己的 mods、查看 mod 可以执行的操作，以及使用您自己的 mod 强制执行策略。</p>
+</blockquote>
+<p><a href="plugins-mods-overview.html">mod</a> 是在 Claude Code 内运行代码的插件，具有安装它的用户的权限。Mods 不是沙箱化的。通过<a href="managed-settings.html">托管设置</a>，您可以决定 mods 是否在用户的机器上运行、运行哪些 mods 以及运行顺序。您还可以安装自己的 mod，用于监视或拒绝其他 mods 的操作。</p>
+<p>本页面适用于为 Claude Code 部署托管设置的人员，无论是通过文件、MDM 还是从 claude.ai 管理控制台部署。在 Claude Code v2.1.286 及更高版本中，mod 默认处于启用状态。从与您要执行的操作相匹配的部分开始：</p>
+<ul>
+<li><strong>排除用户自己的 mods，有或没有您自己的 mods</strong>：<a href="#stop-user-installed-mods-from-loading">停止用户安装的 mods 加载</a></li>
+<li><strong>查看当您不做任何更改时用户会获得什么</strong>：<a href="#know-what-happens-by-default">了解默认情况下会发生什么</a></li>
+<li><strong>保持 mods 开启并设置其他限制</strong>：<a href="#choose-how-much-to-allow">选择允许的程度</a></li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>这些情况在其他页面上有介绍：</p>
+<ul>
+<li><strong>您之前没有部署过托管设置</strong>：从<a href="managed-settings.html">部署托管设置</a>开始</li>
+<li><strong>您想控制用户可以安装哪些插件</strong>：请参阅<a href="plugins-org.html">为您的组织管理插件</a></li>
+</ul></div></div>
+<h2 id="stop-user-installed-mods-from-loading">停止用户安装的 mod 加载</h2>
+<p>要阻止用户带来的每个 mod 运行其 hook，请在<a href="#know-what-happens-by-default">内置守卫</a>上设置 <code>allowManagedModsOnly</code> 选项。内置守卫是一个策略 mod，Claude Code 会在用户安装的每个 mod 之前加载它。该选项位于托管设置的 <code>pluginConfigs</code> 下，以 <code>cc-plugin-sec-default@builtin</code> 为键：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"pluginConfigs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"cc-plugin-sec-default@builtin"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"allowManagedModsOnly"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>在托管设置中设置该选项后：</p>
+<ul>
+<li><strong>用户带来的任何 mod 都不会运行其 hook</strong>：这包括用户安装的插件中的 mod、使用 <code>--plugin-dir</code> 加载的 mod，以及<a href="plugins-mods-create.html#ask-claude-for-a-mod">Claude 在会话期间编写的</a> mod</li>
+<li><strong>您组织的 mod 仍然运行</strong>：<a href="#install-your-organizations-mods">计为您组织的</a> mod 不会被检查。所有其他 mod 都计为用户的 mod，并会被拒绝。这包括您从 GitHub 或其他远程市场启用的插件中的 mod，以及您的组织为其成员在 claude.ai 上启用的 mod。如果没有任何 mod 计为您组织的，则所有已安装的 mod 都不会运行其 hook。</li>
+<li><strong>用户无法撤销它</strong>：守卫仅从托管设置读取该选项，因此用户、项目或本地设置文件中的相同条目，或使用 <code>--settings</code> 传递的文件中的条目都不会改变任何内容</li>
+<li><strong>文件或 MDM 策略涵盖每个提供商</strong>：当您以文件形式或通过 MDM 提供该选项时，它在 Amazon Bedrock、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上的工作方式相同。对于从 claude.ai 管理控制台进行的交付，请参阅<a href="server-managed-settings.html#platform-availability">平台可用性</a></li>
+<li><strong>用户的其他自定义保持工作</strong>：他们<a href="hooks.html">设置文件中的 hook</a> 和插件 <code>hooks/hooks.json</code> 中的 hook、状态栏以及 <code>/goal</code> 均不受影响</li>
+<li><strong>内置 mod 继续运行</strong>：内置于 Claude Code 的 mod，例如 <code>AGENTS.md</code> 支持，各有<a href="plugins-mods-overview.html#mods-built-into-claude-code">自己的开关</a></li>
+</ul>
+<p>要在用户机器上确认该选项，请在该机器上使用 <code>--plugin-dir</code> 和包含 mod 的目录路径启动 Claude Code，例如 <code>claude --plugin-dir ./first-mod</code>。该 mod 的 hook 不会运行，会话记录和调试日志中会出现<a href="plugins-mods-troubleshoot.html#messages-from-the-built-in-guard">守卫的消息</a>，其中会指明该 mod 和 <code>allowManagedModsOnly</code>。如果没有出现该消息，请参阅<a href="managed-settings.html#check-that-a-policy-is-in-force">检查策略是否生效</a>以及<a href="#set-options-on-the-built-in-guard">决定选项是否生效的规则</a>。</p>
+<p>如果您在早期访问期间将 <code>CLAUDE_CODE_ENABLE_FUNCTION_HOOKS</code> 设置为 <code>0</code>，请将其替换为此选项。Claude Code v2.1.287 及更高版本在任何值下都会忽略该变量，因此那里的 <code>0</code> 会使 mod 保持开启。</p>
+<h2 id="know-what-happens-by-default">了解默认情况下会发生什么</h2>
+<p>如果您没有自己的 mod 设置，这就是您的用户会获得的：</p>
+<ul>
+<li><strong>Mods 处于开启状态。</strong> 用户可以安装包含来自您的插件设置允许的任何市场的 mod 的插件，或使用 <code>--plugin-dir</code> 从目录加载一个。</li>
+<li>
+<p><strong>内置守卫首先运行。</strong> Claude Code 在用户安装的每个 mod 之前加载一个名为 <code>sec-default@builtin</code> 的内置 mod。用户无法将其关闭。<code>/plugin</code> 和调试日志将其列为 <code>cc-plugin-sec-default</code>。内置守卫在以下任一情况为真时加载：</p>
+</li>
+<li>
+<p>机器有托管设置</p>
+</li>
+<li>会话使用 Team 或 Enterprise 计划的 <a href="authentication.html#authentication-precedence"><code>/login</code> 凭据</a>运行</li>
+</ul>
+<p>使用 API 密钥进行身份验证的用户，或通过 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 进行身份验证的用户，仅在具有托管设置的机器上获得内置守卫。使用长期有效的 <a href="authentication.html#generate-a-long-lived-token"><code>CLAUDE_CODE_OAUTH_TOKEN</code></a> 运行的会话也不算作上述登录，即使机器上存储了 Team 或 Enterprise 登录信息。<br />
+* <strong>保护程序保护您管理的内容。</strong> 用户的 mod 无法更改您的托管 hooks 接收或决定的内容、系统提示、您的托管 <code>CLAUDE.md</code> 和其他托管说明、任何 mod 读取的设置内容，或您的托管 MCP 服务器的工具和描述。<br />
+* <strong>在您管理的内容之外，用户的 mod 以该用户身份行事。</strong> mod 保留该用户的权限：它仍然可以读写文件、启动进程和发出网络请求。它还可以重写工具调用和提示词、拒绝工具调用，以及在界面中绘制。<br />
+* <strong>权限规则和 <code>PreToolUse</code> hook 优先于用户的 mod。</strong> 加载内置守卫后，默认情况下，用户的 mod 无法批准 <code>deny</code> 规则拒绝的调用或 <code>ask</code> 规则会提示的调用，无论哪个设置文件持有该规则。mod 也无法批准任何 <code>PreToolUse</code> hook 阻止的调用。</p>
+<p>权限规则和 <code>PreToolUse</code> hook 适用于 Claude 的工具调用，而不适用于 mod 的 <a href="plugins-mods-api.html#reach-files-processes-and-the-network"><code>$.fs</code> 和 <code>$.process</code> 调用</a>。即使 <code>Read(.env)</code> 被拒绝，mod 仍然可以使用 <code>$.fs.read</code> 读取该文件，或启动执行此操作的程序。要限制 mod 自身的 <code>$.fs</code> 和 <code>$.process</code> 调用，请<a href="#stop-user-installed-mods-from-loading">阻止该 mod 加载</a>，或在<a href="#enforce-a-policy-with-a-mod-of-your-own">策略 mod</a> 中处理这些调用。<br />
+* <strong>用户的 mod 仍然可以跳过某些提示。</strong> 在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>下，mod 批准的调用运行时不进行分类器检查，除非内置守卫已加载，且会话使用 <a href="cli-reference.html#cli-flags"><code>--permission-prompt-tool</code></a> 或 Agent SDK <a href="agent-sdk-user-input.html#handle-tool-approval-requests"><code>canUseTool</code> 回调</a>运行。在这种情况下，分类器会先检查该调用。对于 mod 的批准不会跳过的提示，请参阅<a href="permissions.html#precedence-among-rules-hooks-and-mods">使用 hook 扩展权限</a>。</p>
+<p>保护程序的源代码在 <a href="https://github.com/anthropics/claude-code/tree/main/mods/sec-default" target="_blank" rel="noopener">Claude Code 存储库的 <code>mods/sec-default</code> 目录</a>中是公开的。</p>
+<h3 id="know-which-controls-still-apply">了解哪些控制仍然适用</h3>
+<p>Mods 不会替换您已有的控制：</p>
+<ul>
+<li><strong>设置 hook 继续工作。</strong> 设置文件和插件的 <code>hooks/hooks.json</code> 中的命令、HTTP、提示词和 Agent hook 照常运行，与 mod 一起。</li>
+<li><strong>拒绝规则在保护程序加载的地方优先。</strong> 用户的 mod 无法批准 <code>deny</code> 规则拒绝的调用，除非您设置 <a href="#set-options-on-the-built-in-guard"><code>allowModsToOverrideDenyRules</code></a>。</li>
+<li><strong>托管 hook 首先运行。</strong> 托管设置中的 <code>PreToolUse</code> hook 在任何 mod 的 <a href="plugins-mods-reference.html#tools"><code>tool.call</code></a> hook 之前运行，当该托管 hook 阻止某个工具调用时，不会有任何 mod 的 <code>tool.call</code> hook 针对该调用运行。如果调用继续进行且 mod 重写了它，您的托管 hook 会在重写后的调用上再次运行，因此仍然可以阻止它。</li>
+</ul>
+<p>来自其他设置文件和插件的 <code>PreToolUse</code> hook 在最后一个 mod 之后运行。如果 mod 自行应答工具调用，该工具永远不会运行，这些 hook 也不会运行。请参阅<a href="plugins-mods-events.html#the-order-mods-run-in">mod 运行的顺序</a>。<br />
+* <strong>网络策略涵盖 <code>$.http.fetch</code>。</strong></p>
+<ul>
+<li><strong>您的组织策略不允许 WebFetch</strong>：Claude Code 也会拒绝每个 mod 的 <code>$.http.fetch</code> 请求。请参阅 <a href="tools-reference.html#webfetch-availability">WebFetch 可用性</a>。</li>
+<li>
+<p><strong>您在托管设置或任何其他设置文件中使用 <a href="env-vars.html#variables"><code>CLAUDE_CODE_DISABLE_WEB_FETCH</code></a> 或 <code>WebFetch</code> <a href="permissions.html#tool-specific-permission-rules">拒绝规则</a>关闭了 WebFetch 工具</strong>：mod 仍然可以发出 <code>$.http.fetch</code> 请求。</p>
+<p>要为您的用户安装的每个 mod 阻止这些请求，请<a href="#stop-user-installed-mods-from-loading">防止用户安装的 mod 加载</a>，或在<a href="#enforce-a-policy-with-a-mod-of-your-own">策略 mod</a> 中 hook <code>http.fetch</code> 并拒绝来自用户 mod 的请求。还要为该 hook 提供一个同样会拒绝请求的 <a href="plugins-mods-events.html#handle-a-hook-that-fails"><code>.catch</code> 处理程序</a>，因为 Claude Code 会跳过失败的 hook，届时请求将继续进行。如果您只<a href="plugins-org.html#restrict-what-users-can-install">限制用户可以安装的插件</a>，加载的 mod 会减少，但您允许的 mod 仍然可以发出这些请求。<br />
+  * <strong>您设置了 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code></a></strong>：您或您的用户安装的 mod 仍然可以发出这些请求。该变量仅阻止 <a href="plugins-mods-overview.html#mods-built-into-claude-code">Claude Code 内置的 mod</a>，以及任何携带会话 Anthropic 凭据的 <code>$.http.fetch</code> 请求。在 v2.1.288 之前，该变量会阻止每个 mod 的 <code>$.http.fetch</code> 请求。</p>
+</li>
+</ul>
+<p>这些都不涵盖 mod 使用 <code>$.process.run</code> 启动的程序，该程序使用用户自己的访问权限访问网络。<br />
+* <strong>插件控制涵盖 mods。</strong> Mod 是一个插件，因此<a href="plugins-org.html#restrict-what-users-can-install">限制用户可以安装的内容的设置</a>，例如 <code>strictKnownMarketplaces</code>，决定它是否可以被安装。<br />
+* <strong>Mods 无法更改权限提示。</strong> Mod 可以重新设置 Claude Code 界面的大部分样式，但不能更改权限提示，因此它无法更改提示显示的内容。Mod 仍然可以在提示出现之前批准或拒绝工具调用，如<a href="#know-what-happens-by-default">了解默认情况下会发生什么</a>所述。<br />
+* <strong>信任提示首先出现。</strong> 在用户尚未信任的目录中的交互式会话中，在他们回答信任提示之前，没有 mod 加载。<br />
+* <strong><code>--safe-mode</code> 关闭已安装的 mods，包括您的。</strong> 使用 <code>claude --safe-mode</code> 启动会话以检查 mod 是否导致了问题。</p>
+<p>这些控制中的任何一个都不会沙箱化 mod。您允许的 mod 以用户身份运行，具有用户对文件、进程和网络的访问权限。</p>
+<h3 id="hooks-the-guard-passes-over">了解用户 mod 的哪些 hook 不会运行</h3>
+<p>在<a href="#know-what-happens-by-default">内置守卫</a>加载的地方，用户的 mod 在以下事件上注册的 hook 永远不会运行，<code>/plugin</code> 会通过一条说明告知该用户。在 <a href="plugins-mods-reference.html#session"><code>session.append</code></a> 各行中，<code>door</code> 是该 hook 所筛选的存储行的类型。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">hook 所在事件</th>
+<th style="text-align: left;">事件是什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-events.html#hook-the-settings-hook-events"><code>classic.&lt;Event&gt;</code></a>，例如 <code>classic.Stop</code></td>
+<td style="text-align: left;">一个<a href="hooks.html#hook-events">设置 hook 事件</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-reference.html#prompts-and-what-claude-reads"><code>prompt.compose</code></a></td>
+<td style="text-align: left;">系统提示词的章节列表</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt.section</code></td>
+<td style="text-align: left;">系统提示词的一个章节</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt.context</code></td>
+<td style="text-align: left;">随对话第一条消息一起发送的上下文</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt.attachment</code></td>
+<td style="text-align: left;">Claude Code 为 Claude 添加的消息，例如提醒</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>skill.prompt</code></td>
+<td style="text-align: left;">为 Claude 展开时的 skill 文本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>attribution.text</code></td>
+<td style="text-align: left;">提交或 Pull Request 的署名文本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-reference.html#session"><code>session.compact</code></a></td>
+<td style="text-align: left;">对话的一次压缩</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>settings.read</code></td>
+<td style="text-align: left;">一次设置读取，例如 mod 的 <code>$.settings.read</code> 调用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.append{door=attachment}</code></td>
+<td style="text-align: left;">Claude Code 为 Claude 添加的消息的存储行</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.append{door=hook-context}</code></td>
+<td style="text-align: left;">来自设置 hook 的上下文的存储行</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.append{door=compaction}</code></td>
+<td style="text-align: left;">压缩摘要和边界的存储行</td>
+</tr>
+</tbody>
+</table>
+<p>在其他一些情况下，守卫也会跳过用户的 hook，例如 <a href="plugins-mods-reference.html#tools"><code>tool.describe</code></a> 上您组织的工具描述，以及 skill 文本的存储行。对于这些情况，<code>/plugin</code> 不会显示说明。如果其他事件上的 hook 没有任何作用，请参阅<a href="plugins-mods-troubleshoot.html#find-out-why-a-mod-does-nothing">查明 mod 为何没有任何作用</a>。</p>
+<p>该说明显示在插件的详细信息中以及 <code>/plugin</code> 的 <strong>Errors</strong> 选项卡中。它需要 Claude Code v2.1.299 或更高版本。它会按照 mod 注册时的写法列出表中的每个 hook，如以下示例所示：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Its hooks on classic.Stop, prompt.section do not run here: where an organization manages Claude Code, these events pass over the plugins you install
+Only a plugin that counts as your organization's own runs hooks on these events. An administrator sets that up in managed settings
+</code></pre></div>
+<p>要让这些 hook 运行，请通过以下两种方式之一更改托管设置：</p>
+<ul>
+<li><strong>将该 mod 作为您组织的 mod 运行</strong>：<a href="#install-your-organizations-mods">安装该 mod，使其算作您组织自己的 mod</a>。这样它在这些事件上的 hook 就会运行，而守卫对其他所有 mod 仍保持加载。该 mod 会为接收这些设置的每个人开启，并且必须位于您放置在每台机器上的目录中。如果您将其列在 <code>prependPlugins</code> 中，请在列表中保留 <code>sec-default@builtin</code>。</li>
+<li><strong>移除守卫</strong>：在 <code>prependPlugins</code> 中省略 <code>sec-default@builtin</code>。一个空列表 <code>"prependPlugins": []</code> 就足够了。您失去的是整个守卫，而不仅仅是这些事件。这样用户的 mod 就可以做<a href="#know-what-happens-by-default">守卫原本会阻止它做的事情</a>，并且<a href="#set-options-on-the-built-in-guard">守卫的选项</a>也不再适用。</li>
+</ul>
+<p>如果您通过<a href="server-managed-settings.html#fetch-and-caching-behavior">服务器托管设置</a>下发不含守卫的列表，守卫会保持加载，直到服务器为该会话确认这些设置。要在运行 v2.1.299 或更高版本的机器上确认任一更改，请在该机器上的会话中打开 <code>/plugin</code>，并检查该说明是否已消失。</p>
+<p>没有 <code>door</code> 筛选条件的 <code>session.append</code> hook 仍会运行且不会收到说明，但表中的存储行不会传递给它。</p>
+<h2 id="decide-whether-to-leave-mods-on">决定是否保持 mods 开启</h2>
+<p>Mod 可以做的比插件的其他部分更多，因为它在 Claude Code 内运行。它看到每个提示和工具调用，可以更改它们，并可以在权限提示出现之前允许或拒绝工具调用。</p>
+<p>用户可以加载什么作为 mod 取决于您已有的插件控制：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您今天的插件控制</th>
+<th style="text-align: left;">用户可以加载什么作为 mod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">无</td>
+<td style="text-align: left;">来自任何市场的 mod、来自任何带有 <code>--plugin-dir</code> 的目录的 mod，或 Claude 在会话期间编写的 mod</td>
+</tr>
+<tr>
+<td style="text-align: left;">市场允许列表</td>
+<td style="text-align: left;">来自您允许的市场的 mod，或来自任何带有 <code>--plugin-dir</code> 的目录的 mod。Claude 在会话期间编写的 mod 仅在允许列表<a href="plugins-org.html#keep-skills-directory-plugins-loading">包含 <code>skills-dir</code></a> 时加载。</td>
+</tr>
+<tr>
+<td style="text-align: left;">市场允许列表和 <code>disableSideloadFlags</code></td>
+<td style="text-align: left;">来自您允许的市场的 mod</td>
+</tr>
+</tbody>
+</table>
+<p><a href="plugins-org.html">为您的组织管理插件</a>列出了插件加载的每种方式以及控制每种方式的设置。</p>
+<p>要在用户安装市场中的 mods 之前检查它们，请参阅<a href="#review-what-a-mod-can-do">查看 mod 可以执行的操作</a>。要在您完成此操作之前排除用户的 mods，请参阅<a href="#stop-user-installed-mods-from-loading">停止用户安装的 mods 加载</a>。</p>
+<h3 id="review-what-a-mod-can-do">查看 mod 可以执行的操作</h3>
+<p>您可以看到 mod 能够做什么而无需运行它。在您的 shell 中，在插件的目录上运行 <code>claude plugin validate</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>validate<span class="w"> </span>./some-mod
+</code></pre></div>
+<p>输出中的 <code>hooks:</code> 和 <code>calls:</code> 行描述了 mod 的代码：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">  ❯ ./register.js hooks: session.start, tool.call, ui.render{component=Pane}
+  ❯ ./register.js calls: $.fs.read, $.http.fetch, $.store.set, $.ui.open
+</code></pre></div>
+<p><code>hooks:</code> 行列出了 mod 接收的事件。<code>calls:</code> 行列出了其代码调用的 mods API 方法。<a href="plugins-mods-api.html">mods API</a>（在 mod 的代码中写作 <code>$</code>）是 mod 到达文件、进程和网络的方式。Claude Code 拒绝加载以此命令无法读取的方式使用 mods API 的 mod。</p>
+<p>查看 <code>calls:</code> 行以获取这些：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">调用</th>
+<th style="text-align: left;">它的含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$.fs.read</code>, <code>$.fs.write</code></td>
+<td style="text-align: left;">读取或写入用户可以访问的任何地方的文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.process.run</code>, <code>$.process.spawn</code></td>
+<td style="text-align: left;">以用户身份启动程序</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.http.fetch</code></td>
+<td style="text-align: left;">发出网络请求</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.env.get</code>, <code>$.settings.read</code></td>
+<td style="text-align: left;">读取环境变量和设置，可以保存 API 密钥。输出中的 <code>env reads:</code> 行命名每个变量。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.env.set</code></td>
+<td style="text-align: left;">为 Claude Code 以及它启动的每个命令和 MCP 服务器设置环境变量，可以改变这些程序运行的内容。<code>env writes:</code> 行命名每个变量。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.mcp.call</code></td>
+<td style="text-align: left;">在连接的 MCP 服务器上调用工具，在会话的权限规则下</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.model.complete</code></td>
+<td style="text-align: left;">使用用户的计划或 API 密钥进行模型调用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.prompt.submit</code></td>
+<td style="text-align: left;">提交提示，可以将其作为用户自己的话语发送</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.session.send</code></td>
+<td style="text-align: left;">发送另一个会话、子代理或<a href="agent-teams.html">队友</a>的 Claude 读取的消息</td>
+</tr>
+</tbody>
+</table>
+<p>在 <code>hooks:</code> 行中，<a href="plugins-mods-reference.html#tools"><code>tool.call</code></a> 和 <a href="plugins-mods-reference.html#prompts-and-what-claude-reads"><code>prompt.submit</code></a> 意味着 mod 看到每个工具调用和每个提示词，并可以更改它们。<a href="plugins-mods-reference.html#session"><code>session.append</code></a> 意味着 mod 可以在存储之前重写对话的每一行，但<a href="#hooks-the-guard-passes-over">防护机制跳过的行</a>除外。<a href="plugins-mods-interface.html#change-what-claude-code-already-draws"><code>ui.render{component=AskUserQuestion}</code></a> 意味着 mod 可以重新绘制 Claude 用来询问用户问题的对话框。<code>tool.check</code> 意味着 mod 可以在权限提示出现之前批准或拒绝工具调用。<a href="#know-what-happens-by-default">了解默认情况下会发生什么</a>列出了您的哪些规则和 hook 优先于其答案。</p>
+<h2 id="choose-how-much-to-allow">选择允许的程度</h2>
+<p>Mod 策略的范围从根本没有已安装的 mod 到用户选择的任何 mod，以及由您自己的 mod 检查其他 mod，每一种都只需几个托管设置。在第一列中找到您想要的策略，并设置第二列列出的内容。<a href="managed-settings.html">部署托管设置</a>介绍了托管设置的存放位置。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您想要什么</th>
+<th style="text-align: left;">设置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">没有已安装的 mod 运行，设置 hook 保持不变</td>
+<td style="text-align: left;">设置 <a href="#set-options-on-the-built-in-guard"><code>allowManagedModsOnly</code></a> 并且不部署您自己的 mod</td>
+</tr>
+<tr>
+<td style="text-align: left;">没有已安装的 mod，也根本没有 hook，包括您的托管 hook</td>
+<td style="text-align: left;">将 <code>disableAllHooks</code> 设置为 <code>true</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">仅您组织的 mod</td>
+<td style="text-align: left;">设置守卫的 <a href="#stop-user-installed-mods-from-loading"><code>allowManagedModsOnly</code> 选项</a>，并<a href="#install-your-organizations-mods">安装您的 mod</a> 以便它们计为您的</td>
+</tr>
+<tr>
+<td style="text-align: left;">来自您批准的市场的任何 mod</td>
+<td style="text-align: left;">保持您的<a href="plugins-org.html#restrict-what-users-can-install">市场限制</a>，并将 <code>disableSideloadFlags</code> 设置为 <code>true</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">任何 mod，由您自己的 mod 检查其他 mod</td>
+<td style="text-align: left;"><a href="#install-your-organizations-mods">安装您的 mod</a>，并在 <code>prependPlugins</code> 中将它与 <code>sec-default@builtin</code> 一起列出</td>
+</tr>
+</tbody>
+</table>
+<p>每个设置的作用：</p>
+<ul>
+<li><strong><code>allowManagedModsOnly</code></strong>：内置守卫上的一个选项。Claude Code 会拒绝用户自己的 mod，因此他们的 hook 都不会运行。用户的设置 hook、状态栏和 <code>/goal</code> 继续工作。<a href="#stop-user-installed-mods-from-loading">停止加载用户安装的 mod</a>列出了它涵盖的内容。</li>
+<li><strong><code>allowManagedHooksOnly</code></strong>：范围更广的设置。仅<a href="#install-your-organizations-mods">您组织的 mod</a> 和内置于 Claude Code 的 mod 会加载。用户自己安装的 mod 不会加载。该设置还会阻止用户自己的设置文件中的 hook。在设置之前，请阅读<a href="settings-reference.html#what-runs-under-allowmanagedhooksonly"><code>allowManagedHooksOnly</code> 下运行什么</a>。</li>
+<li><strong><code>disableAllHooks</code></strong>：范围最广的设置。在托管设置中，它会停止每个已安装插件中的 mod（包括您的），并关闭设置文件中的每个 hook，因此您的托管设置中的 <code>PreToolUse</code> hook 不再阻止任何内容。自定义状态栏和 <code>/goal</code> 也会停止工作。在设置之前，请阅读<a href="settings-reference.html#disableallhooks"><code>disableAllHooks</code></a>。</li>
+<li><strong><code>disableSideloadFlags</code></strong>：在启动时拒绝 <code>--plugin-dir</code> 和 <code>--plugin-url</code>，并阻止 Claude 在会话期间编写的 mod 加载。该设置还会拒绝 <code>--agents</code> 和 <code>--mcp-config</code>。在设置之前，请阅读<a href="settings-reference.html#disablesideloadflags"><code>disableSideloadFlags</code></a>。</li>
+</ul>
+<p>内置于 Claude Code 的 mod，例如 <code>AGENTS.md</code> 支持，不受这些设置的影响。每个都有<a href="plugins-mods-overview.html#mods-built-into-claude-code">自己的开关</a>。</p>
+<p>如果用户的 mod 被拒绝或未加载，用户可以在其调试日志中找到原因。<a href="plugins-mods-troubleshoot.html#refusal-messages">拒绝消息</a>列出了 <code>allowManagedHooksOnly</code> 和 <code>disableAllHooks</code> 对应的日志行，<a href="plugins-mods-troubleshoot.html#messages-from-the-built-in-guard">来自内置守卫的消息</a>包含 <code>allowManagedModsOnly</code> 对应的日志行。</p>
+<h3 id="allow-only-your-organization’s-mods">仅允许您组织的 mod</h3>
+<p>要运行您组织的 mod 并阻止用户带来的 mod，请部署<a href="#choose-how-much-to-allow">策略表</a>中 <strong>仅您组织的 mod</strong> 一行的设置，再加上 <code>disableSideloadFlags</code>。使用以下完整的 <code>managed-settings.json</code>，Claude Code 会拒绝用户自己的 mod，因此他们的 hook 都不会运行，而您的策略 mod 会先于其他 mod 运行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"extraKnownMarketplaces"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"acme-tools"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"directory"</span><span class="p">,</span><span class="w"> </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/opt/acme/claude-plugins"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"enabledPlugins"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"acme-guard@acme-tools"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"prependPlugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"acme-guard@acme-tools"</span><span class="p">,</span><span class="w"> </span><span class="s2">"sec-default@builtin"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"pluginConfigs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"cc-plugin-sec-default@builtin"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"allowManagedModsOnly"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"disableSideloadFlags"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>每组键各负责一项工作：</p>
+<ul>
+<li><strong><code>extraKnownMarketplaces</code>、<code>enabledPlugins</code> 和 <code>prependPlugins</code></strong>：安装您的 mod 以便它计为您的，并让它首先运行，守卫紧随其后。<a href="#install-your-organizations-mods">安装您组织的 mod 并设置顺序</a>介绍了这些键所指向的目录。</li>
+<li><strong><code>pluginConfigs</code></strong>：设置守卫的 <code>allowManagedModsOnly</code> 选项，因此 Claude Code 会拒绝用户自己的 mod。他们的设置 hook、状态栏和 <code>/goal</code> 继续工作。</li>
+<li><strong><code>disableSideloadFlags</code></strong>：有关它在启动时拒绝的标志，请参阅 <a href="settings-reference.html#disablesideloadflags"><code>disableSideloadFlags</code></a></li>
+</ul>
+<p>要在测试机器上确认该策略，请在您的 shell 中使用 <code>claude --debug</code> 启动会话并阅读调试日志：</p>
+<ul>
+<li><strong>您的 mod</strong>：其 <code>hooks module</code> 行带有 <code>tier prepend</code></li>
+<li><strong>用户安装的 mod</strong>：有一行显示 <code>refused by cc-plugin-sec-default: mods are limited to your organization's by policy (allowManagedModsOnly)</code>。更早的一行会显示该 mod 的 hook 模块已 <code>loaded</code>，因此请查找拒绝信息。</li>
+<li><strong>插件目录</strong>：<code>claude --plugin-dir ./any-mod</code> 会退出，并显示以 <code>--plugin-dir is disabled by your organization's managed settings (disableSideloadFlags)</code> 开头的消息</li>
+</ul>
+<p>要同时限制用户可以添加哪些市场，请将此文件与您的<a href="plugins-org.html#restrict-what-users-can-install">市场限制</a>结合使用。</p>
+<h3 id="apply-your-plugin-controls-to-mods">将您的插件控制应用于 mod</h3>
+<p>mod 就是插件，因此您<a href="plugins-org.html">为组织管理插件</a>的方式同样适用于包含 mod 的插件：</p>
+<ul>
+<li><strong>查看整个设备群中加载了哪些插件</strong>：<a href="plugins-org.html#audit-and-review">审计和审查</a></li>
+<li><strong>决定您审查过的插件何时可以更新</strong>：<a href="plugins-org.html#set-update-policy">设置更新策略</a></li>
+<li><strong>为某个群组（例如试点群组）提供不同的策略</strong>：<a href="plugins-org.html#plan-for-what-managed-settings-can’t-enforce">为托管设置无法强制执行的内容做好规划</a></li>
+<li><strong>检查哪些应用和会话类型会应用插件键</strong>：<a href="plugins-org.html#when-each-surface-applies-the-plugin-keys">各使用入口何时应用插件键</a></li>
+<li><strong>设置 CI 和容器</strong>：<a href="plugins-org.html#seed-containers-and-ci">为容器和 CI 预置内容</a></li>
+<li><strong>提供用户可以安装的 mod</strong>：<a href="plugins-host-marketplace.html">托管市场</a>。Claude Code 从 GitHub、git、URL 或 npm 源复制的 mod 计为用户的，而不是<a href="#install-your-organizations-mods">您组织的</a>。</li>
+</ul>
+<h3 id="set-options-on-the-built-in-guard">在内置守卫上设置选项</h3>
+<p>内置守卫接受选项。在托管设置中的 <code>pluginConfigs</code> 下设置它们，以 <code>cc-plugin-sec-default@builtin</code> 为键，如<a href="#stop-user-installed-mods-from-loading">停止加载用户安装的 mod</a>中的示例所示。</p>
+<p>该表给出了每个选项未设置和设置为 <code>true</code> 时您的用户获得的结果：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">选项</th>
+<th style="text-align: left;">未设置</th>
+<th style="text-align: left;"><code>true</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>allowManagedModsOnly</code></td>
+<td style="text-align: left;">用户自己的 mod 会运行</td>
+<td style="text-align: left;">仅<a href="#install-your-organizations-mods">您组织的 mod</a> 和内置于 Claude Code 的 mod 会运行其 hook。Claude Code 会拒绝所有其他 mod，包括用户安装的或使用 <code>--plugin-dir</code> 指定的 mod。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>allowModsToOverrideDenyRules</code></td>
+<td style="text-align: left;">拒绝规则优先于用户的 mod</td>
+<td style="text-align: left;">批准工具调用的用户 mod 可以批准 <code>deny</code> 规则拒绝的调用</td>
+</tr>
+</tbody>
+</table>
+<p>这些规则决定选项是否生效：</p>
+<ul>
+<li><strong>id 在这里只有一种形式</strong>：Claude Code 仅在 <code>cc-plugin-sec-default@builtin</code> 下读取选项。<code>prependPlugins</code> 也接受 <code>sec-default@builtin</code>，而 <code>pluginConfigs</code> 不接受。</li>
+<li><strong>仅托管设置有效</strong>：用户、项目或本地设置文件中的相同条目，或使用 <code>--settings</code> 传递的文件中的相同条目，既不会设置选项，也不会放宽选项</li>
+<li><strong>守卫必须加载</strong>：如果您设置了 <code>prependPlugins</code>，请<a href="#install-your-organizations-mods">在列表中指定守卫</a>。守卫未加载时，两个选项都不适用。</li>
+<li><strong>守卫以失败即关闭方式运行</strong>：如果守卫无法读取托管设置，它会在加载时拒绝每个用户的 mod。如果它无法针对用户的 mod 所批准的调用检查拒绝规则，它会拒绝该调用。</li>
+</ul>
+<p><a href="plugins-mods-troubleshoot.html#messages-from-the-built-in-guard">来自内置守卫的消息</a>是任一选项生效时您的用户看到的内容。</p>
+<h2 id="run-your-organization’s-own-mods">运行您组织自己的 mod</h2>
+<p>您可以将自己的 mod 部署给每个用户，选择它们相对于用户 mod 的运行位置，并使用一个来强制执行策略。</p>
+<h3 id="install-your-organizations-mods">安装您组织的 mod 并设置顺序</h3>
+<p>您组织的 mod 在用户 mod 无法加载的地方加载，并且可以在用户 mod 之前运行，因此 Claude Code 必须能够判断 mod 是否来自您。只有当以下所有条件都为真时，它才会将 mod 视为您组织的：</p>
+<ul>
+<li>托管的 <code>enabledPlugins</code> 将 mod 的插件设置为 <code>true</code></li>
+<li>托管设置通过绝对路径将插件的<a href="plugins-create-marketplace.html">市场</a>指定为用户机器上的目录。<code>extraKnownMarketplaces</code> 条目可以做到这一点，并且也会为用户注册该市场。</li>
+<li>市场通过相对路径列出插件，因此 Claude Code <a href="plugins-loading.html#in-place-and-copied-plugins">从该目录就地加载它</a></li>
+</ul>
+<p>为了满足这些条件，请让您的设备管理将市场目录复制到每台机器上的相同路径。使该目录及其上方的每个目录仅可由管理员写入，就像托管设置文件一样。任何可以在那里写入的人都可以重写您的 mod。您从 claude.ai 管理员控制台交付的托管设置可以携带这些键，但无法将目录放到机器上。</p>
+<p>该目录包含市场的清单和插件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/opt/acme/claude-plugins/
+├── .claude-plugin/
+│   └── marketplace.json
+└── plugins/
+    └── acme-guard/
+        ├── .claude-plugin/
+        │   └── plugin.json
+        └── hooks/
+            ├── hooks.json
+            └── register.js
+</code></pre></div>
+<p>清单通过相对于该目录的路径列出插件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"acme-tools"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Acme"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"acme-guard"</span><span class="p">,</span><span class="w"> </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./plugins/acme-guard"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Acme policy mod"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Claude Code 复制到其缓存中的插件计为用户的，即使托管的 <code>enabledPlugins</code> 启用了它。这涵盖了来自 GitHub、git、URL 或 npm 源的每个插件。其 mod 在用户 mod 中运行，<code>prependPlugins</code> 和 <code>appendPlugins</code> 会跳过它，<code>allowManagedModsOnly</code> 会拒绝它，<code>allowManagedHooksOnly</code> 会阻止它加载。用户的调试日志中有一行以插件的 id 和 <code>is enabled by managed settings, but</code> 开头。</p>
+<p>Claude Code 每次即将采取行动（例如运行工具）时都会触发一个事件，并依次将其传递给每个 mod。计为您的 mod <a href="plugins-mods-events.html#the-order-mods-run-in">在用户 mod 之前运行</a>，即使您没有在任何地方列出它。要设置其位置，请在两个设置之一中列出其 id。id 是插件的名称、<code>@</code> 和市场的名称，例如 <code>acme-guard@acme-tools</code>。</p>
+<ul>
+<li><strong><code>prependPlugins</code></strong>：您的 mod 在任何用户 mod 之前看到每个事件，并在之后看到每个结果。它可以更改事件、拒绝事件或跳过用户 mod。</li>
+<li><strong><code>appendPlugins</code></strong>：您的 mod 在每个用户 mod 之后运行，因此它只看到这些 mod 传递的事件，并以它们传递的形式看到</li>
+</ul>
+<p>此示例在 <code>/opt/acme/claude-plugins</code> 声明 <code>acme-tools</code> 市场，启用来自它的 <code>acme-guard</code>，并首先运行该 mod，内置守卫在其后：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"extraKnownMarketplaces"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"acme-tools"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"directory"</span><span class="p">,</span><span class="w"> </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/opt/acme/claude-plugins"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"enabledPlugins"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"acme-guard@acme-tools"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"prependPlugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"acme-guard@acme-tools"</span><span class="p">,</span><span class="w"> </span><span class="s2">"sec-default@builtin"</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>每个键做一项工作：</p>
+<ul>
+<li><strong><code>extraKnownMarketplaces</code></strong>：指定保存 <code>acme-tools</code> 市场的目录。<code>path</code> 是包含 <code>.claude-plugin/marketplace.json</code> 的目录的绝对路径。</li>
+<li><strong><code>enabledPlugins</code></strong>：为接收这些托管设置的每个用户启用 <code>acme-guard</code></li>
+<li><strong><code>prependPlugins</code></strong>：将 <code>acme-guard</code> 放在第一位，内置守卫放在第二位，都在用户安装的任何 mod 之前。Claude Code 遵循您列出的顺序。</li>
+</ul>
+<p>要确认用户的机器收到了设置，请参阅<a href="managed-settings.html#check-that-a-policy-is-in-force">检查策略是否生效</a>。</p>
+<p>要确认 mod 运行的位置，请在该机器上使用 <code>claude --debug</code> 启动会话，并在<a href="plugins-mods-troubleshoot.html#read-the-debug-log">调试日志</a>中搜索 mod 的 id：</p>
+<ul>
+<li><strong><code>hooks module acme-guard@acme-tools loaded</code>，带有 <code>tier prepend</code></strong>：mod 计为您组织的，并首先运行</li>
+<li><strong>同一行带有 <code>tier user</code></strong>：Claude Code 将其视为用户的 mod。第二行 <code>prependPlugins names acme-guard@acme-tools, which is not an enabled managed plugin with a hooks module; skipped</code> 表示列表跳过了它。</li>
+</ul>
+<p>这些规则决定了两个列表中哪些 id 生效：</p>
+<ul>
+<li><strong>列表替换默认值</strong>：当您在托管设置中设置 <code>prependPlugins</code> 时，请在其中列出 <code>sec-default@builtin</code> 以保留内置守卫。该守卫是内置的，不需要 <code>enabledPlugins</code> 条目。</li>
+<li><strong>您自己的 id 必须计为您的</strong>：在托管设置中，Claude Code 会跳过其插件不满足组织 mod 条件的 id</li>
+<li><strong>仓库无法设置它们</strong>：Claude Code 从托管设置读取这两个设置，从不从仓库的设置文件读取。用户可以在 <code>~/.claude/settings.json</code> 中设置它们来对自己的 mod 排序，但仅限于没有托管设置的机器，并且仅当会话的凭据不是 Team 或 Enterprise <code>/login</code> 时。在其他任何情况下，Claude Code 都会忽略用户设置中的这两个键。那里的列表既不添加也不删除内置守卫。</li>
+</ul>
+<h3 id="enforce-a-policy-with-a-mod-of-your-own">使用您自己的 mod 强制执行策略</h3>
+<p>要阻止每个用户的 mod，您不需要自己的 mod。设置 <a href="#stop-user-installed-mods-from-loading"><code>allowManagedModsOnly</code></a> 即可。当您想允许某些用户的 mod 并拒绝其他的，或记录 mod 的行为时，请编写策略 mod。</p>
+<p>每次另一个 mod 即将加载时，您的 mod 会在名为 <a href="plugins-mods-reference.html#other-mods"><code>plugin.register</code></a> 的事件中收到 <code>claude plugin validate</code> 打印的列表。<code>prependPlugins</code> 中的 mod 可以读取该列表并拒绝该 mod。它也可以<a href="plugins-mods-api.html#reach-files-processes-and-the-network">按名称处理任何 mods API 调用</a>，以便针对每个其他 mod 记录或拒绝该调用。名称是去掉 <code>$.</code> 的方法，因此 <code>fs.write</code> 上的 hook 会看到每个 <code>$.fs.write</code> 调用。</p>
+<p>此策略 mod 拒绝任何自身代码调用 <code>$.process.run</code> 或 <code>$.process.spawn</code> 的用户 mod。它还保留审计日志，将每个工具调用和 mod 写入的每个文件写入调试日志。因为它首先运行，日志记录的是请求的原始内容，在任何用户 mod 更改之前。将其保存为 <code>acme-guard/hooks/register.js</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="c1">// The methods no user's mod may call, each spelled namespace.method</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">BLOCKED_CALLS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">'process.run'</span><span class="p">,</span><span class="w"> </span><span class="s1">'process.spawn'</span><span class="p">]</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">register</span><span class="p">(</span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Runs each time another mod is about to load</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'plugin.register'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Keep the calls in that mod's code that are on the blocked list</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">blocked</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">uses</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">call</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">BLOCKED_CALLS</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">call</span><span class="p">))</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">tier</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'user'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">blocked</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Returning refuse keeps the mod from loading, and the text is the reason</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">refuse</span><span class="o">:</span><span class="w"> </span><span class="s1">'Acme policy: mods may not call '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">blocked</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">', '</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// Let every other mod load</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="c1">// Record each tool call, then let it go ahead unchanged</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'audit tool.call '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">tool</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">to</span><span class="o">:</span><span class="w"> </span><span class="s1">'debug'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="c1">// Record which mod wrote a file, then the path, quoted because the mod chose it</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'fs.write'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'audit fs.write by '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">next</span><span class="p">.</span><span class="nx">origin</span><span class="p">.</span><span class="nx">plugin</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">' '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">path</span><span class="p">),</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">to</span><span class="o">:</span><span class="w"> </span><span class="s1">'debug'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>该文件注册三个 hook：</p>
+<ul>
+<li><strong><code>plugin.register</code></strong>：决定另一个 mod 是否加载。它拒绝调用被阻止方法的用户 mod，并放行每个其他 mod。</li>
+<li><strong><code>tool.call</code></strong>：为每个工具调用向调试日志写入一行，例如 <code>audit tool.call Bash</code>，并且不更改任何内容</li>
+<li><strong><code>fs.write</code></strong>：为另一个 mod 发起的每个 <code>$.fs.write</code> 调用写入一行，例如 <code>audit fs.write by reader "/tmp/notes.md"</code>，并且不更改任何内容。mod 的名称在前，路径加了引号，因此 mod 选择的路径无法冒充该行的其他字段。</li>
+</ul>
+<p><code>plugin.register</code> hook 读取事件的两个字段：</p>
+<ul>
+<li><strong><code>e.tier</code></strong>：mod 将运行的位置，为 <code>prepend</code>、<code>user</code>、<code>append</code> 或 <code>builtin</code> 之一。用户安装的每个 mod 都是 <code>user</code>。</li>
+<li><strong><code>e.uses.calls</code></strong>：mod 调用的 mods API 方法，每个写作 <code>namespace.method</code>，例如 <code>process.run</code>，不带 <code>claude plugin validate</code> 打印的 <code>$.</code></li>
+</ul>
+<p>当用户安装调用 <code>$.process.run</code> 的 mod 时，该 mod 不会加载，其调试日志中有一行以 <code>refused by acme-guard:</code> 和您的原因结尾。在<a href="plugins-mods-troubleshoot.html#find-out-why-a-mod-does-nothing">热重新加载插件目录的会话</a>中，拒绝信息也会出现在会话记录中。要在不拒绝整个 mod 的情况下阻止某个调用，请从该调用名称上的 hook 返回 <code>{ deny: 'your reason' }</code>。</p>
+<p>要将审计行发送到调试日志以外的地方，请从相同的 hook 中调用 <code>$.http.fetch</code>。</p>
+<p>会话可以在没有您的 mod 的情况下运行。如果运行已安装 mod 的工作线程<a href="plugins-mods-troubleshoot.html#mods-that-run-in-the-hooks-worker-are-off-for-this-session">崩溃三次</a>，Claude Code 会卸载所有非内置的 mod（包括您的），直到用户运行 <code>/reload-plugins</code> 或启动新会话。此外，使用 <code>--safe-mode</code> 启动 Claude Code 的用户运行时不会加载已安装的 mod，包括您的。</p>
+<p><a href="plugins-mods-create.html">创建 mod</a> 介绍 mod 需要的文件。<a href="plugins-mods-test.html#test-a-mod-that-judges-other-mods">测试策略 mod</a> 提供此策略 mod 的测试文件。</p>
+<h4 id="refuse-mods-when-your-check-fails">当您的检查失败时拒绝 mod</h4>
+<p>如果您的 <code>plugin.register</code> hook 抛出异常或超过其时间限制，Claude Code 会跳过该 hook，因此检查以放行方式失败，正在被检查的 mod 会加载。要以拒绝方式失败并拒绝用户 mod，请将检查移到命名函数中，并添加返回拒绝的 <code>.catch</code> 处理程序。此版本的文件仅显示 <code>plugin.register</code> hook，因此请在 <code>register</code> 中保留第一个版本的两个审计 hook：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="kd">const</span><span class="w"> </span><span class="nx">BLOCKED_CALLS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">'process.run'</span><span class="p">,</span><span class="w"> </span><span class="s1">'process.spawn'</span><span class="p">]</span>
+
+<span class="c1">// The same check as before, moved into a function of its own</span>
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">checkMod</span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">blocked</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">uses</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">call</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">BLOCKED_CALLS</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">call</span><span class="p">))</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">tier</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'user'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">blocked</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">refuse</span><span class="o">:</span><span class="w"> </span><span class="s1">'Acme policy: mods may not call '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">blocked</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">', '</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">register</span><span class="p">(</span><span class="nx">on</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// The handler runs only when checkMod throws or exceeds its time limit</span>
+<span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="s1">'plugin.register'</span><span class="p">,</span><span class="w"> </span><span class="nx">checkMod</span><span class="p">).</span><span class="k">catch</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Let your organization's mods and built-in mods load</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">tier</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">'user'</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="w">    </span><span class="c1">// Refuse the user's mod that couldn't be checked</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">refuse</span><span class="o">:</span><span class="w"> </span><span class="s1">'Acme policy check failed, so this mod was not loaded'</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>处理程序就位后，如果检查在处理某个 mod 时抛出异常或超时，该 mod 不会加载，拒绝行会带有第二个原因，例如 <code>refused by acme-guard: Acme policy check failed, so this mod was not loaded</code>。处理程序将 <code>user</code> 层以外的每个 mod 传递给 <code>next(e)</code>，因此失败的检查不会阻止您组织列出的 mod。<a href="plugins-mods-events.html#handle-a-hook-that-fails">处理失败的 hook</a> 介绍其他事件的 <code>.catch</code>。</p>
+<h2 id="next-steps">后续步骤</h2>
+<ul>
+<li><a href="plugins-security.html">插件安全</a>：任何插件可以在用户机器上执行的操作，以及如何在安装前查看一个</li>
+<li><a href="plugins-mods-overview.html">Mods 概述</a>：什么是 mod 以及它与 hooks、skills 和 MCP 服务器的比较</li>
+<li><a href="plugins-mods-events.html#the-order-mods-run-in">mods 运行的顺序</a>：<code>prependPlugins</code> 和 <code>appendPlugins</code> 如何与用户的 mods 配合</li>
+<li><a href="plugins-mods-reference.html#settings-and-environment-variables">设置和环境变量</a>：本页命名的每个设置在一个表中</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-org.html"><span class="pager-dir">← 上一页</span><span class="pager-name">为您的组织管理 Claude Code plugins</span></a><a class="pager-link next" href="plugins-troubleshooting.html"><span class="pager-dir">下一页 →</span><span class="pager-name">排查插件问题</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#stop-user-installed-mods-from-loading">停止用户安装的 mod 加载</a><a class="toc-l2" href="#know-what-happens-by-default">了解默认情况下会发生什么</a><a class="toc-l3" href="#know-which-controls-still-apply">了解哪些控制仍然适用</a><a class="toc-l3" href="#hooks-the-guard-passes-over">了解用户 mod 的哪些 hook 不会运行</a><a class="toc-l2" href="#decide-whether-to-leave-mods-on">决定是否保持 mods 开启</a><a class="toc-l3" href="#review-what-a-mod-can-do">查看 mod 可以执行的操作</a><a class="toc-l2" href="#choose-how-much-to-allow">选择允许的程度</a><a class="toc-l3" href="#allow-only-your-organization’s-mods">仅允许您组织的 mod</a><a class="toc-l3" href="#apply-your-plugin-controls-to-mods">将您的插件控制应用于 mod</a><a class="toc-l3" href="#set-options-on-the-built-in-guard">在内置守卫上设置选项</a><a class="toc-l2" href="#run-your-organization’s-own-mods">运行您组织自己的 mod</a><a class="toc-l3" href="#install-your-organizations-mods">安装您组织的 mod 并设置顺序</a><a class="toc-l3" href="#enforce-a-policy-with-a-mod-of-your-own">使用您自己的 mod 强制执行策略</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

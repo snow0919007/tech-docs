@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>兼容性标志 · Workers 文档（中文版）</title>
+<meta name="description" content="逐个开关运行时行为：用标志提前试用、或回退某个变更。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>兼容性标志</h1>
+      <p class="lead">逐个开关运行时行为：用标志提前试用、或回退某个变更。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-09-18</span>
+        <span>对应页面：configuration/compatibility-flags</span>
+      </div>
+
+<p>兼容性标志（compatibility flags）用于启用特定特性。它有两种典型用途：帮 Workers 团队测试尚未默认启用的改动；或者你的代码依赖某个旧行为，需要留住它、同时又想应用其他兼容性变更。</p>
+      <p>兼容性标志通常会有一个「默认启用」的日期。因此只要给你的 Worker 指定 <code>compatibility_date</code>，就能一次性启用截至该日期（含该日期）的全部标志。</p>
+
+      <h2>设置兼容性标志</h2>
+      <p>你可以提供一个 <code>compatibility_flags</code> 列表，用来启用或禁用特定变更。</p>
+
+      <h4>通过 Wrangler</h4>
+      <p>兼容性标志可以在 Worker 的 <a href="../../sections/wrangler.html">Wrangler 配置文件</a>中设置。</p>
+      <p>下例启用了 <code>formdata_parser_supports_files</code> 这个标志。在 <code>2021-09-14</code> 这个日期下它尚未默认启用，但写进 <code>compatibility_flags</code> 就能启用它。反过来，<code>compatibility_flags</code> 也可以用来关掉过去已变成默认的变更（在标志名前面加 <code>no_</code>）。</p>
+<pre data-lang="jsonc"><code>{
+	// Opt into backwards-incompatible changes through September 14, 2021.
+	"compatibility_date": "2021-09-14",
+	// Also opt into an upcoming fix to the FormData API.
+	"compatibility_flags": [
+		"formdata_parser_supports_files"
+	]
+}</code></pre>
+<pre data-lang="toml"><code>compatibility_date = "2021-09-14"
+compatibility_flags = [ "formdata_parser_supports_files" ]</code></pre>
+
+      <h4>通过 Cloudflare 控制台</h4>
+      <p>兼容性标志可以在 <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener">Cloudflare 控制台 ↗</a>的 Workers 设置里更新。</p>
+
+      <h4>通过 Cloudflare API</h4>
+      <p>用 <a href="https://developers.cloudflare.com/api/resources/workers/subresources/scripts/methods/update/" target="_blank" rel="noopener">Workers Script API ↗</a> 或 <a href="https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/versions/methods/create/" target="_blank" rel="noopener">Workers Versions API ↗</a> 上传 Worker 时，可以在请求体的 <code>metadata</code> 字段里设置兼容性标志。</p>
+
+      <h2>Node.js 兼容性标志</h2>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>对于 <code>2024-09-23</code> 至 <code>2026-08-03</code>（含）之间的兼容性日期，<code>nodejs_compat</code> 标志会<strong>同时</strong>启用 <code>nodejs_compat_v2</code>。v2 会把更多 polyfill 与全局对象打包进 Worker，从而改善 Node.js 兼容性，代价是包体积变大。</p>
+        <p>兼容性日期在 <code>2024-09-22</code> 及之前时，需要在 <code>nodejs_compat</code> 之外再加 <code>nodejs_compat_v2</code> 才能开启 v2；在 <code>2024-09-23</code> 至 <code>2026-08-03</code> 之间，则加 <code>no_nodejs_compat_v2</code> 来只用 v1。</p>
+        <p>兼容性日期为 <code>2026-08-04</code> 及之后时，Workers 与 Pages 项目会默认同时启用 <code>nodejs_compat</code> 与 <code>nodejs_compat_v2</code>，无需任何配置；这些标志对该日期已无作用，新配置里可以省略，老项目更新日期时也不必删除。</p>
+      </div>
+      <p>Node.js 的 <code>AsyncLocalStorage</code> 对 Workers 特别有用。只想启用这一个 API 时，用 <code>nodejs_als</code> 标志。</p>
+
+      <h2>标志清单</h2>
+      <div class="info-box">
+        <span class="box-title">关于这张表</span>
+        <p>原文的「Flags history」一节共 133 条，每条都有一段说明与示例代码（合计约 12 万字符）。此处把全部条目整理成可检索的索引：<strong>默认启用日期、英文标题、启用用标志名、关闭用标志名</strong>，按默认启用日期从新到旧排列。标志名一律保留英文原文（它们本身就是配置里要写的值），逐条的详细说明与代码请查阅<a href="https://developers.cloudflare.com/workers/configuration/compatibility-flags/" target="_blank" rel="noopener">英文原文 ↗</a>对应小节。</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th style="width:14%">默认启用</th><th style="width:40%">行为变更（原文标题）</th><th style="width:23%">启用用标志</th><th style="width:23%">关闭用标志</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>2028-04-30</code></td><td>Remove Node.js 24.x end-of-life APIs</td><td><code>remove_nodejs_compat_eol_v24</code></td><td><code>add_nodejs_compat_eol_v24</code></td></tr>
+            <tr><td><code>2027-04-30</code></td><td>Remove Node.js 22.x end-of-life APIs</td><td><code>remove_nodejs_compat_eol_v22</code></td><td><code>add_nodejs_compat_eol_v22</code></td></tr>
+            <tr><td><code>2026-12-01</code></td><td>Name WebAssembly modules after their module in stack traces</td><td><code>wasm_source_url_support</code></td><td><code>no_wasm_source_url_support</code></td></tr>
+            <tr><td><code>2026-11-17</code></td><td>`cache` option does not override the origin&#x27;s `Cache-Control`</td><td><code>cache_option_preserves_cache_control</code></td><td><code>cache_option_overrides_cache_control</code></td></tr>
+            <tr><td><code>2026-11-17</code></td><td>Backward error and close propagation in pipeTo()</td><td><code>pipe_to_backward_propagation</code></td><td><code>no_pipe_to_backward_propagation</code></td></tr>
+            <tr><td><code>2026-10-01</code></td><td>Durable Object I/O tasks prevent eviction</td><td><code>durable_object_io_tasks_prevent_eviction</code></td><td><code>durable_object_io_tasks_do_not_prevent_eviction</code></td></tr>
+            <tr><td><code>2026-09-15</code></td><td>Spec-compliant `dispatchEvent()` exception handling</td><td><code>spec_compliant_dispatch_exceptions</code></td><td><code>no_spec_compliant_dispatch_exceptions</code></td></tr>
+            <tr><td><code>2026-09-08</code></td><td>Python 314 for Python Workers</td><td><code>python_workers_314</code></td><td><code>—</code></td></tr>
+            <tr><td><code>2026-08-04</code></td><td>Node.js compatibility</td><td><code>nodejs_compat</code></td><td><code>no_nodejs_compat</code></td></tr>
+            <tr><td><code>2026-06-16</code></td><td>Throw On Not Implements TLS Options</td><td><code>throw_on_not_implemented_tls_options</code></td><td><code>no_throw_on_not_implemented_tls_options</code></td></tr>
+            <tr><td><code>2026-05-26</code></td><td>Process .pth files for Python Workers</td><td><code>python_process_pth_files</code></td><td><code>disable_python_process_pth_files</code></td></tr>
+            <tr><td><code>2026-05-19</code></td><td>Node.js diagnostics\_channel hasSubscribers getter</td><td><code>diagnostics_channel_has_subscribers_getter</code></td><td><code>no_diagnostics_channel_has_subscribers_getter</code></td></tr>
+            <tr><td><code>2026-05-14</code></td><td>Workflows preserve `NonRetryableError` message</td><td><code>workflows_preserve_non_retryable_error_message</code></td><td><code>workflows_replace_non_retryable_error_message</code></td></tr>
+            <tr><td><code>2026-04-21</code></td><td>Enhanced error serialization</td><td><code>enhanced_error_serialization</code></td><td><code>legacy_error_serialization</code></td></tr>
+            <tr><td><code>2026-04-07</code></td><td>WebSocket auto-reply to close</td><td><code>web_socket_auto_reply_to_close</code></td><td><code>web_socket_manual_reply_to_close</code></td></tr>
+            <tr><td><code>2026-04-01</code></td><td>Use an isolated PID namespace for containers</td><td><code>containers_pid_namespace</code></td><td><code>no_containers_pid_namespace</code></td></tr>
+            <tr><td><code>2026-03-24</code></td><td>Spec-compliant TextEncoderStream/TextDecoderStream backpressure</td><td><code>encoder_stream_spec_compliant_backpressure</code></td><td><code>no_encoder_stream_spec_compliant_backpressure</code></td></tr>
+            <tr><td><code>2026-03-24</code></td><td>Spec-compliant WritableStream writer behavior</td><td><code>writable_stream_spec_compliant_writer</code></td><td><code>no_writable_stream_spec_compliant_writer</code></td></tr>
+            <tr><td><code>2026-03-17</code></td><td>Enable global Performance classes</td><td><code>enable_global_performance_classes</code></td><td><code>disable_global_performance_classes</code></td></tr>
+            <tr><td><code>2026-03-17</code></td><td>Enable `node:child_process` module</td><td><code>enable_nodejs_child_process_module</code></td><td><code>disable_nodejs_child_process_module</code></td></tr>
+            <tr><td><code>2026-03-17</code></td><td>Enable `node:perf_hooks` module</td><td><code>enable_nodejs_perf_hooks_module</code></td><td><code>disable_nodejs_perf_hooks_module</code></td></tr>
+            <tr><td><code>2026-03-17</code></td><td>Enable `node:readline` module</td><td><code>enable_nodejs_readline_module</code></td><td><code>disable_nodejs_readline_module</code></td></tr>
+            <tr><td><code>2026-03-17</code></td><td>Enable `node:repl` module</td><td><code>enable_nodejs_repl_module</code></td><td><code>disable_nodejs_repl_module</code></td></tr>
+            <tr><td><code>2026-03-17</code></td><td>Enable `node:tty` module</td><td><code>enable_nodejs_tty_module</code></td><td><code>disable_nodejs_tty_module</code></td></tr>
+            <tr><td><code>2026-03-17</code></td><td>Enable `node:v8` module</td><td><code>enable_nodejs_v8_module</code></td><td><code>disable_nodejs_v8_module</code></td></tr>
+            <tr><td><code>2026-03-17</code></td><td>Enable `node:worker_threads` module</td><td><code>enable_nodejs_worker_threads_module</code></td><td><code>disable_nodejs_worker_threads_module</code></td></tr>
+            <tr><td><code>2026-03-17</code></td><td>WebSocket standard binary type</td><td><code>websocket_standard_binary_type</code></td><td><code>no_websocket_standard_binary_type</code></td></tr>
+            <tr><td><code>2026-03-12</code></td><td>Expose error codes in Queue operations</td><td><code>queue_expose_error_codes</code></td><td><code>no_queue_expose_error_codes</code></td></tr>
+            <tr><td><code>2026-03-03</code></td><td>Dedicated CJK TextDecoder implementation</td><td><code>text_decoder_cjk_decoder</code></td><td><code>disable_text_decoder_cjk_decoder</code></td></tr>
+            <tr><td><code>2026-03-03</code></td><td>Defer unhandled rejection processing to after microtask checkpoint</td><td><code>unhandled_rejection_after_microtask_checkpoint</code></td><td><code>no_unhandled_rejection_after_microtask_checkpoint</code></td></tr>
+            <tr><td><code>2026-03-03</code></td><td>Enforce WebSocket close reason byte limit</td><td><code>websocket_close_reason_byte_limit</code></td><td><code>no_websocket_close_reason_byte_limit</code></td></tr>
+            <tr><td><code>2026-02-24</code></td><td>Durable Object `deleteAll()` deletes alarms</td><td><code>delete_all_deletes_alarm</code></td><td><code>delete_all_preserves_alarm</code></td></tr>
+            <tr><td><code>2026-02-24</code></td><td>TextDecoder replaces lone surrogates</td><td><code>text_decoder_replace_surrogates</code></td><td><code>disable_text_decoder_replace_surrogates</code></td></tr>
+            <tr><td><code>2026-02-19</code></td><td>Support iterables as fetch Request/Response body</td><td><code>fetch_iterable_type_support</code></td><td><code>no_fetch_iterable_type_support</code></td></tr>
+            <tr><td><code>2026-02-10</code></td><td>Enable Node.js-compatible global timers</td><td><code>enable_nodejs_global_timers</code></td><td><code>no_nodejs_global_timers</code></td></tr>
+            <tr><td><code>2026-01-29</code></td><td>Enable `node:dgram` module</td><td><code>enable_nodejs_dgram_module</code></td><td><code>disable_nodejs_dgram_module</code></td></tr>
+            <tr><td><code>2026-01-29</code></td><td>Enable `node:inspector` module</td><td><code>enable_nodejs_inspector_module</code></td><td><code>disable_nodejs_inspector_module</code></td></tr>
+            <tr><td><code>2026-01-29</code></td><td>Enable `node:sqlite` module</td><td><code>enable_nodejs_sqlite_module</code></td><td><code>disable_nodejs_sqlite_module</code></td></tr>
+            <tr><td><code>2026-01-29</code></td><td>Enable `node:_stream_wrap` module</td><td><code>enable_nodejs_stream_wrap_module</code></td><td><code>disable_nodejs_stream_wrap_module</code></td></tr>
+            <tr><td><code>2026-01-22</code></td><td>`require()` returns default export</td><td><code>require_returns_default_export</code></td><td><code>require_returns_namespace</code></td></tr>
+            <tr><td><code>2026-01-20</code></td><td>Duplicate stubs in RPC params instead of transferring ownership</td><td><code>rpc_params_dup_stubs</code></td><td><code>rpc_params_transfer_stubs</code></td></tr>
+            <tr><td><code>2026-01-15</code></td><td>Fetch iterable body respects toString/toPrimitive overrides</td><td><code>fetch_iterable_type_support_override_adjustment</code></td><td><code>no_fetch_iterable_type_support_override_adjustment</code></td></tr>
+            <tr><td><code>2026-01-13</code></td><td>Strip UTF-8 BOM in stream `readAllText()`</td><td><code>strip_bom_in_read_all_text</code></td><td><code>do_not_strip_bom_in_read_all_text</code></td></tr>
+            <tr><td><code>2025-12-04</code></td><td>Enable `node:cluster` module</td><td><code>enable_nodejs_cluster_module</code></td><td><code>disable_nodejs_cluster_module</code></td></tr>
+            <tr><td><code>2025-12-04</code></td><td>Enable `node:domain` module</td><td><code>enable_nodejs_domain_module</code></td><td><code>disable_nodejs_domain_module</code></td></tr>
+            <tr><td><code>2025-12-04</code></td><td>Enable `node:punycode` module</td><td><code>enable_nodejs_punycode_module</code></td><td><code>disable_nodejs_punycode_module</code></td></tr>
+            <tr><td><code>2025-12-04</code></td><td>Enable `node:trace_events` module</td><td><code>enable_nodejs_trace_events_module</code></td><td><code>disable_nodejs_trace_events_module</code></td></tr>
+            <tr><td><code>2025-12-04</code></td><td>Enable `node:wasi` module</td><td><code>enable_nodejs_wasi_module</code></td><td><code>disable_nodejs_wasi_module</code></td></tr>
+            <tr><td><code>2025-12-03</code></td><td>Enable fast JSG struct optimization</td><td><code>enable_fast_jsg_struct</code></td><td><code>disable_fast_jsg_struct</code></td></tr>
+            <tr><td><code>2025-11-17</code></td><td>Enable ctx.exports</td><td><code>enable_ctx_exports</code></td><td><code>disable_ctx_exports</code></td></tr>
+            <tr><td><code>2025-10-01</code></td><td>Enable `node:vm` module</td><td><code>enable_nodejs_vm_module</code></td><td><code>disable_nodejs_vm_module</code></td></tr>
+            <tr><td><code>2025-09-21</code></td><td>Enable `node:console` module</td><td><code>enable_nodejs_console_module</code></td><td><code>disable_nodejs_console_module</code></td></tr>
+            <tr><td><code>2025-09-20</code></td><td>Enable workflow entrypoint validation</td><td><code>enable_validate_workflow_entrypoint</code></td><td><code>disable_validate_workflow_entrypoint</code></td></tr>
+            <tr><td><code>2025-09-15</code></td><td>Enable `node:fs` module</td><td><code>enable_nodejs_fs_module</code></td><td><code>disable_nodejs_fs_module</code></td></tr>
+            <tr><td><code>2025-09-15</code></td><td>Enable `node:os` module</td><td><code>enable_nodejs_os_module</code></td><td><code>disable_nodejs_os_module</code></td></tr>
+            <tr><td><code>2025-09-15</code></td><td>Enable `process` v2 implementation</td><td><code>enable_nodejs_process_v2</code></td><td><code>disable_nodejs_process_v2</code></td></tr>
+            <tr><td><code>2025-09-01</code></td><td>Enable Node.js HTTP server modules</td><td><code>enable_nodejs_http_server_modules</code></td><td><code>disable_nodejs_http_server_modules</code></td></tr>
+            <tr><td><code>2025-09-01</code></td><td>Enable `node:http2` module</td><td><code>enable_nodejs_http2_module</code></td><td><code>disable_nodejs_http2_module</code></td></tr>
+            <tr><td><code>2025-09-01</code></td><td>Remove end-of-life Node.js APIs</td><td><code>remove_nodejs_compat_eol</code></td><td><code>add_nodejs_compat_eol</code></td></tr>
+            <tr><td><code>2025-09-01</code></td><td>Remove Node.js 23.x end-of-life APIs</td><td><code>remove_nodejs_compat_eol_v23</code></td><td><code>add_nodejs_compat_eol_v23</code></td></tr>
+            <tr><td><code>2025-09-01</code></td><td>Strip Authorization header on cross-origin redirects</td><td><code>strip_authorization_on_cross_origin_redirect</code></td><td><code>retain_authorization_on_cross_origin_redirect</code></td></tr>
+            <tr><td><code>2025-08-15</code></td><td>Enable availability of `node:http` and `node:https` modules</td><td><code>enable_nodejs_http_modules</code></td><td><code>disable_nodejs_http_modules</code></td></tr>
+            <tr><td><code>2025-08-15</code></td><td>Expose global MessageChannel and MessagePort</td><td><code>expose_global_message_channel</code></td><td><code>no_expose_global_message_channel</code></td></tr>
+            <tr><td><code>2025-08-14</code></td><td>Disable global handlers for Python Workers</td><td><code>python_no_global_handlers</code></td><td><code>disable_python_no_global_handlers</code></td></tr>
+            <tr><td><code>2025-08-07</code></td><td>Enable `cache: no-cache` HTTP standard API</td><td><code>cache_no_cache_enabled</code></td><td><code>cache_no_cache_disabled</code></td></tr>
+            <tr><td><code>2025-08-01</code></td><td>Set the `this` value of EventTarget event handlers</td><td><code>set_event_target_this</code></td><td><code>no_set_event_target_this</code></td></tr>
+            <tr><td><code>2025-08-01</code></td><td>Set forwardable email full headers</td><td><code>set_forwardable_email_full_headers</code></td><td><code>set_forwardable_email_single_headers</code></td></tr>
+            <tr><td><code>2025-06-16</code></td><td>Bind AsyncLocalStorage snapshots to the request</td><td><code>bind_asynclocalstorage_snapshot_to_request</code></td><td><code>do_not_bind_asynclocalstorage_snapshot_to</code></td></tr>
+            <tr><td><code>2025-06-16</code></td><td>Throw on unrecognized import assertions</td><td><code>throw_on_unrecognized_import_assertion</code></td><td><code>ignore_unrecognized_import_assertion</code></td></tr>
+            <tr><td><code>2025-06-01</code></td><td>Enable eval during startup</td><td><code>allow_eval_during_startup</code></td><td><code>disallow_eval_during_startup</code></td></tr>
+            <tr><td><code>2025-05-19</code></td><td>Cache API request `cf` overrides cache rules</td><td><code>cache_api_request_cf_overrides_cache_rules</code></td><td><code>no_cache_api_request_cf_overrides_cache_rules</code></td></tr>
+            <tr><td><code>2025-05-19</code></td><td>Enable `navigator.language`</td><td><code>enable_navigator_language</code></td><td><code>disable_navigator_language</code></td></tr>
+            <tr><td><code>2025-05-05</code></td><td>Enable `FinalizationRegistry` and `WeakRef`</td><td><code>enable_weak_ref</code></td><td><code>disable_weak_ref</code></td></tr>
+            <tr><td><code>2025-05-01</code></td><td>Spec-compliant URLPattern implementation</td><td><code>urlpattern_standard</code></td><td><code>urlpattern_original</code></td></tr>
+            <tr><td><code>2025-04-02</code></td><td>Override cache rules cache settings in `request.cf` object for Fetch API</td><td><code>request_cf_overrides_cache_rules</code></td><td><code>no_request_cf_overrides_cache_rules</code></td></tr>
+            <tr><td><code>2025-04-01</code></td><td>Navigation requests prefer asset serving</td><td><code>assets_navigation_prefers_asset_serving</code></td><td><code>assets_navigation_has_no_effect</code></td></tr>
+            <tr><td><code>2025-04-01</code></td><td>Enable auto-populating `process.env`</td><td><code>nodejs_compat_populate_process_env</code></td><td><code>nodejs_compat_do_not_populate_process_env</code></td></tr>
+            <tr><td><code>2024-12-16</code></td><td>Apply TransformStream backpressure fix</td><td><code>fixup-transform-stream-backpressure</code></td><td><code>original-transform-stream-backpressure</code></td></tr>
+            <tr><td><code>2024-12-02</code></td><td>Disable top-level await in require(...)</td><td><code>disable_top_level_await_in_require</code></td><td><code>enable_top_level_await_in_require</code></td></tr>
+            <tr><td><code>2024-11-11</code></td><td>Enable `cache: no-store` HTTP standard API</td><td><code>cache_option_enabled</code></td><td><code>cache_option_disabled</code></td></tr>
+            <tr><td><code>2024-10-14</code></td><td>Handle cross-request promise resolution correctly</td><td><code>handle_cross_request_promise_resolution</code></td><td><code>no_handle_cross_request_promise_resolution</code></td></tr>
+            <tr><td><code>2024-10-14</code></td><td>Upper-case HTTP methods</td><td><code>upper_case_all_http_methods</code></td><td><code>no_upper_case_all_http_methods</code></td></tr>
+            <tr><td><code>2024-09-26</code></td><td>Automatically set the Symbol.toStringTag for Workers API objects</td><td><code>set_tostring_tag</code></td><td><code>do_not_set_tostring_tag</code></td></tr>
+            <tr><td><code>2024-09-23</code></td><td>Enable `node:zlib` module</td><td><code>nodejs_zlib</code></td><td><code>no_nodejs_zlib</code></td></tr>
+            <tr><td><code>2024-09-02</code></td><td>Allow specifying a custom port when making a subrequest with the fetch() API</td><td><code>allow_custom_ports</code></td><td><code>ignore_custom_ports</code></td></tr>
+            <tr><td><code>2024-09-02</code></td><td>WritableStream abort clears pending write queue</td><td><code>internal_writable_stream_abort_clears_queue</code></td><td><code>internal_writable_stream_abort_does_not_clear_queue</code></td></tr>
+            <tr><td><code>2024-06-03</code></td><td>Properly extract blob MIME type from `content-type` headers</td><td><code>blob_standard_mime_type</code></td><td><code>blob_legacy_mime_type</code></td></tr>
+            <tr><td><code>2024-06-03</code></td><td>Use standard URL parsing in `fetch()`</td><td><code>fetch_standard_url</code></td><td><code>fetch_legacy_url</code></td></tr>
+            <tr><td><code>2024-05-13</code></td><td>Returning empty Uint8Array on final BYOB read</td><td><code>internal_stream_byob_return_view</code></td><td><code>internal_stream_byob_return_undefined</code></td></tr>
+            <tr><td><code>2024-04-29</code></td><td>Brotli Content-Encoding support</td><td><code>brotli_content_encoding</code></td><td><code>no_brotli_content_encoding</code></td></tr>
+            <tr><td><code>2024-04-03</code></td><td>Durable Object stubs and Service Bindings support RPC</td><td><code>rpc</code></td><td><code>no_rpc</code></td></tr>
+            <tr><td><code>2024-04-01</code></td><td>Handling custom thenables</td><td><code>unwrap_custom_thenables</code></td><td><code>no_unwrap_custom_thenables</code></td></tr>
+            <tr><td><code>2024-03-26</code></td><td>Fetchers no longer have get/put/delete helper methods</td><td><code>fetcher_no_get_put_delete</code></td><td><code>fetcher_has_get_put_delete</code></td></tr>
+            <tr><td><code>2024-03-18</code></td><td>Queues send messages in `JSON` format</td><td><code>queues_json_messages</code></td><td><code>no_queues_json_messages</code></td></tr>
+            <tr><td><code>2024-03-04</code></td><td>Suppress global `importScripts()`</td><td><code>no_global_importscripts</code></td><td><code>global_importscripts</code></td></tr>
+            <tr><td><code>2023-12-01</code></td><td>WebCrypto preserve publicExponent field</td><td><code>crypto_preserve_public_exponent</code></td><td><code>no_crypto_preserve_public_exponent</code></td></tr>
+            <tr><td><code>2023-11-08</code></td><td>`Vectorize` query with metadata optionally returned</td><td><code>vectorize_query_metadata_optional</code></td><td><code>vectorize_query_original</code></td></tr>
+            <tr><td><code>2023-08-15</code></td><td>WebSocket Compression</td><td><code>web_socket_compression</code></td><td><code>no_web_socket_compression</code></td></tr>
+            <tr><td><code>2023-08-01</code></td><td>Strict crypto error checking</td><td><code>strict_crypto_checks</code></td><td><code>no_strict_crypto_checks</code></td></tr>
+            <tr><td><code>2023-08-01</code></td><td>Strict compression error checking</td><td><code>strict_compression_checks</code></td><td><code>no_strict_compression_checks</code></td></tr>
+            <tr><td><code>2023-08-01</code></td><td>Bot Management data</td><td><code>no_cf_botmanagement_default</code></td><td><code>cf_botmanagement_default</code></td></tr>
+            <tr><td><code>2023-07-01</code></td><td>URLSearchParams delete() and has() value argument</td><td><code>urlsearchparams_delete_has_value_arg</code></td><td><code>no_urlsearchparams_delete_has_value_arg</code></td></tr>
+            <tr><td><code>2023-03-14</code></td><td>Use a spec compliant URL implementation in redirects</td><td><code>response_redirect_url_standard</code></td><td><code>response_redirect_url_original</code></td></tr>
+            <tr><td><code>2023-03-01</code></td><td>Dynamic Dispatch Exception Propagation</td><td><code>dynamic_dispatch_tunnel_exceptions</code></td><td><code>dynamic_dispatch_treat_exceptions_as_500</code></td></tr>
+            <tr><td><code>2023-03-01</code></td><td>`Headers` supports `getSetCookie()`</td><td><code>http_headers_getsetcookie</code></td><td><code>no_http_headers_getsetcookie</code></td></tr>
+            <tr><td><code>2022-11-30</code></td><td>Streams Constructors</td><td><code>streams_enable_constructors</code></td><td><code>streams_disable_constructors</code></td></tr>
+            <tr><td><code>2022-11-30</code></td><td>Compliant TransformStream constructor</td><td><code>transformstream_enable_standard_constructor</code></td><td><code>transformstream_disable_standard_constructor</code></td></tr>
+            <tr><td><code>2022-10-31</code></td><td>CommonJS modules do not export a module namespace</td><td><code>export_commonjs_default</code></td><td><code>export_commonjs_namespace</code></td></tr>
+            <tr><td><code>2022-10-31</code></td><td>Do not throw from async functions</td><td><code>capture_async_api_throws</code></td><td><code>do_not_capture_async_api_throws</code></td></tr>
+            <tr><td><code>2022-10-31</code></td><td>New URL parser implementation</td><td><code>url_standard</code></td><td><code>url_original</code></td></tr>
+            <tr><td><code>2022-08-04</code></td><td>`R2` bucket `list` respects the `include` option</td><td><code>r2_list_honor_include</code></td><td><code>—</code></td></tr>
+            <tr><td><code>2022-06-01</code></td><td>Do not substitute `null` on `TypeError`</td><td><code>dont_substitute_null_on_type_error</code></td><td><code>substitute_null_on_type_error</code></td></tr>
+            <tr><td><code>2022-04-05</code></td><td>Minimal subrequests</td><td><code>minimal_subrequests</code></td><td><code>no_minimal_subrequests</code></td></tr>
+            <tr><td><code>2022-03-21</code></td><td>Global `navigator`</td><td><code>global_navigator</code></td><td><code>no_global_navigator</code></td></tr>
+            <tr><td><code>2022-03-08</code></td><td>Do not use the Custom Origin Trust Store for external subrequests</td><td><code>no_cots_on_external_fetch</code></td><td><code>cots_on_external_fetch</code></td></tr>
+            <tr><td><code>2022-01-31</code></td><td>Setters/getters on API object prototypes</td><td><code>workers_api_getters_setters_on_prototype</code></td><td><code>workers_api_getters_setters_on_instance</code></td></tr>
+            <tr><td><code>2021-11-10</code></td><td>Durable Object `stub.fetch()` requires a full URL</td><td><code>durable_object_fetch_requires_full_url</code></td><td><code>durable_object_fetch_allows_relative_url</code></td></tr>
+            <tr><td><code>2021-11-10</code></td><td>`fetch()` improperly interprets unknown protocols as HTTP</td><td><code>fetch_refuses_unknown_protocols</code></td><td><code>fetch_treats_unknown_protocols_as_http</code></td></tr>
+            <tr><td><code>2021-11-10</code></td><td>Streams BYOB reader detaches buffer</td><td><code>streams_byob_reader_detaches_buffer</code></td><td><code>streams_byob_reader_does_not_detach_buffer</code></td></tr>
+            <tr><td><code>2021-11-03</code></td><td>`FormData` parsing supports `File`</td><td><code>formdata_parser_supports_files</code></td><td><code>formdata_parser_converts_files_to_strings</code></td></tr>
+            <tr><td><code>—</code></td><td>Web Crypto modern algorithms</td><td><code>webcrypto_modern_algorithms</code></td><td><code>—</code></td></tr>
+            <tr><td><code>—</code></td><td>Automatic tracing</td><td><code>enable_workers_observability_tracing</code></td><td><code>—</code></td></tr>
+            <tr><td><code>—</code></td><td>Pedantic Web Platform Tests (WPT) compliance</td><td><code>pedantic_wpt</code></td><td><code>non_pedantic_wpt</code></td></tr>
+            <tr><td><code>—</code></td><td>Enable `Request.signal` for incoming requests</td><td><code>enable_request_signal</code></td><td><code>disable_request_signal</code></td></tr>
+            <tr><td><code>—</code></td><td>Disallowing importable environment</td><td><code>disallow_importable_env</code></td><td><code>allow_importable_env</code></td></tr>
+            <tr><td><code>—</code></td><td>Passthrough AbortSignal of incoming request to subrequests</td><td><code>request_signal_passthrough</code></td><td><code>no_request_signal_passthrough</code></td></tr>
+            <tr><td><code>—</code></td><td>Queue consumers don&#x27;t wait for `ctx.waitUntil()` to resolve</td><td><code>queue_consumer_no_wait_for_wait_until</code></td><td><code>—</code></td></tr>
+            <tr><td><code>—</code></td><td>Global fetch() strictly public</td><td><code>global_fetch_strictly_public</code></td><td><code>global_fetch_private_origin</code></td></tr>
+            <tr><td><code>—</code></td><td>Node.js AsyncLocalStorage</td><td><code>nodejs_als</code></td><td><code>no_nodejs_als</code></td></tr>
+            <tr><td><code>—</code></td><td>Python Workers</td><td><code>python_workers</code></td><td><code>—</code></td></tr>
+            <tr><td><code>—</code></td><td>`HTMLRewriter` handling of `&lt;esi:include&gt;`</td><td><code>html_rewriter_treats_esi_include_as_void_tag</code></td><td><code>—</code></td></tr>
+            <tr><td><code>—</code></td><td>Queue consumers don&#x27;t wait for `ctx.waitUntil()` to resolve</td><td><code>queue_consumer_no_wait_for_wait_until</code></td><td><code>—</code></td></tr>
+            <tr><td><code>—</code></td><td>`HTMLRewriter` handling of `&lt;esi:include&gt;`</td><td><code>html_rewriter_treats_esi_include_as_void_tag</code></td><td><code>—</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/compatibility-flags/" target="_blank" rel="noopener">configuration/compatibility-flags</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

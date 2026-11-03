@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>将会话输出作为 artifacts 共享 · Claude Code 中文文档</title>
+<meta name="description" content="Artifacts 将 Claude Code 的工作转化为 claude.ai 上的实时交互式页面，您可以将其保持私密、与您的组织共享或发布到公开链接。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="artifacts">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/artifacts" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link active" href="artifacts.html" aria-current="page">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>使用 Claude Code 构建</span> <span class="sep">/</span> <span>Artifact</span></div>
+    <article class="prose" id="article"><h1 id="artifacts">将会话输出作为 artifacts 共享</h1>
+<blockquote>
+<p>Artifacts 将 Claude Code 的工作转化为 claude.ai 上的实时交互式页面，您可以将其保持私密、与您的组织共享或发布到公开链接。</p>
+</blockquote>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Artifacts 在 Pro、Max、Ultra、Team 和 Enterprise 计划中可用，需要使用 <a href="setup.html#authenticate"><code>/login</code></a> 登录的会话。有关完整的要求集，请参阅 <a href="#availability">可用性</a>。</p></div></div>
+<p><a href="https://claude.com/features/artifacts" target="_blank" rel="noopener">Artifact</a> 是一个实时交互式网页，Claude Code 从您的会话发布到 claude.ai 上的私密 URL。您在浏览器中打开它，随着会话的继续，它会实时更新。当您希望其他人也看到它时，可以从页面标题中共享它。</p>
+<p><img alt="一个 artifact 在浏览器中打开，位于 claude.ai/code/artifact。查看器标题显示 artifact 标题 acme-funnel-fix、一个共享按钮和作者头像。共享菜单已打开，显示&quot;始终共享最新版本&quot;切换、显示&quot;共享版本 2&quot;的版本选择器、&quot;Acme 中的所有人&quot;受众选择器和复制链接按钮。标题下方，artifact 页面显示两个并排的移动设备模型、一个漏斗图表和一行指标卡片。" src="../assets/img/e08b845cf1f4.png" /></p>
+<h2 id="when-to-use-an-artifact">何时使用 artifact</h2>
+<p>当终端文本不是 Claude 生成内容的合适媒介时，请使用 artifact：输出内容更容易查看和交互，而不是逐行阅读。Claude 从您的会话可以访问的任何内容构建页面，包括您的代码库和通过您的<a href="mcp.html">连接工具</a>拉取的数据，因此页面可以显示需要段落才能描述的内容。例如，要求 Claude：</p>
+<ul>
+<li>通过带注释的 diff 向审查者讲解拉取请求</li>
+<li>从会话已拉取的数据呈现仪表板</li>
+<li>并排展示多个设计或实现选项</li>
+<li>保持在长任务运行时填充的调查时间线</li>
+<li>向团队成员发送链接，而不是将输出粘贴到 Slack</li>
+<li>发布状态板，<a href="#pull-live-data-with-mcp-connectors">每次有人打开时通过 MCP 连接器拉取新数据</a></li>
+</ul>
+<p>有关与这些相匹配的提示，请参阅<a href="#what-you-can-build">您可以构建的内容</a>，有关连接器支持的板的提示，请参阅<a href="#pull-live-data-with-mcp-connectors">使用 MCP 连接器拉取实时数据</a>。</p>
+<h3 id="what-an-artifact-is-not">artifact 不是什么</h3>
+<p>artifact 是工作的捕获：一个自包含的页面，没有后端，因此无法提供多个路由。对于具有后端的托管内部工具，请改为在您自己的基础设施上部署它。有关完整的限制集，请参阅<a href="#page-constraints">页面约束</a>。</p>
+<h2 id="create-an-artifact">创建工件</h2>
+<p>Claude 可能会在输出适合作为页面时自动发布工件，或者你可以直接请求创建一个。要请求创建，请用简洁的语言命名该功能或描述你想要的视觉输出。任何比以文本形式阅读更容易看到的内容都是很好的候选，例如带有内联注释的 diff、图表或一组选项的比较。下面的提示是两个示例；有关更多模式，请参阅<a href="#what-you-can-build">你可以构建的内容</a>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Make an artifact that walks through this PR with the diff annotated inline.
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Build a dashboard artifact of last week's deploy failures by service and keep it updated as you investigate.
+</code></pre></div>
+<p>除非您指定位置，否则 Claude 会将页面写入项目外临时目录中的 HTML 或 Markdown 文件，然后发布它。在您<a href="#share-an-artifact">共享它</a>之前，Artifact 仅对您可见。</p>
+<p>首次发布后，Claude 会打印 URL，您的浏览器会打开新页面。</p>
+<ul>
+<li><strong>重新打开页面</strong>：随时按 <code>Ctrl+]</code> 可重新打开会话中最近的 Artifact</li>
+<li><strong>查看本会话的 Artifact</strong>：输入框下方的 <code>⧉</code> 标签会显示 Artifact 的名称，当会话中有多个 Artifact 时则显示数量。在<a href="fullscreen.html">全屏渲染</a>中，点击它可打开 <a href="#find-an-artifact-again"><code>/artifacts</code></a> 列表</li>
+<li><strong>阻止浏览器自动打开</strong>：在您的环境中设置 <code>CLAUDE_CODE_ARTIFACT_AUTO_OPEN=0</code></li>
+<li><strong>Remote Control</strong>：如果您通过 <a href="remote-control.html">Remote Control</a> 从 claude.ai、Claude Desktop 或 Claude 移动应用发送提示词，运行会话的机器上不会打开标签页。下次 Claude 根据您在终端中输入的提示词发布该 Artifact 时，浏览器会在那台机器上打开</li>
+</ul>
+<p>Claude 会为 Artifact 选择标题，以及与页面内容相匹配的浏览器标签页图标，例如图表或日历。标题会显示在您在 claude.ai 上的 <a href="#share-an-artifact">Artifact 库</a>和共享链接中。如果您想要特定的标题或标签页图标，请告诉 Claude。</p>
+<p>如果 Claude 回复说无法发布，或者写入了本地 HTML 文件但没有提供链接，则说明您的会话未启用 Artifact。请检查<a href="#availability">可用性</a>要求。如果终端显示 <code>Artifacts need a claude.ai login</code>，请参阅<a href="errors.html#artifacts-need-a-claude-ai-login">该错误的条目</a>了解如何登录。</p>
+<h3 id="when-claude-code-asks-before-publishing">Claude Code 何时会在发布前询问</h3>
+<p>Claude 根据您输入的提示词发布的新 Artifact 会直接通过，无需权限提示或分类器审查。在以下情况下，Claude Code 会先询问您，或在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>下让分类器审查该发布：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">情况</th>
+<th style="text-align: left;">Claude Code 的行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">会话处于<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a></td>
+<td style="text-align: left;">在每个 Artifact 首次发布前询问</td>
+</tr>
+<tr>
+<td style="text-align: left;">该发布声明了页面的运行时功能，例如<a href="#pull-live-data-with-mcp-connectors">连接器调用</a>或<a href="#offer-a-file-download">文件下载</a></td>
+<td style="text-align: left;">在该次发布前询问</td>
+</tr>
+<tr>
+<td style="text-align: left;">您已公开共享该 Artifact</td>
+<td style="text-align: left;">每个对话中在更改它之前询问一次</td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude 在由您会话中触发的<a href="scheduled-tasks.html">会话级定时任务</a>（而非您输入的提示词）启动的轮次中发布</td>
+<td style="text-align: left;">在每个 Artifact 首次发布前询问</td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude 未经您批准无法读取该文件</td>
+<td style="text-align: left;">在发布前询问。针对 <code>Artifact</code> 工具的允许规则不会跳过此提示</td>
+</tr>
+<tr>
+<td style="text-align: left;">在 <a href="permission-modes.html">Manual</a> 或 <code>acceptEdits</code> 模式下，Claude 对某个未经您批准无法编辑的 Artifact 文件进行小幅更改，例如 Manual 模式下的项目文件</td>
+<td style="text-align: left;">在发布该更改前询问。即使有允许规则涵盖 <code>Artifact</code> 工具，也会询问您，因为对该文件的编辑需要您的批准</td>
+</tr>
+</tbody>
+</table>
+<p>要让 Claude 无需您批准即可读取<a href="permissions.html#working-directories">工作目录</a>之外的文件，请在启动时使用 <a href="cli-reference.html#cli-flags"><code>--add-dir</code></a> 或在会话期间使用 <code>/add-dir</code> 将其所在文件夹添加为工作目录。Claude 本就可以无需询问即读取这些目录中的文件，以及它写入页面所用的临时目录中的文件。</p>
+<p>如果发布提示中包含诸如 <code>Also makes 1 edit to that file on disk.</code> 的句子，说明 Claude 正在一步完成对 Artifact 文件的更改和发布。当您批准该提示后，Claude Code 会先发布页面，然后将更改写入您的文件。</p>
+<h2 id="update-an-artifact">更新一个 artifact</h2>
+<p>要求 Claude 修改页面，或让长时间运行的任务在进行过程中重新发布。Claude 编辑底层文件并重新发布到相同的 URL。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">在摘要图表下方添加按地区的细分，然后重新发布。
+</code></pre></div>
+<p>任何打开该页面的人都会看到就地更新。每次发布都会成为一个版本，从页面标题中的 <strong>Share</strong> 控件，你可以选择查看者看到哪个版本。</p>
+<p>要从不同的会话更新 artifact，请给 Claude 其 URL，或使用 <a href="#find-an-artifact-again"><code>/artifacts</code></a> 附加它。如果两者都没有，新会话会创建新的 artifact 而不是更新现有的。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">使用今天的数字更新 https://claude.ai/code/artifact/5fbea6f3-...
+</code></pre></div>
+<h2 id="find-an-artifact-again">再次查找一个artifact</h2>
+<p>在Claude Code中运行<code>/artifacts</code>，以列出您拥有的Artifact以及与您共享的Artifact。当前会话的Artifact排在最前面，位于<strong>This session</strong>下。</p>
+<p>选择一个Artifact，然后按以下任一按键：</p>
+<ul>
+<li><strong><code>Enter</code></strong>：如果它已附加到当前会话，则在浏览器中打开它；如果尚未附加，则将其附加到当前会话</li>
+<li><strong><code>o</code></strong>：在浏览器中打开它</li>
+<li><strong><code>c</code></strong>：复制其链接</li>
+<li><strong><code>d</code></strong>：在<a href="claude-code-on-the-web.html">云端会话</a>之外，经您确认后永久删除您拥有的Artifact。其链接将对所有人失效，包括您自己</li>
+</ul>
+<p>Claude Code从您的claude.ai账户读取列表，因此当Artifact的链接已从终端滚出时，<code>/artifacts</code>在新会话中以及在<code>/clear</code>之后都能使用。</p>
+<h2 id="share-an-artifact">分享一个artifact</h2>
+<p>新创建的artifact只有你能看到。要分享它，请在浏览器中打开该artifact，并使用页面标题中的<strong>分享</strong>控件。标题还链接到你的库，位置在<a href="https://claude.ai/code/artifacts" target="_blank" rel="noopener">claude.ai/code/artifacts</a>，其中列出了你创建的每个artifact。</p>
+<p>您组织中的查看者可以看到谁发布了该页面：在组织内共享的Artifact上，您的名字在标题菜单中；在公开Artifact上，对于组织内已登录的查看者，您的名字在页面标题中。打开公开链接但未登录的查看者，或来自组织外的查看者，会看到标签<code>Content is user-generated and unverified.</code>而不是您的名字。</p>
+<p>你可以与谁分享取决于你的计划：</p>
+<ul>
+<li><strong>在你的组织内</strong>：在Team和Enterprise计划上，向组织中的特定人员或所有人授予访问权限。查看者以组织成员身份登录claude.ai以查看该页面。</li>
+<li><strong>公开</strong>：分享一个链接，互联网上的任何人都可以打开，无需claude.ai登录。在Team和Enterprise计划上，公开分享处于关闭状态，直到所有者<a href="#control-public-sharing">为组织启用它</a>。</li>
+</ul>
+<h3 id="link-to-a-specific-view">链接到特定视图</h3>
+<p>如果一个页面有多个视图，例如标签页或章节，您可以直接链接到其中某一个。请让Claude提供这些链接：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Give me a link to each tab of the deploy failures dashboard.
+</code></pre></div>
+<p>每个链接都是该Artifact的链接末尾加上一个锚点，例如<code>#overview</code>。</p>
+<h3 id="let-someone-edit-with-you">让某人与你一起编辑</h3>
+<p>与你分享的人默认是查看者：他们可以看到你发布的每个版本，但无法更改页面。在Team和Enterprise计划上，你也可以让某人成为编辑者。在分享对话框中，添加一个人并将其角色从<strong>查看者</strong>切换到<strong>编辑者</strong>。</p>
+<p>编辑者发布新版本的方式与你<a href="#update-an-artifact">从另一个会话更新artifact</a>的方式相同：他们向Claude提供artifact的URL，或从<a href="#find-an-artifact-again"><code>/artifacts</code></a>附加它，Claude会拉取当前内容并用他们的更改重新发布。打开该页面的每个人都会实时看到每个更新。</p>
+<p>如果编辑者发布时Claude持有的是该页面的旧副本，Claude Code会拒绝基于该副本的发布。随后Claude会将其更改合并到较新的版本上并再次发布。</p>
+<h2 id="read-an-artifact-shared-with-you">阅读与你共享的工件</h2>
+<p>当有人与你共享一个工件时，你可以让 Claude 阅读它：给 Claude 提供其 URL，或从 <a href="#find-an-artifact-again"><code>/artifacts</code></a> 附加它。</p>
+<p>Claude 读取他人编写的页面的方式与它读取网页的方式相同，使用 <a href="tools-reference.html#webfetch-tool-behavior">WebFetch</a>：它获得关于所询问内容的摘要，而不是原始页面，摘要报告写入页面的说明，而不是转达它们。Claude Code 还将页面的完整源代码保存到本地文件，当 Claude 需要确切内容时可以打开该文件，例如将工件重新发布为 <a href="#let-someone-edit-with-you">编辑器</a>。</p>
+<p>在以下情况下，除了您的权限模式或规则所要求的任何提示之外，Claude Code 还会在 Claude 读取 Artifact 之前请求您的批准：</p>
+<ul>
+<li><strong>没有网络访问权限的云端会话</strong>：对于<a href="cloud-environments.html#access-levels">云环境</a>，即 <strong>None</strong> 级别。在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>下，可以改由分类器进行批准；在 <a href="https://claude.com/product/cowork" target="_blank" rel="noopener">Cowork</a> 会话中，只能由您本人批准。</li>
+<li><strong>其他组织的公开 Artifact</strong>：即使在自动模式下，Claude Code 也会先询问您。在 Claude Code 无法询问您的情况下（例如在 <code>bypassPermissions</code> 模式下），Claude 无法读取该 Artifact。只有在<a href="env-vars.html#features-that-need-feature-flag-fetching">功能标志获取</a>开启时，Claude 才能读取这些 Artifact。</li>
+<li><strong>无法确认所有者或网络设置</strong>：当 Claude Code 无法确认 Artifact 的创建者，或无法确认云端会话的网络设置时，它会进行询问，且您的批准仅适用于该次请求。</li>
+<li><strong>计划模式</strong>：在<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a>下，Claude Code 会在 Artifact 工具读取您组织中其他人创建的 Artifact 之前进行询问。</li>
+</ul>
+<p>当 Claude 使用 WebFetch 读取 Artifact 时，WebFetch 自身的<a href="tools-reference.html#webfetch-tool-behavior">提示规则</a>仍然适用。</p>
+<h2 id="collect-comments-on-an-artifact">收集工件上的评论</h2>
+<p>当您在组织内共享工件时，与您共享的人可以在页面上留下评论，您可以让 Claude 读取这些评论并回复。您需要 Claude Code v2.1.221 或更高版本。Claude 在两种情况下读取评论：</p>
+<ul>
+<li><strong>您要求 Claude 读取评论</strong>：向 Claude 提供工件的 URL 并要求查看评论。Claude 列出每个线程，并标记可以编辑工件的人发送给它的评论。</li>
+<li><strong>可以编辑工件的人向 Claude 发送评论</strong>：在页面上的线程中，他们使用<strong>发送给 Claude</strong>发送评论，或在其中提及 <code>@claude</code>。无论哪种方式，他们都会激活该线程。</li>
+</ul>
+<p>Claude 只能回复或解决已激活的线程。其他线程保持打开状态，直到某人在页面上解决它们。查看者会看到每条回复都归属于 Claude，通过您。</p>
+<p>如果您公开共享工件，只有其公开链接访问权限的人看不到其评论，也无法添加任何评论。现有评论线程保留在工件上，您和其编辑者仍然可以读取和回复它们。</p>
+<p>要自己要求查看评论，请向 Claude 提供 URL：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">读取 https://claude.ai/code/artifact/5fbea6f3-... 上的评论，并进行评论者要求的更改。
+</code></pre></div>
+<p>如果 Claude 告诉您它无法读取评论，请确认您的版本、您的会话和您的功能标志设置：</p>
+<ul>
+<li>您运行的是 Claude Code v2.1.221 或更高版本。</li>
+<li>您不在安装 Claude Code 或从 v2.1.221 之前的版本升级后的第一个会话中。在<a href="env-vars.html#first-session-after-an-install-or-upgrade">安装或升级后的第一个会话</a>中，Claude 可能还无法读取评论；启动新会话并再次询问。</li>
+<li>您没有关闭功能标志获取。</li>
+</ul>
+<h3 id="let-claude-reply-to-comments-on-its-own">让 Claude 自动回复评论</h3>
+<p>在您的会话发布 Artifact 后，Claude Code 会监视该 Artifact 的评论。当可以编辑 Artifact 的人向 Claude 发送评论时，它会立即到达您的会话，Claude 可以读取线程并回复，而无需您询问。</p>
+<p>您需要 Claude Code v2.1.228 或更高版本。如果您关闭了<a href="env-vars.html#features-that-need-feature-flag-fetching">功能标志获取</a>，Claude Code 不会监视评论。</p>
+<p>您的<a href="permission-modes.html">权限模式</a>决定了当发送的评论到达时 Claude 的行为：</p>
+<ul>
+<li><strong>Claude 自动回复</strong>：如果您所处的权限模式允许 Claude 在不询问您的情况下发布回复，Claude 会读取线程并回复。您会看到 <code>Auto-replied to comment thread on Artifact: &lt;name&gt;</code>。</li>
+<li><strong>Claude 等待您</strong>：在计划模式之外，当发布回复需要您的批准时，您会看到 <code>Comments are waiting on Artifact: &lt;name&gt;</code>。Claude 然后要求您批准读取线程，再次批准发布回复。</li>
+<li><strong>Claude 在计划模式中暂停</strong>：您会看到 <code>Comments are waiting on Artifact: &lt;name&gt;</code>，Claude 不会回复，直到您离开计划模式并要求它读取和回复。</li>
+</ul>
+<p>如果 Claude 在一小时内处理了某个 Artifact 上的 60 条已发送评论或线程激活，它也会停止自动回复该 Artifact。您会看到一次 <code>Comments are waiting on Artifact: &lt;name&gt;</code>，当该小时内的评论过期后，Claude 会重新开始。</p>
+<p>运行 <code>/tasks</code> 查看您的会话正在监视的 Artifact。<code>/tasks</code> 会将 Claude Code 自行启动的监视归入 <strong>System tasks</strong> 行下。在该行上按 <code>Enter</code> 即可列出它们。您要求 Claude 启动的监视显示在 <strong>Monitors</strong> 下。</p>
+<p>您可以通过以下任何方式停止 Claude 自动回复：</p>
+<ul>
+<li><strong>在空闲提示符处按一次 Ctrl+C</strong>：Claude 暂停回复您的会话正在监视的每个工件。在您发送下一条消息后，回复会重新开始。</li>
+<li><strong>在 <code>/tasks</code> 中停止任务</strong>：Claude 停止回复该工件，直到您要求它在那里恢复回复。重新发布工件不会再次启动回复，当您稍后恢复会话时，停止仍然适用。</li>
+<li><strong>在 3 秒内按两次 <code>Ctrl+X Ctrl+K</code></strong>：<a href="interactive-mode.html#general-controls">停止每个运行的后台子代理</a>的和弦也会停止 Claude 为会话的其余部分回复每个工件。要求 Claude 恢复回复不会撤销此停止。</li>
+</ul>
+<p>由 Claude Code 自行启动的监视可能会在 Artifact 数小时无活动后结束。要重新启动监视，请再次发布该 Artifact 或要求 Claude 监视它。</p>
+<p>如果传递评论的服务变得不可用或停止响应，Claude Code 会尝试重新连接一段时间，然后停止监视您的会话正在监视的每个工件。</p>
+<h2 id="pull-live-data-with-mcp-connectors">使用 MCP 连接器拉取实时数据</h2>
+<p>Artifact 可以在每次有人查看它时调用 <a href="mcp.html#use-mcp-servers-from-claude-ai">MCP 连接器</a>，因此页面显示的是当前数据，而不是构建它的会话中的快照。来自 Artifact 的连接器调用在 Pro、Max、Ultra、Team 和 Enterprise 计划上可用，需要 Claude Code v2.1.209 或更高版本。在早期版本上，Claude 会发布该页面，其中包含会话在构建时收集的任何数据。</p>
+<p>要创建一个由连接器支持的页面，请在提示中命名连接器和您想要的数据：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">构建一个我们未关闭的 Pull Request 的 dashboard Artifact，当页面加载时通过我的 GitHub 连接器拉取实时列表。
+</code></pre></div>
+<p>Claude 声明该页面可能调用哪些连接器作为发布的一部分，该页面无法调用该声明之外的连接器。只有来自您 claude.ai 账户的连接器符合条件：Claude 在声明中命名它们，当有人查看页面时，每个调用都会<a href="#how-connector-calls-work-for-viewers">通过查看账户自己的连接</a>运行到该连接器。您在 Claude Code 中配置的本地 MCP 服务器（例如来自 <code>.mcp.json</code> 的服务器）可以在 Claude 构建页面时提供数据，但已发布的页面无法调用它们。</p>
+<p>页面在加载时获取数据，可以按间隔刷新或当查看者在页面上使用刷新控件时刷新。响应缓存在查看者的浏览器中，因此重新打开的页面会立即从缓存的响应呈现，然后使用新结果更新。</p>
+<h3 id="how-connector-calls-work-for-viewers">连接器调用如何为查看者工作</h3>
+<p>当已发布的页面调用连接器时，该调用使用查看页面的人的账户，而不是发布它的人的账户：</p>
+<ul>
+<li><strong>每个查看者使用他们自己的连接器</strong>：调用通过查看账户的已连接工具进行，因此两个打开同一 dashboard 的人可能会看到不同的数据，具体取决于他们的账户可以访问什么。该页面永远看不到任何人的凭证；claude.ai 代表页面进行调用。</li>
+<li><strong>查看者首先批准访问</strong>：claude.ai 在页面的第一个连接器调用之前向每个查看者请求权限。拒绝的查看者或未连接页面使用的连接器的查看者仍然可以看到页面，但没有其实时部分。</li>
+<li><strong>操作也使用查看者的账户</strong>：页面可以提供控件，调用具有副作用的连接器工具，例如发布消息或更新问题。该操作通过选择控件的任何人的账户进行。</li>
+</ul>
+<p>当您计划共享一个由连接器支持的页面时，请要求 Claude 在每个实时部分中包含一条后备消息，该消息命名它需要的连接器。缺少连接的查看者随后会看到要连接的内容，而不是空部分。</p>
+<p>您可以在您的组织内或公开<a href="#share-an-artifact">共享一个由连接器支持的页面</a>，如您的计划和组织设置所允许的那样。连接器调用不会为未登录 claude.ai 的查看者或来自您组织外部的查看者运行。该查看者看到的页面没有其实时部分。</p>
+<h3 id="the-page-shows-no-live-data-for-a-viewer">页面对查看者显示没有实时数据</h3>
+<p>当由连接器支持的页面呈现但其实时部分对您组织中的查看者保持为空时，请解决这些原因：</p>
+<ul>
+<li><strong>查看者未连接连接器</strong>：连接器是按账户的，因此每个查看者都需要自己连接到页面调用的每个连接器。他们可以在 claude.ai 上的 <a href="https://claude.ai/customize/connectors" target="_blank" rel="noopener"><strong>Customize &gt; Connectors</strong></a> 下添加一个，然后重新加载页面。</li>
+<li><strong>查看者拒绝了权限请求</strong>：拒绝在该页面加载的其余部分持续。重新加载页面会再次显示权限请求。</li>
+<li><strong>为组织关闭了连接器调用</strong>：所有者控制管理设置中的<a href="#control-connector-calls-from-artifacts"><strong>启用 artifact 连接器</strong>切换</a>。</li>
+<li><strong>页面调用连接器不公开的工具名称</strong>：受影响的部分对所有人（包括您）保持为空。当页面命名网关风格连接器后面的单个工具，而该连接器仅公开其自己的几个工具时，可能会发生这种情况。要求 Claude 修复页面调用的工具名称并再次发布它。</li>
+</ul>
+<p>当 Claude 发布页面且该连接器的工具在您的会话中可用时，Claude Code 会检查页面声明的工具名称与它们的对比，警告 Claude 不匹配的名称，并在没有任何名称匹配时拒绝发布。在 v2.1.265 之前，它会在不检查它们的情况下发布页面。</p>
+<h2 id="offer-a-file-download">提供文件下载</h2>
+<p>artifact 可以向查看者提供页面生成的文件，例如表格的 CSV 导出或图表的 PNG。查看者通过页面上的下载控制（例如按钮）保存文件。文件下载是 claude.ai 启用的运行时功能，按账户提供，因此 Claude 在构建控制之前会检查您的账户是否具有此功能。</p>
+<p>查看者无法从普通下载链接或页面上的脚本保存文件，因为 claude.ai 上的 artifact 查看器会阻止页面本身启动的任何下载，包括指向 <code>data:</code> 或 <code>blob:</code> URL 的链接。如果页面具有以这种方式构建的下载按钮，请要求 Claude 使用下载功能重新构建它们。</p>
+<p>要提供文件，请在您的提示中要求控制和文件格式：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Add a button that downloads this table as a CSV file.
+</code></pre></div>
+<p>Claude 将下载功能声明为发布的一部分，与<a href="#pull-live-data-with-mcp-connectors">声明连接器</a>的方式相同。</p>
+<h2 id="what-you-can-build">您可以构建的内容</h2>
+<p>Artifact 是单个 HTML 页面，因此您可以用 HTML、CSS 和内联 JavaScript 表达的任何内容都在范围内。下面的模式最常出现。</p>
+<h3 id="walk-through-a-change">逐步讲解更改</h3>
+<p>要求一个页面，在相关行旁边呈现 diff 或设计更改并带有注释，以便审阅者可以在代码旁边阅读您的推理，而不是从描述中重建它。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Make an artifact that walks through this PR. Render the diff with margin annotations and color-code findings by severity.
+</code></pre></div>
+<h3 id="compare-alternatives">比较替代方案</h3>
+<p>要求在一个页面上有多个变体，以便您可以相互评估它们。这适用于布局、文案、API 形状或实现计划。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Make an artifact with four distinctly different layouts for the settings panel. Vary density and grouping, and lay them out as a grid with a one-line tradeoff under each.
+</code></pre></div>
+<h3 id="tune-with-interactive-controls">使用交互式控件进行调整</h3>
+<p>要求滑块、切换或输入字段绑定到您正在调整的任何内容，以便您可以直接探索值，而不是描述它们。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Build an artifact with sliders for the easing curve, duration, and delay so I can try values on this transition. Show the animation live as I move them.
+</code></pre></div>
+<h3 id="bring-the-result-back-to-your-session">将结果带回您的会话</h3>
+<p>Artifact 可以充当您随后交给 Claude 的决定的轻量级编辑器。要求一个导出控件，生成您可以粘贴到终端的文本，以便与页面交互的结果流回会话，而不是停留在页面上。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Make a triage board artifact with each open issue as a draggable card across Now, Next, Later, and Cut columns. Add a "Copy as prompt" button that gives me the final ordering to paste back here.
+</code></pre></div>
+<h3 id="track-work-in-progress">跟踪进行中的工作</h3>
+<p>要求 Claude 在长任务运行时保持 artifact 最新，以便任何拥有链接的人都可以跟随，而无需阅读终端。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Turn this migration plan into a checklist artifact. Check items off as you complete them and add a note for anything you skip.
+</code></pre></div>
+<h2 id="improve-the-visual-design">改进视觉设计</h2>
+<p>Claude 在构建工件时应用内置设计技能，因此页面获得精心设计的调色板、排版和布局，无需额外提示。该技能还会在选择自己的设计之前查找项目中是否存在现有设计系统。设计令牌是设计系统重复使用的命名颜色、排版和间距值。为了保持工件与产品品牌的一致性，请将它们记录在 Claude 可以找到的地方，例如项目的 <a href="memory.html">CLAUDE.md</a> 或存储库中的主题文件：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown"><span class="gu">## Design system</span>
+
+<span class="k">-</span><span class="w"> </span>Colors: primary <span class="ni">#1a4d8f</span>, accent <span class="ni">#f59e0b</span>, surface <span class="ni">#f8fafc</span>
+<span class="k">-</span><span class="w"> </span>Typography: Inter for body, JetBrains Mono for code
+<span class="k">-</span><span class="w"> </span>Spacing: 8px scale, 6px border radius
+</code></pre></div>
+<p>Claude 将您的设计系统视为比其自己的选择更高的优先级，您的提示比两者都更高的优先级。上面的标题和格式是一个示例；任何清晰的颜色、字体和间距列表都可以。</p>
+<p>对于排版，Claude 可以从 Google Fonts 加载字体，这是工件页面可以加载的唯一外部字体源。Claude 将任何其他字体内联为 <code>@font-face</code> 数据 URI，并为每个字体提供后备堆栈，因此即使字体未加载，页面仍会呈现。要使用特定字体，请在提示或设计系统中命名它。</p>
+<h2 id="start-from-a-slides-design-or-docs-template">从幻灯片、设计或文档模板开始</h2>
+<p>Claude 可以从您的 claude.ai 账户上的模板开始创建工件，而不是从头开始构建页面：<a href="https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them#h_11d5a9a5fa" target="_blank" rel="noopener">Claude Slides</a> 用于演示文稿，<a href="https://support.claude.com/en/articles/14604416-get-started-with-claude-design" target="_blank" rel="noopener">Claude Design</a> 用于视觉设计，或 <a href="https://support.claude.com/en/articles/16923645-get-started-with-claude-docs" target="_blank" rel="noopener">Claude Docs</a> 用于其他人将阅读和编辑的文档。每个都在 claude.ai 上的自己的编辑器中打开，您和您的团队成员可以直接更改它或要求 Claude 更改，并将其导出为 PowerPoint、PDF 或 Word 等格式。</p>
+<p>要从模板开始，请描述您想要的内容，例如"将迁移说明转换为周四审查的演示文稿"或"将此计划作为文档写给团队"。Claude 选择匹配的模板，从您的请求和会话已有的内容填充它，并给您链接。对于演示文稿或设计，您也可以运行 <code>/slides</code> 或 <code>/design</code> 并提供简要说明。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>模板处于测试阶段。它们在 Pro、Max、Ultra 和 Team 计划上默认启用。在 Enterprise 计划上，所有者在<strong>组织设置 &gt; Artifacts</strong>下<a href="https://support.claude.com/en/articles/16994751-artifacts-admin-guide-for-team-and-enterprise-plans" target="_blank" rel="noopener">启用每个模板</a>。如果您的组织关闭了 Slides 模板，<code>/slides</code> 不会出现；如果关闭了 Design 模板，<code>/design</code> 不会草拟设计。两个命令都需要 Claude Code v2.1.265 或更高版本以及一个<a href="#availability">Artifact 可用</a>的会话。</p></div></div>
+<h3 id="make-a-slide-deck">制作幻灯片演示文稿</h3>
+<p>运行 <code>/slides</code> 并提供简要说明，说明演示文稿涵盖的内容以及针对的对象：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/slides a quarterly review of the platform team's reliability work, for the engineering all-hands
+</code></pre></div>
+<p>Claude 创建一个 Claude Slides 工件并给您链接。在桌面浏览器中打开它以编辑或演示演示文稿。如果您运行 <code>/slides</code> 而不提供简要说明，Claude 会在创建任何内容之前询问演示文稿应该是关于什么的。</p>
+<h3 id="draft-a-design-canvas">草拟设计画布</h3>
+<p>要模拟 UI、屏幕流、登陆页面或海报，而不是构建页面，请运行 <code>/design</code> 并提供简要说明。Claude 将设计作为一个画布上的画板草拟，并将画布发布为一个 Claude Design 工件。简要说明命名您想要绘制的内容：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/design a settings screen for a mobile banking app
+</code></pre></div>
+<p>在桌面浏览器中打开已发布的工件以查看画板。在画板上选择一个元素并更改它，您的编辑会自动保存。您可以将每个画板导出为 PNG 或 PDF。</p>
+<h3 id="write-a-document-with-claude-docs">使用 Claude Docs 编写文档</h3>
+<p>Claude Docs 作为 claude.ai <a href="mcp.html#use-mcp-servers-from-claude-ai">连接器</a>而不是命令到达 Claude Code。连接后，<code>/mcp</code> 将其列为 <code>claude.ai Claude Docs</code>。针对供其他人使用的文档的请求随后转到 Claude Docs 而不是工件页面：规范、提案或您在会话中完成的计划的写入。Claude 在草拟文档时给您文档的链接。</p>
+<p>属于代码库的文档（例如 README）保持为文件。要为 Claude 否则会放在 Claude Docs 中的内容获取文件，请命名格式，例如 <code>.docx</code> 或仓库中的 Markdown 文件。要仅关闭 <code>claude.ai Claude Docs</code> 连接器，请参阅<a href="mcp.html#disable-claude-ai-connectors">禁用 claude.ai 连接器</a>。</p>
+<h2 id="page-constraints">页面约束</h2>
+<p>每个工件都是一个独立的页面。Claude Code 将您发布的文件包装在 HTML 文档外壳中，并在严格的内容安全策略 (CSP) 下提供服务，这决定了页面可以执行的操作。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">约束</th>
+<th style="text-align: left;">效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">外部请求</td>
+<td style="text-align: left;">页面可以从 Google Fonts 加载字体，以及从<a href="#allowlist-the-viewer-domain">五个公共 CDN 主机</a>加载脚本：cdnjs、unpkg、Tailwind 和 jQuery CDN，以及 jsDelivr 上的选定路径，例如 <code>/npm/</code>。CSP 阻止所有外部图像和所有其他外部脚本、样式表和字体，并让 <code>fetch</code>、XHR 和 WebSocket 调用仅到达页面自身的源和 Google Fonts 主机。因此，Claude 从这些 CDN 之一加载页面需要的任何库，内联所有其他 CSS 和 JavaScript，并将图像嵌入为数据 URI。<a href="#pull-live-data-with-mcp-connectors">连接器调用</a>通过 claude.ai 进行，它自己进行网络调用。</td>
+</tr>
+<tr>
+<td style="text-align: left;">无后端</td>
+<td style="text-align: left;">工件是一个静态页面。它无法自行对查看者进行身份验证。</td>
+</tr>
+<tr>
+<td style="text-align: left;">下载</td>
+<td style="text-align: left;">页面无法自行启动下载。为了让查看者保存页面生成的文件，Claude 声明下载功能。请参阅<a href="#offer-a-file-download">提供文件下载</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">单页面</td>
+<td style="text-align: left;">相对链接无法解析，因为页面旁边没有部署任何内容。对于多部分内容，Claude 使用页面内锚点而不是单独的文件。</td>
+</tr>
+<tr>
+<td style="text-align: left;">源文件类型</td>
+<td style="text-align: left;">发布的文件必须是 <code>.html</code>、<code>.htm</code> 或 <code>.md</code>，并且必须解码为 UTF-8，或通过其字节顺序标记解码为小端 UTF-16。Markdown 文件呈现为样式化的文档页面，带有语法突出显示的代码。无法解码或包含替换字符 <code>U+FFFD</code> 的文件会被<a href="errors.html#the-source-file-is-not-valid-utf-8-text">拒绝并显示要修复的行和列</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">源文件位置</td>
+<td style="text-align: left;">路径指向网络主机的文件会被拒绝，且不会被读取。有关哪些路径会被拒绝以及 Windows 上映射驱动器的例外情况，请参阅<a href="errors.html#not-published-that-file-is-on-a-network-share">未发布：该文件位于网络共享上</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">呈现大小</td>
+<td style="text-align: left;">呈现的页面必须为 16 MiB 或更小。大型嵌入图像通常是发布因大小而失败的原因。</td>
+</tr>
+</tbody>
+</table>
+<p>生成工件使用输出令牌，就像任何其他响应一样，样式化页面比相同内容作为终端文本更耗费令牌。内联 CSS、用于交互控制的 JavaScript，尤其是嵌入为数据 URI 的图像是主要贡献者。要减少工件的令牌成本：</p>
+<ul>
+<li>对于图表，优先使用 SVG 或 HTML 和 CSS，而不是嵌入的光栅图像</li>
+<li>省略您不需要的交互性</li>
+<li>让页面汇总大型数据集，而不是完整地内联它们</li>
+</ul>
+<h2 id="availability">可用性</h2>
+<p>Artifacts 需要以下所有条件。当不满足其中一个时，Claude 写入本地 HTML 文件或说它无法发布。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">要求</th>
+<th style="text-align: left;">可用时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">计划</td>
+<td style="text-align: left;">Pro、Max、Ultra、Team 或 Enterprise。在 Pro、Max 和 Ultra 计划上，artifacts 仅对您私有，直到您共享它们，不适用任何管理员管理。在 Team 和 Enterprise 计划上，artifacts 默认启用，Owner 可以在 claude.ai 管理设置中 <a href="#manage-artifacts-for-your-organization">为组织关闭它们</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;">身份验证</td>
+<td style="text-align: left;">会话由 claude.ai 账户支持：在 CLI 或桌面应用中使用 <code>/login</code> 登录。Claude Tag 会话无需登录步骤。使用 API 密钥、<a href="llm-gateway.html">网关令牌</a> 或云提供商凭据的会话无法发布。</td>
+</tr>
+<tr>
+<td style="text-align: left;">模型提供商</td>
+<td style="text-align: left;">Anthropic API。在 <a href="amazon-bedrock.html">Amazon Bedrock</a>、<a href="google-vertex-ai.html">Google Cloud 的 Agent Platform</a> 或 <a href="microsoft-foundry.html">Microsoft Foundry</a> 上不可用。</td>
+</tr>
+<tr>
+<td style="text-align: left;">组织策略</td>
+<td style="text-align: left;">客户管理的加密密钥 (CMEK)、HIPAA 和 <a href="zero-data-retention.html">零数据保留</a> 未为组织启用。</td>
+</tr>
+<tr>
+<td style="text-align: left;">使用入口</td>
+<td style="text-align: left;">Claude Code CLI，或 Claude 桌面应用版本 1.13576.0 或更高版本。当 Claude Tag 和 artifacts 都为组织启用时，<a href="https://claude.com/docs/claude-tag/overview" target="_blank" rel="noopener">Claude Tag</a> 会话也可以发布 artifacts。由 <a href="remote-control.html"><code>claude remote-control</code></a> 提供服务的会话，在会话由您自己启动时可以发布 artifacts。需要 Claude Code v2.1.281 或更高版本。在 <a href="agent-sdk-overview.html">Agent SDK</a>、GitHub Action 和 MCP 服务器上下文中默认关闭；当您从自己的终端或脚本中使用 <a href="headless.html"><code>-p</code></a> 运行 Claude Code 时，以及设置了 <a href="env-vars.html"><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code></a> 时，也默认关闭。</td>
+</tr>
+</tbody>
+</table>
+<p>您的组织是否允许 artifacts 来自您的组织策略，Claude Code 从 <code>api.anthropic.com</code> 加载。当 Claude Code 无法加载策略时，artifacts 不可用。当您请求一个时，Claude 会说明原因。</p>
+<p>如果涉及代理、VPN 或网络过滤器，请要求您的 IT 管理员允许 <code>api.anthropic.com</code> 通过。Claude Code 会在后台继续重试，一旦策略加载并允许，artifacts 就会变得可用。</p>
+<h2 id="disable-artifacts">禁用 artifacts</h2>
+<p>要为您自己的会话关闭 artifacts，无论您的组织设置如何，请使用以下任何一种方法：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">位置</th>
+<th style="text-align: left;">操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="commands.html"><code>/config</code></a></td>
+<td style="text-align: left;">关闭 <strong>Artifacts</strong> 行，这会将 <a href="settings-reference.html#enableartifact"><code>"enableArtifact": false</code></a> 写入您的用户设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="settings.html">Settings 文件</a></td>
+<td style="text-align: left;">设置 <code>"enableArtifact": false</code>。已弃用的 <code>"disableArtifact": true</code> 也会关闭 artifacts</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="env-vars.html">环境变量</a></td>
+<td style="text-align: left;">设置 <code>CLAUDE_CODE_DISABLE_ARTIFACT=1</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="permissions.html">权限规则</a></td>
+<td style="text-align: left;">将 <code>Artifact</code> 添加到 <code>permissions.deny</code></td>
+</tr>
+</tbody>
+</table>
+<p>一旦您在 <a href="cli-reference.html#cli-flags"><code>--settings</code></a> 文件中或使用 <code>CLAUDE_CODE_DISABLE_ARTIFACT</code> 关闭 artifacts，或您的管理员在<a href="server-managed-settings.html">托管设置</a>中关闭它们，任何设置文件都无法将其重新打开。</p>
+<p>您也可以在项目的 <code>.claude/settings.json</code> 或 <code>.claude/settings.local.json</code> 中设置 <code>"enableArtifact": false</code> 来为该项目中的会话关闭 artifacts。任何文件中的 <code>"enableArtifact": true</code> 都不会将其重新打开。在项目和本地设置中支持此键需要 Claude Code v2.1.242 或更高版本。</p>
+<p>如果您添加了没有 <code>domain:</code> 部分的 <code>WebFetch</code> deny 或 ask 规则，它不会关闭 artifacts 或阻止 artifact 读取。<a href="permissions.html#allow-or-deny-every-fetch"><code>permissions</code> 中 <code>deny</code> 或 <code>ask</code> 中的 <code>WebFetch(domain:claude.ai)</code> 规则确实适用于 artifact 读取</a>。</p>
+<h2 id="manage-artifacts-for-your-organization">管理组织的 Artifact</h2>
+<p>Team 和 Enterprise 计划的所有者可以在 <a href="https://claude.ai/admin-settings/artifacts" target="_blank" rel="noopener">claude.ai 管理设置</a>中管理 Artifact。Artifact 内容存储在 Anthropic 运营的基础设施上，仅对发布该 Artifact 的组织中经过身份验证的成员以及这些成员与之共享的人员可见，除非该 Artifact 已被<a href="#control-public-sharing">公开共享</a>。</p>
+<h3 id="enable-or-disable-artifacts">启用或禁用 Artifact</h3>
+<p>要为整个组织启用或禁用 Artifact，请前往 <a href="https://claude.ai/admin-settings/artifacts" target="_blank" rel="noopener"><strong>Organization settings &gt; Artifacts</strong></a>，然后使用 <strong>Artifacts</strong> 开关。在具有基于角色的访问控制的 Enterprise 计划中，您还可以将 Artifact 限定到特定角色：前往 <a href="https://claude.ai/admin-settings/roles" target="_blank" rel="noopener"><strong>Organization settings &gt; Roles</strong></a>，编辑某个角色，然后设置 <strong>Artifacts</strong> 权限。</p>
+<h3 id="control-connector-calls-from-artifacts">控制来自 Artifact 的连接器调用</h3>
+<p><a href="#pull-live-data-with-mcp-connectors">来自 Artifact 的连接器调用</a>有其独立的开关，与用于启用或关闭 Artifact 的 <strong>Artifacts</strong> 开关相互独立。请前往 <a href="https://claude.ai/admin-settings/capabilities" target="_blank" rel="noopener"><strong>Organization settings &gt; Capabilities</strong></a>，然后使用 <strong>Enable artifact connectors</strong> 开关。该开关同样控制在 claude.ai 对话中创建的 Artifact 所发起的连接器调用。</p>
+<h3 id="control-public-sharing">控制公开共享</h3>
+<p>在 Team 和 Enterprise 计划中，公开共享默认处于关闭状态。要允许成员将 Artifact 发布到任何人无需登录即可查看的公开链接，请前往 <a href="https://claude.ai/admin-settings/artifacts" target="_blank" rel="noopener"><strong>Organization settings &gt; Artifacts</strong></a>，然后打开 <strong>Artifacts</strong> 开关下方的 <strong>External sharing</strong>。重新关闭该选项会阻止通过现有公开链接进行访问，但不会更改各个 Artifact 的受众；如果您重新启用该选项，访问将恢复。</p>
+<h3 id="set-a-retention-policy">设置保留策略</h3>
+<p>要设置 Artifact 在被自动删除之前的保留时长，请前往 <a href="https://claude.ai/admin-settings/data-privacy-controls" target="_blank" rel="noopener"><strong>Organization settings &gt; Data and privacy</strong></a>。您可以分别为仍仅对作者私有的 Artifact 和已被共享的 Artifact 设置不同的保留期限。</p>
+<h3 id="review-the-audit-log">查看审计日志</h3>
+<p>发布、共享和删除 Artifact 的操作都会以 <code>claude_artifact_*</code> 事件类型出现在组织的审计日志中，这与在 claude.ai 对话中创建的 Artifact 所使用的事件类型系列相同。</p>
+<h3 id="allowlist-the-viewer-domain">将查看器域名加入允许列表</h3>
+<p>claude.ai 上的查看器会从沙盒化的 <code>*.claudeusercontent.com</code> 源加载每个 Artifact。如果您的组织限制出站网络访问，请将该域名与 <code>claude.ai</code> 一起添加到允许列表中。有关完整列表，请参阅<a href="network-config.html#network-access-requirements">网络访问要求</a>。</p>
+<p>从 <a href="#improve-the-visual-design">Google Fonts</a> 加载字体的 Artifact 还会请求 <code>fonts.googleapis.com</code> 和 <code>fonts.gstatic.com</code>。这两个主机都是可选的。如果您阻止它们，Artifact 将使用备用字体进行渲染。请采用快速拒绝而非静默丢弃的方式进行阻止，以便字体请求立即失败，而不会延迟页面的首次渲染。</p>
+<p>Artifact 还可以从 <code>cdnjs.cloudflare.com</code>、<code>cdn.jsdelivr.net</code>、<code>cdn.tailwindcss.com</code>、<code>code.jquery.com</code> 和 <code>unpkg.com</code> 加载 JavaScript 库（例如 React 或图表库），且不会从其他任何外部主机加载。如果您阻止这些主机，Artifact 中依赖库的部分将无法正常工作；与被阻止的字体不同，被阻止的库没有备用方案。此处同样请采用快速拒绝的方式进行阻止，以便被阻止的库请求立即失败，而不会一直挂起直至超时。</p>
+<h3 id="list-and-delete-artifacts-with-the-compliance-api">使用 Compliance API 列出和删除 Artifact</h3>
+<p><a href="https://docs.claude.com/en/api/compliance" target="_blank" rel="noopener">Compliance API</a> 提供了用于列出组织的 Artifact、检索特定版本的内容以及删除 Artifact 的端点：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">方法</th>
+<th style="text-align: left;">端点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>GET</code></td>
+<td style="text-align: left;"><code>/v1/compliance/apps/code/artifacts</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>GET</code></td>
+<td style="text-align: left;"><code>/v1/compliance/apps/code/artifacts/{artifact_id}/versions/{version_id}</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DELETE</code></td>
+<td style="text-align: left;"><code>/v1/compliance/apps/code/artifacts/{artifact_id}</code></td>
+</tr>
+</tbody>
+</table>
+<p>有关请求和响应的 schema，请参阅 <a href="https://platform.claude.com/docs/en/api/compliance/apps/code/artifacts" target="_blank" rel="noopener">Compliance API 参考</a>。</p>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li>浏览与 artifacts 配对的 <a href="prompt-library.html">提示模式和工作流</a></li>
+<li>将您重复使用的 artifact 提示转换为 <a href="skills.html">skill</a>，以便您可以将其作为命令调用</li>
+<li><a href="mcp.html">连接 MCP 服务器</a>，以便 Claude 可以在构建页面时将数据拉入 artifact</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="skills.html"><span class="pager-dir">← 上一页</span><span class="pager-name">使用 skills 扩展 Claude</span></a><a class="pager-link next" href="hooks-guide.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用 hooks 自动化操作</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#when-to-use-an-artifact">何时使用 artifact</a><a class="toc-l3" href="#what-an-artifact-is-not">artifact 不是什么</a><a class="toc-l2" href="#create-an-artifact">创建工件</a><a class="toc-l3" href="#when-claude-code-asks-before-publishing">Claude Code 何时会在发布前询问</a><a class="toc-l2" href="#update-an-artifact">更新一个 artifact</a><a class="toc-l2" href="#find-an-artifact-again">再次查找一个artifact</a><a class="toc-l2" href="#share-an-artifact">分享一个artifact</a><a class="toc-l3" href="#link-to-a-specific-view">链接到特定视图</a><a class="toc-l3" href="#let-someone-edit-with-you">让某人与你一起编辑</a><a class="toc-l2" href="#read-an-artifact-shared-with-you">阅读与你共享的工件</a><a class="toc-l2" href="#collect-comments-on-an-artifact">收集工件上的评论</a><a class="toc-l3" href="#let-claude-reply-to-comments-on-its-own">让 Claude 自动回复评论</a><a class="toc-l2" href="#pull-live-data-with-mcp-connectors">使用 MCP 连接器拉取实时数据</a><a class="toc-l3" href="#how-connector-calls-work-for-viewers">连接器调用如何为查看者工作</a><a class="toc-l3" href="#the-page-shows-no-live-data-for-a-viewer">页面对查看者显示没有实时数据</a><a class="toc-l2" href="#offer-a-file-download">提供文件下载</a><a class="toc-l2" href="#what-you-can-build">您可以构建的内容</a><a class="toc-l3" href="#walk-through-a-change">逐步讲解更改</a><a class="toc-l3" href="#compare-alternatives">比较替代方案</a><a class="toc-l3" href="#tune-with-interactive-controls">使用交互式控件进行调整</a><a class="toc-l3" href="#bring-the-result-back-to-your-session">将结果带回您的会话</a><a class="toc-l3" href="#track-work-in-progress">跟踪进行中的工作</a><a class="toc-l2" href="#improve-the-visual-design">改进视觉设计</a><a class="toc-l2" href="#start-from-a-slides-design-or-docs-template">从幻灯片、设计或文档模板开始</a><a class="toc-l3" href="#make-a-slide-deck">制作幻灯片演示文稿</a><a class="toc-l3" href="#draft-a-design-canvas">草拟设计画布</a><a class="toc-l3" href="#write-a-document-with-claude-docs">使用 Claude Docs 编写文档</a><a class="toc-l2" href="#page-constraints">页面约束</a><a class="toc-l2" href="#availability">可用性</a><a class="toc-l2" href="#disable-artifacts">禁用 artifacts</a><a class="toc-l2" href="#manage-artifacts-for-your-organization">管理组织的 Artifact</a><a class="toc-l3" href="#enable-or-disable-artifacts">启用或禁用 Artifact</a><a class="toc-l3" href="#control-connector-calls-from-artifacts">控制来自 Artifact 的连接器调用</a><a class="toc-l3" href="#control-public-sharing">控制公开共享</a><a class="toc-l3" href="#set-a-retention-policy">设置保留策略</a><a class="toc-l3" href="#review-the-audit-log">查看审计日志</a><a class="toc-l3" href="#allowlist-the-viewer-domain">将查看器域名加入允许列表</a><a class="toc-l3" href="#list-and-delete-artifacts-with-the-compliance-api">使用 Compliance API 列出和删除 Artifact</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

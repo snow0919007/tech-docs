@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>创建一个 marketplace · Claude Code 中文文档</title>
+<meta name="description" content="从 marketplace.json 文件构建一个 plugin marketplace，并在托管之前在本地测试它。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/create-marketplace">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/create-marketplace" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link active" href="plugins-create-marketplace.html" aria-current="page">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>运营市场</span></div>
+    <article class="prose" id="article"><h1 id="marketplace">创建一个 marketplace</h1>
+<blockquote>
+<p>从 marketplace.json 文件构建一个 plugin marketplace，并在托管之前在本地测试它。</p>
+</blockquote>
+<p>plugin marketplace 是一个目录或仓库，包含一个 <code>.claude-plugin/marketplace.json</code> 文件，该文件列出你的 plugins 以及从哪里获取每一个。你将目录推送到 git 主机，任何有权限的人都可以用一个命令在 Claude Code 中注册它，并从中安装你的 plugins。</p>
+<p>当你想让一个你选择的群体（例如你的团队或组织）安装你的 plugins 并继续从你控制的目录接收更新时，创建你自己的 marketplace。该仓库可以是私有的，可以列出任意数量的 plugins，管理员可以<a href="plugins-org.html">在每台机器上要求它</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>这些情况在其他页面上有介绍：</p>
+<ul>
+<li><strong>与少数人共享一个 plugin</strong>：将 plugin 的目录或其 <code>.zip</code> 文件发送给他们。请参阅<a href="plugins-publish.html#share-a-plugin-without-a-marketplace">不使用 marketplace 共享 plugin</a>。</li>
+<li><strong>向所有人提供一个 plugin</strong>：将其提交到 Anthropic 的社区 marketplace。请参阅<a href="plugins-publish.html#submit-to-anthropics-directory">提交到社区 marketplace</a>。</li>
+<li><strong>自己使用一个 plugin</strong>：使用 <code>--plugin-dir</code> 加载它或将其保存在你的 skills 目录中。请参阅<a href="plugins-create.html#develop-without-a-marketplace">不使用 marketplace 开发</a>。</li>
+</ul></div></div>
+<p>从<a href="#create-a-marketplace">创建一个 marketplace</a> 开始，在你自己的机器上构建一个并从中安装一个 plugin，然后<a href="#add-plugin-entries">添加更多 plugin 条目</a>。</p>
+<h2 id="create-a-marketplace">创建一个 marketplace</h2>
+<p>以下步骤在你的机器上创建一个 marketplace，向其中添加一个 plugin，在 Claude Code 中注册它，并从中安装该 plugin。这是整个循环，也是你的用户一旦你在他们可以访问的地方托管 marketplace 后所经历的相同循环。从你想要创建 <code>my-marketplace/</code> 的目录在你的 shell 中运行每个命令。</p>
+<p>你需要一个 plugin 来列出。该示例使用来自<a href="plugins-create.html#create-your-first-plugin">创建你的第一个 plugin</a> 的 <code>my-first-plugin</code>，这是一个具有一个 skill 的 plugin，你可以将其作为 <code>/my-first-plugin:hello</code> 运行；如果你还没有 plugin，请先构建它。要使用你自己的 plugin，请在步骤说 <code>my-first-plugin</code> 的地方替换其目录和其 <code>name</code>。有关 plugin 目录可以包含的内容，请参阅<a href="plugins-components.html#explore-the-plugin-directory">plugin 目录浏览器</a>。</p>
+<p><strong>1. 设置 marketplace 目录</strong></p>
+<p>marketplace 是一个包含 <code>.claude-plugin/marketplace.json</code> 文件的目录，加上它列出的 plugins。创建 marketplace 目录及其 <code>.claude-plugin/</code> 文件夹，然后在 <code>plugins/</code> 下复制你的 plugin：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">mkdir<span class="w"> </span>-p<span class="w"> </span>my-marketplace/.claude-plugin<span class="w"> </span>my-marketplace/plugins
+cp<span class="w"> </span>-r<span class="w"> </span>my-first-plugin<span class="w"> </span>my-marketplace/plugins/
+</code></pre></div>
+<p>检查 plugin 现在所在的位置是否有效，以便任何后续错误都是关于 marketplace 而不是 plugin 的：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>validate<span class="w"> </span>./my-marketplace/plugins/my-first-plugin
+</code></pre></div>
+<p>输出的最后一行读作 <code>✔ Validation passed</code>。</p>
+<p><strong>2. 创建 marketplace 文件</strong></p>
+<p>在 <code>my-marketplace/.claude-plugin/marketplace.json</code> 处保存 <code>marketplace.json</code>。该文件需要一个 <code>name</code>、一个 <code>owner</code> 和一个 <code>plugins</code> 数组。</p>
+<p><code>plugins</code> 中的每个对象都是一个 plugin 条目，需要一个 <code>name</code> 和一个 <code>source</code>。将条目的 <code>source</code> 写成从 marketplace 根目录的路径。根目录是 <code>my-marketplace/</code>，即包含 <code>.claude-plugin/</code> 的目录。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-marketplace"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Plugins for my team"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Your Name"</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-first-plugin"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./plugins/my-first-plugin"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A greeting plugin to learn the basics"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>3. 验证 marketplace</strong></p>
+<p>在 marketplace 目录上运行 <code>claude plugin validate</code> 以检查 JSON 语法、必需字段以及其 <code>.claude-plugin/marketplace.json</code> 中的每个 plugin 条目。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>validate<span class="w"> </span>./my-marketplace
+</code></pre></div>
+<p>对于在步骤 2 中编写的文件，输出的最后一行读作 <code>✔ Validation passed</code>。</p>
+<p><strong>4. 添加 marketplace 并安装 plugin</strong></p>
+<p>将目录注册为 marketplace。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>marketplace<span class="w"> </span>add<span class="w"> </span>./my-marketplace
+</code></pre></div>
+<p>该命令打印 <code>✔ Successfully added marketplace: my-marketplace (declared in user settings)</code>，这意味着 marketplace 已记录在你的用户设置文件中。</p>
+<p>安装 plugin。安装 id 是条目的 <code>name</code>、一个 <code>@</code> 和 marketplace 的 <code>name</code>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>install<span class="w"> </span>my-first-plugin@my-marketplace
+</code></pre></div>
+<p>该命令打印 <code>✔ Successfully installed plugin: my-first-plugin@my-marketplace (scope: user)</code>。</p>
+<p>在会话内，<code>/plugin marketplace add ./my-marketplace</code> 以相同的方式注册 marketplace。<code>/plugin install my-first-plugin@my-marketplace</code> 在 <code>/plugin</code> 面板中打开 plugin 的详细信息，你可以在其中安装它。有关该流程，请参阅<a href="plugins-install.html">安装和管理 plugins</a>。</p>
+<p><strong>5. 确认 plugin 已加载</strong></p>
+<p>列出已安装的 plugins。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>list
+</code></pre></div>
+<p>输出列出 <code>my-first-plugin@my-marketplace</code>，其 <code>Status: ✔ enabled</code>。</p>
+<p>要查看 plugin 加载了什么，请显示其详细信息。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>details<span class="w"> </span>my-first-plugin
+</code></pre></div>
+<p><code>Component inventory</code> 部分读作 <code>Skills (1)  hello</code>。</p>
+<p>要运行该 skill，启动一个会话并输入 <code>/my-first-plugin:hello</code>。Claude 会向你问好。该命令以 plugin 的名称作为前缀，就像每个 plugin skill 的名称一样。</p>
+<h2 id="add-plugin-entries">添加 plugin 条目</h2>
+<p>你分发的每个 plugin 都是 <code>marketplace.json</code> 的 <code>plugins</code> 数组中的一个对象。要添加第二个 plugin，请添加第二个对象。这些字段涵盖了大多数条目：</p>
+<ul>
+<li><code>name</code>：人们在安装时在 <code>@</code> 之前输入的标识符。<a href="plugins-marketplace-reference.html#plugin-entries">Plugin 条目</a>给出了名称可以使用的字符。</li>
+<li><code>source</code>：Claude Code 从哪里获取 plugin。对于 marketplace 目录内的 plugin，写一个相对路径字符串，如<a href="#create-a-marketplace">演练</a>中所示，或对于目录外的 plugin，写一个源对象。请参阅<a href="#choose-a-plugin-source">选择 plugin 源</a>。</li>
+<li><code>description</code>：人们在 <code>/plugin</code> 中浏览你的 marketplace 时在 plugin 旁边看到的行。</li>
+</ul>
+<p>有关完整的字段列表，请参阅<a href="plugins-marketplace-reference.html#plugin-entries">插件条目</a>，其中还介绍了条目可以设置的 <a href="plugins-manifest-reference.html"><code>plugin.json</code></a> 字段以及这些字段何时生效。</p>
+<h2 id="rules-for-plugin-entries">Plugin 条目的规则</h2>
+<p>来自新 marketplace 的大多数失败安装来自于从错误目录编写的相对路径，或来自与 plugin 的 <code>plugin.json</code> 中的 <code>name</code> 不同的条目名称。</p>
+<h3 id="write-relative-paths-from-the-marketplace-root">从 marketplace 根目录编写相对路径</h3>
+<p>marketplace 根目录是包含 <code>.claude-plugin/</code> 的目录。在<a href="#create-a-marketplace">演练</a>中，那是 <code>my-marketplace/</code>，所以条目的 <code>source</code> 是 <code>"./plugins/my-first-plugin"</code>。该路径不是从 <code>.claude-plugin/</code> 内部开始的，所以不要使用 <code>..</code> 来离开它。</p>
+<p>包含 <code>..</code> 的路径和指向不存在目录的路径在不同的命令处失败：</p>
+<ul>
+<li><strong>包含 <code>..</code> 的路径</strong>：<code>claude plugin validate</code> 将条目报告为无效。消息以 <code>Path contains "..": ./../plugins/my-first-plugin</code> 开头。</li>
+<li><strong>指向不存在目录的路径</strong>：<code>claude plugin validate</code> 通过。<code>claude plugin install</code> 失败，显示 <code>Source path does not exist: &lt;path&gt;</code>，其中 <code>&lt;path&gt;</code> 是 Claude Code 检查的绝对位置。</li>
+</ul>
+<h3 id="keep-the-entry-name-and-the-manifest-name-the-same">保持条目名称和清单名称相同</h3>
+<p>marketplace plugin 在 <code>marketplace.json</code> 中有一个条目 <code>name</code> 和在其自己的 <code>plugin.json</code> 中有一个 <code>name</code>，称为清单名称。每个名称出现在不同的地方：</p>
+<ul>
+<li><strong>条目名称</strong>：安装 id，<code>&lt;entry-name&gt;@&lt;marketplace&gt;</code>。这是人们输入来安装的内容，<code>claude plugin list</code> 显示的内容，以及 Claude Code 在他们的设置文件中的 <a href="settings-reference.html#enabledplugins"><code>enabledPlugins</code></a> 下写入的键。</li>
+<li><strong>清单名称</strong>：plugin 的 skills 上的前缀，以及 <code>claude plugin details</code> 接受的名称。</li>
+</ul>
+<p>当两个名称不同且有人按清单名称安装时，Claude Code 报告 <code>Plugin "&lt;manifest-name&gt;" not found in marketplace "&lt;marketplace&gt;"</code>。保持两个名称相同。有关 Claude Code 如何使用这两个名称的更多信息，请参阅<a href="plugins-loading.html#find-where-a-plugin-came-from">Plugin 加载参考</a>。</p>
+<h3 id="keep-unused-submodules-out-of-the-clone">避免将未使用的子模块拉入克隆</h3>
+<p>当有人添加您的市场时，Claude Code 会克隆该仓库，并且只获取包含插件文件的 git 子模块。需要 Claude Code v2.1.295 或更高版本。</p>
+<p>您可以通过每个插件的放置位置来决定 Claude Code 获取哪些子模块：</p>
+<ul>
+<li><strong>位于子目录中的插件</strong>：Claude Code 会获取插件目录内的子模块，以及包含该插件的子模块。将插件需要的子模块放在插件目录内，并将不需要的子模块放在目录外</li>
+<li><strong>位于市场根目录的插件</strong>：只要插件的某个文件引用了任一子模块内的路径，Claude Code 就会获取仓库中的所有子模块。如果您的仓库中有一个仅供构建使用的大型子模块，请将插件移到子目录中</li>
+</ul>
+<p>如果位于根目录的插件运行来自子模块的文件，请在插件的 hook 或服务器配置中完整写出该文件的路径，例如 <code>${CLAUDE_PLUGIN_ROOT}/vendor/tool/run.sh</code>。Claude Code 会读取这些路径来判断插件是否需要这些子模块。它无法识别脚本在运行时拼接出的路径。</p>
+<p>有关完整规则，请参阅<a href="plugins-marketplace-reference.html#git-submodules-in-the-marketplace-repository">市场仓库中的 Git 子模块</a>。</p>
+<h2 id="choose-a-plugin-source">选择 plugin 源</h2>
+<p><code>marketplace.json</code> 中的每个 plugin 条目都有一个 <code>source</code>，告诉 Claude Code 从哪里获取那个 plugin。根据 plugin 文件的存储位置选择源。该表列出了大多数 marketplace 所有者使用的源。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">源</th>
+<th style="text-align: left;">何时使用</th>
+<th style="text-align: left;">最小 <code>source</code> 值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">相对路径</td>
+<td style="text-align: left;">plugin 的文件在 marketplace 目录内</td>
+<td style="text-align: left;"><code>"./plugins/my-first-plugin"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>github</code></td>
+<td style="text-align: left;">plugin 是其自己的 GitHub 仓库</td>
+<td style="text-align: left;"><code>{ "source": "github", "repo": "your-org/my-first-plugin" }</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>git-subdir</code></td>
+<td style="text-align: left;">plugin 是某个其他仓库的子目录，例如 monorepo</td>
+<td style="text-align: left;"><code>{ "source": "git-subdir", "url": "your-org/monorepo", "path": "tools/my-first-plugin" }</code></td>
+</tr>
+</tbody>
+</table>
+<p>在 <code>git-subdir</code> 源中，<code>url</code> 接受 git URL 或 <code>owner/repo</code> GitHub 简写。</p>
+<p>plugin 也可以来自以下源类型之一：</p>
+<ul>
+<li><code>url</code>：任何主机上的 git 仓库 URL</li>
+<li><code>archive</code>：通过 HTTPS 下载的 zip 文件</li>
+<li><code>npm</code>：npm 包</li>
+<li><code>command</code>：通过在安装 plugin 的机器上运行命令生成的目录</li>
+</ul>
+<p>有关每种源类型的字段，以及将基于 git 的源固定到 <code>ref</code> 或 <code>sha</code>，请参阅<a href="plugins-marketplace-reference.html#plugin-sources">Plugin 源</a>。</p>
+<h2 id="validate-and-test">验证和测试</h2>
+<p>当你添加 plugins 时，在每次编辑后在你的 shell 中运行 <code>claude plugin validate ./my-marketplace</code>，并在分享之前从你自己机器上的 marketplace 安装。验证和安装会捕获不同的问题。</p>
+<h3 id="problems-that-validation-reports">验证报告的问题</h3>
+<p><code>claude plugin validate</code> 仅读取 marketplace 目录内的文件。它报告：</p>
+<ul>
+<li>JSON 语法错误，如 <code>json: Invalid JSON syntax: &lt;reason&gt;</code></li>
+<li>缺少必需字段，例如 <code>owner: Invalid input</code></li>
+<li>违反<a href="plugins-marketplace-reference.html#top-level-fields">marketplace 参考</a>中命名规则的 marketplace 或 plugin 名称</li>
+<li>包含 <code>..</code> 的相对 <code>source</code></li>
+<li>顶级或 plugin 条目中的未知字段，作为警告</li>
+<li>每个相对路径 plugin 的 <code>plugin.json</code> 中的问题，如 <code>plugins[N] plugin.json → &lt;field&gt;: &lt;message&gt;</code></li>
+</ul>
+<p>有关 <code>validate</code> 可以打印的每条消息，请参阅<a href="plugins-marketplace-reference.html#validation-messages">验证消息</a>。有关其标志和退出代码，请参阅 <a href="plugins-cli-reference.html#plugin-validate"><code>plugin validate</code></a>。</p>
+<h3 id="problems-that-surface-when-you-add-or-install">添加或安装时出现的问题</h3>
+<p><code>claude plugin validate</code> 不报告的问题在你添加 marketplace 或从中安装时出现：</p>
+<ul>
+<li><strong>当你添加 marketplace 时</strong>：确切的<a href="plugins-marketplace-reference.html#reserved-names">官方 marketplace 名称</a>，例如 <code>claude-plugins-official</code>，通过验证。当你添加具有其中一个名称的 marketplace 时，Claude Code 拒绝它，消息以 <code>The name '&lt;name&gt;' is reserved for official Anthropic marketplaces</code> 开头。</li>
+<li><strong>当你安装一个 plugin 时</strong>：</li>
+<li>Claude Code 在你安装 plugin 时首先获取 <code>github</code>、<code>git-subdir</code> 或其他远程源，所以错误的 <code>repo</code> 或 <code>path</code> 会在那时出现。</li>
+<li>一个相对 <code>source</code> 的目录不存在也会在安装时失败，显示 <code>Source path does not exist: &lt;path&gt;</code>。</li>
+</ul>
+<h3 id="test-an-edit-to-a-plugin">测试对 plugin 的编辑</h3>
+<p>在<a href="#create-a-marketplace">演练</a>中，你从具有相对路径 <code>source</code> 的本地目录添加了 <code>my-marketplace</code>。使用该设置，Claude Code 直接从 <code>my-marketplace/plugins/</code> 读取 plugin 的文件。你的编辑在下一个会话开始时或当你在会话中运行 <code>/reload-plugins</code> 时生效，无需更改 plugin 的 <code>version</code>。</p>
+<p>从你托管的 marketplace 安装的人会在 plugin 缓存中获得一个副本。有关他们如何接收新版本，请参阅<a href="plugins-host-marketplace.html#keep-users-up-to-date">保持用户最新</a>。</p>
+<h3 id="remove-the-marketplace-to-start-over">删除 marketplace 以重新开始</h3>
+<p>要删除所有内容并重新开始，在你的 shell 中运行 <code>claude plugin marketplace remove my-marketplace</code>。该命令删除 marketplace 并卸载其 plugins。</p>
+<h2 id="host-your-marketplace">托管你的 marketplace</h2>
+<p>当您能够像<a href="#create-a-marketplace">创建市场</a>中那样，在自己的机器上从市场安装插件后，请将市场目录推送到 git 托管平台。推送之前，请为市场指定一个其他作者不太可能使用的顶层 <code>name</code>，因为用户<a href="plugins-marketplace-reference.html#marketplace-file">不能拥有两个同名的市场</a>。</p>
+<p>你的队友然后在他们的 shell 中为 GitHub 仓库运行 <code>claude plugin marketplace add &lt;owner&gt;/&lt;repo&gt;</code>，或使用仓库 URL 运行相同的命令。然后他们按名称安装 plugin，如<a href="#create-a-marketplace">演练</a>中所示。</p>
+<p>有关私有仓库访问、更新、版本控制以及重命名或删除条目，请参阅<a href="plugins-host-marketplace.html">托管和维护 marketplace</a>。</p>
+<h2 id="next-steps">后续步骤</h2>
+<ul>
+<li><a href="plugins-host-marketplace.html">托管和维护 marketplace</a>：选择一个主机、保持用户最新并安全地重命名或删除 plugins</li>
+<li><a href="plugins-marketplace-reference.html">Marketplace 参考</a>：<code>marketplace.json</code> 字段和源类型</li>
+<li><a href="plugins-org.html">为你的组织管理 plugins</a>：在每台机器上要求你的 marketplace 及其 plugins</li>
+<li><a href="plugins-relevance.html">按相关性建议 plugins</a>：当会话匹配时，让 Claude Code 建议来自你的 marketplace 的 plugin</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-mods-troubleshoot.html"><span class="pager-dir">← 上一页</span><span class="pager-name">排查 mod 问题</span></a><a class="pager-link next" href="plugins-host-marketplace.html"><span class="pager-dir">下一页 →</span><span class="pager-name">托管和维护一个 marketplace</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#create-a-marketplace">创建一个 marketplace</a><a class="toc-l2" href="#add-plugin-entries">添加 plugin 条目</a><a class="toc-l2" href="#rules-for-plugin-entries">Plugin 条目的规则</a><a class="toc-l3" href="#write-relative-paths-from-the-marketplace-root">从 marketplace 根目录编写相对路径</a><a class="toc-l3" href="#keep-the-entry-name-and-the-manifest-name-the-same">保持条目名称和清单名称相同</a><a class="toc-l3" href="#keep-unused-submodules-out-of-the-clone">避免将未使用的子模块拉入克隆</a><a class="toc-l2" href="#choose-a-plugin-source">选择 plugin 源</a><a class="toc-l2" href="#validate-and-test">验证和测试</a><a class="toc-l3" href="#problems-that-validation-reports">验证报告的问题</a><a class="toc-l3" href="#problems-that-surface-when-you-add-or-install">添加或安装时出现的问题</a><a class="toc-l3" href="#test-an-edit-to-a-plugin">测试对 plugin 的编辑</a><a class="toc-l3" href="#remove-the-marketplace-to-start-over">删除 marketplace 以重新开始</a><a class="toc-l2" href="#host-your-marketplace">托管你的 marketplace</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

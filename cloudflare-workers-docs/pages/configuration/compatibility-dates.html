@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>兼容性日期 · Workers 文档（中文版）</title>
+<meta name="description" content="用日期选定一个 Workers 运行时版本，决定 Worker 会看到哪些行为。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>兼容性日期</h1>
+      <p class="lead">用日期选定一个 Workers 运行时版本，决定 Worker 会看到哪些行为。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-04-23</span>
+        <span>对应页面：configuration/compatibility-dates</span>
+      </div>
+
+<p>Cloudflare 会定期更新 Workers 运行时。这些更新全局生效，正常情况下绝不该让已部署的 Worker 停止工作。但有时某些改动会不向后兼容——尤其是运行时 API 里本来就有 bug，而已有 Worker 可能不经意地依赖了这些 bug。Cloudflare 的做法是：修好 bug，新 Worker 可以选择接受修复后的行为，而已有 Worker 继续看到带 bug 的旧行为，以免破坏已部署的服务。</p>
+      <p>兼容性日期与兼容性标志，就是开发者用来选择是否接受这些运行时变化的手段。<a href="compatibility-flags.html">兼容性标志</a>通常会有一个「默认启用」的日期，因此只要给 Worker 指定 <code>compatibility_date</code>，你就能一次性启用截至该日期（含该日期）的所有这类标志。</p>
+
+      <h2>设置兼容性日期</h2>
+      <p>项目刚起步时，<code>compatibility_date</code> 应当<strong>始终设为当天日期</strong>。之后应偶尔更新它。更新时，请查阅<a href="compatibility-flags.html">兼容性标志</a>页面弄清哪些行为变了，并务必测试你的 Worker 是否受影响，必要时改代码。新的兼容性日期会在你下次运行 <code>npx wrangler deploy</code> 时生效。</p>
+      <p>不想更新也完全可以不更新——Workers 运行时会永久支持旧的兼容性日期。如果 Cloudflare 因为某些原因认为必须做一次会破坏线上 Worker 的改动，会主动联系受影响的开发者。当然，Cloudflare 会尽可能避免这种情况。</p>
+      <p>不过，即便不必更新 <code>compatibility_date</code>，保持更新仍是好习惯，原因有两点：</p>
+      <ol>
+        <li>有时新特性只对使用当前 <code>compatibility_date</code> 的 Worker 开放。想用上最新特性，就得跟上日期。</li>
+        <li>一般来说，除了<a href="compatibility-flags.html">兼容性标志</a>页面之外，Workers 文档只描述当前 <code>compatibility_date</code> 下的行为，不会保留历史行为的说明。如果你的 Worker 用的是旧日期，就需要反复翻兼容性标志页，确认你用到的 API 有没有变过。</li>
+      </ol>
+
+      <h4>通过 Wrangler</h4>
+      <p>兼容性日期可以在 Worker 的 <a href="../../sections/wrangler.html">Wrangler 配置文件</a>里设置：</p>
+<pre data-lang="jsonc"><code>{
+	// Opt into backwards-incompatible changes through April 5, 2022.
+	"compatibility_date": "2022-04-05"
+}</code></pre>
+<pre data-lang="toml"><code>compatibility_date = "2022-04-05"</code></pre>
+
+      <h4>通过 Cloudflare 控制台</h4>
+      <p>在 Cloudflare 控制台创建 Worker 时，兼容性日期会自动设为当天日期。</p>
+      <p>之后可以在 <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener">Cloudflare 控制台 ↗</a>的 Workers 设置里更新兼容性日期。</p>
+
+      <h4>通过 Cloudflare API</h4>
+      <p>用 <a href="https://developers.cloudflare.com/api/resources/workers/subresources/scripts/methods/update/" target="_blank" rel="noopener">Workers Script API ↗</a> 或 <a href="https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/versions/methods/create/" target="_blank" rel="noopener">Workers Versions API ↗</a> 上传 Worker 时，可以在请求体的 <code>metadata</code> 字段里设置兼容性日期。</p>
+      <div class="warn-box">
+        <span class="box-title">注意默认值</span>
+        <p>通过 API 上传时如果没指定兼容性日期，默认取最老的日期——即任何标志生效之前（2021-11-02）。通过 API 新建 Worker 时，强烈建议把兼容性日期设为当天日期。</p>
+      </div>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/compatibility-dates/" target="_blank" rel="noopener">configuration/compatibility-dates</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

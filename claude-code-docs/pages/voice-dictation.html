@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>语音听写 · Claude Code 中文文档</title>
+<meta name="description" content="在 Claude Code CLI 中使用按住录音或点击录音的语音听写功能来说出你的提示词。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="voice-dictation">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/voice-dictation" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link active" href="voice-dictation.html" aria-current="page">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>配置</span> <span class="sep">/</span> <span>界面</span></div>
+    <article class="prose" id="article"><h1 id="_1">语音听写</h1>
+<blockquote>
+<p>在 Claude Code CLI 中使用按住录音或点击录音的语音听写功能来说出你的提示词。</p>
+</blockquote>
+<p>在 Claude Code CLI 中说出你的提示词，而不是输入它们。你的语音会实时转录到提示词输入中，所以你可以在同一条消息中混合使用语音和输入。使用 <code>/voice</code> 启用听写，然后要么在说话时按住一个键，要么点击一次开始，再点击一次发送。</p>
+<p>在<a href="#hold-to-record">按住模式</a>下，听写功能也适用于 <a href="agent-view.html#peek-and-reply">Agent 视图</a>。在 Dispatch 输入框或窥视面板回复获得焦点时，按住您的按键通话键，即可向后台会话进行听写。</p>
+<h2 id="requirements">要求</h2>
+<p>语音听写将你录制的音频流传输到 Anthropic 的服务器进行转录。音频不在本地处理。它需要以下所有条件：</p>
+<ul>
+<li><strong>一个 Claude.ai 账户</strong>：语音转文本服务仅在你使用 Claude.ai 账户进行身份验证时可用，当 Claude Code 配置为直接使用 Anthropic API 密钥、Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 时不可用。</li>
+<li><strong>一个本地麦克风</strong>：语音听写在<a href="claude-code-on-the-web.html">云会话</a>或 SSH 会话中不起作用。</li>
+<li><strong>如果你在 WSL 中运行 Claude Code，则需要 WSLg</strong>：WSLg 包含在 Windows 10 或 11 上从 Microsoft Store 安装的 WSL2 中。如果 WSLg 不可用，例如在 WSL1 上，改为在本机 Windows 中运行 Claude Code。</li>
+</ul>
+<p>转录不消耗 Claude 消息或令牌，也不计入 <code>/usage</code> 中显示的限制。有关 Anthropic 如何处理你的数据，请参阅<a href="data-usage.html">数据使用</a>。</p>
+<p>音频录制在 macOS、Linux 和 Windows 上使用内置的本机模块。在 Linux 上，如果本机模块无法加载，Claude Code 会回退到 ALSA utils 中的 <code>arecord</code> 或 SoX 中的 <code>rec</code>。如果两者都不可用，<code>/voice</code> 会打印你的包管理器的安装命令。</p>
+<p>Claude Code <a href="vs-code.html">VS Code 扩展</a>也支持语音听写，具有相同的 Claude.ai 账户要求。它在 VS Code Remote 会话中不可用，包括 SSH、Dev Containers 和 Codespaces，因为麦克风在你的本地机器上，而扩展在远程主机上运行。</p>
+<h2 id="enable-voice-dictation">启用语音听写</h2>
+<p>运行 <code>/voice</code> 启用听写。启用时，Claude Code 会运行麦克风检查。在 macOS 上，如果之前从未授予过权限，这会触发终端的系统麦克风权限提示。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/voice
+Voice mode enabled (hold). Hold space to record. Dictation language: en (/config to change).
+</code></pre></div>
+<p><code>/voice</code> 接受一个可选的模式参数：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">命令</th>
+<th style="text-align: left;">效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/voice</code></td>
+<td style="text-align: left;">切换开或关，保持当前模式</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/voice hold</code></td>
+<td style="text-align: left;">在<a href="#hold-to-record">按住模式</a>中启用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/voice tap</code></td>
+<td style="text-align: left;">在<a href="#tap-to-record-and-send">点击模式</a>中启用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/voice off</code></td>
+<td style="text-align: left;">禁用</td>
+</tr>
+</tbody>
+</table>
+<p>语音听写在会话之间持续。直接在你的<a href="settings.html">用户设置文件</a>中设置它，而不是运行 <code>/voice</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"voice"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tap"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>启用语音听写的前三个会话中，当提示词为空时，输入页脚会显示 <code>hold space to speak</code> 提示。提示文本反映你当前的 <code>voice:pushToTalk</code> 快捷键绑定，如果你<a href="#rebind-the-dictation-key">重新绑定听写键</a>，它会更新。提示文本在两种模式中都相同，如果你配置了<a href="statusline.html">自定义状态行</a>，则不会显示。</p>
+<p>转录在两种模式中都针对编码词汇进行了调整。常见的开发术语如 <code>regex</code>、<code>OAuth</code>、<code>JSON</code> 和 <code>localhost</code> 被正确识别，你当前的项目名称和 git 分支名称会自动添加为识别提示。</p>
+<h2 id="hold-to-record">按住录音</h2>
+<p>按住模式是按键通话：当你按住键时录制运行，释放时停止。这是默认模式。</p>
+<p>按住 <code>Space</code> 开始录制。Claude Code 通过监视来自你的终端的快速按键重复事件来检测按住的键，因此在录制开始之前有一个简短的预热。页脚在预热期间显示 <code>keep holding…</code>，然后在录制激活后显示 <code>listening…</code>。录制时，提示词光标变成一个随麦克风电平上下移动的条形，除非你打开了 <a href="settings-reference.html#prefersreducedmotion"><code>prefersReducedMotion</code></a>。</p>
+<p>前几个按键重复字符在预热期间输入到输入中，当录制激活时会自动删除。单个 <code>Space</code> 点击仍然会输入一个空格，因为按住检测仅在快速重复时触发。</p>
+<p>按住或点击 <code>Space</code> 仅在按键会输入到提示词的地方开始听写。在<a href="interactive-mode.html#transcript-viewer">转录查看器</a>中，<code>Space</code> 翻页浏览对话，在<a href="interactive-mode.html#vim-editor-mode">vim 模式</a>的非 INSERT 状态下它是一个命令。<a href="#rebind-the-dictation-key">重新绑定的修饰符组合</a>（如 <code>meta+k</code>）永远不会输入文本，所以它也可以从这些地方开始听写。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>要跳过预热，使用 <code>/voice tap</code> 切换到<a href="#tap-to-record-and-send">点击模式</a>，或<a href="#rebind-the-dictation-key">重新绑定到修饰符组合</a>，如 <code>meta+k</code>。修饰符组合在第一次按键时开始录制。</p></div></div>
+<p>你的语音在你说话时出现在提示词中，在转录最终确定之前会变暗。释放 <code>Space</code> 停止录制并最终确定文本。转录被插入到你的光标位置，光标保持在插入文本的末尾，所以你可以以任何顺序混合输入和听写。再次按住 <code>Space</code> 追加另一个录制，或先移动光标以在提示词中的其他地方插入语音：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">&gt; refactor the auth middleware to ▮
+  # hold space, speak "use the new token validation helper"
+&gt; refactor the auth middleware to use the new token validation helper▮
+</code></pre></div>
+<p>默认情况下，释放键会插入转录并等待你按 <code>Enter</code>。在 <code>voice</code> 设置对象中设置 <code>"autoSubmit": true</code> 以在释放键时自动发送提示词，只要转录至少有三个单词。</p>
+<h2 id="tap-to-record-and-send">点击录音并发送</h2>
+<p>点击模式使用单个按键切换录制：点击一次开始，说话，然后再点击一次发送提示词。没有预热，你不需要保持键被按住。</p>
+<p>使用 <code>/voice tap</code> 启用点击模式。当提示词输入为空时，点击 <code>Space</code> 开始录制。页脚在录制时显示 <code>● REC · tap to send</code>。再次点击 <code>Space</code> 停止。</p>
+<p>Claude Code 插入转录并在转录至少有三个单词时自动提交提示词。较短的转录被插入但不提交，所以意外点击不会发送一个杂散的单词。</p>
+<p>三个单词的阈值计算不使用空格书写的语言中的单词。日语、中文和泰语转录计算单个单词，所以它们在点击模式和带有 <code>autoSubmit</code> 的保持模式下自动提交。</p>
+<p>第一次点击仅在提示词输入为空时开始录制，所以你仍然可以在撰写消息时正常输入空格。第二次点击停止录制，无论输入内容如何。录制也会在 15 秒无声或总共两分钟后自动停止。</p>
+<h2 id="cancel-a-recording">取消录音</h2>
+<p>按 <code>Esc</code> 或 <code>Ctrl+C</code> 可以取消听写，而不是完成它。Claude Code 会停止麦克风，丢弃转录文本，并将提示恢复到录音开始前的状态。</p>
+<p>这两个键也可以在完成的录音的转录文本仍在处理时取消。在处理期间编辑或提交的提示会保持您留下的状态。</p>
+<p>这两个键在取消的按键中不执行任何其他操作：<code>Esc</code> 不会中断 Claude 的响应，<code>Ctrl+C</code> 不会清除提示或计为 <a href="interactive-mode.html#general-controls">退出 Claude Code 的两次按键中的第一次</a>。</p>
+<h2 id="change-the-dictation-language">更改听写语言</h2>
+<p>语音听写使用与控制 Claude 响应语言相同的<a href="settings-reference.html#language"><code>language</code> 设置</a>。如果该设置为空，听写默认为英语。在 VS Code 扩展中，如果 <code>language</code> 为空，听写在默认为英语之前使用 VS Code 的 <code>accessibility.voice.speechLanguage</code> 设置。</p>
+<blockquote>
+<p>[accordion] 支持的听写语言</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">语言</th>
+<th style="text-align: left;">代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">捷克语</td>
+<td style="text-align: left;"><code>cs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">丹麦语</td>
+<td style="text-align: left;"><code>da</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">荷兰语</td>
+<td style="text-align: left;"><code>nl</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">英语</td>
+<td style="text-align: left;"><code>en</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">法语</td>
+<td style="text-align: left;"><code>fr</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">德语</td>
+<td style="text-align: left;"><code>de</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">希腊语</td>
+<td style="text-align: left;"><code>el</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">印地语</td>
+<td style="text-align: left;"><code>hi</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">印度尼西亚语</td>
+<td style="text-align: left;"><code>id</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">意大利语</td>
+<td style="text-align: left;"><code>it</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">日语</td>
+<td style="text-align: left;"><code>ja</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">韩语</td>
+<td style="text-align: left;"><code>ko</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">挪威语</td>
+<td style="text-align: left;"><code>no</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">波兰语</td>
+<td style="text-align: left;"><code>pl</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">葡萄牙语</td>
+<td style="text-align: left;"><code>pt</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">俄语</td>
+<td style="text-align: left;"><code>ru</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">西班牙语</td>
+<td style="text-align: left;"><code>es</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">瑞典语</td>
+<td style="text-align: left;"><code>sv</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">土耳其语</td>
+<td style="text-align: left;"><code>tr</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">乌克兰语</td>
+<td style="text-align: left;"><code>uk</code></td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>在 <code>/config</code> 中或直接在设置中设置语言。你可以使用 <a href="https://en.wikipedia.org/wiki/IETF_language_tag" target="_blank" rel="noopener">BCP 47 语言代码</a>或语言名称：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"japanese"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>如果你的 <code>language</code> 设置不在支持的列表中，<code>/voice</code> 在启用时会警告你，并为听写回退到英语。Claude 的文本响应不受此回退的影响。</p>
+<h2 id="rebind-the-dictation-key">重新绑定听写键</h2>
+<p>听写键在 <code>Chat</code> 上下文中绑定到 <code>voice:pushToTalk</code>，默认为 <code>Space</code>。相同的绑定控制按住和点击模式。在 <a href="keybindings.html"><code>~/.claude/keybindings.json</code></a> 中重新绑定它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"bindings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chat"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bindings"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"meta+k"</span><span class="p">:</span><span class="w"> </span><span class="s2">"voice:pushToTalk"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"space"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>voice:pushToTalk</code> 操作一次使用一个键。当你绑定自定义键时，它会替换默认的 <code>Space</code> 绑定，而不是添加第二个触发器，所以此示例中的 <code>"space": null</code> 行是为了清晰起见，可以省略而不改变行为。</p>
+<p>在按住模式中，避免绑定裸字母键如 <code>v</code>，因为按住检测依赖于按键重复，字母在预热期间输入到提示词中。使用 <code>Space</code>，或使用修饰符组合如 <code>meta+k</code> 在第一次按键时开始录制，无需预热。点击模式没有预热，所以大多数键都可以。</p>
+<p>某些键不会传递到终端应用程序，根本无法绑定。例如，如果你尝试绑定 <code>Caps Lock</code>，会显示错误。有关完整的快捷键语法和保留快捷键列表，请参阅<a href="keybindings.html">自定义键盘快捷键</a>。</p>
+<h2 id="troubleshooting">故障排除</h2>
+<p>语音听写不激活或不录制时的常见问题：</p>
+<ul>
+<li><strong><code>Unknown command: /voice</code></strong>：只有在以 claude.ai 账户作为当前登录方式时才能使用 <code>/voice</code>。如果您未使用 claude.ai 账户登录，请运行 <code>/login</code>。如果正在使用 <code>ANTHROPIC_API_KEY</code>、<code>ANTHROPIC_AUTH_TOKEN</code>、<code>apiKeyHelper</code> 设置或<a href="#requirements">第三方提供商</a>，它们会优先于 claude.ai 登录，因此请将其移除并重新启动 Claude Code。</li>
+<li><strong><code>Voice mode requires a Claude.ai account</code></strong>：在您运行 <code>/voice</code> 或开始录制时，Claude Code 找不到可用的 claude.ai 登录。运行 <code>/login</code> 重新登录。</li>
+<li><strong><code>Voice mode is disabled by your organization's policy</code></strong>：你的组织的管理员策略关闭了语音听写。联系你的组织管理员以确认你的组织是否可以使用语音听写。</li>
+<li><strong><code>Microphone access is denied</code></strong>：在系统设置中授予你的终端麦克风权限。在 macOS 上，转到系统设置 → 隐私和安全 → 麦克风并启用你的终端应用，然后再次运行 <code>/voice</code>。在 Windows 上，转到设置 → 隐私和安全 → 麦克风并为桌面应用打开麦克风访问，然后再次运行 <code>/voice</code>。如果你的终端未在 macOS 设置中列出，请参阅<a href="#terminal-not-listed-in-macos-microphone-settings">终端未在 macOS 麦克风设置中列出</a>。</li>
+<li><strong><code>Voice mode requires SoX for audio recording</code> on Linux</strong>：本机音频模块无法加载，没有安装回退。使用错误消息中显示的命令安装 SoX，例如 <code>sudo apt-get install sox</code>。</li>
+<li><strong><code>Voice mode requires a microphone, but SoX could not open an audio capture device</code></strong>：SoX 已安装，但主机没有音频捕获设备，例如无头服务器或容器。在有麦克风的机器上运行 Claude Code。从 v2.1.195 开始，Linux 上的 Claude Code 在这种情况下报告此消息；早期版本即使已安装 SoX 也会要求你安装 SoX。</li>
+<li><strong><code>Voice mode could not find a working audio recorder in WSL</code></strong>：WSLg 通过 PulseAudio 而不是 ALSA 设备路由音频，因此 SoX 需要显式安装其 PulseAudio 后端。运行 <code>sudo apt install sox libsox-fmt-pulse</code>。单独安装 <code>sox</code> 会拉入 ALSA 后端，它无法在 WSL 上录制，因为没有 <code>/dev/snd</code> 设备。</li>
+<li><strong><code>Voice input is failing repeatedly and has been paused</code></strong>：语音听写在 10 秒内遇到三次失败。Claude Code 暂停听写，直到自第一次失败以来已经过了 10 秒。这通常意味着此主机上的麦克风或音频堆栈无法捕获音频，例如无头服务器、没有音频直通的远程 shell 或被拒绝的麦克风权限。确认工作输入设备，从上面的条目中修复根本原因，然后再次触发语音。在 v2.1.202 之前，只有启动失败计入暂停。</li>
+<li><strong>在按住模式中按住 <code>Space</code> 时没有任何反应</strong>：在按住时观察提示词输入。如果空格不断累积，语音听写可能已关闭；运行 <code>/voice hold</code> 启用它。如果只出现一两个空格然后没有任何反应，语音听写已打开但按住检测未触发。按住检测需要你的终端发送按键重复事件，所以如果在操作系统级别禁用了按键重复，它无法检测按住的键。使用 <code>/voice tap</code> 切换到点击模式以避免按键重复要求。</li>
+<li><strong>在点击模式中点击 <code>Space</code> 输入空格而不是录制</strong>：第一次点击仅在提示词输入为空时开始录制。先清除输入，或通过运行 <code>/voice tap</code> 检查你是否处于点击模式。</li>
+<li><strong><code>No audio detected from microphone</code></strong>：录制开始但捕获了静音。确认正确的输入设备设置为系统默认值，其输入级别未静音或接近零。在 Windows 上，打开设置 → 系统 → 声音 → 输入并选择你的麦克风。在 macOS 上，打开系统设置 → 声音 → 输入。</li>
+<li><strong><code>Voice connection failed</code></strong>：你的录制从未到达转录服务，因为连接失败。检查你的网络并重试。捕获无音频的录制报告 <code>No audio detected from microphone</code> 而不是此消息。在 v2.1.200 之前，静音麦克风可能报告连接失败，这表示网络问题，而实际问题是输入设备。</li>
+<li><strong><code>Dictation error: WebSocket error:</code> 后跟证书错误，例如 <code>unable to get local issuer certificate</code></strong>：请参阅 VS Code 页面上的<a href="vs-code.html#dictation-or-the-web-tab-fails-behind-a-tls-inspecting-proxy">在执行 TLS 检查的代理后听写或 Web 选项卡失败</a>。</li>
+<li><strong><code>Voice stream error: WebSocket upgrade rejected with HTTP &lt;status&gt;</code></strong>：服务器以显示的 HTTP 状态拒绝了你的连接，所以这不是网络中断。400 范围内的状态通常意味着过期的登录、代理或机器人保护服务代替转录服务进行应答。运行 <code>/login</code> 刷新你的登录，如果状态仍然存在，请检查你的网络路径上是否有 VPN 或代理。如果拒绝到达时你仍在录制，Claude Code 会在显示此消息之前重试一次 400 范围外的状态；它不会重试 400 范围内的状态。在 v2.1.229 到 v2.1.231 中，本机构建没有显示此消息：Claude Code 继续录制，按住模式页脚仍然显示 <code>listening…</code>，在你停止录制后报告 <code>Voice connection failed</code>。</li>
+<li><strong><code>No speech detected</code></strong>：音频到达转录服务但未识别任何单词。靠近麦克风说话，减少背景噪音，并确认你的<a href="#change-the-dictation-language">听写语言</a>与你说话的语言匹配。</li>
+<li><strong><code>Dictation stopped: no speech recognized for 15 seconds</code> 或 <code>Dictation stopped at its 2-minute limit</code></strong>：在 VS Code 扩展中，如果 15 秒内没有识别到任何单词，或在开始两分钟后，录制就会结束。如果您在这 15 秒内一直在说话，请尝试 <code>No speech detected</code> 的修复方法。已识别的单词会保留在输入框中，不会被发送。要添加更多内容，请再次单击麦克风按钮。</li>
+<li><strong>转录是乱码或使用了错误的语言</strong>：听写默认为英语。如果你用另一种语言听写，请先在 <code>/config</code> 中设置它。请参阅<a href="#change-the-dictation-language">更改听写语言</a>。</li>
+</ul>
+<h3 id="terminal-not-listed-in-macos-microphone-settings">终端未在 macOS 麦克风设置中列出</h3>
+<p>如果你的终端应用未出现在系统设置 → 隐私和安全 → 麦克风下，则没有你可以启用的切换。重置你的终端的权限状态，以便下一次 <code>/voice</code> 运行触发新的 macOS 权限提示。</p>
+<p><strong>1. 重置你的终端的麦克风权限</strong></p>
+<p>运行 <code>tccutil reset Microphone &lt;bundle-id&gt;</code>，将 <code>&lt;bundle-id&gt;</code> 替换为你的终端的标识符：内置终端为 <code>com.apple.Terminal</code>，或 iTerm2 为 <code>com.googlecode.iterm2</code>。对于其他终端，使用 <code>osascript -e 'id of app "AppName"'</code> 查找标识符。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>你可以运行 <code>tccutil reset Microphone</code> 而不带 bundle ID，但这会撤销 Mac 上每个应用的麦克风访问权限，包括 Zoom 或 Slack 等应用。每个应用在下次使用时都需要重新请求访问权限，所以不要在活跃通话期间运行它。</p></div></div>
+<p><strong>2. 退出并重新启动你的终端</strong></p>
+<p>macOS 不会重新提示已在运行的进程。使用 Cmd+Q 退出终端应用，而不仅仅是关闭其窗口，然后再次打开它。</p>
+<p><strong>3. 触发新的提示</strong></p>
+<p>启动 Claude Code 并运行 <code>/voice</code>。macOS 提示输入麦克风访问权限；允许它。</p>
+<h2 id="see-also">另请参阅</h2>
+<ul>
+<li><a href="keybindings.html">自定义键盘快捷键</a>：重新绑定 <code>voice:pushToTalk</code> 和其他 CLI 键盘操作</li>
+<li><a href="settings-reference.html#voice">所有设置</a>：<code>voice</code>、<code>language</code> 和其他设置键</li>
+<li><a href="interactive-mode.html">交互模式</a>：键盘快捷键、输入模式和会话控制</li>
+<li><a href="commands.html">命令</a>：<code>/voice</code>、<code>/config</code> 和所有其他命令的参考</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="accessibility.html"><span class="pager-dir">← 上一页</span><span class="pager-name">使用 Claude Code 与屏幕阅读器</span></a><a class="pager-link next" href="statusline.html"><span class="pager-dir">下一页 →</span><span class="pager-name">自定义你的状态行</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#requirements">要求</a><a class="toc-l2" href="#enable-voice-dictation">启用语音听写</a><a class="toc-l2" href="#hold-to-record">按住录音</a><a class="toc-l2" href="#tap-to-record-and-send">点击录音并发送</a><a class="toc-l2" href="#cancel-a-recording">取消录音</a><a class="toc-l2" href="#change-the-dictation-language">更改听写语言</a><a class="toc-l2" href="#rebind-the-dictation-key">重新绑定听写键</a><a class="toc-l2" href="#troubleshooting">故障排除</a><a class="toc-l3" href="#terminal-not-listed-in-macos-microphone-settings">终端未在 macOS 麦克风设置中列出</a><a class="toc-l2" href="#see-also">另请参阅</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

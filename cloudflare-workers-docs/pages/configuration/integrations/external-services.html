@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>对接外部服务 · Workers 文档（中文版）</title>
+<meta name="description" content="用第三方库与 SDK 连外部服务时，需要注意哪些兼容性问题。">
+<link rel="stylesheet" href="../../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>对接外部服务</h1>
+      <p class="lead">用第三方库与 SDK 连外部服务时，需要注意哪些兼容性问题。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-04-23</span>
+        <span>对应页面：configuration/integrations/external-services</span>
+      </div>
+
+<p>许多外部服务都提供库或 SDK 来调它们自己的 API。绝大部分兼容 Node.js 的库在 Workers 上开箱即用；但有一部分实现了 <code>fs</code>、<code>http/net</code>，或者访问了浏览器的 <code>window</code>，这些库无法直接搬到基于 V8 的 Workers 运行时上。</p>
+
+      <h2>认证</h2>
+      <p>如果服务需要认证，用 Wrangler 的密钥功能安全存放凭据。在你的 Workers 项目里执行：</p>
+<pre data-lang="sh"><code>wrangler secret put SECRET_NAME</code></pre>
+      <p>然后在代码里这样取值：</p>
+<pre data-lang="js"><code>const secretValue = env.SECRET_NAME;</code></pre>
+      <p>接着用这个密钥值向外部服务做认证。例如外部服务用 API key 认证，就把密钥填进该库的配置里。</p>
+      <p>对要求 mTLS 认证的服务，用 <a href="../../../sections/runtime-apis.html">mTLS 证书</a>出示客户端证书。</p>
+      <p>与外部 API 通信时使用<a href="../routing/custom-domains.html">自定义域名</a>——它把你的 Worker 视作核心应用。</p>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/integrations/external-services/" target="_blank" rel="noopener">configuration/integrations/external-services</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../../assets/nav-data-1.js"></script>
+<script src="../../../assets/nav-data-2.js"></script>
+<script src="../../../assets/site.js"></script>
+</body>
+</html>

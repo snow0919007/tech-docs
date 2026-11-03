@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>workers.dev 子域 · Workers 文档（中文版）</title>
+<meta name="description" content="免费赠送的测试用子域：快速上手够用，生产请换自定义域名。">
+<link rel="stylesheet" href="../../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>workers.dev 子域</h1>
+      <p class="lead">免费赠送的测试用子域：快速上手够用，生产请换自定义域名。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-09-22</span>
+        <span>对应页面：configuration/routing/workers-dev</span>
+      </div>
+
+<p>Cloudflare Workers 账户自带一个 <code>workers.dev</code> 子域，可以在 Cloudflare 控制台里配置。有了它，你不必先把自定义域名接入 Cloudflare，就能立刻部署 Worker。</p>
+      <p>生产环境的 Worker 建议跑在 <a href="index.html">Workers 路由或自定义域名</a>上，而不是 <code>workers.dev</code> 子域。你的 <code>workers.dev</code> 子域按 <a href="https://www.cloudflare.com/plans/" target="_blank" rel="noopener">免费网站 ↗</a>对待，定位于个人或兴趣项目，不适合承载关键业务。</p>
+
+      <h2>配置 <code>workers.dev</code></h2>
+      <p><code>workers.dev</code> 子域的格式是：<code>&lt;YOUR_ACCOUNT_SUBDOMAIN&gt;.workers.dev</code>。要修改你的子域：</p>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>在 <strong>Your subdomain</strong> 旁选择 <strong>Change</strong>。</li>
+      </ol>
+      <p>所有 Worker 在创建或重命名时都会被分配一条 <code>workers.dev</code> 路由，格式为 <code>&lt;YOUR_WORKER_NAME&gt;.&lt;YOUR_SUBDOMAIN&gt;.workers.dev</code>。Worker 配置里的 <a href="../../../sections/wrangler.html"><code>name</code></a> 字段就用作已部署 Worker 的子域。</p>
+
+      <h2>管理 <code>workers.dev</code> 的访问权限</h2>
+      <p>启用后，你的 <code>workers.dev</code> URL 是公开可访问的。你可以用 <a href="https://developers.cloudflare.com/cloudflare-one/access-controls/policies/" target="_blank" rel="noopener">Cloudflare Access ↗</a> 要求访问者在打开<a href="../../../sections/versions-and-deployments.html">版本 URL</a>、<a href="../../../sections/previews.html">预览 URL</a>与部署 URL 之前先完成认证。你可以在<a href="https://developers.cloudflare.com/cloudflare-one/access-controls/policies/" target="_blank" rel="noopener">访问策略</a>里把访问范围限定为自己、队友、组织，或你指定的任何人。</p>
+      <p>Access 可以保护某个 Worker 的生产 <code>workers.dev</code> URL、预览 URL，或两者都保护；也可以保护账户下所有 Worker 或所有 Worker 预览。</p>
+      <p>要在 Worker 里使用已登录用户的详细信息，请用 <a href="../cloudflare-access.html"><code>ctx.access</code></a>。你也可以从校验过的 JWT 或 <code>/cdn-cgi/access/get-identity</code> 端点读取<a href="https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/#user-identity" target="_blank" rel="noopener">用户身份 ↗</a>。</p>
+
+      <h2>禁用 <code>workers.dev</code></h2>
+      <h3>在控制台禁用</h3>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>在 <strong>Overview</strong> 中选择你的 Worker。</li>
+        <li>进入 <strong>Settings</strong> &gt; <strong>Domains &amp; Routes</strong>。</li>
+        <li>在 <code>workers.dev</code> 上点击 "Disable"。</li>
+        <li>确认禁用。</li>
+      </ol>
+
+      <h3>在 Wrangler 配置文件中禁用</h3>
+      <p>在该 Worker 的 <a href="../../../sections/wrangler.html">Wrangler 配置文件</a>中写入：</p>
+<pre data-lang="jsonc"><code>{
+	"workers_dev": false
+}</code></pre>
+<pre data-lang="toml"><code>workers_dev = false</code></pre>
+      <p>带上这项改动重新部署后，<code>workers.dev</code> 路由即被禁用。注意：禁用该路由<strong>不会</strong>同时禁用<a href="../../../sections/versions-and-deployments.html">版本 URL</a>、<a href="../../../sections/previews.html">预览 URL</a>或部署 URL。</p>
+      <p>如果你没有写 <code>workers_dev = false</code>，而是给 <a href="../../../sections/wrangler.html">Wrangler 配置文件</a>加了 <a href="../../../sections/wrangler.html"><code>routes</code> 段</a>，那么下次部署时 <code>workers_dev</code> 会被推断为 <code>false</code>。</p>
+      <div class="warn-box">
+        <span class="box-title">谨慎</span>
+        <p>如果你在 Cloudflare 控制台禁用了 <code>workers.dev</code> 路由，却没有把 Wrangler 文件里的 <code>workers_dev</code> 改成 <code>false</code>，那么下次用 Wrangler 部署时，这条路由会被重新启用。</p>
+      </div>
+
+      <h2>限制</h2>
+      <p>启用 <code>workers.dev</code> 子域部署 Worker 时，Worker 名称必须满足：</p>
+      <ul>
+        <li>不超过 63 个字符；</li>
+        <li>只能包含字母数字（<code>a-z</code>、<code>A-Z</code>、<code>0-9</code>）与连字符（<code>-</code>）；</li>
+        <li>不能以连字符开头或结尾。</li>
+      </ul>
+      <p>之所以有这些限制，是因为 Worker 名称会被用作 <code>workers.dev</code> URL 中的 DNS 标签，而 DNS 标签最长 63 个字符，且不能以连字符开头或结尾。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>不使用 <code>workers.dev</code> 子域时，Worker 名称最长可达 255 个字符。如果你需要更长的名字，可以禁用 <code>workers.dev</code>，改用<a href="routes.html">路由</a>或<a href="custom-domains.html">自定义域名</a>。</p>
+      </div>
+
+      <h2>相关资源</h2>
+      <ul>
+        <li><a href="https://blog.cloudflare.com/announcing-workers-dev" target="_blank" rel="noopener">workers.dev 发布公告 ↗</a></li>
+        <li><a href="../../../sections/wrangler.html">Wrangler 路由配置</a></li>
+      </ul>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/routing/workers-dev/" target="_blank" rel="noopener">configuration/routing/workers-dev</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../../assets/nav-data-1.js"></script>
+<script src="../../../assets/nav-data-2.js"></script>
+<script src="../../../assets/site.js"></script>
+</body>
+</html>

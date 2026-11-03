@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>选择沙箱环境 · Claude Code 中文文档</title>
+<meta name="description" content="比较 Claude Code 沙箱选项：内置沙箱化 Bash 工具、沙箱运行时、开发容器、Docker 和虚拟机。为您的威胁模型选择合适的隔离方案。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="sandbox-environments">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/sandbox-environments" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link active" href="sandbox-environments.html" aria-current="page">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>配置</span> <span class="sep">/</span> <span>权限和沙箱隔离</span></div>
+    <article class="prose" id="article"><h1 id="_1">选择沙箱环境</h1>
+<blockquote>
+<p>比较 Claude Code 沙箱选项：内置沙箱化 Bash 工具、沙箱运行时、开发容器、Docker 和虚拟机。为您的威胁模型选择合适的隔离方案。</p>
+</blockquote>
+<p>隔离 Claude Code 会限制会话可以读取、写入和访问网络的内容。当您让 Claude 在较少权限提示的情况下工作、以无人值守方式运行它，或将其指向您不完全信任的代码时，这一点最为重要。</p>
+<p>Claude Code 可以在多种隔离环境中运行，从轻量级的按命令沙箱到完全独立的虚拟机。本页面比较了它们隔离的内容和所需条件，帮助您为威胁模型选择合适的方案，并展示如何在整个组织中强制实施该选择。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>有关更广泛的安全模型，请参阅 <a href="security.html">安全性</a>。有关 Agent SDK 部署，请参阅 <a href="agent-sdk-secure-deployment.html">安全部署</a>。</p></div></div>
+<h2 id="compare-sandboxing-approaches">比较沙箱方法</h2>
+<p>下表中的前两种方法在主机操作系统上运行，不使用容器。其余方法将 Claude Code 放在容器或虚拟机内。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">方法</th>
+<th style="text-align: left;">隔离的内容</th>
+<th style="text-align: left;">需要 Docker</th>
+<th style="text-align: left;">设置工作量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="#sandboxed-bash-tool">Sandboxed Bash tool</a></td>
+<td style="text-align: left;">Bash、PowerShell 和 Monitor 工具命令及其子进程</td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">macOS 上最少；Linux 和 WSL2 上较少</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#sandbox-runtime">Sandbox runtime</a></td>
+<td style="text-align: left;">整个 Claude Code 进程，包括文件工具、MCP 服务器和 hooks</td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">较少</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#dev-containers">Dev container</a></td>
+<td style="text-align: left;">完整开发环境</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">中等</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#custom-container">Custom container</a></td>
+<td style="text-align: left;">完整开发环境</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">中等到高</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#virtual-machine">Virtual machine</a></td>
+<td style="text-align: left;">完整操作系统</td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">高</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#cloud-sessions">Cloud sessions</a></td>
+<td style="text-align: left;">完整操作系统，由 Anthropic 托管</td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">无；需要 Claude 订阅和已连接的 GitHub 账户，除非您使用 <code>claude --cloud</code> 启动</td>
+</tr>
+</tbody>
+</table>
+<p><a href="sandboxing.html">Sandboxed Bash tool</a> 内置于 Claude Code 中，仅限制 Bash 命令。内置文件工具、MCP 服务器和 hooks 仍直接在您的主机上运行。表中的所有其他方法都将整个 Claude Code 进程放在隔离边界内，因此文件工具、MCP 服务器和 hooks 也受到限制。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>沙箱隔离可以减少违规的影响，但不能消除风险。任何允许网络出站的方法仍然可能泄露代理可以读取的数据，任何以可写方式挂载项目目录的方法仍然可能修改该代码。在依赖沙箱作为硬控制之前，请查看 <a href="sandboxing.html#security-limitations">security limitations</a>。</p>
+<p>隔离也不会改变发送给模型的内容。您的提示和 Claude 读取的文件无论是否使用沙箱，都会传输到 Anthropic API 或您配置的提供商。有关 Claude Code 发送的内容以及如何减少它，请参阅 <a href="data-usage.html">Data usage</a>。</p></div></div>
+<h2 id="choose-an-approach">选择一种方法</h2>
+<p>将您的目标与下面的一行匹配，然后阅读随后的详细部分。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您想要</th>
+<th style="text-align: left;">开始使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">在您自己的机器上日常工作期间减少权限提示</td>
+<td style="text-align: left;"><a href="sandboxing.html">sandboxed Bash tool</a>，使用 <code>/sandbox</code> 启用</td>
+</tr>
+<tr>
+<td style="text-align: left;">让 Claude 使用 <code>--dangerously-skip-permissions</code> 或自动模式无人值守工作</td>
+<td style="text-align: left;">预配置的 <a href="devcontainer.html">dev container</a>、任何容器或虚拟机，或 <a href="#sandbox-runtime">sandbox runtime</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">隔离 MCP 服务器和 hooks 以及 Bash，不使用 Docker</td>
+<td style="text-align: left;">sandbox runtime</td>
+</tr>
+<tr>
+<td style="text-align: left;">在不受信任的存储库上工作</td>
+<td style="text-align: left;">专用虚拟机，或 <a href="claude-code-on-the-web.html">cloud session</a>（如果您有 Claude 订阅）；使用 <code>claude --cloud</code> 启动时不需要 GitHub</td>
+</tr>
+<tr>
+<td style="text-align: left;">在团队中标准化沙箱环境</td>
+<td style="text-align: left;">预配置的 <a href="devcontainer.html">dev container</a>，复制到您的存储库中</td>
+</tr>
+<tr>
+<td style="text-align: left;">从没有本地设置的设备使用 Claude Code</td>
+<td style="text-align: left;"><a href="claude-code-on-the-web.html">cloud session</a>，需要 Claude 订阅和连接的 GitHub 账户</td>
+</tr>
+<tr>
+<td style="text-align: left;">为组织中的每个开发人员要求隔离</td>
+<td style="text-align: left;"><a href="#enforce-isolation-across-an-organization">在整个组织中强制实施隔离</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">在本机 Windows 主机上工作</td>
+<td style="text-align: left;">容器或虚拟机，或在 WSL2 内运行 Bash 沙箱</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-isolation-relates-to-permission-modes">隔离与权限模式的关系</h3>
+<p><a href="permission-modes.html">Permission modes</a> 决定工具调用是否运行以及是否首先提示您。隔离限制命令运行后可以访问的内容。两者协同工作：当权限模式允许操作在不询问您的情况下运行时，隔离边界限制这些操作可以到达的内容。</p>
+<p>当您传递 <code>--dangerously-skip-permissions</code> 时，Claude 在不首先询问您的情况下行动。<a href="permission-modes.html#actions-no-mode-auto-approves">任何模式都不会自动批准的操作</a> 仍然适用。</p>
+<p>没有提示来捕捉错误，您选择的隔离边界是保护您的系统的东西。始终在容器、虚拟机或 <a href="#sandbox-runtime">sandbox runtime</a> 内运行 <code>--dangerously-skip-permissions</code> 会话，以便文件工具、MCP 服务器和 hooks 也在边界内。在 Linux 和 macOS 上，当以 root 用户身份运行时，Claude Code 拒绝使用此标志启动，因此请以非 root 用户身份运行容器、虚拟机或 sandbox runtime。</p>
+<p><a href="permission-modes.html#eliminate-prompts-with-auto-mode">Auto mode</a> 用审查操作的分类器替换提示。分类器是按操作控制，而不是隔离边界，因此隔离边界仍然为无人值守运行添加纵深防御，并且不像 <code>--dangerously-skip-permissions</code> 那样是必需的。</p>
+<p><a href="#sandboxed-bash-tool">sandboxed Bash tool</a> 本身仅限制 shell 命令，因此对于任一模式的完全无人值守运行都不足够。您可以分层方法：在容器或虚拟机内运行沙箱化 Bash 工具可在外部环境边界之上为您提供操作系统级命令限制。有关 Bash 沙箱本身如何与权限规则和权限模式交互的信息，请参阅 <a href="sandboxing.html#how-sandboxing-relates-to-permissions-and-permission-modes">How sandboxing relates to permissions and permission modes</a>。</p>
+<h2 id="sandboxed-bash-tool">Sandboxed Bash tool</h2>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>此选项不支持本机 Windows。在 Windows 主机上，使用 WSL2 或下面的容器或虚拟机方法之一。</p></div></div>
+<p>Sandboxed Bash tool 内置于 Claude Code 中。它使用操作系统原语来限制 Claude 运行的 Bash、PowerShell 和 Monitor 工具命令的文件系统和网络访问。</p>
+<p>运行 <code>/sandbox</code> 命令打开沙箱面板并选择一个模式。<a href="sandboxing.html">Sandboxing</a> 指南涵盖批准模式、默认边界以及如何扩大或缩小它。</p>
+<p>按命令沙箱不涵盖会话中运行的所有内容：</p>
+<ul>
+<li>其他 <a href="tools-reference.html">built-in tools</a>（如 Read、Edit 和 WebFetch）在 Claude Code 进程内运行，不会生成任意代码。<a href="permissions.html">Permission rules</a> 用于路径或域来控制它们。</li>
+<li><a href="mcp.html">MCP</a> 服务器、<a href="hooks.html#command-hook-fields">命令 hook</a> 和<a href="plugins-components.html#monitors">插件监视器</a>是在主机上无约束运行的单独进程。有关以这种方式运行的其他进程，请参阅<a href="sandboxing.html#what-runs-outside-the-sandbox">哪些内容在沙箱外运行</a>。</li>
+</ul>
+<p>要将内置工具、MCP 服务器和 hooks 都放在一个操作系统边界后面，请在 <a href="#sandbox-runtime">sandbox runtime</a>、<a href="#dev-containers">dev container</a> 或 <a href="#custom-container">custom container</a> 内运行整个 Claude Code 进程。</p>
+<h2 id="sandbox-runtime">Sandbox runtime</h2>
+<p><a href="https://github.com/anthropics/sandbox-runtime" target="_blank" rel="noopener"><code>@anthropic-ai/sandbox-runtime</code></a> 包将整个进程包装在内置 Bash 沙箱使用的相同 Seatbelt 或 bubblewrap 隔离中。通过该运行时运行 Claude Code 不仅会限制 shell 命令，还会限制会话的工具、hook 和 MCP 服务器。运行时是测试版研究预览，其配置格式可能会随着包的发展而改变。</p>
+<p>本部分涵盖您配置的内容以及运行时自身强制执行的内容。有关在 Agent SDK 应用程序中部署运行时，请参阅<a href="agent-sdk-secure-deployment.html#sandbox-runtime">安全部署指南</a>。</p>
+<h3 id="set-up-and-launch-the-runtime">设置和启动运行时</h3>
+<p>在 Linux 和 WSL2 上，运行时依赖于与内置沙箱相同的 <code>bubblewrap</code> 和 <code>socat</code> 包，加上 <code>ripgrep</code>，Claude Code 捆绑了它，但独立运行时从您的 PATH 中解析。按照<a href="sandboxing.html#set-up-linux-and-wsl2">设置 Linux 和 WSL2</a> 中的说明安装 <code>bubblewrap</code> 和 <code>socat</code>，以及从您的发行版包管理器安装 <code>ripgrep</code>。在 macOS 上，您不需要任何额外的包。运行时在那里使用内置的 Seatbelt 沙箱。</p>
+<p>默认情况下，运行时拒绝网络访问并将写入限制在一小组内置运行时路径，因此在通过它启动 Claude Code 之前配置它。将您的配置放在 <code>~/.srt-settings.json</code> 中，或在您使用 <code>--settings</code> 传递的文件中。包 <a href="https://github.com/anthropics/sandbox-runtime" target="_blank" rel="noopener">README</a> 记录了配置 schema。</p>
+<p>至少允许写入访问：</p>
+<ul>
+<li>您的项目目录。</li>
+<li>Claude Code 的配置路径 <code>~/.claude</code> 和 <code>~/.claude.json</code>。</li>
+<li>Claude Code 写入运行时文件的目录。除非您设置了 <a href="env-vars.html"><code>CLAUDE_CODE_TMPDIR</code></a>，否则该目录为：</li>
+<li><strong>Linux 和 WSL2</strong>：<code>/tmp</code></li>
+<li><strong>macOS</strong>：<code>/private/tmp</code>。<code>/tmp</code> 是指向该目录的符号链接，而 Seatbelt 检查的是解析后的路径。</li>
+</ul>
+<p>允许您的会话需要的网络域：</p>
+<ul>
+<li><code>api.anthropic.com</code>，或您配置的提供商的端点。在第三方提供商上，也保留 <code>api.anthropic.com</code>：WebFetch 域安全检查默认仍会调用它，除非您设置 <code>skipWebFetchPreflight: true</code>。</li>
+<li><code>claude.ai</code> 和 <code>platform.claude.com</code>，<a href="network-config.html#network-access-requirements">OAuth 登录和令牌刷新</a>需要这些。使用 API 密钥进行身份验证的运行可以删除这两个。</li>
+</ul>
+<p>在 Linux 和 WSL2 上，运行时仅对已存在的路径应用写入授权。在全新环境中，在首次启动前创建 Claude Code 的配置路径：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">mkdir<span class="w"> </span>-p<span class="w"> </span>~/.claude<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span>~/.claude.json<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">'{}'</span><span class="w"> </span>&gt;<span class="w"> </span>~/.claude.json<span class="p">;</span><span class="w"> </span><span class="o">}</span>
+</code></pre></div>
+<p>全局安装运行时，安装前缀应位于您允许写入的所有路径之外：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>@anthropic-ai/sandbox-runtime
+</code></pre></div>
+<p>设置文件就位后，从您的项目目录通过运行时启动 Claude Code：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">srt<span class="w"> </span>claude
+</code></pre></div>
+<p>Claude Code 在沙箱内启动，具有您配置的文件系统和网络边界。相同的 <code>srt</code> 命令适用于沙箱化独立 MCP 服务器或其他辅助进程。</p>
+<h3 id="what-the-runtime-blocks-on-its-own">运行时自身阻止的内容</h3>
+<p>运行时在没有您任何配置的情况下阻止最高风险的写入：</p>
+<ul>
+<li><code>denyWrite</code> 优先于 <code>allowWrite</code>。</li>
+<li>在项目根目录，运行时拒绝 <code>.git/hooks</code>，拒绝 <code>.git/config</code> 除非您设置 <code>filesystem.allowGitConfig: true</code>，并拒绝 <code>.mcp.json</code>、<code>.claude/commands</code>、<code>.claude/agents</code> 和 shell 启动文件。</li>
+<li>在 macOS 上，这些拒绝在写入发生时被检查，因此它们也涵盖嵌套文件和在会话期间创建的仓库。</li>
+<li>在 Linux 和 WSL2 上，运行时在启动时构建拒绝列表一次。它可靠地涵盖项目根目录，对当时存在的嵌套副本进行最佳努力的浅层扫描，并不涵盖会话稍后创建的任何内容，例如 <code>git init</code>、<code>git clone</code> 或脚手架。README 的 <code>mandatoryDenySearchDepth</code> 部分描述了扫描的确切语义。</li>
+<li>如果 <code>~/.srt-settings.json</code> 不存在且您没有传递 <code>--settings</code>，运行时仍然启动。它阻止网络访问并将写入限制在内置运行时路径，例如 <code>/tmp/claude</code>、<code>~/.npm/_logs</code> 和 <code>~/.claude/debug</code>。不要将干净的启动作为您的设置已加载的证明。</li>
+<li>如果设置文件存在但为空、不可读或无效，运行时拒绝启动，无论是 <code>~/.srt-settings.json</code> 还是您使用 <code>--settings</code> 传递的文件。如果 <code>--settings</code> 文件不存在，它也拒绝启动。</li>
+</ul>
+<p>您的写入授权仍然包括 Claude Code 加载配置的其他路径，因此使用 <code>denyWrite</code> 拒绝这些路径。可以写入它们的沙箱化会话可以持久化 hook、权限规则或 MCP 服务器，这些在您下次启动 Claude Code 时以未沙箱化的方式运行。</p>
+<h3 id="after-unattended-runs">无人值守运行后</h3>
+<p>审查您保持可写的路径。在 Linux 和 WSL2 上，也审查会话创建的任何内容。</p>
+<h2 id="dev-containers">Dev containers</h2>
+<p>Dev container 在 VS Code 或兼容编辑器管理的 Docker 容器内运行 Claude Code，您的项目挂载在其中。您可以在存储库中使用 <code>.devcontainer/</code> 目录定义自己的。</p>
+<p>Claude Code 存储库发布了一个 <a href="devcontainer.html">example dev container</a>，其中包含默认拒绝 iptables 防火墙作为起点。将其复制到您的存储库中，并调整防火墙允许列表、基础镜像和固定的 Claude Code 版本以适应您的环境。因为防火墙阻止未批准的出站，像这样的配置支持使用 <code>--dangerously-skip-permissions</code> 运行 Claude Code 以进行无人值守工作。</p>
+<h2 id="custom-container">Custom container</h2>
+<p>您可以在任何 Docker 或 OCI 容器镜像中运行 Claude Code，具有您自己的网络策略、挂载卷和 seccomp 配置文件。这是具有现有容器基础设施或 CI 运行器的组织最常见的路径。</p>
+<p>几个托管沙箱和远程执行服务可以为您托管容器。与您操作的任何容器相同的检查清单适用：查看挂载的可写内容、容器内可访问的凭据和令牌，以及网络出站策略允许的内容。</p>
+<p>您可以在容器内分层内置 Bash 沙箱以进行按命令限制。无特权容器需要 <code>enableWeakerNestedSandbox</code>，详见 <a href="sandboxing.html#bubblewrap-fails-to-start-inside-a-container">Bubblewrap 在容器内无法启动</a>。</p>
+<h2 id="virtual-machine">Virtual machine</h2>
+<p>专用虚拟机提供最强的分离，具有自己的内核，在云或 microVM 部署中，还有自己的虚拟化硬件。选项包括云实例、本地虚拟机管理程序和 microVM（如 Firecracker）。当您评估不受信任的代码、您的安全策略要求代理和主机之间的内核级分离，或没有主机级方法满足您的合规要求时，使用此方法。</p>
+<p><a href="https://docs.docker.com/ai/sandboxes/" target="_blank" rel="noopener">Docker Sandboxes</a> 提供了一个具有自己的 Docker 守护程序和工作区同步的 microVM，可以在任何安装了 Docker Sandboxes 的主机上运行 Claude Code。它是来自 Docker 的免费独立产品，不需要 Docker Desktop。</p>
+<h2 id="cloud-sessions">云会话</h2>
+<p><a href="claude-code-on-the-web.html">云会话</a>在隔离的、由 Anthropic 管理的虚拟机中运行。网络代理强制执行默认允许列表，单独的代理在沙箱外保存您的 GitHub 令牌，同时在其内部为存储库访问发出作用域凭据。您的组织路由到<a href="self-hosted-environments.html">自托管环境</a>的会话在您配置的基础设施上运行，其中隔离、出站控制和 git 凭据是您部署的责任。</p>
+<p>当您想要完整的虚拟机隔离而无需自己配置基础设施，或当您从没有本地开发环境的设备委派任务时，使用此方法。它需要 Claude 订阅。除非您从 CLI 启动，否则您还需要一个连接的 GitHub 账户，以便沙箱可以克隆您的存储库。当您使用 <code>--cloud</code> 从 CLI 启动时，Claude Code 可以<a href="claude-code-on-the-web.html#send-local-repositories-without-github">捆绑并上传您的本地存储库</a>。有关计划可用性和 GitHub 身份验证选项，请参阅<a href="claude-code-on-the-web.html">在云中使用 Claude Code</a>。</p>
+<h2 id="enforce-isolation-across-an-organization">在整个组织中强制实施隔离</h2>
+<p>个别开发人员可以选择本页面上的任何沙箱方法。组织可以强制实施什么，以及使用哪些工具，取决于该方法：</p>
+<ul>
+<li><strong>Built-in Bash sandbox</strong>：Claude Code 强制实施的唯一方法。通过 <a href="managed-settings.html#delivery-mechanisms">managed settings</a> 传递 <code>sandbox</code> 设置键，可以是由您的 MDM 管理的文件，也可以通过 Claude.ai 上的 <a href="server-managed-settings.html">server-managed settings</a>。有关要部署的键以及如何防止开发人员扩大策略，请参阅 <a href="sandboxing.html#enforce-sandboxing-with-managed-settings">Enforce sandboxing with managed settings</a>。</li>
+<li><strong>Dev containers</strong>：将 <a href="devcontainer.html">example dev container</a> 提交到您的存储库以在团队中标准化环境。这是一个约定而不是强制边界，因为 Claude Code 不需要容器。如果开发人员不应该能够在其外部运行 Claude Code，请使用您组织的设备管理或软件允许列表工具强制实施。</li>
+<li><strong>Custom containers and VMs</strong>：通过批准的镜像分发 Claude Code，并使用您组织的设备管理或软件允许列表工具防止在其外部安装。</li>
+</ul>
+<h2 id="see-also">另请参阅</h2>
+<p>这些页面涵盖上述方法的配置和策略详细信息。</p>
+<ul>
+<li><a href="sandboxing.html">Sandboxing</a>：配置内置沙箱化 Bash 工具</li>
+<li><a href="devcontainer.html">Dev container</a>：预配置的 Docker 开发容器</li>
+<li><a href="security.html">安全性</a>：完整的 Claude Code 安全模型</li>
+<li><a href="agent-sdk-secure-deployment.html">安全部署</a>：Agent SDK 应用程序的隔离指导</li>
+<li><a href="settings-reference.html#sandbox-settings">设置</a>：所有沙箱配置键，包括托管设置传递</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="sandboxing.html"><span class="pager-dir">← 上一页</span><span class="pager-name">配置沙箱化的 Bash 工具</span></a><a class="pager-link next" href="cloud-environments.html"><span class="pager-dir">下一页 →</span><span class="pager-name">配置云环境</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#compare-sandboxing-approaches">比较沙箱方法</a><a class="toc-l2" href="#choose-an-approach">选择一种方法</a><a class="toc-l3" href="#how-isolation-relates-to-permission-modes">隔离与权限模式的关系</a><a class="toc-l2" href="#sandboxed-bash-tool">Sandboxed Bash tool</a><a class="toc-l2" href="#sandbox-runtime">Sandbox runtime</a><a class="toc-l3" href="#set-up-and-launch-the-runtime">设置和启动运行时</a><a class="toc-l3" href="#what-the-runtime-blocks-on-its-own">运行时自身阻止的内容</a><a class="toc-l3" href="#after-unattended-runs">无人值守运行后</a><a class="toc-l2" href="#dev-containers">Dev containers</a><a class="toc-l2" href="#custom-container">Custom container</a><a class="toc-l2" href="#virtual-machine">Virtual machine</a><a class="toc-l2" href="#cloud-sessions">云会话</a><a class="toc-l2" href="#enforce-isolation-across-an-organization">在整个组织中强制实施隔离</a><a class="toc-l2" href="#see-also">另请参阅</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

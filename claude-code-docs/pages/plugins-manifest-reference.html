@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plugin manifest 参考 · Claude Code 中文文档</title>
+<meta name="description" content="plugin.json 的完整参考：每个字段的类型和默认值、接受的路径形式，以及 userConfig 和环境变量模式。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/manifest-reference">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/manifest-reference" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link active" href="plugins-manifest-reference.html" aria-current="page">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>参考</span></div>
+    <article class="prose" id="article"><h1 id="plugin-manifest">Plugin manifest 参考</h1>
+<blockquote>
+<p>plugin.json 的完整参考：每个字段的类型和默认值、接受的路径形式，以及 userConfig 和环境变量模式。</p>
+</blockquote>
+<p>Plugin manifest 是 plugin 的 <code>.claude-plugin/</code> 目录中的 <code>plugin.json</code> 文件。它包含 plugin 的元数据和 Claude Code 提示用户输入的 <a href="#user-configuration"><code>userConfig</code></a> 值。它还声明任何在其<a href="#standard-layout">默认位置</a>之外定义内联或保留的组件。</p>
+<p>本参考适用于 plugin 创建者，以及将组件字段放在 marketplace 条目中的 marketplace 所有者。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>这些情况在其他页面上有介绍：</p>
+<ul>
+<li><strong>学习构建 plugin</strong>：从<a href="plugins-create.html">创建 plugin</a>开始</li>
+<li><strong>每个组件在运行时的作用</strong>：参见<a href="plugins-components.html">Plugin 组件</a></li>
+</ul></div></div>
+<p>从与您要查找的内容相匹配的部分开始：</p>
+<ul>
+<li>一个字段：<a href="#fields">字段表</a>给出每个字段的类型、是否必需、其默认值以及它接受的内容。<a href="#path-rules">路径规则</a>涵盖 <code>./</code> 前缀和每个组件路径的包含</li>
+<li>一个 <code>userConfig</code> 选项或一个 <code>channels</code> 条目：<a href="#user-configuration">用户配置</a>和<a href="#channels">频道</a>模式</li>
+<li><code>${CLAUDE_PLUGIN_ROOT}</code> 或 plugin 可以引用的另一个变量：<a href="#environment-variables">环境变量</a></li>
+<li>每个组件的文件位置：<a href="#standard-layout">标准布局</a></li>
+<li>来自 <code>claude plugin validate</code> 的消息：<a href="plugins-troubleshooting.html">故障排除页面</a>列出每条消息及其修复，并链接到本页的相关部分</li>
+</ul>
+<h2 id="manifest-file">Manifest 文件</h2>
+<p>manifest 是可选的。没有它，Claude Code 会加载它在<a href="#standard-layout">标准布局</a>中找到的组件。然后 plugin 名称来自 marketplace 条目，或者当您使用 <code>--plugin-dir</code> 加载 plugin 时来自目录名称。</p>
+<p>当您想要元数据、组件在其默认目录之外、<code>userConfig</code> 或内联组件定义时，编写 manifest。</p>
+<p>在 plugin 根目录下的 <code>.claude-plugin/plugin.json</code> 处保存 manifest。将所有其他 plugin 文件放在 plugin 根目录，而不是在 <code>.claude-plugin/</code> 内。这包括 <code>skills/</code>、<code>commands/</code> 和 <code>hooks/</code>。</p>
+<p>以下示例设置了<a href="#fields">字段表</a>中的大多数键。它在包含每个引用路径的 plugin 目录中通过验证。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deploy-tools"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deploy Tools"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.2.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deployment commands, a review agent, and a status monitor"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example Team"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dev@example.com"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com"</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"homepage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/docs/deploy-tools"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"repository"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://github.com/example/deploy-tools"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MIT"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"keywords"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"deployment"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ci"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"defaultEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"secrets-vault"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"catalogId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cat-123"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"skills"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"./extra-skills/"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./commands/status.md"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Show the current deployment status"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"about"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Explain what the deploy-tools plugin provides."</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Describe this plugin"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"agents"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"./agents/reviewer.md"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./config/extra-hooks.json"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"deploy-api"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"${CLAUDE_PLUGIN_ROOT}/server.js"</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"lspServers"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./.lsp.json"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"outputStyles"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./styles/"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"experimental"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"themes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./themes/"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"monitors"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./config/monitors.json"</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"userConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"api_token"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API token"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Token for the deployment API"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"sensitive"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="unrecognized-fields">无法识别的字段</h3>
+<p>无法识别的顶级键被剥离，<code>userConfig</code> 选项、<code>channels</code> 条目、<code>lspServers</code> 配置或 <code>monitors</code> 条目内的无法识别的键被拒绝：</p>
+<ul>
+<li><strong>顶级字段</strong>：字段被剥离，plugin 加载。<code>claude plugin validate</code> 将每个无法识别的顶级字段报告为警告</li>
+<li><strong>严格对象</strong>：<code>userConfig</code> 选项、<code>channels</code> 条目、<code>lspServers</code> 配置和 <code>monitors</code> 条目是严格的。其中的未知键是错误，plugin 不加载</li>
+</ul>
+<h3 id="validate-the-manifest">验证 manifest</h3>
+<p><code>claude plugin validate</code> 是 manifest 的权威检查。从您的 shell 针对 plugin 目录运行它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>validate<span class="w"> </span>./my-plugin
+</code></pre></div>
+<p>该命令报告以下结果之一：</p>
+<ul>
+<li><strong><code>Validation passed</code></strong>：manifest 加载</li>
+<li><strong><code>Validation passed with warnings</code></strong>：manifest 加载，但验证器发现需要修复的内容，例如 Claude Code 剥离的未知顶级字段、不是 kebab-case 的 <code>name</code>，或缺少 <code>version</code>、<code>description</code> 或 <code>author</code>。传递 <code>--strict</code> 以在 CI 中将警告转换为失败</li>
+<li><strong><code>Validation failed</code></strong>：manifest 有类型不匹配、缺失或逃逸 plugin 根目录的路径，或 <code>userConfig</code> 选项、<code>channels</code> 条目、<code>lspServers</code> 配置或 <code>monitors</code> 条目内的未知键。Claude Code 在加载 plugin 时报告相同的问题</li>
+</ul>
+<p>该命令还检查 plugin 在 <code>.mcp.json</code> 中声明的每个 MCP 服务器条目、在 <a href="#mcpservers"><code>mcpServers</code></a> 命名的 <code>.json</code> 文件中，或在 <code>plugin.json</code> 中内联声明的条目。这些 MCP 检查需要 Claude Code v2.1.281 或更高版本，包括：</p>
+<ul>
+<li><strong>错误</strong>：Claude Code 在加载 plugin 时会丢弃的条目、对 manifest 未声明的选项的 <code>${user_config.KEY}</code> 引用，以及不是有效绝对 URL 的远程 <code>url</code></li>
+<li><strong>警告</strong>：到非环回主机的 <code>http://</code> 或 <code>ws://</code> URL，以及看起来像字面凭证的标头值</li>
+</ul>
+<h2 id="fields">字段</h2>
+<p>该表列出了 <code>plugin.json</code> 中的顶级键。<code>name</code> 是唯一必需的键。如果字段名称是链接，链接的部分有其完整规则。</p>
+<p>对于组件键（如 <code>commands</code> 和 <code>hooks</code>），<a href="#component-path-forms">组件路径形式</a>显示每个接受的形式及示例，每个路径遵循 <code>./</code> 前缀、扩展名和包含的<a href="#path-rules">路径规则</a>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$schema</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">用于编辑器自动完成的 JSON Schema URL。Claude Code 在加载时忽略它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#name"><code>name</code></a></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">Plugin 标识符，必需。使用 kebab-case。每个组件都在其下命名空间</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#displayname"><code>displayName</code></a></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">在 UI 中显示的名称，代替 <code>name</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#version"><code>version</code></a></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">版本字符串。设置它会将用户保持在该版本，直到您更改它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>description</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">plugin 提供的内容的简短说明</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>author</code></td>
+<td style="text-align: left;">Object</td>
+<td style="text-align: left;"><code>name</code>（必需），加上可选的 <code>email</code> 和 <code>url</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>homepage</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">文档 URL。必须解析为 URL，否则 plugin 加载失败</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>repository</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">源代码库 URL。未验证</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>license</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">SPDX 标识符，如 <code>MIT</code> 或 <code>Apache-2.0</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>keywords</code></td>
+<td style="text-align: left;">Array of strings</td>
+<td style="text-align: left;">发现标签</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#metadata"><code>metadata</code></a></td>
+<td style="text-align: left;">Object</td>
+<td style="text-align: left;">用于您自己数据的自由形式对象。Claude Code 不读取它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#directory-listing-fields"><code>icon</code></a></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">插件在 Anthropic 目录中的列表所用的图标。Claude Code 不读取它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#directory-listing-fields"><code>documentationUrl</code></a></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">插件在 Anthropic 目录中的列表所用的文档链接。Claude Code 不读取它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#directory-listing-fields"><code>supportUrl</code></a></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">插件在 Anthropic 目录中的列表所用的支持链接。Claude Code 不读取它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#directory-listing-fields"><code>privacyPolicyUrl</code></a></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">插件在 Anthropic 目录中的列表所用的隐私政策链接。Claude Code 不读取它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#directory-listing-fields"><code>termsOfServiceUrl</code></a></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">插件在 Anthropic 目录中的列表所用的服务条款链接。Claude Code 不读取它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#defaultenabled"><code>defaultEnabled</code></a></td>
+<td style="text-align: left;">Boolean</td>
+<td style="text-align: left;">当用户未设置时 plugin 是否在启用时启动。默认为 <code>true</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#dependencies"><code>dependencies</code></a></td>
+<td style="text-align: left;">Array of strings or objects</td>
+<td style="text-align: left;">必须为此 plugin 启用的 plugin</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#settings"><code>settings</code></a></td>
+<td style="text-align: left;">Object</td>
+<td style="text-align: left;">Claude Code 在 plugin 启用时应用的设置。仅 <code>agent</code> 和 <code>subagentStatusLine</code> 生效</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#user-configuration"><code>userConfig</code></a></td>
+<td style="text-align: left;">Object</td>
+<td style="text-align: left;">Claude Code 在 plugin 启用时提示用户输入的值</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>types</code></td>
+<td style="text-align: left;">Path</td>
+<td style="text-align: left;">声明 <a href="plugins-mods-reference.html#files">mod</a> 的 <code>$.state</code> 值和 <code>$</code> 名词的 <code>.d.ts</code> 文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#channels"><code>channels</code></a></td>
+<td style="text-align: left;">Array of objects</td>
+<td style="text-align: left;">plugin 提供的消息频道，每个绑定到其 MCP 服务器之一</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>skills</code></td>
+<td style="text-align: left;">Path, or array of paths</td>
+<td style="text-align: left;">要扫描的目录以查找 skills，每个目录是 <code>&lt;name&gt;/SKILL.md</code> 文件夹或直接包含 <code>SKILL.md</code> 的一个文件夹。<code>"."</code> 命名 plugin 根目录。添加到默认 <code>skills/</code> 扫描</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#commands"><code>commands</code></a></td>
+<td style="text-align: left;">Path, array of paths, or object</td>
+<td style="text-align: left;">平面 <code>.md</code> 命令文件、它们的目录或命令名称到 <code>source</code> 或 <code>content</code> 的对象映射。替换默认 <code>commands/</code> 扫描</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>agents</code></td>
+<td style="text-align: left;">Path, or array of paths</td>
+<td style="text-align: left;">Agent <code>.md</code> 文件。不接受目录。替换默认 <code>agents/</code> 扫描</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#hooks"><code>hooks</code></a></td>
+<td style="text-align: left;">Path, object, or array of either</td>
+<td style="text-align: left;"><code>.json</code> hook 文件或内联 hook 配置。与 <code>hooks/hooks.json</code> 一起加载</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#mcpservers"><code>mcpServers</code></a></td>
+<td style="text-align: left;">Path, object, or array of either</td>
+<td style="text-align: left;"><code>.json</code> MCP 配置文件、<code>.mcpb</code> 或 <code>.dxt</code> 包，或以名称为键的内联服务器配置。与 <code>.mcp.json</code> 一起加载；稍后声明的服务器名称替换较早的名称</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#lspservers"><code>lspServers</code></a></td>
+<td style="text-align: left;">Path, object, or array of either</td>
+<td style="text-align: left;"><code>.json</code> LSP 配置文件或以名称为键的内联服务器配置。与 <code>.lsp.json</code> 一起加载</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>outputStyles</code></td>
+<td style="text-align: left;">Path, or array of paths</td>
+<td style="text-align: left;">输出样式文件或目录。替换默认 <code>output-styles/</code> 扫描</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>workflows</code></td>
+<td style="text-align: left;">Path, or array of paths</td>
+<td style="text-align: left;"><a href="workflows.html#distribute-a-workflow-in-a-plugin">Workflow</a> <code>.js</code> 文件或目录。替换默认 <code>workflows/</code> 扫描</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>experimental</code></td>
+<td style="text-align: left;">Object</td>
+<td style="text-align: left;"><code>themes</code>、<code>monitors</code> 和 <code>evals</code> 的容器，其 manifest 形式可能仍会改变</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>experimental.themes</code></td>
+<td style="text-align: left;">Path, or array of paths</td>
+<td style="text-align: left;">主题文件或目录。替换默认 <code>themes/</code> 扫描。顶级 <code>themes</code> 键仍然加载，带有 <code>claude plugin validate</code> 警告</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#monitors"><code>experimental.monitors</code></a></td>
+<td style="text-align: left;">Path, or inline array</td>
+<td style="text-align: left;">包含 monitors 数组的 <code>.json</code> 文件，或数组本身。默认为 <code>monitors/monitors.json</code>。顶级 <code>monitors</code> 键仍然加载，带有 <code>claude plugin validate</code> 警告。Monitors <a href="plugins-components.html#monitors">在使用 <code>-p</code> 标志时不会启动</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>experimental.evals</code></td>
+<td style="text-align: left;">Path, or array of paths</td>
+<td style="text-align: left;">当不是默认 <code>evals/</code> 时，保存 plugin 的<a href="plugin-evals.html#use-a-different-eval-directory">评估案例</a>的目录。<code>claude plugin eval --eval-dir</code> 覆盖它</td>
+</tr>
+</tbody>
+</table>
+<p>在"类型"列中，路径是相对于 plugin 根目录的字符串，例如 <code>"./custom/commands"</code>。</p>
+<h3 id="name"><code>name</code></h3>
+<p>plugin 标识符。它必须非空，没有空格、<code>@</code>、<code>:</code>、路径分隔符、控制字符或双向格式字符；使用 kebab-case。</p>
+<p>Claude Code 在其下命名空间每个组件，因此 plugin <code>deploy-tools</code> 中的 agent <code>reviewer</code> 显示为 <code>deploy-tools:reviewer</code>。</p>
+<p><code>claude plugin validate</code> 还检查该名称是否通过作为 Anthropic 自己的 plugin 之一。检查忽略大小写并将任何分隔符的运行视为一个：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">名称</th>
+<th style="text-align: left;">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">以 <code>claude-</code>、<code>anthropic-</code>、<code>anthropics-</code> 或 <code>cc-plugin-</code> 开头</td>
+<td style="text-align: left;">错误</td>
+</tr>
+<tr>
+<td style="text-align: left;">是 <code>claude</code>、<code>anthropic</code>、<code>anthropics</code>、<code>claude-code</code> 或 <code>claude-mods</code></td>
+<td style="text-align: left;">错误</td>
+</tr>
+<tr>
+<td style="text-align: left;">将 <code>official</code> 放在 <code>claude</code> 或 <code>anthropic</code> 旁边，例如 <code>official-claude-tools</code></td>
+<td style="text-align: left;">错误</td>
+</tr>
+<tr>
+<td style="text-align: left;">在其他任何地方有 <code>claude</code>、<code>anthropic</code> 或 <code>anthropics</code> 作为整个单词，例如 <code>mcp-for-claude</code></td>
+<td style="text-align: left;">警告</td>
+</tr>
+</tbody>
+</table>
+<p>错误读作 <code>Plugin name "&lt;name&gt;" is reserved: it passes as one of Anthropic's own</code>，警告读作 <code>Plugin name "&lt;name&gt;" reads as one of Anthropic's own</code>。<code>claude plugin init</code> 和 <code>claude plugin tag</code> 拒绝引发错误的名称。Claude Code 仍然安装和加载其名称被拒绝的插件。</p>
+<h3 id="displayname"><code>displayName</code></h3>
+<p>在 UI 中显示的名称，代替 <code>name</code>。它可能包含空格和任何大小写，它不用于命名空间或查找。</p>
+<p>对于 marketplace 安装的 plugin，<a href="plugins-marketplace-reference.html#plugin-entries">marketplace 条目</a>上的 <code>displayName</code> 优先于此值。</p>
+<h3 id="version"><code>version</code></h3>
+<p>版本字符串，不针对 semver 检查。设置它会将插件固定到该版本，直到您更改它；参见<a href="plugins-loading.html#versions-and-updates">版本和更新</a>。具有<a href="plugins-marketplace-reference.html"><code>command</code> 源</a>的插件、来自<a href="plugins-install.html#add-from-claude-ai">托管在 claude.ai 上的市场</a>的插件以及从通过本地路径添加的市场<a href="plugins-loading.html#find-plugins-on-disk">就地加载</a>的插件不由此字段固定。</p>
+<h3 id="metadata"><code>metadata</code></h3>
+<p>用于您自己数据的自由形式对象，例如目录或权利字段。Claude Code 不读取它。需要 Claude Code v2.1.222 或更高版本。</p>
+<h3 id="directory-listing-fields">目录列表字段</h3>
+<p>当您<a href="plugins-publish.html#submit-to-anthropics-directory">提交插件</a>时，Anthropic 的目录会从 <code>plugin.json</code> 中读取 <code>icon</code>、<code>documentationUrl</code>、<code>supportUrl</code>、<code>privacyPolicyUrl</code> 和 <code>termsOfServiceUrl</code> 字段，用于您插件的列表。Claude Code 在加载时忽略它们。请仅在 <code>plugin.json</code> 中设置它们。在<a href="#marketplace-entries-and-the-manifest">市场条目</a>中，<code>claude plugin validate</code> 会将它们逐一报告为未知字段。</p>
+<p>将 <code>icon</code> 设置为插件内图像文件的路径，例如 <code>./logo.png</code>，并将四个 URL 字段分别设置为 <code>https://</code> URL。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>在 Claude Code v2.1.281 或更高版本上，<code>claude plugin validate</code> 不会将 <code>plugin.json</code> 中的这些字段报告为未知字段。更早的版本会为每个字段打印一条 <code>Unknown field</code> 警告，因此在这些版本上使用 <code>--strict</code> 运行会失败。</p></div></div>
+<h3 id="defaultenabled"><code>defaultEnabled</code></h3>
+<p>当用户未在 <a href="settings-reference.html#enabledplugins"><code>enabledPlugins</code></a> 中设置时，plugin 是否在启用时启动。默认为 <code>true</code>。启用的 plugin 依赖的 plugin 无论如何都会启用启动。marketplace 条目中的相同字段覆盖此字段。</p>
+<p>一旦用户的 <code>enabledPlugins</code> 条目被写入，它在 plugin 更新中持续存在，因此在后续版本中更改 <code>defaultEnabled</code> 不会更改现有用户的设置。</p>
+<h3 id="dependencies"><code>dependencies</code></h3>
+<p>必须为此 plugin 启用的 plugin。每个条目是 <code>"name"</code>、<code>"name@marketplace"</code> 或 <code>{ "name": "...", "marketplace": "...", "version": "..." }</code>。裸名称针对此 plugin 自己的 marketplace 解析。参见<a href="plugins-dependencies.html">依赖约束</a>。</p>
+<h3 id="settings"><code>settings</code></h3>
+<p>Claude Code 在 plugin 启用时应用的设置。仅 <code>agent</code> 和 <code>subagentStatusLine</code> 生效；其他键在加载时被删除。plugin 根目录处的 <code>settings.json</code> 优先于此键。参见<a href="plugins-components.html#default-settings">默认设置</a>。</p>
+<h2 id="component-path-forms">组件路径形式</h2>
+<p>每个组件键接受相对于 plugin 根目录的路径。<code>hooks</code>、<code>mcpServers</code>、<code>lspServers</code> 和 <code>experimental.monitors</code> 也接受内联配置，<code>commands</code> 也接受对象映射，<code>mcpServers</code> 也接受 MCP 包路径和 URL。以下示例显示每个接受的形式一次。有关每个组件在运行时的作用，参见<a href="plugins-components.html">Plugin 组件</a>。</p>
+<h3 id="path-only-fields">仅路径字段</h3>
+<p><code>agents</code>、<code>skills</code>、<code>outputStyles</code>、<code>workflows</code> 和 <code>experimental.themes</code> 采用一个路径或路径数组。<code>agents</code> 条目必须是 <code>.md</code> 文件，<code>skills</code> 条目必须是目录。其他三个接受目录或文件。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"agents"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"./custom-agents/reviewer.md"</span><span class="p">,</span><span class="w"> </span><span class="s2">"./custom-agents/tester.md"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"skills"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"./extra-skills/"</span><span class="p">,</span><span class="w"> </span><span class="s2">"."</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"outputStyles"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./styles/"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="commands"><code>commands</code></h3>
+<p><code>commands</code> 采用路径、路径数组或对象映射。路径命名平面 <code>.md</code> 命令文件或目录。在对象映射中，每个键在 plugin 前缀后成为命令名称。例如，plugin <code>deploy-tools</code> 中的 <code>"about"</code> 运行为 <code>/deploy-tools:about</code>。</p>
+<p>每个值恰好设置 <code>source</code> 或 <code>content</code> 之一，设置两者或都不设置的条目验证失败。此表中的其他字段是可选的：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>source</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">命令的 Markdown 文件的路径，相对于 plugin 根目录</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>content</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">命令体的内联 Markdown，而不是 <code>source</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>description</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">为命令显示的描述</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>argumentHint</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">在命令名称后显示的参数提示，例如 <code>[file]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>model</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">命令的默认模型</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>allowedTools</code></td>
+<td style="text-align: left;">array of strings</td>
+<td style="text-align: left;">命令可以使用而无需提示的工具</td>
+</tr>
+</tbody>
+</table>
+<p>此映射声明一个来自文件的命令和一个来自内联内容的命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"commands"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./commands/status.md"</span><span class="p">,</span><span class="w"> </span><span class="nt">"argumentHint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[env]"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"about"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Explain what this plugin provides."</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="hooks"><code>hooks</code></h3>
+<p><code>hooks</code> 采用 <code>.json</code> 文件路径、与 <a href="hooks.html#configuration"><code>settings.json</code> 中的 <code>hooks</code></a>相同形状的内联 hooks 对象，或混合两者的数组。有关 hook 事件和处理程序字段，参见<a href="hooks.html#hook-events">hooks 参考</a>。</p>
+<p>hooks 文件将事件映射包装在顶层 <code>"hooks"</code> 键中，即 <a href="plugins-components.html#hooks"><code>hooks/hooks.json</code></a> 使用的形状。仅包含事件映射而没有该包装的文件无法加载。内联对象就是事件映射本身，没有包装。</p>
+<p>Claude Code 在该文件存在时将您声明的内容与 <code>hooks/hooks.json</code> 合并。此数组加载一个 hooks 文件并声明一个内联 <code>PostToolUse</code> hook：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"./config/extra-hooks.json"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"PostToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Write|Edit"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w"> </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"\"${CLAUDE_PLUGIN_ROOT}\"/scripts/format.sh"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>该数组指定的文件在其自身的事件映射外带有 <code>"hooks"</code> 包装：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PreToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"matcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bash"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w"> </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"\"${CLAUDE_PLUGIN_ROOT}\"/scripts/check-command.sh"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="mcpservers"><code>mcpServers</code></h3>
+<p><code>mcpServers</code> 采用 <code>.json</code> 文件路径、MCP 包路径或 URL、内联映射或混合它们的数组。有关服务器配置字段，参见<a href="mcp.html#plugin-provided-mcp-servers">plugin 提供的 MCP 服务器</a>。</p>
+<p>Claude Code 首先加载 plugin 根目录处的 <code>.mcp.json</code>，然后按顺序加载每个声明的形式。稍后声明的服务器名称替换较早的名称。</p>
+<p><code>mcpServers</code> 值采用以下形式之一：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">形式</th>
+<th style="text-align: left;">示例值</th>
+<th style="text-align: left;">Claude Code 的作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>.json</code> 文件路径</td>
+<td style="text-align: left;"><code>"./mcp/servers.json"</code></td>
+<td style="text-align: left;">将文件读取为 <code>mcpServers</code> 映射</td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP 包路径</td>
+<td style="text-align: left;"><code>"./bundle.mcpb"</code></td>
+<td style="text-align: left;">将 <code>.mcpb</code> 或 <code>.dxt</code> 包提取到 plugin 根目录下的 <code>.mcpb-cache/</code> 并读取其服务器配置</td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP 包 URL</td>
+<td style="text-align: left;"><code>"https://example.com/server.mcpb"</code></td>
+<td style="text-align: left;">将包下载到 <code>.mcpb-cache/</code>，然后读取它</td>
+</tr>
+<tr>
+<td style="text-align: left;">内联映射</td>
+<td style="text-align: left;"><code>{ "deploy-api": { "command": "node", "args": ["${CLAUDE_PLUGIN_ROOT}/server.js"] } }</code></td>
+<td style="text-align: left;">使用映射作为以名称为键的服务器配置</td>
+</tr>
+</tbody>
+</table>
+<p>包路径或 URL 必须以 <code>.mcpb</code> 或 <code>.dxt</code> 结尾。任何其他扩展名验证失败。</p>
+<h3 id="lspservers"><code>lspServers</code></h3>
+<p><code>lspServers</code> 采用 <code>.json</code> 文件路径、服务器名称到配置的内联映射，或两者的数组。</p>
+<p>Claude Code 首先加载 plugin 根目录处的 <code>.lsp.json</code>，然后按顺序加载每个声明的配置。稍后声明的服务器名称替换较早的名称。</p>
+<p>每个服务器配置是具有这些字段的严格对象。未知键验证失败。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">必需</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>command</code></td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">语言服务器二进制文件。除非值以 <code>/</code> 开头，否则没有空格；将参数放在 <code>args</code> 中</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>extensionToLanguage</code></td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">文件扩展名到 LSP 语言 ID 的映射，至少一个条目。键以点开头，例如 <code>".go"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>args</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">传递给服务器的参数</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>transport</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">通信传输：<code>stdio</code>（默认）或 <code>socket</code>。Claude Code 接受 <code>socket</code> 但在 stdio 上运行每个服务器，因此 stdout 协议规则适用于所有服务器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>env</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">服务器进程的环境变量</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>initializationOptions</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">在初始化请求中发送的选项</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>settings</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">由 <code>workspace/didChangeConfiguration</code> 发送的设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>workspaceFolder</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">服务器的工作区文件夹路径</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>startupTimeout</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">等待启动的毫秒数，正整数</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>shutdownTimeout</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">等待正常关闭的毫秒数，正整数。当超时时间过去时，Claude Code 终止服务器进程。未设置时，不适用超时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>requestTimeout</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">等待服务器响应请求的毫秒数，正整数。默认为 <code>60000</code>，因此服务器始终未响应的请求会在 60 秒后失败。需要 v2.1.288 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>restartOnCrash</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">服务器崩溃后是否重新启动。默认为 <code>true</code>。设置为 <code>false</code> 以使崩溃的服务器停止而不是重新启动</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>maxRestarts</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">放弃前的重新启动尝试，零或更多</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>diagnostics</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">编辑后是否将诊断推送到上下文。默认为 <code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p>此内联配置为 <code>.go</code> 文件运行 <code>gopls</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"lspServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"go"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gopls"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"extensionToLanguage"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">".go"</span><span class="p">:</span><span class="w"> </span><span class="s2">"go"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>有关 Anthropic 作为 plugin 发布的语言服务器以及服务器在运行时的行为，参见<a href="plugins-code-intelligence.html">代码智能</a>。</p>
+<h3 id="monitors"><code>monitors</code></h3>
+<p><code>experimental.monitors</code> 采用 <code>.json</code> 文件路径或内联数组。当您省略该键时，Claude Code 加载 <code>monitors/monitors.json</code>（如果存在）。</p>
+<p>每个条目是具有这些字段的严格对象。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">必需</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>name</code></td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">在 plugin 内唯一的标识符</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>command</code></td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">Claude Code 在会话工作目录中作为持久后台进程运行的 shell 命令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>description</code></td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">在任务面板和通知摘要中显示的简短摘要</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>when</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">使用 <code>"always"</code>（默认），monitor 在会话启动和 plugin 重新加载时启动。使用 <code>"on-skill-invoke:&lt;skill&gt;"</code>，它在该 skill 首次运行时启动</td>
+</tr>
+</tbody>
+</table>
+<p>此内联数组声明一个在 <code>deploy</code> skill 首次运行时启动的 monitor：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"experimental"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"monitors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deploy-status"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"\"${CLAUDE_PLUGIN_ROOT}\"/scripts/poll-deploy.sh"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deployment status changes"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"on-skill-invoke:deploy"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>monitor <code>command</code> 不能引用 <code>${user_config.*}</code>。参见<a href="#fields-that-run-through-a-shell">通过 shell 运行的字段</a>。</p>
+<h2 id="path-rules">路径规则</h2>
+<p>manifest 中的每个组件路径相对于 plugin 根目录，必须以 <code>./</code> 开头。路径如 <code>commands/foo.md</code> 验证失败。<code>skills</code> 和 <code>mcpServers</code> 各接受该规则之外的一种形式：</p>
+<ul>
+<li><strong><code>skills</code></strong>：也接受 <code>"."</code>。<code>"."</code> 和 <code>"./"</code> 都表示 plugin 根目录。在 v2.1.221 之前，<code>"."</code> 验证失败，因此当 plugin 必须在较早版本上加载时使用 <code>"./"</code></li>
+<li><strong><code>mcpServers</code></strong>：也接受 <code>https://</code> 包 URL</li>
+</ul>
+<p><code>experimental.evals</code> 不是组件路径，因此本节中的规则不适用于它，而是由 <code>claude plugin eval</code> 在运行时检查该值。它指定插件根目录下的一个目录，例如 <code>"quality/evals"</code>，可以带或不带 <code>./</code> 前缀。如果是数组，则仅使用第一个条目。有关该值接受的内容以及值不可用时会发生什么，请参阅<a href="plugin-evals.html#use-a-different-eval-directory">使用不同的 eval 目录</a>。</p>
+<h3 id="containment-and-existence">包含和存在</h3>
+<p>每个组件路径必须在 plugin 根目录内解析并且必须存在。<code>claude plugin validate</code> 检查每个组件键下的路径：</p>
+<ul>
+<li><strong>包含</strong>：在 plugin 根目录外解析的路径不加载，<code>/plugin</code> <strong>Errors</strong> 选项卡显示 <code>&lt;component&gt; path escapes plugin directory: &lt;path&gt;</code>。包含 <code>..</code> 的路径是常见情况，<code>claude plugin validate</code> 将其报告为 <code>Path contains ".." which could be a path traversal attempt</code></li>
+<li><strong>存在</strong>：不存在的路径不加载，<code>/plugin</code> <strong>Errors</strong> 选项卡显示 <code>&lt;component&gt; path not found: &lt;path&gt;</code>。<code>claude plugin validate</code> 将其报告为 <code>Path not found</code></li>
+</ul>
+<p>对于 <code>outputStyles</code>、<code>lspServers</code>、<code>monitors</code> 和 <code>themes</code> 路径，<code>claude plugin validate</code> 检查需要 Claude Code v2.1.283 或更高版本。</p>
+<h3 id="how-each-key-combines-with-its-default-location">每个键如何与其默认位置结合</h3>
+<p>每个组件键要么替换其默认位置，要么添加到它，要么与它合并：</p>
+<ul>
+<li><strong>替换默认值</strong>：<code>commands</code>、<code>agents</code>、<code>outputStyles</code>、<code>workflows</code>、<code>experimental.themes</code>、<code>experimental.monitors</code>。当您设置 <code>commands</code> 时，默认 <code>commands/</code> 目录不被扫描。要保留默认值并添加更多，明确列出它：<code>"commands": ["./commands/", "./extras/"]</code></li>
+<li><strong>添加到默认值</strong>：<code>skills</code>。<code>skills/</code> 目录仍被扫描，列出的目录与它一起加载</li>
+<li><strong>合并</strong>：<code>hooks</code>、<code>mcpServers</code>、<code>lspServers</code>。默认文件首先加载，manifest 声明的内容合并到它中，如<a href="#component-path-forms">组件路径形式</a>下所述</li>
+</ul>
+<p>如果 plugin 有默认文件夹（如 <code>commands/</code>）并且还设置了替换它的 manifest 键，Claude Code 加载 manifest 路径而不是文件夹。<code>claude plugin list</code> 和 <code>/plugin</code> 界面然后显示警告 <code>Default &lt;folder&gt;/ folder is ignored because the manifest sets "&lt;key&gt;"</code>。</p>
+<p>要避免警告，将键设置为该文件夹内的路径：<code>"commands": ["./commands/deploy.md"]</code> 命名默认文件夹中的文件，不产生警告。</p>
+<h2 id="user-configuration">用户配置</h2>
+<p><code>userConfig</code> 声明 Claude Code 在 plugin 启用时提示用户输入的值，因此用户不自己编辑 <code>settings.json</code>。</p>
+<p>键是由字母、数字和下划线组成的标识符，不能以数字开头。</p>
+<p>每个值是具有这些字段的严格对象。未知键验证失败。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">必需</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>type</code></td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;"><code>string</code>、<code>number</code>、<code>boolean</code>、<code>directory</code> 或 <code>file</code> 之一</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>title</code></td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">在配置对话框中显示的标签</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>description</code></td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">在字段下方显示的帮助文本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>required</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">如果 <code>true</code>，配置对话框不接受空值</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>default</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">当用户不提供任何内容时使用的值：字符串、数字、布尔值或字符串数组</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>options</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">对于 <code>string</code>，字段接受的值，在 <code>/config</code> 中显示为选择器。参见<a href="#limit-a-field-to-fixed-options">将字段限制为固定选项</a>。需要 Claude Code v2.1.271 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>multiple</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">对于 <code>string</code>，允许字符串数组</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sensitive</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">如果 <code>true</code>，掩盖输入并将值存储在安全存储中而不是 <code>settings.json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>min</code> / <code>max</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;"><code>number</code> 的边界</td>
+</tr>
+</tbody>
+</table>
+<p>每个启用的 plugin 的每个选项也显示为 <code>/config</code> 面板中的一行，除了 <code>sensitive</code> 选项和 <code>multiple</code> 列表。<code>/config</code> 行需要 Claude Code v2.1.269 或更高版本。</p>
+<p>此 <code>userConfig</code> 声明端点和掩盖的令牌：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"userConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"api_endpoint"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API endpoint"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Your team's API endpoint"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"api_token"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API token"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API authentication token"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"sensitive"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="limit-a-field-to-fixed-options">将字段限制为固定选项</h3>
+<p>在 <code>userConfig</code> 字段上设置 <code>options</code> 以使用户从固定列表中选择其值。</p>
+<p>要将 <code>tone</code> 字段限制为三个选项，在 <code>options</code> 中列出它们并将 <code>default</code> 设置为其中之一：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"userConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"tone"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tone"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Voice for generated replies"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"neutral"</span><span class="p">,</span><span class="w"> </span><span class="s2">"warm"</span><span class="p">,</span><span class="w"> </span><span class="s2">"formal"</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"neutral"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>如果您在任何字段上声明 <code>options</code>，Claude Code v2.1.271 之前版本的用户无法加载 plugin。</p>
+<p><code>options</code> 适用于不是 <code>multiple</code> 或 <code>sensitive</code> 的 <code>string</code> 字段。将 <code>default</code> 设置为列出的值之一，或设置 <code>required: true</code> 以便用户必须选择一个。每个选项是 1 到 64 个字符的纯标签，您在 shell 中运行的 <code>claude plugin validate</code> 报告它拒绝的任何其他内容。其 <code>options</code> 违反这些规则的 plugin 无法加载。</p>
+<h3 id="where-values-are-stored">值的存储位置</h3>
+<p>非敏感值保存在用户 <code>settings.json</code> 中的 <a href="settings-reference.html#pluginconfigs"><code>pluginConfigs</code></a> 下。敏感值转到平台的安全凭证存储。<a href="settings-reference.html#pluginconfigs">设置页面</a>列出从哪些设置文件读取 <code>pluginConfigs</code>。</p>
+<h3 id="reference-a-saved-value">引用保存的值</h3>
+<p>在 plugin 需要的地方引用保存的值，采用以下两种形式之一：</p>
+<ul>
+<li><strong><code>${user_config.KEY}</code></strong>：在 MCP 服务器配置、LSP 服务器配置、<a href="hooks.html#exec-form-and-shell-form">exec 形式</a> hook <code>args</code> 以及 skill 和 agent 内容中替换。在 skill 和 agent 内容中，仅替换非敏感值，敏感值变成占位符</li>
+<li><strong><code>CLAUDE_PLUGIN_OPTION_&lt;KEY&gt;</code></strong>：导出到每个选项的 hook 进程，<code>&lt;KEY&gt;</code> 大写。shell 形式 hook 为 <code>api_token</code> 读取 <code>$CLAUDE_PLUGIN_OPTION_API_TOKEN</code></li>
+</ul>
+<h3 id="fields-that-run-through-a-shell">通过 shell 运行的字段</h3>
+<p>Shell 形式 hook 命令、monitor 命令和 MCP <a href="mcp.html#use-dynamic-headers-for-custom-authentication"><code>headersHelper</code></a> 拒绝 <code>${user_config.*}</code>。引用它的组件在这些字段之一中失败，出现<a href="errors.html#plugin-command-references-user-config">错误</a>而不是运行，因为字段的值被传递到会重新解析替换值的 shell。</p>
+<p>该表显示值如何可以到达这些字段。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">值如何到达它</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Shell 形式 hook 命令</td>
+<td style="text-align: left;">使用<a href="hooks.html#exec-form-and-shell-form">exec 形式</a>与 <code>args</code>，或从 hook 的环境读取 <code>CLAUDE_PLUGIN_OPTION_&lt;KEY&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Monitor 命令</td>
+<td style="text-align: left;">不通过 Claude Code。Monitor 进程不接收 <code>CLAUDE_PLUGIN_OPTION_&lt;KEY&gt;</code>，因此 monitor 脚本必须自己获取值</td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP <code>headersHelper</code></td>
+<td style="text-align: left;">不通过 Claude Code。helper 的环境携带 <code>CLAUDE_PLUGIN_ROOT</code>、<code>CLAUDE_CODE_MCP_SERVER_NAME</code> 和 <code>CLAUDE_CODE_MCP_SERVER_URL</code> 但没有选项值，因此 helper 脚本必须自己获取值</td>
+</tr>
+</tbody>
+</table>
+<h2 id="channels">频道</h2>
+<p><code>channels</code> 声明 plugin 提供的消息频道，例如到聊天应用的桥接。当您声明一个时，Claude Code 可以在 plugin 启用时提示频道的配置。有关服务器如何注入消息，参见<a href="channels-reference.html#package-as-a-plugin">频道参考</a>。</p>
+<p>每个条目是绑定到 plugin 的 MCP 服务器之一的严格对象，具有这些字段：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">必需</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>server</code></td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">此 plugin 的 <code>mcpServers</code> 中频道绑定到的 MCP 服务器的键</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>displayName</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">在配置对话框标题中显示的名称。默认为服务器名称</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>userConfig</code></td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">要提示的选项，形状与<a href="#user-configuration">顶级 <code>userConfig</code></a>相同。保存的值替换到服务器 <code>env</code> 中的 <code>${user_config.KEY}</code> 引用</td>
+</tr>
+</tbody>
+</table>
+<p>此 manifest 将频道绑定到 plugin 的 <code>telegram</code> MCP 服务器，并提示替换到服务器 <code>env</code> 中的机器人令牌：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"telegram"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"${CLAUDE_PLUGIN_ROOT}/server.js"</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"BOT_TOKEN"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${user_config.bot_token}"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"channels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"telegram"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Telegram"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"userConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"bot_token"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bot token"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Telegram bot token"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"sensitive"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="environment-variables">环境变量</h2>
+<p>Claude Code 为 plugin 组件提供三个路径变量。在<a href="#where-each-variable-resolves">每个变量解析的位置</a>下列出的字段中将它们引用为 <code>${NAME}</code>，并在接收它们的进程中将它们读取为环境变量。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">变量</th>
+<th style="text-align: left;">解析为</th>
+<th style="text-align: left;">用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>${CLAUDE_PLUGIN_ROOT}</code></td>
+<td style="text-align: left;">plugin 已安装版本的绝对路径</td>
+<td style="text-align: left;">与 plugin 捆绑的脚本、二进制文件和配置文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>${CLAUDE_PLUGIN_DATA}</code></td>
+<td style="text-align: left;"><code>~/.claude/plugins/data/&lt;id&gt;/</code>，在首次引用时创建并在 plugin 更新中保留。<code>&lt;id&gt;</code> 是 plugin 标识符，其中除字母、数字、<code>_</code> 或 <code>-</code> 外的每个字符都被替换为 <code>-</code></td>
+<td style="text-align: left;">已安装的依赖项（如 <code>node_modules</code>）、生成的代码和缓存</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>${CLAUDE_PROJECT_DIR}</code></td>
+<td style="text-align: left;">项目根目录</td>
+<td style="text-align: left;">项目本地脚本和配置文件</td>
+</tr>
+</tbody>
+</table>
+<p><code>${CLAUDE_PLUGIN_ROOT}</code> 在 plugin 更新时改变，因此不要在那里写入状态。有关根目录移动的位置和旧目录何时被清理，参见<a href="plugins-loading.html">加载页面</a>。</p>
+<p>默认情况下，当您从最后一个安装它的地方卸载 plugin 时，Claude Code 会删除 <code>${CLAUDE_PLUGIN_DATA}</code> 目录。有关 <code>--keep-data</code> 和其他保留它的情况，参见 <a href="plugins-cli-reference.html#plugin-uninstall">plugin 卸载</a>。</p>
+<h3 id="where-each-variable-resolves">每个变量解析的位置</h3>
+<p>在每个 plugin 组件中，<code>${...}</code> 引用在特定字段中内联解析，某些组件也在其进程环境中接收变量：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Plugin 组件</th>
+<th style="text-align: left;"><code>${...}</code> 解析的字段</th>
+<th style="text-align: left;">导出到进程</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Hook 命令</td>
+<td style="text-align: left;">在 <code>command</code> 和 <code>args</code> 中的任何地方</td>
+<td style="text-align: left;"><code>CLAUDE_PLUGIN_ROOT</code>、<code>CLAUDE_PLUGIN_DATA</code>、<code>CLAUDE_PROJECT_DIR</code> 和 <code>CLAUDE_PLUGIN_OPTION_&lt;KEY&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Monitor 命令</td>
+<td style="text-align: left;">在 <code>command</code> 中的任何地方</td>
+<td style="text-align: left;">未导出</td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP <code>stdio</code> 服务器</td>
+<td style="text-align: left;"><code>command</code>、<code>args</code>、<code>env</code></td>
+<td style="text-align: left;"><code>CLAUDE_PLUGIN_ROOT</code>、<code>CLAUDE_PLUGIN_DATA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP <code>http</code>、<code>sse</code>、<code>ws</code> 服务器</td>
+<td style="text-align: left;"><code>url</code>、<code>headers</code>、<code>headersHelper</code></td>
+<td style="text-align: left;">不适用</td>
+</tr>
+<tr>
+<td style="text-align: left;">LSP 服务器</td>
+<td style="text-align: left;"><code>command</code>、<code>args</code>、<code>env</code>、<code>workspaceFolder</code></td>
+<td style="text-align: left;"><code>CLAUDE_PLUGIN_ROOT</code>、<code>CLAUDE_PLUGIN_DATA</code>、<code>CLAUDE_PROJECT_DIR</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Skill、command 和 agent 内容</td>
+<td style="text-align: left;">Markdown 体中的任何地方</td>
+<td style="text-align: left;">不适用</td>
+</tr>
+</tbody>
+</table>
+<p>变量不存在于 Claude 通过 Bash 工具在主会话或子代理中运行的命令的环境中。在 skill、command 和 agent 内容中，在 Markdown 体中写入 <code>${...}</code> 引用，Claude Code 在加载内容时内联替换路径。</p>
+<h3 id="quoting-and-path-separators">引用和路径分隔符</h3>
+<p>保持每个替换的路径为单个参数：</p>
+<ul>
+<li><strong>Hook 命令</strong>：使用<a href="hooks.html#exec-form-and-shell-form">exec 形式</a>与 <code>args</code> 以便每个路径是一个没有引用的参数</li>
+<li><strong>Shell 形式 hooks 和 monitor 命令</strong>：用双引号包装变量，以便带空格的路径保持为一个单词</li>
+</ul>
+<p>如果您在 hooks 文件中的 shell 形式命令中将这些变量之一留在引号外，<code>claude plugin validate</code> 会发出警告，除非 hook 将 <a href="hooks.html#command-hook-fields"><code>shell</code></a> 设置为 <code>"powershell"</code>。</p>
+<p>此 shell 形式 hook 运行与 plugin 捆绑的脚本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"PostToolUse"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"\"${CLAUDE_PLUGIN_ROOT}\"/scripts/process.sh"</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>在 Windows 上，大多数替换的路径使用正斜杠，例如 <code>C:/Users/you/...</code>。在 <a href="hooks.html#exec-form-and-shell-form">exec 形式 hook</a> 以及通过 PowerShell 运行的 hook 中，它们会保留原生的反斜杠；未安装 Git Bash 时，PowerShell 是 Windows 上的默认 shell。</p>
+<h2 id="standard-layout">标准布局</h2>
+<p>每个组件类型在 plugin 根目录下有默认位置，当 manifest 不指向其他位置时使用。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">组件</th>
+<th style="text-align: left;">默认位置</th>
+<th style="text-align: left;">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Manifest</td>
+<td style="text-align: left;"><code>.claude-plugin/plugin.json</code></td>
+<td style="text-align: left;">Plugin 元数据和配置。可选</td>
+</tr>
+<tr>
+<td style="text-align: left;">Skills</td>
+<td style="text-align: left;"><code>skills/</code></td>
+<td style="text-align: left;">每个 skill 一个 <code>&lt;name&gt;/SKILL.md</code>。具有 <code>SKILL.md</code> 在其根目录、没有 <code>skills/</code> 和没有 <code>skills</code> 键的 plugin 加载为单个 skill</td>
+</tr>
+<tr>
+<td style="text-align: left;">Commands</td>
+<td style="text-align: left;"><code>commands/</code></td>
+<td style="text-align: left;">平面 Markdown 命令文件。对于新 plugin 更喜欢 <code>skills/</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Agents</td>
+<td style="text-align: left;"><code>agents/</code></td>
+<td style="text-align: left;">Agent Markdown 文件。子文件夹是<a href="plugins-components.html#agents">agent 名称</a>的一部分</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hooks</td>
+<td style="text-align: left;"><code>hooks/hooks.json</code></td>
+<td style="text-align: left;">Hook 配置</td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP 服务器</td>
+<td style="text-align: left;"><code>.mcp.json</code></td>
+<td style="text-align: left;">MCP 服务器定义</td>
+</tr>
+<tr>
+<td style="text-align: left;">LSP 服务器</td>
+<td style="text-align: left;"><code>.lsp.json</code></td>
+<td style="text-align: left;">LSP 服务器配置</td>
+</tr>
+<tr>
+<td style="text-align: left;">输出样式</td>
+<td style="text-align: left;"><code>output-styles/</code></td>
+<td style="text-align: left;">输出样式 Markdown 文件</td>
+</tr>
+<tr>
+<td style="text-align: left;">Workflows</td>
+<td style="text-align: left;"><code>workflows/</code></td>
+<td style="text-align: left;">Workflow <code>.js</code> 文件</td>
+</tr>
+<tr>
+<td style="text-align: left;">主题</td>
+<td style="text-align: left;"><code>themes/</code></td>
+<td style="text-align: left;">主题 JSON 文件</td>
+</tr>
+<tr>
+<td style="text-align: left;">Monitors</td>
+<td style="text-align: left;"><code>monitors/monitors.json</code></td>
+<td style="text-align: left;">monitors 数组</td>
+</tr>
+<tr>
+<td style="text-align: left;">可执行文件</td>
+<td style="text-align: left;"><code>bin/</code></td>
+<td style="text-align: left;">此处的文件在 plugin 启用时位于 Bash 工具的 <code>PATH</code> 上，因此 Claude 将它们作为裸命令运行。claude.ai 和 Cowork 不安装具有此目录的 plugin，包括您<a href="https://claude.com/docs/plugins/org-sync#keep-executables-out-of-the-top-level-bin-directory" target="_blank" rel="noopener">通过 claude.ai 组织设置分发</a>的 plugin</td>
+</tr>
+<tr>
+<td style="text-align: left;">设置</td>
+<td style="text-align: left;"><code>settings.json</code></td>
+<td style="text-align: left;">在 plugin 启用时应用的 <code>agent</code> 和 <code>subagentStatusLine</code> 默认值</td>
+</tr>
+</tbody>
+</table>
+<p>使用每个默认位置的 plugin，加上其 hooks 调用的 <code>scripts/</code> 文件夹，布局如下：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">deploy-tools/
+├── .claude-plugin/
+│   └── plugin.json
+├── skills/
+│   └── deploy/
+│       └── SKILL.md
+├── commands/
+│   └── status.md
+├── agents/
+│   └── reviewer.md
+├── hooks/
+│   └── hooks.json
+├── monitors/
+│   └── monitors.json
+├── output-styles/
+│   └── terse.md
+├── themes/
+│   └── dracula.json
+├── workflows/
+│   └── release-audit.js
+├── bin/
+│   └── deploy-tool
+├── scripts/
+│   └── format.sh
+├── settings.json
+├── .mcp.json
+└── .lsp.json
+</code></pre></div>
+<p>要点击此布局并阅读每个文件的作用，打开<a href="plugins-components.html#explore-the-plugin-directory">plugin 浏览器</a>。</p>
+<p>plugin 根目录处的 <code>CLAUDE.md</code> 不作为上下文加载，<code>claude plugin validate</code> 在找到一个时发出警告。要包含加载到 Claude 上下文中的说明，将它们放在 skill 中。</p>
+<h2 id="marketplace-entries-and-the-manifest">Marketplace 条目和 manifest</h2>
+<p><a href="plugins-marketplace-reference.html">市场条目</a>接受<a href="plugins-marketplace-reference.html#plugin-entries">其自己的字段</a>（包括 <code>strict</code>），以及此页面上除<a href="#directory-listing-fields">目录列表字段</a>之外的每个字段。</p>
+<p><code>strict</code> 字段决定条目是否可以向具有自己 <code>plugin.json</code> 的 plugin 添加组件。它默认为 <code>true</code>。</p>
+<h3 id="how-entry-fields-combine-with-plugin-json">条目字段如何与 <code>plugin.json</code> 结合</h3>
+<p>条目要么充当 manifest，要么向其添加组件，要么与其冲突：</p>
+<ul>
+<li><strong>没有 <code>plugin.json</code></strong>：条目是 manifest，无论 <code>strict</code> 如何。条目 <code>hooks</code> 仅以内联对象形式加载。对于文件路径或数组，<code>/plugin</code> <strong>Errors</strong> 选项卡显示 <code>not yet supported in a marketplace entry</code> 错误</li>
+<li><strong><code>plugin.json</code> 存在，<code>strict</code> 未设置或 <code>true</code></strong>：Claude Code 加载 manifest 并将条目的 <code>commands</code>、<code>agents</code>、<code>skills</code>、<code>outputStyles</code> 和 <code>themes</code> 附加到它。对于 <code>hooks</code>，条目对事件的匹配器替换 manifest 对该相同事件的匹配器，仅 manifest 声明的事件保留其</li>
+<li><strong><code>plugin.json</code> 存在，<code>strict: false</code></strong>：声明 <code>commands</code>、<code>agents</code>、<code>skills</code>、<code>hooks</code>、<code>outputStyles</code> 或 <code>themes</code> 的条目是冲突，plugin 加载失败，出现 <code>Plugin &lt;name&gt; has conflicting manifests</code></li>
+</ul>
+<p>当<a href="plugins-marketplace-reference.html">其 <code>source</code> 是 marketplace 根目录的 marketplace 条目</a>列出特定 <code>skills</code> 子目录时，仅这些子目录加载，plugin 的默认 <code>skills/</code> 目录不被扫描。manifest 中的 <code>skills</code> 键改为<a href="#how-each-key-combines-with-its-default-location">添加到默认值</a>。</p>
+<h3 id="metadata-precedence">元数据优先级</h3>
+<p>某些元数据字段有固定的优先级，无论 <code>strict</code> 如何：</p>
+<ul>
+<li><strong><code>defaultEnabled</code> 和显示字段</strong>：条目的 <code>defaultEnabled</code> 和其<a href="plugins-marketplace-reference.html#entry-and-plugin-json">显示字段</a>（如 <code>displayName</code>）覆盖 manifest 的</li>
+<li><strong><code>version</code></strong>：manifest 的 <code>version</code> 覆盖条目的</li>
+<li><strong><code>name</code></strong>：当条目在与 manifest 不同的 <code>name</code> 下列出 plugin 时，<code>enabledPlugins</code> 使用条目名称，组件在 manifest 名称下命名空间</li>
+</ul>
+<p>有关完整的优先级表，参见<a href="plugins-marketplace-reference.html">严格模式</a>。</p>
+<h2 id="next-steps">后续步骤</h2>
+<ul>
+<li><a href="plugins-components.html">向 plugin 添加组件</a>：每个组件在运行时的作用，带有验证的示例</li>
+<li><a href="plugins-marketplace-reference.html">Marketplace 参考</a>：marketplace 可以为您的 plugin 设置的条目字段</li>
+<li><a href="plugins-cli-reference.html#plugin-validate">Plugin 命令参考</a>：<code>claude plugin validate</code> 标志和输出</li>
+<li><a href="plugins-troubleshooting.html#claude-plugin-validate-reports-errors">Plugin 故障排除</a>：每条验证消息及其修复</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-loading.html"><span class="pager-dir">← 上一页</span><span class="pager-name">插件加载参考</span></a><a class="pager-link next" href="plugins-marketplace-reference.html"><span class="pager-dir">下一页 →</span><span class="pager-name">Marketplace 参考</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#manifest-file">Manifest 文件</a><a class="toc-l3" href="#unrecognized-fields">无法识别的字段</a><a class="toc-l3" href="#validate-the-manifest">验证 manifest</a><a class="toc-l2" href="#fields">字段</a><a class="toc-l3" href="#name">name</a><a class="toc-l3" href="#displayname">displayName</a><a class="toc-l3" href="#version">version</a><a class="toc-l3" href="#metadata">metadata</a><a class="toc-l3" href="#directory-listing-fields">目录列表字段</a><a class="toc-l3" href="#defaultenabled">defaultEnabled</a><a class="toc-l3" href="#dependencies">dependencies</a><a class="toc-l3" href="#settings">settings</a><a class="toc-l2" href="#component-path-forms">组件路径形式</a><a class="toc-l3" href="#path-only-fields">仅路径字段</a><a class="toc-l3" href="#commands">commands</a><a class="toc-l3" href="#hooks">hooks</a><a class="toc-l3" href="#mcpservers">mcpServers</a><a class="toc-l3" href="#lspservers">lspServers</a><a class="toc-l3" href="#monitors">monitors</a><a class="toc-l2" href="#path-rules">路径规则</a><a class="toc-l3" href="#containment-and-existence">包含和存在</a><a class="toc-l3" href="#how-each-key-combines-with-its-default-location">每个键如何与其默认位置结合</a><a class="toc-l2" href="#user-configuration">用户配置</a><a class="toc-l3" href="#limit-a-field-to-fixed-options">将字段限制为固定选项</a><a class="toc-l3" href="#where-values-are-stored">值的存储位置</a><a class="toc-l3" href="#reference-a-saved-value">引用保存的值</a><a class="toc-l3" href="#fields-that-run-through-a-shell">通过 shell 运行的字段</a><a class="toc-l2" href="#channels">频道</a><a class="toc-l2" href="#environment-variables">环境变量</a><a class="toc-l3" href="#where-each-variable-resolves">每个变量解析的位置</a><a class="toc-l3" href="#quoting-and-path-separators">引用和路径分隔符</a><a class="toc-l2" href="#standard-layout">标准布局</a><a class="toc-l2" href="#marketplace-entries-and-the-manifest">Marketplace 条目和 manifest</a><a class="toc-l3" href="#how-entry-fields-combine-with-plugin-json">条目字段如何与 plugin.json 结合</a><a class="toc-l3" href="#metadata-precedence">元数据优先级</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

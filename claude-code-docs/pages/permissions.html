@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>配置权限 · Claude Code 中文文档</title>
+<meta name="description" content="通过细粒度权限规则、模式和托管策略来控制 Claude Code 可以访问和执行的操作。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="permissions">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/permissions" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link active" href="permissions.html" aria-current="page">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>配置</span> <span class="sep">/</span> <span>权限和沙箱隔离</span></div>
+    <article class="prose" id="article"><h1 id="_1">配置权限</h1>
+<blockquote>
+<p>通过细粒度权限规则、模式和托管策略来控制 Claude Code 可以访问和执行的操作。</p>
+</blockquote>
+<p>Claude Code 支持细粒度权限，因此您可以精确指定代理允许执行的操作和不允许执行的操作。权限设置可以检入版本控制并分发给组织中的所有开发人员，也可以由个别开发人员自定义。</p>
+<h2 id="permission-system">权限系统</h2>
+<p>Claude Code 使用分层权限系统来平衡功能和安全性。该表显示了对于每种工具类型，手动模式是否在操作运行前询问。其他<a href="#permission-modes">权限模式</a>改变了这些提示中的哪些会询问您；在自动模式中，分类器会审查操作而不是您，<a href="permission-modes.html#how-the-classifier-evaluates-actions">分类器如何评估操作</a>列出了它看到的操作。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">工具类型</th>
+<th style="text-align: left;">示例</th>
+<th style="text-align: left;">需要批准</th>
+<th style="text-align: left;">"是，不再询问"行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">只读</td>
+<td style="text-align: left;">文件读取、Grep</td>
+<td style="text-align: left;">否，在<a href="#working-directories">工作目录和其他目录</a>内</td>
+<td style="text-align: left;">不适用</td>
+</tr>
+<tr>
+<td style="text-align: left;">Bash 命令</td>
+<td style="text-align: left;">Shell 执行</td>
+<td style="text-align: left;">是，除了内置的<a href="#read-only-commands">只读命令</a>集合</td>
+<td style="text-align: left;">每个项目目录和命令永久有效</td>
+</tr>
+<tr>
+<td style="text-align: left;">文件修改</td>
+<td style="text-align: left;">Edit/Write 文件</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">直到会话结束</td>
+</tr>
+<tr>
+<td style="text-align: left;">Web 获取</td>
+<td style="text-align: left;">WebFetch</td>
+<td style="text-align: left;">是，除了内置的<a href="tools-reference.html#webfetch-tool-behavior">预批准文档域</a>集合</td>
+<td style="text-align: left;">每个项目目录和域永久有效</td>
+</tr>
+<tr>
+<td style="text-align: left;">Web 搜索</td>
+<td style="text-align: left;">WebSearch</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">每个项目目录永久有效</td>
+</tr>
+</tbody>
+</table>
+<p>权限提示会显示 Claude 即将执行的操作，然后列出您的选项。以下示例是手动模式会话中 Bash 命令的提示：</p>
+<p><img alt="一个标题为 Bash command 的 Claude Code 权限提示。在一条关于自动模式的提示下方，它显示了描述&quot;Run the test suite&quot;、命令 npm test 以及&quot;This command requires approval&quot;这一行，然后询问&quot;Do you want to proceed?&quot;并提供四个选项：Yes；Yes, and don't ask again for: npm test *；Yes, and switch to auto mode；以及 No。页脚列出了两个按键：Esc 用于取消，Tab 用于修改。" src="../assets/img/9bfd005dea7c.png" /></p>
+<p>第三个选项 <strong>是，并切换到自动模式</strong>，<a href="permission-modes.html#switch-permission-modes">并非在每个提示中都会出现</a>。</p>
+<p>当您选择"是，不再询问"且批准永久保存时（例如对于 Bash 命令或 WebFetch 域），Claude Code 会将规则保存到 git 项目根目录的 <code>.claude/settings.local.json</code>，通过<a href="worktrees.html">工作树</a>解析到主检出。该规则适用于该项目中的未来会话，包括在子目录和工作树中启动的会话。文件修改批准不会保存到文件中：如表所示，它仅持续到会话结束。在某些情况下，例如在 git 项目外或在 Windows 上，Claude Code 不使用项目根目录；<a href="settings.html#where-claude-code-looks-for-each-file">Claude Code 查找每个文件的位置</a>列出了这些情况以及它保存规则的位置。</p>
+<p>有时权限提示仅提供一次性批准，没有"不再询问"选项，也没有允许操作在会话的其余部分进行的选项。Claude Code 仅在提示可以向您显示它们允许的所有内容时才提供这些选项，因此您从提示保存的规则仅涵盖其选项命名的内容。当提示仅提供一次性批准时，批准该操作一次，或在 <a href="#manage-permissions"><code>/permissions</code></a> 中自己添加规则。要停止针对以 <code>watch</code> 等 exec 包装器开头的命令的提示，或针对带有 <code>-delete</code> 等操作的 <code>find</code> 命令的提示，请参阅 <a href="#exec-wrappers-and-find-actions">Exec 包装器和 <code>find</code> 操作</a>。</p>
+<h3 id="add-a-comment-when-you-answer-a-permission-prompt">在回答权限提示时添加注释</h3>
+<p>您可以在批准或拒绝单个操作时向 Claude 附加注释。在大多数权限提示上，包括 Bash、PowerShell、文件和 MCP 工具提示，移动到<strong>是</strong>或<strong>否</strong>并按 <code>Tab</code> 在该选项上打开注释字段。WebFetch 和浏览器提示不提供该字段。允许操作在会话的其余部分进行或保存规则的选项也不接受注释。</p>
+<p>打开字段后，输入注释，然后按以下键之一：</p>
+<ul>
+<li><code>Enter</code>：提交您的答案并附加注释。如果您将字段留空，Claude Code 会提交答案而不附加注释。</li>
+<li><code>Tab</code>：关闭字段而不回答。Claude Code 保留您输入的文本，如果您使用该选项回答，仍会发送它。</li>
+<li><code>Shift+Tab</code>：在文件提示上，例如 Edit 或 Write 提示，关闭字段的方式与 <code>Tab</code> 相同。在 v2.1.235 之前，在字段内按 <code>Shift+Tab</code> 会选择允许操作在会话的其余部分进行的选项，因此 Claude Code 批准了会话其余部分的操作并丢弃了注释。</li>
+</ul>
+<p>Claude Code 根据您的回答方式以不同的方式传递注释：</p>
+<ul>
+<li><strong>是</strong>：Claude Code 运行操作，然后在结果后将您的注释发送给 Claude。</li>
+<li><strong>否</strong>：Claude Code 将您的注释作为拒绝原因发送给 Claude，Claude 继续工作。如果您在来自主对话的提示上选择<strong>否</strong>而不附加注释，Claude Code 会停止该轮。</li>
+</ul>
+<h2 id="manage-permissions">管理权限</h2>
+<p>您可以使用 <code>/permissions</code> 查看和管理 Claude Code 的工具权限。此对话框列出所有权限规则和它们来自的 <code>settings.json</code> 文件。您可以在 Claude 工作时打开此对话框：当您添加或删除规则时，Claude Code 会从 Claude 在同一轮中的下一个工具调用开始应用更改。在 v2.1.234 之前，Claude Code 会将命令排队直到轮次完成。</p>
+<ul>
+<li><strong>Allow</strong> 规则让 Claude Code 使用指定的工具而无需手动批准。</li>
+<li><strong>Ask</strong> 规则在 Claude Code 尝试使用指定工具时提示确认。</li>
+<li><strong>Deny</strong> 规则防止 Claude Code 使用指定的工具。</li>
+</ul>
+<p>规则按顺序评估：deny、ask，然后 allow。该顺序中的第一个匹配项决定结果，规则特异性不会改变顺序。</p>
+<p>一个宽泛的 deny 规则（如 <code>Bash(aws *)</code>）会阻止每个匹配的调用，包括也匹配更具体的 allow 规则（如 <code>Bash(aws s3 ls)</code>）的调用，因此 deny 规则不能包含允许列表例外。ask 和 allow 之间也适用相同的优先级：匹配的 ask 规则即使更具体的 allow 规则也匹配同一调用，也会提示。</p>
+<p>Deny 规则的行为取决于它们是命名工具还是在工具内范围化模式。像 <code>Bash</code> 这样的裸工具名称会将工具从 Claude 的上下文中完全移除，因此 Claude 永远看不到它。如果您在会话中途添加此类规则，Claude 无法从其下一个工具调用开始调用该工具；<a href="prompt-caching.html#denying-an-entire-tool">拒绝整个工具</a> 涵盖了 Claude 已经看到的定义会发生什么。像 <code>Bash(rm *)</code> 这样的范围化规则会保留工具的可用性，并在 Claude 尝试时阻止匹配的调用。</p>
+<p>裸名称移除适用于除了 <a href="tools-reference.html#endconversation-tool-behavior"><code>EndConversation</code></a> 之外的每个工具：当任何其他工具仍然存在时，deny 规则无法移除它，ask 规则永远不会为其提示。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>权限规则由 Claude Code 强制执行，而不是由模型强制执行。您的提示或 <code>CLAUDE.md</code> 中的说明会影响 Claude 尝试执行的操作，但它们不会改变 Claude Code 允许的操作。要授予或撤销访问权限，请使用 <code>/permissions</code>、此处描述的规则、<a href="permission-modes.html">权限模式</a> 或 <a href="#extend-permissions-with-hooks">PreToolUse hook</a>。</p></div></div>
+<p>当 <a href="permission-modes.html#eliminate-prompts-with-auto-mode">auto mode</a> 对您的会话可用时，此对话框还包括 <a href="auto-mode-config.html#edit-rules-from-permissions">auto mode 分类器规则</a>。选择 <strong>Auto mode</strong> 选项卡以查看它们。</p>
+<h2 id="permission-modes">权限模式</h2>
+<p>Claude Code 支持多种权限模式来控制工具调用的批准方式。请参阅<a href="permission-modes.html">权限模式</a>了解何时使用每种模式。要更改会话启动时的模式，请在您的<a href="settings.html#where-settings-live">设置文件</a>中设置 <code>defaultMode</code>。<a href="permission-modes.html#which-mode-a-session-starts-in">会话启动时的模式</a>涵盖了每个计划的内置默认值以及 VS Code 扩展读取的内容。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">模式</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>default</code></td>
+<td style="text-align: left;">在首次使用每个工具时提示权限。在 CLI、VS Code 和 JetBrains 扩展以及桌面应用中标记为 Manual，Claude Code 接受 <code>manual</code> 作为别名</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>acceptEdits</code></td>
+<td style="text-align: left;">自动接受工作目录或 <code>additionalDirectories</code> 中路径的文件编辑和常见文件系统命令，例如 <code>mkdir</code>、<code>touch</code>、<code>mv</code> 和 <code>cp</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>plan</code></td>
+<td style="text-align: left;">Claude 读取文件并运行只读 shell 命令来探索，但不编辑您的源文件；在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>可用的情况下，分类器批准的命令也会运行。在 CLI 和 VS Code 扩展中标记为 Plan</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>auto</code></td>
+<td style="text-align: left;">无需常规提示即可运行；在 shell 命令和网络请求等操作运行之前，后台<a href="permission-modes.html#eliminate-prompts-with-auto-mode">分类器</a>会检查它们是否与您的请求一致</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dontAsk</code></td>
+<td style="text-align: left;">自动拒绝每个会导致提示的调用，但您安装的 <a href="plugins-mods-overview.html">mod</a> 仍可以批准其中的部分调用。您的工作目录中的文件读取和其他不需要批准的操作仍会运行，通过 <code>/permissions</code> 或 <code>permissions.allow</code> 规则预先批准的工具也会运行。<code>AskUserQuestion</code>、标记为 <a href="mcp.html#require-approval-for-a-specific-tool"><code>requiresUserInteraction</code></a> 的 MCP 工具、<a href="#network-paths">从网络路径读取</a>，以及在该设置到达 Claude Code 的会话中<a href="mcp.html#organization-controls-on-connector-tools">您的组织设置为 <code>ask</code></a> 的连接器工具，即使您已允许它们也会被拒绝</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>bypassPermissions</code></td>
+<td style="text-align: left;">跳过权限提示，除了<a href="permission-modes.html#actions-no-mode-auto-approves">任何模式都不会自动批准的操作</a></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>在 <code>bypassPermissions</code> 模式中，Claude Code 跳过权限提示，包括对<a href="permission-modes.html#protected-paths">受保护路径</a>（例如 <code>.git</code> 和 <code>.claude</code>）的写入。<a href="permission-modes.html#skip-all-checks-with-bypasspermissions-mode">跨会话消息传递保护措施</a>仍然适用。仅在隔离环境（如容器或虚拟机）中使用此模式，其中 Claude Code 无法造成损害。</p></div></div>
+<p>为了防止 <code>bypassPermissions</code> 或 <code>auto</code> 模式被使用，在任何<a href="settings.html#where-settings-live">设置文件</a>中将 <code>permissions.disableBypassPermissionsMode</code> 或 <code>permissions.disableAutoMode</code> 设置为 <code>"disable"</code>。这些在<a href="#managed-settings">托管设置</a>中最有用，因为它们无法被覆盖。</p>
+<h2 id="permission-rule-syntax">权限规则语法</h2>
+<p>权限规则遵循格式 <code>Tool</code> 或 <code>Tool(specifier)</code>。括号内的说明符是字面意思，因此包含括号的命令或路径不需要转义。</p>
+<h3 id="match-all-uses-of-a-tool">匹配工具的所有使用</h3>
+<p>要匹配工具的所有使用，只需使用工具名称而不带括号：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">规则</th>
+<th style="text-align: left;">效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Bash</code></td>
+<td style="text-align: left;">匹配所有 Bash 命令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>WebFetch</code></td>
+<td style="text-align: left;">匹配所有网络获取请求</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Read</code></td>
+<td style="text-align: left;">匹配所有文件读取</td>
+</tr>
+</tbody>
+</table>
+<p><code>Bash(*)</code> 等同于 <code>Bash</code> 并匹配所有 Bash 命令。作为拒绝规则，两种形式都会从 Claude 的上下文中移除该工具。</p>
+<p>会话记录和权限对话框中为工具显示的标签可能与其规范名称不同。例如，会话记录中标记为 <code>Stop Task</code> 的工具具有规范名称 <code>TaskStop</code>。权限规则和 <a href="hooks.html">hook 匹配器</a> 不匹配标签，因此写作 <code>Stop Task</code> 的规则不匹配。对于拒绝和询问规则，<a href="errors.html#matches-no-tool">启动警告</a>会指出这一点。请使用<a href="tools-reference.html">工具参考</a>中列出的规范名称。</p>
+<h3 id="use-specifiers-for-fine-grained-control">使用说明符进行细粒度控制</h3>
+<p>在括号中添加说明符以匹配特定的工具使用：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">规则</th>
+<th style="text-align: left;">效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Bash(npm run build)</code></td>
+<td style="text-align: left;">匹配确切的命令 <code>npm run build</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Read(./.env)</code></td>
+<td style="text-align: left;">匹配读取当前目录中的 <code>.env</code> 文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>WebFetch(domain:example.com)</code></td>
+<td style="text-align: left;">匹配对 example.com 的获取请求</td>
+</tr>
+</tbody>
+</table>
+<h3 id="match-by-input-parameter">按输入参数匹配</h3>
+<p>拒绝和询问规则可以使用 <code>Tool(param:value)</code> 匹配任何内置工具上的顶级输入参数。</p>
+<p>要匹配 MCP 工具上的参数，请使用 <a href="cli-reference.html#cli-flags"><code>--disallowedTools</code></a> 传递拒绝规则。当 Claude Code 加载设置文件时，它会跳过任何具有括号的 <code>mcp__</code> 规则。Claude Code 在交互式会话启动时在无效设置对话框中列出跳过的规则，以及在 <a href="debug-your-config.html#check-resolved-settings"><code>claude doctor</code></a> 输出中列出。</p>
+<p>当 Claude 使用该参数设置为该确切值调用工具时，参数规则匹配。一个参数值的允许规则不会确立该调用总体上是安全的，因此允许规则继续使用每个工具自己的说明符语法。这适用于工具接受的任何标量参数：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">规则</th>
+<th style="text-align: left;">匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Agent(model:opus)</code></td>
+<td style="text-align: left;">请求 Opus 模型层级的 Agent 调用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Agent(isolation:worktree)</code></td>
+<td style="text-align: left;">请求 git worktree 的 Agent 调用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(run_in_background:true)</code></td>
+<td style="text-align: left;">在后台运行的 Bash 调用</td>
+</tr>
+</tbody>
+</table>
+<p>参数匹配遵循以下规则：</p>
+<ul>
+<li>参数名称必须是工具输入的直接字段，例如 Agent 工具上的 <code>model</code>。嵌套在对象或数组内的字段不可匹配</li>
+<li>每个规则命名一个参数。要对 <code>model</code> 和 <code>isolation</code> 进行门控，请编写两个规则 <code>Agent(model:opus)</code> 和 <code>Agent(isolation:worktree)</code>，而不是在一个规则中组合它们</li>
+<li>该值支持 <code>*</code> 作为通配符，匹配任何字符序列，因此 <code>Agent(isolation:*)</code> 匹配任何显式隔离值。没有 <code>*</code> 时匹配是精确的</li>
+<li>模型省略的参数永远不会被匹配，因此 <code>Agent(model:*)</code> 不匹配留下 <code>model</code> 未设置的调用</li>
+<li>该值与 Claude 发送的文字输入进行比较，在任何规范化之前。<code>Agent(model:opus)</code> 匹配别名 <code>opus</code> 但不匹配完整模型 ID</li>
+<li>一个 <code>Skill(skill:&lt;name&gt;)</code> 拒绝规则改为<a href="skills.html#restrict-claude%E2%80%99s-skill-access">在其任何名称下匹配技能</a>，例如其别名或显示名称</li>
+<li>使用 <a href="cli-reference.html"><code>--verbose</code></a> 运行以查看每个工具调用中的确切参数名称和值</li>
+<li>冒号周围的空格被忽略</li>
+</ul>
+<p>您不能以这种方式匹配工具的主要内容字段：Bash 和 PowerShell 的 <code>command</code>、Read、Edit 和 Write 的 <code>file_path</code>、Grep 和 Glob 的 <code>path</code>、NotebookEdit 的 <code>notebook_path</code> 和 WebFetch 的 <code>url</code>。像 <code>Bash(command:rm *)</code> 这样的规则可以通过复合命令绕过，因此 Claude Code 会忽略它并在启动时发出警告。改用 <code>Bash(rm *)</code>、<code>Read(./path)</code> 或 <code>WebFetch(domain:host)</code>。</p>
+<h3 id="wildcard-patterns">通配符模式</h3>
+<p>Bash 规则中的 <code>*</code> 匹配任何文本，包括空格，因此一个规则涵盖一系列命令。没有 <code>*</code> 的规则匹配一个确切的命令。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>将 <code>*</code> 放在子命令之后。在 <code>git log --oneline main</code> 中，<code>git</code> 是程序，<code>log</code> 是子命令，是确定程序执行什么操作的词。Claude Code 按照编写的方式匹配第一个 <code>*</code> 之前的所有内容，因此这些词是限制规则的内容：<code>Bash(git log *)</code> 仅允许 <code>git log</code> 命令，<code>Bash(git *)</code> 允许每个 git 命令。Claude Code <a href="errors.html#has-a-wildcard-before-the-rest-of-the-command">在启动时警告</a>关于在子命令之前有 <code>*</code> 的允许规则，例如 <code>Bash(git * main)</code>。</p></div></div>
+<p>编写您希望 Claude 运行而不询问的命令，并用 <code>*</code> 替换变化的部分。使用此配置，Claude Code 运行 npm 脚本和 git 提交而不询问，并拒绝以 <code>git push</code> 开头的命令。以另一种方式编写的推送，例如 <code>git -C . push</code>，不匹配；请参阅<a href="#bash-rule-limits">Bash 规则不匹配的内容</a>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"allow"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"Bash(npm run *)"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"Bash(git commit *)"</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"deny"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"Bash(git push *)"</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>*</code> 可以出现在规则中的任何位置：开始、中间或结尾。每行显示一个规则、它匹配的命令以及附近它不匹配的命令：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您编写</th>
+<th style="text-align: left;">匹配</th>
+<th style="text-align: left;">不匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Bash(npm run build)</code></td>
+<td style="text-align: left;"><code>npm run build</code></td>
+<td style="text-align: left;"><code>npm run build --watch</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(npm run *)</code></td>
+<td style="text-align: left;"><code>npm run build</code>、<code>npm run test --watch</code>、<code>npm run</code></td>
+<td style="text-align: left;"><code>npm install</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(git log * main)</code></td>
+<td style="text-align: left;"><code>git log --oneline main</code>、<code>git log -5 main</code>、<code>git log --output=&lt;file&gt; main</code></td>
+<td style="text-align: left;"><code>git log main</code>、<code>git push origin main</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(git * main)</code></td>
+<td style="text-align: left;"><code>git merge main</code>、<code>git push origin main</code>、<code>git -c core.fsmonitor=&lt;script&gt; diff main</code></td>
+<td style="text-align: left;"><code>git log</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(* --version)</code></td>
+<td style="text-align: left;"><code>node --version</code>、<code>bash -c 'echo hi' --version</code></td>
+<td style="text-align: left;"><code>node -v</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(ls *)</code></td>
+<td style="text-align: left;"><code>ls -la</code>、<code>ls</code></td>
+<td style="text-align: left;"><code>lsof</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(ls*)</code></td>
+<td style="text-align: left;"><code>ls -la</code>、<code>lsof</code></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(* --help *)</code></td>
+<td style="text-align: left;"><code>npm --help x</code></td>
+<td style="text-align: left;"><code>npm --help</code></td>
+</tr>
+</tbody>
+</table>
+<p>三个匹配规则产生这些行：</p>
+<ul>
+<li><strong><code>*</code> 代表其位置上的任何文本。</strong> 在 <code>Bash(git * main)</code> 中，它代表子命令，因此 Claude Code 匹配每个 git 子命令和它之前的每个选项。这包括 <code>-c</code>，它使 git 运行您命名的程序。在 <code>Bash(* --version)</code> 中，<code>*</code> 代表程序，因此任何程序都匹配。</li>
+<li><strong>末尾的 <code>*</code>，前面有空格，也匹配裸命令。</strong> <code>Bash(ls *)</code> 匹配 <code>ls</code>，<code>Bash(git log *)</code> 匹配 <code>git log</code>。这仅在尾部 <code>*</code> 是规则的唯一通配符时成立：<code>Bash(* --help *)</code> 匹配 <code>npm --help x</code> 但不匹配 <code>npm --help</code>。</li>
+<li><strong>尾部 <code>*</code> 前的空格是规则的一部分。</strong> <code>Bash(ls *)</code> 在 <code>ls</code> 后需要一个空格，因此 <code>lsof</code> 不匹配。<code>Bash(ls*)</code> 没有空格，因此它也匹配 <code>lsof</code>。</li>
+</ul>
+<p><code>:*</code> 后缀是编写尾部通配符的等效方式，因此 <code>Bash(ls:*)</code> 匹配与 <code>Bash(ls *)</code> 相同的命令。</p>
+<p>当您为命令前缀选择"是，不再询问"时，权限对话框会写入空格分隔的形式。<code>:*</code> 形式仅在模式末尾被识别。在像 <code>Bash(git:* push)</code> 这样的模式中，冒号被视为文字字符，不会匹配 git 命令。</p>
+<h3 id="tool-name-wildcards">工具名称通配符</h3>
+<p>拒绝和询问规则也接受工具名称位置中的 glob 模式。该模式必须匹配完整的工具名称：<code>"*"</code> 匹配每个工具，<code>"mcp__*"</code> 匹配所有服务器中的每个 MCP 工具。由裸名称 glob 拒绝规则匹配的工具会从 Claude 的上下文中移除，与裸工具名称相同，包括 <a href="tools-reference.html#endconversation-tool-behavior"><code>EndConversation</code></a> 例外：glob 拒绝在任何其他工具保留时无法移除它，glob 询问永远不会提示它。此配置拒绝每个 MCP 工具：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"deny"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"mcp__*"</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>允许规则仅在文字 <code>mcp__&lt;server&gt;__</code> 前缀之后接受工具名称 glob。服务器段必须不含 glob，以便规则命名您配置的特定服务器。<code>mcp__puppeteer__*</code> 匹配来自 <code>puppeteer</code> 服务器的每个工具，<code>mcp__github__get_*</code> 匹配其 <code>get_</code> 工具。未锚定的允许 glob（如 <code>"*"</code>、<code>"B*"</code> 或 <code>"mcp__*"</code>）会被跳过，不会自动批准任何内容。</p>
+<p>工具名称不匹配任何已知工具的拒绝或询问规则会产生<a href="errors.html#matches-no-tool">启动警告</a>以捕获拼写错误。包含 <code>_</code> 或 <code>*</code> 的工具名称不受此检查的约束，Claude Code 已移除的工具的名称（例如 <code>TaskOutput</code>）也不受约束。</p>
+<h2 id="tool-specific-permission-rules">工具特定的权限规则</h2>
+<h3 id="bash">Bash</h3>
+<p>Bash 规则匹配整个命令文本，其中 <code>*</code> 代表任何文本。<a href="#wildcard-patterns">通配符模式</a>显示每个规则形状匹配的命令以及在哪里放置 <code>*</code>。本节的其余部分涵盖 Claude Code 如何匹配复合命令和包装器、哪些包装器和 <code>find</code> 操作无法通过前缀规则批准、规则不匹配的内容、只读命令和重定向。</p>
+<h4 id="compound-commands">复合命令</h4>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>Claude Code 知道 shell 运算符，所以像 <code>Bash(safe-cmd *)</code> 这样的规则不会给它权限运行命令 <code>safe-cmd &amp;&amp; other-cmd</code>。识别的命令分隔符是 <code>&amp;&amp;</code>、<code>||</code>、<code>;</code>、<code>|</code>、<code>|&amp;</code>、<code>&amp;</code> 和换行符。每个子命令都必须被允许，复合命令才能无需提示即可运行，例如因为该子命令匹配 allow 规则或是<a href="#read-only-commands">只读命令</a>。</p></div></div>
+<p>Deny 和 ask 规则在任何子命令匹配它们时适用，包括嵌套在子 shell 中的命令、命令替换或控制流体（如 <code>for</code> 循环）中的命令。像 <code>Bash(git clean *)</code> 这样的 ask 规则仍然会提示您 <code>cd /tmp &amp;&amp; git clean -f</code> 或 <code>echo "$(git clean -f)"</code>，即使在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>中。</p>
+<p>当 <code>&amp;&amp;</code> 或 <code>||</code> 后面没有任何内容时，例如在 <code>npm test &amp;&amp;</code> 中，Claude Code 将命令视为无法解析，不会将其分割为子命令以进行 allow 规则匹配，因此像 <code>Bash(npm *)</code> 这样的规则不会批准它。</p>
+<p>当您使用"是，不再询问"批准复合命令时，Claude Code 会为需要批准的每个子命令保存一个单独的规则，而不是为完整的复合字符串保存单个规则。例如，批准 <code>git status &amp;&amp; npm test</code> 会为 <code>npm test</code> 保存一个规则，因此将来的 <code>npm test</code> 调用被识别，无论 <code>&amp;&amp;</code> 前面是什么。诸如 <code>cd</code> 进入工作目录之外的目录之类的子命令会为该路径生成自己的 Read 规则。单个复合命令最多可能保存 5 个规则。</p>
+<h4 id="process-wrappers">包装器</h4>
+<p>在匹配 Bash 规则之前，Claude Code 会剥离一组固定的包装器，因此像 <code>Bash(npm test *)</code> 这样的规则也匹配 <code>timeout 30 npm test</code>。被剥离的包装器是 <code>timeout</code>、<code>time</code>、<code>nice</code>、<code>nohup</code> 和 <code>stdbuf</code>，加上 shell 内置命令 <code>command</code> 和 <code>builtin</code>，以及 zsh 的 <code>noglob</code>。每个都将其参数作为实际命令运行。两个相关的形式不被剥离：查询形式 <code>command -v</code>，它查找命令而不是运行命令，以及 zsh 的 <code>nocorrect</code>。</p>
+<p>Claude Code 也会剥离某些已知安全的环境变量的前导赋值，因此 <code>Bash(npm test *)</code> 匹配 <code>NODE_ENV=test npm test</code>。Allow 规则不会匹配超过任何其他变量的赋值。Deny 或 ask 规则匹配超过任何前导赋值，因此 deny 中的 <code>Bash(rm *)</code> 仍然匹配 <code>FOO=bar rm -rf tmp/</code>。</p>
+<p>裸 <code>xargs</code> 也被剥离，所以 <code>Bash(grep *)</code> 匹配 <code>xargs grep pattern</code>。剥离仅在 <code>xargs</code> 没有标志时适用：像 <code>xargs -n1 grep pattern</code> 这样的调用被匹配为 <code>xargs</code> 命令，因此为内部命令编写的规则不涵盖它。</p>
+<p>此包装器列表是内置的，不可配置。开发环境运行器，如 <code>direnv exec</code>、<code>devbox run</code>、<code>mise exec</code>、<code>npx</code> 和 <code>docker exec</code> 不在列表中。因为这些工具将其参数作为命令执行，像 <code>Bash(devbox run *)</code> 这样的规则匹配 <code>run</code> 之后的任何内容，包括 <code>devbox run rm -rf .</code>。要批准环境运行器内的工作，请编写一个包含运行器和内部命令的特定规则，如 <code>Bash(devbox run npm test)</code>。为您想要允许的每个内部命令添加一个规则。</p>
+<h4 id="exec-wrappers-and-find-actions">Exec 包装器和 <code>find</code> 操作</h4>
+<p>像 <code>Bash(watch *)</code> 或 <code>Bash(find *)</code> 这样的前缀规则无法自动批准以下命令，因此在 Manual 模式下它们会提示：</p>
+<ul>
+<li><strong>Exec 包装器</strong>：如 <code>watch</code>、<code>setsid</code>、<code>ionice</code> 和 <code>flock</code></li>
+<li><strong><code>find</code></strong>：带有运行命令、删除文件或写入文件的操作（如 <code>-exec</code>、<code>-delete</code>、<code>-rm</code> 或 <code>-fprint</code>），或带有 <code>-files0-from</code>（从文件中获取要搜索的路径）</li>
+</ul>
+<p>要批准不含 <code>*</code> 的特定调用，请为完整命令字符串编写精确匹配规则，如 <code>Bash(find build -type f -delete)</code>。</p>
+<p>当命令包含 <code>*</code> 时，如 <code>find . -name '*.tmp' -delete</code>，Claude Code 会将规则读作<a href="#wildcard-patterns">通配符模式</a>而不是精确匹配，因此该命令仍然会提示。请在每次提示时批准它，或使用为其返回 <code>"allow"</code> 的 <a href="hooks.html#pretooluse-decision-control">PreToolUse hook</a>。</p>
+<h4 id="bash-rule-limits">Bash 规则不匹配的内容</h4>
+<p>Bash 规则匹配 Claude 编写的命令文本，在 Claude Code 分割<a href="#compound-commands">复合命令</a>和剥离<a href="#process-wrappers">包装器</a>之后。它不匹配以不同形式调用的同一程序，因此 deny 或 ask 规则涵盖 Claude 通常产生的调用，而不是围绕程序的安全边界。<code>deny</code> 或 <code>ask</code> 中的这些规则停止第一种形式，而不是其他形式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">规则</th>
+<th style="text-align: left;">停止</th>
+<th style="text-align: left;">不停止</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Bash(curl *)</code></td>
+<td style="text-align: left;"><code>curl https://example.com</code></td>
+<td style="text-align: left;"><code>/usr/bin/curl https://example.com</code>、<code>sh -c 'curl https://example.com'</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(rm *)</code></td>
+<td style="text-align: left;"><code>rm -rf build/</code></td>
+<td style="text-align: left;"><code>/bin/rm -rf build/</code>、<code>bash -c 'rm -rf build/'</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Bash(git push *)</code></td>
+<td style="text-align: left;"><code>git push origin main</code></td>
+<td style="text-align: left;"><code>git -C . push origin main</code>、<code>git -c push.default=current push origin main</code>、<code>git 'push' origin main</code></td>
+</tr>
+</tbody>
+</table>
+<p>您的其他规则和权限模式决定最后一列中的命令。</p>
+<p>对于不依赖于命令文本的文件系统和网络强制执行，使用<a href="sandboxing.html">沙箱</a>。要在运行前使用您自己的逻辑检查完整的命令文本，使用<a href="#extend-permissions-with-hooks">PreToolUse hook</a>。</p>
+<h4 id="read-only-commands">只读命令</h4>
+<p>Claude Code 将一组内置 Bash 命令识别为只读，并在每种模式下无需权限提示即可运行它们，但 <a href="settings-reference.html#permissions-blockreadsoutsideworkingdirectories"><code>permissions.blockReadsOutsideWorkingDirectories</code></a> 会改变工作目录之外路径的行为。该集合包括 <code>ls</code>、<code>cat</code>、<code>echo</code>、<code>pwd</code>、<code>head</code>、<code>tail</code>、<code>grep</code>、<code>find</code>、<code>wc</code>、<code>which</code>、<code>diff</code>、<code>stat</code>、<code>du</code>、<code>cd</code> 和 <code>git</code> 的只读形式。该集合不可配置；要对其中一个命令要求提示，请为其添加 <code>ask</code> 或 <code>deny</code> 规则。在自动模式下，这些命令也可以等待分类器的审查；请参阅<a href="permission-modes.html#how-the-classifier-evaluates-actions">分类器如何评估操作</a>。</p>
+<p>像 <code>ls &gt; out.txt</code> 这样的重定向会在目标上添加检查。请参阅<a href="#redirections">重定向</a>。</p>
+<p>对于其每个标志都是只读的命令，允许未引用的 glob 模式，因此 <code>ls *.ts</code> 和 <code>wc -l src/*.py</code> 无需提示即可运行。</p>
+<p>在 Manual 模式下，来自此集合的命令在这些情况下仍然提示：</p>
+<ul>
+<li><strong>具有写入能力标志的命令的未引用 glob</strong>：具有写入能力或执行能力标志的命令，如 <code>find</code>、<code>sort</code>、<code>sed</code> 和 <code>git</code>，在存在未引用的 glob 时提示，因为 glob 可能扩展为像 <code>-delete</code> 这样的标志。</li>
+<li><strong><code>docker</code> 指向另一个守护程序</strong>：当命令携带选择不同守护程序的标志时，<code>docker</code> 的只读形式提示，如 <code>-H</code>、<code>--context</code> 或 Podman 的 <code>--url</code> 和 <code>--connection</code>。</li>
+<li><strong><code>file</code> 带有路径打开标志</strong>：当 <code>file</code> 传递 <code>-m</code>/<code>--magic-file</code> 或 <code>-f</code>/<code>--files-from</code> 时，<code>file</code> 提示，因为这些标志使 <code>file</code> 打开标志值中命名的路径。</li>
+<li><strong>可能打印环境变量的 <code>ps</code></strong>：当 <code>ps</code> 的某个参数可能充当 <code>e</code> 选项时（如 <code>ps auxe</code> 或 <code>ps aux -e</code>），<code>ps</code> 会提示，因为该选项会打印进程环境变量。<code>ps aux</code> 和 <code>ps -ef</code> 无需提示即可运行。对 <code>ps aux -e</code> 等带短横线形式的检查需要 Claude Code v2.1.290 或更高版本。</li>
+<li><strong>Windows 上的网络路径</strong>：其参数包括网络 (UNC) 路径的命令，如 <code>\\server\share\file</code>，提示是因为访问网络路径可能会将您的 Windows 凭据发送到它命名的主机。同样的检查适用于<a href="tools-reference.html#powershell-tool">PowerShell 工具</a>命令。</li>
+<li><strong>写入特殊 shell 变量</strong>：设置、取消设置或遍历某些特殊 shell 变量（如 <code>PATH</code> 或 <code>IFS</code>）的命令会提示，即使命令的其余部分是只读的。</li>
+<li><strong>分析无法解析的命令</strong>：当 Claude Code 无法完全解析命令时，它会要求批准而不是将命令视为只读。超过 10,000 个字符的命令总是提示，因为它们超过了分析解析的内容。</li>
+</ul>
+<p>进入工作目录内或<a href="#working-directories">其他目录</a>内的路径的 <code>cd</code> 也是只读的，像 <code>cd packages/api &amp;&amp; ls</code> 这样的复合命令在每个部分都符合条件时无需提示即可运行。即使每个部分都是只读的，这些组合也会提示：</p>
+<ul>
+<li><strong><code>cd</code> 与 <code>git</code></strong>：当 <code>cd</code> 改变到不同目录时提示，因为在新目录中运行 <code>git</code> 可以执行该目录的钩子。<code>cd</code> 的目标解析到当前工作目录是无操作的，不会触发提示。</li>
+<li><strong><code>cd</code> 与重定向</strong>：当 Claude Code 无法确定在 <code>cd</code> 运行后重定向目标解析到哪个目录时提示。仅重定向目标为 <code>/dev/null</code> 的命令，如 <code>cd app; grep -r pattern . 2&gt;/dev/null</code>，不提示，因为 <code>/dev/null</code> 不依赖于工作目录。</li>
+</ul>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>尝试约束命令参数的 Bash 权限模式很脆弱。例如，<code>Bash(curl http://github.com/ *)</code> 旨在将 curl 限制为 GitHub URL，但不会匹配以下变体：</p>
+<ul>
+<li>URL 前的选项：<code>curl -X GET http://github.com/...</code></li>
+<li>不同的协议：<code>curl https://github.com/...</code></li>
+<li>重定向：<code>curl -L http://short.example.com/xyz</code>，重定向到 GitHub</li>
+<li>变量：<code>URL=http://github.com &amp;&amp; curl $URL</code></li>
+</ul>
+<p>为了更可靠的 URL 过滤，请考虑：</p>
+<ul>
+<li><strong>限制 Bash 网络工具</strong>：使用 deny 规则阻止 <code>curl</code>、<code>wget</code> 和类似命令，然后对允许的域使用带有 <code>WebFetch(domain:github.com)</code> 权限的 WebFetch 工具。Deny 规则不匹配按路径调用的同一程序或在 <code>sh -c</code> 内部调用的程序，因此当限制必须成立时，将其与<a href="sandboxing.html#network-isolation">沙箱网络允许列表</a>配对；请参阅<a href="#bash-rule-limits">Bash 规则不匹配的内容</a></li>
+<li><strong>使用 PreToolUse hook</strong>：实现一个 hook 来验证 Bash 命令中的 URL 并阻止不允许的域</li>
+<li><strong>添加 CLAUDE.md 指导</strong>：在 <code>CLAUDE.md</code> 中描述您允许的 curl 模式。这会影响 Claude 尝试的内容，但不会强制执行边界，因此请将其与上述选项之一配对</li>
+</ul>
+<p>请注意，仅使用 WebFetch 不会阻止网络访问。如果允许 Bash，Claude 仍然可以使用 <code>curl</code>、<code>wget</code> 或其他工具来访问任何 URL。</p></div></div>
+<h4 id="redirections">重定向</h4>
+<p>当命令重定向输出或输入时，Claude Code 会根据您的文件规则检查重定向目标，就像 Claude 直接写入或读取该文件一样：</p>
+<ul>
+<li><strong>输出重定向</strong>：对于 <code>&gt; file</code>、<code>&gt;&gt; file</code> 或 <code>2&gt; file</code>，检查涵盖您的 <code>Edit</code> allow 和 deny 规则、<a href="permission-modes.html#protected-paths">受保护的路径</a>和<a href="#working-directories">工作目录</a>。像 <code>Bash(git commit *)</code> 这样的规则允许命令，而不是目标。以 <code>~</code> 开头或包含 glob 字符的目标需要您的批准。</li>
+<li><strong>输入重定向</strong>：对于 <code>&lt; file</code>，检查涵盖您的 <code>Read</code> allow 和 deny 规则和工作目录。工作目录外的目标需要您的批准，除非 allow 规则涵盖它。包含 glob 模式的目标，或在同一命令中跟随 <code>cd</code> 的相对路径，即使 allow 规则涵盖它也需要您的批准。Claude Code 在 v2.1.257 及更高版本中检查输入目标。</li>
+</ul>
+<p>没有文件在其后的目标不被检查：<code>/dev/null</code>、文件描述符形式如 <code>2&gt;&amp;1</code> 和 <code>&lt;&amp;3</code>，以及 here-docs 和 here-strings。</p>
+<p>Claude Code 也检查 <code>tee</code> 命令写入的文件，包括在管道中，如 <code>make | tee build.log</code>。检查涵盖您的 <code>Edit</code> allow 和 deny 规则、<a href="permission-modes.html#protected-paths">受保护的路径</a>和<a href="#working-directories">工作目录</a>。像 <code>Bash(tee *)</code> 这样的 allow 规则不涵盖工作目录外的目标。Claude Code 在 v2.1.269 及更高版本中检查 <code>tee</code> 目标。</p>
+<h3 id="powershell">PowerShell</h3>
+<p>PowerShell 权限规则使用与 <a href="#wildcard-patterns">Bash 规则</a>相同的形式，裸 <code>PowerShell</code> 或 <code>PowerShell(*)</code> 匹配每个命令。此配置允许 <code>Get-ChildItem</code> 和 <code>git commit</code> 命令，同时阻止 <code>Remove-Item</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"allow"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"PowerShell(Get-ChildItem *)"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"PowerShell(git commit *)"</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"deny"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"PowerShell(Remove-Item *)"</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>常见别名在匹配之前会被规范化。为 cmdlet 名称编写的规则也会匹配这些别名，因此 <code>PowerShell(Get-ChildItem *)</code> 也会匹配 <code>gci</code>、<code>ls</code> 和 <code>dir</code>。匹配不区分大小写。</p>
+<p>Claude Code 解析 PowerShell AST 并独立检查复合命令中的每个命令。管道运算符 <code>|</code>、语句分隔符 <code>;</code> 和 PowerShell 7+ 上的链运算符 <code>&amp;&amp;</code> 和 <code>||</code> 将复合命令分割为子命令。每个子命令都必须被允许，复合命令才能无需提示即可运行，例如通过匹配 allow 规则。</p>
+<h3 id="read-and-edit">Read 和 Edit</h3>
+<p>要阻止 Claude 的文件工具读取文件或目录，请为其路径添加 <code>Read</code> deny 规则，如 <code>Read(./.env)</code> 或 <code>Read(./secrets/**)</code>；<a href="settings-reference.html#exclude-sensitive-files">排除敏感文件</a>有一个粘贴就用的示例。如果您的项目有 <code>.claudeignore</code> 文件，它不会产生任何效果，因此请将其条目移到 <code>Read</code> deny 规则中。</p>
+<h4 id="what-read-and-edit-rules-cover"><code>Read</code> 和 <code>Edit</code> 规则涵盖的范围</h4>
+<p><code>Edit</code> 规则适用于所有编辑文件的内置工具。Claude 尽力将 <code>Read</code> 规则应用于所有读取文件的内置工具，如 Grep 和 Glob，以及您提示词中的 <code>@file</code> 提及，以及连接的 <a href="vs-code.html#the-built-in-ide-mcp-server">IDE</a> 与 Claude 共享的选择和打开文件上下文。</p>
+<p><code>Read(path)</code> deny 规则也适用于您粘贴到提示词中的图片路径以及您 @ 提及的目录：</p>
+<ul>
+<li><strong>图片路径</strong>：当您在终端中将图片路径粘贴到提示词中或将图片文件拖入提示词，且规则匹配该路径时，Claude Code 不会附加该图片。如果粘贴的内容中没有其他图片，该路径将作为文本保留在您的提示词中。</li>
+<li><strong>目录</strong>：<a href="common-workflows.html#reference-files-and-directories">Claude 收到的列表</a>会省略规则匹配的文件和目录名称。</li>
+</ul>
+<p>Claude Code 在 v2.1.290 及更高版本中检查粘贴的图片路径和目录列表。</p>
+<p><code>Read</code> deny 规则也会阻止同一路径上的 <a href="errors.html#file-is-covered-by-a-read-deny-rule">Edit 和 Write 工具</a>，包括在那里创建新文件。NotebookEdit 不被覆盖，因此为任何工具都不能更改的路径添加 <code>Edit</code> deny 规则。对于 Write 工具，该检查需要 Claude Code v2.1.228 或更高版本。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>Read 和 Edit deny 规则适用于 Claude 的内置文件工具、Claude Code 在 Bash 中识别的文件命令（如 <code>cat</code>、<code>head</code>、<code>tail</code>、<code>sed</code> 和 <code>tee</code>）以及 Bash <a href="#redirections">重定向</a>的目标（如 <code>&gt; file</code> 和 <code>&lt; file</code>）。它们不适用于读取文件而不命名它们的命令，如从保存文件的目录运行的 <code>grep -r pattern .</code>，或间接读取或写入文件的任意子进程，如打开文件本身的 Python 或 Node 脚本。对于阻止所有进程访问路径的 OS 级别强制执行，请<a href="sandboxing.html">启用沙箱</a>。</p></div></div>
+<h4 id="path-rules-that-never-match"><code>Write(path)</code>、<code>NotebookEdit(path)</code> 和 <code>Glob(path)</code> 规则从不匹配</h4>
+<p>Claude Code 仅根据 <code>Edit(path)</code> 和 <code>Read(path)</code> 规则检查文件权限。如果您为 <code>Write</code>、<code>NotebookEdit</code>、<code>Glob</code> 或旧版 <code>MultiEdit</code> 编写路径规则，Claude Code 会接受该规则，但从不将任何读取或编辑与其匹配。</p>
+<p>使用 <code>Edit(docs/**)</code> 代替 <code>Write(docs/**)</code>、<code>NotebookEdit(docs/**)</code> 或 <code>MultiEdit(docs/**)</code>，以及 <code>Read(docs/**)</code> 代替 <code>Glob(docs/**)</code>。要匹配 Write、NotebookEdit 或 Glob 工具的每次使用（无论路径如何），请只编写工具名称。</p>
+<h4 id="how-path-patterns-match">路径模式如何匹配</h4>
+<p>Read 和 Edit 规则都使用<a href="https://git-scm.com/docs/gitignore" target="_blank" rel="noopener">gitignore</a>模式语法，具有四种不同的模式类型：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>含义</th>
+<th>示例</th>
+<th>匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>//path</code></td>
+<td>来自文件系统根目录的绝对路径</td>
+<td><code>Read(//Users/alice/secrets/**)</code></td>
+<td><code>/Users/alice/secrets/**</code></td>
+</tr>
+<tr>
+<td><code>~/path</code></td>
+<td>来自主目录的路径</td>
+<td><code>Read(~/Documents/*.pdf)</code></td>
+<td><code>/Users/alice/Documents/*.pdf</code></td>
+</tr>
+<tr>
+<td><code>/path</code></td>
+<td>相对于设置源的路径</td>
+<td><code>Edit(/src/**/*.ts)</code></td>
+<td>项目设置中的 <code>&lt;primary working directory&gt;/src/**/*.ts</code></td>
+</tr>
+<tr>
+<td><code>path</code> 或 <code>./path</code></td>
+<td>相对于当前目录的路径</td>
+<td><code>Read(*.env)</code></td>
+<td><code>&lt;cwd&gt;/*.env</code></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>像 <code>/Users/alice/file</code> 这样的模式不是绝对路径。单个前导斜杠锚定在设置源，而不是文件系统根目录。对于绝对路径，使用 <code>//Users/alice/file</code>。</p></div></div>
+<h5 id="where-a-pattern-anchors">模式的锚定位置</h5>
+<p><code>/path</code> 模式锚定在与定义它的设置源关联的目录，因此相同的规则根据您放置它的位置匹配不同的位置：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">规则定义在</th>
+<th style="text-align: left;"><code>/path</code> 解析为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>.claude/settings.json</code> 处的项目设置</td>
+<td style="text-align: left;"><code>&lt;primary working directory&gt;/path</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.claude/settings.local.json</code> 处的本地设置</td>
+<td style="text-align: left;"><code>&lt;primary working directory&gt;/path</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>~/.claude/settings.json</code> 处的用户设置</td>
+<td style="text-align: left;"><code>~/.claude/path</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">使用 <code>--settings &lt;file&gt;</code> 传递的文件</td>
+<td style="text-align: left;"><code>&lt;directory of file&gt;/path</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">CLI 标志或会话规则</td>
+<td style="text-align: left;"><code>&lt;primary working directory&gt;/path</code></td>
+</tr>
+</tbody>
+</table>
+<p>您通过 <code>/permissions</code> 添加的规则遵循您保存它的设置文件的行。</p>
+<p>本地设置规则锚定在会话的<a href="#working-directories">主工作目录</a>，而不是 Claude Code <a href="#permission-system">存储文件</a>的仓库根目录。在从仓库根目录启动的会话中，两个目录相同；在<a href="worktrees.html">worktree</a>会话中，像 <code>Edit(/src/**)</code> 这样的共享规则匹配该 worktree 自己的 <code>src/</code> 目录。</p>
+<p>像 <code>Read(/secrets/**)</code> 这样的 deny 规则在用户设置中阻止 <code>~/.claude/secrets/**</code>，而不是您项目中的 <code>secrets</code> 目录。要在用户设置中编写适用于每个项目内部的规则，请改用 <code>//</code> 绝对路径或 <code>~/</code> 主目录相对路径。</p>
+<p>在 Windows 上，路径在匹配前被规范化为 POSIX 形式。<code>C:\Users\alice</code> 变成 <code>/c/Users/alice</code>，因此使用 <code>//c/**/.env</code> 来匹配该驱动器上的 <code>.env</code> 文件。要在所有驱动器上匹配，使用 <code>//**/.env</code>。</p>
+<p>示例：</p>
+<ul>
+<li><code>Edit(/docs/**)</code>：编辑 <code>&lt;primary working directory&gt;/docs/</code> 中的文件，而不是 <code>/docs/</code> 或 <code>&lt;primary working directory&gt;/.claude/docs/</code></li>
+<li><code>Read(~/.zshrc)</code>：读取您主目录的 <code>.zshrc</code></li>
+<li><code>Edit(//tmp/scratch.txt)</code>：编辑绝对路径 <code>/tmp/scratch.txt</code></li>
+<li><code>Read(src/**)</code>：作为 allow 规则，仅从 <code>&lt;current-directory&gt;/src/</code> 读取；作为 deny 或 ask 规则，匹配当前目录下任何深度的 <code>src</code> 目录</li>
+</ul>
+<h5 id="how-deep-a-pattern-matches">模式的匹配深度</h5>
+<p>一个规则只匹配其锚点下的文件；在该范围内，匹配深度取决于模式形状，以及对于单段目录模式，规则类型，下面描述。裸文件名遵循 gitignore 语义并在任何深度匹配，因此 <code>Read(.env)</code> 和 <code>Read(**/.env)</code> 是等价的：</p>
+<table>
+<thead>
+<tr>
+<th>Deny 规则</th>
+<th>阻止</th>
+<th>不阻止</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Read(.env)</code> 或 <code>Read(**/.env)</code></td>
+<td>当前目录或其下的任何 <code>.env</code></td>
+<td>父目录或另一个项目中的 <code>.env</code></td>
+</tr>
+<tr>
+<td><code>Read(//**/.env)</code></td>
+<td>文件系统上任何地方的任何 <code>.env</code></td>
+<td>无；规则锚定在文件系统根目录</td>
+</tr>
+</tbody>
+</table>
+<p>具有单个目录段的相对模式，如 <code>src/**</code>，根据规则类型在不同深度匹配：</p>
+<ul>
+<li><strong>Allow 规则</strong>：<code>Edit(src/**)</code> 仅匹配 <code>&lt;cwd&gt;/src</code> 及其下的文件。要允许任何深度的目录名，请编写 <code>Edit(**/src/**)</code>。</li>
+<li><strong>Deny 和 ask 规则</strong>：<code>Read(secrets/**)</code> 匹配当前目录下任何深度的名为 <code>secrets</code> 的目录，因此规则也适用于嵌套副本。</li>
+</ul>
+<p>每个其他模式形状在每种规则类型中的相同深度匹配：<code>Edit(/src/**)</code> 和 <code>Edit(src/components/**)</code> 仅在其锚定位置匹配，而 <code>Edit(**/src/**)</code> 在任何深度匹配。</p>
+<p>以下示例显示了具有顶级 <code>src/</code> 目录和 <code>vendor/</code> 下嵌套副本的项目中的每个模式形状：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">&lt;current-directory&gt;/
+├── src/
+│   └── app.ts
+└── vendor/
+    └── pkg/
+        └── src/
+            └── lib.js
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">规则</th>
+<th style="text-align: left;">匹配 <code>src/app.ts</code></th>
+<th style="text-align: left;">匹配 <code>vendor/pkg/src/lib.js</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Edit(src/**)</code> 作为 allow 规则</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">否</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Edit(src/**)</code> 作为 deny 或 ask 规则</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">是</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Edit(/src/**)</code> 在任何规则类型中</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">否</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Edit(**/src/**)</code> 在任何规则类型中</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">是</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>在 gitignore 模式中，<code>*</code> 匹配单个路径段内的文本，可以出现在模式中的任何位置，而 <code>**</code> 匹配跨目录。</p></div></div>
+<h4 id="special-characters-and-negation">特殊字符和 <code>!</code> 否定</h4>
+<p>当您使用"是，不再询问"批准文件路径时，Claude Code 会转义该路径中的 gitignore 模式字符，如 <code>[</code>、<code>]</code> 和 <code>*</code>，因此生成的规则仅匹配您批准的字面路径。您自己编写的规则不会被转义。</p>
+<p>您不需要转义路径中的括号，因此 <code>Edit(./Finance (2024)/**)</code> 匹配按拼写的 <code>Finance (2024)</code> 文件夹。</p>
+<p>其路径不可用作 gitignore 模式的 deny 或 ask 规则仍然保护该确切路径。其模式不可用的 allow 规则不批准任何内容。</p>
+<p>一个 deny 或 ask 模式，其路径以 <code>!</code> 开头是 gitignore 否定。它从其前面列出的 <code>path</code> 或 <code>./path</code> 规则中切割出它匹配的路径。在一个设置文件的 <code>deny</code> 列表中，<code>Read(*.env)</code> 后跟 <code>Read(!sample.env)</code> 阻止名称以 <code>.env</code> 结尾的每个文件在任何深度，除了名为 <code>sample.env</code> 的文件。首先列出的 <code>!</code> 规则切割不出任何内容。</p>
+<p>切割范围仅到达来自同一源的规则。项目设置或 <code>--disallowedTools</code> 中的 <code>Read(!.env)</code> 不会取消来自托管设置或任何其他设置文件的 <code>Read(./.env)</code> deny。</p>
+<p>两个限制缩小了 <code>!</code> 模式可以切割的内容：</p>
+<ul>
+<li>Claude Code 读取 <code>!</code> 模式相对于当前目录，即使 <code>/</code>、<code>~/</code> 或 <code>//</code> 跟随 <code>!</code>，因此模式无法到达用其中一个前缀锚定的规则。<code>Read(!~/notes/public/**)</code> 从 <code>Read(~/notes/**)</code> 中切割不出任何内容。</li>
+<li>切割不能重新打开规则作为整体阻止的目录内的文件。使用 <code>Read(secrets/**)</code> 和 <code>Read(!secrets/public/**)</code>，Claude Code 仍然阻止 <code>secrets/public</code> 以及 <code>secrets</code> 的其余部分。</li>
+</ul>
+<h4 id="symlinks">符号链接</h4>
+<p>当 Claude 请求的文件路径通过符号链接时，权限检查涵盖两个路径：Claude 请求的路径和它解析到的文件。这适用于 macOS、Linux 和 Windows 上的符号链接，以及 Windows 上的目录连接。</p>
+<h5 id="how-rules-match-a-symlinked-path">规则如何匹配符号链接路径</h5>
+<p>Allow 和 deny 规则对请求的路径和它解析到的文件的处理方式不同：</p>
+<ul>
+<li><strong>Allow 规则</strong>：仅在请求的路径和它解析到的文件都匹配时适用。通过允许目录内指向其外部的符号链接进行的读取不匹配该规则。</li>
+<li><strong>Deny 规则</strong>：当请求的路径或它解析到的文件匹配时适用。指向被拒绝文件的符号链接本身被拒绝。例如，使用 <code>Read(./project/**)</code> 允许和 <code>Read(~/.ssh/**)</code> 拒绝，<code>./project/key</code> 处的符号链接指向 <code>~/.ssh/id_rsa</code> 被阻止：目标未通过 allow 规则，并匹配 deny 规则。</li>
+</ul>
+<p>在 macOS 和 Linux 上，通过带有 <code>//</code>、<code>~/</code> 或 <code>/</code> 模式的符号链接目录编写的 deny 或 ask 规则也适用于该目录的真实位置。例如，在 macOS 上，其中 <code>/etc</code> 解析为 <code>/private/etc</code>，<code>Read(//etc/**)</code> 也阻止 <code>/private/etc/hosts</code>。在 v2.1.268 之前，通过符号链接目录编写的 deny 或 ask 规则不适用于其真实位置给出的路径。</p>
+<p>Grep 和 Glob 搜索 <code>path</code> 参数解析到的目录。Claude Code 将 <code>Read</code> deny 规则应用于该目录。</p>
+<h5 id="attachments-through-a-symlink">通过符号链接的附件</h5>
+<p><code>Read</code> deny 规则也涵盖以下附件，对每个附件按其指定的路径或它解析到的文件进行匹配。当规则匹配某个附件时，Claude Code 会将其排除在对话之外：</p>
+<ul>
+<li><strong><code>@</code> 提及</strong>：您在提示词中提及的文件或目录。被拒绝的文件不会在对话中留下任何内容，而<a href="#read-and-edit">目录的列表</a>会省略规则涵盖的名称。</li>
+<li><strong>粘贴的图片</strong>：您在终端中将其路径粘贴或拖入提示词的图片</li>
+<li><strong>已更改的文件</strong>：Claude Code 在文件于磁盘上更改后重新读取的文件</li>
+<li><strong>IDE 上下文</strong>：连接的 IDE 共享的选择和打开文件上下文</li>
+</ul>
+<p>启用 <a href="settings-reference.html#permissions-blockreadsoutsideworkingdirectories"><code>permissions.blockReadsOutsideWorkingDirectories</code></a> 时，或在 <a href="cli-reference.html#cli-flags"><code>--restricted</code></a> 会话中，如果这些附件来自该设置或标志拒绝 Claude 文件读取的路径，它们也会被排除。</p>
+<p>如果您 <code>@</code> 提及的文件被以下这行取代，则表示 Claude Code 无法确定该路径指向何处，例如因为其符号链接形成循环：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Referenced &lt;path&gt; (not read: could not be examined)
+</code></pre></div>
+<p>Claude 会被告知改用其文件工具读取该路径；当 Claude Code 只是没有足够时间检查该路径时，这种读取可能会成功。</p>
+<p>当路径的符号链接无法解析时，该读取也会被<a href="errors.html#refusing-after-a-symlink-changed">拒绝</a>，因此请修复磁盘上的链接，或通过可以解析的路径 <code>@</code> 提及该文件。</p>
+<h5 id="writes-through-a-symlink">通过符号链接的写入</h5>
+<p>如果 Claude 要求编辑或写入的路径本身是符号链接，Edit 和 Write 工具<a href="errors.html#refusing-after-a-symlink-changed">拒绝写入并指导 Claude 到链接的目标</a>。</p>
+<p>当目录在文件路径上是符号链接，或当 Bash 或 PowerShell 命令进行写入时，写入仍然可以通过符号链接进行。对于这些写入，发生的情况取决于写入解析到的文件相对于您的<a href="#working-directories">工作目录</a>和<a href="permission-modes.html#protected-paths">受保护的路径</a>的位置：</p>
+<ul>
+<li><strong>解析到工作目录外</strong>：当请求的路径在您的工作目录内，而它解析到的文件不在时，在<a href="permission-modes.html#auto-approve-file-edits-with-acceptedits-mode"><code>acceptEdits</code> 模式</a>中写入不会自动批准。在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>中，除非 allow 规则批准写入，否则您会被提示而不是分类器决定。提示命名写入解析到的路径。</li>
+<li><strong>解析到请求的路径不命名的受保护路径</strong>：<a href="permission-modes.html#protected-paths">受保护的路径表</a>给出每个权限模式的结果，除了表将写入路由到分类器的地方，此写入改为提示您。</li>
+</ul>
+<h5 id="paths-that-cant-be-resolved-or-that-change">无法解析或改变的路径</h5>
+<p>当 Claude Code 无法确定路径在磁盘上的位置时，例如因为路径上的符号链接形成循环，Read、Edit 和 Write 工具<a href="errors.html#refusing-after-a-symlink-changed">拒绝操作</a>。</p>
+<p>当工具随后打开已批准的文件时，它<a href="errors.html#refusing-after-a-symlink-changed">确认路径仍然解析到权限检查批准的位置</a>。</p>
+<h4 id="network-paths">网络路径</h4>
+<p>当 Claude 的文件读取工具（如 Read、Grep 和 Glob）从网络路径读取时，该读取会经过单独的权限检查。网络路径是可以访问另一台计算机的路径：在 Windows 上是 UNC 路径，如 <code>\\server\share\file</code>；在 macOS 和 Linux 上是 <code>/net</code> 自动挂载路径，如 <code>/net/fileserver/notes.txt</code>。查找此类路径可能会联系它命名的主机，而在 Windows 上，这种联系可能会将您的凭据发送给该主机。Shell 命令有自己的检查：在 Manual 模式下，参数中包含 UNC 路径的只读 Bash 或 PowerShell 命令<a href="#read-only-commands">在 Windows 上仍然会提示</a>。</p>
+<p>在 Claude Code v2.1.292 及更高版本中，以下各项都不会取消该提示：</p>
+<ul>
+<li><strong>Allow 规则</strong>：规则不会预先批准该读取，包括针对整个工具的规则，如 <code>Read</code></li>
+<li><strong>PreToolUse hook</strong>：返回 <code>"allow"</code> 的 <a href="#extend-permissions-with-hooks">hook</a> 不会跳过该提示</li>
+<li><strong>自动模式</strong>：提示会交给您，而不是由<a href="permission-modes.html#eliminate-prompts-with-auto-mode">分类器</a>决定该读取</li>
+</ul>
+<p>在 <code>dontAsk</code> 模式下，Claude Code 会拒绝该读取而不是提示。在 <code>bypassPermissions</code> 模式下，以及在可使用<a href="permission-modes.html#skip-all-checks-with-bypasspermissions-mode">绕过权限</a>的交互式终端会话中处于计划模式时，该读取无需此提示即可运行。</p>
+<p>要在没有此提示的情况下读取网络共享上的文件，请先为该共享提供一个本地路径：</p>
+<ul>
+<li><strong>Windows</strong>：将共享映射到驱动器号，并在启动 Claude Code 时使用 <code>--add-dir</code> 传递该驱动器，如<a href="#working-directories">工作目录</a>中所述。对于映射到 <code>Z:</code> 的共享，请在 PowerShell 中运行 <code>claude --add-dir Z:\</code>。</li>
+<li><strong>macOS 和 Linux</strong>：将共享挂载到本地路径（如 <code>/mnt</code> 或 <code>/Volumes</code> 下的目录），并从那里读取文件，如<a href="errors.html#working-directory-is-a-network-path">工作目录是网络路径</a>中所述</li>
+</ul>
+<h3 id="webfetch">WebFetch</h3>
+<p>WebFetch 规则使用 <code>domain:</code> 前缀并针对请求的 URL 的主机名进行匹配。匹配不区分大小写，支持 <code>*</code> 通配符，并从规则和主机名中剥离尾部 <code>.</code>，因此 <code>example.com.</code> 和 <code>example.com</code> 被视为相同。</p>
+<ul>
+<li><code>WebFetch(domain:example.com)</code> 仅匹配对 <code>example.com</code> 的请求。要同时涵盖 <code>api.example.com</code> 等子域，请添加 <code>WebFetch(domain:*.example.com)</code> 规则</li>
+<li><code>WebFetch(domain:*.example.com)</code> 匹配任何深度的任何子域，如 <code>api.example.com</code> 或 <code>a.b.example.com</code>，但不匹配 <code>example.com</code> 本身</li>
+<li><code>WebFetch(domain:*)</code> 匹配每个域。它与裸 <code>WebFetch</code> 规则不同；请参阅<a href="#allow-or-deny-every-fetch">允许或拒绝每次获取</a></li>
+</ul>
+<p>在前导 <code>*.</code> 或裸 <code>*</code> 以外的任何位置，通配符仅匹配两个点之间的文本。<code>WebFetch(domain:example.*)</code> 匹配 <code>example.org</code>，其中 <code>*</code> 变成 <code>org</code>，但不匹配 <code>example.evil.com</code>，其中 <code>*</code> 必须变成 <code>evil.com</code> 并跨越一个点。这防止尾部通配符匹配攻击者可以注册的域。</p>
+<p><code>WebFetch</code> 规则中的通配符需要 Claude Code v2.1.172 或更高版本来匹配获取。</p>
+<h4 id="allow-or-deny-every-fetch">允许或拒绝每次获取</h4>
+<p>裸 <code>WebFetch</code> 规则是没有 <code>domain:</code> 部分的工具名称，如 <code>"deny": ["WebFetch"]</code>。它和 <code>WebFetch(domain:*)</code> 都涵盖每个 URL，但 Claude Code 以不同方式应用它们，只有 <code>domain:</code> 形式也将其域添加到沙箱的<a href="sandboxing.html#network-isolation">允许或拒绝的域列表</a>。该部分列出沙箱支持的通配符形式和添加裸 <code>*</code> 的版本。</p>
+<p>每行显示规则在 <code>allow</code> 列表中和 <code>deny</code> 列表中的作用：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">规则</th>
+<th style="text-align: left;">在 <code>allow</code> 中</th>
+<th style="text-align: left;">在 <code>deny</code> 中</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>WebFetch</code></td>
+<td style="text-align: left;">Claude 无需提示您即可获取。不改变沙箱命令可以到达的主机。</td>
+<td style="text-align: left;">Claude Code 移除 <code>WebFetch</code> 工具，因此 Claude 根本无法获取。不改变沙箱命令可以到达的主机。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>WebFetch(domain:*)</code></td>
+<td style="text-align: left;">Claude 无需提示您即可获取，沙箱命令可以到达任何主机。</td>
+<td style="text-align: left;">Claude Code 保留工具并拒绝每次获取，沙箱命令无法到达任何主机。</td>
+</tr>
+</tbody>
+</table>
+<p>两种形式也在 <a href="artifacts.html">Artifact</a> 的读取上有所不同，即 Artifact 工具在 claude.ai 上发布的页面。裸 <code>WebFetch</code> deny 或 ask 规则不适用于这些读取。覆盖 <code>claude.ai</code> 或 <code>*.claudeusercontent.com</code> 内容主机的 <code>domain:</code> 规则，如 <code>WebFetch(domain:claude.ai)</code> 或 <code>WebFetch(domain:*)</code>，拒绝每次读取或在读取前提示。<a href="artifacts.html#disable-artifacts"><code>Artifact</code> 规则</a>也是如此。</p>
+<p>当规则阻止读取时，拒绝命名规则。在 v2.1.268 之前，裸 <code>WebFetch</code> deny 规则阻止每次 Artifact 读取，裸 ask 规则在每次读取前提示。</p>
+<p>要让 Claude 自由获取同时保持沙箱允许列表不变，请使用裸形式。此 <code>settings.json</code> 这样做：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"allow"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"WebFetch"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>当您要求 Claude 获取页面时，它无需提示即可获取。当您要求它对沙箱允许列表外的主机运行<a href="sandboxing.html">沙箱</a> <code>curl</code> 时，Claude Code 仍然会提示您该主机，因为裸规则没有将主机添加到允许列表。</p>
+<p>在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>中，Claude 改为在命令的<a href="sandboxing.html#per-command-allowed-domains-in-auto-mode">每个命令允许的域</a>中命名主机以供分类器审查。</p>
+<h3 id="mcp">MCP</h3>
+<p>要匹配某个 MCP 服务器的所有工具，请编写 <code>mcp__&lt;server&gt;__*</code>。要匹配单个工具，请编写其完整名称 <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>。</p>
+<ul>
+<li><code>mcp__puppeteer</code> 匹配由 <code>puppeteer</code> 服务器提供的任何工具</li>
+<li><code>mcp__puppeteer__*</code> 使用通配符语法，也匹配来自 <code>puppeteer</code> 服务器的所有工具</li>
+<li><code>mcp__puppeteer__puppeteer_navigate</code> 匹配由 <code>puppeteer</code> 服务器提供的 <code>puppeteer_navigate</code> 工具</li>
+</ul>
+<p>对于 <code>&lt;server&gt;</code>，请按照服务器名称在该服务器工具名称中出现的形式编写。以下示例展示了对于包含特殊字符的名称、来自插件的服务器，以及包含 <code>__</code> 或以 <code>_</code> 结尾的名称应编写的规则：</p>
+<ul>
+<li><strong>包含 <code>.</code> 或空格等字符的名称</strong>：这些字符会变为 <code>_</code>，因此对于您配置为 <code>my.server</code> 的服务器，请编写 <code>mcp__my_server__*</code></li>
+<li><strong>由插件提供的服务器</strong>：<code>&lt;server&gt;</code> 采用<a href="mcp.html#plugin-provided-mcp-servers">插件作用域形式</a>，因此对于名为 <code>my-plugin</code> 的插件中的 <code>database-tools</code> 服务器，请编写 <code>mcp__plugin_my-plugin_database-tools__*</code></li>
+<li><strong>包含 <code>__</code> 或以 <code>_</code> 结尾的 <code>&lt;server&gt;</code></strong>：使用完整名称编写通配符形式 <code>mcp__&lt;server&gt;__*</code>。对于名为 <code>reports__v2</code> 的服务器，请编写 <code>mcp__reports__v2__*</code>。裸 <code>mcp__reports__v2</code> 和更短的 <code>mcp__reports</code> 作为 allow 规则都不匹配其工具，因为 Claude Code 会将两者都读作名为 <code>reports</code> 的服务器的规则。</li>
+</ul>
+<p>但是，作为 deny 或 ask 规则，这两个名称中的每一个也都涵盖 <code>reports__v2</code> 服务器的所有工具。要仅涵盖名为 <code>reports</code> 的服务器，请以 <code>mcp__reports__&lt;tool&gt;</code> 形式为每个工具编写一条规则，或重命名其中一个服务器。</p>
+<p>如果您的组织已设置<a href="mcp.html#organization-controls-on-connector-tools">claude.ai 连接器</a>工具为 <code>ask</code>，该设置在您的会话中到达 Claude Code，该工具的 allow 规则不会生效：Claude Code 在每次调用时都会提示，即使在 <code>auto</code> 和 <code>bypassPermissions</code> 模式下。在 <code>dontAsk</code> 模式下（从不提示），Claude Code 会拒绝调用。Claude Code 自己获取的连接器工具显示为 <code>mcp__claude_ai_&lt;server&gt;__&lt;tool&gt;</code>。</p>
+<p>在 Claude Desktop 应用中的 <a href="https://claude.com/docs/cowork/overview" target="_blank" rel="noopener">Cowork</a> 会话中，Claude 通过 Cowork 的 <code>mcp__workspace__bash</code> 工具而不是内置 <code>Bash</code> 工具运行 shell 命令，Cowork 同样为 web 获取提供 <code>mcp__workspace__web_fetch</code>。Claude Code 也将命名整个 <code>Bash</code> 或 <code>WebFetch</code> 工具的 deny 规则应用于这些 Cowork 工具，因此托管的 <code>Bash</code> deny 规则阻止 Claude 在 Cowork 中运行 shell 命令。当 Claude Code 阻止此类调用时，消息命名 Cowork 工具：<code>Permission to use mcp__workspace__bash has been denied.</code> Allow 规则不会转移：Claude Code 从不将 <code>Bash</code> allow 规则应用于 <code>mcp__workspace__bash</code>。</p>
+<h3 id="agent-subagents">Agent（子代理）</h3>
+<p>使用 <code>Agent(AgentName)</code> 规则来控制 Claude 可以使用哪些<a href="sub-agents.html">子代理</a>：</p>
+<ul>
+<li><code>Agent(Explore)</code> 匹配 Explore 子代理</li>
+<li><code>Agent(Plan)</code> 匹配 Plan 子代理</li>
+<li><code>Agent(my-custom-agent)</code> 匹配名为 <code>my-custom-agent</code> 的自定义子代理</li>
+</ul>
+<p>将这些规则添加到您的设置中的 <code>deny</code> 数组，或使用 <code>--disallowedTools</code> CLI 标志来禁用特定 Agent。要禁用 Explore Agent：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"deny"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Agent(Explore)"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="cd">Cd</h3>
+<p><code>Cd</code> 规则控制 <a href="commands.html"><code>/cd</code> 命令</a>可以将会话移动到哪些目录。<code>Cd</code> 不是模型可调用的工具：Claude 无法调用它，规则仅在您自己运行 <code>/cd</code> 时适用。</p>
+<p>裸 <code>Cd</code> deny 规则完全禁用 <code>/cd</code>。<code>Cd(&lt;path-pattern&gt;)</code> deny 规则阻止匹配的目标。Deny 规则检查目标的每个拼写，包括它解析的每个符号链接跳跃，因此为一个路径编写的规则也会阻止解析到它的目标。</p>
+<p>添加任何 <code>Cd</code> allow 规则会将 <code>/cd</code> 切换到允许列表模式：解析的目标目录必须匹配您的一个 allow 规则，否则 <code>/cd</code> 拒绝。如果没有配置 <code>Cd</code> 规则，<code>/cd</code> 保持其默认行为并提示您信任不熟悉的目录。</p>
+<p>路径模式共享来自 <a href="#read-and-edit">Read 和 Edit 规则</a>的 <code>//</code>、<code>~/</code> 和 <code>/</code> 锚点，但匹配锚定到整个目录路径而不是 gitignore 风格。<code>*</code> 匹配恰好一个路径段，<code>**</code> 匹配跨段。尾部 <code>/**</code> 也匹配其命名的根。</p>
+<table>
+<thead>
+<tr>
+<th>规则</th>
+<th>匹配</th>
+<th>不匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cd(~/code/*)</code></td>
+<td><code>~/code/app</code></td>
+<td><code>~/code/app/src</code>、<code>~/code</code></td>
+</tr>
+<tr>
+<td><code>Cd(~/code/**)</code></td>
+<td><code>~/code</code> 和其下的任何目录</td>
+<td><code>~/code</code> 外的目录</td>
+</tr>
+<tr>
+<td><code>Cd(**/node_modules)</code></td>
+<td>当前目录下任何深度的任何 <code>node_modules</code> 目录</td>
+<td><code>node_modules/pkg</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="extend-permissions-with-hooks">使用 hooks 扩展权限</h2>
+<p><a href="hooks-guide.html">Claude Code hooks</a> 让您可以注册自定义 shell 命令，在运行时评估权限。当 Claude Code 进行工具调用时，PreToolUse hooks 在权限提示之前运行，适用于除了 <a href="tools-reference.html#endconversation-tool-behavior"><code>EndConversation</code></a> 之外的每个工具。hook 输出可以拒绝工具调用、强制提示或跳过提示以让调用继续。</p>
+<h3 id="precedence-among-rules-hooks-and-mods">规则、hook 和 mod 之间的优先级</h3>
+<p>PreToolUse hook 决定不会绕过权限规则。Claude Code 评估 deny 和 ask 规则，无论 PreToolUse hook 返回什么：匹配的 deny 规则会阻止调用，匹配的 ask 规则即使在 hook 返回 <code>"allow"</code> 或 <code>"ask"</code> 时仍然会提示。这保留了<a href="#manage-permissions">管理权限</a>中描述的 deny 优先级，包括在托管设置中设置的 deny 规则。</p>
+<p>该优先级涵盖设置文件中的 hook 和插件的 <code>hooks/hooks.json</code> 中的 hook。您安装的处理 <a href="plugins-mods-events.html#approve-or-refuse-a-tool-call-before-the-user-is-asked"><code>tool.check</code></a> 事件的 <a href="plugins-mods-overview.html">mod</a> 会在 <code>PreToolUse</code> hook 运行之后给出其答案。当机器上存在<a href="settings.html#check-what-your-organization-enforces">托管设置</a>，或会话的凭据是团队或企业 <a href="authentication.html#authentication-precedence"><code>/login</code></a> 时，在 mod 批准调用的情况下，以下结果默认保持不变：</p>
+<ul>
+<li>deny 规则拒绝的调用仍会被拒绝，您的组织可以更改这一点。</li>
+<li>ask 规则会提示的调用仍会提示您。</li>
+<li><code>PreToolUse</code> hook 或 <a href="settings-reference.html#permissions-blockreadsoutsideworkingdirectories"><code>permissions.blockReadsOutsideWorkingDirectories</code></a> 会提示的调用仍会提示您。</li>
+<li><code>PreToolUse</code> hook 阻止的调用仍会被阻止，无论该 hook 来自哪个设置文件。</li>
+<li>您的 <a href="cli-reference.html#cli-flags"><code>--permission-prompt-tool</code></a> 或 Agent SDK <a href="agent-sdk-user-input.html#handle-tool-approval-requests"><code>canUseTool</code> 回调</a>会被询问的调用，仍会交由该工具或回调处理。</li>
+</ul>
+<p>如果既没有托管设置，会话的凭据也不是团队或企业 <code>/login</code>，mod 就可以批准 deny 规则拒绝的调用或 <code>PreToolUse</code> hook 阻止的调用。改用 API 密钥或长期有效的 <a href="authentication.html#generate-a-long-lived-token"><code>CLAUDE_CODE_OAUTH_TOKEN</code></a> 运行的会话并未使用该登录，即使该登录已被存储。</p>
+<p>在这种配置下，当 mod 批准 ask 规则、<code>PreToolUse</code> hook 或 <code>permissions.blockReadsOutsideWorkingDirectories</code> 会提示的调用时，您不会收到提示。对于 mod 批准的调用，您的 <code>--permission-prompt-tool</code> 或 <code>canUseTool</code> 回调也不会被询问。在所有配置下，自动模式、计划模式和 <code>dontAsk</code> 模式各自还会带来其特有的结果：</p>
+<ul>
+<li><strong><a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a></strong>：mod 批准的调用运行时无需分类器检查，除非 mod 无法绕过您的权限提示工具或 Agent SDK 权限回调。在这种情况下，分类器会先检查该调用。</li>
+<li><strong><a href="#hook-approvals-in-plan-mode">计划模式</a></strong>：mod 无法批准非只读调用，例如文件编辑或进行写入的 shell 命令。</li>
+<li><strong><a href="permission-modes.html#allow-only-pre-approved-tools-with-dontask-mode"><code>dontAsk</code> 模式</a></strong>：mod 可以批准仅会被该模式拒绝的调用。</li>
+</ul>
+<p>请参见<a href="plugins-mods-overview.html#decide-whether-to-trust-a-mod">决定是否信任模块</a>，或如果您部署托管设置，请参见<a href="plugins-mods-admin.html#know-what-happens-by-default">为您的组织管理模块</a>。</p>
+<p>对于<a href="permission-modes.html#actions-no-mode-auto-approves">需要用户交互的工具</a>，例如 <code>AskUserQuestion</code> 或标记为 <code>requiresUserInteraction</code> 的 MCP 工具，mod 的 <code>tool.check</code> 批准不会跳过提示。需要 Claude Code v2.1.292 或更高版本。标记为 <a href="mcp.html#require-approval-for-a-specific-tool"><code>requiresUserInteraction</code></a> 的 MCP 工具在 hook 返回 <code>"allow"</code> 时也仍然会提示，从<a href="#network-paths">网络路径</a>进行的读取，以及在该设置到达 Claude Code 的会话中<a href="mcp.html#organization-controls-on-connector-tools">您的组织设置为 <code>ask</code></a> 的连接器工具也是如此。</p>
+<p>阻止 hook 也优先于 allow 规则。以退出代码 2 退出的 hook 在权限规则被评估之前停止工具调用，因此即使 allow 规则会让调用继续，阻止也适用。要运行所有 Bash 命令而无需提示，除了您想要阻止的少数几个，将 <code>"Bash"</code> 添加到您的 allow 列表，并注册一个 PreToolUse hook 来拒绝那些特定命令。请参见<a href="hooks-guide.html#block-edits-to-protected-files">阻止对受保护文件的编辑</a>以获取您可以调整的 hook 脚本。</p>
+<h3 id="hook-approvals-in-plan-mode">计划模式中的 hook 批准</h3>
+<p>在<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a>中，除 <code>ExitPlanMode</code> 外，您的 <code>PreToolUse</code> hook 返回的 <code>"allow"</code> 对文件编辑或其他非只读调用不起作用。您会得到与没有 hook 时该调用相同的提示、阻止或批准，并且 Claude Code 仍会应用 hook 返回的任何 <code>updatedInput</code>。如果 hook 以 <code>"allow"</code> 和 <code>updatedInput</code> 响应 <a href="hooks.html#allow-with-updatedinput"><code>ExitPlanMode</code></a>，该工具仍会在无提示的情况下运行。</p>
+<p>在计划模式中，处理 <code>tool.check</code> 的 mod 同样无法批准文件编辑或其他非只读调用，但它仍然可以阻止此类调用。要解除对 hook 和 mod 批准的这一限制，请<a href="permission-modes.html#review-and-approve-a-plan">批准计划</a>或切换到其他权限模式。</p>
+<h2 id="working-directories">工作目录</h2>
+<p>默认情况下，Claude 可以访问启动它的目录中的文件。该目录是会话的主工作目录，直到您<a href="#move-the-session-to-another-directory">使用 <code>/cd</code> 移动会话</a>。您可以扩展此访问：</p>
+<ul>
+<li><strong>启动期间</strong>：使用 <code>--add-dir &lt;path&gt;</code> CLI 参数</li>
+<li><strong>会话期间</strong>：使用 <code>/add-dir</code> 命令</li>
+<li><strong>持久配置</strong>：添加到<a href="settings.html#where-settings-live">设置文件</a>中的 <code>additionalDirectories</code></li>
+</ul>
+<p>其他目录中的文件遵循与原始工作目录相同的权限规则：除<a href="#network-paths">网络路径</a>检查外，它们变为可读的而无需提示，文件编辑权限遵循当前权限模式。</p>
+<p>您无法添加大多数<a href="errors.html#working-directory-is-a-network-path">网络路径</a>（例如 UNC 共享 <code>\\server\share</code>）作为工作目录，因为查找它们可能会联系它们命名的主机。在 Windows 上，将共享映射到驱动器号，然后在启动时使用 <code>--add-dir</code> 传递该驱动器。</p>
+<p>设置 <a href="settings-reference.html#permissions-blockreadsoutsideworkingdirectories"><code>permissions.blockReadsOutsideWorkingDirectories</code></a> 以使文件工具在每种权限模式下都拒绝它围栏的路径。在自动模式下，Claude Code 会在 Claude 首次<a href="permission-modes.html#first-read-outside-the-working-directories">读取工作目录外的文件</a>时提供打开它。</p>
+<p>在 macOS 上的后台会话中，会话主机会单独从您的终端请求访问受保护的文件夹（如 <code>~/Desktop</code>、<code>~/Documents</code> 和 <code>~/Downloads</code>），当 Claude 需要在那里读取或写入文件时；如果读取失败并显示 <code>Operation not permitted</code>，请参阅<a href="agent-view.html#background-sessions-can%E2%80%99t-read-desktop-documents-or-downloads-on-macos">如何向后台会话授予文件夹访问权限</a>。</p>
+<h3 id="move-the-session-to-another-directory">将会话移动到另一个目录</h3>
+<p>要将会话移动到不同的主工作目录，而不是<a href="#working-directories">在当前目录旁添加目录</a>，请运行 <code>/cd &lt;path&gt;</code>。Claude Code 保持对话，加载新目录的 <code>CLAUDE.md</code>，如果您之前未在其中工作过，会提示您<a href="#project-allow-rules-and-workspace-trust">信任工作区</a>。之后，当您从新目录运行 <code>--resume</code> 时，Claude Code <a href="sessions.html#where-the-session-picker-looks">找到移动的会话</a>。</p>
+<p>移动后，Claude Code 立即应用新目录的项目配置：</p>
+<ul>
+<li>其项目设置，包括其权限规则和 <a href="hooks.html">hooks</a></li>
+<li>其 <a href="mcp.html#project-scope"><code>.mcp.json</code> 服务器</a>，受与启动时相同的<a href="mcp.html#project-server-approvals-and-workspace-trust">服务器批准</a>约束，以及您在其中注册的<a href="mcp.html#local-scope">本地范围</a> MCP 服务器</li>
+<li>其设置启用的 <a href="plugins-overview.html">plugins</a>、其 <a href="skills.html#discovery-from-parent-and-nested-directories">skills</a> 和其 <a href="sub-agents.html">subagents</a></li>
+<li>其 <a href="settings-reference.html#env"><code>env</code></a> 值，应用在前一个目录的设置中的环境变量之上，这些变量保持有效</li>
+</ul>
+<p>Claude Code 还断开前一个目录的项目和<a href="mcp.html#local-scope">本地范围</a> MCP 服务器，以及移动后不再启用的 <a href="mcp.html#plugin-provided-mcp-servers">plugins</a> 的服务器。它从新目录的设置而不是前一个目录的设置中获取<a href="#working-directories">其他目录</a>，并保留您使用 <code>--add-dir</code> 或 <code>/add-dir</code> 添加的目录。移动激活的 Hooks 仍然接收 <a href="hooks.html#reference-scripts-by-path"><code>${CLAUDE_PROJECT_DIR}</code></a> 设置为会话启动的项目根目录。</p>
+<p>当新目录尚未被信任时，Claude Code 在信任提示中列出目录的设置将激活的允许规则、其他目录、hooks 和辅助命令，以便您可以在接受前查看它们。如果您拒绝，会话保持在原位置。在 v2.1.246 之前，<code>/cd</code> 不会应用新目录的设置、hooks、MCP 服务器或 skills，直到您恢复会话，其信任提示也不会列出目录的设置将激活的内容。</p>
+<p>使用 <a href="#cd"><code>Cd</code> 权限规则</a>限制或禁用 <code>/cd</code> 目标。</p>
+<h3 id="additional-directories-grant-file-access-not-configuration">其他目录授予文件访问权限，而不是配置</h3>
+<p>添加目录扩展 Claude 可以读取和编辑文件的位置。它不会使该目录成为完整的配置根目录：大多数 <code>.claude/</code> 配置不是从其他目录发现的，尽管有几种类型作为例外被加载。</p>
+<p>这些例外仅适用于使用 <code>--add-dir</code> 标志或 <code>/add-dir</code> 命令添加的目录，包括 Agent SDK 通过该标志添加的目录。在设置文件中的 <code>permissions.additionalDirectories</code> 中列出的目录仅授予文件访问权限，不加载以下任何配置。</p>
+<p>Agent SDK 在 TypeScript 中的 <a href="agent-sdk-typescript.html#options"><code>additionalDirectories</code></a> 选项和在 Python 中的 <a href="agent-sdk-python.html#claudeagentoptions"><code>add_dirs</code></a> 选项也接收这些例外，尽管 TypeScript 选项与设置键共享其名称。SDK 将每个条目作为 <code>--add-dir</code> 传递给 Claude Code，因此这些目录的行为类似于标志添加的目录。来自任何标志添加目录的 Skills、命令和 subagents 通过 <code>project</code> <a href="agent-sdk-claude-code-features.html#control-filesystem-settings-with-settingsources">setting source</a> 加载，因此当您在 CLI 上使用 <a href="cli-reference.html"><code>--setting-sources</code></a> 或在 SDK 中使用 <code>settingSources</code> 排除该源时，它们不会加载，<a href="headless.html#start-faster-with-bare-mode">bare mode</a> 跳过其中的命令和 subagents。</p>
+<p>以下配置类型从 <code>--add-dir</code> 目录加载：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">配置</th>
+<th style="text-align: left;">从 <code>--add-dir</code> 加载</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>.claude/skills/</code> 中的 <a href="skills.html">Skills</a></td>
+<td style="text-align: left;">是，带有实时重新加载</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.claude/commands/</code> 中的<a href="skills.html#where-skills-live">命令文件</a></td>
+<td style="text-align: left;">是，不带实时重新加载。当添加的目录和您的项目都定义了同名命令时，Claude Code 运行您的项目的命令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.claude/agents/</code> 中的 <a href="sub-agents.html">Subagents</a></td>
+<td style="text-align: left;">是，不带实时重新加载</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.claude/settings.json</code> 和 <code>.claude/settings.local.json</code> 中的<a href="settings.html">设置</a></td>
+<td style="text-align: left;">仅 <code>enabledPlugins</code> 和 <a href="settings-reference.html#extraknownmarketplaces"><code>extraKnownMarketplaces</code></a> 键</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="memory.html">CLAUDE.md</a> 文件、<code>.claude/rules/</code> 和 <code>CLAUDE.local.md</code></td>
+<td style="text-align: left;">仅当设置 <code>CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1</code> 时。<code>CLAUDE.local.md</code> 另外需要 <code>local</code> 设置源，默认启用</td>
+</tr>
+</tbody>
+</table>
+<p>要在会话中期从<a href="#working-directories">主工作目录</a>的子目录加载 skills、命令和 subagents，请使用该子目录的路径运行 <code>/add-dir</code>。Claude Code 为会话的其余部分加载它们，无需提示您或添加工作目录，因为子目录已经可读。这需要 Claude Code v2.1.257 或更高版本。</p>
+<h4 id="where-output-styles-hooks-and-local-settings-load-from">输出样式、hook 和本地设置的加载位置</h4>
+<p>Claude Code 从当前工作目录及其父目录、您在 <code>~/.claude/</code> 的用户目录和托管设置中发现输出样式。Hook 和其他 <code>.claude/settings.json</code> 键从当前工作目录的 <code>.claude/</code> 文件夹加载，没有父目录回退，同时从您的用户 <code>~/.claude/settings.json</code> 和托管设置加载。</p>
+<p><code>.claude/settings.local.json</code> 则从 git 仓库根目录加载，即使您在子目录中启动 Claude Code，除了 Claude Code <a href="settings.html#where-claude-code-looks-for-each-file">不使用仓库根目录</a>的情况，例如在 Windows 上。</p>
+<p>要在项目间共享该配置，请使用以下方法之一：</p>
+<ul>
+<li><strong>用户级配置</strong>：将文件放在 <code>~/.claude/agents/</code>、<code>~/.claude/output-styles/</code> 或 <code>~/.claude/settings.json</code> 中，使其在每个项目中可用</li>
+<li><strong>Plugins</strong>：将配置打包并分发为<a href="plugins-overview.html">插件</a>，团队可以安装</li>
+<li><strong>从配置目录启动</strong>：从包含您想要的 <code>.claude/</code> 配置的目录运行 Claude Code</li>
+</ul>
+<h2 id="how-permissions-interact-with-sandboxing">权限如何与沙箱交互</h2>
+<p>权限和<a href="sandboxing.html">沙箱</a>是互补的安全层：</p>
+<ul>
+<li><strong>权限</strong>控制 Claude Code 可以使用哪些工具以及它可以访问哪些文件或域。它们适用于 Bash、Read、Edit、WebFetch、MCP 和其他所有工具，除了 deny 或 ask 规则无法阻止 <a href="tools-reference.html#endconversation-tool-behavior"><code>EndConversation</code></a>，而任何其他工具仍然存在。</li>
+<li><strong>沙箱隔离</strong>提供 OS 级别的强制执行，限制 shell 命令的文件系统和网络访问。它适用于 Bash、PowerShell 和 <a href="tools-reference.html#monitor-tool">Monitor</a> 工具命令及其子进程。</li>
+</ul>
+<p>使用两者进行深度防御，因为即使提示注入绕过 Claude 的决策制定，沙箱限制仍然适用。来自沙箱设置和权限规则的路径和域被<a href="sandboxing.html#permission-rules">合并到最终沙箱配置</a>中。</p>
+<p>当您启用沙箱并将 <code>autoAllowBashIfSandboxed</code> 保留为其默认值 <code>true</code> 时，沙箱化的 Bash 命令无需提示即可运行，即使您的权限包括裸 <code>Bash</code> ask 规则，或<a href="#match-all-uses-of-a-tool">等效的 <code>Bash(*)</code> 形式</a>：沙箱边界替代了该整体工具提示。</p>
+<p>在<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a>中，Claude Code 跳过此替代。没有 ask 规则时，<a href="#read-only-commands">内置只读命令</a>仍然无需提示即可运行，任何其他 shell 命令在您仍在计划时通过常规权限流程；请参见<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a>了解 Claude Code 如何在那里控制命令。使用裸 <code>Bash</code> ask 规则时，每个 Bash 命令都会提示，包括沙箱化的只读命令，与沙箱隔离之外相同。</p>
+<p>这些检查仍然适用：</p>
+<ul>
+<li>内容范围的 ask 规则（如 <code>Bash(git push *)</code>）仍然强制提示</li>
+<li>其他沙箱化的命令也可能通过常规权限流程，如<a href="sandboxing.html#auto-allow-mode">自动允许模式</a>中所述</li>
+</ul>
+<p>不会在沙箱中运行的命令（如排除的命令）按照通常的方式遵守裸 <code>Bash</code> ask 规则。请参见<a href="sandboxing.html#sandbox-modes">沙箱模式</a>以更改此行为。</p>
+<h2 id="managed-settings">托管设置</h2>
+<p>对于需要集中控制的组织，管理员部署托管设置，用户和项目设置无法覆盖，除了少数<a href="settings.html#exceptions-to-managed-settings-precedence">安全敏感的密钥</a>。<a href="managed-settings.html">部署托管设置</a>涵盖传递机制、托管层内的优先级以及<a href="managed-settings.html#managed-only-settings">仅托管设置可以设置的密钥</a>。</p>
+<p>其中一个密钥<a href="settings-reference.html#allowmanagedpermissionrulesonly"><code>allowManagedPermissionRulesOnly</code></a>使托管设置成为权限规则的唯一设置来源。其条目列出了 Claude Code 随后忽略的每个来源。</p>
+<p><code>disableBypassPermissionsMode</code>通常放在托管设置中以强制执行组织策略，但它可以从任何范围工作。用户可以在自己的设置中设置它以将自己锁定在绕过模式之外。</p>
+<h2 id="settings-precedence">设置优先级</h2>
+<p>权限规则遵循与所有其他 Claude Code 设置相同的<a href="settings.html#settings-precedence">设置优先级</a>，托管设置最高：没有其他级别（包括命令行参数）可以覆盖托管权限规则。</p>
+<p>如果工具在任何级别被拒绝，没有其他级别可以允许它。例如，托管设置 deny 无法被 <code>--allowedTools</code> 覆盖，<code>--disallowedTools</code> 可以添加超出托管设置定义的限制。</p>
+<p>同样的规则也适用于设置范围：如果用户设置允许某个权限而项目设置拒绝它，deny 规则会阻止它。反之亦然：用户级别的 deny 会阻止项目级别的 allow，因为来自任何范围的 deny 规则在 allow 规则之前被评估。</p>
+<p>这个优先级是在设置文件和命令行参数之间的。关于 deny 规则是否对你安装的 <a href="plugins-mods-overview.html">mod</a> 有效，请参阅<a href="#extend-permissions-with-hooks">使用 hooks 扩展权限</a>。</p>
+<p>嵌入主机可以通过 SDK <code>managedSettings</code> 选项提供额外的托管策略，包括权限允许规则，除非管理员设置了 <code>allowManaged*Only</code> 锁；<a href="claude-apps-gateway.html#deliver-policy-to-claude-desktop-sessions">向 Claude Desktop 会话传递策略</a>涵盖了嵌入器策略何时适用。</p>
+<h2 id="project-allow-rules-and-workspace-trust">项目允许规则和工作区信任</h2>
+<p>项目的 <code>.claude/settings.json</code> 中的 <code>permissions.allow</code> 规则和 <code>permissions.additionalDirectories</code> 条目授予功能，因此 Claude Code 仅在您接受该文件夹的<a href="security.html#additional-safeguards">工作区信任对话框</a>后才应用它们。对话框列出了该文件夹将授予的规则和目录，以便您可以先查看它们。<code>deny</code> 和 <code>ask</code> 规则不受影响，因为它们仅限制。</p>
+<p>Claude Code 根据您启动它的位置来保存和存储您接受的信任：</p>
+<ul>
+<li>在仓库中，Claude Code 根据 git 仓库根目录来保存信任，因此信任覆盖整个仓库，除了其中嵌套的任何 git 仓库（如子模块）。在 <a href="worktrees.html">worktree</a> 中，它使用主检出的根目录，就像它对<a href="#permission-system">保存的规则</a>所做的那样。</li>
+<li>在仓库外，Claude Code 根据您启动它的目录来保存信任，信任覆盖该目录的任何子目录，除了其中嵌套的 git 仓库（如克隆）。每个被覆盖的子目录随后都被视为一个您信任其父目录的文件夹。</li>
+<li>当您从主目录启动时，Claude Code 仅在当前会话期间保持信任，不会将其写入磁盘；请参阅<a href="security.html#additional-safeguards">其他保护措施</a>说明。</li>
+</ul>
+<p>Claude Code 仅在交互式会话中显示信任对话框。<code>claude -p</code> 运行或 SDK 会话永远不会显示它，信任父文件夹不计入这些规则，因此<a href="#what-runs-before-you-trust-a-folder">在您信任文件夹之前运行什么</a>说明了在这两种情况下 Claude Code 仍然使用哪些仓库内容。</p>
+<p>在启动或重启<a href="agent-view.html">后台会话</a>之前，Claude Code 还会检查会话运行所在目录的工作区信任。如果您从您尚未信任的目录中的终端运行 <code>claude --bg</code>，信任对话框会首先出现，一旦您接受它，会话就会启动。在无法出现对话框的地方（如脚本中），命令会改为以<a href="errors.html#workspace-not-trusted-when-dispatching-a-background-session"><code>Workspace not trusted</code></a>错误退出。</p>
+<h3 id="when-your-local-settings-file-needs-trust">当您的本地设置文件需要信任时</h3>
+<p><code>.claude/settings.local.json</code> 通常是您自己的文件，因此 Claude Code 应用其允许规则和其他目录而无需信任步骤。当该文件在 git 中被跟踪，或 <code>.claude</code> 是符号链接时，Claude Code 将其视为仓库提供的文件，并暂不应用其规则，直到您信任该文件夹为止。</p>
+<p>Claude Code 运行 git 来区分两者，并且仅在您信任该文件夹后才运行 git：您接受了它或其父目录的信任对话框，其信任扩展到它，或您在 <code>-p</code> 或 SDK 会话中，这被视为已接受。在此之前，您启动 Claude Code 的位置决定了该文件规则会发生什么：</p>
+<ul>
+<li><strong>在您的配置主目录中：</strong> Claude Code 立即应用该文件夹的 <code>.claude/settings.local.json</code> 而无需运行 git。您的配置主目录是您的主目录，或一个您已将其 <code>.claude</code> 子目录设置为 <a href="env-vars.html#variables"><code>CLAUDE_CONFIG_DIR</code></a> 的目录。如果该 <code>CLAUDE_CONFIG_DIR</code> 目录位于 git 仓库内，并且 Claude Code 改为<a href="settings.html#where-claude-code-looks-for-each-file">将您的本地设置保留在仓库根目录</a>，它会像在其他任何地方一样暂不应用这些规则。</li>
+<li><strong>其他任何地方：</strong> Claude Code 像对待项目设置一样暂不应用该文件的规则。一旦检查运行，Claude Code 应用未跟踪文件的规则，或位于任何 git 仓库外的目录中的文件的规则，即使您尚未信任该确切文件夹。</li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>配置主目录例外仅跳过信任步骤。<code>~/.claude/settings.local.json</code> 仍然是<a href="settings.html#compare-the-scope-of-each-settings-file">本地作用域</a>，因此 Claude Code 仅在您从主目录本身启动的会话中读取它，而不是在每个项目中。要在所有项目中应用权限规则，请将它们添加到您的用户设置中：<code>~/.claude/settings.json</code>，或当设置 <code>CLAUDE_CONFIG_DIR</code> 时为 <code>$CLAUDE_CONFIG_DIR/settings.json</code>。</p></div></div>
+<h3 id="what-runs-before-you-trust-a-folder">在您信任文件夹之前运行什么</h3>
+<p>每一行是仓库可以提供的一种内容。列是两种您尚未信任该文件夹本身的情况：您仅信任了父文件夹，或您在那里运行了 <code>claude -p</code> 或 SDK，这永远不会显示信任对话框。父文件夹列不适用于<a href="#project-allow-rules-and-workspace-trust">嵌套仓库</a>内：在交互式会话中 Claude Code 为其显示信任对话框，在那里运行的 <code>claude -p</code> 或 SDK 遵循 <code>claude -p</code> 列。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">仓库提供的内容</th>
+<th style="text-align: left;">您仅信任了父文件夹</th>
+<th style="text-align: left;"><code>claude -p</code> 或 SDK，文件夹从未被信任</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">设置文件中的 <a href="hooks.html">Hooks</a>、<a href="settings-reference.html#env"><code>env</code></a> 块和辅助命令（如 <a href="settings-reference.html#apikeyhelper"><code>apiKeyHelper</code></a>），以及项目 skill 的 <a href="hooks.html#hooks-in-skills-and-agents">hook</a> 和 <a href="skills.html#pre-approve-tools-for-a-skill"><code>allowed-tools</code></a></td>
+<td style="text-align: left;">已使用</td>
+<td style="text-align: left;">已使用。工作区信任在任何会话中都不会限制 skill 的 <code>allowed-tools</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.claude/settings.json</code> 中的 <code>permissions.allow</code> 规则和 <code>additionalDirectories</code></td>
+<td style="text-align: left;">在您接受信任对话框之前不使用，对话框再次出现列出它们</td>
+<td style="text-align: left;">不使用。Claude Code 向 stderr 打印 <a href="errors.html#workspace-has-not-been-trusted"><code>this workspace has not been trusted</code></a> 警告</td>
+</tr>
+<tr>
+<td style="text-align: left;">项目<a href="sub-agents.html#hooks-in-subagent-frontmatter">子代理</a>中的 frontmatter hook、项目 <a href="plugins-loading.html#plugins-shared-through-a-repository"><code>@skills-dir</code> 插件</a> 和来自仓库或 <code>--add-dir</code> 目录的 <a href="settings-reference.html#extraknownmarketplaces"><code>extraKnownMarketplaces</code></a> 条目</td>
+<td style="text-align: left;">不使用，不提供对话框</td>
+<td style="text-align: left;">不使用</td>
+</tr>
+<tr>
+<td style="text-align: left;">来自仓库或 <code>--add-dir</code> 目录的子代理 frontmatter 中的内联 <a href="sub-agents.html#scope-mcp-servers-to-a-subagent"><code>mcpServers</code></a></td>
+<td style="text-align: left;">不使用，不提供对话框</td>
+<td style="text-align: left;">不使用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.mcp.json</code> 中的服务器，包括仓库<a href="mcp.html#project-server-approvals-and-workspace-trust">在其自己的设置中批准的</a>服务器</td>
+<td style="text-align: left;">Claude Code 在连接它们之前询问您。仓库自己的批准不计数</td>
+<td style="text-align: left;">连接而不询问，无论是否批准。SDK 仅在 <code>settingSources</code> 包括项目设置时加载它们。同一文件夹中的 <code>claude mcp list</code> 仍然将此类服务器报告为待处理</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.mcp.json</code> 中服务器上的 <a href="mcp.html#trust-a-folder-before-its-headershelper-runs"><code>headersHelper</code></a></td>
+<td style="text-align: left;">在您接受信任对话框之前不运行，对话框再次出现命名声明辅助程序的位置。Claude Code 仅使用其静态 <code>headers</code> 连接服务器直到那时</td>
+<td style="text-align: left;">不运行。Claude Code 仅使用其静态 <code>headers</code> 连接服务器，并为每个服务器向 stderr 打印 <a href="errors.html#headershelper-not-run"><code>headersHelper not run</code></a> 行</td>
+</tr>
+</tbody>
+</table>
+<p>对于需要此确切文件夹被信任的行，手动信任它：在 <code>~/.claude.json</code> 中设置 <code>projects["&lt;path&gt;"].hasTrustDialogAccepted</code> 为 <code>true</code>，其中 <code>&lt;path&gt;</code> 是仓库根目录，或仓库外的文件夹本身。Claude Code 在跳过的子代理 hook 或内联 MCP 服务器的调试日志行中打印确切的键，在跳过的允许规则的 stderr 警告中，以及在跳过的辅助程序的 <code>headersHelper not run</code> 行中。</p>
+<p>在您未编写的仓库中运行 <code>claude -p</code> 之前，决定它可能在您的机器上运行什么：</p>
+<ul>
+<li>传递 <code>--setting-sources user</code>，或设置 SDK 的 <code>settingSources</code> 而不包括项目设置，以便 Claude Code 既不读取项目的设置文件也不读取其 <code>.mcp.json</code></li>
+<li>使用 <a href="headless.html#start-faster-with-bare-mode"><code>--bare</code></a> 启动，以便 Claude Code 不读取项目中的 hook、skill、自定义命令、子代理、插件或 <code>.mcp.json</code> 服务器。项目的 <code>env</code> 块和 <code>awsAuthRefresh</code> 等辅助程序在其设置文件中仍然适用，Claude Code 仅从 <code>--settings</code> 读取 <code>apiKeyHelper</code></li>
+<li>传递 <code>--settings '{"disableAllHooks": true}'</code> 以<a href="hooks.html#disable-or-remove-hooks">关闭该运行的 hook</a>。仅在您的用户设置中设置它是不够的，因为仓库的项目设置优先于您的设置，可以将其设置回 <code>false</code></li>
+<li>添加 <a href="settings-reference.html#disabledmcpjsonservers"><code>disabledMcpjsonServers</code></a> 条目以在每个会话类型中按名称拒绝 <code>.mcp.json</code> 服务器</li>
+</ul>
+<h2 id="example-configurations">示例配置</h2>
+<p>此<a href="https://github.com/anthropics/claude-code/tree/main/examples/settings" target="_blank" rel="noopener">存储库</a>包括常见部署场景的启动设置配置。将这些用作起点并根据您的需要调整它们。</p>
+<h2 id="see-also">另请参见</h2>
+<ul>
+<li><a href="settings-reference.html#permission-settings">所有设置</a>：每个设置键，包括权限键</li>
+<li><a href="auto-mode-config.html">配置自动模式</a>：告诉自动模式分类器您的组织信任哪些基础设施</li>
+<li><a href="sandboxing.html">沙箱隔离</a>：Bash 命令的 OS 级文件系统和网络隔离</li>
+<li><a href="authentication.html">身份验证</a>：设置用户对 Claude Code 的访问</li>
+<li><a href="security.html">安全</a>：安全保障和最佳实践</li>
+<li><a href="hooks-guide.html">Hooks</a>：自动化工作流并扩展权限评估</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="settings-example.html"><span class="pager-dir">← 上一页</span><span class="pager-name">示例设置文件</span></a><a class="pager-link next" href="permission-modes.html"><span class="pager-dir">下一页 →</span><span class="pager-name">选择权限模式</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#permission-system">权限系统</a><a class="toc-l3" href="#add-a-comment-when-you-answer-a-permission-prompt">在回答权限提示时添加注释</a><a class="toc-l2" href="#manage-permissions">管理权限</a><a class="toc-l2" href="#permission-modes">权限模式</a><a class="toc-l2" href="#permission-rule-syntax">权限规则语法</a><a class="toc-l3" href="#match-all-uses-of-a-tool">匹配工具的所有使用</a><a class="toc-l3" href="#use-specifiers-for-fine-grained-control">使用说明符进行细粒度控制</a><a class="toc-l3" href="#match-by-input-parameter">按输入参数匹配</a><a class="toc-l3" href="#wildcard-patterns">通配符模式</a><a class="toc-l3" href="#tool-name-wildcards">工具名称通配符</a><a class="toc-l2" href="#tool-specific-permission-rules">工具特定的权限规则</a><a class="toc-l3" href="#bash">Bash</a><a class="toc-l3" href="#powershell">PowerShell</a><a class="toc-l3" href="#read-and-edit">Read 和 Edit</a><a class="toc-l3" href="#webfetch">WebFetch</a><a class="toc-l3" href="#mcp">MCP</a><a class="toc-l3" href="#agent-subagents">Agent（子代理）</a><a class="toc-l3" href="#cd">Cd</a><a class="toc-l2" href="#extend-permissions-with-hooks">使用 hooks 扩展权限</a><a class="toc-l3" href="#precedence-among-rules-hooks-and-mods">规则、hook 和 mod 之间的优先级</a><a class="toc-l3" href="#hook-approvals-in-plan-mode">计划模式中的 hook 批准</a><a class="toc-l2" href="#working-directories">工作目录</a><a class="toc-l3" href="#move-the-session-to-another-directory">将会话移动到另一个目录</a><a class="toc-l3" href="#additional-directories-grant-file-access-not-configuration">其他目录授予文件访问权限，而不是配置</a><a class="toc-l2" href="#how-permissions-interact-with-sandboxing">权限如何与沙箱交互</a><a class="toc-l2" href="#managed-settings">托管设置</a><a class="toc-l2" href="#settings-precedence">设置优先级</a><a class="toc-l2" href="#project-allow-rules-and-workspace-trust">项目允许规则和工作区信任</a><a class="toc-l3" href="#when-your-local-settings-file-needs-trust">当您的本地设置文件需要信任时</a><a class="toc-l3" href="#what-runs-before-you-trust-a-folder">在您信任文件夹之前运行什么</a><a class="toc-l2" href="#example-configurations">示例配置</a><a class="toc-l2" href="#see-also">另请参见</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

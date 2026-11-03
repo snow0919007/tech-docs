@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>缓存的工作机制 · Workers 文档（中文版）</title>
+<meta name="description" content="Workers 如何与 Cloudflare 缓存交互，以及清理缓存时该清哪个 URL。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>缓存的工作机制</h1>
+      <p class="lead">Workers 如何与 Cloudflare 缓存交互，以及清理缓存时该清哪个 URL。</p>
+      <div class="page-meta">
+        <span class="tag">参考</span>
+        <span>原文更新于 2026-10-29</span>
+        <span>对应页面：reference/how-the-cache-works</span>
+      </div>
+
+<p>Workers 构建在 Cloudflare 的全球网络之上，目的之一就是让开发者能够直接操作 Cloudflare 缓存。缓存可以提供临时性的、数据中心本地的存储，是频繁访问静态或动态内容时的一种便利手段。</p>
+
+      <p>通过允许开发者写入缓存，Workers 提供了一种在 Cloudflare CDN 上自定义缓存行为的方式。缓存有哪些好处，参见学习中心的<a href="https://www.cloudflare.com/learning/cdn/what-is-caching/" target="_blank" rel="noopener">《什么是缓存？》↗</a>。</p>
+
+      <p>Cloudflare Workers 在缓存<strong>之前</strong>运行，但也可以用来修改从缓存返回的资源。修改从缓存返回的资源，意味着你既能对响应签名或个性化，又能减少源站压力、并通过就近分发资源降低终端用户的延迟。</p>
+
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>本页讲的是 Workers 如何与<strong>某个区域（zone）</strong>的 Cloudflare 缓存交互——例如 Worker 运行在配置了 Cache Rules 的区域上，或 Worker 使用 <a href="../../sections/runtime-apis.html">Cache API</a> 或 <code>fetch()</code> 存取响应时。</p>
+        <p>如果你想缓存的是 <strong>Worker 自身的响应</strong>（让 Cloudflare 直接返回缓存结果、不再执行 Worker），请参阅 <a href="../../sections/cache.html">Workers 缓存</a>。</p>
+      </div>
+
+      <h2>与 Cloudflare 缓存交互</h2>
+      <p>从概念上讲，用 Worker 与 Cloudflare 缓存交互有两种方式：</p>
+      <ul>
+        <li>在 Workers 脚本中调用 <a href="../../sections/runtime-apis.html"><code>fetch()</code></a>。经由 Cloudflare 代理的请求，即便没有 Workers，也会按区域的默认或配置行为被缓存（例如 <code>.jpg</code> 结尾的静态文件默认就会被缓存）。Worker 还能进一步定制这一行为：
+          <ul>
+            <li>设置 Cloudflare 缓存规则（也就是操作<a href="../../sections/runtime-apis.html">请求</a>上的 <code>cf</code> 对象）。</li>
+          </ul>
+        </li>
+        <li>在 Workers 脚本中用 <a href="../../sections/runtime-apis.html">Cache API</a> 存储响应。这样可以缓存并非来自源站的响应，并通过下面两点获得更细的控制：
+          <ul>
+            <li>给传给 <code>cache.put()</code> 的响应设置 <code>Cache-Control</code> 等响应头，从而定制任意资源的缓存行为。</li>
+            <li>用 <code>cache.put()</code> 缓存 Worker 自己生成的响应。</li>
+          </ul>
+        </li>
+      </ul>
+
+      <div class="warn-box">
+        <span class="box-title">分层缓存（Tiered caching）</span>
+        <p>Cache API 与分层缓存不兼容。要用分层缓存，请改用 <a href="../../sections/runtime-apis.html">fetch API</a>。</p>
+      </div>
+
+      <h3>清理由 Worker 缓存的单个文件</h3>
+      <p>用单文件清理（single-file purge）清理由 Worker 缓存下来的资源时，注意不要在清理时使用终端用户的 URL，而要清理 <code>fetch</code> 请求里那个 URL。举例来说：你有一个运行在 <code>https://example.com/hello</code> 的 Worker，它向 <code>https://notexample.com/hello</code> 发起 <code>fetch</code> 请求。</p>
+      <p>就缓存而言，被缓存的是 <code>fetch</code> 请求里的资源（<code>https://notexample.com/hello</code>）。要清理它，就得清理 <code>https://notexample.com/hello</code>。</p>
+      <p>清理终端用户 URL <code>https://example.com/hello</code> 不会生效，因为缓存看到的不是这个 URL。你需要在 Worker 里确认实际抓取的是哪个 URL，才能清对资源。</p>
+      <p>在上面的例子里，<code>https://notexample.com/hello</code> 没有经过 Cloudflare 代理。如果它<em>经过</em>了代理（<a href="https://developers.cloudflare.com/dns/proxy-status/" target="_blank" rel="noopener">橙云代理 ↗</a>），那你就必须拥有 <code>notexample.com</code>，并从 <code>notexample.com</code> 这个区域清理 <code>https://notexample.com/hello</code>。</p>
+      <p>为了更好地理解这个例子，看下面的决策流程：</p>
+
+      <div class="flow">
+        <p class="cap">决策流程：清理由 Worker 缓存的单个文件</p>
+        <div class="q">你的 Worker 脚本运行在 <code>https://example.com/hello</code>，并向 <code>https://notexample.com/hello</code> 发起 <code>fetch</code> 请求。</div>
+        <ul>
+          <li>
+            <div class="q"><code>notexample.com</code> 是 Cloudflare 上的一个活跃区域吗？</div>
+            <ul>
+              <li><span class="lbl">否</span><span class="a">从原本的 <code>example.com</code> 区域清理 <code>https://notexample.com/hello</code>。</span></li>
+              <li><span class="lbl">是</span>
+                <div class="q"><code>https://notexample.com/</code> 是否经由 Cloudflare 代理？</div>
+                <ul>
+                  <li><span class="lbl">否</span><span class="a">从原本的 <code>example.com</code> 区域清理 <code>https://notexample.com/hello</code>。</span></li>
+                  <li><span class="lbl">是</span>
+                    <div class="q">你拥有 <code>notexample.com</code> 吗？</div>
+                    <ul>
+                      <li><span class="lbl">是</span><span class="a">从 <code>notexample.com</code> 区域清理 <code>https://notexample.com/hello</code>。</span></li>
+                      <li><span class="lbl">否</span><span class="a">抱歉，你无法清理该资源。只有 <code>notexample.com</code> 的所有者才能清理它。</span></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <h3>清理通过 Cache API 存储的资源</h3>
+      <p>通过 <a href="../../sections/runtime-apis.html">Cache API</a> 存入缓存的资源，有几种清理方式：</p>
+      <ul>
+        <li>在 Worker 内调用 <code>cache.delete</code>，用匹配的 request 变量使该资源的缓存失效。
+          <ul>
+            <li>这样清理<strong>只影响本地</strong>——仅限执行该 Worker 运行时的那个数据中心。</li>
+          </ul>
+        </li>
+        <li>要全局清理，请使用标准的<a href="https://developers.cloudflare.com/cache/how-to/purge-cache/" target="_blank" rel="noopener">缓存清理选项 ↗</a>。受 Cache API 实现所限，并非所有清理端点都能清理 Cache API 存入的资源。
+          <ul>
+            <li>用 <a href="https://developers.cloudflare.com/cache/how-to/purge-cache/purge-everything/" target="_blank" rel="noopener">Purge Everything ↗</a> 可以清理某个区域上的全部资源。这次清理会把该 Cloudflare 区域关联的所有资源从所有数据中心的缓存中移除，无论当初用的是什么方法存入。</li>
+            <li><a href="https://developers.cloudflare.com/cache/how-to/purge-cache/purge-by-tags/#add-cache-tag-http-response-headers" target="_blank" rel="noopener">Cache Tags ↗</a> 可以在 Worker 里动态加到请求上：调用 <code>response.headers.append()</code> 把 <code>Cache-Tag</code> 值动态附加到该请求。设置好之后，就能用这些标签有选择地清理资源，而不必让整个区域的缓存全部失效。注意 <code>cache.match()</code> 返回的响应不含 <code>Cache-Tag</code>；如果你要把匹配到的响应重新存入，请在调用 <code>put()</code> 之前先设置 <code>Cache-Tag</code>。更多细节见 <a href="../../sections/runtime-apis.html"><code>Put</code></a>。</li>
+          </ul>
+        </li>
+        <li>目前还无法清理使用了 Worker 自定义缓存键的 URL。可以改用<a href="https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#cache-key" target="_blank" rel="noopener">通过 Cache Rules 创建的自定义键 ↗</a>；或者改用 purge everything、按标签清理、按主机清理、按前缀清理来清理资源。</li>
+      </ul>
+
+      <h2>边缘缓存与浏览器缓存</h2>
+      <p>浏览器缓存由响应中发给客户端的 <code>Cache-Control</code> 头控制（那个响应就是处理器返回的 <code>Response</code> 实例）。Worker 通过在响应上设置这个头来定制浏览器缓存行为。</p>
+      <p>本文未提及的其他缓存控制手段还有：Page Rules 与 Cloudflare 缓存设置。如果你不想写 JavaScript、又希望保留一定粒度的控制，参见<a href="https://developers.cloudflare.com/cache/concepts/customize-cache/" target="_blank" rel="noopener">如何自定义 Cloudflare 缓存 ↗</a>。</p>
+
+      <div class="info-box">
+        <span class="box-title">该用 Cache API 还是 fetch 来缓存对象？</span>
+        <p>当 Worker 扮演中间件角色（即通过 <code>fetch</code> 发起子请求）时，推荐使用 <code>fetch</code>。因为已有现成设置会在优化缓存的同时，避免意外的动态缓存。对于没有后端的项目（即整个项目都在 Workers 上，例如 <a href="../../sections/configuration.html">Workers Sites</a>），Cache API 是定制缓存的唯一选择。</p>
+        <p>资源会被缓存到 <strong>Worker 子请求中指定的主机名</strong>下，而不是 Worker 自己的主机名。因此要清理这份缓存，必须针对子请求里包含的那个主机名执行清理。</p>
+      </div>
+
+      <h3><code>fetch</code></h3>
+      <p>在 Workers 语境中，运行时提供的 <a href="../../sections/runtime-apis.html"><code>fetch</code></a> 会与 Cloudflare 缓存通信。首先，<code>fetch</code> 检查该 URL 是否属于另一个区域：如果属于，就走那个区域的缓存（或 Worker）；否则走自己区域的缓存——即便该 URL 指向的是非 Cloudflare 的站点。基于你的 Cloudflare 设置，<code>fetch</code> 会自动套用相应的缓存规则。<code>fetch</code> 不允许你在对象进入缓存之前修改或检视它，但允许你决定它<em>将如何</em>被缓存。</p>
+      <p>当一次响应填充了缓存，其响应头会包含 <code>CF-Cache-Status: HIT</code>。只要能看到 <code>CF-Cache-Status</code>，就说明该对象正在尝试走缓存。</p>
+      <p>这个<a href="../../sections/examples.html">示例模板</a>演示了如何用 fetch 定制某个请求的 Cloudflare 缓存行为。</p>
+
+      <h3>Cache API</h3>
+      <p><a href="../../sections/runtime-apis.html">Cache API</a> 可以看成一个临时的键值存储：<code>Request</code> 对象（更准确地说，是请求 URL）是键，<code>Response</code> 是值。</p>
+      <p>Cloudflare 缓存提供两种缓存命名空间：</p>
+      <ul>
+        <li><strong><code>caches.default</code></strong>：访问默认缓存（与 <code>fetch</code> 请求共用的同一份缓存）。当你需要在收到响应后覆盖已被缓存的内容时很有用。</li>
+        <li><strong><code>caches.open()</code></strong>：用 <code>let cache = await caches.open(CACHE_NAME)</code> 访问一个带命名空间的缓存（与 <code>fetch</code> 共用的缓存相互独立）。注意 <a href="https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage/open" target="_blank" rel="noopener"><code>caches.open</code> ↗</a> 是异步函数，而 <code>caches.default</code> 不是。</li>
+      </ul>
+      <p>什么时候用 Cache API：</p>
+      <ul>
+        <li>当你需要以编程方式向缓存保存或删除响应时。比如源站返回 <code>Cache-Control: max-age:0</code> 且无法改动，你可以克隆这个 <code>Response</code>，把头改成 <code>max-age=3600</code>，再用 Cache API 把修改后的响应缓存一小时。</li>
+        <li>当你需要以编程方式从缓存读取响应、而不依赖 <code>fetch</code> 请求时。比如先检查 <code>https://example.com/slow-response</code> 的响应是否已缓存；如果已缓存，就能避开那个慢请求。</li>
+      </ul>
+      <p>这个<a href="../../sections/examples.html">示例模板</a>演示了 Cache API 的用法。Cache API 的限制见<a href="../../sections/platform.html">限额</a>。</p>
+
+      <div class="warn-box">
+        <span class="box-title">分层缓存与 Cache API</span>
+        <p>Workers 中的 Cache API 不支持分层缓存。分层缓存会把到源站的连接集中起来，使其来自少数几个数据中心，而不是全部网络位置。而 Cache API 是数据中心本地的：<code>cache.match</code> 查找、<code>cache.put</code> 存储、<code>cache.delete</code> 删除，都只在处理该请求的 Worker 所在数据中心的缓存中生效。因为这些方法只作用于本地缓存，所以无法与分层缓存配合。</p>
+      </div>
+
+      <h2>相关资源</h2>
+      <ul>
+        <li><a href="../../sections/runtime-apis.html">Cache API</a></li>
+        <li><a href="https://developers.cloudflare.com/cache/interaction-cloudflare-products/workers/" target="_blank" rel="noopener">用 Workers 自定义缓存行为 ↗</a></li>
+      </ul>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/reference/how-the-cache-works/" target="_blank" rel="noopener">reference/how-the-cache-works</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

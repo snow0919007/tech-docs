@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SDK 中的子代理 · Claude Code 中文文档</title>
+<meta name="description" content="定义和调用子代理以隔离上下文、并行运行任务，以及在 Claude Agent SDK 应用程序中应用专门的指令。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-sdk/subagents">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-sdk/subagents" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link active" href="agent-sdk-subagents.html" aria-current="page">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>Agent SDK</span> <span class="sep">/</span> <span>使用工具扩展</span></div>
+    <article class="prose" id="article"><h1 id="sdk">SDK 中的子代理</h1>
+<blockquote>
+<p>定义和调用子代理以隔离上下文、并行运行任务，以及在 Claude Agent SDK 应用程序中应用专门的指令。</p>
+</blockquote>
+<p>子代理是您的主代理可以生成的独立代理实例，用于处理专注的子任务。<br />
+使用它们来隔离上下文、并行运行多个分析，以及应用专门的指令，而无需添加到主代理的提示中。</p>
+<h2 id="overview">概述</h2>
+<p>您可以通过三种方式创建子代理：</p>
+<ul>
+<li><strong>以编程方式</strong>：在您的 <code>query()</code> 选项中使用 <code>agents</code> 参数。请参阅 <a href="agent-sdk-typescript.html#agentdefinition">TypeScript</a> 和 <a href="agent-sdk-python.html#agentdefinition">Python</a> 参考文档</li>
+<li><strong>基于文件系统</strong>：在 <code>.claude/agents/</code> 目录中将代理定义为 markdown 文件。请参阅<a href="sub-agents.html">将子代理定义为文件</a></li>
+<li><strong>内置通用型</strong>：Claude 可以随时通过 Agent 工具调用内置的 <code>general-purpose</code> 子代理，无需您定义任何内容</li>
+</ul>
+<p>本指南重点介绍以编程方式的方法，这是 SDK 应用程序的推荐方法。</p>
+<h2 id="benefits-of-using-subagents">使用子代理的好处</h2>
+<p>由于子代理是独立的代理实例，将工作委托给它们可以为您带来四个好处：</p>
+<ul>
+<li><strong>上下文隔离</strong>：每个子代理在自己的对话中运行，除非子代理是<a href="sub-agents.html#fork-the-current-conversation">fork</a>，否则会从头开始。无论哪种方式，中间工具调用和结果都保留在子代理内部；只有其最终消息返回到父代理。<code>research-assistant</code> 子代理可以探索数十个文件，而不会有任何内容在主对话中累积。父代理收到的是简洁的摘要，而不是子代理读取的每个文件。有关子代理上下文中的确切内容，请参阅<a href="#what-subagents-inherit">子代理继承的内容</a>。</li>
+<li><strong>并行化</strong>：多个子代理可以并发运行，因此独立的子任务在最慢的一个的时间内完成，而不是所有任务的总和。在代码审查期间，您可以同时运行 <code>style-checker</code>、<code>security-scanner</code> 和 <code>test-coverage</code> 子代理，而不是按顺序运行。</li>
+<li><strong>专门的指令和知识</strong>：每个子代理可以有一个定制的系统提示，具有特定的专业知识、最佳实践和约束。<code>database-migration</code> 子代理可以拥有关于 SQL 最佳实践、回滚策略和数据完整性检查的详细知识，这些在主代理的指令中会是不必要的噪音。</li>
+<li><strong>工具限制</strong>：子代理可以限制为特定工具，降低意外操作的风险。<code>doc-reviewer</code> 子代理可能只能访问 Read 和 Grep 工具，确保它可以分析但永远不会意外修改您的文档文件。</li>
+</ul>
+<h2 id="create-subagents">创建子代理</h2>
+<h3 id="programmatic-definition-recommended">程序化定义（推荐）</h3>
+<p>使用 <code>agents</code> 参数直接在代码中定义子代理。Claude 通过 <code>Agent</code> 工具调用子代理。</p>
+<p>本页面上的大多数示例仅打印最终结果。要确认 Claude 委托给了子代理而不是直接回答，请参阅<a href="#detect-subagent-invocation">检测子代理调用</a>。</p>
+<p>此示例创建两个子代理：一个具有只读访问权限的代码审查员和一个可以执行命令的测试运行器。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">AgentDefinition</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Review the authentication module for security issues"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+            <span class="c1"># Auto-approve these tools</span>
+            <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">,</span> <span class="s2">"Agent"</span><span class="p">],</span>
+            <span class="n">agents</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"code-reviewer"</span><span class="p">:</span> <span class="n">AgentDefinition</span><span class="p">(</span>
+                    <span class="c1"># description tells Claude when to use this subagent</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s2">"Expert code review specialist. Use for quality, security, and maintainability reviews."</span><span class="p">,</span>
+                    <span class="c1"># prompt defines the subagent's behavior and expertise</span>
+                    <span class="n">prompt</span><span class="o">=</span><span class="s2">"""You are a code review specialist with expertise in security, performance, and best practices.</span>
+
+<span class="s2">When reviewing code:</span>
+<span class="s2">- Identify security vulnerabilities</span>
+<span class="s2">- Check for performance issues</span>
+<span class="s2">- Verify adherence to coding standards</span>
+<span class="s2">- Suggest specific improvements</span>
+
+<span class="s2">Be thorough but concise in your feedback."""</span><span class="p">,</span>
+                    <span class="c1"># tools restricts what the subagent can do (read-only here)</span>
+                    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">],</span>
+                    <span class="c1"># model overrides the default model for this subagent</span>
+                    <span class="n">model</span><span class="o">=</span><span class="s2">"sonnet"</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="s2">"test-runner"</span><span class="p">:</span> <span class="n">AgentDefinition</span><span class="p">(</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s2">"Runs and analyzes test suites. Use for test execution and coverage analysis."</span><span class="p">,</span>
+                    <span class="n">prompt</span><span class="o">=</span><span class="s2">"""You are a test execution specialist. Run tests and provide clear analysis of results.</span>
+
+<span class="s2">Focus on:</span>
+<span class="s2">- Running test commands</span>
+<span class="s2">- Analyzing test output</span>
+<span class="s2">- Identifying failing tests</span>
+<span class="s2">- Suggesting fixes for failures"""</span><span class="p">,</span>
+                    <span class="c1"># Bash access lets this subagent run test commands</span>
+                    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Bash"</span><span class="p">,</span> <span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">],</span>
+                <span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">),</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Review the authentication module for security issues"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Auto-approve these tools</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Agent"</span><span class="p">],</span>
+<span class="w">    </span><span class="nx">agents</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">"code-reviewer"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// description tells Claude when to use this subagent</span>
+<span class="w">        </span><span class="nx">description</span><span class="o">:</span>
+<span class="w">          </span><span class="s2">"Expert code review specialist. Use for quality, security, and maintainability reviews."</span><span class="p">,</span>
+<span class="w">        </span><span class="c1">// prompt defines the subagent's behavior and expertise</span>
+<span class="w">        </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="sb">`You are a code review specialist with expertise in security, performance, and best practices.</span>
+
+<span class="sb">When reviewing code:</span>
+<span class="sb">- Identify security vulnerabilities</span>
+<span class="sb">- Check for performance issues</span>
+<span class="sb">- Verify adherence to coding standards</span>
+<span class="sb">- Suggest specific improvements</span>
+
+<span class="sb">Be thorough but concise in your feedback.`</span><span class="p">,</span>
+<span class="w">        </span><span class="c1">// tools restricts what the subagent can do (read-only here)</span>
+<span class="w">        </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">],</span>
+<span class="w">        </span><span class="c1">// model overrides the default model for this subagent</span>
+<span class="w">        </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s2">"sonnet"</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">"test-runner"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">description</span><span class="o">:</span>
+<span class="w">          </span><span class="s2">"Runs and analyzes test suites. Use for test execution and coverage analysis."</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="sb">`You are a test execution specialist. Run tests and provide clear analysis of results.</span>
+
+<span class="sb">Focus on:</span>
+<span class="sb">- Running test commands</span>
+<span class="sb">- Analyzing test output</span>
+<span class="sb">- Identifying failing tests</span>
+<span class="sb">- Suggesting fixes for failures`</span><span class="p">,</span>
+<span class="w">        </span><span class="c1">// Bash access lets this subagent run test commands</span>
+<span class="w">        </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Bash"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s2">"result"</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">message</span><span class="p">)</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="agentdefinition-configuration">AgentDefinition 配置</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">必需</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>description</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">何时使用此代理的自然语言描述</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prompt</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">代理的系统提示，定义其角色和行为</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tools</code></td>
+<td style="text-align: left;"><code>string[]</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">允许的工具名称数组。如果省略，继承<a href="sub-agents.html#available-tools">子代理可用的每个工具</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disallowedTools</code></td>
+<td style="text-align: left;"><code>string[]</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">要从代理工具集中移除的工具名称数组。也接受 MCP 服务器级别的模式：<code>mcp__server</code> 或 <code>mcp__server__*</code> 移除该服务器的每个工具，<code>mcp__*</code> 移除任何服务器的每个 MCP 工具</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>model</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">此代理的模型覆盖。接受别名如 <code>'fable'</code>、<code>'opus'</code>、<code>'sonnet'</code>、<code>'haiku'</code>、<code>'inherit'</code> 或完整模型 ID。<code>'inherit'</code> 使用主模型。省略时，Claude Code 选择<a href="sub-agents.html#choose-a-model">子代理模型顺序</a>中的模型</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>skills</code></td>
+<td style="text-align: left;"><code>string[]</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">启动时预加载到 Agent 上下文中的 skill 名称列表。最多预加载列表中的<a href="sub-agents.html#preload-skills-into-subagents">前 32 个不同名称</a>。未列出的 skill 仍可通过 Skill 工具调用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>memory</code></td>
+<td style="text-align: left;"><code>'user' \| 'project' \| 'local'</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">此代理的内存源</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mcpServers</code></td>
+<td style="text-align: left;"><code>(string \| object)[]</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">此代理可用的 MCP 服务器，按名称或内联配置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>initialPrompt</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">当此代理作为主线程代理运行时自动提交为第一个用户轮次。当代理作为子代理调用时忽略</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>maxTurns</code></td>
+<td style="text-align: left;"><code>number</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">代理停止前的最大代理轮次数。当代理达到限制时，Claude Code 返回其输出标记为部分，您可以<a href="#resume-subagents">恢复代理</a>以继续。部分标记需要 Claude Code v2.1.246 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>autoCompactWindow</code></td>
+<td style="text-align: left;"><code>number</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">当此 Agent 作为子代理运行时，将其<a href="sub-agents.html#subagent-auto-compact-window">自动压缩窗口</a>降低到 <code>100000</code> 至 <code>1000000</code> 之间的 token 数。需要 TypeScript Agent SDK v0.3.296 或更高版本。Python SDK 的 <a href="agent-sdk-python.html#agentdefinition"><code>AgentDefinition</code></a> 没有此字段</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>background</code></td>
+<td style="text-align: left;"><code>boolean</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">调用时将此代理作为非阻塞后台任务运行</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>omitClaudeMd</code></td>
+<td style="text-align: left;"><code>boolean</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">将用户、项目和本地 CLAUDE.md 文件排除在此 Agent 的初始上下文之外；托管策略文件仍会加载。当该 Agent 作为主线程 Agent 运行时忽略。需要 TypeScript Agent SDK v0.3.271 或更高版本。Python SDK 的 <a href="agent-sdk-python.html#agentdefinition"><code>AgentDefinition</code></a> 没有此字段</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>effort</code></td>
+<td style="text-align: left;"><code>'low' \| 'medium' \| 'high' \| 'xhigh' \| 'max' \| number</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">此代理的推理工作量级别</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>permissionMode</code></td>
+<td style="text-align: left;"><code>PermissionMode</code></td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">此代理内工具执行的权限模式。<a href="agent-sdk-permissions.html#available-modes">子代理继承规则</a>决定何时应用</td>
+</tr>
+</tbody>
+</table>
+<p>在 Python SDK 中，多词字段名称如 <code>disallowedTools</code> 和 <code>mcpServers</code> 保持其 camelCase 拼写以匹配线路格式，而不是遵循 Python 的 snake_case 约定。有关详细信息，请参阅<a href="agent-sdk-python.html#agentdefinition"><code>AgentDefinition</code> 参考</a>。</p>
+<h4 id="choose-whether-claude-waits-for-subagents">选择 Claude 是否等待子代理</h4>
+<p>默认情况下，主 Agent 生成的子代理<a href="sub-agents.html#run-subagents-in-foreground-or-background">在后台运行</a>。Agent 工具结果包含 <code>status: "async_launched"</code>，报告会在之后的轮次中送达。</p>
+<p>当 Claude 的下一步操作需要该报告时，它会等待：调用会阻塞并返回 <code>status: "completed"</code>。要自行做出此选择：</p>
+<ul>
+<li><strong>在提示词中</strong>：要求 Claude 等待，例如"run the test-runner agent and wait for it"</li>
+<li><strong>在定义中</strong>：将 <code>background</code> 设置为 <code>true</code>，使该 Agent 保持在后台运行</li>
+</ul>
+<h3 id="filesystem-based-definition-alternative">基于文件系统的定义（替代方案）</h3>
+<p>您也可以在 <code>.claude/agents/</code> 目录中将子代理定义为 markdown 文件。有关此方法的详细信息，请参阅 <a href="sub-agents.html">Claude Code 子代理文档</a>。程序化定义的代理优先于具有相同名称的基于文件系统的代理。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>当 Claude 调用不带 <code>subagent_type</code> 的 Agent 工具时，它获得内置的 <code>general-purpose</code> 子代理，即使您未定义任何自己的代理，Claude 也可以生成。设置 <a href="env-vars.html"><code>CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS=1</code></a> 移除该默认值，此类调用失败并显示 <a href="errors.html#subagent-type-is-required"><code>subagent_type is required</code></a>。</p></div></div>
+<h2 id="what-subagents-inherit">子代理继承的内容</h2>
+<p>除非子代理是<a href="sub-agents.html#fork-the-current-conversation">分叉</a>，否则其上下文窗口会重新开始，没有父对话，但也不是空的。从父代理传递给子代理的唯一内容是 Agent 工具的提示字符串，因此请直接在该提示中包含子代理需要的任何文件路径、错误消息或决策。</p>
+<p>具有 <a href="tools-reference.html"><code>SendMessage</code></a> 工具的子代理会从会话中运行的其他命名代理列表开始，因此它知道可以向哪些名称发送消息。Claude Code 会在子代理的第一轮自动将列表添加到其中。<a href="sub-agents.html#fork-the-current-conversation">分叉</a>不会获得该列表，因为它继承的是父对话。</p>
+<p>子代理还继承主会话的扩展思考配置。</p>
+<p>下表列出了非分叉子代理的上下文包含的内容以及它遗漏的内容。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">子代理接收</th>
+<th style="text-align: left;">子代理不接收</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">其自身的系统提示（<code>AgentDefinition.prompt</code>）和 Agent 工具的提示</td>
+<td style="text-align: left;">父代理的对话历史或工具结果</td>
+</tr>
+<tr>
+<td style="text-align: left;">项目 CLAUDE.md（通过 <a href="agent-sdk-claude-code-features.html#control-filesystem-settings-with-settingsources"><code>settingSources</code></a> 加载）。设置了 <a href="#agentdefinition-configuration"><code>omitClaudeMd</code></a> 的 Agent 启动时不包含它</td>
+<td style="text-align: left;">预加载的 skill 内容，除非在 <code>AgentDefinition.skills</code> 中列出</td>
+</tr>
+<tr>
+<td style="text-align: left;">工具定义（从父代理继承或 <code>tools</code> 中的子集，<a href="sub-agents.html#available-tools">为后台运行过滤</a>）</td>
+<td style="text-align: left;">父代理的系统提示</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>父 Agent 接收子代理的最终报告，但可能在其自己的回复中对其进行总结。要在面向用户的回复中逐字保留子代理输出，请在传递给主 <code>query()</code> 调用的提示词或 <code>systemPrompt</code> 选项中包含执行此操作的指令。</p>
+<p>在 v2.1.210 及更高版本中，Claude Code <a href="sub-agents.html#subagent-output-scanning">在父代理读取最终消息之前扫描它以查找指令形状的模式</a>。扫描以三种不同的方式处理三种模式：</p>
+<ul>
+<li><strong>控制标签模仿</strong>：Claude Code 就地中和仅由工具发出的标签，例如 <code>&lt;system-reminder&gt;</code> 块。它在开始角括号后插入反斜杠，不删除任何内容。</li>
+<li><strong>权限配置提及</strong>：Claude Code 保持对权限配置的引用，例如 <code>.claude/settings.json</code>、<code>bypassPermissions</code> 或 <code>--dangerously-skip-permissions</code>，按原样写入。</li>
+<li><strong>轮次标记</strong>：以 <code>Human:</code> 或 <code>Assistant:</code> 开头的行在冒号前获得反斜杠，因此消息无法模仿对话轮次边界。</li>
+</ul>
+<p>对于控制标签或权限配置匹配，Claude Code 在前面加上 <code>[harness: ...]</code> 标记行，命名匹配的模式；轮次标记匹配不添加标记行。这些是扫描所做的唯一修改：它从不删除或改写子代理的文本。</p></div></div>
+<p>提前结束子代理的 API 错误（例如速率限制）永远不会作为其结果传递。有关前台和后台行为，请参阅<a href="sub-agents.html#api-errors-in-subagents">子代理中的 API 错误</a>。</p>
+<h2 id="invoke-subagents">调用子代理</h2>
+<h3 id="automatic-invocation">自动调用</h3>
+<p>Claude 根据任务和每个子代理的 <code>description</code> 自动决定何时调用子代理。例如，如果你定义了一个 <code>performance-optimizer</code> 子代理，其描述为"用于查询调优的性能优化专家"，当你的提示中提到优化查询时，Claude 将调用它。</p>
+<p>编写清晰、具体的描述，以便 Claude 能够将任务与正确的子代理匹配。</p>
+<h3 id="explicit-invocation">显式调用</h3>
+<p>要保证 Claude 使用特定的子代理，请在你的提示中按名称提及它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">"Use the code-reviewer agent to check the authentication module"
+</code></pre></div>
+<p>这会绕过自动匹配，直接调用指定的子代理。</p>
+<h3 id="forked-subagents">分叉子代理</h3>
+<p><a href="sub-agents.html#fork-the-current-conversation">分叉</a>是一种复制当前已有对话、而非从头开始的子代理。从 Claude Code v2.1.302 开始，无需任何配置，Claude 即可在您的应用程序中启动分叉，方法是调用 Agent 工具并传入 <code>subagent_type: "fork"</code>。</p>
+<p>要阻止 Claude 启动分叉，请添加 <a href="agent-sdk-permissions.html#allow-and-deny-rules"><code>Agent(fork)</code> 拒绝规则</a>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+    <span class="c1"># 仅拒绝 fork 子代理类型；其他子代理仍会运行</span>
+    <span class="n">disallowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Agent(fork)"</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 仅拒绝 fork 子代理类型；其他子代理仍会运行</span>
+<span class="w">  </span><span class="nx">disallowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Agent(fork)"</span><span class="p">]</span>
+<span class="p">};</span>
+</code></pre></div>
+<h3 id="dynamic-agent-configuration">动态代理配置</h3>
+<p>你可以根据运行时条件动态创建代理定义。此示例创建了一个安全审查器，具有不同的严格程度，对严格审查使用更强大的模型。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">AgentDefinition</span>
+
+
+<span class="c1"># 返回 AgentDefinition 的工厂函数</span>
+<span class="c1"># 此模式允许你根据运行时条件自定义代理</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_security_agent</span><span class="p">(</span><span class="n">security_level</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentDefinition</span><span class="p">:</span>
+    <span class="n">is_strict</span> <span class="o">=</span> <span class="n">security_level</span> <span class="o">==</span> <span class="s2">"strict"</span>
+    <span class="k">return</span> <span class="n">AgentDefinition</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Security code reviewer"</span><span class="p">,</span>
+        <span class="c1"># 根据严格程度自定义提示</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="sa">f</span><span class="s2">"You are a </span><span class="si">{</span><span class="s1">'strict'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">is_strict</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'balanced'</span><span class="si">}</span><span class="s2"> security reviewer..."</span><span class="p">,</span>
+        <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">],</span>
+        <span class="c1"># 关键见解：对高风险审查使用更强大的模型</span>
+        <span class="n">model</span><span class="o">=</span><span class="s2">"opus"</span> <span class="k">if</span> <span class="n">is_strict</span> <span class="k">else</span> <span class="s2">"sonnet"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># 代理在查询时创建，因此每个请求都可以使用不同的设置</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Review this PR for security issues"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+            <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">,</span> <span class="s2">"Agent"</span><span class="p">],</span>
+            <span class="n">agents</span><span class="o">=</span><span class="p">{</span>
+                <span class="c1"># 使用你所需的配置调用工厂</span>
+                <span class="s2">"security-reviewer"</span><span class="p">:</span> <span class="n">create_security_agent</span><span class="p">(</span><span class="s2">"strict"</span><span class="p">)</span>
+            <span class="p">},</span>
+        <span class="p">),</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="p">,</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">AgentDefinition</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="c1">// 返回 AgentDefinition 的工厂函数</span>
+<span class="c1">// 此模式允许你根据运行时条件自定义代理</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">createSecurityAgent</span><span class="p">(</span><span class="nx">securityLevel</span><span class="o">:</span><span class="w"> </span><span class="s2">"basic"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">"strict"</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">AgentDefinition</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">isStrict</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">securityLevel</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"strict"</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s2">"Security code reviewer"</span><span class="p">,</span>
+<span class="w">    </span><span class="c1">// 根据严格程度自定义提示</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="sb">`You are a </span><span class="si">${</span><span class="nx">isStrict</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s2">"strict"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"balanced"</span><span class="si">}</span><span class="sb"> security reviewer...`</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">],</span>
+<span class="w">    </span><span class="c1">// 关键见解：对高风险审查使用更强大的模型</span>
+<span class="w">    </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="kt">isStrict</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s2">"opus"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"sonnet"</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">// 代理在查询时创建，因此每个请求都可以使用不同的设置</span>
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Review this PR for security issues"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Agent"</span><span class="p">],</span>
+<span class="w">    </span><span class="nx">agents</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 使用你所需的配置调用工厂</span>
+<span class="w">      </span><span class="s2">"security-reviewer"</span><span class="o">:</span><span class="w"> </span><span class="nx">createSecurityAgent</span><span class="p">(</span><span class="s2">"strict"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s2">"result"</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">message</span><span class="p">)</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="detect-subagent-invocation">检测子代理调用</h2>
+<p>Claude 通过 Agent 工具调用子代理。要检测何时调用子代理，请检查 <code>tool_use</code> 块，其中 <code>name</code> 为 <code>"Agent"</code>。</p>
+<p>来自子代理上下文内的消息包含 <code>parent_tool_use_id</code> 字段。在 TypeScript 中，子代理生成的每条 assistant 消息和 user 消息还带有 <a href="agent-sdk-typescript.html#sdkassistantmessage"><code>agent_id</code></a>：即该子代理的<a href="agent-sdk-typescript.html#sdktaskstartedmessage">任务事件</a>中的 <code>task_id</code>。当您<a href="#resume-subagents">恢复子代理</a>时，<code>agent_id</code> 保持不变。<code>agent_id</code> 需要 TypeScript Agent SDK v0.3.292 或更高版本。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>该工具在 <code>tool_use</code> 块中显示为 <code>"Agent"</code>，但在 <code>system:init</code> 工具列表中显示为 <code>"Task"</code>。在 Claude Code v2.1.63 之前，<code>tool_use</code> 块也将其命名为 <code>"Task"</code>。为了保持检测在不同 SDK 版本中的工作，请在 <code>block.name</code> 中匹配两个值。</p></div></div>
+<p>消息结构在不同 SDK 中有所不同。在 Python 中，您可以通过 <code>message.content</code> 直接访问内容块。在 TypeScript 中，<code>SDKAssistantMessage</code> 包装 Claude API 消息，因此您通过 <code>message.message.content</code> 访问内容。</p>
+<p>此示例遍历流式消息，记录何时调用子代理以及后续消息来自该子代理执行上下文内的时间。TypeScript 版本还会为每条带有 <code>agent_id</code> 的子代理消息记录该 <code>agent_id</code>。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">AgentDefinition</span><span class="p">,</span> <span class="n">ToolUseBlock</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Use the code-reviewer agent to review this codebase"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+            <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"Agent"</span><span class="p">],</span>
+            <span class="n">agents</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"code-reviewer"</span><span class="p">:</span> <span class="n">AgentDefinition</span><span class="p">(</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s2">"Expert code reviewer."</span><span class="p">,</span>
+                    <span class="n">prompt</span><span class="o">=</span><span class="s2">"Analyze code quality and suggest improvements."</span><span class="p">,</span>
+                    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">},</span>
+        <span class="p">),</span>
+    <span class="p">):</span>
+        <span class="c1"># Check for subagent invocation. Match both names: older SDK</span>
+        <span class="c1"># versions emitted "Task", current versions emit "Agent".</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">ToolUseBlock</span><span class="p">)</span> <span class="ow">and</span> <span class="n">block</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">(</span>
+                    <span class="s2">"Task"</span><span class="p">,</span>
+                    <span class="s2">"Agent"</span><span class="p">,</span>
+                <span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Subagent invoked: </span><span class="si">{</span><span class="n">block</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'subagent_type'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="c1"># Check if this message is from within a subagent's context</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s2">"parent_tool_use_id"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">message</span><span class="o">.</span><span class="n">parent_tool_use_id</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"  (running inside subagent)"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Use the code-reviewer agent to review this codebase"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Agent"</span><span class="p">],</span>
+<span class="w">    </span><span class="nx">agents</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">"code-reviewer"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s2">"Expert code reviewer."</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Analyze code quality and suggest improvements."</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Check for subagent invocation. Match both names: older SDK versions</span>
+<span class="w">  </span><span class="c1">// emitted "Task", current versions emit "Agent".</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">block</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">msg</span><span class="p">.</span><span class="nx">message</span><span class="o">?</span><span class="p">.</span><span class="nx">content</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">[])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">block</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"tool_use"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">block</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"Task"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">block</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"Agent"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Subagent invoked: </span><span class="si">${</span><span class="nx">block</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">subagent_type</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Check if this message is from within a subagent's context</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">parent_tool_use_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"  (running inside subagent)"</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// On assistant and user messages, agent_id matches the task_id</span>
+<span class="w">    </span><span class="c1">// on that subagent's task_started and other task events</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">agent_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`  agent_id: </span><span class="si">${</span><span class="nx">msg</span><span class="p">.</span><span class="nx">agent_id</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s2">"result"</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">message</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="resume-subagents">恢复子代理</h2>
+<p>您可以恢复子代理以继续其中断的地方，而不是重新开始。恢复的子代理保留其完整的对话历史记录，包括所有先前的工具调用、结果和推理。</p>
+<p>当子代理在其 <a href="#agentdefinition-configuration"><code>maxTurns</code></a> 限制处停止时，Claude Code 会在 Agent 工具结果中将输出标记为部分，以便 Claude 知道运行未完成。</p>
+<p>当子代理完成时，Agent 工具结果包含一个包含 <code>agentId: &lt;id&gt;</code> 的文本块。内置的 <a href="sub-agents.html#built-in-subagents"><code>Explore</code> 和 <code>Plan</code> 代理</a> 是一次性的，不返回 <code>agentId</code>，因此当您需要恢复时，请使用自定义代理或 <code>general-purpose</code>。要以编程方式恢复子代理：</p>
+<ol>
+<li><strong>捕获会话 ID</strong>：从第一个查询期间的消息中提取 <code>session_id</code></li>
+<li><strong>提取代理 ID</strong>：从 Agent 工具结果文本中解析 <code>agentId</code></li>
+<li><strong>恢复会话</strong>：在第二个查询的选项中传递 <code>resume: sessionId</code>，并在您的提示中包含代理 ID。每个 <code>query()</code> 调用默认启动一个新会话，您必须恢复同一会话才能访问子代理的记录。</li>
+</ol>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>使用自定义代理时，在两个查询的 <code>agents</code> 参数中传递相同的代理定义。</p></div></div>
+<p>下面的示例定义了一个自定义 <code>endpoint-finder</code> 代理。第一个查询运行它并从 Agent 工具结果中捕获会话 ID 和代理 ID，然后第二个查询恢复会话以提出需要来自第一次分析的上下文的后续问题。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">AgentDefinition</span><span class="p">,</span> <span class="n">ToolResultBlock</span>
+
+<span class="n">AGENTS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"endpoint-finder"</span><span class="p">:</span> <span class="n">AgentDefinition</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Locates and catalogs API endpoints in a codebase."</span><span class="p">,</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"You find and document API endpoints. Report each endpoint's path, method, and handler."</span><span class="p">,</span>
+        <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">],</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_agent_id</span><span class="p">(</span><span class="n">block</span><span class="p">:</span> <span class="n">ToolResultBlock</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Extract agentId from an Agent tool result's text content."""</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">content</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[{</span><span class="s2">"text"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">content</span><span class="p">}]</span>
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"agentId:\s*([\w-]+)"</span><span class="p">,</span> <span class="n">part</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"text"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">agent_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">session_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># First invocation - run the endpoint-finder subagent</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+            <span class="n">prompt</span><span class="o">=</span><span class="s2">"Use the endpoint-finder agent to find all API endpoints in this codebase"</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span><span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">,</span> <span class="s2">"Agent"</span><span class="p">],</span> <span class="n">agents</span><span class="o">=</span><span class="n">AGENTS</span><span class="p">),</span>
+        <span class="p">):</span>
+            <span class="c1"># Capture session_id from ResultMessage (needed to resume this session)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s2">"session_id"</span><span class="p">):</span>
+                <span class="n">session_id</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">session_id</span>
+            <span class="c1"># Search tool results for the agentId trailer</span>
+            <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">ToolResultBlock</span><span class="p">):</span>
+                    <span class="n">agent_id</span> <span class="o">=</span> <span class="n">extract_agent_id</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="ow">or</span> <span class="n">agent_id</span>
+            <span class="c1"># Print the final result</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="c1"># A single-shot query() raises after yielding an error result,</span>
+        <span class="c1"># so session_id and agent_id have already been captured by the loop above.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Session ended with an error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Second invocation - resume and ask follow-up</span>
+    <span class="k">if</span> <span class="n">agent_id</span> <span class="ow">and</span> <span class="n">session_id</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+            <span class="n">prompt</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Resume agent </span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2"> and list the top 3 most complex endpoints"</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+                <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">,</span> <span class="s2">"Agent"</span><span class="p">],</span> <span class="n">agents</span><span class="o">=</span><span class="n">AGENTS</span><span class="p">,</span> <span class="n">resume</span><span class="o">=</span><span class="n">session_id</span>
+            <span class="p">),</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"No agentId found in the first query, so there is no subagent to resume."</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="p">,</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">SDKMessage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">agents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="s2">"endpoint-finder"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s2">"Locates and catalogs API endpoints in a codebase."</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"You find and document API endpoints. Report each endpoint's path, method, and handler."</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Stringify content to search for agentId without traversing nested block types</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">extractAgentId</span><span class="p">(</span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="kt">SDKMessage</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">"assistant"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">"user"</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">match</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">content</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/agentId:\s*([\w-]+)/</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">match</span><span class="o">?</span><span class="p">.[</span><span class="mf">1</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="nx">agentId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">sessionId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+
+<span class="c1">// First invocation - run the endpoint-finder subagent</span>
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Use the endpoint-finder agent to find all API endpoints in this codebase"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Agent"</span><span class="p">],</span><span class="w"> </span><span class="nx">agents</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Capture session_id from ResultMessage (needed to resume this session)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s2">"session_id"</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">message</span><span class="p">)</span><span class="w"> </span><span class="nx">sessionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">session_id</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Search message content for the agentId (appears in Agent tool results)</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">extractedId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">extractAgentId</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">extractedId</span><span class="p">)</span><span class="w"> </span><span class="nx">agentId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">extractedId</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Print the final result</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s2">"result"</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">message</span><span class="p">)</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// A single-shot query() throws after yielding an error result,</span>
+<span class="w">  </span><span class="c1">// so sessionId and agentId have already been captured by the loop above.</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`Session ended with an error: </span><span class="si">${</span><span class="nx">error</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Second invocation - resume and ask follow-up</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">agentId</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">sessionId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="sb">`Resume agent </span><span class="si">${</span><span class="nx">agentId</span><span class="si">}</span><span class="sb"> and list the top 3 most complex endpoints`</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Agent"</span><span class="p">],</span><span class="w"> </span><span class="nx">agents</span><span class="p">,</span><span class="w"> </span><span class="nx">resume</span><span class="o">:</span><span class="w"> </span><span class="kt">sessionId</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s2">"result"</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">message</span><span class="p">)</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"No agentId found in the first query, so there is no subagent to resume."</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>子代理记录存储在单独的文件中，并独立于主对话而持久存在。有关压缩行为和 <code>cleanupPeriodDays</code> 清理期，请参阅 <a href="sub-agents.html#resume-subagents">Claude Code 中的恢复子代理</a>。</p>
+<h2 id="tool-restrictions">工具限制</h2>
+<p>使用 <code>tools</code> 字段来限制子代理可以执行的操作：</p>
+<ul>
+<li><strong>省略 <code>tools</code></strong>：子代理获得<a href="sub-agents.html#available-tools">可用于子代理的每个工具</a></li>
+<li><strong>列出工具</strong>：子代理仅获得这些工具。例如，不应该编辑文件的代码审查员会获得 <code>["Read", "Grep", "Glob"]</code></li>
+</ul>
+<p>你省略的工具根本不会出现在子代理的会话中：Claude 可以在没有它的情况下工作，不会出现权限提示或错误。</p>
+<p>此示例创建了一个只读分析代理，可以检查代码但无法修改文件或运行命令。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">AgentDefinition</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="s2">"Analyze the architecture of this codebase"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+            <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">,</span> <span class="s2">"Agent"</span><span class="p">],</span>
+            <span class="n">agents</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"code-analyzer"</span><span class="p">:</span> <span class="n">AgentDefinition</span><span class="p">(</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s2">"Static code analysis and architecture review"</span><span class="p">,</span>
+                    <span class="n">prompt</span><span class="o">=</span><span class="s2">"""You are a code architecture analyst. Analyze code structure,</span>
+<span class="s2">identify patterns, and suggest improvements without making changes."""</span><span class="p">,</span>
+                    <span class="c1"># Read-only tools: no Edit, Write, or Bash access</span>
+                    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">},</span>
+        <span class="p">),</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Analyze the architecture of this codebase"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Agent"</span><span class="p">],</span>
+<span class="w">    </span><span class="nx">agents</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">"code-analyzer"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s2">"Static code analysis and architecture review"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="sb">`You are a code architecture analyst. Analyze code structure,</span>
+<span class="sb">identify patterns, and suggest improvements without making changes.`</span><span class="p">,</span>
+<span class="w">        </span><span class="c1">// Read-only tools: no Edit, Write, or Bash access</span>
+<span class="w">        </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s2">"result"</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">message</span><span class="p">)</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="common-tool-combinations">常见工具组合</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">用例</th>
+<th style="text-align: left;">工具</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">只读分析</td>
+<td style="text-align: left;"><code>Read</code>、<code>Grep</code>、<code>Glob</code></td>
+<td style="text-align: left;">可以检查代码但无法修改或执行</td>
+</tr>
+<tr>
+<td style="text-align: left;">测试执行</td>
+<td style="text-align: left;"><code>Bash</code>、<code>Read</code>、<code>Grep</code></td>
+<td style="text-align: left;">可以运行命令并分析输出</td>
+</tr>
+<tr>
+<td style="text-align: left;">代码修改</td>
+<td style="text-align: left;"><code>Read</code>、<code>Edit</code>、<code>Write</code>、<code>Grep</code>、<code>Glob</code></td>
+<td style="text-align: left;">完整的读/写访问权限，无命令执行</td>
+</tr>
+<tr>
+<td style="text-align: left;">完全访问</td>
+<td style="text-align: left;">所有工具</td>
+<td style="text-align: left;">继承可用于子代理的工具（省略 <code>tools</code> 字段）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cap-subagent-depth-concurrency-and-spend">限制子代理的深度、并发和支出</h2>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>本部分描述 TypeScript SDK v0.3.219 和 Python SDK v0.2.127 及更高版本，这些版本捆绑了 Claude Code v2.1.219 或更高版本。在较早的版本中，某些限制缺失或默认值不同，因此在依赖它们来限制运行之前，请升级。<a href="env-vars.html">环境变量参考</a>和<a href="agent-sdk-agent-loop.html#turns-and-budget">轮次和预算</a>记录了添加每个变量的 Claude Code 版本以及支出上限的子代理强制执行。</p></div></div>
+<p>Claude 会自行决定何时生成子代理以及生成多少个子代理。每个子代理都会发出自己的 API 请求，这些请求计入查询的 <code>total_cost_usd</code>，而子代理可以生成自己的子代理，因此一个提示可以扩展成一个代理树。</p>
+<p>您可以通过三种方式限制这种增长：子代理的嵌套深度、同时运行的数量以及整个查询的支出。通过 <a href="agent-sdk-typescript.html#options"><code>env</code></a> 选项将深度和并发限制设置为环境变量，并将支出限制设置为查询选项：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">限制</th>
+<th style="text-align: left;">设置方式</th>
+<th style="text-align: left;">默认值</th>
+<th style="text-align: left;">Claude Code 在达到限制时的行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">深度</td>
+<td style="text-align: left;"><a href="env-vars.html"><code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH</code></a></td>
+<td style="text-align: left;">主代理下方的<code>3</code>层子代理。<code>1</code>会阻止您的子代理生成任何自己的子代理</td>
+<td style="text-align: left;">使底层的子代理无法生成，因此它会自己完成委派的工作。请参阅<a href="sub-agents.html#let-subagents-spawn-their-own-subagents">嵌套子代理</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">并发</td>
+<td style="text-align: left;"><a href="env-vars.html"><code>CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS</code></a></td>
+<td style="text-align: left;"><code>20</code>个子代理同时运行，计算 Claude 使用 Agent 工具生成的每个子代理</td>
+<td style="text-align: left;">拒绝生成另一个子代理，返回 <code>Concurrent subagent limit reached</code>，直到运行计数降至限制以下。启用了<a href="model-config.html#adjust-effort-level">ultracode</a>的会话永远不会被拒绝。请参阅<a href="sub-agents.html#concurrent-subagent-limit">并发子代理限制</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">支出</td>
+<td style="text-align: left;">TypeScript 中的 <code>maxBudgetUsd</code>，Python 中的 <code>max_budget_usd</code></td>
+<td style="text-align: left;">无限制。计算调用自身的支出，包括子代理请求</td>
+<td style="text-align: left;">通过三种方式强制执行上限：拒绝生成更多子代理，返回 <code>Budget limit reached</code>，停止仍在运行的后台子代理，并以 <code>error_max_budget_usd</code> 结果子类型结束查询。关于上限在会话中的行为方式，请参阅<a href="agent-sdk-agent-loop.html#turns-and-budget">轮次和预算</a></td>
+</tr>
+</tbody>
+</table>
+<p>两个 SDK 对 <code>env</code> 选项的处理方式不同：TypeScript SDK 用它替换子进程环境，因此将 <code>process.env</code> 展开到其中以保留 <code>PATH</code> 等变量，而 Python SDK 将其合并到继承的环境中。此示例关闭嵌套，最多允许五个子代理同时运行，并在估计支出达到 \$5 时停止查询：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">query</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">ResultMessage</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">query</span><span class="p">(</span>
+            <span class="n">prompt</span><span class="o">=</span><span class="s2">"Audit every service in this repo for unhandled promise rejections"</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+                <span class="n">allowed_tools</span><span class="o">=</span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">,</span> <span class="s2">"Agent"</span><span class="p">],</span>
+                <span class="c1"># env is merged on top of the inherited environment</span>
+                <span class="n">env</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">"CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+                    <span class="s2">"CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS"</span><span class="p">:</span> <span class="s2">"5"</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="n">max_budget_usd</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">subtype</span><span class="si">}</span><span class="s2">: $</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">total_cost_usd</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="c1"># A single-shot query() raises after yielding an error result,</span>
+        <span class="c1"># so the budget-capped result has already been printed above.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Session ended with an error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Audit every service in this repo for unhandled promise rejections"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Agent"</span><span class="p">],</span>
+<span class="w">      </span><span class="c1">// env replaces the subprocess environment, so spread process.env to keep PATH</span>
+<span class="w">      </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">...</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH</span><span class="o">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS</span><span class="o">:</span><span class="w"> </span><span class="s2">"5"</span><span class="p">,</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">maxBudgetUsd</span><span class="o">:</span><span class="w"> </span><span class="kt">5</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">message</span><span class="p">.</span><span class="nx">subtype</span><span class="si">}</span><span class="sb">: $</span><span class="si">${</span><span class="nx">message</span><span class="p">.</span><span class="nx">total_cost_usd</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// A single-shot query() throws after yielding an error result,</span>
+<span class="w">  </span><span class="c1">// so the budget-capped result has already been logged above.</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`Session ended with an error: </span><span class="si">${</span><span class="nx">error</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>您看到的内容取决于查询达到的限制（如果有的话）：</p>
+<ul>
+<li><strong>在支出上限以下</strong>：您会看到 <code>success</code> 和估计成本。</li>
+<li><strong>在支出上限处</strong>：您会看到 <code>error_max_budget_usd</code>，成本为 <code>5</code> 或以上，然后您的错误处理程序运行。</li>
+<li><strong>在并发限制处</strong>：您会在消息流中看到一个 <code>tool_result</code> 块，其中包含 <code>Concurrent subagent limit reached</code>。Claude 收到与 Agent 工具结果相同的块。</li>
+</ul>
+<h3 id="run-opus-5-with-subagents">使用子代理运行 Opus 5</h3>
+<p>Claude Opus 5 比早期模型更容易委派给子代理，因此<a href="#cap-subagent-depth-concurrency-and-spend">深度、并发和支出限制</a>在运行 Opus 5 的查询中最为重要。<a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5#controlling-subagent-spawning" target="_blank" rel="noopener">Opus 5 提示指南</a>提供了一条委派指令，您可以将其添加到任何提示中。Claude Code 是否添加自己的指令取决于您使用的<a href="agent-sdk-modifying-system-prompts.html#how-system-prompts-work">系统提示</a>：</p>
+<ul>
+<li><strong><code>claude_code</code> 预设</strong>：当模型是 Opus 5 时，Claude Code 会在其系统提示中添加一行，告诉 Claude 除非被要求，否则不要调用 Agent 工具。Agent 工具保持可用。</li>
+<li><strong>自定义提示或无 <code>systemPrompt</code></strong>：Claude Code 不构建其系统提示，因此该行不存在。将提示指南的委派指令添加到您自己的提示中。</li>
+</ul>
+<p>任一指令只会引导 Claude，因此也要设置限制。Claude Code 会根据 Claude 决定的委派方式强制执行它们。</p>
+<h2 id="scale-up-with-dynamic-workflows">使用动态工作流进行扩展</h2>
+<p>子代理适用于每轮委派的几个任务。对于协调数十到数百个代理的运行，请使用 <code>Workflow</code> 工具，它将编排移到运行时在对话上下文外执行的脚本中。请参阅<a href="workflows.html">动态工作流</a>以了解工作流与逐轮子代理委派的区别。</p>
+<p><code>Workflow</code> 工具在 TypeScript Agent SDK v0.3.149 及更高版本中可用。在 <code>allowedTools</code> 中包含 <code>Workflow</code> 以自动批准工作流运行。工具输入和输出架构列在 <a href="agent-sdk-typescript.html#workflow">TypeScript 参考</a>中。</p>
+<h2 id="troubleshooting">故障排除</h2>
+<h3 id="claude-not-delegating-to-subagents">Claude 不委派给子代理</h3>
+<p>如果 Claude 直接完成任务而不是委派给您的子代理：</p>
+<ul>
+<li><strong>使用显式提示</strong>：在您的提示词中按名称提及子代理，例如"使用代码审查员代理来检查身份验证模块"</li>
+<li><strong>编写清晰的描述</strong>：准确解释何时应使用子代理，以便 Claude 可以适当地匹配任务</li>
+</ul>
+<h3 id="filesystem-based-agents-not-loading">基于文件系统的代理未加载</h3>
+<p>Claude Code 监视 <code>~/.claude/agents/</code> 和 <code>.claude/agents/</code>，并在几秒内拾取新的或编辑的代理文件，无需重启。如果定义从未出现，请排查这些原因：</p>
+<ul>
+<li><strong>新的 <code>agents</code> 目录</strong>：监视程序仅覆盖会话启动时存在的目录，因此新目录中的第一个文件需要会话重启。这是最常见的原因。</li>
+<li><strong>无效的 frontmatter 或重复的 <code>name</code></strong>：检查文件的 YAML，以及现有代理是否已使用该 <code>name</code>。</li>
+<li><strong><code>--disable-slash-commands</code></strong>：使用此标志启动的会话不监视这些目录，始终需要重启以加载新文件。</li>
+<li><strong>添加的目录下的文件</strong>：Claude Code 从使用 <code>add_dirs</code>（Python）或 <code>additionalDirectories</code>（TypeScript）选项或 CLI 的 <code>--add-dir</code> 或 <code>/add-dir</code> 添加的目录加载 <code>.claude/agents/</code>，但不监视它们，因此那里的新文件或编辑文件需要会话重启。</li>
+<li><strong>具有相同名称的程序化代理</strong>：传递给 <code>query()</code> 的 <code>agents</code> 会覆盖具有相同名称的文件系统代理。</li>
+</ul>
+<p>有关文件格式，请参阅<a href="sub-agents.html#write-subagent-files">如何编写子代理文件</a>。</p>
+<h2 id="related-documentation">相关文档</h2>
+<ul>
+<li><a href="sub-agents.html">Claude Code 子代理</a>：子代理文档，包括基于文件系统的定义</li>
+<li><a href="workflows.html">动态工作流</a>：从脚本编排许多子代理，用于对话过大的工作</li>
+<li><a href="agent-sdk-overview.html">SDK 概述</a>：Claude Agent SDK 入门</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="agent-sdk-tool-search.html"><span class="pager-dir">← 上一页</span><span class="pager-name">使用工具搜索扩展到多个工具</span></a><a class="pager-link next" href="agent-sdk-modifying-system-prompts.html"><span class="pager-dir">下一页 →</span><span class="pager-name">修改系统提示词</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#overview">概述</a><a class="toc-l2" href="#benefits-of-using-subagents">使用子代理的好处</a><a class="toc-l2" href="#create-subagents">创建子代理</a><a class="toc-l3" href="#programmatic-definition-recommended">程序化定义（推荐）</a><a class="toc-l3" href="#agentdefinition-configuration">AgentDefinition 配置</a><a class="toc-l3" href="#filesystem-based-definition-alternative">基于文件系统的定义（替代方案）</a><a class="toc-l2" href="#what-subagents-inherit">子代理继承的内容</a><a class="toc-l2" href="#invoke-subagents">调用子代理</a><a class="toc-l3" href="#automatic-invocation">自动调用</a><a class="toc-l3" href="#explicit-invocation">显式调用</a><a class="toc-l3" href="#forked-subagents">分叉子代理</a><a class="toc-l3" href="#dynamic-agent-configuration">动态代理配置</a><a class="toc-l2" href="#detect-subagent-invocation">检测子代理调用</a><a class="toc-l2" href="#resume-subagents">恢复子代理</a><a class="toc-l2" href="#tool-restrictions">工具限制</a><a class="toc-l3" href="#common-tool-combinations">常见工具组合</a><a class="toc-l2" href="#cap-subagent-depth-concurrency-and-spend">限制子代理的深度、并发和支出</a><a class="toc-l3" href="#run-opus-5-with-subagents">使用子代理运行 Opus 5</a><a class="toc-l2" href="#scale-up-with-dynamic-workflows">使用动态工作流进行扩展</a><a class="toc-l2" href="#troubleshooting">故障排除</a><a class="toc-l3" href="#claude-not-delegating-to-subagents">Claude 不委派给子代理</a><a class="toc-l3" href="#filesystem-based-agents-not-loading">基于文件系统的代理未加载</a><a class="toc-l2" href="#related-documentation">相关文档</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

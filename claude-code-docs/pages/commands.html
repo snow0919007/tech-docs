@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Commands · Claude Code 中文文档</title>
+<meta name="description" content="Claude Code 中可用命令的完整参考，包括内置命令和捆绑的 skills。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="commands">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/commands" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link active" href="commands.html" aria-current="page">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>参考</span> <span class="sep">/</span> <span>参考</span></div>
+    <article class="prose" id="article"><h1 id="commands">Commands</h1>
+<blockquote>
+<p>Claude Code 中可用命令的完整参考，包括内置命令和捆绑的 skills。</p>
+</blockquote>
+<p>Commands 从会话内部控制 Claude Code。它们提供了一种快速方式来切换模型、管理权限、清除上下文、运行工作流等。</p>
+<p>输入 <code>/</code> 查看可用的命令，或输入 <code>/</code> 后跟字母来筛选。<a href="#how-the-command-menu-matches-what-you-type">命令菜单如何匹配你输入的内容</a>涵盖了高亮显示、拼写错误以及 Claude Code 在你输入完整名称之前隐藏的少数命令。</p>
+<p>命令只在您的消息开头被识别。命令名称后面的文本成为其参数。在终端提示符处，您可以在一条消息的开头使用多个 <a href="skills.html#stack-several-skills-in-one-message">skill</a>：输入 <code>/skill-a /skill-b do XYZ</code> 会加载这两个 skill，并将尾部文本作为参数传递给每个 skill。最多可以链接六个 skill。</p>
+<p>如果你在 Claude 响应时发送命令，Claude Code 会将其排队，并在当前轮次完成后运行。Claude Code 会立即运行某些命令而不中断响应，例如 <code>/status</code>、<code>/tasks</code> 和 <code>/usage</code>。在<a href="fullscreen.html">全屏渲染</a>中，Claude Code 也会立即打开对话命令，例如 <code>/theme</code> 和 <code>/help</code>。在 v2.1.234 之前，Claude Code 会将这些对话排队直到轮次完成。</p>
+<h2 id="commands-across-a-typical-workflow">典型工作流程中的命令</h2>
+<p>大多数命令在会话的特定阶段很有用，从设置项目到发布更改。</p>
+<p><strong>首次在仓库中的会话。</strong> 运行 <code>/init</code> 生成一个启动 <code>CLAUDE.md</code>，然后运行 <code>/memory</code> 来完善它。使用 <code>/mcp</code> 设置项目需要的任何服务器，要求 Claude 创建你想要的任何 <a href="sub-agents.html">subagents</a>，并运行 <code>/permissions</code> 来设置你的批准规则。</p>
+<p><strong>执行任务期间。</strong> <code>/plan</code> 在大型更改前切换到 plan mode。<code>/model</code> 和 <code>/effort</code> 调整你使用的模型以及它应用多少推理。当对话变得很长时，<code>/context</code> 显示什么在填充窗口，<code>/compact</code> 总结它以释放空间。使用 <code>/btw</code> 提出不应添加到对话历史的附带问题。</p>
+<p><strong>并行运行工作。</strong> Claude 将附带任务委派给 <a href="sub-agents.html">subagents</a>，<code>/tasks</code> 列出当前会话的后台工作，包括已完成的 subagents。<code>/background</code> 分离整个会话以继续作为 <a href="agent-view.html">background agent</a> 运行并释放你的终端。对于跨越代码库的大型更改，<code>/batch</code> 将其分解为独立单元并在各自的 <a href="worktrees.html">worktree</a> 中运行每个单元。请参阅 <a href="agents.html">Run agents in parallel</a> 了解这些方法如何相关。</p>
+<p><strong>在你发布之前。</strong> <code>/diff</code> 显示更改的内容。<code>/code-review</code> 检查当前 diff 是否存在正确性错误和清理，并可以使用 <code>--fix</code> 应用发现的问题；传递 PR 号码，例如 <code>/code-review high 1234</code>，以改为审查拉取请求。<code>/review</code> 是一个别名。<code>/code-review ultra</code> 在云中运行多代理审查。<code>/security-review</code> 检查 diff 是否存在安全漏洞。</p>
+<p><strong>会话之间。</strong> <code>/clear</code> 在保持项目记忆的同时开始新任务。<code>/resume</code> 返回到较早的对话，<code>/branch</code> 分支当前对话以尝试不同的方向，<code>/fork</code> 将其复制到新的 <a href="agent-view.html">后台会话</a>。<code>/teleport</code> 将云端会话拉入此终端，<code>/remote-control</code> 让你从另一台设备继续此本地会话。</p>
+<p><strong>当出现问题时。</strong> <code>/rewind</code> 将代码和对话回滚到检查点，或总结对话的一部分。<code>/doctor</code> 运行设置检查以诊断安装和配置问题并可以修复它们，<code>/debug</code> 诊断运行时问题，<code>/feedback</code> 报告附加会话上下文的错误。</p>
+<h2 id="all-commands">所有命令</h2>
+<p>下表列出了 Claude Code 中包含的所有命令。大多数是内置命令，其行为编码在 CLI 中。有两类条目带有标记：</p>
+<ul>
+<li><strong><a href="skills.html#bundled-skills">Skill</a></strong>：随附 skill。它的工作方式与您自己编写的 skill 相同：是交给 Claude 的提示词。</li>
+<li><code>/verify</code> 仅在您调用时运行。在 v2.1.215 之前，Claude 也可以自行运行 <code>/verify</code>。</li>
+<li><strong><a href="workflows.html#bundled-workflows">工作流</a></strong>：随附的<a href="workflows.html">动态工作流</a>，会将工作分发到多个子代理并在后台运行。</li>
+<li><code>/deep-research</code> 仅在您调用时运行。</li>
+</ul>
+<p>要添加您自己的命令，请参阅 <a href="skills.html">skill</a>。</p>
+<p>在下表中，<code>&lt;arg&gt;</code> 表示必需参数，<code>[arg]</code> 表示可选参数。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>并非每个命令都会对每个用户显示。可用性取决于您的平台、套餐和环境。例如，<code>/desktop</code> 仅在使用 Claude 订阅登录时才会在 macOS 和 x64 Windows 上显示，而 <code>/upgrade</code> 不会在 Enterprise 套餐上显示。</p></div></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">命令</th>
+<th style="text-align: left;">用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/add-dir &lt;path&gt;</code></td>
+<td style="text-align: left;">添加一个工作目录，以便在当前会话期间访问文件。输入部分路径可查看匹配的目录建议；按 <code>Tab</code> 接受其中一个。大多数 <code>.claude/</code> 配置<a href="permissions.html#additional-directories-grant-file-access-not-configuration">不会从添加的目录中被发现</a>。您无法添加大多数<a href="errors.html#working-directory-is-a-network-path">网络路径</a>，例如 <code>\\server\share</code>。成功添加后，您的 <a href="hooks.html#directoryadded"><code>DirectoryAdded</code> hook</a> 会运行。如果在 Claude 回复时运行此命令，Claude Code 会立即要求您确认该目录，确认后，Claude 在同一轮次中的下一次工具调用即可访问该目录。在 v2.1.234 之前，Claude Code 会将该命令排队，直到该轮次结束</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/advisor [model\|off]</code></td>
+<td style="text-align: left;">启用或禁用<a href="advisor.html">顾问工具</a>，它会在任务的关键时刻咨询第二个模型以获取指导。接受 <code>fable</code>、<code>opus</code>、<code>sonnet</code> 或完整的模型 ID。<code>fable</code> 需要 <a href="advisor.html#choose-an-advisor-model">Fable 访问权限</a>。不带参数时，打开选择器。在没有交互式终端的会话中，或通过 <a href="remote-control.html#limitations">Remote Control</a> 使用时，请将模型或 <code>off</code> 作为参数传递；在这些情况下不带参数时，该命令会以文本形式输出当前顾问。这些形式需要 Claude Code v2.1.260 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/agents</code></td>
+<td style="text-align: left;">输出一条提醒，提示您请 Claude 创建或管理<a href="sub-agents.html">子代理</a>，或直接编辑 <code>.claude/agents/</code> 或 <code>~/.claude/agents/</code>。在 v2.1.197 及更早版本中，打开用于创建和管理子代理配置的交互式界面</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/artifact-capabilities</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 加载已发布的 <a href="artifacts.html">Artifact</a> 可使用的运行时功能参考，例如<a href="artifacts.html#pull-live-data-with-mcp-connectors">调用您的连接器</a>或<a href="artifacts.html#offer-a-file-download">提供文件下载</a>，包括您的账户拥有哪些功能。Claude 通常会在构建使用其中某项功能的页面之前自行加载它。在 <a href="artifacts.html#availability">Artifact 可用</a>的地方可用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/artifact-diagramming</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 加载供 Claude 在 <a href="artifacts.html">Artifact</a> 中遵循的绘图指导：何时使用图表有帮助、绘制什么，以及如何编写在浅色和深色主题下都清晰可读的内联 SVG。需要 Claude Code v2.1.221 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/artifacts</code></td>
+<td style="text-align: left;">列出您拥有的或与您共享的 <a href="artifacts.html#find-an-artifact-again">Artifact</a>，然后将其中一个附加到会话、在浏览器中打开，或复制其链接。在 <a href="artifacts.html#availability">Artifact 可用</a>的地方可用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/auto-mode-setup</code></td>
+<td style="text-align: left;">根据您的项目和最近的会话<a href="auto-mode-config.html#generate-environment-entries">起草 <code>autoMode.environment</code> 条目</a>，然后审阅草稿并将其保存到您的用户设置中。在 Pro、Max、Ultra 或 Team 套餐上，需要 Claude Code v2.1.228 或更高版本，在原生 Windows 上则需要 v2.1.233 或更高版本。在 Enterprise 套餐上或使用 Claude Console API 密钥时，需要 v2.1.283 或更高版本。如果该命令不存在，请参阅 <a href="auto-mode-config.html#auto-mode-setup-returns-unknown-command"><code>/auto-mode-setup</code> 返回 "Unknown command"</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/autocompact [auto\|&lt;tokens&gt;]</code></td>
+<td style="text-align: left;">设置自动压缩窗口：即上下文窗口填充到多满时 Claude Code 会自动压缩。传递大小（例如 <code>500k</code>），或传递 <code>auto</code> 以恢复为针对您的模型调整的窗口。Claude Code 会将该值保存到用户设置并应用于当前会话。有关接受的值以及哪些设置会覆盖它，请参阅<a href="model-config.html#set-the-auto-compact-window">设置自动压缩窗口</a>。不带参数时，打开显示当前窗口的对话框。需要 Claude Code v2.1.221 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/autofix-pr [prompt]</code></td>
+<td style="text-align: left;">生成一个<a href="claude-code-on-the-web.html#auto-fix-pull-requests">云端会话</a>，监视当前分支的 PR，并在 CI 失败或审阅者留下评论时推送修复。通过 <code>gh pr view</code> 从您检出的分支检测打开的 PR；要监视其他 PR，请先检出其分支。默认情况下，云端会话会被指示修复每个 CI 失败和审阅评论；传递提示词可给出不同的指令，例如 <code>/autofix-pr only fix lint and type errors</code>。需要 <code>gh</code> CLI 以及<a href="claude-code-on-the-web.html">云端会话</a>访问权限</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/background [prompt]</code></td>
+<td style="text-align: left;">将当前会话分离，作为<a href="agent-view.html">后台 Agent</a> 运行，并释放此终端。传递提示词可在分离前再发送一条指令。使用 <code>claude agents</code> 监视该会话。要将对话复制到新的后台会话中，同时让当前会话继续运行，请使用 <code>/fork</code>。别名：<code>/bg</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/batch &lt;instruction&gt;</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 在代码库中并行编排大规模更改。研究代码库，将工作分解为 5 到 30 个独立单元，并呈现计划。获得批准后，为每个单元在隔离的 <a href="worktrees.html">worktree</a> 中生成一个<a href="sub-agents.html#run-subagents-in-foreground-or-background">后台子代理</a>。每个子代理实现其单元、运行测试并发布其更改。需要 git 仓库，或一个用于创建 worktree 的 <a href="worktrees.html#non-git-version-control"><code>WorktreeCreate</code> hook</a>。在 git 仓库之外，<code>/batch</code> 需要 Claude Code v2.1.281 或更高版本。示例：<code>/batch migrate src/ from JavaScript to TypeScript</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/branch [name]</code></td>
+<td style="text-align: left;">在此处创建当前对话的分支，以便您可以尝试不同的方向而不丢失当前的对话。会将您切换到该分支并保留原始对话，您可以使用 <code>/resume</code> 返回原始对话。要将副本作为单独的<a href="agent-view.html">后台会话</a>运行而不切换进去，请使用 <code>/fork</code>；要将附带任务交给会向此对话汇报结果的<a href="sub-agents.html">子代理</a>，请使用 <code>/subtask</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/btw [question]</code></td>
+<td style="text-align: left;">询问有关当前会话的<a href="interactive-mode.html#side-questions-with-%2Fbtw">附带问题</a>，而不将其添加到对话中。如果不带问题运行 <code>/btw</code>，Claude Code 会显示您最近的附带问题，以便您浏览之前的回答；如果您还没有提问过，Claude Code 会输出一行用法说明</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/bug [report]</code></td>
+<td style="text-align: left;">报告 bug 或分享您的对话。您可以选择包含多少会话历史，并在发送任何内容之前在同意屏幕上确认。当您通过第一方连接登录 Anthropic 时，报告会发送给 Anthropic；在第三方提供商上，或没有 Anthropic 凭据时，Claude Code 会将报告写入<a href="data-usage.html#telemetry-services">位于 <code>~/.claude/feedback-bundles/</code> 下的本地归档</a>，由您自行转发。在 <a href="vs-code.html#use-the-prompt-box">VS Code 扩展</a>中，<code>/bug</code> 会改为打开扩展自己的反馈对话框；需要 Claude Code v2.1.229 或更高版本。如果在 Claude 回复时运行此命令，Claude Code 会立即打开对话框。在 v2.1.232 之前，Claude Code 会将该命令排队，直到该轮次结束。别名：<code>/share</code>。在 v2.1.212 之前，<code>/bug</code> 和 <code>/share</code> 是 <code>/feedback</code> 的别名</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/cd &lt;path&gt;</code></td>
+<td style="text-align: left;">将此会话移动到新的工作目录，同时保留对话。输入部分路径可查看匹配的目录建议；按 <code>Tab</code> 接受其中一个。有关移动后 Claude Code 会立即从新目录应用哪些内容，以及 <code>/cd</code> 与 <code>/add-dir</code> 的区别，请参阅<a href="permissions.html#move-the-session-to-another-directory">将会话移动到另一个目录</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/chrome</code></td>
+<td style="text-align: left;">配置 <a href="chrome.html">Claude in Chrome</a> 设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/claude-api [migrate\|upgrade\|api-version\|managed-agents-onboard\|managed-agents-secure\|prompt-audit\|cost-optimize\|build-eval\|hillclimb\|preserved-thinking-migration]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 加载适用于您项目语言的 <a href="https://platform.claude.com/docs/en/api/overview" target="_blank" rel="noopener">Claude API</a> 和 <a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank" rel="noopener">Managed Agents</a> 参考资料。当您的代码导入 <code>anthropic</code> 或 <code>@anthropic-ai/sdk</code> 时也会自动激活。有关每个子命令的作用及其所需版本，请参阅<a href="skills.html#work-on-claude-api-projects">处理 Claude API 项目</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/claude-in-chrome [task]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 让 Claude 通过 <a href="chrome.html">Claude in Chrome</a> 在您的浏览器中执行任务，例如测试页面、填写表单或读取控制台日志。当会话启用了 Chrome 集成时可用（例如使用 <code>claude --chrome</code>），或者当 Claude Code 可以提议<a href="chrome.html#install-the-extension-when-claude-asks">安装扩展</a>时可用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/clear [name]</code></td>
+<td style="text-align: left;">使用空上下文开始新对话。传递名称可在 <code>/resume</code> 选择器中为之前的对话添加标签。要在继续同一对话的同时释放上下文，请改用 <code>/compact</code>。使用 <code>/resume</code> 恢复之前的对话，或者在同一 Claude Code 进程中，从<a href="checkpointing.html#rewind-past-a-cleared-conversation">回退菜单的上一个会话条目</a>恢复。别名：<code>/reset</code>、<code>/new</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/code-review [low\|medium\|high\|xhigh\|max\|ultra] [--fix] [--comment] [--max-findings n\|all\|default] [pr#\|branch\|path]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 审查当前 diff，或您传递的 PR 编号、分支或路径，查找正确性 bug。根据您的模型和 effort 级别，审查还会涵盖清理机会。传递 <code>--fix</code> 可让 Claude 应用发现的问题，传递 <code>--comment</code> 可将其发布到 GitHub PR 或 GitLab Merge Request 上，传递 <code>ultra</code> 可运行深度<a href="ultrareview.html">云端审查</a>。发布到 GitLab Merge Request 需要 Claude Code v2.1.257 或更高版本。在以 <code>github.com</code> PR 为目标使用 <code>ultra</code> 时，传递 <code>--post</code> 可在启动对话框中预先选择<a href="ultrareview.html#post-findings-to-the-pull-request">将完成的发现发布到 PR</a>；<code>--post</code> 需要 Claude Code v2.1.227 或更高版本。有关 effort 级别、目标指定方式以及它与 <code>/simplify</code> 的关系，请参阅<a href="code-review-local.html">使用 <code>/code-review</code> 在本地审查</a>。别名：<code>/review</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/color [color\|default]</code></td>
+<td style="text-align: left;">设置当前会话的提示栏颜色。可用颜色：<code>red</code>、<code>blue</code>、<code>green</code>、<code>yellow</code>、<code>purple</code>、<code>orange</code>、<code>pink</code>、<code>cyan</code>。使用 <code>default</code> 重置，或不带参数运行以随机选择一种颜色。连接 <a href="remote-control.html">Remote Control</a> 时，颜色会同步到 claude.ai/code。也可在非交互模式（<code>-p</code>）中使用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/compact [instructions]</code></td>
+<td style="text-align: left;">通过总结到目前为止的对话来释放上下文。可选择传递摘要的重点指令。请参阅<a href="context-window.html#what-survives-compaction">压缩如何处理规则、skill 和记忆文件</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/config [key=value ...]</code></td>
+<td style="text-align: left;">打开<a href="settings.html">设置</a>界面，以调整主题、模型、<a href="output-styles.html">输出样式</a>和其他偏好。传递一个或多个 <code>key=value</code> 对可直接设置某项设置而无需打开界面，例如 <code>/config thinking=false</code>、<code>/config theme=dark</code> 或 <code>/config model=sonnet</code>。<code>key=value</code> 形式也适用于非交互模式（<code>-p</code>），以及通过 <a href="remote-control.html">Remote Control</a> 从 Claude 移动应用使用。<code>key=value</code> 形式无法开启需要您在面板中确认的设置，例如 <a href="interactive-mode.html#turn-automatic-continue-off"><code>autoContinueAtUsageLimit</code></a>，但可以将其关闭。运行 <code>/config --help</code> 可列出其接受的键。别名：<code>/settings</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/context [all]</code></td>
+<td style="text-align: left;">以彩色网格形式可视化当前上下文使用情况。显示针对占用大量上下文的工具、记忆膨胀的优化建议以及容量警告。当对话超出上下文窗口时，输出会包含一条<a href="errors.html#context-exceeds-the-token-limit">警告</a>，显示超出限制多少以及哪个命令可以释放空间。在<a href="fullscreen.html">全屏模式</a>下，<code>/context</code> 会折叠逐项明细以保持网格可见。传递 <code>all</code> 可将其展开</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/copy [N]</code></td>
+<td style="text-align: left;">将最后一条助手回复复制到剪贴板。传递数字 <code>N</code> 可复制倒数第 N 条回复：<code>/copy 2</code> 复制倒数第二条。当存在代码块或引用块时，会显示交互式选择器，以选择单个块或完整回复。在选择器中按 <code>w</code> 可将所选内容写入文件而不是剪贴板，这在通过 SSH 使用时很有用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/cost</code></td>
+<td style="text-align: left;"><code>/usage</code> 的别名</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/dataviz [request]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 图表、图形和仪表板的设计指导。Claude 会为数据选择图表形式，按角色分配颜色，使用随附脚本验证调色板的色盲安全性和对比度，并应用标记、交互和无障碍规则。使用品牌中立的占位调色板，供您替换为自己的调色板</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/debug [description]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 为当前会话启用调试日志记录，并通过读取会话调试日志来排除问题。除非您使用 <code>claude --debug</code> 启动，否则调试日志记录默认关闭，因此在会话中途运行 <code>/debug</code> 会从该时刻开始捕获日志。可选择描述问题以聚焦分析</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/deep-research &lt;question&gt;</code></td>
+<td style="text-align: left;"><strong><a href="workflows.html#bundled-workflows">工作流</a>。</strong> 针对一个问题分散进行网络搜索，获取并交叉核对来源，并综合生成带引用的报告</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/design [brief]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 在一个画布上以画板形式起草 UI 模型、屏幕流程、着陆页或海报，并发布为 Claude Design <a href="artifacts.html#draft-a-design-canvas">Artifact</a>，例如 <code>/design a settings screen for a mobile banking app</code>。您可以在桌面浏览器中编辑画板，编辑内容会自动保存。您可以将每个画板导出为 PNG 或 PDF。需要 Claude Code v2.1.265 或更高版本、<a href="artifacts.html#availability">Artifact 可用</a>的会话，以及 <a href="artifacts.html#start-from-a-slides-design-or-docs-template">Design 模板可用</a>的账户；如果您的组织已关闭该模板，<code>/design</code> 不会起草设计。可在 Anthropic API 上使用。在 Amazon Bedrock、Google Cloud's Agent Platform、Microsoft Foundry 和 Claude Platform on AWS 上，Artifact 不可用，因此该命令在这些平台上不可用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/design consent</code>, <code>/design revoke</code></td>
+<td style="text-align: left;">授予 Claude 访问 <a href="https://claude.ai/design" target="_blank" rel="noopener">Claude Design</a> 的权限，或撤销该权限。当 Claude 的回复要求您运行 <code>/design consent</code> 时，请自行在 Claude Code 输入框中输入该命令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/design-login</code></td>
+<td style="text-align: left;">使用您的 claude.ai 账户为 <code>/design-sync</code> 授权设计系统访问。每当 <code>/design-sync</code> 或 <code>/design consent</code> 提示您登录时，请使用 <code>/design-login</code> 登录。此登录用于位于 claude.ai/design 的独立 Claude Design 站点，该站点将于 2026 年 12 月 14 日前关闭；请参阅<a href="https://support.claude.com/en/articles/17440474-migrate-from-standalone-claude-design-to-claude" target="_blank" rel="noopener">从独立 Claude Design 迁移到 Claude</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/design-sync [hint]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 转换您仓库中的 React 设计系统并将其上传到 <a href="https://claude.ai/design" target="_blank" rel="noopener">Claude Design</a>，使其生成的设计使用您的真实组件。可选择为设计系统命名，例如 <code>/design-sync Acme DS</code>。首次同步会验证每个组件，在大型仓库上可能需要几个小时。可在 Anthropic API 上使用。它需要 claude.ai，而 CLI 在 Amazon Bedrock、Google Cloud's Agent Platform、Microsoft Foundry 或 Claude Platform on AWS 上，或通过 <a href="claude-apps-gateway.html#availability-and-limitations">Claude apps gateway</a> 使用时不会连接 claude.ai。该命令在这些情况下不可用。此命令会上传到独立的 claude.ai/design 站点，该站点将于 2026 年 12 月 14 日前关闭；请参阅<a href="https://support.claude.com/en/articles/17440474-migrate-from-standalone-claude-design-to-claude" target="_blank" rel="noopener">从独立 Claude Design 迁移到 Claude</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/desktop</code></td>
+<td style="text-align: left;">在 Claude Code Desktop 应用中继续当前会话。需要 macOS 或 x64 Windows 以及 Claude 订阅。别名：<code>/app</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/diff</code></td>
+<td style="text-align: left;">审查工作树中的更改，包括 Claude 到目前为止所做的编辑。请参阅<a href="interactive-mode.html#review-changes-with-%2Fdiff">使用 /diff 审查更改</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/doctor [prompt-audit [path]]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 运行设置检查，诊断安装、设置、扩展和 <code>CLAUDE.md</code> 方面的问题，并提出修复建议，Claude 会在您确认后应用这些修复。有关检查涵盖的内容，或要改用 <code>prompt-audit</code> 审计您的指令，请参阅<a href="skills.html#check-your-setup-with-/doctor">使用 <code>/doctor</code> 检查您的设置</a>。<code>prompt-audit</code> 子命令需要 Claude Code v2.1.283 或更高版本。别名：<code>/checkup</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/effort [level\|auto\|status\|ultracode [on\|off]]</code></td>
+<td style="text-align: left;">设置 <a href="model-config.html#adjust-effort-level">effort 级别</a>：<code>low</code> 到 <code>xhigh</code>、<code>max</code> 或 <code>auto</code>；<code>status</code> 会输出当前级别。<code>ultracode</code> 或 <code>ultracode on</code> 会为会话开启 <a href="workflows.html#let-claude-decide-with-ultracode">ultracode</a>，<code>ultracode off</code> 会将其关闭；<a href="settings-reference.html#ultracode"><code>ultracode</code></a> 键会持久保存。<code>max</code> 仅对当前会话有效。<code>on</code> 和 <code>off</code> 参数需要 Claude Code v2.1.284 或更高版本。如果您在 Claude 工作时运行 <code>/effort</code>，请参阅<a href="model-config.html#when-a-new-effort-level-starts">新级别何时生效</a>。在 v2.1.205 或更高版本中可在 <code>-p</code> 中使用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/exit</code></td>
+<td style="text-align: left;">退出 CLI。在已附加的<a href="agent-view.html#attach-to-a-session">后台会话</a>中，此操作会分离，会话继续运行。别名：<code>/quit</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/export [filename]</code></td>
+<td style="text-align: left;">将当前对话导出为纯文本。提供文件名时，直接写入该文件。不提供时，打开对话框以复制到剪贴板或保存到文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/fast [on\|off]</code></td>
+<td style="text-align: left;">开启或关闭<a href="fast-mode.html">快速模式</a>。在 Claude 回复时运行此命令，Claude Code 会切换快速模式而无需等待轮次结束，但正在运行的轮次仍会以其原始速度完成。在 v2.1.242 之前，Claude Code 会根据从 Anthropic 获取的功能标志来决定是在轮次中途运行该命令，还是将其排队直到轮次结束，并且在不<a href="env-vars.html#features-that-need-feature-flag-fetching">获取功能标志</a>的会话中始终将其排队。在使用 <code>-p</code> 的非交互模式中可用性有限；请参阅<a href="fast-mode.html#toggle-fast-mode">切换快速模式</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/feedback [report]</code></td>
+<td style="text-align: left;">发送有关 Claude Code 的产品反馈。打开与 <a href="#all-commands"><code>/bug</code></a> 相同的对话框，具有相同的同意步骤、发送规则和轮次中途行为。在具有 <a href="tools-reference.html#sendfeedback-tool-behavior">Claude 起草的反馈</a>的会话中，不带参数的 <code>/feedback</code> 会改为打开草稿队列，您可以在其中审阅、编辑、发送或丢弃 Claude 排入队列的草稿；该队列包含一个在对话框中撰写新报告的选项。带参数时，以及对于 <code>/bug</code> 始终如此，对话框会直接打开</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/fewer-permission-prompts</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 扫描您的会话记录，查找常见的只读 Bash 和 MCP 工具调用，然后将按优先级排序的允许列表添加到项目的 <code>.claude/settings.json</code> 中，以减少权限提示</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/focus</code></td>
+<td style="text-align: left;">切换专注视图，该视图仅显示您的最后一条提示词、带有编辑 diffstat 的单行工具调用摘要以及最终回复。工具调用摘要还会统计该轮次中启动的子代理数量，并将已完成的后台任务通知合并为单个计数。该选择会跨会话保持；在设置中设置 <a href="settings-reference.html#viewmode"><code>viewMode</code></a> 可覆盖它。仅在<a href="fullscreen.html">全屏渲染</a>中可用。在 <a href="remote-control.html">Remote Control</a> 客户端中，运行 <code>/focus [on\|off]</code> 可仅为当前会话开启或关闭专注视图，而不更改您保存的选择；这需要 Claude Code v2.1.281 或更高版本。<a href="vs-code.html#use-the-prompt-box">VS Code 扩展</a>提供其自己的 Focus 视图，作为命令菜单中的开关，存储为扩展设置，独立于 <code>viewMode</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/fork [prompt]</code></td>
+<td style="text-align: left;"><a href="agent-view.html#copy-the-session-with-%2Ffork">将当前对话复制</a>到新的后台会话中，并在此处继续工作。传递提示词后，副本会立即开始处理；不传递时，副本会在 Agent 视图中等待其第一条提示词。除非副本<a href="agent-view.html#how-file-edits-are-isolated">就地编辑</a>，否则 Claude Code 会指示它在进行代码更改之前创建自己的 worktree；该隔离指令需要 Claude Code v2.1.221 或更高版本。要将附带任务交给结果会返回到此对话的子代理，请使用 <code>/subtask</code>；要自己切换到副本中，请使用 <code>/branch</code>。当<a href="agent-view.html#turn-off-agent-view">关闭 Agent 视图</a>时，<code>/fork</code> 会改为启动<a href="sub-agents.html#fork-the-current-conversation">分叉子代理</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/goal [condition\|clear]</code></td>
+<td style="text-align: left;">设置<a href="goal.html">目标</a>：Claude 会跨轮次持续工作，直到满足条件或目标<a href="goal.html#how-evaluation-works">因其他原因被清除</a>。不带参数时，显示当前目标或最近达成的目标。<code>clear</code>、<code>stop</code>、<code>off</code>、<code>reset</code>、<code>none</code> 或 <code>cancel</code> 可提前移除活动目标</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/heapdump</code></td>
+<td style="text-align: left;">将 JavaScript 堆快照和内存明细写入 <code>~/Desktop</code>（在没有 Desktop 文件夹的 Linux 上则写入主目录），用于诊断高内存使用率。报告内存问题时只附加 <code>-diagnostics.json</code> 文件；<code>.heapsnapshot</code> 包含您的完整对话和凭据，因此请勿分享它。<a href="#how-the-command-menu-matches-what-you-type">在命令菜单中隐藏</a>；需要完整输入。请参阅<a href="troubleshooting.html#high-cpu-or-memory-usage">如何处理输出</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/help</code></td>
+<td style="text-align: left;">显示帮助和可用命令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/hooks</code></td>
+<td style="text-align: left;">查看 <a href="hooks.html#the-%2Fhooks-menu">hook</a> 配置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/ide</code></td>
+<td style="text-align: left;">管理 IDE 集成并显示状态</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/import [codex\|gemini\|cursor] [--dry-run] [--yes]</code></td>
+<td style="text-align: left;">将您计算机上 OpenAI Codex、Google Gemini CLI 或 Cursor 中的配置导入 Claude Code，包括指令文件、MCP 服务器、命令、子代理和 skill。在使用 <code>-p</code> 的<a href="headless.html">非交互模式</a>中，<code>/import</code> 会列出它找到的内容，并给出用于确认导入的命令。添加 <code>--dry-run</code> 可预览而不写入任何内容，或添加 <code>--yes</code> 以跳过交互式选择器。在 Amazon Bedrock、Google Cloud's Agent Platform、Microsoft Foundry 或 Claude Platform on AWS 上，或通过 <a href="claude-apps-gateway.html#availability-and-limitations">Claude apps gateway</a> 使用时不可用。当您关闭<a href="env-vars.html#features-that-need-feature-flag-fetching">功能标志获取</a>时也不可用。从 Cursor 导入需要 v2.1.265 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/init</code></td>
+<td style="text-align: left;">使用 <code>CLAUDE.md</code> 指南初始化项目。设置 <code>CLAUDE_CODE_NEW_INIT=1</code> 可使用交互式流程，该流程还会引导您完成 skill、hook 和个人记忆文件的设置。如果 <code>/init</code> 发现 OpenAI Codex 或 Google Gemini CLI 配置，它会提议使用 <code>/import</code> 将其迁移过来</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/insights</code></td>
+<td style="text-align: left;">生成 HTML 报告，分析您在此计算机上的最近会话：您在哪些项目中工作、如何使用 Claude Code、哪里出现问题，以及值得尝试的功能。在<a href="claude-code-on-the-web.html">云端会话</a>中不可用。有关报告位置、保留期限和开销，请参阅<a href="costs.html#analyze-your-usage-patterns">分析您的使用模式</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/install-github-app</code></td>
+<td style="text-align: left;">为仓库安装 Claude GitHub App，并可选择设置 <a href="github-actions.html">GitHub Actions</a> 工作流和密钥。引导您选择仓库并配置集成。仅适用于 github.com 仓库。当您仓库的 git 远程位于 gitlab.com 或 bitbucket.org 上时，该命令会输出一条通知并退出，而不是开始设置。要从 GitLab 流水线运行 Claude Code，请参阅 <a href="gitlab-ci-cd.html">GitLab CI/CD</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/install-slack-app</code></td>
+<td style="text-align: left;">安装 Claude Slack 应用。打开浏览器以完成 OAuth 流程</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/keybindings</code></td>
+<td style="text-align: left;">打开您的<a href="keybindings.html">快捷键</a>文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/list-agents</code></td>
+<td style="text-align: left;">列出 Claude 可以向其发送消息的子代理、<a href="agent-teams.html">agent team</a> 队友以及其他 Claude Code 会话，并显示每一项应使用的名称。请参阅<a href="cross-session-messaging.html">跨会话消息传递</a>。也可作为 <code>/peers</code> 使用。需要 Claude Code v2.1.224 或更高版本；更早版本会报告 <code>Unknown command: /list-agents</code>。队友行以及显示此会话自身名称的第一行需要 v2.1.239 或更高版本。仅在<a href="cross-session-messaging.html#availability">已启用跨会话消息传递</a>的会话中可用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/login</code></td>
+<td style="text-align: left;">登录您的 Anthropic 账户</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/logout</code></td>
+<td style="text-align: left;">从您的 Anthropic 账户注销</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/loop [interval] [prompt]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 在会话保持打开期间重复运行提示词。省略间隔时，Claude 会<a href="scheduled-tasks.html#let-claude-choose-the-interval">自行决定迭代之间的节奏</a>。省略提示词时，Claude 会运行<a href="scheduled-tasks.html#run-the-built-in-maintenance-prompt">内置维护提示词</a>或您的 <a href="scheduled-tasks.html#customize-the-default-prompt-with-loop-md"><code>loop.md</code></a>。示例：<code>/loop 5m check if the deploy finished</code>。请参阅<a href="scheduled-tasks.html">按计划运行提示词</a>。别名：<code>/proactive</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/mcp [reconnect (&lt;server&gt;\|all)\|enable\|disable [&lt;server&gt;\|all]]</code></td>
+<td style="text-align: left;">管理 MCP 服务器连接和 OAuth 身份验证。不带参数运行可打开交互式列表，或传递 <code>reconnect</code>、<code>enable</code> 或 <code>disable</code> 以及服务器名称或 <code>all</code>，可在不打开列表的情况下更改连接状态。<code>reconnect all</code> 会<a href="mcp.html#retry-failed-servers-yourself">重试每个失败或需要身份验证的服务器</a>。在非交互模式（<code>-p</code>）中，不带参数运行会输出服务器状态的文本摘要，而不是打开列表</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/memory</code></td>
+<td style="text-align: left;">编辑 <code>CLAUDE.md</code> 文件，启用或禁用<a href="memory.html#auto-memory">自动记忆</a>，并查看自动记忆条目</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/mobile</code></td>
+<td style="text-align: left;">显示用于下载 Claude 移动应用的二维码。别名：<code>/ios</code>、<code>/android</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/model [model]</code></td>
+<td style="text-align: left;">切换 AI 模型并将其保存为新会话的默认模型。对于支持的模型，使用左/右箭头<a href="model-config.html#adjust-effort-level">调整 effort 级别</a>。不带参数时，打开选择器；在某一行上按 <code>s</code> 可仅为当前会话切换。请参阅<a href="interactive-mode.html#when-claude-code-sends-what-you-queued">新模型何时生效</a>。在 v2.1.242 之前，切换可能需要等待。使用 <code>-p</code> 时，请传递模型参数，该参数不会保存为默认模型；需要 v2.1.205 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/output-style [style]</code></td>
+<td style="text-align: left;">列出<a href="output-styles.html">输出样式</a>或切换到其中一种，例如 <code>/output-style concise</code>。请参阅<a href="output-styles.html#change-your-output-style">更改输出样式</a>。需要 Claude Code v2.1.269 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/passes</code></td>
+<td style="text-align: left;">与朋友分享一周免费的 Claude Code。仅在您的账户符合条件时可见</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/permissions</code></td>
+<td style="text-align: left;">管理工具权限的允许、询问和拒绝规则。打开交互式对话框，您可以在其中按作用域查看规则、添加或删除规则、管理工作目录，以及查看<a href="auto-mode-config.html#review-denials">最近的自动模式拒绝记录</a>。您还可以从对话框的 <strong>Auto mode</strong> 选项卡查看和编辑<a href="auto-mode-config.html#edit-rules-from-permissions">自动模式分类器规则</a>。如果在 Claude 回复时运行此命令，Claude Code 会立即打开对话框，并从 Claude 在同一轮次中的下一次工具调用开始应用您的更改。在 v2.1.234 之前，Claude Code 会将该命令排队，直到该轮次结束。别名：<code>/allowed-tools</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/plan [description]</code></td>
+<td style="text-align: left;">直接从输入框进入计划模式。传递可选描述可进入计划模式并立即开始处理该任务，例如 <code>/plan fix the auth bug</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/plugin [subcommand]</code></td>
+<td style="text-align: left;">管理 Claude Code <a href="plugins-overview.html">插件</a>。不带参数运行可打开插件菜单，或传递 <code>list</code>、<code>install</code>、<code>enable</code> 或 <code>disable</code> 等子命令以直接执行操作。Claude Code 可以在安装期间激活插件；<a href="plugins-install.html#install-a-plugin">安装摘要</a>会告诉您插件是否已激活，或是否需要运行 <code>/reload-plugins</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/plugin-authoring</code></td>
+<td style="text-align: left;">加载 Claude 用于<a href="plugins-mods-create.html#ask-claude-for-a-mod">编写 mod</a> 的参考资料。当您请求 mod 时，Claude 可以自行加载它。这是一个来自<a href="plugins-mods-overview.html#mods-built-into-claude-code">内置插件</a>的 skill，您可以在 <code>/plugin</code> 中将其关闭。需要 Claude Code v2.1.287 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/powerup</code></td>
+<td style="text-align: left;">通过带有动画演示的快速交互式课程了解 Claude Code 功能</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/pr-comments [PR]</code></td>
+<td style="text-align: left;">已在 v2.1.91 中移除。请改为直接让 Claude 查看 Pull Request 评论。在更早版本中，获取并显示 GitHub Pull Request 中的评论；自动检测当前分支的 PR，或传递 PR URL 或编号。需要 <code>gh</code> CLI</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/privacy-settings</code></td>
+<td style="text-align: left;">查看和更新您的隐私设置。仅适用于 Pro、Max 和 Ultra 套餐订阅者</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/radio</code></td>
+<td style="text-align: left;">在浏览器中打开 Claude FM lo-fi 电台。没有可用浏览器时输出流 URL</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rate-limit-options</code></td>
+<td style="text-align: left;">显示当 claude.ai 用量限制阻止请求时继续工作的方法：等待并<a href="interactive-mode.html#wait-for-a-usage-limit-to-reset">在限制重置时自动继续</a>、添加<a href="costs.html#add-usage-credits-to-your-subscription">使用额度</a>，或升级您的套餐。当您在自己的终端中遇到限制时，Claude Code 也可能会自行打开此菜单。请参阅<a href="interactive-mode.html#turn-automatic-continue-off">关闭自动继续</a>。需要 claude.ai 订阅。等待并继续的选项行需要 Claude Code v2.1.234 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/recap</code></td>
+<td style="text-align: left;">按需生成当前会话的单行摘要。有关您离开一段时间后出现的自动回顾，请参阅<a href="interactive-mode.html#session-recap">会话回顾</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/release-notes</code></td>
+<td style="text-align: left;">在交互式版本选择器中查看更新日志。选择特定版本以查看其发布说明，或选择显示所有版本。这些说明会出现在您的会话记录中，但不会进入 Claude 看到的对话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/reload-plugins [--force]</code></td>
+<td style="text-align: left;">重新加载所有活动<a href="plugins-overview.html">插件</a>以应用待处理的更改，无需重启。报告每个重新加载组件的数量，并标记任何加载错误。当重新加载会改变已加载的 MCP 工具并使提示缓存失效时，该命令会发出警告并跳过，除非您传递 <code>--force</code>。也可在非交互模式（<code>-p</code>）、Agent SDK 和桌面应用中使用，在这些环境中它仅对直接输入到会话中的内容运行，并且不会应用插件 MCP 服务器的更改；需要 Claude Code v2.1.260 或更高版本。请参阅<a href="plugins-cli-reference.html#reload-plugins">无需重启即可应用插件更改</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/reload-skills</code></td>
+<td style="text-align: left;">重新扫描 <a href="skills.html">skill</a> 和命令目录，使会话期间在磁盘上添加或更改的 skill 无需重启即可使用。报告可用的 skill 数量以及添加或移除的数量</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/remote-control</code></td>
+<td style="text-align: left;">使此会话可通过 claude.ai 进行 <a href="remote-control.html">Remote Control</a>。在未登录时运行，会输出 Remote Control 需要 claude.ai 订阅的提示，并告诉您如何登录。别名：<code>/rc</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/remote-env</code></td>
+<td style="text-align: left;">为您从 CLI 启动的云端会话选择默认<a href="cloud-environments.html#select-an-environment-from-the-cli">云环境</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rename [name]</code></td>
+<td style="text-align: left;">重命名当前会话并在提示栏上显示名称。不提供名称时，根据对话历史自动生成一个名称。也可在非交互模式（<code>-p</code>）中使用。在所有重命名入口（包括 claude.ai 和桌面应用）中，Claude Code 都会将新名称中的控制字符和不可见字符替换为空格，并将名称长度上限设为 200 个字符。如果移除不可见字符后名称为空，Claude Code 会拒绝该名称并显示 <code>That name is empty once invisible characters are removed. Usage: /rename &lt;name&gt;</code>。字符替换和长度上限需要 Claude Code v2.1.221 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/restart</code></td>
+<td style="text-align: left;">重启 Claude Code 并恢复此会话，从而应用已安装的更新。在更新安装后页脚提供此选项时运行它。需要 Pro、Max 或 Ultra 套餐，以及在 macOS 或 Linux（非 WSL）上的原生安装。需要 Claude Code v2.1.288 或更高版本。别名：<code>/update</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/resume [session]</code></td>
+<td style="text-align: left;">通过 ID 或名称恢复对话，或打开会话选择器。<a href="agent-view.html">后台会话</a>在选择器中以 <code>bg</code> 标记显示。恢复仍在运行的后台会话时（无论是从选择器还是通过 ID 或名称），会<a href="sessions.html#resume-a-running-background-session">打开该会话</a>：您当前的对话会移到后台，此终端会附加到正在运行的会话。在空输入框中按 <code>←</code> 可返回 Agent 视图，其中也会列出您离开的对话。在 v2.1.285 之前，Claude Code 会拒绝并告诉您使用 <code>claude attach</code> 打开该会话，或先停止它。别名：<code>/continue</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/review [low\|medium\|high\|xhigh\|max\|ultra] [--fix] [--comment] [--max-findings n\|all\|default] [pr#\|branch\|path]</code></td>
+<td style="text-align: left;"><a href="code-review-local.html"><code>/code-review</code></a> 的别名：审查当前 diff，或您传递的 PR 编号、分支或路径（例如 <code>/review 1234</code>），并接受相同的 effort 级别和标志。未指定级别时，审查会沿用您上次输入的 <code>low</code> 到 <code>max</code> 级别；有关确切规则，请参阅<a href="code-review-local.html">使用 <code>/code-review</code> 在本地审查</a>。要进行深度云端审查，请使用 <a href="ultrareview.html"><code>/code-review ultra</code></a>。在 v2.1.223 之前，<code>/review</code> 是一个单独的命令，按编号对 GitHub Pull Request 运行单次只读审查，不带参数运行时会列出打开的 PR 供选择；从 v2.1.186 到 v2.1.201，它运行与 <code>/code-review medium</code> 相同的多 Agent 引擎</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/rewind</code></td>
+<td style="text-align: left;">将对话和/或代码回退到之前的某个时间点，或从选定的消息开始总结。请参阅<a href="checkpointing.html">检查点功能</a>。别名：<code>/checkpoint</code>、<code>/undo</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/run</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 启动并操作您项目的应用，以查看更改是否实际生效，而不仅仅是通过测试。请参阅<a href="skills.html#run-and-verify-your-app">运行并验证您的应用</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/run-skill-generator</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 通过编写一个项目专属的 <a href="skills.html#run-and-verify-your-app">skill</a>，教会 <code>/run</code> 和 <code>/verify</code> 如何在干净的环境中构建、启动和操作您项目的应用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/sandbox</code></td>
+<td style="text-align: left;">切换<a href="sandboxing.html">沙箱模式</a>。仅在支持的平台上可用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/schedule [description]</code></td>
+<td style="text-align: left;">创建、更新、列出或运行<a href="routines.html">云端定时任务</a>（以前称为 Routine）。Claude 会以对话方式引导您完成设置。您还可以询问<a href="routines.html#manage-scheduled-tasks-from-the-cli">定时任务的最近运行情况</a>。别名：<code>/routines</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/scroll-speed</code></td>
+<td style="text-align: left;">以交互方式调整鼠标滚轮<a href="fullscreen.html#mouse-wheel-scrolling">滚动速度</a>。仅在<a href="fullscreen.html">全屏渲染</a>中可用，在 JetBrains IDE 终端中不可用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/security-review</code></td>
+<td style="text-align: left;">分析当前分支上的更改是否存在安全漏洞。审查您的分支与 origin 默认分支之间的 diff，识别注入、身份验证问题和数据泄露等风险。需要 <code>origin</code> 远程；如果审查因 <code>ambiguous argument</code> 错误而失败，请参阅<a href="errors.html#security-review-fails-without-origin-head">错误参考</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/setup-bedrock</code></td>
+<td style="text-align: left;">通过交互式向导配置 <a href="amazon-bedrock.html">Amazon Bedrock</a> 身份验证、区域和模型固定。在设置 <code>CLAUDE_CODE_USE_BEDROCK=1</code> 之前<a href="#how-the-command-menu-matches-what-you-type">在命令菜单中隐藏</a>；需要完整输入。首次使用 Amazon Bedrock 的用户也可以从登录屏幕访问此向导</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/setup-vertex</code></td>
+<td style="text-align: left;">通过交互式向导配置 <a href="google-vertex-ai.html">Google Cloud's Agent Platform</a> 身份验证、项目、区域和模型固定。在设置 <code>CLAUDE_CODE_USE_VERTEX=1</code> 之前<a href="#how-the-command-menu-matches-what-you-type">在命令菜单中隐藏</a>；需要完整输入。首次使用 Google Cloud's Agent Platform 的用户也可以从登录屏幕访问此向导</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/simplify [target]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 审查已更改的代码以寻找清理机会并应用修复。四个审查 <a href="sub-agents.html">Agent</a> 并行运行，涵盖现有辅助函数的复用、简化、效率，以及更改是否处于合适的抽象层级。该审查不查找正确性 bug。使用 <code>/code-review</code> 查找 bug。传递路径或 PR 引用可审查特定目标</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/skill-doctor</code></td>
+<td style="text-align: left;">显示您的每个 <a href="skills.html">skill</a> 在上下文中的开销以及使用频率，以便您<a href="skills.html#find-unused-skills">找到可以关闭的 skill</a>。需要 Claude Code v2.1.252 或更高版本以及<a href="env-vars.html#features-that-need-feature-flag-fetching">功能标志获取</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/skills</code></td>
+<td style="text-align: left;">列出可用的 <a href="skills.html">skill</a>。输入内容可按名称、描述或来源筛选列表。按 <code>t</code> 按 token 数排序，按 <code>Space</code> 或 <code>Enter</code> <a href="skills.html#override-skill-visibility-from-settings">循环切换 skill 对 Claude 和 <code>/</code> 菜单的可见性</a>，按 <code>Esc</code> 保存并关闭。您无法循环切换插件 skill、frontmatter 设置了 <code>disable-model-invocation: true</code> 的 skill，或在托管设置或 <code>--settings</code> 标志中具有 <code>skillOverrides</code> 条目的 skill</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/slides [brief]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 根据您的简介创建一个新的演示文稿，作为 Claude Slides <a href="artifacts.html#make-a-slide-deck">Artifact</a>，例如 <code>/slides a quarterly review of the platform team</code>。需要 Claude Code v2.1.265 或更高版本、<a href="artifacts.html#availability">Artifact 可用</a>的会话，以及 <a href="artifacts.html#start-from-a-slides-design-or-docs-template">Slides 模板可用</a>的账户；否则该命令不会出现。可在 Anthropic API 上使用。在 Amazon Bedrock、Google Cloud's Agent Platform、Microsoft Foundry 和 Claude Platform on AWS 上，Artifact 不可用，因此该命令在这些平台上不可用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/stats</code></td>
+<td style="text-align: left;"><code>/usage</code> 的别名。在 Stats 选项卡上打开</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/status</code></td>
+<td style="text-align: left;">在 Status 选项卡上打开设置界面，显示版本、模型、账户和连接状态。在<a href="agent-view.html">后台会话</a>中，<code>Session kind</code> 行会显示 <code>background job · attached</code> 或 <code>background job · unattended</code>（取决于是否附加了终端），在其他任何会话中显示 <code>interactive</code>。在 v2.1.221 之前，<code>/status</code> 不显示此行。在 Claude 回复时也可使用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/statusline</code></td>
+<td style="text-align: left;">配置 Claude Code 的<a href="statusline.html">状态栏</a>。描述您想要的内容，或不带参数运行以根据您的 shell 提示符自动配置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/stickers</code></td>
+<td style="text-align: left;">订购 Claude Code 贴纸</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/stop</code></td>
+<td style="text-align: left;">停止您已附加到的<a href="agent-view.html">后台会话</a>，或您以<a href="agent-view.html#peek-and-reply">窥视回复</a>方式发送此命令的目标会话；会话记录和任何 worktree 都会保留。要分离而不停止，请使用 <code>/exit</code> 或按 <code>←</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/subtask &lt;task&gt;</code></td>
+<td style="text-align: left;">生成一个<a href="sub-agents.html#fork-the-current-conversation">分叉子代理</a>：一个继承完整对话的后台子代理，在您继续工作的同时处理该任务。完成后，其结果会返回到此对话。要改为将对话复制到单独的后台会话中，请使用 <code>/fork</code>。当<a href="agent-view.html#turn-off-agent-view">关闭 Agent 视图</a>时，<code>/subtask</code> 不可用，<code>/fork</code> 会改为生成分叉子代理</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/tasks</code></td>
+<td style="text-align: left;">查看和管理当前会话中的后台工作，包括已完成的子代理。也可作为 <code>/bashes</code> 使用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/team-onboarding</code></td>
+<td style="text-align: left;">根据您的 Claude Code 使用历史生成团队入门指南。Claude 会分析您过去 30 天的会话、命令和 MCP 服务器使用情况，并生成一份 markdown 指南，队友可以将其作为第一条消息粘贴以快速完成设置。对于 Team 和 Enterprise 套餐的 claude.ai 订阅者，还会返回一个分享链接，队友可以直接在 Claude Code 中打开</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/teleport</code></td>
+<td style="text-align: left;">将<a href="claude-code-on-the-web.html#from-cloud-to-terminal">云端会话</a>拉取到此终端。打开选择器，然后获取分支和对话。也可作为 <code>/tp</code> 使用。需要 claude.ai 订阅</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/terminal-setup</code></td>
+<td style="text-align: left;">在 VS Code、Cursor、Devin Desktop、Alacritty 或 Zed 中<a href="terminal-config.html#enter-multiline-prompts">安装用于换行的 Shift+Enter 快捷键</a>。在 Apple Terminal 中，则改为<a href="terminal-config.html#enable-option-key-shortcuts-on-macos">启用 Option+Enter 换行并关闭提示音</a>。在 iTerm2 中，<a href="terminal-config.html#enable-option-key-shortcuts-on-macos">开启剪贴板访问，使 <code>/copy</code> 能够正常工作</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/theme</code></td>
+<td style="text-align: left;">更改颜色主题。包括与终端浅色或深色背景匹配的 <code>auto</code> 选项、浅色和深色变体、色盲友好（daltonized）主题、使用终端调色板的 ANSI 主题，以及来自 <code>~/.claude/themes/</code> 或插件的任何<a href="terminal-config.html#create-a-custom-theme">自定义主题</a>。选择 <strong>New custom theme…</strong> 可创建一个主题</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/tui [default\|fullscreen]</code></td>
+<td style="text-align: left;">设置终端 UI 渲染器，并在保持对话完整的情况下重新启动到该渲染器。<code>fullscreen</code> 会启用<a href="fullscreen.html">无闪烁备用屏幕渲染器</a>。不带参数时，输出当前活动的渲染器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/ultraplan &lt;prompt&gt;</code></td>
+<td style="text-align: left;">已移除。请改用<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a>。以前会将规划任务发送到<a href="claude-code-on-the-web.html">云端会话</a>，以便在浏览器中审阅</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/ultrareview [PR or branch]</code></td>
+<td style="text-align: left;">使用 <a href="ultrareview.html">ultrareview</a> 在云端沙箱中运行深度多 Agent 代码审查。传递 PR 引用可审查该 Pull Request，或传递基准分支或提交以更改比较基准。首选调用方式是 <code>/code-review ultra</code>，<code>/ultrareview</code> 是其别名。Pro、Max 和 Ultra 包含 3 次免费运行，之后需要<a href="https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans" target="_blank" rel="noopener">使用额度</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/update-config [request]</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 描述一项设置更改，例如允许某个命令、设置环境变量或添加 <a href="hooks.html">hook</a>，Claude 会编辑相应的 <a href="settings.html"><code>settings.json</code></a> 文件。对于主题和模型等选项，请改用 <code>/config</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/upgrade</code></td>
+<td style="text-align: left;">在浏览器中打开升级页面，以切换到更高的套餐级别。当浏览器无法打开时，该命令会显示登录提示，但不会输出 URL</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/usage</code></td>
+<td style="text-align: left;">显示会话开销、套餐用量限制和活动统计信息。在 Pro、Max、Ultra、Team 或 Enterprise 套餐上，包括<a href="costs.html#plan-usage-breakdown">计入套餐限制的内容明细</a>。<code>/cost</code> 和 <code>/stats</code> 是其别名</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/usage-credits</code></td>
+<td style="text-align: left;">在达到限制时配置使用额度，或向管理员申请使用额度。在浏览器中打开您的<a href="costs.html#add-usage-credits-to-your-subscription">使用额度计费设置</a>；但没有计费访问权限的 Team 和 Enterprise 成员会在对话框中确认该请求会通知其管理员后，改为从 CLI 向管理员发送使用额度请求。当无法打开浏览器访问计费页面时（例如通过 SSH），该命令会改为输出要访问的 URL；这需要 Claude Code v2.1.205 或更高版本，更早版本在这种情况下不显示任何内容。以前为 <code>/extra-usage</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/verify</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 通过构建、运行您项目的应用并观察结果来确认代码更改是否按预期工作，而不是依赖测试或类型检查。请参阅<a href="skills.html#run-and-verify-your-app">运行并验证您的应用</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/vim</code></td>
+<td style="text-align: left;">已在 v2.1.92 中移除。要在 Vim 和 Normal 编辑模式之间切换，请使用 <code>/config</code> → Editor mode</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/voice [hold\|tap\|off]</code></td>
+<td style="text-align: left;">切换<a href="voice-dictation.html">语音听写</a>，或以特定模式启用它。需要 Claude.ai 账户</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/web-setup</code></td>
+<td style="text-align: left;">使用本地 <code>gh</code> CLI 凭据为<a href="web-quickstart.html#connect-from-your-terminal">云端会话</a>连接您的 GitHub 账户</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/workflow-authoring</code></td>
+<td style="text-align: left;"><strong><a href="skills.html#bundled-skills">Skill</a>。</strong> 加载编写<a href="workflows.html">动态工作流</a>脚本的参考：脚本 API、恢复行为、质量模式和完整示例。Claude 通常会在编写脚本之前自行加载它；在<a href="workflows.html#edit-a-saved-script">手动编辑已保存的脚本</a>之前，请自行运行它。在启用动态工作流时可用，需要 Claude Code v2.1.248 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/workflows</code></td>
+<td style="text-align: left;">打开<a href="workflows.html#watch-the-run">工作流</a>进度视图，以监视、暂停、恢复或保存正在运行和已完成的工作流</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-the-command-menu-matches-what-you-type">命令菜单如何匹配你输入的内容</h2>
+<p>Claude Code 在你输入时过滤 <code>/</code> 菜单。下面的每个要点涵盖了你在过滤时可能注意到的一件事：</p>
+<ul>
+<li><strong>高亮显示</strong>：Claude Code 仅当 <code>/</code> 后面的字母与命令的名称或别名匹配时才高亮显示顶部建议，匹配可以从名称的开头或名称内的某个单词开始，忽略 <code>:</code>、<code>_</code> 和 <code>-</code> 分隔符。输入 <code>/adddir</code> 会高亮显示 <code>/add-dir</code>，输入 <code>/new</code> 会通过其别名高亮显示 <code>/clear</code>。按 <code>Enter</code> 运行高亮显示的建议。这些高亮显示规则需要 Claude Code v2.1.236 或更高版本。</li>
+<li><strong>打字错误后</strong>：Claude Code 不高亮显示任何内容。接近的匹配项保持列出，你可以用 <code>Tab</code> 或箭头键选择一个，但 <code>Enter</code> 会按原样提交你的文本并报告<a href="errors.html#unknown-command">未知命令</a>。</li>
+<li><strong>你无法使用的命令</strong>：Claude Code 将它们排除在菜单之外。当没有任何内容匹配时，Claude Code 显示 <code>No commands match "/name"</code>。大多数不可用的命令在你提交时会返回<a href="errors.html#unknown-command">未知命令</a>；少数几个，例如<a href="routines.html#schedule-returns-unknown-command"><code>/schedule</code> 在 Console API 密钥上</a>，会改为返回自己的可用性消息。当你的组织的策略禁用某些命令时，这些命令也会返回自己的消息。</li>
+<li><strong>隐藏命令</strong>：Claude Code 故意将一些可用命令（例如 <code>/heapdump</code>）排除在菜单之外。部分名称永远不会将隐藏命令带入菜单：如果部分匹配不到任何可见内容，Claude Code 会显示相同的不匹配消息。Claude Code 仅在你输入完整名称后才列出该命令，提交完整名称会运行它。</li>
+</ul>
+<h2 id="mcp-prompts">MCP prompts</h2>
+<p>MCP 服务器可以公开显示为命令的提示。有关详细信息，请参阅 <a href="mcp.html#use-mcp-prompts-as-commands">MCP prompts</a>。</p>
+<h2 id="see-also">另请参阅</h2>
+<ul>
+<li><a href="skills.html">Skills</a>：创建您自己的命令</li>
+<li><a href="interactive-mode.html">Interactive mode</a>：快捷键、Vim 模式和命令历史记录</li>
+<li><a href="cli-reference.html">CLI reference</a>：启动时标志</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="cli-reference.html"><span class="pager-dir">← 上一页</span><span class="pager-name">CLI 参考</span></a><a class="pager-link next" href="env-vars.html"><span class="pager-dir">下一页 →</span><span class="pager-name">环境变量</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#commands-across-a-typical-workflow">典型工作流程中的命令</a><a class="toc-l2" href="#all-commands">所有命令</a><a class="toc-l2" href="#how-the-command-menu-matches-what-you-type">命令菜单如何匹配你输入的内容</a><a class="toc-l2" href="#mcp-prompts">MCP prompts</a><a class="toc-l2" href="#see-also">另请参阅</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

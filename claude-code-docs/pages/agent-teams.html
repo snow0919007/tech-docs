@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>协调 Claude Code 会话团队 · Claude Code 中文文档</title>
+<meta name="description" content="协调多个 Claude Code 实例作为一个团队一起工作，具有共享任务、代理间消息传递和集中管理。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-teams">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-teams" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link active" href="agent-teams.html" aria-current="page">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>使用 Claude Code 构建</span> <span class="sep">/</span> <span>Agent 与并行工作</span></div>
+    <article class="prose" id="article"><h1 id="claude-code">协调 Claude Code 会话团队</h1>
+<blockquote>
+<p>协调多个 Claude Code 实例作为一个团队一起工作，具有共享任务、代理间消息传递和集中管理。</p>
+</blockquote>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>Agent teams 是实验性功能，默认禁用。通过在你的 <a href="settings.html">settings.json</a> 或环境中设置 <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> 来启用它们。如果没有该变量，会话启动时不会设置任何团队，不会写入团队目录，Claude 也不会生成或提议队友。Agent teams 在 <a href="#limitations">已知限制</a> 中存在关于会话恢复、任务协调和关闭行为的问题。</p></div></div>
+<p>Agent teams 让你协调多个 Claude Code 实例一起工作。一个会话充当团队负责人，协调工作、分配任务和综合结果。队友独立工作，每个都在自己的 context window 中，并直接相互通信。你也可以直接与任何队友互动，无需通过负责人。</p>
+<p>在设置团队之前，请检查是否有更轻量级的选项可以完成工作。<a href="sub-agents.html">Subagents</a> 在单个会话中工作，通过 <a href="cross-session-messaging.html">跨会话消息传递</a>，Claude 可以在你自己运行的会话之间传递发现。</p>
+<h2 id="when-to-use-agent-teams">何时使用 agent teams</h2>
+<p>Agent teams 最适合用于并行探索能增加真实价值的任务。有关完整场景，请参阅 <a href="#use-case-examples">用例示例</a>。最强的用例是：</p>
+<ul>
+<li><strong>研究和审查</strong>：多个队友可以同时调查问题的不同方面，然后分享和质疑彼此的发现</li>
+<li><strong>新模块或功能</strong>：队友可以各自拥有一个独立的部分，不会相互干扰</li>
+<li><strong>使用竞争假设进行调试</strong>：队友并行测试不同的理论，更快地收敛到答案</li>
+<li><strong>跨层协调</strong>：跨越前端、后端和测试的更改，每个由不同的队友负责</li>
+</ul>
+<p>Agent teams 增加了协调开销，使用的令牌数量明显多于单个会话。当队友可以独立运作时，它们效果最好。对于顺序任务、同一文件编辑或有许多依赖关系的工作，单个会话或 <a href="sub-agents.html">subagents</a> 更有效。</p>
+<h3 id="compare-with-subagents">与 subagents 比较</h3>
+<p>Agent teams 和 <a href="sub-agents.html">subagents</a> 都让你并行化工作，但它们的运作方式不同。对于不带团队的独立会话，这些会话相互传递消息，请参阅 <a href="cross-session-messaging.html">跨会话消息传递</a>。</p>
+<p><img alt="比较 subagent 和 agent team 架构的图表。Subagents 由主代理生成、执行工作并报告结果。Agent teams 通过共享任务列表进行协调，队友彼此直接通信。" src="../assets/img/b13c236df694.png" /></p>
+<p>Subagents 向主代理报告结果。在 agent teams 中，队友共享任务列表、认领工作并直接相互通信。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Subagents</th>
+<th style="text-align: left;">Agent teams</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Context</strong></td>
+<td style="text-align: left;">自己的 context window；结果返回给调用者</td>
+<td style="text-align: left;">自己的 context window；完全独立</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>通信</strong></td>
+<td style="text-align: left;">向调用者返回结果。Claude 在生成子代理时为其<a href="sub-agents.html#subagent-names">命名</a>的子代理也可以 <a href="sub-agents.html#what-loads-at-startup">相互发送消息</a></td>
+<td style="text-align: left;">队友直接相互发送消息</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>协调</strong></td>
+<td style="text-align: left;">主代理管理所有工作</td>
+<td style="text-align: left;">通过消息进行自我协调，加上具有 <a href="tools-reference.html#task-tool-availability">Task tools 的代理</a> 的共享任务列表</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>最适合</strong></td>
+<td style="text-align: left;">只有结果重要的专注任务</td>
+<td style="text-align: left;">需要讨论和协作的复杂工作</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>令牌成本</strong></td>
+<td style="text-align: left;">较低：结果汇总回主 context</td>
+<td style="text-align: left;">较高：每个队友是一个独立的 Claude 实例</td>
+</tr>
+</tbody>
+</table>
+<p>当你需要快速、专注的工作人员报告结果时，使用 subagents。当队友需要分享发现、相互质疑和自我协调时，使用 agent teams。</p>
+<h2 id="enable-agent-teams">启用 agent teams</h2>
+<p>Agent teams 默认禁用。通过将 <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code> 环境变量设置为 <code>1</code>，在你的 shell 环境中或通过 <a href="settings.html">settings.json</a> 来启用它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>启用 agent teams 也会改变普通的委派方式。Claude 可能会<a href="sub-agents.html#subagent-names">自行命名一个子代理</a>，当启用 agent teams 时，Claude 命名的子代理会作为队友启动，因此即使你没有要求，团队也可以形成。有关更多信息，请参阅<a href="#how-claude-starts-agent-teams">Claude 如何启动 agent teams</a>；要关闭此行为，请参阅<a href="#claude-spawns-teammates-instead-of-subagents">Claude 生成队友而不是子代理</a>。</p>
+<p>生成队友也需要交互式会话。在<a href="headless.html">非交互模式</a>中使用 <code>-p</code> 标志，包括 Agent SDK 会话，Claude 不会生成队友，即使启用了 agent teams，Claude 命名的子代理也会作为普通<a href="sub-agents.html">子代理</a>运行。</p>
+<h2 id="start-your-first-agent-team">启动你的第一个 agent team</h2>
+<p>启用 agent teams 后，用自然语言描述你想要的任务和队友。Claude 会生成他们并根据你的提示协调工作。</p>
+<p>这个例子效果很好，因为三个角色是独立的，可以在不相互等待的情况下探索问题：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">I'm designing a CLI tool that helps developers track TODO comments across
+their codebase. Spawn three teammates to explore this from different angles:
+one on UX, one on technical architecture, one playing devil's advocate.
+</code></pre></div>
+<p>从那里，Claude 会填充一个 <a href="interactive-mode.html#task-list">共享任务列表</a>，在 <a href="tools-reference.html#task-tool-availability">具有 Task 工具的会话</a> 中为每个角度生成队友，让他们探索问题，并在完成时综合发现。</p>
+<p>Claude 有时可能会使用 <a href="sub-agents.html">subagents</a> 而不是创建一个 team。Subagents 在 agent 面板中与队友显示在同一位置，因此仅凭面板无法确认是否形成了 team。如果 Claude 生成了 subagents，请再次询问并明确请求一个 agent team。</p>
+<p>负责人的终端在提示输入下方的 agent 面板中列出队友。从该面板中：</p>
+<ul>
+<li><strong>向上和向下箭头</strong>：选择一个队友</li>
+<li><strong>Enter</strong>：打开所选队友的记录并直接向其发送消息</li>
+<li><strong>Escape</strong>：清除选择。当你正在查看队友的记录时，Escape 会中断该队友的当前轮次</li>
+</ul>
+<p>当任何队友或子代理仍在工作时，空闲队友的行会保留在面板中，因此您可以选择它来查看其会话记录或向其分配更多工作。一旦面板中的每个 Agent 都处于空闲状态，空闲行会在 30 秒后隐藏，并在队友的下一轮次时重新出现；队友在隐藏时仍然保持运行并可寻址。</p>
+<p>当超过三个队友同时处于空闲状态时，前三个之外的行会折叠成一行，计数折叠的队友，例如当五个处于空闲状态时显示 <code>2 idle agents</code>。选择它并按 Enter 展开折叠的行，或按 Esc 再次折叠它们。工作中的队友、失败的队友和你正在查看的队友始终保持自己的行。</p>
+<p>如果你想让每个队友在自己的分割窗格中，请参阅 <a href="#choose-a-display-mode">选择显示模式</a>。</p>
+<h2 id="control-your-agent-team">控制您的 agent team</h2>
+<p>用自然语言告诉负责人（lead）您想要什么。它会根据您的指示处理团队协调、任务分配和委派。</p>
+<h3 id="choose-a-display-mode">选择显示模式</h3>
+<p>Agent team 支持两种显示模式：</p>
+<ul>
+<li><strong>进程内</strong>：所有队友都在您的主终端内运行。在 Agent 面板中使用上下方向键选择一个队友，然后按 Enter 查看它，并直接输入内容向其发送消息。适用于任何终端，无需额外设置。</li>
+<li><strong>分屏窗格</strong>：每个队友拥有自己的窗格。您可以同时看到所有人的输出，并点击进入某个窗格直接与之交互。需要 tmux 或 iTerm2。</li>
+</ul>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><code>tmux</code> 在某些操作系统上存在已知限制，传统上在 macOS 上效果最佳。建议在 iTerm2 中使用 <code>tmux -CC</code> 作为进入 <code>tmux</code> 的方式。</p></div></div>
+<p>默认值为 <code>"in-process"</code>。设置为 <code>"auto"</code> 时，如果您已在 tmux 会话中运行，或者您的终端是已安装 <code>it2</code> CLI 的 iTerm2，则启用分屏窗格，否则回退到进程内模式。<code>"tmux"</code> 设置会启用分屏窗格模式，并根据您的终端自动检测使用 tmux 还是 iTerm2。</p>
+<p>设置为 <code>"iterm2"</code> 可显式使用 iTerm2 原生分屏窗格。此模式需要 <a href="https://github.com/mkusaka/it2" target="_blank" rel="noopener"><code>it2</code> CLI</a>，如果缺少 <code>it2</code>，会显示错误并附带安装命令。当您的终端是 iTerm2 且 tmux 可作为回退选项时，在 <code>"auto"</code> 或 <code>"tmux"</code> 下会出现设置提示，询问是安装 <code>it2</code> 还是切换到 tmux。</p>
+<p>要覆盖默认值，请在 <code>~/.claude/settings.json</code> 中设置 <a href="settings-reference.html#teammatemode"><code>teammateMode</code></a>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"teammateMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"auto"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>要为单个会话设置模式，请将其作为标志传入：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--teammate-mode<span class="w"> </span>auto
+</code></pre></div>
+<p><code>--teammate-mode</code> 标志是实验性的，不会出现在 <code>claude --help</code> 中。</p>
+<p>分屏窗格模式需要 <a href="https://github.com/tmux/tmux/wiki" target="_blank" rel="noopener">tmux</a>，或者安装了 <a href="https://github.com/mkusaka/it2" target="_blank" rel="noopener"><code>it2</code> CLI</a> 的 iTerm2。手动安装方法：</p>
+<ul>
+<li><strong>tmux</strong>：通过系统的包管理器安装。有关特定平台的说明，请参阅 <a href="https://github.com/tmux/tmux/wiki/Installing" target="_blank" rel="noopener">tmux wiki</a>。</li>
+<li><strong>iTerm2</strong>：安装 <a href="https://github.com/mkusaka/it2" target="_blank" rel="noopener"><code>it2</code> CLI</a>，然后在 <strong>iTerm2 → Settings → General → Magic → Enable Python API</strong> 中启用 Python API。</li>
+</ul>
+<h3 id="specify-teammates-and-models">指定队友和模型</h3>
+<p>Claude 会根据您的任务决定生成的队友数量，您也可以准确指定您想要的内容：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Spawn 4 teammates to refactor these modules in parallel. Use Sonnet for
+each teammate.
+</code></pre></div>
+<p>Claude Code 按以下顺序，取第一个适用的来源作为每个队友的模型：</p>
+<ol>
+<li>您的生成提示词中为该队友指定的模型。</li>
+<li>对于从<a href="#use-subagent-definitions-for-teammates">子代理定义</a>生成的队友，使用该定义的 <code>model</code>，其中 <code>inherit</code> 表示选择负责人的模型。</li>
+<li><a href="model-config.html#environment-variables"><code>CLAUDE_CODE_SUBAGENT_MODEL</code></a>，当其设置为 <code>inherit</code> 以外的任何值时。</li>
+<li>负责人的当前模型。</li>
+</ol>
+<p>如果已安装的 <a href="plugins-mods-overview.html">mod</a> 在其 <a href="plugins-mods-reference.html#subagents"><code>agent.spawn</code></a> hook 中设置了模型，Claude Code 会使用该模型代替第一个来源。</p>
+<p>如果您设置了 <a href="sub-agents.html#run-every-subagent-on-one-model"><code>CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1</code></a>，则前两个来源不适用。当 <code>CLAUDE_CODE_SUBAGENT_MODEL</code> 这个环境变量设置为 <code>inherit</code> 以外的任何值时，Claude Code 从该变量中选取每个队友的模型；否则从负责人的当前模型中选取。需要 Claude Code v2.1.257 或更高版本。</p>
+<p>在 v2.1.251 之前，<code>CLAUDE_CODE_SUBAGENT_MODEL</code> 在此顺序中排在首位。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><code>teammateDefaultModel</code> 已在 v2.1.234 中移除；Claude Code 会忽略残留的值。请改为在提示词中指定模型。</p></div></div>
+<p>Claude Code 会根据您组织的 <a href="model-config.html#restrict-model-selection"><code>availableModels</code></a> 允许列表检查它为队友选择的模型。当允许列表阻止某个值时，Claude Code 会替换为另一个模型：</p>
+<ul>
+<li><strong>系列别名，例如 <code>opus</code></strong>：在 Anthropic API 和 Claude Platform on AWS 上，Claude Code 会在允许列表允许的该系列最新版本上运行队友。在使用提供商特定模型 ID 的提供商上，<a href="model-config.html#restrict-model-selection">替换机制不起作用</a>，被阻止的别名会像其他被阻止的值一样，按照下一条规则回退</li>
+<li><strong>任何其他被阻止的值，包括在替换机制不起作用的提供商上的系列别名，或其系列没有允许版本的别名</strong>：Claude Code 会改为在负责人的模型上运行队友。如果您设置了 <code>CLAUDE_CODE_SUBAGENT_MODEL</code>，Claude Code 会先尝试该模型，并遵循同样的规则</li>
+</ul>
+<p>默认情况下，队友继承负责人的 <a href="model-config.html#adjust-effort-level">effort 级别</a>。在分屏窗格模式下，此行为从 v2.1.186 起适用；早期版本不会将负责人的会话 effort 传递给分屏窗格队友。</p>
+<h3 id="have-teammates-plan-before-implementing">让队友在实施前先制定计划</h3>
+<p>对于复杂或有风险的任务，您可以让队友在实施前先制定计划。当负责人处于<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a>时由 Claude 生成的队友，会在只读的计划模式下工作，直到其计划准备就绪。先将负责人切换到计划模式，然后请求生成队友：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Spawn an architect teammate to refactor the authentication module.
+</code></pre></div>
+<p>当该队友完成计划后，它会向负责人发送计划批准请求。如果自该队友生成以来您未更改其权限模式，Claude Code 会在请求到达后立即批准该计划，无需负责人审查。队友的编辑和命令仍需经过<a href="#permissions">权限</a>中所述的权限提示。获得批准后，队友退出计划模式并开始实施。</p>
+<p>如果您在查看某个正在运行的进程内队友的会话时按 <a href="permission-modes.html#switch-permission-modes"><code>Shift+Tab</code></a> 将其置于计划模式，则该次运行的计划将由负责人审查，而不是由 Claude Code 批准。系统不会要求您批准；负责人会批准该计划或将其退回修改。</p>
+<h3 id="talk-to-teammates-directly">直接与队友对话</h3>
+<p>每个队友都是一个完整、独立的 Claude Code 会话。您可以直接向任何队友发送消息，以提供额外指示、询问后续问题或调整其方法。</p>
+<ul>
+<li><strong>进程内模式</strong>：在 Agent 面板中使用上下方向键选择一个队友，然后按 Enter 查看其会话，并输入内容向其发送消息。在选中的队友上按 <code>x</code> 可将其停止。按 Ctrl+T 可切换任务列表。</li>
+<li><strong>分屏窗格模式</strong>：点击进入队友的窗格，直接与其会话交互。每个队友都拥有其自身终端的完整视图。</li>
+</ul>
+<p>当您查看进程内队友时，纯文本和 <a href="skills.html">skill</a> 会发送给该队友，而内置命令会发送到负责人的会话，并带有以下保护措施：</p>
+<ul>
+<li><code>/compact</code>、<code>/clear</code> 和 <code>/rewind</code> 作用于负责人的对话，因此在此视图中运行其中任何一个之前，Claude Code 会要求您确认。</li>
+<li><code>/model</code> 和 <code>/fast</code> 设置的是负责人的模型和快速模式，而不是队友的，因此它们不会在此视图中运行。系统会显示通知告知原因。</li>
+</ul>
+<p>队友的模型和快速模式在其生成时即已固定。</p>
+<h3 id="assign-and-claim-tasks">分配和认领任务</h3>
+<p>共享任务列表用于协调整个团队的工作。负责人创建任务，队友逐一完成。任务有三种状态：待处理、进行中和已完成。任务还可以依赖其他任务，在这些任务完成之前，它会在任务列表中显示为已阻塞。队友不会自行认领已阻塞的任务，但您或负责人仍可以分配它。</p>
+<p><a href="tools-reference.html#task-tool-availability">没有 Task 工具</a>的 Agent 改为通过消息进行协调，而不是通过共享任务列表。</p>
+<p>负责人可以显式分配任务，队友也可以自行认领：</p>
+<ul>
+<li><strong>负责人分配</strong>：告诉负责人将哪个任务交给哪个队友</li>
+<li><strong>自行认领</strong>：完成一个任务后，队友会自行领取下一个未分配、未被阻塞的任务</li>
+</ul>
+<p>任务认领使用文件锁定，以防止多个队友同时尝试认领同一任务时出现竞争条件。</p>
+<h3 id="shut-down-teammates">关闭队友</h3>
+<p>要正常结束某个队友的会话，请按名称指代它。例如，对于名为 researcher 的队友：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Ask the researcher teammate to shut down
+</code></pre></div>
+<p>负责人会发送关闭请求。队友可以批准并正常退出，也可以拒绝并给出解释。</p>
+<p>团队的共享目录会在会话结束时自动清理，因此无需单独的清理步骤。有关哪些目录会被删除、哪些会保留在磁盘上，请参阅<a href="#architecture">架构</a>。</p>
+<h3 id="enforce-quality-gates-with-hooks">使用 hook 强制执行质量关卡</h3>
+<p>使用 <a href="hooks.html">hook</a> 在队友完成工作或任务被创建或完成时强制执行规则：</p>
+<ul>
+<li><a href="hooks.html#teammateidle"><code>TeammateIdle</code></a>：在队友即将进入空闲状态时运行。以代码 2 退出可发送反馈并让队友继续工作。</li>
+<li><a href="hooks.html#taskcreated"><code>TaskCreated</code></a>：在任务正在创建时运行。以代码 2 退出可阻止创建并发送反馈。</li>
+<li><a href="hooks.html#taskcompleted"><code>TaskCompleted</code></a>：在任务正被标记为完成时运行。以代码 2 退出可阻止完成并发送反馈。</li>
+</ul>
+<h2 id="how-agent-teams-work">Agent teams 如何工作</h2>
+<p>本部分涵盖 agent teams 背后的架构和机制。如果你想开始使用它们，请参阅上面的 <a href="#control-your-agent-team">控制你的 agent team</a>。</p>
+<h3 id="how-claude-starts-agent-teams">Claude 如何启动 agent teams</h3>
+<p>要启动一个团队，请向 Claude 请求队友。当 Claude 在启用 agent teams 的情况下调用 <a href="tools-reference.html">Agent tool</a> 并使用 <a href="sub-agents.html#subagent-names"><code>name</code></a> 时，除非该调用是一个 <a href="sub-agents.html#fork-the-current-conversation">fork</a> 或在调用本身上传递 <code>isolation</code>，否则 Claude 会启动一个队友。Claude Code 不会要求你确认启动。</p>
+<p>Claude 也会自动为普通 subagents 命名，以便稍后可以向它们发送消息。这些调用遵循相同的规则，所以即使你没有请求，团队也可能形成。如果你想要 subagents 而不是 agent teams，请 <a href="#claude-spawns-teammates-instead-of-subagents">关闭 agent teams</a>。</p>
+<h3 id="architecture">架构</h3>
+<p>Agent team 由以下部分组成：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">组件</th>
+<th style="text-align: left;">角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Team lead</strong></td>
+<td style="text-align: left;">生成队友并协调工作的主 Claude Code 会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Teammates</strong></td>
+<td style="text-align: left;">各自处理分配任务的独立 Claude Code 实例</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Task list</strong></td>
+<td style="text-align: left;">队友认领和完成的共享工作项列表</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Mailbox</strong></td>
+<td style="text-align: left;">代理之间通信的消息系统</td>
+</tr>
+</tbody>
+</table>
+<p>每个 Agent 的邮箱是位于 <code>~/.claude/teams/{team-name}/inboxes/{agent-name}.json</code> 的 JSON 文件。Claude Code 在读取邮箱文件时会验证每个条目。不匹配消息格式的条目会被报告为错误并从文件中删除；有效的消息仍然会被传递。</p>
+<p>Claude Code 仅在写入收件人邮箱文件成功时才报告消息已发送，无论消息是纯文本还是结构化协议消息（如计划批准或关闭请求）。当写入失败时，例如因为磁盘已满或邮箱目录不可写，发送代理会收到错误，什么都不会被发送。有关错误消息和恢复步骤，请参阅 <a href="errors.html#failed-to-write-to-a-teammate-inbox">Failed to write to a teammate's inbox</a>。</p>
+<p>Claude Code 自动管理任务依赖关系：当队友完成其他任务依赖的任务时，被阻止的任务会自动解除阻止，无需你采取任何行动。</p>
+<p>团队和任务存储在本地，名称来自会话派生的名称。名称是 <code>session-</code> 后跟会话 ID 的前八个字符：</p>
+<ul>
+<li><strong>Team config</strong>：<code>~/.claude/teams/{team-name}/config.json</code>。Claude Code 会在会话结束时删除团队配置目录。</li>
+<li><strong>Task list</strong>：<code>~/.claude/tasks/{team-name}/</code>。此目录在会话结束后仍保留在磁盘上。要更改 <a href="claude-directory.html#cleaned-up-automatically">Claude Code 保留它的时长</a>，请设置 <a href="settings-reference.html#cleanupperioddays"><code>cleanupPeriodDays</code></a>。</li>
+</ul>
+<p>Claude Code 在会话启动时自动生成这两项，并在队友加入、空闲或离开时更新它们。</p>
+<p>团队配置保存运行时状态，例如会话 ID 和 tmux 窗格 ID，所以不要手动编辑它或预先编写它：你的更改会在下一次状态更新时被覆盖。</p>
+<p>要定义可重用的队友角色，请改用 <a href="#use-subagent-definitions-for-teammates">subagent 定义</a>。</p>
+<p>团队配置包含一个 <code>members</code> 数组，其中包含每个成员的名称和代理 ID。负责人的条目始终携带代理类型 <code>team-lead</code>。队友的条目携带负责人在生成它时命名的任何代理类型，无论是 <a href="sub-agents.html#built-in-subagents">built-in type</a> 还是 <a href="#use-subagent-definitions-for-teammates">subagent definition</a>，当负责人没有命名任何类型时省略该字段。队友可以读取此文件以发现其他团队成员。</p>
+<p>没有项目级别的团队配置等效项。项目目录中的 <code>.claude/teams/teams.json</code> 之类的文件不被识别为配置；Claude 将其视为普通文件。</p>
+<h3 id="use-subagent-definitions-for-teammates">为队友使用 subagent 定义</h3>
+<p>当在任一显示模式中生成队友时，您可以引用来自项目、用户、托管或插件 <a href="sub-agents.html#choose-the-subagent-scope">子代理作用域</a> 的 <a href="sub-agents.html">子代理</a> 类型。这让您只需定义一次角色，例如安全审查员或测试运行器，并将其同时重用为委派的子代理和 agent team 队友。</p>
+<p>要使用 subagent 定义，在要求 Claude 生成队友时按名称提及它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Spawn a teammate using the security-reviewer agent type to audit the auth module.
+</code></pre></div>
+<p>Claude Code 读取你命名的 subagent 定义，并将其以下部分应用于队友。当一个部分取决于队友的 <a href="#choose-a-display-mode">display mode</a> 时，条目会说明：</p>
+<ul>
+<li><strong><code>tools</code></strong>：Claude Code 将队友限制为定义的 <code>tools</code> 列表中的工具。对于进程内队友，Claude Code 将 <code>SendMessage</code> 添加到该列表，在 <a href="tools-reference.html#task-tool-availability">具有 Task tools 的会话</a> 中，它还添加 <code>TaskCreate</code>、<code>TaskGet</code>、<code>TaskList</code> 和 <code>TaskUpdate</code>。</li>
+<li><strong><code>model</code></strong>：当你的生成提示没有命名模型时，Claude Code 在任一显示模式中使用定义的 <code>model</code>。请参阅 <a href="#specify-teammates-and-models">Claude Code 如何选择队友的模型</a>。</li>
+<li><strong><code>disallowedTools</code></strong>：对于进程内队友，Claude Code 会从队友的工具集中移除定义的 <code>disallowedTools</code> 中的工具。即使该列表中列出了 <code>SendMessage</code> 以及 Claude Code 添加的 Task 工具，它们仍然可用。</li>
+<li><strong><code>effort</code></strong>：对于进程内队友，Claude Code 按照 <a href="model-config.html#set-the-effort-level">frontmatter effort 规则</a> 应用定义的 <a href="sub-agents.html#supported-frontmatter-fields"><code>effort</code></a>。</li>
+<li><strong><code>autoCompactWindow</code></strong>：对于进程内队友，Claude Code 按照 <a href="sub-agents.html#subagent-auto-compact-window">该字段的规则</a> 应用定义的 <a href="sub-agents.html#supported-frontmatter-fields"><code>autoCompactWindow</code></a>。分割窗格队友会忽略该字段。需要 Claude Code v2.1.296 或更高版本。</li>
+<li><strong>Body</strong>：对于进程内队友，Claude Code 将定义的主体附加到其默认系统提示作为额外指示。对于分割窗格队友，Claude Code 使用主体代替其默认系统提示。</li>
+<li><strong><code>skills</code></strong>：Claude Code 在任一显示模式中都不将定义的 <code>skills</code> 应用于队友。队友从你的项目和用户设置加载 skills。</li>
+<li><strong><code>mcpServers</code></strong>：对于分割窗格队友，Claude Code 在 <a href="sub-agents.html#scope-mcp-servers-to-a-subagent">该字段的规则</a> 下应用定义的 <code>mcpServers</code>，这些规则涵盖使用 <code>--agent</code> 启动的会话。进程内队友忽略该字段，从你的项目和用户设置加载 MCP servers。</li>
+</ul>
+<p>当 Claude 向一个不再运行的进程内队友发送消息时，Claude Code 会在同一会话中将其恢复，恢复为其保存的任何对话，并将消息作为其下一个提示给予它。在你恢复一个会话后，队友不会以这种方式被恢复，根据 <a href="#limitations">恢复限制</a>。</p>
+<p>对于它恢复的队友，Claude Code 重新应用来自项目的 <code>.claude/agents/</code> 目录或 <code>--add-dir</code> 目录的定义，仅当你 <a href="permissions.html#what-runs-before-you-trust-a-folder">信任了代理文件所在的文件夹</a> 时。信任父文件夹不算数。在那之前，队友会恢复时不带定义的任何工具或指示，仅保留 Claude Code 添加到每个进程内队友的工具。请参阅 <a href="errors.html#teammate-agent-definition-not-restored">the teammate's agent definition was not restored</a> 了解通知文本。</p>
+<h3 id="permissions">权限</h3>
+<p>队友从负责人的权限模式开始，除了 <a href="permission-modes.html#allow-only-pre-approved-tools-with-dontask-mode"><code>dontAsk</code> 模式</a>，他们不继承该模式。如果负责人使用 <code>--dangerously-skip-permissions</code> 运行，所有队友也会这样做。生成后，你可以更改个别队友的权限模式，但在生成时无法设置每个队友的权限模式。</p>
+<p><a href="#choose-a-display-mode">进程内</a>队友在负责人实时的允许和拒绝规则下运行，因此 <a href="cli-reference.html#cli-flags"><code>--disallowedTools</code></a>、<code>--tools</code> 和 <code>--allowedTools</code> 都适用于它。对于分割窗格队友，请逐一检查各个标志：</p>
+<ul>
+<li><strong><code>--disallowedTools</code> 和 <code>--tools</code></strong>：队友以负责人的命令行拒绝规则和工具列表启动。需要 Claude Code v2.1.309 或更高版本。</li>
+<li><strong><code>--allowedTools</code></strong>：Claude Code 不会将此标志传递给分割窗格队友，因此仅通过该标志允许的操作在那里不会被预先批准。要提前批准这些操作，请在启动负责人时将规则放在 <a href="settings.html#change-a-setting-for-one-session"><code>--settings</code></a> 的 <code>permissions.allow</code> 下。例如，在您的 shell 中运行 <code>claude --settings '{"permissions":{"allow":["Bash(npm *)"]}}'</code>。这些规则在该会话中适用于负责人和每个分割窗格队友。</li>
+</ul>
+<p>队友权限提示出现在负责人会话中，所以请在那里亲自批准它们。您无需批准 <a href="#have-teammates-plan-before-implementing">队友的计划</a>。</p>
+<h4 id="messages-between-agents">代理之间的消息</h4>
+<p>当一个代理通过 <code>SendMessage</code> 向另一个代理发送消息时，Claude Code 告诉接收代理消息来自另一个 Claude 会话，而不是来自你。队友无法批准权限提示或代表你提供同意，被拒绝某项操作的队友无法将其转发给另一个队友以绕过检查。相同的规则适用于来自 <a href="cross-session-messaging.html#how-a-session-treats-an-incoming-message">你的其他 Claude Code 会话</a> 的消息，完全在团队之外。</p>
+<p>在 <a href="permission-modes.html#eliminate-prompts-with-auto-mode">auto mode</a> 中，分类器对代理之间的消息应用两项检查：</p>
+<ul>
+<li>它将从另一个代理转发的批准声明视为不受信任的输入，而不是来自你的确认。</li>
+<li>它在 Claude Code 传递消息之前审查每条消息，无论是纯消息还是结构化协议消息（如关闭请求或计划批准响应）。它阻止的消息永远不会到达收件人。</li>
+</ul>
+<h3 id="context-and-communication">Context 和通信</h3>
+<p>每个队友都有自己的 context window。生成时，队友加载与常规会话相同的项目 context：CLAUDE.md、MCP servers 和 skills。如果你使用 <a href="cli-reference.html#cli-flags"><code>--setting-sources</code></a> 启动负责人，队友会从相同的受限源列表加载。在 v2.1.281 之前，<a href="#choose-a-display-mode">split-pane</a> 队友加载每个设置源。</p>
+<p>队友也接收来自负责人的生成提示。负责人的对话历史不会继承。</p>
+<p><strong>队友如何共享信息：</strong></p>
+<ul>
+<li><strong>自动消息传递</strong>：当队友发送消息时，它们会自动传递给收件人。负责人不需要轮询更新。</li>
+<li><strong>空闲通知</strong>：当队友完成并停止时，它会自动通知负责人并在通知中包含其最终答案。其轮次因 API 错误而结束的队友会通知负责人它失败了并包含错误文本。</li>
+<li><strong>共享任务列表</strong>：<a href="tools-reference.html#task-tool-availability">具有 Task tools 的代理</a> 可以看到任务状态并认领可用工作。</li>
+<li><strong>队友消息传递</strong>：按名称向一个特定的队友发送消息。要联系所有人，请为每个收件人发送一条消息。</li>
+</ul>
+<p>负责人在生成队友时为其分配一个名称，任何队友都可以按该名称向任何其他队友发送消息。要获得可预测的名称，你可以在后续提示中引用，在你的生成指令中告诉负责人如何称呼每个队友。</p>
+<h3 id="token-usage">令牌使用</h3>
+<p>Agent teams 使用的令牌数量明显多于单个会话。每个队友都有自己的 context window，令牌使用量随活跃队友数量而增加。对于研究、审查和新功能工作，额外的令牌通常是值得的。对于日常任务，单个会话更具成本效益。有关使用指导，请参阅 <a href="costs.html#agent-team-token-costs">agent team 令牌成本</a>。</p>
+<p>进程内队友的请求落在主对话的 <a href="prompt-caching.html#which-ttl-each-request-gets">cache TTL bucket</a> 之外，所以其缓存默认保持五分钟，包括在 Claude 订阅上。要将其保持一小时，请将 <a href="settings-reference.html#subagentpromptcachettl"><code>subagentPromptCacheTtl</code></a> 设置为 <code>1h</code>。API 以更高的速率计费 1 小时缓存写入。</p>
+<h2 id="use-case-examples">用例示例</h2>
+<p>这些示例展示了 agent teams 如何处理并行探索增加价值的任务。</p>
+<h3 id="run-a-parallel-code-review">运行并行代码审查</h3>
+<p>单个审查者往往一次只关注一种类型的问题。将审查标准分解为独立的领域意味着安全性、性能和测试覆盖都同时获得彻底的关注。提示为每个队友分配一个不同的视角，以便他们不重叠：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Spawn three teammates to review PR #142:
+- One focused on security implications
+- One checking performance impact
+- One validating test coverage
+Have them each review and report findings.
+</code></pre></div>
+<p>每个审查者从同一个 PR 工作，但应用不同的过滤器。负责人在他们完成后综合所有三个的发现。</p>
+<h3 id="investigate-with-competing-hypotheses">使用竞争假设进行调查</h3>
+<p>当根本原因不清楚时，单个代理往往会找到一个看似合理的解释并停止寻找。提示通过让队友明确对抗来对抗这一点：每个队友的工作不仅是调查自己的理论，还要质疑其他队友的理论。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Users report the app exits after one message instead of staying connected.
+Spawn 5 agent teammates to investigate different hypotheses. Have them talk to
+each other to try to disprove each other's theories, like a scientific
+debate. Update the findings doc with whatever consensus emerges.
+</code></pre></div>
+<p>辩论结构是这里的关键机制。顺序调查受到锚定的影响：一旦探索了一个理论，后续调查就会偏向于它。</p>
+<p>有多个独立的调查者积极尝试相互反驳，存活下来的理论更有可能是实际的根本原因。</p>
+<h2 id="best-practices">最佳实践</h2>
+<h3 id="give-teammates-enough-context">给队友足够的 context</h3>
+<p>队友自动加载项目 context，包括 CLAUDE.md、MCP servers 和 skills，但他们不继承负责人的对话历史。有关详细信息，请参阅 <a href="#context-and-communication">Context 和通信</a>。在生成提示中包含特定于任务的详细信息：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Spawn a security reviewer teammate with the prompt: "Review the authentication module
+at src/auth/ for security vulnerabilities. Focus on token handling, session
+management, and input validation. The app uses JWT tokens stored in
+httpOnly cookies. Report any issues with severity ratings."
+</code></pre></div>
+<h3 id="choose-an-appropriate-team-size">选择适当的团队规模</h3>
+<p>队友数量没有硬限制，但实际限制适用：</p>
+<ul>
+<li><strong>令牌成本线性增加</strong>：每个队友都有自己的 context window 并独立消耗令牌。有关详细信息，请参阅 <a href="costs.html#agent-team-token-costs">agent team 令牌成本</a>。</li>
+<li><strong>协调开销增加</strong>：更多队友意味着更多通信、任务协调和潜在冲突</li>
+<li><strong>收益递减</strong>：超过一定点，额外的队友不会按比例加快工作</li>
+</ul>
+<p>对于大多数工作流，从 3-5 个队友开始。这平衡了并行工作和可管理的协调。如果你有 15 个独立任务，3 个队友是一个很好的起点。</p>
+<p>仅当工作真正受益于队友同时工作时才扩展。三个专注的队友通常胜过五个分散的队友。</p>
+<h3 id="size-tasks-appropriately">适当调整任务大小</h3>
+<ul>
+<li><strong>太小</strong>：协调开销超过收益</li>
+<li><strong>太大</strong>：队友长时间工作而不进行检查，增加浪费努力的风险</li>
+<li><strong>恰到好处</strong>：自包含的单位，产生清晰的可交付成果，例如函数、测试文件或审查</li>
+</ul>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>负责人将工作分解为任务并自动分配给队友。如果它没有创建足够的任务，要求它将工作分成更小的部分。每个队友有 5-6 个任务可以让每个人保持生产力，并让负责人在有人卡住时重新分配工作。</p></div></div>
+<h3 id="wait-for-teammates-to-finish">等待队友完成</h3>
+<p>有时负责人开始自己实施任务，而不是等待队友。如果你注意到这一点：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Wait for your teammates to complete their tasks before proceeding
+</code></pre></div>
+<h3 id="start-with-research-and-review">从研究和审查开始</h3>
+<p>如果你是 agent teams 的新手，从具有明确边界且不需要编写代码的任务开始：审查 PR、研究库或调查错误。这些任务展示了并行探索的价值，而不会带来并行实施所带来的协调挑战。</p>
+<h3 id="avoid-file-conflicts">避免文件冲突</h3>
+<p>两个队友编辑同一文件会导致覆盖。分解工作，使每个队友拥有不同的文件集。</p>
+<h3 id="monitor-and-steer">监控和指导</h3>
+<p>检查队友的进度，重定向不起作用的方法，并在发现时综合发现。让团队无人值守运行太长时间会增加浪费努力的风险。</p>
+<h2 id="troubleshooting">故障排除</h2>
+<h3 id="teammates-not-appearing">队友未出现</h3>
+<p>如果在你要求 Claude 创建队友后队友没有出现：</p>
+<ul>
+<li>在 in-process 模式中，队友出现在提示输入下方的代理面板中。使用上下箭头键选择一个，然后按 Enter 键查看它。</li>
+<li>闲置后消失的队友行已被隐藏，而不是停止。闲置行在整个面板闲置 30 秒后隐藏，并在队友的下一轮出现时重新出现。当超过三个队友闲置时，他们的多余行会折叠成一个 <code>N idle agents</code> 行，按 Enter 键可展开。按名称向队友发送消息以将隐藏的行恢复。</li>
+<li>检查你给 Claude 的任务是否足够复杂以保证需要团队。Claude 根据任务决定是否生成队友。</li>
+<li>如果你明确要求分割窗格，请确保 tmux 已安装并在你的 PATH 中可用：<br />
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="w">  </span>which<span class="w"> </span>tmux
+</code></pre></div></li>
+<li>对于 iTerm2，验证 <code>it2</code> CLI 已安装，并在 iTerm2 偏好设置中启用了 Python API。</li>
+</ul>
+<h3 id="claude-spawns-teammates-instead-of-subagents">Claude 生成队友而不是子代理</h3>
+<p>启用代理团队时，Claude 在负责人的会话中命名的子代理会作为队友启动。Claude <a href="#how-claude-starts-agent-teams">可以自己命名子代理</a>，所以这可能在你从未将其框架化为团队工作的委派过程中发生。</p>
+<p>要使命名的子代理再次作为子代理启动，请通过将 <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code> 设置为 <code>0</code> 来关闭代理团队：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>你不需要启动新会话：Claude Code 在你保存时将设置文件 <code>env</code> 值重新应用到运行中的会话，并在每次 Claude 生成子代理时重新读取该变量，所以 Claude 命名的下一个子代理会作为子代理启动。</p>
+<p>在你的用户 <code>settings.json</code> 中将变量设置为 <code>0</code> 会覆盖 shell 导出。其他设置源仍然可以启用代理团队：</p>
+<ul>
+<li><strong>更高优先级的设置文件</strong>：项目设置、本地设置和 <code>--settings</code> 有效负载在用户设置之后应用，所以在其中任何一个中将变量设置为 <code>1</code> 的 <code>env</code> 条目会获胜。请参阅 <a href="settings.html#settings-precedence">设置优先级</a>。</li>
+<li><strong>托管设置</strong>：<a href="server-managed-settings.html">托管设置</a> 在所有其他源之后应用。如果你的组织在那里启用了代理团队，请要求你的管理员更改托管值。</li>
+</ul>
+<p>更改后，Claude 可能仍会命名子代理，该名称继续作为 <a href="sub-agents.html#resume-subagents"><code>SendMessage</code> 地址</a>工作。Claude 在每个子代理完成时接收其结果。</p>
+<h3 id="too-many-permission-prompts">过多权限提示</h3>
+<p>队友权限请求冒泡到负责人，这可能会造成摩擦。在生成队友之前，在你的 <a href="permissions.html">权限设置</a> 中预批准常见操作，以减少中断。</p>
+<h3 id="agents-stopping-early">代理提前停止</h3>
+<p>队友可能在遇到错误后停止，而不是恢复。通过在代理面板中选择队友并在 in-process 模式中按 Enter 键，或在分割模式中点击窗格来检查他们的输出，然后：</p>
+<ul>
+<li>直接给他们额外的指示</li>
+<li>生成一个替代队友来继续工作</li>
+</ul>
+<p>来自负责人或另一个队友的消息会唤醒正在等待重试失败 API 请求的 in-process 队友，因此它会立即重试，而不是等待完整的重试延迟。</p>
+<p>负责人也可能提前停止，在所有任务实际完成之前决定团队已完成。如果发生这种情况，告诉它继续。</p>
+<h3 id="orphaned-tmux-sessions">孤立的 tmux 会话</h3>
+<p>如果 tmux 会话在 Claude Code 会话结束后仍然存在，它可能没有被完全清理。列出会话并杀死由团队创建的会话：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">tmux<span class="w"> </span>ls
+tmux<span class="w"> </span>kill-session<span class="w"> </span>-t<span class="w"> </span>&lt;session-name&gt;
+</code></pre></div>
+<h2 id="limitations">限制</h2>
+<p>Agent teams 是实验性的。需要注意的当前限制：</p>
+<ul>
+<li><strong>In-process 队友没有会话恢复</strong>：<code>/resume</code> 和 <code>/rewind</code> 不会恢复 in-process 队友。恢复会话后，负责人可能会尝试向不再存在的队友发送消息。如果发生这种情况，告诉负责人生成新队友。</li>
+<li><strong>任务状态可能滞后</strong>：队友有时无法将任务标记为已完成，这会阻止依赖任务。如果任务似乎卡住，检查工作是否实际完成，并手动更新任务状态或告诉负责人推动队友。</li>
+<li><strong>关闭可能很慢</strong>：队友在关闭前完成他们的当前请求或工具调用，这可能需要时间。</li>
+<li><strong>每个会话一个团队</strong>：一个会话恰好有一个团队，作用域限于该会话。你无法创建额外的命名团队或在会话间共享团队。</li>
+<li><strong>没有嵌套团队</strong>：队友无法生成自己的队友。只有负责人可以管理团队。</li>
+<li><strong>没有来自 in-process 队友的后台子代理</strong>：in-process 队友自己的子代理在前台运行，因为队友的后台工作无法超越负责人的进程。Claude Code 在队友生成定义设置 <code>background: true</code> 的子代理时返回错误。队友的 <code>run_in_background: true</code> 请求也会失败，要么返回错误，要么在前台静默运行。从主对话启动的子代理遵循<a href="sub-agents.html#run-subagents-in-foreground-or-background">后台默认值</a>。</li>
+<li><strong>负责人是固定的</strong>：主会话在其生命周期内是其团队的负责人。你无法将队友提升为负责人或转移领导权。</li>
+<li><strong>权限在生成时设置</strong>：队友从 <a href="#permissions">权限</a> 下描述的权限模式开始。你可以在生成后更改个别队友的权限模式，但在生成时无法设置每个队友的权限模式。</li>
+<li><strong>分割窗格需要 tmux 或 iTerm2</strong>：默认 in-process 模式在任何终端中工作。VS Code 的集成终端、Windows Terminal 或 Ghostty 不支持分割窗格模式。</li>
+</ul>
+<h2 id="next-steps">后续步骤</h2>
+<p>探索用于并行工作和委派的相关方法：</p>
+<ul>
+<li><strong>轻量级委派</strong>：<a href="sub-agents.html">subagents</a> 在你的会话中生成辅助代理以进行研究或验证，更适合不需要代理间协调的任务</li>
+<li><strong>在你自己的会话之间进行消息传递</strong>：<a href="cross-session-messaging.html">cross-session messaging</a> 让 Claude 在你自己运行的会话之间传递发现</li>
+<li><strong>手动并行会话</strong>：<a href="worktrees.html">Git worktrees</a> 让你自己运行多个 Claude Code 会话，无需自动化团队协调</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="agent-view.html"><span class="pager-dir">← 上一页</span><span class="pager-name">使用 agent view 管理多个代理</span></a><a class="pager-link next" href="cross-session-messaging.html"><span class="pager-dir">下一页 →</span><span class="pager-name">消息传递到您的其他 Claude Code 会话</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#when-to-use-agent-teams">何时使用 agent teams</a><a class="toc-l3" href="#compare-with-subagents">与 subagents 比较</a><a class="toc-l2" href="#enable-agent-teams">启用 agent teams</a><a class="toc-l2" href="#start-your-first-agent-team">启动你的第一个 agent team</a><a class="toc-l2" href="#control-your-agent-team">控制您的 agent team</a><a class="toc-l3" href="#choose-a-display-mode">选择显示模式</a><a class="toc-l3" href="#specify-teammates-and-models">指定队友和模型</a><a class="toc-l3" href="#have-teammates-plan-before-implementing">让队友在实施前先制定计划</a><a class="toc-l3" href="#talk-to-teammates-directly">直接与队友对话</a><a class="toc-l3" href="#assign-and-claim-tasks">分配和认领任务</a><a class="toc-l3" href="#shut-down-teammates">关闭队友</a><a class="toc-l3" href="#enforce-quality-gates-with-hooks">使用 hook 强制执行质量关卡</a><a class="toc-l2" href="#how-agent-teams-work">Agent teams 如何工作</a><a class="toc-l3" href="#how-claude-starts-agent-teams">Claude 如何启动 agent teams</a><a class="toc-l3" href="#architecture">架构</a><a class="toc-l3" href="#use-subagent-definitions-for-teammates">为队友使用 subagent 定义</a><a class="toc-l3" href="#permissions">权限</a><a class="toc-l3" href="#context-and-communication">Context 和通信</a><a class="toc-l3" href="#token-usage">令牌使用</a><a class="toc-l2" href="#use-case-examples">用例示例</a><a class="toc-l3" href="#run-a-parallel-code-review">运行并行代码审查</a><a class="toc-l3" href="#investigate-with-competing-hypotheses">使用竞争假设进行调查</a><a class="toc-l2" href="#best-practices">最佳实践</a><a class="toc-l3" href="#give-teammates-enough-context">给队友足够的 context</a><a class="toc-l3" href="#choose-an-appropriate-team-size">选择适当的团队规模</a><a class="toc-l3" href="#size-tasks-appropriately">适当调整任务大小</a><a class="toc-l3" href="#wait-for-teammates-to-finish">等待队友完成</a><a class="toc-l3" href="#start-with-research-and-review">从研究和审查开始</a><a class="toc-l3" href="#avoid-file-conflicts">避免文件冲突</a><a class="toc-l3" href="#monitor-and-steer">监控和指导</a><a class="toc-l2" href="#troubleshooting">故障排除</a><a class="toc-l3" href="#teammates-not-appearing">队友未出现</a><a class="toc-l3" href="#claude-spawns-teammates-instead-of-subagents">Claude 生成队友而不是子代理</a><a class="toc-l3" href="#too-many-permission-prompts">过多权限提示</a><a class="toc-l3" href="#agents-stopping-early">代理提前停止</a><a class="toc-l3" href="#orphaned-tmux-sessions">孤立的 tmux 会话</a><a class="toc-l2" href="#limitations">限制</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

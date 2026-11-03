@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Channels 参考 · Claude Code 中文文档</title>
+<meta name="description" content="构建一个 MCP 服务器，将 webhooks、警报和聊天消息推送到 Claude Code 会话中。频道合约的参考：能力声明、通知事件、回复工具、发送者门控和权限中继。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="channels-reference">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/channels-reference" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link active" href="channels-reference.html" aria-current="page">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>参考</span> <span class="sep">/</span> <span>参考</span></div>
+    <article class="prose" id="article"><h1 id="channels">Channels 参考</h1>
+<blockquote>
+<p>构建一个 MCP 服务器，将 webhooks、警报和聊天消息推送到 Claude Code 会话中。频道合约的参考：能力声明、通知事件、回复工具、发送者门控和权限中继。</p>
+</blockquote>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>Channels 处于<a href="channels.html#research-preview">研究预览</a>阶段。Team 和 Enterprise 组织必须<a href="channels.html#enterprise-controls">明确启用它们</a>。</p></div></div>
+<p>Channel 是一个 MCP 服务器，它将事件推送到 Claude Code 会话中，以便 Claude 可以对终端外发生的事情做出反应。</p>
+<p>您可以构建单向或双向频道。单向频道转发警报、webhooks 或监控事件供 Claude 处理。双向频道（如聊天桥接）也<a href="#expose-a-reply-tool">公开回复工具</a>，以便 Claude 可以发送消息回复。具有受信任发送者路径的频道也可以选择加入<a href="#relay-permission-prompts">中继权限提示</a>，以便您可以远程批准或拒绝工具使用。</p>
+<p>本页涵盖：</p>
+<ul>
+<li><a href="#overview">概述</a>：频道如何工作</li>
+<li><a href="#what-you-need">您需要什么</a>：要求和一般步骤</li>
+<li><a href="#example-build-a-webhook-receiver">示例：构建 webhook 接收器</a>：最小单向演练</li>
+<li><a href="#server-options">服务器选项</a>：构造函数字段</li>
+<li><a href="#notification-format">通知格式</a>：事件有效负载和传递行为</li>
+<li><a href="#expose-a-reply-tool">公开回复工具</a>：让 Claude 发送消息回复</li>
+<li><a href="#gate-inbound-messages">门控入站消息</a>：发送者检查以防止提示注入</li>
+<li><a href="#relay-permission-prompts">中继权限提示</a>：将工具批准提示转发到远程频道</li>
+</ul>
+<p>要使用现有频道而不是构建一个，请参阅 <a href="channels.html">Channels</a>。Telegram、Discord、iMessage 和 fakechat 包含在研究预览中。</p>
+<h2 id="overview">概述</h2>
+<p>Channel 是一个在与 Claude Code 相同的机器上运行的 <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">MCP</a> 服务器。Claude Code 将其作为子进程生成并通过 stdio 进行通信。您的频道服务器是外部系统和 Claude Code 会话之间的桥梁：</p>
+<ul>
+<li><strong>聊天平台</strong>（Telegram、Discord）：您的插件在本地运行并轮询平台的 API 以获取新消息。当有人向您的机器人发送 DM 时，插件接收消息并将其转发给 Claude。无需公开 URL。</li>
+<li><strong>Webhooks</strong>（CI、监控）：您的服务器在本地 HTTP 端口上侦听。外部系统 POST 到该端口，您的服务器将有效负载推送到 Claude。</li>
+</ul>
+<p><img alt="架构图显示外部系统连接到您的本地频道服务器，该服务器通过 stdio 与 Claude Code 通信" src="../assets/img/00e64f251546.svg" /></p>
+<h2 id="what-you-need">您需要什么</h2>
+<p>唯一的硬性要求是 <a href="https://www.npmjs.com/package/@modelcontextprotocol/sdk" target="_blank" rel="noopener"><code>@modelcontextprotocol/sdk</code></a> 包和 Node.js 兼容的运行时。<a href="https://bun.sh" target="_blank" rel="noopener">Bun</a>、<a href="https://nodejs.org" target="_blank" rel="noopener">Node</a> 和 <a href="https://deno.com" target="_blank" rel="noopener">Deno</a> 都可以工作。研究预览中的预构建插件使用 Bun，但您的频道不一定要使用。</p>
+<p>您的服务器需要：</p>
+<ol>
+<li>声明 <code>claude/channel</code> 能力，以便 Claude Code 注册通知侦听器</li>
+<li>当发生某事时发出 <code>notifications/claude/channel</code> 事件</li>
+<li>通过 <a href="https://modelcontextprotocol.io/docs/concepts/transports#standard-io" target="_blank" rel="noopener">stdio transport</a> 连接</li>
+</ol>
+<p><a href="#server-options">服务器选项</a>和<a href="#notification-format">通知格式</a>部分详细介绍了每一项。有关完整演练，请参阅<a href="#example-build-a-webhook-receiver">示例：构建 webhook 接收器</a>。</p>
+<p>在研究预览期间，自定义频道不在<a href="channels.html#supported-channels">批准的允许列表</a>上。使用 <code>--dangerously-load-development-channels</code> 在本地测试。有关详细信息，请参阅<a href="#test-during-the-research-preview">在研究预览期间测试</a>。</p>
+<h2 id="example-build-a-webhook-receiver">示例：构建 webhook 接收器</h2>
+<p>本演练将构建一个单文件服务器，它监听 HTTP 请求并将其转发到您的 Claude Code 会话中。完成后，任何能够发送 HTTP POST 的对象，例如 CI 流水线、监控告警或 <code>curl</code> 命令，都可以向 Claude 推送事件。</p>
+<p>本示例使用 <a href="https://bun.sh" target="_blank" rel="noopener">Bun</a> 作为运行时，因为它内置了 HTTP 服务器和 TypeScript 支持。您也可以改用 <a href="https://nodejs.org" target="_blank" rel="noopener">Node</a> 或 <a href="https://deno.com" target="_blank" rel="noopener">Deno</a>；唯一的要求是 <a href="https://www.npmjs.com/package/@modelcontextprotocol/sdk" target="_blank" rel="noopener">MCP SDK</a>。</p>
+<p><strong>1. 创建项目</strong></p>
+<p><a href="#relay-permission-prompts">权限中继</a>示例会直接导入 <code>zod</code>，因此需要将其与 MCP SDK 一起安装。创建一个新目录并安装两者：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">mkdir<span class="w"> </span>webhook-channel<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>webhook-channel
+bun<span class="w"> </span>add<span class="w"> </span>@modelcontextprotocol/sdk<span class="w"> </span>zod
+</code></pre></div>
+<p><strong>2. 编写频道服务器</strong></p>
+<p>创建一个名为 <code>webhook.ts</code> 的文件。这就是您的整个频道服务器：它通过 stdio 连接到 Claude Code，并在端口 8788 上监听 HTTP POST。当请求到达时，它会将请求体作为频道事件推送给 Claude。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><span class="cb-title">webhook.ts</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="ch">#!/usr/bin/env bun</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Server</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@modelcontextprotocol/sdk/server/index.js'</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">StdioServerTransport</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@modelcontextprotocol/sdk/server/stdio.js'</span>
+
+<span class="c1">// Create the MCP server and declare it as a channel</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">mcp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Server</span><span class="p">(</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'webhook'</span><span class="p">,</span><span class="w"> </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">'0.0.1'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// this key is what makes it a channel — Claude Code registers a listener for it</span>
+<span class="w">    </span><span class="nx">capabilities</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">experimental</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">'claude/channel'</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="c1">// Claude Code delivers this to Claude as context when the server connects, so it knows how to handle these events</span>
+<span class="w">    </span><span class="nx">instructions</span><span class="o">:</span><span class="w"> </span><span class="s1">'Events from the webhook channel arrive as &lt;channel source="webhook" ...&gt;. They are one-way: read them and act, no reply expected.'</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1">// Connect to Claude Code over stdio (Claude Code spawns this process)</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">mcp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">StdioServerTransport</span><span class="p">())</span>
+
+<span class="c1">// Start an HTTP server that forwards every POST to Claude</span>
+<span class="nx">Bun</span><span class="p">.</span><span class="nx">serve</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">port</span><span class="o">:</span><span class="w"> </span><span class="kt">8788</span><span class="p">,</span><span class="w">  </span><span class="c1">// any open port works</span>
+<span class="w">  </span><span class="c1">// localhost-only: nothing outside this machine can POST</span>
+<span class="w">  </span><span class="nx">hostname</span><span class="o">:</span><span class="w"> </span><span class="s1">'127.0.0.1'</span><span class="p">,</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">mcp</span><span class="p">.</span><span class="nx">notification</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'notifications/claude/channel'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">body</span><span class="p">,</span><span class="w">  </span><span class="c1">// becomes the body of the &lt;channel&gt; tag</span>
+<span class="w">        </span><span class="c1">// each key becomes a tag attribute, e.g. &lt;channel path="/" method="POST"&gt;</span>
+<span class="w">        </span><span class="nx">meta</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">).</span><span class="nx">pathname</span><span class="p">,</span><span class="w"> </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="kt">req.method</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Response</span><span class="p">(</span><span class="s1">'ok'</span><span class="p">)</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>该文件依次配置服务器、通过 stdio 连接，并启动 HTTP 监听器：</p>
+<ul>
+<li><strong>服务器配置</strong>：创建在其 capabilities 中包含 <code>claude/channel</code> 的 MCP 服务器，正是这一点告诉 Claude Code 这是一个频道。服务器连接时，Claude Code 会将 <a href="#server-options"><code>instructions</code></a> 字符串作为上下文传递给 Claude：告诉 Claude 应预期哪些事件、是否需要回复，以及如需回复应如何路由回复。</li>
+<li><strong>Stdio 连接</strong>：通过 stdin/stdout 连接到 Claude Code。这对任何 <a href="https://modelcontextprotocol.io/docs/concepts/transports#standard-io" target="_blank" rel="noopener">MCP 服务器</a>来说都是标准做法。</li>
+<li><strong>HTTP 监听器</strong>：在端口 8788 上启动本地 Web 服务器。每个 POST 请求体都会通过 <code>mcp.notification()</code> 作为频道事件转发给 Claude。<code>content</code> 成为事件正文，每个 <code>meta</code> 条目成为 <code>&lt;channel&gt;</code> 标签上的一个属性。监听器需要访问 <code>mcp</code> 实例，因此它在同一进程中运行。对于较大的项目，您可以将其拆分为单独的模块。</li>
+</ul>
+<p><strong>3. 向 Claude Code 注册您的服务器</strong></p>
+<p>将服务器添加到您的 MCP 配置中，以便 Claude Code 知道如何启动它。对于同一目录中的项目级 <code>.mcp.json</code>，请使用相对路径。对于 <code>~/.claude.json</code> 中的用户级配置，请使用完整的绝对路径，以便从任何项目都能找到该服务器：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><span class="cb-title">.mcp.json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"webhook"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bun"</span><span class="p">,</span><span class="w"> </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"./webhook.ts"</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Claude Code 在启动时读取您的 MCP 配置，并将每个服务器作为子进程启动。</p>
+<p><strong>4. 测试</strong></p>
+<p>在研究预览期间，自定义频道不在允许列表中，因此请使用开发标志启动 Claude Code：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--dangerously-load-development-channels<span class="w"> </span>server:webhook
+</code></pre></div>
+<p>Claude Code 首先会显示一个全屏警告对话框，列出您正在加载的开发频道。选择 <strong>I am using this for local development</strong> 继续，或选择 <strong>Exit</strong> 退出。</p>
+<p>当您首次在此项目中启动会话时，Claude Code 还会在使用 <code>.mcp.json</code> 中的新服务器之前征求您的同意。对话框会显示"New MCP server found in this project: webhook"。选择 <strong>Use this MCP server</strong> 继续。</p>
+<p>接受后，Claude Code 会将您的 <code>webhook.ts</code> 作为子进程启动，HTTP 监听器会在您配置的端口（本示例中为 8788）上自动启动。您无需自行运行服务器。</p>
+<p>启动横幅下方的一条暗色提示会确认频道已注册：<code>Channels (experimental) messages from server:webhook inject directly in this session · restart without --dangerously-load-development-channels to stop</code>。</p>
+<p>如果您看到"blocked by org policy"，则需要您的组织管理员先<a href="channels.html#enterprise-controls">启用频道</a>。</p>
+<p>在另一个终端中，通过向服务器发送带有消息的 HTTP POST 来模拟 webhook。本示例向端口 8788（或您配置的任何端口）发送一条 CI 失败告警：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>localhost:8788<span class="w"> </span>-d<span class="w"> </span><span class="s2">"build failed on main: https://ci.example.com/run/1234"</span>
+</code></pre></div>
+<p>负载会以 <code>&lt;channel&gt;</code> 标签的形式到达 Claude 的上下文：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">&lt;channel source="webhook" path="/" method="POST"&gt;
+build failed on main: https://ci.example.com/run/1234
+&lt;/channel&gt;
+</code></pre></div>
+<p>您的终端会将该事件渲染为单行摘要 <code>← webhook: build failed on main: https://ci.example.com/run/1234</code>，而不是原始标签。随后您会看到 Claude 开始响应：读取文件、运行命令，或执行消息所要求的任何操作。这是一个单向频道，因此 Claude 会在您的会话中采取行动，但不会通过 webhook 发回任何内容。要添加回复功能，请参阅<a href="#expose-a-reply-tool">公开回复工具</a>。</p>
+<p>如果事件没有到达，诊断方法取决于 <code>curl</code> 返回的结果：</p>
+<ul>
+<li><strong><code>curl</code> 成功但没有任何内容到达 Claude</strong>：在会话中运行 <code>/mcp</code> 检查服务器状态。<code>failed</code> 状态通常表示服务器文件中存在依赖或导入错误。要查看 stderr 跟踪信息，请使用 <code>claude --debug --dangerously-load-development-channels server:webhook</code> 重新启动，并检查位于 <code>~/.claude/debug/&lt;session-id&gt;.txt</code> 的调试日志。</li>
+<li><strong><code>curl</code> 失败并显示"connection refused"</strong>：端口要么尚未绑定，要么被先前运行遗留的进程占用。<code>lsof -i :&lt;port&gt;</code> 可显示正在监听的进程；在重新启动会话之前，请先 <code>kill</code> 掉遗留进程。</li>
+</ul>
+<p><a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/fakechat" target="_blank" rel="noopener">fakechat 服务器</a>在此模式的基础上进行了扩展，增加了 Web UI、文件附件以及用于双向聊天的回复工具。</p>
+<h2 id="test-during-the-research-preview">在研究预览期间测试</h2>
+<p>在研究预览期间，每个频道都必须在<a href="channels.html#research-preview">批准的允许列表</a>上才能注册。开发标志在确认提示后绕过特定条目的允许列表。此示例显示两种条目类型：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="c1"># 测试您正在开发的插件</span>
+claude<span class="w"> </span>--dangerously-load-development-channels<span class="w"> </span>plugin:yourplugin@yourmarketplace
+
+<span class="c1"># 测试裸 .mcp.json 服务器（尚无插件包装器）</span>
+claude<span class="w"> </span>--dangerously-load-development-channels<span class="w"> </span>server:webhook
+</code></pre></div>
+<p>请在交互式会话中使用开发标志，以便 Claude Code 能够显示确认提示。如果您在非交互模式下通过 <code>-p</code> 或通过 Agent SDK 传递该标志，Claude Code 会忽略该标志，频道也不会注册。</p>
+<p>绕过是按条目的。将此标志与 <code>--channels</code> 结合不会将绕过扩展到 <code>--channels</code> 条目。在研究预览期间，您的频道不在批准的允许列表上，因此在您构建和测试时它保持在开发标志上。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>此标志仅跳过允许列表。<code>channelsEnabled</code> 组织政策仍然适用。不要使用它来运行来自不受信任来源的频道。</p></div></div>
+<h2 id="server-options">服务器选项</h2>
+<p>频道在 <a href="https://modelcontextprotocol.io/docs/learn/server-concepts" target="_blank" rel="noopener"><code>Server</code></a> 构造函数中设置这些选项。<code>instructions</code> 和 <code>capabilities.tools</code> 字段是<a href="https://modelcontextprotocol.io/docs/learn/server-concepts" target="_blank" rel="noopener">标准 MCP</a>；<code>capabilities.experimental['claude/channel']</code> 和 <code>capabilities.experimental['claude/channel/permission']</code> 是频道特定的添加：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>capabilities.experimental['claude/channel']</code></td>
+<td style="text-align: left;"><code>object</code></td>
+<td style="text-align: left;">必需。始终为 <code>{}</code>。存在注册通知侦听器。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>capabilities.experimental['claude/channel/permission']</code></td>
+<td style="text-align: left;"><code>object</code> 或 <code>false</code></td>
+<td style="text-align: left;">可选。将其设置为 <code>{}</code> 以声明此频道可以接收权限中继请求。声明后，Claude Code 将工具批准提示转发到您的频道，以便您可以远程批准或拒绝它们。要选择退出，请省略该键或将其设置为 <code>false</code>。在 v2.1.234 之前，Claude Code 将 <code>false</code> 视为已声明。请参阅<a href="#relay-permission-prompts">中继权限提示</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>capabilities.tools</code></td>
+<td style="text-align: left;"><code>object</code></td>
+<td style="text-align: left;">仅双向。始终为 <code>{}</code>。标准 MCP 工具能力。请参阅<a href="#expose-a-reply-tool">公开回复工具</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>instructions</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">推荐。Claude Code 在服务器连接时将其作为上下文传递给 Claude。告诉 Claude 期望什么事件、<code>&lt;channel&gt;</code> 标签属性的含义、是否回复，如果是，使用哪个工具以及传回哪个属性（如 <code>chat_id</code>）。</td>
+</tr>
+</tbody>
+</table>
+<p>要创建单向频道，请省略 <code>capabilities.tools</code>。此示例显示双向设置，其中频道能力、工具和说明已设置：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Server</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@modelcontextprotocol/sdk/server/index.js'</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">mcp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Server</span><span class="p">(</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'your-channel'</span><span class="p">,</span><span class="w"> </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">'0.0.1'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">capabilities</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">experimental</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">'claude/channel'</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">},</span><span class="w">  </span><span class="c1">// 注册频道侦听器</span>
+<span class="w">      </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span><span class="w">  </span><span class="c1">// 对于单向频道省略</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="c1">// Claude Code 在服务器连接时将其作为上下文传递给 Claude，以便它知道如何处理您的事件</span>
+<span class="w">    </span><span class="nx">instructions</span><span class="o">:</span><span class="w"> </span><span class="s1">'Messages arrive as &lt;channel source="your-channel" ...&gt;. Reply with the reply tool.'</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="notification-format">通知格式</h2>
+<p>您的服务器使用两个参数发出 <code>notifications/claude/channel</code>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">字段</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>content</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">事件主体。作为 <code>&lt;channel&gt;</code> 标签的主体传递。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>meta</code></td>
+<td style="text-align: left;"><code>Record&lt;string, string&gt;</code></td>
+<td style="text-align: left;">可选。每个条目成为 <code>&lt;channel&gt;</code> 标签上的属性，用于路由上下文，如聊天 ID、发送者名称或警报严重性。键必须是标识符：仅字母、数字和下划线。包含连字符或其他字符的键会被静默删除。</td>
+</tr>
+</tbody>
+</table>
+<p>您的服务器通过在 <code>Server</code> 实例上调用 <code>mcp.notification()</code> 来推送事件。此示例推送带有两个元键的 CI 失败警报：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">await</span><span class="w"> </span><span class="nx">mcp</span><span class="p">.</span><span class="nx">notification</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'notifications/claude/channel'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s1">'build failed on main: https://ci.example.com/run/1234'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">meta</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">severity</span><span class="o">:</span><span class="w"> </span><span class="s1">'high'</span><span class="p">,</span><span class="w"> </span><span class="nx">run_id</span><span class="o">:</span><span class="w"> </span><span class="s1">'1234'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>事件在 Claude 的上下文中到达，包装在 <code>&lt;channel&gt;</code> 标签中。<code>source</code> 属性从您的服务器配置的名称自动设置：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">&lt;channel source="your-channel" severity="high" run_id="1234"&gt;
+build failed on main: https://ci.example.com/run/1234
+&lt;/channel&gt;
+</code></pre></div>
+<p>Claude Code 不确认通知。<code>mcp.notification()</code> 上的 <code>await</code> 在消息写入传输时解析，而不是在 Claude 处理它时解析。如果会话尚未将您的服务器加载为频道，或组织政策阻止它，Claude Code 会静默删除事件，不会向您的服务器返回错误。</p>
+<p>如果您需要传递确认，请在您的服务器中跟踪事件状态，并公开一个<a href="#expose-a-reply-tool">回复工具</a>，Claude 可以调用它来报告状态回来。</p>
+<p>事件排队进入会话并按顺序处理。如果在 Claude 忙碌时有多个通知到达，它们会在下一个轮次一起传递，Claude 将它们作为一个组处理。要并发处理独立事件流，请运行单独的会话。</p>
+<h2 id="expose-a-reply-tool">公开回复工具</h2>
+<p>如果您的频道是双向的，如聊天桥接而不是警报转发器，请公开一个标准 <a href="https://modelcontextprotocol.io/docs/concepts/tools" target="_blank" rel="noopener">MCP 工具</a>，Claude 可以调用它来发送消息回复。关于工具注册的任何内容都不是频道特定的。回复工具有三个组件：</p>
+<ol>
+<li>您的 <code>Server</code> 构造函数能力中的 <code>tools: {}</code> 条目，以便 Claude Code 发现工具</li>
+<li>定义工具的架构并实现发送逻辑的工具处理程序</li>
+<li>您的 <code>Server</code> 构造函数中的 <code>instructions</code> 字符串，告诉 Claude 何时以及如何调用工具</li>
+</ol>
+<p>要将这些添加到上面的<a href="#example-build-a-webhook-receiver">webhook 接收器</a>：</p>
+<p><strong>1. 启用工具发现</strong></p>
+<p>在您的 <code>Server</code> 构造函数中的 <code>webhook.ts</code> 中，将 <code>tools: {}</code> 添加到能力中，以便 Claude Code 知道您的服务器提供工具：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="nx">capabilities</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">experimental</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">'claude/channel'</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span><span class="w">  </span><span class="c1">// 启用工具发现</span>
+<span class="p">},</span>
+</code></pre></div>
+<p><strong>2. 注册回复工具</strong></p>
+<p>将以下内容添加到 <code>webhook.ts</code>。<code>import</code> 与您的其他导入一起位于文件顶部；两个处理程序位于 <code>Server</code> 构造函数和 <code>mcp.connect()</code> 之间。这注册了一个 <code>reply</code> 工具，Claude 可以使用 <code>chat_id</code> 和 <code>text</code> 调用它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="c1">// 在 webhook.ts 顶部添加此导入</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ListToolsRequestSchema</span><span class="p">,</span><span class="w"> </span><span class="nx">CallToolRequestSchema</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@modelcontextprotocol/sdk/types.js'</span>
+
+<span class="c1">// Claude 在启动时查询此项以发现您的服务器提供什么工具</span>
+<span class="nx">mcp</span><span class="p">.</span><span class="nx">setRequestHandler</span><span class="p">(</span><span class="nx">ListToolsRequestSchema</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<span class="w">  </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'reply'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'Send a message back over this channel'</span><span class="p">,</span>
+<span class="w">    </span><span class="c1">// inputSchema 告诉 Claude 要传递什么参数</span>
+<span class="w">    </span><span class="nx">inputSchema</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'object'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">chat_id</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'string'</span><span class="p">,</span><span class="w"> </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'The conversation to reply in'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'string'</span><span class="p">,</span><span class="w"> </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'The message to send'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">'chat_id'</span><span class="p">,</span><span class="w"> </span><span class="s1">'text'</span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">}],</span>
+<span class="p">}))</span>
+
+<span class="c1">// Claude 想要调用工具时调用此项</span>
+<span class="nx">mcp</span><span class="p">.</span><span class="nx">setRequestHandler</span><span class="p">(</span><span class="nx">CallToolRequestSchema</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">req</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'reply'</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">chat_id</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nb">arguments</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">chat_id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// send() 是您的出站：POST 到您的聊天平台，或用于本地</span>
+<span class="w">    </span><span class="c1">// 测试下面完整示例中显示的 SSE 广播。</span>
+<span class="w">    </span><span class="nx">send</span><span class="p">(</span><span class="sb">`Reply to </span><span class="si">${</span><span class="nx">chat_id</span><span class="si">}</span><span class="sb">: </span><span class="si">${</span><span class="nx">text</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'text'</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'sent'</span><span class="w"> </span><span class="p">}]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`unknown tool: </span><span class="si">${</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<p><strong>3. 更新说明</strong></p>
+<p>更新您的 <code>Server</code> 构造函数中的 <code>instructions</code> 字符串，以便 Claude 知道通过工具将回复路由回去。此示例告诉 Claude 从入站标签传递 <code>chat_id</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="nx">instructions</span><span class="o">:</span><span class="w"> </span><span class="s1">'Messages arrive as &lt;channel source="webhook" chat_id="..."&gt;. Reply with the reply tool, passing the chat_id from the tag.'</span>
+</code></pre></div>
+<p>这是完整的 <code>webhook.ts</code>，具有双向支持。出站回复通过 <code>GET /events</code> 使用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events" target="_blank" rel="noopener">Server-Sent Events</a> (SSE) 流式传输，因此 <code>curl -N localhost:8788/events</code> 可以实时观看它们；入站聊天到达 <code>POST /</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><span class="cb-title">Full webhook.ts with reply tool</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="ch">#!/usr/bin/env bun</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Server</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@modelcontextprotocol/sdk/server/index.js'</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">StdioServerTransport</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@modelcontextprotocol/sdk/server/stdio.js'</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ListToolsRequestSchema</span><span class="p">,</span><span class="w"> </span><span class="nx">CallToolRequestSchema</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@modelcontextprotocol/sdk/types.js'</span>
+
+<span class="c1">// --- 出站：写入 /events 上的任何 curl -N 侦听器 ---</span>
+<span class="c1">// 真实的桥接会改为 POST 到您的聊天平台。</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">listeners</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="o">&lt;</span><span class="p">(</span><span class="nx">chunk</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ow">void</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">send</span><span class="p">(</span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">text</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'\n'</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">l</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="sb">`data: </span><span class="si">${</span><span class="nx">l</span><span class="si">}</span><span class="sb">\n`</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">'\n'</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">emit</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">listeners</span><span class="p">)</span><span class="w"> </span><span class="nx">emit</span><span class="p">(</span><span class="nx">chunk</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">mcp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Server</span><span class="p">(</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'webhook'</span><span class="p">,</span><span class="w"> </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">'0.0.1'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">capabilities</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">experimental</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">'claude/channel'</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">instructions</span><span class="o">:</span><span class="w"> </span><span class="s1">'Messages arrive as &lt;channel source="webhook" chat_id="..."&gt;. Reply with the reply tool, passing the chat_id from the tag.'</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="nx">mcp</span><span class="p">.</span><span class="nx">setRequestHandler</span><span class="p">(</span><span class="nx">ListToolsRequestSchema</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<span class="w">  </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'reply'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'Send a message back over this channel'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">inputSchema</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'object'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">chat_id</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'string'</span><span class="p">,</span><span class="w"> </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'The conversation to reply in'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'string'</span><span class="p">,</span><span class="w"> </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'The message to send'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">'chat_id'</span><span class="p">,</span><span class="w"> </span><span class="s1">'text'</span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">}],</span>
+<span class="p">}))</span>
+
+<span class="nx">mcp</span><span class="p">.</span><span class="nx">setRequestHandler</span><span class="p">(</span><span class="nx">CallToolRequestSchema</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">req</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'reply'</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">chat_id</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nb">arguments</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">chat_id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">send</span><span class="p">(</span><span class="sb">`Reply to </span><span class="si">${</span><span class="nx">chat_id</span><span class="si">}</span><span class="sb">: </span><span class="si">${</span><span class="nx">text</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'text'</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'sent'</span><span class="w"> </span><span class="p">}]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`unknown tool: </span><span class="si">${</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="k">await</span><span class="w"> </span><span class="nx">mcp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">StdioServerTransport</span><span class="p">())</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="nx">nextId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span>
+<span class="nx">Bun</span><span class="p">.</span><span class="nx">serve</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">port</span><span class="o">:</span><span class="w"> </span><span class="kt">8788</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">hostname</span><span class="o">:</span><span class="w"> </span><span class="s1">'127.0.0.1'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">idleTimeout</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span><span class="w">  </span><span class="c1">// 不要关闭空闲 SSE 流</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">)</span>
+
+<span class="w">    </span><span class="c1">// GET /events：SSE 流，以便 curl -N 可以实时观看 Claude 的回复</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'GET'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">url</span><span class="p">.</span><span class="nx">pathname</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'/events'</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ReadableStream</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">start</span><span class="p">(</span><span class="nx">ctrl</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">ctrl</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="s1">': connected\n\n'</span><span class="p">)</span><span class="w">  </span><span class="c1">// 所以 curl 立即显示一些内容</span>
+<span class="w">          </span><span class="kd">const</span><span class="w"> </span><span class="nx">emit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">chunk</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">ctrl</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="nx">chunk</span><span class="p">)</span>
+<span class="w">          </span><span class="nx">listeners</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">emit</span><span class="p">)</span>
+<span class="w">          </span><span class="nx">req</span><span class="p">.</span><span class="nx">signal</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'abort'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">listeners</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="nx">emit</span><span class="p">))</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Response</span><span class="p">(</span><span class="nx">stream</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">'Content-Type'</span><span class="o">:</span><span class="w"> </span><span class="s1">'text/event-stream'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Cache-Control'</span><span class="o">:</span><span class="w"> </span><span class="s1">'no-cache'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// POST：作为频道事件转发给 Claude</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">chat_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">nextId</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">mcp</span><span class="p">.</span><span class="nx">notification</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'notifications/claude/channel'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">body</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">meta</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">chat_id</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">url.pathname</span><span class="p">,</span><span class="w"> </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="kt">req.method</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Response</span><span class="p">(</span><span class="s1">'ok'</span><span class="p">)</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">})</span>
+</code></pre></div>
+<p><a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/fakechat" target="_blank" rel="noopener">fakechat 服务器</a>显示了一个更完整的示例，具有文件附件和消息编辑。</p>
+<h2 id="gate-inbound-messages">门控入站消息</h2>
+<p>未门控的频道是提示注入向量。任何可以到达您的端点的人都可以在 Claude 前面放置文本。侦听聊天平台或公共端点的频道需要在发出任何内容之前进行真正的发送者检查。</p>
+<p>在调用 <code>mcp.notification()</code> 之前，根据允许列表检查发送者。此示例删除来自不在集合中的发送者的任何消息：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">allowed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">(</span><span class="nx">loadAllowlist</span><span class="p">())</span><span class="w">  </span><span class="c1">// 从您的 access.json 或等效项</span>
+
+<span class="c1">// 在您的消息处理程序中，在发出之前：</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">allowed</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">from</span><span class="p">.</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// 发送者，不是房间</span>
+<span class="w">  </span><span class="k">return</span><span class="w">  </span><span class="c1">// 静默删除</span>
+<span class="p">}</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">mcp</span><span class="p">.</span><span class="nx">notification</span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">})</span>
+</code></pre></div>
+<p>根据发送者的身份而不是聊天或房间身份进行门控：示例中的 <code>message.from.id</code>，而不是 <code>message.chat.id</code>。在群组聊天中，这些不同，根据房间进行门控会让已列入允许列表的群组中的任何人向会话注入消息。</p>
+<p><a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/telegram" target="_blank" rel="noopener">Telegram</a> 和 <a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/discord" target="_blank" rel="noopener">Discord</a> 频道以相同的方式在发送者允许列表上进行门控。它们通过<a href="channels.html#security">配对</a>引导列表。有关完整配对流程，请参阅任一实现。<a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/imessage" target="_blank" rel="noopener">iMessage</a> 频道采用不同的方法：它在启动时从 Messages 数据库检测用户自己的地址，并自动让它们通过，其他发送者通过句柄添加。</p>
+<h2 id="relay-permission-prompts">中继权限提示</h2>
+<p>当 Claude 调用需要批准的工具时，本地终端对话打开，会话等待。双向频道可以选择加入以在并行接收相同的提示，并将其中继到您的另一台设备。两者都保持活动：您可以在终端或手机上回答，Claude Code 应用先到达的任何答案并关闭另一个。</p>
+<p>中继涵盖工具使用批准，如 <code>Bash</code>、<code>Write</code> 和 <code>Edit</code>。项目信任和 MCP 服务器同意对话不中继；这些仅在本地终端中出现。</p>
+<p>Claude Code v2.1.234 及更高版本仅向其为会话注册为频道的服务器发送权限请求，因此中继位于与<a href="channels.html#security">会话选择加入和组织控制</a>相同的后面。中继还要求您使用 <code>--channels</code> 或开发标志选择加入服务器，并要求服务器声明权限能力。</p>
+<h3 id="how-relay-works">中继如何工作</h3>
+<p>当权限提示打开时，中继循环有四个步骤：</p>
+<ol>
+<li>Claude Code 生成一个短请求 ID 并通知您的服务器</li>
+<li>您的服务器将提示和 ID 转发到您的聊天应用</li>
+<li>远程用户使用该 ID 回复是或否</li>
+<li>您的入站处理程序将回复解析为判决，Claude Code 仅在 ID 匹配开放请求时应用它</li>
+</ol>
+<p>本地终端对话在所有这一切中保持打开。如果终端上的某人在远程判决到达之前回答，该答案将被应用，待处理的远程请求将被删除。</p>
+<p><img alt="序列图：Claude Code 向频道服务器发送 permission_request 通知，服务器格式化并将提示发送到聊天应用，人类使用判决回复，服务器将该回复解析为权限通知回到 Claude Code" src="../assets/img/20d434f2fcf3.svg" /></p>
+<h3 id="permission-request-fields">权限请求字段</h3>
+<p>来自 Claude Code 的出站通知是 <code>notifications/claude/channel/permission_request</code>。与<a href="#notification-format">频道通知</a>一样，传输是标准 MCP，但方法和架构是 Claude Code 扩展。<code>params</code> 对象有四个字符串字段，您的服务器将其格式化为出站提示：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>request_id</code></td>
+<td>从 <code>a</code>-<code>z</code> 中抽取的五个小写字母，不包括 <code>l</code>，因此在手机上输入时永远不会读作 <code>1</code> 或 <code>I</code>。将其包含在您的出站提示中，以便可以在回复中回显。Claude Code 仅接受携带其发出的 ID 的判决。本地终端对话不显示此 ID，因此您的出站处理程序是了解它的唯一方式。</td>
+</tr>
+<tr>
+<td><code>tool_name</code></td>
+<td>Claude 想要使用的工具的名称，例如 <code>Bash</code> 或 <code>Write</code>。</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>此特定工具调用执行的操作的人类可读摘要，永远不是命令本身。对于 Bash 调用，这是 Claude 对命令的描述；当模型不给出描述时，该字段是常数 <code>Run shell command</code>，不包含任何命令详情。在有空间时呈现 <code>input_preview</code>。</td>
+</tr>
+<tr>
+<td><code>input_preview</code></td>
+<td>工具的参数作为 JSON 形状的显示文本，以各顶级字段为键。对于 Bash，这是命令；对于 Write，是文件路径和内容。如果您只有一行消息的空间，请从您的提示中省略它。您的服务器决定显示什么。</td>
+</tr>
+</tbody>
+</table>
+<p>Claude Code v2.1.211 或更高版本的客户端在中继前清理 <code>description</code> 和 <code>input_preview</code>。期望您收到的文本中有三个变化：</p>
+<ul>
+<li>Claude Code 中和方向覆盖字符、不可见字符以及引号和角括号外观。</li>
+<li>Claude Code 将每次空白运行折叠为单个空格。</li>
+<li>Claude Code 中继文本最多 3,500 个代码点。对于更长的值，您会收到其开始和结束，围绕计数的 <code>⋯ N code points elided ⋯</code> 标记。长命令的结束仍然到达批准者。</li>
+</ul>
+<p>对于 <code>input_preview</code>，Claude Code 分别对参数的每个顶级字段应用 3,500 限制，并保持 JSON 自己的结构引号。v2.1.211 之前的客户端原始中继 <code>description</code> 并将 <code>input_preview</code> 切割为 200 个 UTF-16 单位，带有尾随省略号。</p>
+<p>Claude Code v2.1.234 或更高版本的客户端在 <code>input_preview</code> 字段值处中继标记 <code>(value unserializable)</code>，他们无法安全序列化，例如循环结构或极大数组。您仍然接收字段的键，预览的其他字段保持不变。</p>
+<p>Claude Code v2.1.234 或更高版本的客户端也在 <code>description</code> 和 <code>input_preview</code> 中掩盖凭证。您会收到 <code>[REDACTED]</code> 代替可识别的提供商凭证令牌，例如 API 密钥或个人访问令牌。当您呈现字段时，期望掩盖的三个效果：</p>
+<ul>
+<li>Claude Code 在 <code>input_preview</code> 内掩盖键名及其值。您显示的键名可能与输入中的键名不匹配。</li>
+<li>Claude Code 永远不会掩盖包含 shell 语法、路径字符或 URL 字符的跨度。掩盖无法隐藏正在批准的命令、文件路径或目标。</li>
+<li>Claude Code 不掩盖缺乏可识别前缀的秘密，或跨越空白的秘密，例如私钥块。两者都到达您的服务器未掩盖。</li>
+</ul>
+<p>掩盖不改变谁接收字段。无论什么保持未掩盖都仅进入您使用 <code>--channels</code> 或开发标志选择加入的服务器。除非您控制客户端队列，否则将两个字段视为不受信任。</p>
+<p>您的服务器发送回的判决是 <code>notifications/claude/channel/permission</code>，有两个字段：<code>request_id</code> 回显上面的 ID，<code>behavior</code> 设置为 <code>'allow'</code> 或 <code>'deny'</code>。允许让工具调用继续；拒绝拒绝它。两个判决都不影响未来的调用。</p>
+<h3 id="add-relay-to-a-chat-bridge">向聊天桥接添加中继</h3>
+<p>向双向频道添加权限中继需要三个组件：</p>
+<ol>
+<li>您的 <code>Server</code> 构造函数中 <code>experimental</code> 能力下的 <code>claude/channel/permission: {}</code> 条目，以便 Claude Code 知道转发提示</li>
+<li><code>notifications/claude/channel/permission_request</code> 的通知处理程序，格式化提示并通过您的平台 API 发送它</li>
+<li>您的入站消息处理程序中的检查，识别 <code>yes &lt;id&gt;</code> 或 <code>no &lt;id&gt;</code> 并发出 <code>notifications/claude/channel/permission</code> 判决通知，而不是将文本转发给 Claude</li>
+</ol>
+<p>仅在您的频道<a href="#gate-inbound-messages">验证发送者</a>时声明该能力，因为任何可以通过您的频道回复的人都可以批准或拒绝您会话中的工具使用。</p>
+<p>要将这些添加到在<a href="#expose-a-reply-tool">公开回复工具</a>中组装的双向聊天桥接：</p>
+<p><strong>1. 声明权限能力</strong></p>
+<p>在您的 <code>Server</code> 构造函数中，在 <code>experimental</code> 下的 <code>claude/channel</code> 旁边添加 <code>claude/channel/permission: {}</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="nx">capabilities</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">experimental</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s1">'claude/channel'</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">    </span><span class="s1">'claude/channel/permission'</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span><span class="w">  </span><span class="c1">// 选择加入权限中继</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="p">},</span>
+</code></pre></div>
+<p><strong>2. 处理传入请求</strong></p>
+<p>在您的 <code>Server</code> 构造函数和 <code>mcp.connect()</code> 之间注册一个通知处理程序。当权限对话打开时，Claude Code 使用<a href="#permission-request-fields">四个请求字段</a>调用它。您的处理程序为您的平台格式化提示，并包括使用 ID 回复的说明：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">z</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'zod'</span>
+
+<span class="c1">// setNotificationHandler 通过 z.literal 在方法字段上路由，</span>
+<span class="c1">// 所以这个架构既是验证器又是调度键</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">PermissionRequestSchema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="kt">z.literal</span><span class="p">(</span><span class="s1">'notifications/claude/channel/permission_request'</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="kt">z.object</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">request_id</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span><span class="w">     </span><span class="c1">// 五个小写字母，在您的提示中逐字包含</span>
+<span class="w">    </span><span class="nx">tool_name</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span><span class="w">      </span><span class="c1">// 例如 "Bash"、"Write"</span>
+<span class="w">    </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span><span class="w">    </span><span class="c1">// 此调用的摘要。视为不受信任。</span>
+<span class="w">    </span><span class="nx">input_preview</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span><span class="w">  </span><span class="c1">// 工具参数作为 JSON 形状的文本。视为不受信任。</span>
+<span class="w">  </span><span class="p">}),</span>
+<span class="p">})</span>
+
+<span class="nx">mcp</span><span class="p">.</span><span class="nx">setNotificationHandler</span><span class="p">(</span><span class="nx">PermissionRequestSchema</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// send() 是您的出站：POST 到您的聊天平台，或用于本地</span>
+<span class="w">  </span><span class="c1">// 测试下面完整示例中显示的 SSE 广播。</span>
+<span class="w">  </span><span class="nx">send</span><span class="p">(</span>
+<span class="w">    </span><span class="sb">`Claude wants to run </span><span class="si">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">tool_name</span><span class="si">}</span><span class="sb">: </span><span class="si">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="sb">\n`</span><span class="w"> </span><span class="o">+</span>
+<span class="w">    </span><span class="c1">// input_preview 携带实际参数；在有空间时呈现它：对于 Bash，描述</span>
+<span class="w">    </span><span class="c1">// 单独可能只是"Run shell command"，零命令详情</span>
+<span class="w">    </span><span class="sb">`</span><span class="si">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">input_preview</span><span class="si">}</span><span class="sb">\n\n`</span><span class="w"> </span><span class="o">+</span>
+<span class="w">    </span><span class="c1">// 说明中的 ID 是您的入站处理程序在步骤 3 中解析的内容</span>
+<span class="w">    </span><span class="sb">`Reply "yes </span><span class="si">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">request_id</span><span class="si">}</span><span class="sb">" or "no </span><span class="si">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">request_id</span><span class="si">}</span><span class="sb">"`</span><span class="p">,</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<p><strong>3. 在您的入站处理程序中拦截判决</strong></p>
+<p>您的入站处理程序是接收来自您的平台的消息的循环或回调：与您<a href="#gate-inbound-messages">根据发送者进行门控</a>和发出 <code>notifications/claude/channel</code> 以将聊天转发给 Claude 的地方相同。在聊天转发调用之前添加一个检查，识别判决格式并改为发出权限通知。</p>
+<p>正则表达式匹配 Claude Code 生成的 ID 格式：五个字母，永远不是 <code>l</code>。<code>/i</code> 标志容忍手机自动更正将回复大写；在将其发送回之前将捕获的 ID 小写。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="c1">// 匹配 "y abcde"、"yes abcde"、"n abcde"、"no abcde"</span>
+<span class="c1">// [a-km-z] 是 Claude Code 使用的 ID 字母表（小写，跳过 'l'）</span>
+<span class="c1">// /i 容忍手机自动更正；在发送前小写捕获</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">PERMISSION_REPLY_RE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sr">/^\s*(y|yes|n|no)\s+([a-km-z]{5})\s*$/i</span>
+
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">onInbound</span><span class="p">(</span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="kt">PlatformMessage</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">allowed</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">from</span><span class="p">.</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w">  </span><span class="c1">// 首先根据发送者进行门控</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PERMISSION_REPLY_RE</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">text</span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// m[1] 是判决词，m[2] 是请求 ID</span>
+<span class="w">    </span><span class="c1">// 将判决通知发出回 Claude Code，而不是聊天</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">mcp</span><span class="p">.</span><span class="nx">notification</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'notifications/claude/channel/permission'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">request_id</span><span class="o">:</span><span class="w"> </span><span class="kt">m</span><span class="p">[</span><span class="mf">2</span><span class="p">].</span><span class="nx">toLowerCase</span><span class="p">(),</span><span class="w">  </span><span class="c1">// 在自动更正大写的情况下规范化</span>
+<span class="w">        </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="kt">m</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">toLowerCase</span><span class="p">().</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">'y'</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">'allow'</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">'deny'</span><span class="p">,</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="k">return</span><span class="w">  </span><span class="c1">// 作为判决处理，不要也转发为聊天</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 不匹配判决格式：落入正常聊天路径</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">mcp</span><span class="p">.</span><span class="nx">notification</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'notifications/claude/channel'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">message.text</span><span class="p">,</span><span class="w"> </span><span class="nx">meta</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">chat_id</span><span class="o">:</span><span class="w"> </span><span class="kt">String</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">chat</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>如果远程回复没有任何效果，且本地终端对话保持打开，请检查以下原因：</p>
+<ul>
+<li><strong>格式错误</strong>：您的入站处理程序的正则表达式无法匹配，因此 <code>approve it</code> 或 <code>yes</code> 之类的文本（没有 ID）会作为正常消息落入 Claude。</li>
+<li><strong>ID 错误</strong>：您的服务器发出判决，但 Claude Code 找不到具有该 ID 的开放请求并静默删除它。</li>
+<li><strong>该 ID 已被较早的提示使用</strong>：您的服务器使用请求中的 ID 发出判决，但会话中较早的提示具有相同的 ID。一旦 ID 重复，Claude Code 会删除携带该 ID 的任何频道判决，以便针对一个提示的回复无法批准另一个提示。ID 是五个随机字母，因此重复很少见。请改为在终端中回答。</li>
+</ul>
+<h3 id="full-example">完整示例</h3>
+<p>下面组装的 <code>webhook.ts</code> 结合了本页的所有三个扩展：回复工具、发送者门控和权限中继。如果您从这里开始，您还需要初始演练中的<a href="#example-build-a-webhook-receiver">项目设置和 <code>.mcp.json</code> 条目</a>。</p>
+<p>为了使两个方向都可以从 curl 测试，HTTP 侦听器提供两个路径：</p>
+<ul>
+<li><strong><code>GET /events</code></strong>：保持 SSE 流打开并将每个出站消息作为 <code>data:</code> 行推送，因此 <code>curl -N</code> 可以实时观看 Claude 的回复和权限提示到达。</li>
+<li><strong><code>POST /</code></strong>：入站端，与之前相同的处理程序，现在在聊天转发分支之前插入了判决格式检查。</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">ts</span><span class="cb-title">Full webhook.ts with permission relay</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="ch">#!/usr/bin/env bun</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Server</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@modelcontextprotocol/sdk/server/index.js'</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">StdioServerTransport</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@modelcontextprotocol/sdk/server/stdio.js'</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ListToolsRequestSchema</span><span class="p">,</span><span class="w"> </span><span class="nx">CallToolRequestSchema</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@modelcontextprotocol/sdk/types.js'</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">z</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'zod'</span>
+
+<span class="c1">// --- 出站：写入 /events 上的任何 curl -N 侦听器 ---</span>
+<span class="c1">// 真实的桥接会改为 POST 到您的聊天平台。</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">listeners</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="o">&lt;</span><span class="p">(</span><span class="nx">chunk</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ow">void</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">send</span><span class="p">(</span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">text</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'\n'</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">l</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="sb">`data: </span><span class="si">${</span><span class="nx">l</span><span class="si">}</span><span class="sb">\n`</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">'\n'</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">emit</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">listeners</span><span class="p">)</span><span class="w"> </span><span class="nx">emit</span><span class="p">(</span><span class="nx">chunk</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 发送者允许列表。对于本地演练，我们信任单个 X-Sender</span>
+<span class="c1">// 标头值 "dev"；真实的桥接会检查平台的用户 ID。</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">allowed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">([</span><span class="s1">'dev'</span><span class="p">])</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">mcp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Server</span><span class="p">(</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'webhook'</span><span class="p">,</span><span class="w"> </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">'0.0.1'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">capabilities</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">experimental</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s1">'claude/channel'</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">        </span><span class="s1">'claude/channel/permission'</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span><span class="w">  </span><span class="c1">// 选择加入权限中继</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">instructions</span><span class="o">:</span>
+<span class="w">      </span><span class="s1">'Messages arrive as &lt;channel source="webhook" chat_id="..."&gt;. '</span><span class="w"> </span><span class="o">+</span>
+<span class="w">      </span><span class="s1">'Reply with the reply tool, passing the chat_id from the tag.'</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1">// --- 回复工具：Claude 调用此项以发送消息回复 ---</span>
+<span class="nx">mcp</span><span class="p">.</span><span class="nx">setRequestHandler</span><span class="p">(</span><span class="nx">ListToolsRequestSchema</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<span class="w">  </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'reply'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'Send a message back over this channel'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">inputSchema</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'object'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">chat_id</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'string'</span><span class="p">,</span><span class="w"> </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'The conversation to reply in'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'string'</span><span class="p">,</span><span class="w"> </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'The message to send'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">'chat_id'</span><span class="p">,</span><span class="w"> </span><span class="s1">'text'</span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">}],</span>
+<span class="p">}))</span>
+
+<span class="nx">mcp</span><span class="p">.</span><span class="nx">setRequestHandler</span><span class="p">(</span><span class="nx">CallToolRequestSchema</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">req</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'reply'</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">chat_id</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nb">arguments</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">chat_id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">send</span><span class="p">(</span><span class="sb">`Reply to </span><span class="si">${</span><span class="nx">chat_id</span><span class="si">}</span><span class="sb">: </span><span class="si">${</span><span class="nx">text</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'text'</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'sent'</span><span class="w"> </span><span class="p">}]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`unknown tool: </span><span class="si">${</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="c1">// --- 权限中继：当对话打开时，Claude Code（不是 Claude）调用此项</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">PermissionRequestSchema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="kt">z.literal</span><span class="p">(</span><span class="s1">'notifications/claude/channel/permission_request'</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="kt">z.object</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">request_id</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span>
+<span class="w">    </span><span class="nx">tool_name</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span>
+<span class="w">    </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span>
+<span class="w">    </span><span class="nx">input_preview</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span>
+<span class="w">  </span><span class="p">}),</span>
+<span class="p">})</span>
+
+<span class="nx">mcp</span><span class="p">.</span><span class="nx">setNotificationHandler</span><span class="p">(</span><span class="nx">PermissionRequestSchema</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">send</span><span class="p">(</span>
+<span class="w">    </span><span class="sb">`Claude wants to run </span><span class="si">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">tool_name</span><span class="si">}</span><span class="sb">: </span><span class="si">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="sb">\n`</span><span class="w"> </span><span class="o">+</span>
+<span class="w">    </span><span class="sb">`</span><span class="si">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">input_preview</span><span class="si">}</span><span class="sb">\n\n`</span><span class="w"> </span><span class="o">+</span>
+<span class="w">    </span><span class="sb">`Reply "yes </span><span class="si">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">request_id</span><span class="si">}</span><span class="sb">" or "no </span><span class="si">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">request_id</span><span class="si">}</span><span class="sb">"`</span><span class="p">,</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="k">await</span><span class="w"> </span><span class="nx">mcp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">StdioServerTransport</span><span class="p">())</span>
+
+<span class="c1">// --- HTTP on :8788：GET /events 流出站，POST 路由入站 ---</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">PERMISSION_REPLY_RE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sr">/^\s*(y|yes|n|no)\s+([a-km-z]{5})\s*$/i</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">nextId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span>
+
+<span class="nx">Bun</span><span class="p">.</span><span class="nx">serve</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">port</span><span class="o">:</span><span class="w"> </span><span class="kt">8788</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">hostname</span><span class="o">:</span><span class="w"> </span><span class="s1">'127.0.0.1'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">idleTimeout</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span><span class="w">  </span><span class="c1">// 不要关闭空闲 SSE 流</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">)</span>
+
+<span class="w">    </span><span class="c1">// GET /events：SSE 流，以便 curl -N 可以实时观看回复和提示</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'GET'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">url</span><span class="p">.</span><span class="nx">pathname</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'/events'</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ReadableStream</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">start</span><span class="p">(</span><span class="nx">ctrl</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">ctrl</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="s1">': connected\n\n'</span><span class="p">)</span><span class="w">  </span><span class="c1">// 所以 curl 立即显示一些内容</span>
+<span class="w">          </span><span class="kd">const</span><span class="w"> </span><span class="nx">emit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">chunk</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">ctrl</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="nx">chunk</span><span class="p">)</span>
+<span class="w">          </span><span class="nx">listeners</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">emit</span><span class="p">)</span>
+<span class="w">          </span><span class="nx">req</span><span class="p">.</span><span class="nx">signal</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'abort'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">listeners</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="nx">emit</span><span class="p">))</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Response</span><span class="p">(</span><span class="nx">stream</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">'Content-Type'</span><span class="o">:</span><span class="w"> </span><span class="s1">'text/event-stream'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Cache-Control'</span><span class="o">:</span><span class="w"> </span><span class="s1">'no-cache'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 其他一切都是入站：首先根据发送者进行门控</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">sender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'X-Sender'</span><span class="p">)</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">''</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">allowed</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">sender</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Response</span><span class="p">(</span><span class="s1">'forbidden'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="kt">403</span><span class="w"> </span><span class="p">})</span>
+
+<span class="w">    </span><span class="c1">// 在将其视为聊天之前检查判决格式</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PERMISSION_REPLY_RE</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">body</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">m</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="nx">mcp</span><span class="p">.</span><span class="nx">notification</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'notifications/claude/channel/permission'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">request_id</span><span class="o">:</span><span class="w"> </span><span class="kt">m</span><span class="p">[</span><span class="mf">2</span><span class="p">].</span><span class="nx">toLowerCase</span><span class="p">(),</span>
+<span class="w">          </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="kt">m</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">toLowerCase</span><span class="p">().</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">'y'</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">'allow'</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">'deny'</span><span class="p">,</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Response</span><span class="p">(</span><span class="s1">'verdict recorded'</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 正常聊天：作为频道事件转发给 Claude</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">chat_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">nextId</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">mcp</span><span class="p">.</span><span class="nx">notification</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'notifications/claude/channel'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">body</span><span class="p">,</span><span class="w"> </span><span class="nx">meta</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">chat_id</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">url.pathname</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Response</span><span class="p">(</span><span class="s1">'ok'</span><span class="p">)</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>在三个终端中测试判决路径。第一个是您的 Claude Code 会话，使用<a href="#test-during-the-research-preview">开发标志</a>启动，以便它生成 <code>webhook.ts</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--dangerously-load-development-channels<span class="w"> </span>server:webhook
+</code></pre></div>
+<p>本演练测试权限对话本身，因此一旦会话打开，按 <code>Shift+Tab</code> 直到状态栏显示 <code>⏸ manual mode on</code>。在自动模式下，分类器会决定 <code>reply</code> 调用而不是您，远程端不会打开对话来回答。</p>
+<p>在第二个中，流出站端，以便您可以看到 Claude 的回复和任何权限提示在它们触发时到达：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">curl<span class="w"> </span>-N<span class="w"> </span>localhost:8788/events
+</code></pre></div>
+<p>在第三个中，发送一条消息，使 Claude 尝试运行命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">curl<span class="w"> </span>-d<span class="w"> </span><span class="s2">"list the files in this directory"</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">"X-Sender: dev"</span><span class="w"> </span>localhost:8788
+</code></pre></div>
+<p>列出文件是只读的，所以 Claude 在没有批准的情况下运行它。当 Claude 调用 <code>reply</code> 工具发送其答案回复时，权限对话打开。本地对话在您的 Claude Code 终端中打开，片刻后，<code>mcp__webhook__reply</code> 的提示出现在 <code>/events</code> 流中，包括五字母 ID。从远程端批准它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">curl<span class="w"> </span>-d<span class="w"> </span><span class="s2">"yes &lt;id&gt;"</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">"X-Sender: dev"</span><span class="w"> </span>localhost:8788
+</code></pre></div>
+<p>本地对话关闭，<code>reply</code> 工具运行，Claude 的回复在流中着陆。</p>
+<p>此文件中的三个频道特定部分：</p>
+<ul>
+<li><strong><code>Server</code> 构造函数中的能力</strong>：<code>claude/channel</code> 注册通知侦听器，<code>claude/channel/permission</code> 选择加入权限中继，<code>tools</code> 让 Claude 发现回复工具。</li>
+<li><strong>出站路径</strong>：<code>reply</code> 工具处理程序是 Claude 为会话响应调用的；<code>PermissionRequestSchema</code> 通知处理程序是当权限对话打开时 Claude Code 调用的。两者都调用 <code>send()</code> 通过 <code>/events</code> 广播，但它们由系统的不同部分触发。</li>
+<li><strong>HTTP 处理程序</strong>：<code>GET /events</code> 保持 SSE 流打开，以便 curl 可以实时观看出站；<code>POST</code> 是入站，根据 <code>X-Sender</code> 标头进行门控。<code>yes &lt;id&gt;</code> 或 <code>no &lt;id&gt;</code> 主体作为判决通知进入 Claude Code，永远不会到达 Claude；其他任何东西都作为频道事件转发给 Claude。</li>
+</ul>
+<h2 id="package-as-a-plugin">打包为插件</h2>
+<p>要使您的频道可安装和可共享，请将其包装在<a href="plugins-overview.html">插件</a>中并将其发布到<a href="plugins-overview.html">市场</a>。用户使用 <code>/plugin install</code> 安装它，然后使用 <code>--channels plugin:&lt;name&gt;@&lt;marketplace&gt;</code> 按会话启用它。</p>
+<p>发布到您自己的市场的频道仍然需要 <code>--dangerously-load-development-channels</code> 来运行，因为它不在<a href="channels.html#supported-channels">批准的允许列表</a>上。默认允许列表是 <code>claude-plugins-official</code> 中的频道插件。社区市场不在频道允许列表上。</p>
+<p>如果您正在与 Anthropic 合作伙伴联系合作，请与他们联系以协调官方市场列表。在 Team 和 Enterprise 计划上，管理员可以改为将您的插件包含在组织自己的 <a href="channels.html#restrict-which-channel-plugins-can-run"><code>allowedChannelPlugins</code></a> 列表中，该列表替换默认的 Anthropic 允许列表。</p>
+<h2 id="see-also">另请参阅</h2>
+<ul>
+<li><a href="channels.html">Channels</a> 安装和使用 Telegram、Discord、iMessage 或 fakechat 演示，以及为 Team 或 Enterprise 组织启用频道</li>
+<li><a href="https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins" target="_blank" rel="noopener">工作频道实现</a>用于具有配对流、回复工具和文件附件的完整服务器代码</li>
+<li><a href="mcp.html">MCP</a> 用于频道服务器实现的基础协议</li>
+<li><a href="plugins-overview.html">Plugins</a> 打包您的频道，以便用户可以使用 <code>/plugin install</code> 安装它</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="hooks.html"><span class="pager-dir">← 上一页</span><span class="pager-name">Hooks 参考</span></a><a class="pager-link next" href="glossary.html"><span class="pager-dir">下一页 →</span><span class="pager-name">术语表</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#overview">概述</a><a class="toc-l2" href="#what-you-need">您需要什么</a><a class="toc-l2" href="#example-build-a-webhook-receiver">示例：构建 webhook 接收器</a><a class="toc-l2" href="#test-during-the-research-preview">在研究预览期间测试</a><a class="toc-l2" href="#server-options">服务器选项</a><a class="toc-l2" href="#notification-format">通知格式</a><a class="toc-l2" href="#expose-a-reply-tool">公开回复工具</a><a class="toc-l2" href="#gate-inbound-messages">门控入站消息</a><a class="toc-l2" href="#relay-permission-prompts">中继权限提示</a><a class="toc-l3" href="#how-relay-works">中继如何工作</a><a class="toc-l3" href="#permission-request-fields">权限请求字段</a><a class="toc-l3" href="#add-relay-to-a-chat-bridge">向聊天桥接添加中继</a><a class="toc-l3" href="#full-example">完整示例</a><a class="toc-l2" href="#package-as-a-plugin">打包为插件</a><a class="toc-l2" href="#see-also">另请参阅</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>各开发模式支持的绑定 · Workers 文档（中文版）</title>
+<meta name="description" content="哪些绑定能在本地模拟，哪些必须连远程资源，哪些只能在远程开发中使用。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>各开发模式支持的绑定</h1>
+      <p class="lead">哪些绑定能在本地模拟，哪些必须连远程资源，哪些只能在远程开发中使用。</p>
+      <div class="page-meta">
+        <span class="tag">本地开发</span>
+        <span>原文更新于 2026-06-25</span>
+        <span>对应页面：local-development/bindings-per-env</span>
+      </div>
+
+<h2>本地开发</h2>
+      <p><strong>本地模拟（Local simulations）</strong>：本地开发时，你的 Worker 代码始终在本地执行，而绑定<a href="../../pages/local-development/index.html">默认</a>连接到本地模拟的资源。<a href="../../sections/wrangler.html"><code>wrangler dev</code></a> 与 <a href="../../sections/vite-plugin.html">Cloudflare Vite 插件</a>都支持这种方式。</p>
+      <p><strong>远程绑定连接（Remote binding connections）</strong>：允许你<a href="../../pages/local-development/index.html">按单个绑定</a>连接到远程资源。<a href="../../sections/wrangler.html"><code>wrangler dev</code></a> 与 <a href="../../sections/vite-plugin.html">Cloudflare Vite 插件</a>都支持这种方式。</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:46%">绑定</th><th>本地模拟</th><th>远程绑定连接</th></tr></thead>
+          <tbody>
+            <tr><td><strong>AI</strong></td><td>❌</td><td>✅</td></tr>
+            <tr><td><strong>Assets</strong></td><td>✅</td><td>❌</td></tr>
+            <tr><td><strong>Analytics Engine</strong></td><td>✅</td><td>✅</td></tr>
+            <tr><td><strong>Browser Run</strong></td><td>✅</td><td>✅</td></tr>
+            <tr><td><strong>D1</strong></td><td>✅</td><td>✅</td></tr>
+            <tr><td><strong>Durable Objects</strong></td><td>✅</td><td>❌ <sup><a href="#fn1">1</a></sup></td></tr>
+            <tr><td><strong>Containers</strong></td><td>✅</td><td>❌</td></tr>
+            <tr><td><strong>Email Bindings</strong></td><td>✅</td><td>✅</td></tr>
+            <tr><td><strong>Flagship</strong></td><td>✅</td><td>✅</td></tr>
+            <tr><td><strong>Hyperdrive</strong></td><td>✅</td><td>❌</td></tr>
+            <tr><td><strong>Images</strong></td><td>✅</td><td>✅</td></tr>
+            <tr><td><strong>KV</strong></td><td>✅</td><td>✅</td></tr>
+            <tr><td><strong>Media Transformations</strong></td><td>❌</td><td>✅</td></tr>
+            <tr><td><strong>mTLS</strong></td><td>❌</td><td>✅</td></tr>
+            <tr><td><strong>Queues</strong></td><td>✅</td><td>✅</td></tr>
+            <tr><td><strong>R2</strong></td><td>✅</td><td>✅</td></tr>
+            <tr><td><strong>Rate Limiting</strong></td><td>✅</td><td>❌</td></tr>
+            <tr><td><strong>Service Bindings（多 Worker）</strong></td><td>✅</td><td>✅</td></tr>
+            <tr><td><strong>Vectorize</strong></td><td>❌</td><td>✅</td></tr>
+            <tr><td><strong>Workflows</strong></td><td>✅</td><td>❌</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>远程开发</h2>
+      <p>远程开发时，你的 Worker 代码会被上传到 Cloudflare 的基础设施上执行，绑定始终连接远程资源。<strong>我们建议改用「本地开发 + 远程绑定连接」</strong>，迭代和调试都更快。</p>
+      <p>这种方式仅支持 <a href="../../sections/wrangler.html"><code>wrangler dev --remote</code></a>——<strong>没有对应的 Vite 插件功能</strong>。</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:70%">绑定</th><th>远程开发</th></tr></thead>
+          <tbody>
+            <tr><td><strong>AI</strong></td><td>✅</td></tr>
+            <tr><td><strong>Assets</strong></td><td>✅</td></tr>
+            <tr><td><strong>Analytics Engine</strong></td><td>✅</td></tr>
+            <tr><td><strong>Browser Run</strong></td><td>✅</td></tr>
+            <tr><td><strong>D1</strong></td><td>✅</td></tr>
+            <tr><td><strong>Durable Objects</strong></td><td>✅</td></tr>
+            <tr><td><strong>Containers</strong></td><td>❌</td></tr>
+            <tr><td><strong>Email Bindings</strong></td><td>✅</td></tr>
+            <tr><td><strong>Flagship</strong></td><td>✅</td></tr>
+            <tr><td><strong>Hyperdrive</strong></td><td>✅</td></tr>
+            <tr><td><strong>Images</strong></td><td>✅</td></tr>
+            <tr><td><strong>KV</strong></td><td>✅</td></tr>
+            <tr><td><strong>Media Transformations</strong></td><td>✅</td></tr>
+            <tr><td><strong>mTLS</strong></td><td>✅</td></tr>
+            <tr><td><strong>Queues</strong></td><td>❌</td></tr>
+            <tr><td><strong>R2</strong></td><td>✅</td></tr>
+            <tr><td><strong>Rate Limiting</strong></td><td>✅</td></tr>
+            <tr><td><strong>Service Bindings（多 Worker）</strong></td><td>✅</td></tr>
+            <tr><td><strong>Vectorize</strong></td><td>✅</td></tr>
+            <tr><td><strong>Workflows</strong></td><td>❌</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>脚注</h2>
+      <p id="fn1" style="font-size:13.6px;color:var(--ink-2)">1. Durable Objects 与 Workflows 的远程资源用法，参见<a href="../../pages/local-development/index.html">如何配合远程资源使用 Durable Objects 和 Workflows</a>中的推荐变通方案。</p>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/local-development/bindings-per-env/" target="_blank" rel="noopener">local-development/bindings-per-env</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

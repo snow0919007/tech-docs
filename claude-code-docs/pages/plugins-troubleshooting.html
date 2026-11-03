@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>排查插件问题 · Claude Code 中文文档</title>
+<meta name="description" content="修复 Claude Code 中的插件错误。找到您看到的确切消息，按照 /plugin 运行、安装和组织策略的阶段分组。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/troubleshooting">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/troubleshooting" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link active" href="plugins-troubleshooting.html" aria-current="page">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>故障排除</span></div>
+    <article class="prose" id="article"><h1 id="_1">排查插件问题</h1>
+<blockquote>
+<p>修复 Claude Code 中的插件错误。找到您看到的确切消息，按照 /plugin 运行、安装和组织策略的阶段分组。</p>
+</blockquote>
+<p>此页面列出了 Claude Code 插件和市场的错误消息和症状，市场是 Claude Code 安装插件的目录。每个条目都给出了原因、一个修复方法，以及修复后您会看到的内容。</p>
+<p>如果消息中提到了插件或市场的名称，该条目会显示一个占位符，例如 <code>&lt;name&gt;</code>。</p>
+<p>无论您是安装插件、构建插件、托管市场还是为组织管理插件，都可以使用此页面。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>这些情况在其他页面上有介绍：</p>
+<ul>
+<li><strong>为什么作用域、缓存和优先级的行为方式如此</strong>：阅读 <a href="plugins-loading.html">Plugin loading reference</a></li>
+<li><strong>查找标志、字段或命令</strong>：使用 <a href="plugins-cli-reference.html">plugin commands reference</a>、<a href="plugins-manifest-reference.html">manifest reference</a> 或 <a href="plugins-marketplace-reference.html">marketplace reference</a></li>
+<li><strong><code>hooks module not loaded</code> 或 <code>hooks module did not load</code> 消息</strong>：该插件是一个 <a href="plugins-mods-overview.html">mod</a>，请阅读 <a href="plugins-mods-troubleshoot.html#the-mod-doesn’t-load">The mod doesn't load</a></li>
+</ul></div></div>
+<p>搜索您看到的确切消息。每条消息都列在产生它的阶段下，这不一定是您运行的命令。例如，安装可能因为市场缺失而失败，所以该消息在 <a href="#add-a-marketplace">Add a marketplace</a> 下。</p>
+<h2 id="find-where-/plugin-runs">查找 <code>/plugin</code> 运行的位置</h2>
+<p><code>/plugin</code> 是您在运行的 Claude Code 终端会话中键入的命令，它打开一个交互式面板。本节中的条目涵盖了您可以键入它但它无法运行的地方，以及不存在的命令拼写。</p>
+<h3 id="plugin-isnt-available-in-this-environment"><code>/plugin isn't available in this environment</code></h3>
+<p>您在 Claude Code 终端会话之外的某个地方键入了 <code>/plugin</code>，Claude 用这一行回复而不是打开任何东西。</p>
+<p>您会在没有终端来绘制 <code>/plugin</code> 面板的会话中收到此回复：<a href="headless.html">非交互模式</a>，使用 <code>claude -p</code>、Agent SDK、Claude 桌面应用的 Code 选项卡、VS Code 扩展面板和浏览器上的 claude.ai/code。</p>
+<p>在 VS Code 扩展面板中，只有 <code>/plugin</code> 行后面跟着内容（例如 <code>/plugin install &lt;plugin&gt;@&lt;marketplace&gt;</code>）才会收到此回复。单独键入 <code>/plugin</code> 或 <code>/plugins</code> 会打开 <strong>Manage plugins</strong> 对话框。</p>
+<p>从您所在的表面安装插件：</p>
+<ul>
+<li><strong>Claude 桌面应用、本地或 SSH 会话</strong>：使用 <a href="plugins-install.html#install-a-plugin">安装插件</a> 下的 <strong>Desktop app</strong> 选项卡</li>
+<li><strong>VS Code 扩展</strong>：使用 <a href="plugins-install.html#install-a-plugin">安装插件</a> 下的 <strong>VS Code</strong> 选项卡</li>
+<li><strong>网络上的 Claude Code 或桌面云会话</strong>：云会话没有插件浏览器。有关云会话加载的内容，请参阅 <a href="plugins-install.html#install-a-plugin">安装插件</a> 下的 <strong>Cloud session</strong> 选项卡</li>
+<li><strong>您有权访问的终端</strong>：运行 <code>claude</code> 并在那里键入 <code>/plugin</code>，或在您的 shell 中运行 <code>claude plugin install &lt;plugin&gt;@&lt;marketplace&gt;</code> 而不启动会话</li>
+</ul>
+<p>当终端安装成功时，<code>/plugin</code> 会打印一个以 <code>✓ Installed &lt;plugin&gt;.</code> 开头的安装摘要，<code>claude plugin install</code> 会打印 <code>Successfully installed plugin: &lt;plugin&gt;@&lt;marketplace&gt;</code>。</p>
+<h3 id="zsh-no-such-file-or-directory-plugin"><code>zsh: no such file or directory: /plugin</code></h3>
+<p>您在 shell 提示符处键入了 <code>/plugin ...</code>，shell 报告不存在名为 <code>/plugin</code> 的文件。Bash 报告 <code>bash: /plugin: No such file or directory</code>。</p>
+<p><code>/plugin</code> 是您在 Claude Code 会话中键入的命令，而不是在 shell 提示符处。启动一个会话并在那里键入相同的命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude
+</code></pre></div>
+<p>然后，在 Claude Code 提示符处：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/plugin install &lt;plugin&gt;@&lt;marketplace&gt;
+</code></pre></div>
+<p>成功的安装会打印一个以 <code>✓ Installed &lt;plugin&gt;.</code> 开头的摘要。如果安装本身随后失败，其消息在 <a href="#add-a-marketplace">添加市场</a> 或 <a href="#install-a-plugin">安装插件</a> 下。</p>
+<p>要从 shell 安装而不启动会话，请改为运行 <code>claude plugin install &lt;plugin&gt;@&lt;marketplace&gt;</code>。</p>
+<h3 id="the-term-plugin-is-not-recognized-as-the-name-of-a-cmdlet"><code>The term '/plugin' is not recognized as the name of a cmdlet</code></h3>
+<p>您在 PowerShell 提示符处键入了 <code>/plugin ...</code>，<code>/plugin</code> 是 Claude Code 命令，而不是程序。Bash 和 Zsh 报告 <a href="#zsh-no-such-file-or-directory-plugin">它们自己的这个错误形式</a>。</p>
+<p>改为使用以下任一方式：</p>
+<ul>
+<li>运行 <code>claude</code>，然后在 Claude Code 提示符处键入 <code>/plugin</code></li>
+<li>在 PowerShell 中运行 <code>claude plugin install &lt;plugin&gt;@&lt;marketplace&gt;</code> 而不启动会话</li>
+</ul>
+<h3 id="claude-command-not-found-after-claude-plugin"><code>claude: command not found</code> after <code>claude plugin ...</code></h3>
+<p>您在 shell 中运行了 <code>claude plugin install ...</code>，shell 根本找不到 <code>claude</code>。在 Windows 上，消息是 <code>'claude' is not recognized as the name of a cmdlet</code> 或 <code>'claude' is not recognized as an internal or external command</code>。</p>
+<p>原因不是插件命令。请按照 <a href="troubleshoot-install.html#verify-your-path">验证您的 PATH</a> 进行操作，然后重试插件命令。</p>
+<h3 id="unknown-command-and-command-spellings-that-dont-exist"><code>Unknown command</code> 和不存在的命令拼写</h3>
+<p>您键入了在某处看到的插件命令，并在会话中收到 <code>Unknown command: /&lt;name&gt;</code>，或从 shell 中的 <code>claude</code> 二进制文件收到 <code>error: unknown command '&lt;name&gt;'</code> 或 <code>error: unknown option '&lt;flag&gt;'</code>。</p>
+<p>有几种命令拼写在使用中，但 Claude Code 没有。下表将每一个映射到真实命令。<a href="plugins-cli-reference.html">插件命令参考</a> 列出了各个子命令及其标志。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您键入的</th>
+<th style="text-align: left;">Claude Code 说什么</th>
+<th style="text-align: left;">改为使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>claude plugin add &lt;source&gt;</code></td>
+<td style="text-align: left;"><code>error: unknown command 'add'</code></td>
+<td style="text-align: left;"><code>claude plugin marketplace add &lt;source&gt;</code> 添加市场，或 <code>claude plugin install &lt;plugin&gt;@&lt;marketplace&gt;</code> 安装插件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude plugin install &lt;plugin&gt; --project</code></td>
+<td style="text-align: left;"><code>error: unknown option '--project'</code></td>
+<td style="text-align: left;"><code>claude plugin install &lt;plugin&gt;@&lt;marketplace&gt; --scope project</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/install &lt;plugin&gt;</code></td>
+<td style="text-align: left;"><code>Unknown command: /install</code></td>
+<td style="text-align: left;"><code>/plugin install &lt;plugin&gt;@&lt;marketplace&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/plugin add &lt;source&gt;</code></td>
+<td style="text-align: left;"><code>/plugin</code> 面板在 <strong>Discover</strong> 选项卡上打开</td>
+<td style="text-align: left;"><code>/plugin marketplace add &lt;source&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>marketplace.anthropic.com</code> 作为源</td>
+<td style="text-align: left;"><code>Invalid marketplace source format. Try: owner/repo, https://..., or ./path</code></td>
+<td style="text-align: left;"><code>anthropics/claude-plugins-official</code> 用于官方市场</td>
+</tr>
+</tbody>
+</table>
+<p>这些拼写看起来不对但有效：</p>
+<ul>
+<li><code>claude plugins</code> 是 <code>claude plugin</code> 的别名</li>
+<li><code>claude plugin remove</code> 是 <code>claude plugin uninstall</code> 的别名</li>
+<li><code>/plugins</code> 和 <code>/marketplace</code> 在会话中打开与 <code>/plugin</code> 相同的面板</li>
+</ul>
+<h2 id="add-a-marketplace">添加市场</h2>
+<p>市场是您从 git 存储库、URL 或本地路径添加到 Claude Code 的目录。这些条目涵盖了添加失败或稍后刷新失败时您收到的消息。</p>
+<h3 id="marketplace-claude-plugins-official-not-found"><code>Marketplace "claude-plugins-official" not found</code></h3>
+<p>您在会话中运行了 <code>/plugin install &lt;plugin&gt;@claude-plugins-official</code>，Claude Code 报告它没有该名称的市场。</p>
+<p>官方市场在此机器上尚未注册。Claude Code 通常在您第一次启动交互式终端会话时自动注册它。如果您仅通过 VS Code 扩展使用 Claude Code，它还没有运行，并且它会跳过或延迟该步骤：</p>
+<ul>
+<li>当策略阻止源时</li>
+<li>当设置了 <code>CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL</code> 时</li>
+<li>在等待重试的失败尝试之后</li>
+</ul>
+<p><code>claude plugin</code> shell 命令永远不会为您注册它。</p>
+<p>添加它，然后重试安装：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/plugin marketplace add anthropics/claude-plugins-official
+</code></pre></div>
+<p>Claude Code 打印 <code>Successfully added marketplace: claude-plugins-official</code>，<code>/plugin marketplace list</code> 显示带有其源的市场。</p>
+<p>对于此消息中的任何其他市场名称，请参阅 <a href="#marketplace-not-found"><code>Marketplace "&lt;name&gt;" not found</code></a>。</p>
+<p>相同的字符串也出现在 <code>/plugin</code> <strong>Errors</strong> 选项卡中，即面板的加载失败列表，当您的设置中列出的插件命名您未添加的市场时。</p>
+<h3 id="marketplace-not-found"><code>Marketplace "&lt;name&gt;" not found</code></h3>
+<p>您在会话中运行了 <code>/plugin install</code>，Claude Code 报告它没有该名称的市场。两种形式的命令会到达此消息：</p>
+<ul>
+<li><strong><code>/plugin install &lt;plugin&gt;@&lt;name&gt;</code></strong>：安装行，通常是某人发送给您的，命名了您未添加的市场。本条目的其余部分涵盖了查找和添加它。</li>
+<li><strong><code>/plugin install &lt;source&gt;</code> 带有路径、URL 或 <code>owner/repo</code></strong>：此形式报告消息而不是安装，即使对于您已添加的源也是如此。要在一个命令中从源安装，请参阅 <a href="plugins-install.html#add-a-marketplace-and-install-in-one-command">添加市场并在一个命令中安装</a>。</li>
+</ul>
+<p>如果名称以 <code>claudeai-</code> 开头，市场托管在 claude.ai 上，您可以从 shell 中使用 <code>claude plugin marketplace add --claudeai &lt;name&gt;</code> 按名称添加它。请参阅 <a href="plugins-install.html#add-from-claude-ai">从 claude.ai 添加市场</a>。</p>
+<p>对于任何其他名称，安装行命名市场但不说明市场托管在哪里，Claude Code 没有索引来查找市场名称。询问发送该行的人市场的源，这是 GitHub <code>owner/repo</code>、git URL 或路径。然后 <a href="plugins-install.html#add-a-marketplace">添加市场</a> 并再次运行安装行。</p>
+<p>某人发送给您的市场是第三方的，所以 <a href="plugins-security.html#review-a-plugin-before-you-install">在安装前审查插件</a>。</p>
+<p>如果您已经添加了市场，请根据 <code>/plugin marketplace list</code> 检查拼写。</p>
+<h3 id="invalid-marketplace-source-format"><code>Invalid marketplace source format</code></h3>
+<p>您运行了 <code>/plugin marketplace add &lt;source&gt;</code>、<code>claude plugin marketplace add &lt;source&gt;</code> 或 <code>claude plugin install &lt;plugin&gt; --marketplace &lt;source&gt;</code>，Claude Code 回复 <code>Invalid marketplace source format. Try: owner/repo, https://..., or ./path</code>。</p>
+<p>Claude Code 接受以下形式之一的源：</p>
+<ul>
+<li>GitHub <code>owner/repo</code> 简写</li>
+<li><code>https://</code> 或 <code>http://</code> URL</li>
+<li><code>user@host:path</code> SSH URL</li>
+<li>以 <code>./</code>、<code>../</code>、<code>/</code> 或 <code>~</code> 开头的本地路径</li>
+</ul>
+<p>裸名称（例如 <code>claude-plugins-official</code>）不匹配任何一个。裸主机名（例如 <code>marketplace.anthropic.com</code>）也不匹配。</p>
+<p>以接受的形式之一重新键入源：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/plugin marketplace add anthropics/claude-plugins-official
+</code></pre></div>
+<p>当添加成功时，Claude Code 打印 <code>Successfully added marketplace: &lt;name&gt;</code>。</p>
+<h3 id="is-not-a-valid-github-owner-repo-shorthand"><code>'&lt;source&gt;' is not a valid GitHub owner/repo shorthand</code></h3>
+<p>您传递了一个包含斜杠但不是 <code>owner/repo</code> 的源，例如 <code>github.com/owner/repo</code> 或 <code>gitlab.example.com/group/project</code> 路径。Claude Code 拒绝了它，并显示了一个接受的形式列表。</p>
+<p><code>owner/repo</code> 简写仅限于 GitHub，必须遵循 GitHub 的命名规则，因此主机名或额外的路径段会失败。以与市场托管位置匹配的形式传递源：</p>
+<ul>
+<li><strong>任何主机上的存储库</strong>：完整的克隆 URL</li>
+<li><strong>托管的 <code>marketplace.json</code></strong>：其 <code>https://</code> URL</li>
+<li><strong>本地检出</strong>：<code>./path</code> 或绝对路径</li>
+</ul>
+<p>例如，要通过其克隆 URL 添加官方市场，请在会话中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/plugin marketplace add https://github.com/anthropics/claude-plugins-official.git
+</code></pre></div>
+<p>成功的添加打印 <code>Successfully added marketplace: &lt;name&gt;</code>。</p>
+<h3 id="invalid-git-url"><code>Invalid git URL</code></h3>
+<p>您添加了市场、安装了插件或从 git 地址运行了更新，命令失败，消息中显示 <code>Invalid git URL</code>。</p>
+<p>Claude Code 在运行 git 之前检查每个 git 地址。它拒绝其协议不支持的地址。它也拒绝 git 可能读取为命名不同服务器或文件夹的地址。</p>
+<p>地址后面的文本命名要更改的内容。按照消息说的重写地址并再次运行命令。</p>
+<p>拒绝消息改为说 <code>is blocked by enterprise policy</code> 来自您组织的设置。请参阅 <a href="#marketplace-source-is-blocked-by-enterprise-policy">市场源被企业策略阻止</a>。</p>
+<h3 id="path-does-not-exist"><code>Path does not exist: &lt;path&gt;</code></h3>
+<p>您将本地路径传递给 <code>marketplace add</code>，该路径处没有任何内容。相对路径相对于您的当前目录解析。</p>
+<p>检查消息中的已解析路径。然后从相对路径开始的目录运行命令，或将绝对路径传递给市场目录。成功的添加打印 <code>Successfully added marketplace: &lt;name&gt;</code>。</p>
+<p>Claude Code 接受包含 <code>.claude-plugin/marketplace.json</code> 的目录，或指向 <code>.json</code> 文件的路径。指向任何其他文件的路径失败，显示 <code>File path must point to a .json file (marketplace.json)</code>。</p>
+<h3 id="marketplace-file-not-found-at-claude-plugin-marketplace-json"><code>Marketplace file not found at &lt;path&gt;/.claude-plugin/marketplace.json</code></h3>
+<p>Claude Code 克隆或下载了市场，但在其内部的预期路径中找不到 <code>marketplace.json</code>。添加命令将其报告为 <code>Failed to add marketplace: Marketplace file not found at ...</code>。</p>
+<p>默认位置是存储库根目录中的 <code>.claude-plugin/marketplace.json</code>，<a href="plugins-marketplace-reference.html">市场参考</a> 列出了接受的位置。</p>
+<p>修复因所有者和其他人而异：</p>
+<ul>
+<li><strong>您拥有市场</strong>：将文件放在该位置并重新添加市场</li>
+<li><strong>其他人托管它</strong>：向所有者询问他们发布的确切源</li>
+</ul>
+<h3 id="cannot-install-plugins-from-a-marketplace-with-this-name"><code>Cannot add marketplace "&lt;name&gt;": Claude Code cannot install plugins from a marketplace with this name</code></h3>
+<p>您添加了一个市场，但其 <code>marketplace.json</code> 中的 <a href="plugins-marketplace-reference.html#top-level-fields"><code>name</code></a> 不能作为 <a href="plugins-loading.html#find-where-a-plugin-came-from">插件 ID</a>（例如 <code>my-plugin@my-marketplace</code>）中 <code>@</code> 之后的部分。Claude Code 拒绝添加，且不注册任何内容。</p>
+<p>消息的其余部分说明了名称的规则。在此示例中，<code>_internal</code> 以 <code>_</code> 开头，违反了该规则：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Cannot add marketplace "_internal": Claude Code cannot install plugins from a marketplace with this name. Each part of a plugin id (plugin@marketplace) may use only the letters a-z and A-Z, digits, ".", "_" and "-", and must start with a letter or digit. The name is set by "name" in the marketplace's marketplace.json; ask its maintainer to change it.
+</code></pre></div>
+<p>为市场指定符合该规则的名称，然后再次添加：</p>
+<ul>
+<li><strong>您拥有市场</strong>：更改 <code>marketplace.json</code> 中的 <code>name</code>，例如改为 <code>internal-tools</code></li>
+<li><strong>其他人托管它</strong>：请所有者更改名称</li>
+</ul>
+<p>在 v2.1.295 之前，Claude Code 会将此示例中的添加报告为成功。</p>
+<h3 id="claude-code-reserves-this-name"><code>Cannot add marketplace "&lt;name&gt;": Claude Code reserves this name and cannot register a marketplace under it</code></h3>
+<p>您添加了一个市场，但其 <code>marketplace.json</code> 中的 <a href="plugins-marketplace-reference.html#top-level-fields"><code>name</code></a> 是每个 JavaScript 对象都具有的成员名称之一，例如 <code>constructor</code>、<code>toString</code> 或 <code>valueOf</code>。Claude Code 保留这些名称，因此它拒绝添加，且不注册任何内容。<a href="plugins-marketplace-reference.html#reserved-names">保留名称</a> 列出了这些名称。</p>
+<p>在此示例中，市场名为 <code>constructor</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Cannot add marketplace "constructor": Claude Code reserves this name and cannot register a marketplace under it. The name is set by "name" in the marketplace's marketplace.json; ask its maintainer to change it.
+</code></pre></div>
+<p>如果设置文件在 <a href="settings-reference.html#extraknownmarketplaces"><code>extraKnownMarketplaces</code></a> 下声明了该市场，Claude Code 在启动时尝试添加它也会以相同方式失败，该消息会显示在 <code>/plugin</code> 的 <strong>Errors</strong> 选项卡中。</p>
+<p>为市场指定另一个名称，然后再次添加：</p>
+<ul>
+<li><strong>您拥有市场</strong>：更改 <code>marketplace.json</code> 中的 <code>name</code></li>
+<li><strong>其他人托管它</strong>：请所有者更改名称</li>
+</ul>
+<p>在 v2.1.296 之前，添加此类市场会因内部错误而失败，而不是显示此消息。</p>
+<h3 id="ssh-authentication-failed-or-https-authentication-failed"><code>SSH authentication failed</code> 或 <code>HTTPS authentication failed</code></h3>
+<p>您从 git 存储库添加或更新了市场，克隆失败，显示 <code>Failed to clone marketplace repository:</code> 后跟以下行之一。</p>
+<p>首先检查存储库本身：拼写错误的 <code>owner/repo</code>、不存在的存储库或您看不到的私有存储库也以此消息结尾。在浏览器中打开存储库 URL，或在终端中运行 <code>git ls-remote &lt;url&gt;</code>，以确认它存在且您有权访问。</p>
+<p>如果仓库是正确的，原因是凭据。Claude Code 会关闭 git 的提示和 askpass 程序（包括在 <code>GIT_ASKPASS</code> 中设置的程序），并以批处理模式运行 SSH。当 git 需要提示时，克隆的错误中会包含 <code>fatal: Cannot prompt because user interactivity has been disabled</code>、<code>terminal prompts disabled</code> 或 <code>fatal: unable to get password from user</code>。只有 git 无需提示或 askpass 程序即可获取的凭据才会成功：</p>
+<ul>
+<li><strong>SSH</strong>：<code>ssh -T git@&lt;host&gt;</code> 必须成功而不提示密码，主机必须已在 <code>known_hosts</code> 中</li>
+<li><strong>HTTPS</strong>：您的凭据助手必须为主机保存令牌。对于 GitHub，运行 <code>gh auth login</code> 和 <code>gh auth setup-git</code>。对于另一个主机，在您的 git 凭据助手中存储个人访问令牌。要进行测试，请在终端中取消设置 <code>GIT_ASKPASS</code> 并运行 <code>git -c core.askPass= ls-remote &lt;url&gt;</code>。</li>
+</ul>
+<p>一旦针对您所用协议的检查成功且未出现提示，再次运行添加或更新。成功的添加打印 <code>Successfully added marketplace: &lt;name&gt;</code>。成功的更新从您的 shell 打印 <code>Successfully updated marketplace: &lt;name&gt;</code>，或在会话中打印 <code>✔ Updated 1 marketplace</code>。</p>
+<p>要使 Claude Code 为 GitHub <code>owner/repo</code> 源跳过 SSH，请设置 <code>CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1</code>。没有它，当 <code>github.com</code> 的 SSH 密钥看起来已配置时，Claude Code 通过 SSH 克隆这些源，当 SSH 克隆失败时回退到 HTTPS。</p>
+<p>有关后台自动更新可以和不能对您的凭证做什么，请参阅 <a href="plugins-host-marketplace.html#what-background-auto-update-does-with-credentials">后台自动更新对凭证的处理</a>。</p>
+<h3 id="ssh-host-key-is-not-in-your-known-hosts-file"><code>SSH host key is not in your known_hosts file</code></h3>
+<p>您从您从未连接过的主机通过 SSH 添加了市场，克隆失败，显示此行和 <code>ssh -T git@&lt;host&gt;</code> 提示。对于密钥已更改的主机，消息是 <code>SSH host key has changed</code>，带有 <code>ssh-keygen -R &lt;host&gt;</code> 提示。</p>
+<p>Claude Code 使用 <code>StrictHostKeyChecking=yes</code> 克隆，因此它拒绝您尚未接受其密钥的主机，而不是自动接受密钥。从您的终端连接一次以接受指纹，然后重试：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">ssh<span class="w"> </span>-T<span class="w"> </span>git@github.com
+</code></pre></div>
+<p>对于公共存储库，改为通过其 <code>https://</code> URL 添加市场以完全避免 SSH。</p>
+<h3 id="command-git-not-found-or-is-in-an-unsafe-location"><code>Command 'git' not found or is in an unsafe location</code></h3>
+<p>在 Windows 上，您添加了市场，Claude Code 报告 <code>Failed to clone marketplace repository: Command 'git' not found or is in an unsafe location (current directory)</code>。</p>
+<p>Claude Code 在您的 <code>PATH</code> 上查找 <code>git</code>，并拒绝运行仅在当前目录中找到的。要修复它，请安装 Git 并重试：</p>
+<p><strong>1. 安装 Git for Windows</strong></p>
+<p>安装 Git for Windows，以便 <code>git</code> 在您的 <code>PATH</code> 上。</p>
+<p><strong>2. 打开新终端</strong></p>
+<p>打开新终端，以便应用更新的 <code>PATH</code>。</p>
+<p><strong>3. 确认 git 运行</strong></p>
+<p>确认 <code>git --version</code> 打印版本。</p>
+<p><strong>4. 重试添加</strong></p>
+<p>再次运行 <code>marketplace add</code> 命令。</p>
+<h3 id="git-clone-timed-out-after-120s"><code>Git clone timed out after 120s</code></h3>
+<p>您添加或更新了市场，它失败，显示 <code>Git clone timed out after 120s</code>，后跟设置 <code>CLAUDE_CODE_PLUGIN_GIT_TIMEOUT_MS</code> 的提示。</p>
+<p>克隆市场和重新克隆一个以更新它，默认获得 120 秒。对于大型存储库或缓慢的连接，提高限制。该值以毫秒为单位：</p>
+<blockquote>
+<p>[tab] Bash 或 Zsh</p>
+<p><code>bash theme={null}
+export CLAUDE_CODE_PLUGIN_GIT_TIMEOUT_MS=300000</code></p>
+<p>[tab] PowerShell</p>
+<p><code>powershell theme={null}
+$env:CLAUDE_CODE_PLUGIN_GIT_TIMEOUT_MS = "300000"</code></p>
+</blockquote>
+<p>然后在同一 shell 中重试。</p>
+<p>如果存储库是 monorepo，使用 <code>claude plugin marketplace add &lt;source&gt; --sparse &lt;paths&gt;</code> 限制检出到您命名的目录。</p>
+<p>如果仓库包含大型 git 子模块，请更新 Claude Code。在 v2.1.295 及更高版本中，Claude Code 仅获取<a href="plugins-marketplace-reference.html#git-submodules-in-the-marketplace-repository">包含插件文件的子模块</a>。早期版本会获取所有子模块，仅此一项就可能耗尽这 120 秒。</p>
+<h3 id="marketplace-updates-keep-failing-offline">市场更新在离线时持续失败</h3>
+<p>您在市场的 git 主机无法访问的环境中工作，每个会话都在后台重复失败的刷新。您现有的市场检出保持原位，启动不会延迟。</p>
+<p>每个会话，对于 <a href="plugins-loading.html#which-marketplaces-and-plugins-auto-update">启用自动更新</a> 的市场，Claude Code 在后台检查市场的 git 主机是否有新提交。当该检查无法到达主机时，它尝试再次克隆市场，离线时该克隆也失败。</p>
+<p>设置此变量以跳过重新克隆尝试，并在检查无法到达主机时继续使用现有检出：</p>
+<blockquote>
+<p>[tab] Bash 或 Zsh</p>
+<p><code>bash theme={null}
+export CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE=1</code></p>
+<p>[tab] PowerShell</p>
+<p><code>powershell theme={null}
+$env:CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE = "1"</code></p>
+</blockquote>
+<p>设置变量后，Claude Code 仅对已包含 <code>.claude-plugin/marketplace.json</code> 的检出跳过重新克隆。从未克隆或其克隆停止中途的市场仍然获得克隆尝试，因此请在在线时添加一次。</p>
+<p>对于完全离线部署，改为在镜像构建时使用 <code>CLAUDE_CODE_PLUGIN_SEED_DIR</code> 预填充插件目录，遵循 <a href="plugins-org.html#seed-containers-and-ci">种子容器和 CI</a>。</p>
+<h3 id="marketplace-add-fails-on-a-github-enterprise-server-host">市场添加在 GitHub Enterprise Server 主机上失败</h3>
+<p>您从 GitHub Enterprise Server (GHES) URL 添加了市场并收到策略错误，或您从 claude.ai 添加了它并收到 GitHub 访问错误。</p>
+<p>两种情况都在 GHES 页面上：</p>
+<ul>
+<li><a href="github-enterprise-server.html#marketplace-add-fails-with-a-policy-error">策略错误</a> 意味着您的组织限制了市场源，管理员需要为主机添加 <code>hostPattern</code></li>
+<li><a href="github-enterprise-server.html#marketplace-add-on-claude-ai-fails-with-a-github-access-error">claude.ai 上的 GitHub 访问错误</a> 意味着您自己的 GitHub Enterprise 帐户尚未连接</li>
+</ul>
+<h2 id="install-a-plugin">安装插件</h2>
+<p>您添加了市场并运行了安装，安装停止并显示消息而不是安装任何东西。这些条目涵盖了这些消息。它们还涵盖了稍后出现在 <code>/plugin</code> <strong>Errors</strong> 选项卡中的相关消息，或当插件或其市场无法找到、读取或信任时的空 <strong>Discover</strong> 选项卡。</p>
+<h3 id="plugin-not-found-in-marketplace"><code>Plugin "&lt;name&gt;" not found in marketplace "&lt;marketplace&gt;"</code></h3>
+<p>您运行了 <code>/plugin install &lt;name&gt;@&lt;marketplace&gt;</code> 或 <code>claude plugin install &lt;name&gt;@&lt;marketplace&gt;</code>，插件名称不在您机器上该市场目录的副本中。</p>
+<p>当您根本没有添加市场时，<code>claude plugin install</code> 在您的 shell 中打印相同的消息。如果 <code>claude plugin marketplace update &lt;marketplace&gt;</code> 然后回答 <code>Marketplace '&lt;marketplace&gt;' not found</code>，<a href="#add-a-marketplace">首先添加市场</a>。</p>
+<h4 id="the-message-ends-with-a-refresh-hint"><code>not found in marketplace</code> 带有刷新提示</h4>
+<p>提示读取 <code>Your local copy may be out of date — try claude plugin marketplace update &lt;marketplace&gt;</code> 或 <code>The marketplace couldn't be refreshed (...)</code>。Claude Code 在查找前没有刷新市场，例如当您离线时，所以您的目录副本可能已过时。使用市场的名称刷新，然后再次安装：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/plugin marketplace update &lt;marketplace&gt;
+</code></pre></div>
+<p><code>claude plugin marketplace update</code> 打印 <code>Successfully updated marketplace: &lt;name&gt;</code>，<code>/plugin marketplace update</code> 显示 <code>✔ Updated 1 marketplace</code>。如果重试的安装打印相同的消息，请按照 <a href="#the-message-has-no-hint"><code>not found in marketplace</code> 无提示</a> 描述检查名称。<a href="plugins-loading.html#when-claude-code-refreshes-a-marketplace-before-an-install">Claude Code 何时在安装前刷新市场</a> 列出了刷新不运行的其他情况。</p>
+<h4 id="the-message-has-no-hint"><code>not found in marketplace</code> 无提示</h4>
+<p>名称是最可能的问题。打开 <code>/plugin</code>，转到 <strong>Discover</strong>，并从列表中复制名称。</p>
+<p>在 v2.1.232 之前，Claude Code 仅在查找失败后刷新命名的市场，并且仅当为其启用了自动更新时。</p>
+<h3 id="plugin-not-found-in-any-marketplace"><code>Plugin "&lt;name&gt;" not found in any marketplace</code></h3>
+<p>您运行了 <code>/plugin install &lt;name&gt;</code> 而没有 <code>@marketplace</code>，没有注册的市场拥有该插件。<code>claude plugin install &lt;name&gt;</code> 报告 <code>Plugin "&lt;name&gt;" not found in any configured marketplace</code>。</p>
+<p>没有市场名称，<code>claude plugin install</code> 搜索它已有的目录，不会首先刷新它们，<code>/plugin install</code> 仅刷新启用了自动更新的市场。命名市场，Claude Code 在查找插件前刷新它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/plugin install &lt;name&gt;@&lt;marketplace&gt;
+</code></pre></div>
+<p>当安装成功时，您在会话中看到 <code>✓ Installed &lt;plugin&gt;.</code>，或从 <code>claude plugin install</code> 看到 <code>Successfully installed plugin: &lt;plugin&gt;@&lt;marketplace&gt;</code>。</p>
+<p>如果您不知道哪个市场列出了插件，请运行 <code>/plugin marketplace list</code> 查看您拥有的市场，并在 <code>/plugin</code> 中浏览 <strong>Discover</strong> 查找插件名称。</p>
+<h3 id="plugin-is-already-installed-globally"><code>Plugin '&lt;name&gt;@&lt;marketplace&gt;' is already installed globally</code></h3>
+<p>您为已在用户作用域或通过托管设置安装的插件运行了 <code>/plugin install</code>，Claude Code 拒绝了 <code>Use '/plugin' to manage existing plugins.</code>。如果您键入了没有 <code>@&lt;marketplace&gt;</code> 的插件名称，消息会省略 <code>globally</code>。</p>
+<p>插件已在每个项目中可用，因此没有什么可添加的。要更改其 <a href="plugins-install.html">作用域</a>、启用或禁用它，或配置它，请打开 <code>/plugin</code> 并转到 <strong>Installed</strong>。</p>
+<p>仅在项目或本地作用域安装的插件不会触发此消息。Claude Code 允许您也在用户作用域安装它，因此它在其他项目中可用。</p>
+<p>您的 shell 中的 <code>claude plugin install</code> 打印不同的消息。对于已在目标作用域安装的插件，它打印 <code>Plugin "&lt;name&gt;@&lt;marketplace&gt;" is already installed (scope: user)</code> 并以 0 退出。如果其缓存目录缺失，相同的命令重新下载它。</p>
+<h3 id="plugin-would-share-its-folder"><code>"&lt;plugin&gt;" was not installed: it would share its folder with "&lt;other&gt;"</code></h3>
+<p>您通过 <code>claude plugin install</code>、<code>/plugin</code> 或会话中的安装建议安装了插件，Claude Code 拒绝了它，显示此行或 <code>would share its saved data with</code>。</p>
+<p>被拒绝的插件的 id 和已安装的插件的 id 映射到磁盘上的同一文件夹：一旦 <code>.</code> 和 <code>@</code> 被写成 <code>-</code>，它们就是相同的。在 macOS 和 Windows 上，仅在大小写上不同的 id 也映射到同一文件夹。安装两者都会将一个插件的文件放在另一个的文件夹中，所以 Claude Code 拒绝并且已安装的插件保留其文件。</p>
+<p>消息命名了出路：</p>
+<ul>
+<li><strong>其他插件已安装</strong>：消息说 <code>Only one of the two can be installed.</code> 并命名 <code>claude plugin uninstall</code> 命令，或 <code>/plugin</code> 中的卸载步骤，删除其他插件。运行它，然后再次安装。对于卸载删除和保留的内容，请参阅 <a href="plugins-cli-reference.html#what-an-uninstall-deletes-and-keeps">卸载删除和保留的内容</a>。</li>
+<li><strong>两个 id 在一次安装中到达</strong>，例如插件及其需要的依赖项：没有安装顺序有帮助。只有列出这两个插件的市场的维护者可以通过重命名其中一个来修复它。当两者来自不同的市场时，任一个的维护者都可以。</li>
+</ul>
+<h3 id="this-plugin-uses-a-source-type-your-claude-code-version-does-not-suppo"><code>This plugin uses a source type your Claude Code version does not support</code></h3>
+<p>您安装了一个插件，其市场条目使用此版本 Claude Code 无法获取的源类型，Claude Code 停止并显示此消息和 <code>Update Claude Code and try again.</code></p>
+<p>更新 Claude Code，然后重试安装。源类型在 <a href="plugins-marketplace-reference.html">市场参考</a> 上。</p>
+<h3 id="plugin-archive-integrity-check-failed"><code>Plugin archive integrity check failed</code></h3>
+<p>您安装了作为 zip 存档分发的插件，Claude Code 拒绝了它，显示此行和 <code>The archive was not installed.</code>。插件的市场条目使用带有 <code>sha256</code> 引脚的 <a href="plugins-marketplace-reference.html"><code>archive</code> 源</a>，下载文件的摘要与引脚不匹配。</p>
+<p>完整消息如下所示：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Plugin archive integrity check failed for https://artifacts.example.com/claude-plugins/my-plugin.zip: expected sha256 6bfa50e3d2e00c052b46abe51fff89346ac803e45771f76dcf6df1ab74cca5e1, got ac52220c0914ef8ca6a602e4a7362f88d30fb021110f72a6d15b68c3fe7df2b7. The archive was not installed. Verify the sha256 in the marketplace entry, or that the URL serves the intended file.
+</code></pre></div>
+<p>修复因发布者和安装程序而异：</p>
+<ul>
+<li><strong>您发布插件</strong>：重新计算 URL 提供的确切文件的摘要，并更新市场条目中的 <code>sha256</code>。使用 <code>shasum -a 256 my-plugin.zip</code>，或在 PowerShell 中使用 <code>Get-FileHash -Algorithm SHA256 my-plugin.zip</code></li>
+<li><strong>您安装插件</strong>：在会话中运行 <code>/plugin marketplace update &lt;name&gt;</code> 以刷新目录以防条目已更正，然后重试安装。如果刷新后摘要仍然不同，请在安装前询问市场所有者他们引脚了哪个文件</li>
+</ul>
+<h3 id="an-npm-plugin-source-must-name-a-registry-package"><code>An npm plugin source must name a registry package</code></h3>
+<p>市场条目使用 <a href="plugins-marketplace-reference.html#npm-plugin-source"><code>npm</code> 源</a> 的插件安装、更新或加载失败，且消息中包含这句话。Claude Code 在获取任何内容之前检查了该条目的 <code>package</code> 值并拒绝了它。消息会指出该值和原因：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">"github:acme/formatter" was not installed: it is not an http or https link. An npm plugin source must name a registry package (name or name@version) or link to a tarball file. For a plugin in a git repository, use a "github", "url" or "git-subdir" source.
+</code></pre></div>
+<p>市场的所有者必须更改该条目：</p>
+<ul>
+<li><strong>如果那是您</strong>：将 <code>package</code> 更改为 <a href="plugins-marketplace-reference.html#npm-plugin-source">npm 插件源参考</a> 接受的值，或将该条目切换为 <code>github</code>、<code>url</code> 或 <code>git-subdir</code> 源</li>
+<li><strong>如果不是您</strong>：向市场所有者报告消息</li>
+</ul>
+<h3 id="marketplace-is-registered-from-an-untrusted-source"><code>Marketplace "&lt;name&gt;" is registered from an untrusted source</code></h3>
+<p>您之前添加的市场停止加载，其插件也停止加载。此行出现在 <code>/plugin</code> <strong>Errors</strong> 选项卡中或下一次刷新时。</p>
+<p>市场以 <a href="plugins-marketplace-reference.html">为官方 Anthropic 市场保留</a> 的名称注册，但其注册源不是 <code>anthropics</code> GitHub 仓库。每次市场加载或刷新时都会重新检查保留名称，因此市场和从它安装的插件停止加载。</p>
+<p>完整消息命名保留名称和修复：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Marketplace "claude-community" is registered from an untrusted source: The name 'claude-community' is reserved for official Anthropic marketplaces. Only repositories from 'github.com/anthropics/' can use this name. To fix it, remove the marketplace and re-add it from the official source.
+</code></pre></div>
+<p>修复因用户和发布者而异：</p>
+<ul>
+<li><strong>您使用市场</strong>：在您的 shell 中，运行 <code>claude plugin marketplace remove &lt;name&gt;</code>，然后从官方 <code>github.com/anthropics</code> 仓库再次添加市场</li>
+<li><strong>您发布在其名称成为保留之前使用该名称的第三方市场</strong>：重命名它并要求用户从您的源重新添加它</li>
+</ul>
+<p>在 v2.1.205 之前，Claude Code 仅在您添加市场时检查名称，因此在其名称成为保留之前注册的条目继续加载。</p>
+<h3 id="marketplace-is-added-but-ignored"><code>Marketplace "&lt;name&gt;" is added but ignored</code></h3>
+<p>该市场在 <code>~/.claude/plugins/known_marketplaces.json</code> 中有条目，但该条目未通过 Claude Code 每次读取该文件时运行的检查，因此该市场以及从它安装的插件停止加载。在您的 shell 中，<code>claude plugin list</code> 会为每个受影响的插件报告一行，指出原因和修复方法：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Marketplace team-tools is added but ignored. Its location is on a network drive, has "." or ".." in its path, or couldn't be checked. Re-add the marketplace (one added from a folder or file must be re-added from a copy on this computer), or, to trust a folder on a network drive, declare it under extraKnownMarketplaces in user or managed settings.
+</code></pre></div>
+<p>在会话中，<code>/plugin</code> <strong>Errors</strong> 选项卡会将市场名称放在引号中，在原因之后结束该行，并在其下一行显示修复方法。</p>
+<p><code>is added but ignored</code> 之后的句子指出该条目未通过的检查：</p>
+<ul>
+<li><code>Its location is on a network drive, has "." or ".." in its path, or couldn't be checked</code>，或关于 <code>The folder or file it was added from</code> 的相同句子：市场的目录或添加它时所用的本地路径位于网络位置、路径中包含 <code>.</code> 或 <code>..</code> 段，或无法检查</li>
+<li><code>Its git URL can't be used: &lt;reason&gt;</code> 或 <code>Its URL can't be read as an https:// or http:// address</code>：条目记录的源 URL 是 Claude Code 拒绝从中克隆或获取的 URL</li>
+<li><code>Its source doesn't match its extraKnownMarketplaces entry in user or managed settings</code>：该条目与同名的 <a href="settings-reference.html#extraknownmarketplaces"><code>extraKnownMarketplaces</code></a> 声明不匹配</li>
+</ul>
+<p>当 <code>(see the debug log)</code> 代替原因出现在 <code>is added but ignored</code> 之后时，Claude Code 拒绝了该市场的名称，例如 <a href="errors.html#marketplace-name-is-another-spelling-of-a-reserved-name">保留名称的另一种拼写</a>。<a href="debug-your-config.html">调试日志</a> 会指出该条目。</p>
+<p><strong>处理方法：</strong></p>
+<ul>
+<li>按照消息中的修复方法操作。在您的 shell 中，运行 <code>claude plugin marketplace remove &lt;name&gt;</code>，然后从受支持的源或本地路径再次添加该市场，并重新安装其插件（remove 命令会卸载这些插件）。remove 命令对被忽略的条目同样有效</li>
+<li>要保留位于网络位置的市场，请在您的用户设置或托管设置中的 <a href="settings-reference.html#extraknownmarketplaces"><code>extraKnownMarketplaces</code></a> 下声明它；仓库的 <code>.claude/settings.json</code> 或 <code>.claude/settings.local.json</code> 中的声明不算数</li>
+<li>对于与其设置声明不同的源，请从声明的源重新添加市场，或更改声明。<code>claude plugin marketplace add</code> 会拒绝同样的不匹配；请参阅 <a href="#cannot-add-marketplace-source-doesnt-match">对应的 <code>Cannot add marketplace</code> 条目</a></li>
+<li>对于被拒绝的名称，请删除该市场；如果该行给出了 <code>Remove it:</code> 之后的命令，则使用该命令。以相同名称再次添加会再次被拒绝</li>
+</ul>
+<p>在 v2.1.286 之前，无论原因是什么，<code>claude plugin list</code> 都将此类市场报告为 <code>Marketplace &lt;name&gt; not found</code>，而 <code>/plugin</code> <strong>Errors</strong> 选项卡将其报告为 <code>Marketplace "&lt;name&gt;" is registered but was refused (see the debug log)</code>。原因仅出现在调试日志中。在 v2.1.286 中，原因和修复句子使用了不同的措辞，例如 <code>Its recorded location is network-shaped or unclassifiable (never probed)</code>。</p>
+<h3 id="plugin-has-a-corrupt-manifest-file-or-has-an-invalid-manifest-file"><code>Plugin &lt;name&gt; has a corrupt manifest file</code> 或 <code>has an invalid manifest file</code></h3>
+<p>Claude Code 获取了插件，然后无法读取其 <code>.claude-plugin/plugin.json</code>。在 shell 中，此行中的 <code>&lt;name&gt;</code> 可以是临时目录名称；<code>Failed to install plugin "&lt;name&gt;@&lt;marketplace&gt;"</code> 前缀携带插件的真实名称。措辞说明哪个检查失败：</p>
+<ul>
+<li><strong><code>corrupt manifest file</code>，后跟 <code>JSON parse error:</code></strong>：文件不是有效的 JSON</li>
+<li><strong><code>invalid manifest file</code>，后跟 <code>Validation errors:</code></strong>：文件可以解析但未通过 schema 校验，例如缺失必需字段时显示 <code>name: Invalid input</code></li>
+</ul>
+<p><code>claude plugin install</code> 报告为 <code>Failed to install plugin "&lt;name&gt;@&lt;marketplace&gt;":</code> 并以代码 1 退出。</p>
+<p>插件的作者必须修复文件，在那之前无法安装插件：</p>
+<ul>
+<li><strong>如果那是您</strong>：在您的 shell 中运行 <code>claude plugin validate &lt;plugin-directory&gt;</code> 以查看相同的错误和违规路径，然后修复文件</li>
+<li><strong>如果不是您</strong>：向市场所有者报告消息</li>
+</ul>
+<h3 id="plugin-directory-not-found-at-path"><code>Plugin directory not found at path: &lt;path&gt;</code></h3>
+<p><code>/plugin</code> 中的 <strong>Errors</strong> 选项卡显示这个用于启用的插件，其市场通过相对路径列出，例如 <code>./plugins/my-plugin</code>，当市场内该路径处不存在目录时。如果您维护市场，请更正条目的 <code>source</code> 路径或恢复文件夹。否则，向市场所有者报告消息。</p>
+<p><code>Marketplace directory not found at path: &lt;path&gt;</code> 意味着市场自己的目录缺失。对于您从本地路径添加的市场，该目录已移动或被删除。恢复它，或删除市场并从其新位置再次添加它。</p>
+<h3 id="no-plugins-available-or-no-marketplaces-configured"><code>No plugins available</code> 或 <code>No marketplaces configured</code></h3>
+<p>您打开了 <code>/plugin</code>，<strong>Discover</strong> 选项卡为空，或 <code>claude plugin marketplace list</code> 打印 <code>No marketplaces configured</code>。</p>
+<p>没有注册市场，因此没有目录可显示。在会话中，添加官方市场 <code>anthropics/claude-plugins-official</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/plugin marketplace add anthropics/claude-plugins-official
+</code></pre></div>
+<p>Claude Code 打印 <code>Successfully added marketplace: claude-plugins-official</code>，<strong>Discover</strong> 列出其插件。<a href="plugins-anthropic-marketplaces.html">Anthropic 市场</a> 页面列出了您可以添加的其他市场。</p>
+<h3 id="marketplace-is-already-added-from-a-different-source"><code>Marketplace "&lt;name&gt;" is already added from a different source</code></h3>
+<p>您在会话中或从 shell 中，通过 <a href="plugins-install.html#add-a-marketplace-and-install-in-one-command">安装命令上的 <code>--marketplace &lt;source&gt;</code></a> 指定了一个新的市场源。Claude Code 从该源获取的目录与您已从不同源添加的市场具有相同的名称。Claude Code 保留现有市场而不是替换它，插件未安装。</p>
+<p>完整消息如下所示：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Marketplace "acme-tools" is already added from a different source (github:acme/plugins). To use this source instead, remove that marketplace first with /plugin marketplace remove acme-tools.
+</code></pre></div>
+<p>选择您想要的源：</p>
+<ul>
+<li><strong>您已添加的市场</strong>：使用 <code>/plugin install &lt;plugin&gt;@&lt;name&gt;</code> 按名称从它安装</li>
+<li><strong>新源</strong>：运行 <code>/plugin marketplace remove &lt;name&gt;</code>，然后重试安装</li>
+</ul>
+<h3 id="cannot-add-marketplace-source-doesnt-match"><code>Cannot add marketplace "&lt;name&gt;": its source doesn't match its extraKnownMarketplaces entry in user or managed settings</code></h3>
+<p>您添加了一个市场，而其 <code>marketplace.json</code> 中的 <code>name</code> 在您的用户设置或托管设置中已有一个 <a href="settings-reference.html#extraknownmarketplaces"><code>extraKnownMarketplaces</code></a> 条目。您提供的源与该条目列出的源不同，因此 Claude Code 拒绝添加，并且不注册任何内容。</p>
+<p>只有当两个源类型相同且每个字段的值都相同时，它们才匹配。设置了您未传递的 <code>ref</code> 的条目视为不同。当您以 <code>https://github.com/</code> URL 的形式提供仓库时，<code>github</code> 条目也视为不同，因为 Claude Code 会将该 URL 记录为 <a href="plugins-marketplace-reference.html#marketplace-sources"><code>git</code> 源</a>。执行以下操作之一：</p>
+<ul>
+<li><strong>使用声明的源</strong>：Claude Code 会自行<a href="settings-reference.html#extraknownmarketplaces">注册设置中声明的市场</a>，因此请先在会话中运行 <code>/plugin marketplace list</code>。如果列表中显示该名称，则该市场已注册，无需添加。</li>
+</ul>
+<p>如果列表中未显示该名称，请按照条目的写法键入源来添加它。对于 <code>source</code> 对象为 <code>{ "source": "github", "repo": "acme-corp/claude-plugins", "ref": "v1.2.0" }</code> 的条目，请运行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">  /plugin marketplace add acme-corp/claude-plugins#v1.2.0
+</code></pre></div>
+<ul>
+<li><strong>使用新源</strong>：编辑或删除 <code>extraKnownMarketplaces</code> 条目，然后再次添加市场。如果托管设置声明它，请询问您的管理员</li>
+</ul>
+<p>在 v2.1.287 之前，该消息为 <code>Cannot add marketplace "&lt;name&gt;": its network source differs from the one declared for it in settings (kind, target, or a fetch-shaping field such as headers / ref / path / sparsePaths)</code>。</p>
+<h3 id="failed-to-install-from-the-plugin-menu"><code>Failed to install: &lt;plugin&gt; (&lt;reason&gt;)</code></h3>
+<p>您在 <code>/plugin</code> 菜单中选择了要安装的插件，它们都没有安装，菜单关闭并显示失败的摘要。</p>
+<p>某些原因（例如失败克隆后 git 的输出）仅显示其第一行。当这样的原因被缩短时，摘要以 <code>Installing a plugin from its details (Enter) in /plugin shows its full error.</code> 结尾。</p>
+<p>要做什么取决于摘要是否缩短了原因：</p>
+<ul>
+<li>修复括号中原因命名的内容</li>
+<li>当原因被缩短时，运行 <code>/plugin</code>，在 <strong>Discover</strong> 选项卡上选择插件，然后按 <strong>Enter</strong> 从其详细信息安装它。如果安装在那里失败，详细信息视图显示整个错误</li>
+</ul>
+<h3 id="could-not-move-the-new-copy-of-this-plugin-version"><code>Could not move the new copy of this plugin version into &lt;path&gt;</code></h3>
+<p>当您安装插件时，Claude Code 下载其文件的新副本并将其移动到 <a href="plugins-loading.html#find-plugins-on-disk">插件缓存</a> 中该版本的文件夹中。此消息意味着移动失败，通常是因为另一个程序在安装运行时使用了该文件夹。文件系统代码出现在括号中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Could not move the new copy of this plugin version into /home/user/.claude/plugins/cache/acme-tools/formatter/1.2.0: the new copy or the version folder stayed busy while the install ran (ENOTEMPTY) — usually a scanner still reading the freshly downloaded files, another program using that folder, or another process re-creating it. The previously installed copy was moved back. Run the install again once other Claude Code sessions or programs using that folder have finished.
+</code></pre></div>
+<p>消息说明了之前安装的副本发生了什么，这告诉您插件是否仍然有效：</p>
+<ul>
+<li><code>The previously installed copy was moved back</code>：您拥有的版本仍然安装</li>
+<li><code>had to be removed first</code>、<code>was not moved back</code> 或 <code>could not be moved back</code>：该插件版本在安装成功之前未安装</li>
+<li>没有这样的句子：没有早期副本，因此版本尚未安装</li>
+</ul>
+<p>在 Windows 上，当另一个程序持有已安装的副本本身时，消息改为说该副本 <code>could not be replaced</code> 并且 <code>It was not replaced and the new copy was discarded</code>，因此您拥有的版本仍然安装。</p>
+<p><code>Left on disk</code> 列表命名缓存内的搁置文件夹。稍后安装该版本或插件缓存清理会删除它们，因此您不需要删除它们。</p>
+<p>要修复安装：</p>
+<ul>
+<li>关闭使用插件文件夹的其他 Claude Code 会话、编辑器和终端（在 <code>~/.claude/plugins/cache</code> 下），然后再次运行安装</li>
+<li>当消息说检查插件缓存文件夹的权限时，恢复您对其命名的文件夹的写入权限并释放磁盘空间，然后再次运行安装</li>
+</ul>
+<h3 id="dependency-errors">依赖项错误</h3>
+<p>声明依赖项的插件在无法满足依赖项时可能无法安装或安装并保持禁用。消息在安装时或加载时到达您：</p>
+<ul>
+<li><strong>在安装期间</strong>：拒绝作为安装的错误消息返回</li>
+<li><strong>当插件加载时</strong>：问题出现在 <code>claude plugin list</code> 和 <code>/plugin</code> <strong>Errors</strong> 选项卡中，Claude Code 保持受影响的插件禁用，直到您解决它</li>
+</ul>
+<p>表格列出了每条消息及其修复。要作为作者声明依赖项，请参阅 <a href="plugins-dependencies.html">插件依赖项</a>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">消息</th>
+<th style="text-align: left;">含义</th>
+<th style="text-align: left;">如何解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Dependency "&lt;dep&gt;" is not installed</code></td>
+<td style="text-align: left;">声明的依赖项未安装。</td>
+<td style="text-align: left;">使用 <code>claude plugin install &lt;dep&gt;@&lt;marketplace&gt;</code> 在您的 shell 中安装它，或卸载插件。如果依赖项的市场尚未注册，请添加它并在您的会话中运行 <code>/reload-plugins</code>，它安装它可以解决的缺失依赖项。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>"&lt;name&gt;@synced" is loaded from your claude.ai account but meets a marketplace dependency only for other claude.ai plugins</code>，位于 <code>is not installed</code> 消息中</td>
+<td style="text-align: left;">该依赖项指定了一个市场，而同名插件是从您的 claude.ai 账户加载的。声明该依赖项的插件不是从 claude.ai 加载的，因此该 claude.ai 插件无法满足它。</td>
+<td style="text-align: left;">在您的 shell 中运行 <code>claude plugin install &lt;dep&gt;@&lt;marketplace&gt;</code>，从其市场安装该依赖项。之后将加载市场副本，而不是 claude.ai 副本。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Dependency "&lt;dep&gt;" is disabled</code></td>
+<td style="text-align: left;">依赖项已安装但关闭。</td>
+<td style="text-align: left;">启用依赖项，或卸载需要它的插件。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Requires "&lt;dep&gt;" &lt;range&gt;, installed &lt;version&gt;</code></td>
+<td style="text-align: left;">已安装的依赖项的版本在插件的声明范围之外。</td>
+<td style="text-align: left;">将依赖项更新到范围内的版本，或卸载插件。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>&lt;Plugin or Dependency&gt; "&lt;name&gt;" has conflicting version requirements</code></td>
+<td style="text-align: left;">没有版本满足每个引脚它的范围。消息列出范围。</td>
+<td style="text-align: left;">卸载或更新其中一个冲突的插件，或要求上游作者扩大其约束。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>... has version requirements too complex to intersect</code> 或 <code>has an invalid version requirement</code></td>
+<td style="text-align: left;">范围不是有效的 semver，或组合范围无法相交。</td>
+<td style="text-align: left;">修复无效范围或简化长 <code>\|\|</code> 链。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>... has no git tag satisfying &lt;range&gt;</code></td>
+<td style="text-align: left;">依赖项的仓库在范围内没有 <code>&lt;name&gt;--v*</code> 标签。</td>
+<td style="text-align: left;">检查上游是否使用该约定标记发布，或放宽范围。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Dependency "&lt;dep&gt;" (required by &lt;plugin&gt;) is in marketplace "&lt;marketplace&gt;", which is not in the allowlist</code></td>
+<td style="text-align: left;">依赖项在不同的市场中，默认情况下跨市场解析已关闭。</td>
+<td style="text-align: left;">自己在相同的作用域安装依赖项，在您的 shell 中使用 <code>claude plugin install &lt;dep&gt;@&lt;marketplace&gt;</code> 加上您安装插件的 <code>--scope</code>，然后重试。</td>
+</tr>
+</tbody>
+</table>
+<p>要以编程方式查看这些，请在您的 shell 中运行 <code>claude plugin list --json</code>。有问题的插件携带带有消息的 <code>errors</code> 字段和带有每个 <code>type</code> 的 <code>errorDetails</code> 字段：前三行是 <code>dependency-unsatisfied</code>，第四行是 <code>dependency-version-unsatisfied</code>。</p>
+<h2 id="plugin-installed-but-not-working">插件已安装但不工作</h2>
+<p>安装成功，但插件的技能、hooks 或服务器没有做任何事情。从 <a href="#plugin-doesnt-appear-or-its-skills-dont-show-up">插件不出现或其技能不显示</a> 开始，它告诉您 Claude Code 在哪里报告它加载的内容，然后匹配消息。</p>
+<h3 id="plugin-doesnt-appear-or-its-skills-dont-show-up">插件不出现或其技能不显示</h3>
+<p>您安装了插件并键入 <code>/</code> 期望其技能，或要求 Claude 使用它，但什么都没有发生。</p>
+<p>在更改任何内容之前检查插件的状态：</p>
+<p><strong>1. 确认插件已安装并启用</strong></p>
+<p>运行 <code>/plugin</code> 并打开 <strong>Installed</strong>。确认插件已列出并启用。您的 shell 中的 <code>claude plugin list</code> 打印相同的列表，每个插件的版本、作用域和 <code>Status: ✔ enabled</code>。</p>
+<p><strong>2. 阅读 Errors 选项卡</strong></p>
+<p>在同一面板中打开 <strong>Errors</strong> 选项卡。每个条目将消息与指导行配对。本节其余部分中的大多数消息来自该选项卡。</p>
+<p><strong>3. 如果您在此会话期间安装，请重新加载</strong></p>
+<p>如果插件已安装且无错误，但您在此会话期间安装了它，请运行 <code>/reload-plugins</code>。它打印 <code>Reloaded:</code> 和插件、技能、代理、hooks 和服务器的计数。当某些失败时，它添加 <code>N errors during load. Run /plugin for details.</code></p>
+<p>如果插件加载无错误且其技能仍然不出现，下一步因您自己的插件和其他人的而异：</p>
+<ul>
+<li><strong>您正在构建的插件</strong>：请参阅 <a href="#plugin-loads-but-its-skills-are-missing">插件加载但其技能缺失</a></li>
+<li><strong>某人发布的插件</strong>：在 <code>/plugin</code> 中打开 <strong>Installed</strong> 并打开插件的详细信息窗格，其中列出了插件包含的内容。在那里列出无技能的插件在您键入 <code>/</code> 时没有什么可提供的</li>
+</ul>
+<h3 id="run-reload-plugins-to-activate"><code>Run /reload-plugins to apply.</code></h3>
+<p><code>/plugin</code> 中的安装摘要以 <code>Run /reload-plugins to apply.</code> 结尾，而不是 <code>Plugin is now active.</code>。同时，输入框上方可能会出现 <code>Plugins changed. Run /reload-plugins to activate.</code> 通知。</p>
+<p>Claude Code 在安装期间没有激活插件，要么是因为激活它会 <a href="prompt-caching.html#enabling-or-disabling-a-plugin">使提示缓存失效</a>，要么是因为激活尝试失败。</p>
+<p>您不需要键入命令。面板关闭，Claude Code 为您运行 <code>/reload-plugins</code>，或将其排队直到流式传输的响应完成。</p>
+<p>阅读该重新加载打印的内容：</p>
+<ul>
+<li><strong><code>Reloaded:</code> 和插件、技能、代理、hooks 和服务器的计数</strong>：插件现在处于活动状态。当某些加载失败时，该行添加 <code>N errors during load. Run /plugin for details.</code></li>
+<li><strong><code>This reload changes MCP tools (...) — your next message will re-read the whole conversation instead of using the cache. Run /reload-plugins --force to apply.</code></strong>：重新加载会添加或删除插件 MCP 服务器，或 <code>LSP</code> 工具，并使您的提示缓存失效。对于 LSP 情况，该行以 <code>This reload adds the LSP tool</code> 或 <code>This reload removes the LSP tool</code> 开头。运行它带有 <code>--force</code> 以激活插件，或启动新会话</li>
+</ul>
+<p>在 v2.1.268 之前，在安装期间未激活的安装保持待处理状态，直到您自己运行 <code>/reload-plugins</code>。</p>
+<p>在 v2.1.246 之前，该摘要中的技能计数仅包括插件的 <code>commands/</code> 条目，因此重新加载可以加载插件的 <code>SKILL.md</code> 技能并仍然报告 <code>0 skills</code>。</p>
+<h3 id="the-packages-it-lists-are-not-installed"><code>The packages it lists are not installed</code> 或 <code>were not installed, because ...</code></h3>
+<p>当插件的依赖安装未留下 <code>node_modules</code> 目录时，<code>/plugin</code> 和 <code>claude plugin list</code> 会在该插件上显示以下注释之一。插件会加载，但需要缺失包的部分可能无法工作。</p>
+<ul>
+<li><strong><code>are not installed</code></strong>：此插件可以运行安装，但安装没有完成，例如因为安装失败或超时。要重试安装，请在您的 shell 中运行注释给出的 <code>claude plugin update</code> 命令，或从 <code>/plugin</code> 更新插件</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="w">  </span>claude<span class="w"> </span>plugin<span class="w"> </span>update<span class="w"> </span>formatter@my-marketplace
+</code></pre></div>
+<p>如果重试失败，输出会给出原因。当设置了 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> 时，<code>claude plugin update</code> 和 <code>/plugin</code> 会跳过重试，并报告插件已是最新版本。</p>
+<ul>
+<li><strong><code>were not installed, because ...</code></strong>：此插件无法运行安装，注释会说明原因，例如 Yarn、pnpm 或 <code>bun.lockb</code> lockfile，或者其包管理器未安装在此计算机上的 lockfile。只要该原因存在，更新插件就不会安装这些包。如果原因是 lockfile，插件作者必须替换它。如果是缺少包管理器，请安装它，然后更新插件</li>
+</ul>
+<h3 id="plugin-not-cached-at"><code>Plugin "&lt;name&gt;" not cached at &lt;path&gt;</code></h3>
+<p><strong>Errors</strong> 选项卡显示此行，指导为 <code>Run /plugin to refresh the plugin cache</code>。Claude Code 有插件的安装记录，但记录指向的目录缺失，例如在您清除缓存后。</p>
+<p>从您的 shell 重新安装插件。<code>claude plugin install &lt;name&gt;@&lt;marketplace&gt;</code> 重新下载安装目录缺失的插件，即使其记录存在：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>install<span class="w"> </span>&lt;name&gt;@&lt;marketplace&gt;
+</code></pre></div>
+<p>然后在您的会话中运行 <code>/reload-plugins</code>。<strong>Errors</strong> 选项卡条目消失，插件回到 <strong>Installed</strong> 下。</p>
+<h3 id="installed-plugins-json-holds-a-record-this-version-cannot-read"><code>installed_plugins.json holds a record under "&lt;id&gt;" that this version of Claude Code cannot read</code></h3>
+<p>消息以这些形式出现：</p>
+<ul>
+<li><strong><code>claude plugin list</code></strong>：将其打印为 <code>Note:</code></li>
+<li><strong><code>claude plugin install</code>、<code>uninstall</code> 和 <code>update</code></strong>：拒绝并显示 <code>Plugin "&lt;name&gt;" was not installed:</code>、<code>Plugin "&lt;name&gt;" was not uninstalled:</code> 或 <code>Plugin "&lt;name&gt;" was not updated:</code>，后跟相同的文本</li>
+<li><strong>这三个命令中任何一个上的 <code>--json</code></strong>：结果行携带相同的 <code>message</code> 和 <code>failureCode: "install_records_unreadable"</code></li>
+<li><strong>多个这样的记录</strong>：消息读作 <code>holds records under</code></li>
+<li><strong>整个文件声明此版本不知道的格式</strong>：消息读作 <code>installed_plugins.json is in a format (version &lt;N&gt;) that this version of Claude Code does not know</code> 而不是</li>
+</ul>
+<p>命名的记录在 <code>installed_plugins.json</code> 中是有效的 JSON，在有效的插件 id 下，但其字段对此版本不解析。最可能是另一个版本的 Claude Code 写了它，也许是更新的版本。</p>
+<p>当记录在那里时，此版本不重写文件，所以记录不会丢失。</p>
+<p>按顺序采取消息的选项：</p>
+<ol>
+<li>使用 <code>claude update</code> 更新 Claude Code。</li>
+<li>如果您无法更新，请使用写入记录的 Claude Code 版本卸载命名的插件。</li>
+<li>如果两者都没有帮助，请手动从 <code>installed_plugins.json</code> 删除记录，然后重新启动 Claude Code 或运行 <code>/reload-plugins</code>。</li>
+</ol>
+<h3 id="installed-plugins-json-could-not-be-read-and-was-rebuilt"><code>installed_plugins.json could not be read and was rebuilt</code></h3>
+<p><code>claude plugin list</code> 打印此注释，带有保留文件的路径，名为 <code>installed_plugins.unreadable.&lt;date&gt;.&lt;hash&gt;.kept</code>，只要该文件位于 <code>installed_plugins.json</code> 旁边。</p>
+<p>不是有效 JSON 的 <code>installed_plugins.json</code>，或不是插件列表的，无法说出您安装了什么。</p>
+<p>打开 <code>.kept</code> 文件以查看旧文件记录的内容，并重新安装您缺少的插件。Claude Code 永远不会读回该文件，该文件在 <a href="settings-reference.html#cleanupperioddays"><code>cleanupPeriodDays</code></a> 计划上老化。</p>
+<h3 id="install-records-under-names-that-no-version-can-use"><code>install records under names that no version of Claude Code can use were removed from installed_plugins.json</code></h3>
+<p><code>claude plugin list</code> 打印此注释，带有副本的路径，名为 <code>installed_plugins.set-aside.&lt;date&gt;.&lt;hash&gt;.json</code>，只要该副本位于 <code>installed_plugins.json</code> 旁边。注释以 <code>Nothing needs doing about these copies.</code> 结尾。</p>
+<p><code>installed_plugins.json</code> 中的记录位于不是有效插件 id 的键下，因此没有版本的 Claude Code 可以使用它。文件的其余部分正常加载。</p>
+<p>Claude Code 将不可用的记录复制到 <code>.set-aside</code> 文件中并将其从列表中删除。Claude Code 永远不会读回副本，副本在 <a href="settings-reference.html#cleanupperioddays"><code>cleanupPeriodDays</code></a> 计划上老化。</p>
+<h3 id="does-not-load-so-claude-code-ignores-the-whole-file"><code>does not load (...), so Claude Code ignores the whole file</code></h3>
+<p>命令已成功执行。警告中指明的设置文件存在错误，因此在您修复之前，Claude Code 会忽略整个文件，包括命令写入其中的任何内容。</p>
+<p>修复警告中指明的错误。对于 Claude Code 不接受的值，<a href="settings.html#fix-a-broken-settings-file">修复损坏的设置文件</a> 说明了修复方法。然后，如果命令所做的更改已不在文件中，请再次运行该命令。</p>
+<p>该警告出现在您的 shell 中 <code>claude plugin install</code>、<code>enable</code>、<code>disable</code> 或 <code>claude plugin marketplace add</code> 的成功行之后：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">⚠ /home/user/.claude/settings.json does not load (its "permissions" is not valid), so Claude Code ignores the whole file, including anything this command wrote there. Fix the file, then run this command again if its change is missing. If a newer Claude Code wrote the file, update Claude Code instead.
+</code></pre></div>
+<p>括号中的文本指明了错误：</p>
+<ul>
+<li><strong><code>its "&lt;key&gt;" is not valid</code></strong>：引号中的设置项包含 Claude Code 不接受的值。在 <a href="settings-reference.html">设置参考</a> 中查找该设置项可接受的值。当多个值无效时，文本会指明第一个设置项并统计其他设置项的数量，例如 <code>its "permissions" and 1 other value are not valid</code>。</li>
+<li><strong><code>it is not a JSON object</code></strong>：文件的顶层不是 JSON 对象，例如顶层为数组的文件。</li>
+</ul>
+<h3 id="a-plugin-you-disabled-still-loads"><code>Disabled in ~/.claude/settings.json but still loads</code></h3>
+<p>您在 <code>~/.claude/settings.json</code> 中将插件设置为 <code>false</code>，其在 <code>claude plugin list</code> 或 <code>/plugin</code> 中的行显示此消息，后跟启用它的源，例如 <code>— project settings enable it, which overrides your user setting</code>。该更高优先级源中的 <code>true</code> 覆盖了您的用户设置。</p>
+<p>要在您的机器上选择退出项目启用的插件，请在 <code>.claude/settings.local.json</code> 中将 id 设置为 <code>false</code>，它的优先级高于项目文件。对于消息可以命名的其他源，请参阅 <a href="plugins-loading.html#disabled-in-user-settings-but-still-loads">在用户设置中禁用但仍然加载</a>。</p>
+<p>如果 <code>claude plugin list</code> 改为将插件标记为 <code>required by your org</code>，则不涉及设置文件：您的组织在 claude.ai 上将该同步插件标记为必需，即使您之前禁用了它，它也会加载。请参阅 <a href="plugins-loading.html#synced-plugins">从 claude.ai 同步的插件</a>。</p>
+<h3 id="plugin-is-enabled-in-project-settings-but-isnt-installed-here"><code>Plugin "&lt;name&gt;" is enabled in project settings but isn't installed here</code></h3>
+<p><strong>Errors</strong> 选项卡显示此行用于您的项目的 <code>.claude/settings.json</code> 启用的插件，指导为 <code>Run claude plugin install &lt;name&gt;@&lt;marketplace&gt; --scope project to install it for this project</code>。</p>
+<p>存储库的设置可以为打开它的每个人启用插件，但它们不安装它。当插件来自外部源（例如 GitHub 存储库或 npm 包）时，Claude Code 在您自己安装它之前不会下载它。从指导行在您的 shell 中运行命令，然后重新加载：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>install<span class="w"> </span>&lt;name&gt;@&lt;marketplace&gt;<span class="w"> </span>--scope<span class="w"> </span>project
+</code></pre></div>
+<p>在您的会话中运行 <code>/reload-plugins</code> 后，<strong>Errors</strong> 选项卡条目消失，插件列在 <strong>Installed</strong> 下。</p>
+<p>如果您的组织为您预安装插件，它通过托管设置而不是这样做。请参阅 <a href="plugins-org.html#pre-install-and-require-plugins">预安装和要求插件</a>。</p>
+<h3 id="a-plugin-stays-installed-after-plugin-uninstall-on-windows">在 Windows 上执行 <code>plugin uninstall</code> 后插件仍保持安装</h3>
+<p>在 Windows 上，您在项目或本地作用域运行 <code>claude plugin uninstall</code> 并报告成功，但 <code>claude plugin list</code> 或 <code>/plugin</code> 仍然列出该插件。</p>
+<p><code>installed_plugins.json</code> 为该项目文件夹保存了该插件的两条安装记录，每条记录对文件夹路径的写法不同，而一次卸载只会删除其中一条。要进行检查，请在您的 shell 中运行 <code>claude plugin list --json</code>。该插件剩余的行中，<code>projectPath</code> 对文件夹的写法与您运行卸载的位置不同，例如 <code>C:\work\app</code> 被写为 <code>c:\work\app</code>。</p>
+<p>在同一文件夹中，使用相同的 <code>--scope</code> 再次运行相同的卸载命令。第二次运行在其自身的路径写法下找不到记录，因此会删除另一种写法下的记录。对于项目作用域的安装：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>uninstall<span class="w"> </span>&lt;name&gt;@&lt;marketplace&gt;<span class="w"> </span>--scope<span class="w"> </span>project
+</code></pre></div>
+<p>然后再次运行 <code>claude plugin list --json</code>，确认该行已消失。</p>
+<p>在 v2.1.295 之前，第二次运行会失败并显示 <code>Plugin "&lt;name&gt;" is not installed in project scope</code>。请运行 <code>claude update</code>，然后再次运行卸载。</p>
+<h3 id="a-plugin-installed-from-a-git-repository-shows-version-unknown">从 git 仓库安装的插件显示版本 <code>unknown</code></h3>
+<p><code>claude plugin list</code> 中的 <code>Version: unknown</code> 可能意味着 Claude Code 无法读取它用作 git 来源插件版本的提交。该插件可能有自己的仓库，也可能位于 git 托管的市场中。</p>
+<p>在您的 shell 中运行以下命令，将 <code>formatter@my-marketplace</code> 替换为 <code>claude plugin list</code> 中该插件的 <code>name@marketplace</code> 行：</p>
+<p><strong>1. 更新 Claude Code</strong></p>
+<p><a href="setup.html#update-claude-code">将 Claude Code 更新</a>到 v2.1.302 或更高版本，该版本会以能够从中读取提交的格式进行克隆：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>update
+</code></pre></div>
+<p><strong>2. 更新市场</strong></p>
+<p>更新 Claude Code 的市场副本，其中保存了市场仓库内插件的提交：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>marketplace<span class="w"> </span>update<span class="w"> </span>my-marketplace
+</code></pre></div>
+<p><strong>3. 更新插件</strong></p>
+<p>更新插件以重写其记录的版本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>update<span class="w"> </span>formatter@my-marketplace
+</code></pre></div>
+<p><strong>4. 检查版本</strong></p>
+<p>检查 <code>Version:</code> 行是否显示诸如 <a href="plugins-loading.html#how-claude-code-computes-the-version">12 字符提交 ID</a> 之类的值：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>list
+</code></pre></div>
+<p><code>claude plugin update</code> <a href="plugins-cli-reference.html#which-scope-the-command-updates">每次运行只更改一个作用域的块</a>。对于仍显示 <code>unknown</code> 的块，请使用该块的 <code>Scope:</code> 值重新运行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>update<span class="w"> </span>formatter@my-marketplace<span class="w"> </span>--scope<span class="w"> </span>project
+</code></pre></div>
+<p>如果重新运行后该块仍显示 <code>unknown</code>，请参阅 <a href="troubleshooting.html#get-more-help">获取更多帮助</a>。</p>
+<h3 id="failed-to-load-hooks-from-and-hooks-that-dont-fire"><code>Failed to load hooks from &lt;path&gt;</code> 和不触发的 hooks</h3>
+<p>插件的 hooks 不运行，或一个阻止了一个操作。要么 <strong>Errors</strong> 选项卡显示它们的加载失败，hooks 加载且您在成绩单中看到 <code>&lt;Event&gt; hook error</code> 通知或阻止错误，要么 hook 加载无错误且永远不触发。</p>
+<h4 id="hooks-fail-to-load">Hooks 无法加载</h4>
+<p><strong>Errors</strong> 选项卡显示以下消息之一：</p>
+<ul>
+<li><strong><code>Failed to load hooks from &lt;path&gt;: &lt;reason&gt;</code></strong>：<code>hooks/hooks.json</code> 不是有效的 JSON 或失败 hooks 架构。原因命名解析或验证错误。修复文件。要在发布插件前在 <code>hooks/hooks.json</code> 中捕获 JSON 语法问题，请在您的 shell 中运行 <code>claude plugin validate &lt;plugin-directory&gt;</code></li>
+<li><strong><code>hooks path not found: &lt;path&gt;</code></strong>：清单的 <code>hooks</code> 字段命名在该路径相对于插件根处不存在的文件。修复路径或添加文件</li>
+<li><strong><code>hooks path escapes plugin directory: &lt;path&gt;</code></strong>：请参阅 <a href="errors.html#path-escapes-plugin-directory">Path escapes plugin directory</a></li>
+</ul>
+<h4 id="hook-error-notices-in-the-transcript">成绩单中的 <code>hook error</code> 通知</h4>
+<p>形式为 <code>... hook error: Failed with non-blocking status code: &lt;stderr&gt;</code> 的通知意味着 hook 运行且其命令失败。例如，<code>Stop hook error: Failed with non-blocking status code: /bin/sh: node: command not found</code> 意味着 Claude Code 生成的 shell 找不到 <code>node</code>。安装它，或确保它在您启动 <code>claude</code> 的终端的 <code>PATH</code> 上。</p>
+<p>如果 stderr 显示插件的路径在空格处被截断，hook 的 shell 形式命令在引号外使用 <code>${CLAUDE_PLUGIN_ROOT}</code>，安装路径包含空格。将变量用双引号包装或使用 <a href="hooks.html#exec-form-and-shell-form">exec 形式</a>。要找到未引用的变量，请在插件的目录上运行 <code>claude plugin validate</code> 并查找其 <a href="plugins-manifest-reference.html#quoting-and-path-separators">引用警告</a>。</p>
+<p>如果通知内容为 <code>Failed to run: Plugin directory does not exist: &lt;path&gt;</code>，请参阅 <a href="#plugin-directory-does-not-exist"><code>Plugin directory does not exist</code></a>。</p>
+<p>对于任何其他错误，从插件目录自己运行 hook 的命令以查看完整输出，或使用 <a href="hooks.html#debug-hooks">调试日志</a> 捕获完整 stderr。</p>
+<h4 id="a-plugin-hook-blocks-a-tool-call-or-prompt">插件 hook 阻止工具调用或提示</h4>
+<p>退出代码为 2 的 hook <a href="hooks.html#exit-code-2">阻止它运行的操作</a>。当插件的 hook 以这种方式阻止且其 stderr 是阻止消息时，错误以 <code>This hook comes from the &lt;plugin&gt; plugin.</code> 结尾，以便您知道要禁用或修复哪个插件。在 v2.1.281 之前，错误没有命名插件。</p>
+<p>如果该消息显示插件的路径在空格处被截断，应用 <a href="#hook-error-notices-in-the-transcript">未引用的 <code>${CLAUDE_PLUGIN_ROOT}</code> 修复</a>。</p>
+<h4 id="hook-loads-but-never-fires">Hook 加载但永远不触发</h4>
+<p>如果 hook 加载无错误但永远不触发，请先在会话中运行 <code>/plugin</code> 并打开该插件的详细信息。如果其中有一条以 <code>Its hooks.json hooks do not run</code> 开头的说明，则表示另一个同名的已启用插件改为注册了它的 hook，<a href="plugins-loading.html#hooks-when-two-enabled-plugins-share-a-name">两个已启用插件同名时的 hook</a> 说明了是哪个副本以及如何切换。否则，请检查 hook 的定义，然后观察它运行：</p>
+<p><strong>1. 检查事件名称</strong></p>
+<p>事件名称区分大小写，因此确认您的完全匹配，例如 <code>PostToolUse</code>。</p>
+<p><strong>2. 检查匹配器</strong></p>
+<p>确认 hook 的 <code>matcher</code> 匹配工具名称。</p>
+<p><strong>3. 故意触发事件</strong></p>
+<p>对于 <code>PostToolUse</code> hook，要求 Claude 编辑文件。</p>
+<p><strong>4. 阅读调试日志</strong></p>
+<p>打开 <a href="hooks.html#debug-hooks">调试日志</a>，它记录哪些 hooks 匹配。运行的 hook 显示在那里及其退出代码。</p>
+<h3 id="plugin-directory-does-not-exist"><code>Plugin directory does not exist: &lt;path&gt;</code></h3>
+<p>即使消息提示重新安装，也请先在 Claude Code 输入框中运行 <code>/reload-plugins</code>。当您的会话加载插件 hook 所用的目录已从磁盘上消失时，插件的 hook 会失败并显示 <code>Failed to run: Plugin directory does not exist: &lt;path&gt; (&lt;plugin&gt; — run /plugin to reinstall)</code>，且该 hook 不会运行。<a href="#plugin-directory-not-found-at-path"><code>Plugin directory not found at path: &lt;path&gt;</code></a> 是另一条消息，与市场条目有关。</p>
+<p>重新加载会从插件的当前目录加载其 hook。对于每个 hook 事件和命令，该失败在每个会话中只显示一次，因此 hook 不再报错并不能确认问题已修复。请改为阅读重新加载的输出：</p>
+<ul>
+<li><strong><code>Reloaded:</code> 且没有错误行</strong>：插件的 hook 不再指向缺失的目录</li>
+<li><strong><code>N errors during load. Run /plugin for details.</code></strong>：在 <code>/plugin</code> 中打开 <strong>Errors</strong> 选项卡，并按照本页中针对其显示的消息的条目操作</li>
+<li><strong>以 <code>Run /reload-plugins --force to apply.</code> 结尾的行</strong>：没有重新加载任何内容，hook 会继续失败。请在 Claude Code 输入框中运行 <code>/reload-plugins --force</code></li>
+</ul>
+<h3 id="invalid-mcp-server-config-for-and-mcp-servers-that-dont-start"><code>Invalid MCP server config for "&lt;server&gt;"</code> 和不启动的 MCP 服务器</h3>
+<p>插件捆绑了 MCP 服务器，<strong>Errors</strong> 选项卡显示 <code>Invalid MCP server config for "&lt;server&gt;": &lt;error&gt;</code>，或服务器已列出但 <code>/mcp</code> 永远不显示它已连接。</p>
+<h4 id="invalid-mcp-server-config-for-server-error"><code>Invalid MCP server config for "&lt;server&gt;": &lt;error&gt;</code></h4>
+<p>服务器的配置通过架构检查，但 Claude Code 无法为此会话解决它。冒号后的文本命名原因并决定修复：</p>
+<ul>
+<li><strong><code>Missing environment variables: &lt;names&gt;</code></strong>：在启动 Claude Code 的 shell 中设置这些变量，然后启动新会话</li>
+<li><strong><code>URL is unset or invalid</code></strong>：URL 使用的 <code>${user_config.*}</code> 选项未设置。运行 <code>/plugin configure &lt;plugin&gt;</code> 设置它</li>
+<li><strong><code>has an invalid MCP url</code></strong> 或 <strong><code>headersHelper for MCP server '&lt;server&gt;' references ${user_config.*}</code></strong>：插件自己的配置有问题。修复您的插件的 MCP 配置中的 <code>url</code> 或 <code>headersHelper</code>，或如果插件不是您的，向插件的作者报告。<code>headersHelper</code> 情况在 <a href="errors.html#plugin-command-references-user-config">插件命令参考 user_config</a> 下有其自己的条目</li>
+</ul>
+<h4 id="bundled-mcp-server-name-was-not-started-it-needs-configuration"><code>Bundled MCP server "&lt;name&gt;" was not started: it needs configuration</code></h4>
+<p>插件包括服务器作为 <a href="plugins-components.html#include-a-packaged-mcpb-server">MCPB bundle</a>，声明 <code>user_config</code>，且必需的设置没有保存的值或保存的值失败 bundle 自己的验证，所以 Claude Code 跳过启动服务器。插件的其余部分工作。</p>
+<p>在 <code>/plugin</code> 的 <strong>Installed</strong> 选项卡上选择插件并选择 <strong>Configure</strong> 以提供值。保存后，<code>/plugin</code> 显示 <code>Configuration saved.</code> 并关闭，Claude Code 重新加载插件如 <a href="plugins-install.html#manage-installed-plugins">管理已安装的插件</a> 下所述。服务器在该重新加载应用后启动。在 v2.1.285 之前，Claude Code 跳过服务器而不显示此行。</p>
+<h4 id="server-is-configured-but-never-connects">服务器已配置但永远不连接</h4>
+<p>运行 <code>/mcp</code> 查看服务器的状态。当服务器健康时，<code>/mcp</code> 将其列为已连接。</p>
+<p>要读取服务器在启动时打印的错误，请运行 <code>claude --debug</code> 并打开 <code>~/.claude/debug/&lt;session-id&gt;.txt</code> 处的日志。<code>--debug</code> 标志不打印到终端。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>当与 <a href="mcp.html#plugin-provided-mcp-servers">插件的 stdio 服务器</a> 的连接在您运行 <code>claude --debug</code> 之前不到 15 分钟内失败时，Claude Code <a href="errors.html#skipping-connection-recent-failure-cached">不会启动该服务器</a>。在新会话中，从 <code>/mcp</code> 中该服务器的菜单选择 <strong>Reconnect</strong> 以启动它，然后打开日志。</p></div></div>
+<p><code>.mcp.json</code> 中失败架构的服务器条目不出现在 <strong>Errors</strong> 选项卡中。Claude Code 删除该服务器并仅在该调试日志中记录 <code>Invalid MCP server config for &lt;server&gt; in &lt;path&gt;</code>。要在不加载插件的情况下找到条目，请在插件目录上在您的 shell 中运行 <code>claude plugin validate</code>，它将其报告为错误。</p>
+<p>在 v2.1.281 之前，<code>claude plugin validate</code> 没有检查 <code>.mcp.json</code>。</p>
+<h4 id="server-works-with-plugin-dir-but-fails-after-install">服务器使用 <code>--plugin-dir</code> 工作但安装后失败</h4>
+<p>您是插件的作者，当您使用 <code>--plugin-dir</code> 从其源目录加载插件时服务器启动，但一旦插件安装就失败。</p>
+<p>Claude Code 将已安装的插件复制到其缓存中，因此仅从源目录工作的路径会中断。使用 <code>${CLAUDE_PLUGIN_ROOT}</code> 编写插件内的路径。</p>
+<p>对于到达插件目录外的路径，请参阅 <a href="#files-the-plugin-references-outside-its-directory-arent-found">插件引用的文件在其目录外找不到</a>。</p>
+<h3 id="language-server-doesnt-start">语言服务器不启动、使用过多内存或报告错误的诊断</h3>
+<p>您安装了 <a href="plugins-code-intelligence.html">代码智能插件</a>，Claude 没有看到诊断，或语言服务器使用过多内存或报告不是真实的错误。</p>
+<h4 id="language-server-doesn’t-start">语言服务器不启动</h4>
+<p>插件连接到您单独安装的语言服务器二进制文件，Claude Code 从您的 <code>PATH</code> 按命令名称生成它。</p>
+<p><code>/plugin</code> <strong>Errors</strong> 选项卡显示失败及其原因，例如 <code>Executable not found in $PATH: "&lt;binary&gt;"</code>，<code>claude --debug</code> 将其记录为 <code>LSP server &lt;name&gt; failed to start: &lt;reason&gt;</code>。</p>
+<p>安装二进制文件并确认它在您启动 <code>claude</code> 的终端的 <code>PATH</code> 上，例如使用 <code>which typescript-language-server</code>。然后启动新会话。</p>
+<h4 id="language-server-uses-too-much-memory">语言服务器使用过多内存</h4>
+<p>语言服务器（例如 <code>rust-analyzer</code> 和 <code>pyright</code>）索引整个项目。使用 <code>/plugin disable &lt;plugin&gt;</code> 在会话中禁用插件，改为依赖 Claude 的内置搜索工具。</p>
+<h4 id="false-positive-diagnostics-in-a-monorepo">monorepo 中的假阳性诊断</h4>
+<p>未为工作区配置的语言服务器可以报告内部包的未解析导入。Claude Code 端没有什么可修复的，诊断不会阻止 Claude 编辑代码。</p>
+<h2 id="build-a-plugin">构建插件</h2>
+<p>您正在开发插件，并使用 <code>--plugin-dir</code> 加载它或从本地市场安装它。这些条目涵盖了开发插件时遇到的失败。要了解每次更改后需要运行的检查，请参阅<a href="plugins-create.html#test-and-debug">测试和调试</a>。</p>
+<p>有两种失败也会影响插件的用户，它们的条目位于<a href="#plugin-installed-but-not-working">插件已安装但无法工作</a>下：</p>
+<ul>
+<li><strong>未触发的 hook</strong>：请参阅<a href="#failed-to-load-hooks-from-and-hooks-that-dont-fire">未触发的 hook</a></li>
+<li><strong>无法启动的 MCP 服务器</strong>：请参阅<a href="#invalid-mcp-server-config-for-and-mcp-servers-that-dont-start">无法启动的 MCP 服务器</a></li>
+</ul>
+<h3 id="commands-path-not-found"><code>commands path not found: &lt;path&gt;</code></h3>
+<p><strong>Errors</strong> 选项卡显示 <code>commands path not found: &lt;absolute path&gt;</code>，并提示 <code>Check that the path in your manifest or marketplace config is correct</code>。<code>skills</code>、<code>agents</code> 和 <code>hooks</code> 也会显示相同的消息。</p>
+<p>Claude Code 根据插件根目录解析了您的 <code>plugin.json</code> 或市场条目中的路径，但在那里找不到任何内容。消息中的路径是它检查的绝对路径，因此请将其与磁盘上的内容进行比较。修复路径或创建目录，然后运行 <code>/reload-plugins</code>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>在 v2.1.299 之前，此消息可能会在启动时出现在带有 <code>synced[0]</code> 等标签的行上。该行对应<a href="plugins-loading.html#synced-plugins">从 claude.ai 同步</a>的插件。当您计算机上的另一个 Claude Code 会话刚刚更新了该插件并移动了其文件时，就会出现此消息。要加载该插件，请重启 Claude Code。要避免因此原因出现该消息，请更新到 v2.1.299 或更高版本。</p></div></div>
+<p>清单中的路径相对于插件根目录，以 <code>./</code> 开头。解析到插件根目录外的路径会被报告为 <code>&lt;component&gt; path escapes plugin directory</code>，并被丢弃。</p>
+<h3 id="plugin-dir-loads-a-plugin-with-no-components"><code>--plugin-dir</code> 在市场根目录处不会加载 <code>plugins/</code> 下的插件</h3>
+<p>您启动了 <code>claude --plugin-dir &lt;path&gt;</code>，没有看到错误，但插件的 skill、Agent 和 hook 不存在。</p>
+<p><code>--plugin-dir</code> 接受插件的根目录，即包含 <code>.claude-plugin/plugin.json</code> 和 <code>skills/</code> 等组件目录的目录。如果改为指向市场根目录，Claude Code 不会读取 <code>marketplace.json</code>，因此 <code>plugins/</code> 下的插件不会加载，也看不到任何错误。在 v2.1.281 之前，Claude Code 将市场根目录作为一个以该目录命名的空插件加载。请将标志指向插件目录本身：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--plugin-dir<span class="w"> </span>./my-marketplace/plugins/my-plugin
+</code></pre></div>
+<p>然后在 <code>/plugin</code> 中打开 <strong>Installed</strong>，插件的详情窗格会列出其组件。</p>
+<h3 id="files-the-plugin-references-outside-its-directory-arent-found">插件引用的目录外文件找不到</h3>
+<p>插件使用 <code>--plugin-dir</code> 从其源目录运行正常，但安装后失败，出现关于 <code>../shared-utils</code> 等路径的错误。</p>
+<p>Claude Code 将已安装的插件复制到其缓存中并从那里加载，因此指向插件自身目录之外的路径在缓存中找不到任何内容。请将共享文件移到插件目录内，或通过插件目录内的符号链接引用它们。有关缓存位置和路径解析方式，请参阅<a href="plugins-loading.html#find-plugins-on-disk">在磁盘上查找插件</a>。</p>
+<h3 id="claude-plugin-root-shows-forward-slashes-on-windows"><code>${CLAUDE_PLUGIN_ROOT}</code> 在 Windows 上显示正斜杠</h3>
+<p>在 Windows 上，通过 Git Bash 运行的插件 hook 接收到的 <code>${CLAUDE_PLUGIN_ROOT}</code> 为 <code>C:/Users/you/...</code> 而不是 <code>C:\Users\you\...</code>，期望反斜杠的脚本因此出错。</p>
+<p>安装了 Git Bash 时，<a href="hooks.html#exec-form-and-shell-form">shell 形式的 hook</a> 默认通过 Git Bash 运行。对于通过 Git Bash 运行的 hook，Claude Code 以正斜杠形式传递路径，以免 Bash 将反斜杠解读为转义符。Bash 内置命令、MSYS 工具和本机 Windows 二进制文件都接受该形式。</p>
+<p>如果您的脚本需要反斜杠，请将 hook 切换到保留本机路径的形式之一，如<a href="hooks.html#exec-form-and-shell-form">执行形式和 shell 形式</a>下所述：</p>
+<ul>
+<li>执行形式的 hook，它使用 <code>args</code> 数组直接生成进程</li>
+<li>带有 <code>"shell": "powershell"</code> 的 hook</li>
+</ul>
+<h3 id="plugin-loads-but-its-skills-are-missing">插件已加载但其 skill 缺失</h3>
+<p>您的插件在 <strong>Installed</strong> 下列出且没有错误，但输入 <code>/</code> 时不会提供其 skill。</p>
+<p>skill 从插件根目录的 <code>skills/</code> 加载，command 从插件根目录的 <code>commands/</code> 加载。只有 <code>plugin.json</code> 应位于 <code>.claude-plugin/</code> 内，<code>.claude-plugin/</code> 内的 <code>skills/</code> 目录不会被扫描。请将这些目录移到插件根目录并运行 <code>/reload-plugins</code>。之后，<code>/plugin</code> 中插件的详情窗格会列出这些 skill，输入 <code>/</code> 也会提供它们。</p>
+<p>每个 skill 是一个包含 <code>SKILL.md</code> 的目录。清单中指向 <code>SKILL.md</code> 文件而不是其目录的 <code>skills</code> 条目会被报告为 <code>path is a file; skills entries must be directories containing SKILL.md</code>。</p>
+<h3 id="skill-loads-but-claude-never-invokes-the-skill">Skill 已加载但 Claude 从不调用该 skill</h3>
+<p>输入 <code>/&lt;plugin&gt;:&lt;skill&gt;</code> 命令时，您插件的 skill 会运行，但 Claude 在响应普通请求时从不调用它。</p>
+<p>请按顺序检查以下原因：</p>
+<ul>
+<li><strong>skill 设置了 <code>disable-model-invocation: true</code></strong>：<a href="plugins-create.html#create-your-first-plugin">创建您的第一个插件</a>中的模板 skill 设置了该字段。请从希望 Claude 自行调用的 skill 中删除该行。<a href="skills.html#control-who-invokes-a-skill">控制谁调用 skill</a> 介绍了该字段</li>
+<li><strong>描述与人们的提问方式不匹配</strong>：请完成<a href="skills.html#skill-not-triggering">Skill 未触发</a>中的检查</li>
+<li><strong>描述被截断</strong>：当安装了许多 skill 时，Claude Code 会缩短描述以适应列表的字符预算，这可能会删除 Claude 匹配请求所需的关键字。请参阅<a href="skills.html#skill-descriptions-are-cut-short">Skill 描述被截断</a></li>
+</ul>
+<p>要衡量 skill 在真实提示词中触发的频率，而不是逐一检查，请使用 <a href="plugin-evals.html#create-your-first-eval-suite"><code>tool_used: Skill</code> grader</a> 编写一个 eval 用例，并在每次更改描述后使用 <code>claude plugin eval</code> 运行它。</p>
+<h3 id="is-not-a-plugin-or-skill-folder"><code>claude plugin eval init</code> 报告 <code>&lt;directory&gt; is not a plugin or skill folder</code></h3>
+<p>您在不是插件根目录的目录中运行了 <code>claude plugin eval init</code>，例如您的主目录，或将插件保存在子目录中的仓库根目录。<code>init</code> 会在工作目录下写入套件，因此它会停止，而不是创建一个插件永远看不到的 <code>evals/</code> 目录。</p>
+<p>请切换到插件的根目录（包含 <code>.claude-plugin/plugin.json</code> 或 skill 的 <code>SKILL.md</code> 的目录），然后再次运行命令。如果确实要在其他位置搭建套件，请传递 <code>--eval-dir</code>。请参阅<a href="plugin-evals.html">使用 evals 测试插件</a>。</p>
+<h3 id="the-userconfig-dialog-never-appears"><code>userConfig</code> 对话框从不出现</h3>
+<p>您的插件声明了 <code>userConfig</code> 选项，但安装时没有出现配置对话框。</p>
+<p>安装时是否询问这些值取决于运行安装的位置：</p>
+<ul>
+<li><strong>在会话中运行 <code>/plugin install</code>，或使用 <code>/plugin</code> 中的 Discover 选项卡</strong>：对话框是此交互式安装的一部分</li>
+<li><strong>VS Code 扩展的 Manage plugins 对话框</strong>：在安装后以表单形式询问未设置的选项。在 v2.1.285 之前，在此处安装不会显示选项表单，因此请在终端会话中使用 <code>/plugin configure &lt;plugin&gt;@&lt;marketplace&gt;</code> 设置这些值</li>
+<li><strong>在 shell 中运行 <code>claude plugin install</code></strong>：从不提示输入 <code>userConfig</code> 值。它会保存您传递的任何 <code>--config KEY=VALUE</code> 值，当仍有选项未设置时，它会打印 <code>N userConfig options not yet set — run /plugin configure &lt;plugin&gt;@&lt;marketplace&gt; in Claude Code, or pass --config KEY=VALUE.</code> 当任何未设置的选项为必需项时，<code>not yet set</code> 后面会跟上 <code>(M required)</code>。</li>
+</ul>
+<p>如果您从 shell 安装，请使用 <code>--config</code> 传递值，每个选项一个标志：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">shell</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>plugin<span class="w"> </span>install<span class="w"> </span>my-plugin@my-marketplace<span class="w"> </span>--config<span class="w"> </span><span class="nv">api_url</span><span class="o">=</span>https://example.com
+</code></pre></div>
+<p>当所有选项都已设置后，安装输出不会包含 <code>not yet set</code> 行。</p>
+<p>如果想在之后打开对话框，请在会话中运行 <code>/plugin configure my-plugin@my-marketplace</code>。在 shell 中，<a href="plugins-cli-reference.html#plugin-configure"><code>claude plugin configure</code></a> 会显示哪些选项仍未设置，并保存通过 stdin 管道传入的值。它需要 Claude Code v2.1.285 或更高版本。</p>
+<p>如果您传递了清单未声明的 <code>--config</code> 键，插件仍会安装，命令会打印 <code>⚠ Installed, but --config not applied: --config key "&lt;key&gt;" isn't declared in this plugin's userConfig.</code>，后跟插件已声明的键。</p>
+<p>对于附带自身声明了 <code>user_config</code> 的<a href="plugins-components.html#include-a-packaged-mcpb-server">MCPB 包文件</a>的插件，消息会改为 <code>isn't declared in this plugin's userConfig or by its bundled MCP servers.</code>，已知的键包括该服务器的键，写作 <code>&lt;server&gt;.&lt;key&gt;</code>。清单通过 URL 引用的包在安装时不会被读取，因此其键不会被列出，消息会提示在 <code>/plugin</code> 中进行配置。设置 <code>&lt;server&gt;.&lt;key&gt;</code> 键需要 Claude Code v2.1.285 或更高版本。</p>
+<h3 id="claude-plugin-validate-reports-errors"><code>claude plugin validate</code> 报告错误</h3>
+<p>您运行了 <code>claude plugin validate &lt;path&gt;</code>，或在会话中运行了 <code>/plugin validate &lt;path&gt;</code>，它打印了 <code>Found N errors</code> 和 <code>Validation failed</code>，然后以代码 1 退出。</p>
+<p>验证器读取您指定路径处的清单：插件目录为 <code>.claude-plugin/plugin.json</code>，市场目录为 <code>.claude-plugin/marketplace.json</code>，同时包含两者的目录则两者都读取。对于市场，它会在条目自身清单中的问题前加上条目索引，例如 <code>plugins[1] plugin.json → json: ...</code>。在 v2.1.289 之前，Claude Code 仅将同时包含两者的目录作为市场进行验证。</p>
+<p>下表涵盖会导致验证停止的消息，以及两个警告 <code>No frontmatter block found</code> 和 <code>Unknown field '&lt;key&gt;'</code>，这两个警告仅在传递 <code>--strict</code> 时才会导致验证停止。其他警告（例如缺少描述）未列出。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">消息</th>
+<th style="text-align: left;">原因</th>
+<th style="text-align: left;">修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>File not found: &lt;path&gt;</code></td>
+<td style="text-align: left;">路径没有清单，或路径不存在。</td>
+<td style="text-align: left;">针对插件或市场根目录（即包含 <code>.claude-plugin/</code> 的目录）运行命令。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>No manifest found in directory. Expected .claude-plugin/marketplace.json or .claude-plugin/plugin.json</code></td>
+<td style="text-align: left;">目录没有 <code>.claude-plugin/</code> 清单。</td>
+<td style="text-align: left;">创建清单，或指向正确的目录。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Invalid JSON syntax: &lt;parse error&gt;</code></td>
+<td style="text-align: left;">清单或 <code>hooks/hooks.json</code> 不是有效的 JSON。</td>
+<td style="text-align: left;">修复 JSON。在修复 <code>hooks/hooks.json</code> 之前，会话加载插件时不会包含该文件中的 hook。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Path not found: &lt;path&gt;. The runtime loader will report this as a load failure.</code></td>
+<td style="text-align: left;">清单中的组件路径不存在。</td>
+<td style="text-align: left;">修复路径或创建目录。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Path contains ".." which could be a path traversal attempt: &lt;path&gt;</code></td>
+<td style="text-align: left;">组件路径超出了插件目录。</td>
+<td style="text-align: left;">使用插件根目录内的路径。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Path is a file; skills entries must be directories containing SKILL.md</code></td>
+<td style="text-align: left;"><code>skills</code> 条目指向 <code>SKILL.md</code> 而不是其目录。</td>
+<td style="text-align: left;">指向父目录，对于根级 <code>SKILL.md</code> 则使用 <code>.</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>No frontmatter block found</code> 或 <code>YAML frontmatter failed to parse: &lt;error&gt;</code></td>
+<td style="text-align: left;">skill、Agent 或 command 文件缺少 YAML frontmatter 或其无效。</td>
+<td style="text-align: left;">在 <code>---</code> 分隔符之间添加或修复 frontmatter。在验证插件目录时报告。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Plugin name "&lt;name&gt;" is reserved: it passes as one of Anthropic's own</code></td>
+<td style="text-align: left;">插件的 <code>name</code> 是<a href="plugins-manifest-reference.html#name">保留名称</a>之一。</td>
+<td style="text-align: left;">根据插件的功能重命名插件。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Unknown field '&lt;key&gt;'</code></td>
+<td style="text-align: left;">清单中有一个 schema 未定义的字段。</td>
+<td style="text-align: left;">删除它，或使用消息建议的名称。Claude Code 在加载时会忽略未知字段。有关 <code>plugin.json</code> 中的 <code>privacyPolicyUrl</code> 及其他目录列表字段，请参阅<a href="plugins-manifest-reference.html#directory-listing-fields">目录列表字段</a>。</td>
+</tr>
+</tbody>
+</table>
+<p>每次修复后再次运行命令，直到不再打印任何错误。</p>
+<p><code>plugin.json</code> 字段请参阅<a href="plugins-manifest-reference.html">清单参考</a>，市场级消息请参阅<a href="#marketplace-validation-errors">市场验证错误</a>。</p>
+<h3 id="plugin-has-conflicting-manifests"><code>Plugin &lt;name&gt; has conflicting manifests</code></h3>
+<p>插件加载失败，显示 <code>Plugin &lt;name&gt; has conflicting manifests: both plugin.json and marketplace entry specify components.</code></p>
+<p>插件有自己的 <code>plugin.json</code>，而其市场条目设置了 <code>strict: false</code>，同时声明了 <code>commands</code>、<code>agents</code>、<code>skills</code>、<code>hooks</code>、<code>outputStyles</code> 或 <code>themes</code> 中的任何一个。请从条目中删除这些字段，或在条目中设置 <code>strict: true</code>，以便 Claude Code 将它们附加到 <code>plugin.json</code>。请参阅<a href="plugins-marketplace-reference.html#strict-mode">严格模式</a>。</p>
+<h3 id="warning-no-commands-found-in-plugin-custom-directory"><code>Warning: No commands found in plugin &lt;name&gt; custom directory</code></h3>
+<p>插件加载时，位于 <code>~/.claude/debug/&lt;session-id&gt;.txt</code> 的 <code>claude --debug</code> 日志会记录 <code>Warning: No commands found in plugin &lt;name&gt; custom directory: &lt;path&gt;. Expected .md files or SKILL.md in subdirectories.</code> 会话或 <strong>Errors</strong> 选项卡中不会显示任何内容。</p>
+<p>清单中的 <code>commands</code> 路径存在，但其中既没有 <code>.md</code> 文件，子目录中也没有 <code>SKILL.md</code>。请添加 command 文件，或从清单中删除该路径。</p>
+<h2 id="host-a-marketplace">托管市场</h2>
+<p>您发布市场，用户报告错误，或您自己的验证失败。这些条目适用于市场所有者。</p>
+<h3 id="plugins-with-relative-paths-fail-in-url-based-marketplaces">相对路径的插件在基于 URL 的市场中失败</h3>
+<p>用户使用 <code>https://example.com/marketplace.json</code> URL 添加了您的市场。其 <code>source</code> 是相对路径（例如 <code>./plugins/my-plugin</code>）的插件安装失败，显示 <code>its marketplace entry path does not stay inside the marketplace directory</code>。已安装的插件无法加载，显示 <code>Plugin source path refused</code>。两条消息都有 <a href="errors.html#marketplace-entry-path-does-not-stay-inside-the-marketplace-directory">错误参考条目</a>。</p>
+<p>当用户添加基于 URL 的市场时，Claude Code 仅下载 <code>marketplace.json</code> 文件本身。它不从该服务器通过相对路径获取插件文件，因此条目中的相对路径指向从未获取的目录。给每个条目一个 Claude Code 可以自己获取的源，例如 GitHub 存储库：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-plugin"</span><span class="p">,</span><span class="w"> </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"github"</span><span class="p">,</span><span class="w"> </span><span class="nt">"repo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"owner/repo"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>或者，在 git 存储库中托管市场并告诉用户使用存储库 URL 添加它。对于 git 源，Claude Code 克隆整个存储库，因此相对路径解析。源类型在 <a href="plugins-marketplace-reference.html">市场参考</a> 上。</p>
+<h3 id="a-root-plugins-files-from-a-git-submodule-are-missing-after-install">安装后根插件来自 git 子模块的文件缺失</h3>
+<p>您的插件位于市场根目录，并运行或读取来自仓库 git 子模块的文件。安装后，子模块的目录为空。在 v2.1.295 之前，Claude Code 会获取每个子模块，因此该目录中有内容。</p>
+<p>当 Claude Code 克隆您的市场时，它仅获取<a href="plugins-marketplace-reference.html#git-submodules-in-the-marketplace-repository">包含插件文件的子模块</a>。对于位于根目录的插件，它通过读取插件配置中的路径以及插件文件的文本来做出判断。它无法看到脚本在运行时构建的路径。</p>
+<p>请将指向子模块的路径完整写在 Claude Code 能够读取的位置，例如 hook 命令中的 <code>${CLAUDE_PLUGIN_ROOT}/vendor/tool/run.sh</code>。这样 Claude Code 就会为该插件获取仓库中的每个子模块。</p>
+<h3 id="marketplace-validation-errors">市场验证错误</h3>
+<p>您从市场目录运行了 <code>claude plugin validate .</code>，它在市场文件本身上报告了错误或警告。</p>
+<p><code>claude plugin validate</code> 也验证其 <code>source</code> 是本地路径的每个条目，并在条目的 <code>version</code> 与插件自己的清单不同时警告。</p>
+<p>表格列出了市场级消息。条目级消息是 <a href="#claude-plugin-validate-reports-errors"><code>claude plugin validate</code> 报告错误</a> 下的插件消息，前缀为 <code>plugins[N] plugin.json →</code>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">消息</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>Duplicate plugin name "&lt;name&gt;" found in marketplace</code></td>
+<td style="text-align: left;">错误</td>
+<td style="text-align: left;">给每个插件一个唯一的 <code>name</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Path contains "..": &lt;path&gt;</code> 在 <code>plugins[N].source</code> 下</td>
+<td style="text-align: left;">错误</td>
+<td style="text-align: left;">使用相对于市场根的路径，不带 <code>..</code> 段。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Marketplace name cannot contain control or bidirectional-formatting characters</code></td>
+<td style="text-align: left;">错误</td>
+<td style="text-align: left;">从名称中删除字符，例如转义或换行符。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Plugin name cannot contain control or bidirectional-formatting characters</code></td>
+<td style="text-align: left;">错误</td>
+<td style="text-align: left;">从插件 <code>name</code> 中删除字符。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Claude Code cannot install plugins from marketplace "&lt;name&gt;". Each part of a plugin id (plugin@marketplace) may use only the letters a-z and A-Z, digits, ".", "_" and "-", and must start with a letter or digit. Change the marketplace's "name".</code></td>
+<td style="text-align: left;">错误</td>
+<td style="text-align: left;">将市场重命名以符合消息所述的规则。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Claude Code cannot install plugin "&lt;name&gt;". Each part of a plugin id (plugin@marketplace) may use only the letters a-z and A-Z, digits, ".", "_" and "-", and must start with a letter or digit. Change this entry's "name".</code></td>
+<td style="text-align: left;">错误</td>
+<td style="text-align: left;">将条目重命名以符合消息所述的规则。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Marketplace has no plugins defined</code></td>
+<td style="text-align: left;">警告</td>
+<td style="text-align: left;">至少添加一个条目到 <code>plugins</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>No marketplace description provided</code></td>
+<td style="text-align: left;">警告</td>
+<td style="text-align: left;">添加顶级 <code>description</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Plugin name "&lt;name&gt;" is not kebab-case</code> 在 <code>plugins[N] plugin.json → name</code> 下</td>
+<td style="text-align: left;">警告</td>
+<td style="text-align: left;">重命名为小写字母、数字和连字符；claude.ai 市场同步需要该形式。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Entry declares version "&lt;a&gt;" but &lt;path&gt;/plugin.json says "&lt;b&gt;"</code></td>
+<td style="text-align: left;">警告</td>
+<td style="text-align: left;">更新条目以匹配 <code>plugin.json</code>，这在安装时是权威的。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Marketplace name "&lt;name&gt;" is reserved in Claude Desktop</code></td>
+<td style="text-align: left;">警告</td>
+<td style="text-align: left;">重命名市场。Claude Desktop 的托管市场同步拒绝任何大小写的 <code>org</code>、<code>org-provisioned</code> 和 <code>unknown</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Marketplace name "&lt;name&gt;" is not accepted by Claude Desktop</code> 或 <code>Plugin name "&lt;name&gt;" is not accepted by Claude Desktop</code></td>
+<td style="text-align: left;">警告</td>
+<td style="text-align: left;">重命名为最多 128 个字符的字母、数字、<code>.</code>、<code>_</code> 和 <code>-</code>，以字母或数字开头。</td>
+</tr>
+</tbody>
+</table>
+<p>在 v2.1.247 之前，包含控制或双向格式化字符的市场名称仅报告为 <code>Marketplace name impersonates an official Anthropic/Claude marketplace</code>。</p>
+<h2 id="blocked-by-your-organization">被您的组织阻止</h2>
+<p>您的组织部署了限制插件的托管设置，命令被拒绝，显示策略消息。这些条目命名每个拒绝背后的设置，以便您知道要求管理员什么。对于管理员端，请参阅 <a href="plugins-org.html">为您的组织管理插件</a>。</p>
+<h3 id="marketplace-source-is-blocked-by-enterprise-policy"><code>Marketplace source '&lt;source&gt;' is blocked by enterprise policy</code></h3>
+<p>您运行了 <code>/plugin marketplace add</code>、<code>update</code> 或安装，Claude Code 拒绝并显示此行。</p>
+<p>您的管理员在托管设置中设置了 <code>blockedMarketplaces</code> 或 <code>strictKnownMarketplaces</code>，此源不被允许。要求您的管理员允许源，或添加消息列出的允许源之一。</p>
+<p>将消息的其余部分与看到的内容匹配：</p>
+<ul>
+<li><strong><code>Allowed sources: &lt;list&gt;</code></strong>：阻止来自 <code>strictKnownMarketplaces</code> 允许列表而不是 <code>blockedMarketplaces</code> 阻止列表</li>
+<li><strong><code>No external marketplaces are allowed.</code></strong>：<code>strictKnownMarketplaces</code> 允许列表为空</li>
+<li><strong>一个 <code>Tip:</code> 说简写假设 github.com</strong>：允许列表允许 git 主机按主机名，您传递的 <code>owner/repo</code> 简写指向 github.com。如果存储库位于您的内部主机，使用其完整 URL 再次添加它，例如 <code>git@your-git-host.com:owner/repo.git</code></li>
+</ul>
+<p>您在策略变得更严格之前添加的市场停止刷新，因为策略在每次刷新时应用。</p>
+<h3 id="marketplace-is-not-in-the-allowed-marketplace-list"><code>Marketplace "&lt;name&gt;" is not in the allowed marketplace list</code></h3>
+<p><strong>Errors</strong> 选项卡显示此行，或 <code>Marketplace "&lt;name&gt;" is blocked by enterprise policy</code>，用于您已注册的市场。</p>
+<p>相同的托管设置，阻止 <a href="#marketplace-source-is-blocked-by-enterprise-policy">市场源</a>，在加载时应用。<code>strictKnownMarketplaces</code> 不包括此市场，或 <code>blockedMarketplaces</code> 命名它，因此 Claude Code 停止加载它及其插件。对于允许列表变体，指导行显示允许的源，或 <code>Contact your administrator to configure allowed marketplace sources</code>。对于阻止列表变体，它读取 <code>This marketplace source is explicitly blocked by your administrator</code>。</p>
+<h3 id="plugin-is-blocked-by-your-organizations-policy-and-cannot-be-installed"><code>Plugin "&lt;name&gt;" is blocked by your organization's policy and cannot be installed</code></h3>
+<p>安装被拒绝，显示此行，启用显示相同的行，以 <code>cannot be enabled</code> 结尾，或安装或更新显示命名原因的行：<code>Plugin "&lt;name&gt;" is from marketplace "&lt;marketplace&gt;", which is blocked by your organization's policy</code>，或 <code>Plugin "&lt;name&gt;" depends on "&lt;dep&gt;", which is blocked by your organization's policy</code>。</p>
+<p>托管设置阻止此插件、其市场或它需要的依赖项。要求您的管理员哪个条目适用。阻止的依赖项意味着插件在依赖项的市场被允许之前无法安装。</p>
+<h3 id="plugin-dir-is-disabled-by-your-organizations-managed-settings-disables"><code>--plugin-dir is disabled by your organization's managed settings (disableSideloadFlags)</code></h3>
+<p>您使用 <code>--plugin-dir</code>、<code>--plugin-url</code>、<code>--agents</code> 或 <code>--mcp-config</code> 启动了 <code>claude</code>。Claude Code 以此消息退出并显示 <code>Plugins, custom agents, and MCP servers can only be loaded from sources your administrator has approved.</code></p>
+<p>您的管理员在托管设置中设置了 <code>disableSideloadFlags</code>，它关闭了从任意路径加载插件、代理和服务器的标志。改为从批准的市场加载插件，或要求您的管理员删除设置。</p>
+<p><code>/plugin</code> <strong>Errors</strong> 选项卡中的相关消息是 <code>--plugin-dir copy of "&lt;name&gt;" ignored: plugin is locked by managed settings</code>。托管设置按名称启用或禁用该插件，Claude Code 忽略您的 <code>--plugin-dir</code> 副本，以便标志无法覆盖策略。</p>
+<h3 id="plugins-from-claude-skills-are-blocked-by-your-organizations-managed-s"><code>Plugins from ~/.claude/skills/ are blocked by your organization's managed settings</code></h3>
+<p>您运行了 <code>claude plugin init</code> 或 <code>claude plugin enable</code>，它停止了此行。消息命名 <code>strictKnownMarketplaces or blockedMarketplaces</code> 并要求您的管理员将 <code>{"source":"skills-dir"}</code> 添加到 <code>strictKnownMarketplaces</code> 或从 <code>blockedMarketplaces</code> 中删除它。</p>
+<p><code>skills-dir</code> 源代表 Claude Code 从您的 <code>~/.claude/skills/</code> 目录加载的插件。要求您的管理员进行消息命名的更改。</p>
+<h3 id="command-sourced-plugins-are-disabled-by-your-organizations-managed-set"><code>Command-sourced plugins are disabled by your organization's managed settings</code></h3>
+<p>您安装或更新了具有 <code>command</code> 源的插件，它停止了此行并显示 <code>The plugin was not installed or updated and its command was not run.</code></p>
+<p>您的管理员设置了 <code>disableCommandPluginSources</code>，因此 Claude Code 拒绝运行市场声明的生成插件的命令。仅设置 <code>allowManagedHooksOnly</code> 在 <code>disableCommandPluginSources</code> 未设置时具有相同的效果。要求您的管理员插件是否可以从策略允许的源类型发布。</p>
+<h3 id="marketplace-is-seed-managed"><code>Marketplace '&lt;name&gt;' is seed-managed</code></h3>
+<p>您运行了 <code>claude plugin marketplace update &lt;name&gt;</code>，它失败，显示 <code>Marketplace '&lt;name&gt;' is seed-managed (&lt;dir&gt;)</code> 和要求您的管理员的提示。</p>
+<p>操作员通过 <code>CLAUDE_CODE_PLUGIN_SEED_DIR</code> 预填充了此市场，Claude Code 将种子管理的市场视为只读。批量 <code>marketplace update</code> 跳过它并更新其他。</p>
+<p>要更改市场的内容，要求维护种子镜像的人更新它。有关该过程，请参阅 <a href="plugins-org.html#seed-containers-and-ci">种子容器和 CI</a>。</p>
+<h2 id="next-steps">后续步骤</h2>
+<ul>
+<li><a href="plugins-loading.html">插件加载参考</a>：为什么作用域、缓存和优先级的行为方式如此</li>
+<li><a href="plugins-cli-reference.html">插件命令参考</a>：<code>claude plugin</code> 命令的标志、默认值、输出和退出代码</li>
+<li><a href="plugins-install.html">安装和管理插件</a>：从开始的安装步骤</li>
+<li><a href="plugins-org.html#troubleshoot-policy">为您的组织管理插件</a>：管理员的策略端故障排除</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-mods-admin.html"><span class="pager-dir">← 上一页</span><span class="pager-name">为您的组织管理 mods</span></a><a class="pager-link next" href="plugins-loading.html"><span class="pager-dir">下一页 →</span><span class="pager-name">插件加载参考</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#find-where-/plugin-runs">查找 /plugin 运行的位置</a><a class="toc-l3" href="#plugin-isnt-available-in-this-environment">/plugin isn&#x27;t available in this environment</a><a class="toc-l3" href="#zsh-no-such-file-or-directory-plugin">zsh: no such file or directory: /plugin</a><a class="toc-l3" href="#the-term-plugin-is-not-recognized-as-the-name-of-a-cmdlet">The term &#x27;/plugin&#x27; is not recognized as the name of a cmdlet</a><a class="toc-l3" href="#claude-command-not-found-after-claude-plugin">claude: command not found after claude plugin ...</a><a class="toc-l3" href="#unknown-command-and-command-spellings-that-dont-exist">Unknown command 和不存在的命令拼写</a><a class="toc-l2" href="#add-a-marketplace">添加市场</a><a class="toc-l3" href="#marketplace-claude-plugins-official-not-found">Marketplace &quot;claude-plugins-official&quot; not found</a><a class="toc-l3" href="#marketplace-not-found">Marketplace &quot;&amp;lt;name&amp;gt;&quot; not found</a><a class="toc-l3" href="#invalid-marketplace-source-format">Invalid marketplace source format</a><a class="toc-l3" href="#is-not-a-valid-github-owner-repo-shorthand">&#x27;&amp;lt;source&amp;gt;&#x27; is not a valid GitHub owner/repo shorthand</a><a class="toc-l3" href="#invalid-git-url">Invalid git URL</a><a class="toc-l3" href="#path-does-not-exist">Path does not exist: &amp;lt;path&amp;gt;</a><a class="toc-l3" href="#marketplace-file-not-found-at-claude-plugin-marketplace-json">Marketplace file not found at &amp;lt;path&amp;gt;/.claude-plugin/marketplace.json</a><a class="toc-l3" href="#cannot-install-plugins-from-a-marketplace-with-this-name">Cannot add marketplace &quot;&amp;lt;name&amp;gt;&quot;: Claude Code cannot install plugins from a marketplace with this name</a><a class="toc-l3" href="#claude-code-reserves-this-name">Cannot add marketplace &quot;&amp;lt;name&amp;gt;&quot;: Claude Code reserves this name and cannot register a marketplace under it</a><a class="toc-l3" href="#ssh-authentication-failed-or-https-authentication-failed">SSH authentication failed 或 HTTPS authentication failed</a><a class="toc-l3" href="#ssh-host-key-is-not-in-your-known-hosts-file">SSH host key is not in your known_hosts file</a><a class="toc-l3" href="#command-git-not-found-or-is-in-an-unsafe-location">Command &#x27;git&#x27; not found or is in an unsafe location</a><a class="toc-l3" href="#git-clone-timed-out-after-120s">Git clone timed out after 120s</a><a class="toc-l3" href="#marketplace-updates-keep-failing-offline">市场更新在离线时持续失败</a><a class="toc-l3" href="#marketplace-add-fails-on-a-github-enterprise-server-host">市场添加在 GitHub Enterprise Server 主机上失败</a><a class="toc-l2" href="#install-a-plugin">安装插件</a><a class="toc-l3" href="#plugin-not-found-in-marketplace">Plugin &quot;&amp;lt;name&amp;gt;&quot; not found in marketplace &quot;&amp;lt;marketplace&amp;gt;&quot;</a><a class="toc-l3" href="#plugin-not-found-in-any-marketplace">Plugin &quot;&amp;lt;name&amp;gt;&quot; not found in any marketplace</a><a class="toc-l3" href="#plugin-is-already-installed-globally">Plugin &#x27;&amp;lt;name&amp;gt;@&amp;lt;marketplace&amp;gt;&#x27; is already installed globally</a><a class="toc-l3" href="#plugin-would-share-its-folder">&quot;&amp;lt;plugin&amp;gt;&quot; was not installed: it would share its folder with &quot;&amp;lt;other&amp;gt;&quot;</a><a class="toc-l3" href="#this-plugin-uses-a-source-type-your-claude-code-version-does-not-suppo">This plugin uses a source type your Claude Code version does not support</a><a class="toc-l3" href="#plugin-archive-integrity-check-failed">Plugin archive integrity check failed</a><a class="toc-l3" href="#an-npm-plugin-source-must-name-a-registry-package">An npm plugin source must name a registry package</a><a class="toc-l3" href="#marketplace-is-registered-from-an-untrusted-source">Marketplace &quot;&amp;lt;name&amp;gt;&quot; is registered from an untrusted source</a><a class="toc-l3" href="#marketplace-is-added-but-ignored">Marketplace &quot;&amp;lt;name&amp;gt;&quot; is added but ignored</a><a class="toc-l3" href="#plugin-has-a-corrupt-manifest-file-or-has-an-invalid-manifest-file">Plugin &amp;lt;name&amp;gt; has a corrupt manifest file 或 has an invalid manifest file</a><a class="toc-l3" href="#plugin-directory-not-found-at-path">Plugin directory not found at path: &amp;lt;path&amp;gt;</a><a class="toc-l3" href="#no-plugins-available-or-no-marketplaces-configured">No plugins available 或 No marketplaces configured</a><a class="toc-l3" href="#marketplace-is-already-added-from-a-different-source">Marketplace &quot;&amp;lt;name&amp;gt;&quot; is already added from a different source</a><a class="toc-l3" href="#cannot-add-marketplace-source-doesnt-match">Cannot add marketplace &quot;&amp;lt;name&amp;gt;&quot;: its source doesn&#x27;t match its extraKnownMarketplaces entry in user or managed settings</a><a class="toc-l3" href="#failed-to-install-from-the-plugin-menu">Failed to install: &amp;lt;plugin&amp;gt; (&amp;lt;reason&amp;gt;)</a><a class="toc-l3" href="#could-not-move-the-new-copy-of-this-plugin-version">Could not move the new copy of this plugin version into &amp;lt;path&amp;gt;</a><a class="toc-l3" href="#dependency-errors">依赖项错误</a><a class="toc-l2" href="#plugin-installed-but-not-working">插件已安装但不工作</a><a class="toc-l3" href="#plugin-doesnt-appear-or-its-skills-dont-show-up">插件不出现或其技能不显示</a><a class="toc-l3" href="#run-reload-plugins-to-activate">Run /reload-plugins to apply.</a><a class="toc-l3" href="#the-packages-it-lists-are-not-installed">The packages it lists are not installed 或 were not installed, because ...</a><a class="toc-l3" href="#plugin-not-cached-at">Plugin &quot;&amp;lt;name&amp;gt;&quot; not cached at &amp;lt;path&amp;gt;</a><a class="toc-l3" href="#installed-plugins-json-holds-a-record-this-version-cannot-read">installed_plugins.json holds a record under &quot;&amp;lt;id&amp;gt;&quot; that this version of Claude Code cannot read</a><a class="toc-l3" href="#installed-plugins-json-could-not-be-read-and-was-rebuilt">installed_plugins.json could not be read and was rebuilt</a><a class="toc-l3" href="#install-records-under-names-that-no-version-can-use">install records under names that no version of Claude Code can use were removed from installed_plugins.json</a><a class="toc-l3" href="#does-not-load-so-claude-code-ignores-the-whole-file">does not load (...), so Claude Code ignores the whole file</a><a class="toc-l3" href="#a-plugin-you-disabled-still-loads">Disabled in ~/.claude/settings.json but still loads</a><a class="toc-l3" href="#plugin-is-enabled-in-project-settings-but-isnt-installed-here">Plugin &quot;&amp;lt;name&amp;gt;&quot; is enabled in project settings but isn&#x27;t installed here</a><a class="toc-l3" href="#a-plugin-stays-installed-after-plugin-uninstall-on-windows">在 Windows 上执行 plugin uninstall 后插件仍保持安装</a><a class="toc-l3" href="#a-plugin-installed-from-a-git-repository-shows-version-unknown">从 git 仓库安装的插件显示版本 unknown</a><a class="toc-l3" href="#failed-to-load-hooks-from-and-hooks-that-dont-fire">Failed to load hooks from &amp;lt;path&amp;gt; 和不触发的 hooks</a><a class="toc-l3" href="#plugin-directory-does-not-exist">Plugin directory does not exist: &amp;lt;path&amp;gt;</a><a class="toc-l3" href="#invalid-mcp-server-config-for-and-mcp-servers-that-dont-start">Invalid MCP server config for &quot;&amp;lt;server&amp;gt;&quot; 和不启动的 MCP 服务器</a><a class="toc-l3" href="#language-server-doesnt-start">语言服务器不启动、使用过多内存或报告错误的诊断</a><a class="toc-l2" href="#build-a-plugin">构建插件</a><a class="toc-l3" href="#commands-path-not-found">commands path not found: &amp;lt;path&amp;gt;</a><a class="toc-l3" href="#plugin-dir-loads-a-plugin-with-no-components">--plugin-dir 在市场根目录处不会加载 plugins/ 下的插件</a><a class="toc-l3" href="#files-the-plugin-references-outside-its-directory-arent-found">插件引用的目录外文件找不到</a><a class="toc-l3" href="#claude-plugin-root-shows-forward-slashes-on-windows">${CLAUDE_PLUGIN_ROOT} 在 Windows 上显示正斜杠</a><a class="toc-l3" href="#plugin-loads-but-its-skills-are-missing">插件已加载但其 skill 缺失</a><a class="toc-l3" href="#skill-loads-but-claude-never-invokes-the-skill">Skill 已加载但 Claude 从不调用该 skill</a><a class="toc-l3" href="#is-not-a-plugin-or-skill-folder">claude plugin eval init 报告 &amp;lt;directory&amp;gt; is not a plugin or skill folder</a><a class="toc-l3" href="#the-userconfig-dialog-never-appears">userConfig 对话框从不出现</a><a class="toc-l3" href="#claude-plugin-validate-reports-errors">claude plugin validate 报告错误</a><a class="toc-l3" href="#plugin-has-conflicting-manifests">Plugin &amp;lt;name&amp;gt; has conflicting manifests</a><a class="toc-l3" href="#warning-no-commands-found-in-plugin-custom-directory">Warning: No commands found in plugin &amp;lt;name&amp;gt; custom directory</a><a class="toc-l2" href="#host-a-marketplace">托管市场</a><a class="toc-l3" href="#plugins-with-relative-paths-fail-in-url-based-marketplaces">相对路径的插件在基于 URL 的市场中失败</a><a class="toc-l3" href="#a-root-plugins-files-from-a-git-submodule-are-missing-after-install">安装后根插件来自 git 子模块的文件缺失</a><a class="toc-l3" href="#marketplace-validation-errors">市场验证错误</a><a class="toc-l2" href="#blocked-by-your-organization">被您的组织阻止</a><a class="toc-l3" href="#marketplace-source-is-blocked-by-enterprise-policy">Marketplace source &#x27;&amp;lt;source&amp;gt;&#x27; is blocked by enterprise policy</a><a class="toc-l3" href="#marketplace-is-not-in-the-allowed-marketplace-list">Marketplace &quot;&amp;lt;name&amp;gt;&quot; is not in the allowed marketplace list</a><a class="toc-l3" href="#plugin-is-blocked-by-your-organizations-policy-and-cannot-be-installed">Plugin &quot;&amp;lt;name&amp;gt;&quot; is blocked by your organization&#x27;s policy and cannot be installed</a><a class="toc-l3" href="#plugin-dir-is-disabled-by-your-organizations-managed-settings-disables">--plugin-dir is disabled by your organization&#x27;s managed settings (disableSideloadFlags)</a><a class="toc-l3" href="#plugins-from-claude-skills-are-blocked-by-your-organizations-managed-s">Plugins from ~/.claude/skills/ are blocked by your organization&#x27;s managed settings</a><a class="toc-l3" href="#command-sourced-plugins-are-disabled-by-your-organizations-managed-set">Command-sourced plugins are disabled by your organization&#x27;s managed settings</a><a class="toc-l3" href="#marketplace-is-seed-managed">Marketplace &#x27;&amp;lt;name&amp;gt;&#x27; is seed-managed</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

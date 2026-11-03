@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>配置权限 · Claude Code 中文文档</title>
+<meta name="description" content="使用权限模式、hooks 和声明式允许/拒绝规则来控制您的代理如何使用工具。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-sdk/permissions">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-sdk/permissions" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link active" href="agent-sdk-permissions.html" aria-current="page">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>Agent SDK</span> <span class="sep">/</span> <span>控制与可观测性</span></div>
+    <article class="prose" id="article"><h1 id="_1">配置权限</h1>
+<blockquote>
+<p>使用权限模式、hooks 和声明式允许/拒绝规则来控制您的代理如何使用工具。</p>
+</blockquote>
+<p>Claude Agent SDK 提供权限控制来管理 Claude 如何使用工具。使用权限模式和规则来定义自动允许的内容，以及使用 <a href="agent-sdk-user-input.html"><code>canUseTool</code> 回调</a> 在运行时处理其他所有情况。</p>
+<h2 id="how-permissions-are-evaluated">权限如何被评估</h2>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>如果您加载的插件包含 <a href="plugins-mods-overview.html">mod</a>，请参阅 <a href="permissions.html#precedence-among-rules-hooks-and-mods">mod 的决定在规则和 hook 之间的位置</a>。</p></div></div>
+<p>当 Claude 请求一个工具时，SDK 按以下顺序检查权限：</p>
+<p><strong>1. Hooks</strong></p>
+<p>首先运行 <a href="agent-sdk-hooks.html">hooks</a>。Hook 可以直接拒绝调用或将其传递下去。返回 <code>allow</code> 的 hook 不会跳过下面的拒绝和询问规则；无论 hook 结果如何，这些规则都会被评估。</p>
+<p>返回 <code>allow</code> 的 <code>PreToolUse</code> hook 也不能批准目标被 Claude Code 识别为 <a href="permission-modes.html#critical-paths">关键路径</a> 的 <code>rm</code> 或 <code>rmdir</code> 命令，例如 <code>rm -rf ~</code>。关于该 <code>allow</code> 在计划模式下的作用，请参阅 <a href="permissions.html#hook-approvals-in-plan-mode">计划模式下的 hook 批准</a>。</p>
+<p><strong>2. 拒绝规则</strong></p>
+<p>如果来自 <code>disallowed_tools</code> 或 <a href="settings-reference.html#permission-settings">settings.json</a> 的拒绝规则匹配，调用将被拒绝，且不会调用 <a href="agent-sdk-user-input.html"><code>canUseTool</code></a>，即使在 <a href="#bypass-permissions-mode-bypasspermissions"><code>bypassPermissions</code></a> 模式下、即使 hook 返回了 <code>allow</code> 也是如此。</p>
+<p>在 TypeScript SDK 中，如果您将某个 <a href="agent-sdk-custom-tools.html#require-approval-for-specific-tools">自定义工具</a> 的 <code>permission_policy</code> 设置为 <a href="agent-sdk-typescript.html#mcpservertoolpolicy"><code>always_deny</code></a>，对该工具的调用会在此步骤被拒绝。</p>
+<p><strong>3. 询问规则</strong></p>
+<p>检查来自 <a href="settings-reference.html#permission-settings">settings.json</a> 的 <code>ask</code> 规则。如果询问规则匹配，调用会传递到您的 <a href="agent-sdk-user-input.html"><code>canUseTool</code> 回调</a> 以获得确认，即使在 <code>bypassPermissions</code> 模式下也是如此。</p>
+<p>需要用户交互的工具行为相同：<code>AskUserQuestion</code> 和 MCP 工具，其服务器设置了 <a href="mcp.html#require-approval-for-a-specific-tool"><code>_meta["anthropic/requiresUserInteraction"]</code></a>，总是传递到回调，即使当允许规则匹配时也是如此。在 <code>dontAsk</code> 模式下，两种情况都被拒绝，因为该模式从不提示。MCP 注解需要 Claude Code v2.1.199 或更高版本。</p>
+<p>您的组织设置为 <code>ask</code> 的 <a href="mcp.html#organization-controls-on-connector-tools">claude.ai connector</a> 工具也在此步骤离开流程。每个调用都传递到回调，即使在 <code>bypassPermissions</code> 模式下，即使当允许规则匹配时也是如此。回调接收原因 <code>Your organization requires approval for this tool</code>。在 <code>dontAsk</code> 模式下，调用被拒绝，因为该模式从不提示。</p>
+<p>在 TypeScript SDK 中，如果您将自定义工具的 <code>permission_policy</code> 设置为 <a href="agent-sdk-custom-tools.html#require-approval-for-specific-tools"><code>always_ask</code></a>，任何允许规则都不会批准其调用，即使是 <code>allowedTools</code> 条目也不行。在 <code>dontAsk</code> 模式下，Claude Code 会拒绝这些调用；在 <code>auto</code>、<code>plan</code> 或 <code>bypassPermissions</code> 模式下，它<a href="agent-sdk-typescript.html#permission-modes-that-can-approve-an-always_ask-call">可以在您的回调运行之前批准它们</a>。</p>
+<p><strong>4. 权限模式</strong></p>
+<p>应用活跃的 <a href="#permission-modes">权限模式</a>：</p>
+<ul>
+<li>在 <code>bypassPermissions</code> 模式下，Claude Code 批准到达此步骤的所有内容，除了被识别出的 <a href="permission-modes.html#critical-paths">关键路径删除</a> 以及被标记为 <a href="permission-modes.html#dangerous-rm-operation-not-ruled-out"><code>Dangerous rm operation not ruled out</code></a> 的 Bash 命令，这些会传递下去。</li>
+<li>若要在没有提示的情况下运行这些删除操作，请参阅 <a href="permission-modes.html#turn-off-the-critical-path-removal-prompt-in-bypasspermissions-mode">关闭关键路径删除提示</a>。</li>
+<li>在 <code>acceptEdits</code> 模式下，Claude Code 批准 <a href="#accept-edits-mode-acceptedits">接受编辑模式</a> 下列出的文件操作。</li>
+<li>在 <code>plan</code> 模式下，无论允许规则如何，Claude Code 都会将文件编辑工具发送到您的 <code>canUseTool</code> 回调。</li>
+<li>在其他模式下，请求传递下去。</li>
+</ul>
+<p><strong>5. 允许规则</strong></p>
+<p>检查 <code>allow</code> 规则（来自 <code>allowed_tools</code> 和 settings.json）。如果规则匹配，工具被批准。工具自己批准的调用也在此步骤被解决，无需规则：例如在您的工作目录内的文件读取或 <a href="permissions.html#read-only-commands">只读 Bash 命令</a>。</p>
+<p>被识别出的 <a href="permission-modes.html#critical-paths">关键路径删除</a> 不会被允许规则批准，被标记为 <code>Dangerous rm operation not ruled out</code> 的命令也不会被 <code>Bash</code> 或 <code>Bash(*)</code> 规则批准。它们是否随后到达您的回调取决于权限模式：例如在 <code>auto</code> 模式的 Agent SDK 会话中，Claude Code 默认拒绝它们而不调用它。<a href="permission-modes.html#critical-path-removals-in-each-permission-mode">关键路径模式表</a> 列出了每种模式对它们的处理方式。</p>
+<p>允许规则不会批准从 <a href="permissions.html#network-paths">网络路径</a> 进行的读取。</p>
+<p><strong>6. canUseTool 回调</strong></p>
+<p>如果上述任何步骤都未解决，调用您的 <a href="agent-sdk-user-input.html"><code>canUseTool</code> 回调</a> 以获得决定。在 <code>dontAsk</code> 模式下，此步骤被跳过，工具被拒绝，不过您安装的 <a href="plugins-mods-overview.html">mod</a> 仍然可以批准<a href="permissions.html#precedence-among-rules-hooks-and-mods">部分此类调用</a>。</p>
+<p>在 TypeScript SDK 中，如果您设置了 <a href="agent-sdk-typescript.html#options"><code>permissionPrompts: 'none'</code></a>，您的回调在此步骤不会被调用。<a href="hooks.html#permissionrequest"><code>PermissionRequest</code> hook</a> 仍然有机会决定，如果它不决定，Claude Code 拒绝调用。该选项需要 Claude Code v2.1.259 或更高版本。</p>
+<p><img alt="六步权限评估流程的图表，与上述步骤匹配：工具请求通过 hooks、拒绝规则、询问规则、权限模式、允许规则和 canUseTool。Hooks、拒绝规则和 canUseTool 可以路由到被阻止；权限模式绕过、允许规则和 canUseTool 可以路由到执行；询问规则路由到 canUseTool。" src="../assets/img/64d45392e438.svg" /></p>
+<p>如果您在 TypeScript SDK 期望评估顺序在咨询回调之前自动批准调用的配置中传递 <code>canUseTool</code> 回调，SDK 在构造查询时会发出一次 Node.js 进程警告。警告的代码是 <code>CLAUDE_SDK_CAN_USE_TOOL_SHADOWED</code>。两个配置会触发它：</p>
+<ul>
+<li><code>permissionMode: 'bypassPermissions'</code>：警告文本以 <code>canUseTool will not be invoked: permissionMode 'bypassPermissions'</code> 开头。工具调用在咨询 <code>canUseTool</code> 之前就已被批准，因此您的回调只会针对少数调用运行，例如 <a href="#bypass-permissions-mode-bypasspermissions">绕过权限模式</a> 下列出的调用。若也要检查已批准的调用，请将回调中的检查放入 <a href="agent-sdk-hooks.html"><code>PreToolUse</code> hook</a></li>
+<li>仅为工具名称的 <code>allowedTools</code> 条目，例如 <code>"Read"</code>：警告会在 <code>canUseTool will not be invoked for:</code> 之后列出每个此类条目。对所列工具的调用在咨询 <code>canUseTool</code> 之前就已被批准，<a href="#calls-an-allow-rule-never-approves">允许规则从不批准的调用</a> 除外。若要让您的回调针对所列工具中需要批准的调用运行，请从 <code>allowedTools</code> 中删除该工具的条目</li>
+</ul>
+<p>带有说明符的条目，如 <code>Bash(ls *)</code> 和 <code>acceptEdits</code> 模式不会触发它，来自设置文件的允许规则对检查不可见。</p>
+<p>该警告不会阻止任何调用，也不会更改任何选项。如果您的回调已经能收到您想检查的每个调用，请保持配置不变。要记录该警告，请使用 <code>process.on('warning', ...)</code> 监听并匹配 <code>CLAUDE_SDK_CAN_USE_TOOL_SHADOWED</code> 代码。</p>
+<p>此页面重点关注 <strong>允许和拒绝规则</strong> 和 <strong>权限模式</strong>。对于其他步骤：</p>
+<ul>
+<li><strong>Hooks：</strong> 运行自定义代码以允许、拒绝或修改工具请求。请参阅 <a href="agent-sdk-hooks.html">使用 hooks 控制执行</a>。</li>
+<li><strong>canUseTool 回调：</strong> 在运行时提示用户批准，当没有更早的步骤解决调用时。请参阅 <a href="agent-sdk-user-input.html">处理批准和用户输入</a>。</li>
+</ul>
+<h2 id="allow-and-deny-rules">允许和拒绝规则</h2>
+<p><code>allowed_tools</code> 和 <code>disallowed_tools</code>（TypeScript：<code>allowedTools</code> / <code>disallowedTools</code>）在上述评估流程中向允许和拒绝规则列表添加条目。如果你在 <code>allowed_tools</code> 中命名了某个<a href="agent-sdk-todo-tracking.html#model-availability">任务跟踪工具</a>，Claude Code 也会为该会话启用这些工具。任何其他未在 <code>allowed_tools</code> 中列出的工具仍然可供 Claude 使用，对其的调用如果需要批准，则会进入权限模式。拒绝规则的行为取决于它们是命名工具还是在工具内限定模式。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">选项</th>
+<th style="text-align: left;">效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>allowed_tools=["Read", "Grep"]</code></td>
+<td style="text-align: left;"><code>Read</code> 和 <code>Grep</code> 被自动批准，<a href="permissions.html#network-paths">从网络路径读取</a>除外。此处未列出的其他工具仍然存在，对它们的调用如果需要批准，则会进入权限模式和 <code>canUseTool</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disallowed_tools=["Bash"]</code></td>
+<td style="text-align: left;"><code>Bash</code> 工具定义从请求中移除。Claude 看不到该工具，无法尝试使用它。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disallowed_tools=["Bash(rm *)"]</code></td>
+<td style="text-align: left;"><code>Bash</code> 保持可用。匹配 <code>rm *</code> <a href="permissions.html#bash-rule-limits">如所写</a> 的调用在每种权限模式中都被拒绝，包括 <code>bypassPermissions</code>。其他 <code>Bash</code> 调用（包括 <code>/bin/rm</code>）会进入权限模式。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disallowed_tools=["*"]</code></td>
+<td style="text-align: left;">每个工具定义都从请求中移除。拒绝规则中支持工具名称通配符：<code>"*"</code> 匹配每个工具，<code>"mcp__*"</code> 匹配所有服务器中的每个 MCP 工具。</td>
+</tr>
+</tbody>
+</table>
+<p>允许规则仅在字面 <code>mcp__&lt;server&gt;__</code> 前缀之后接受工具名称通配符。服务器段必须无通配符，以便规则命名您配置的特定服务器：<code>mcp__puppeteer__*</code> 匹配来自 <code>puppeteer</code> 服务器的每个工具，<code>mcp__github__get_*</code> 匹配其 <code>get_</code> 工具。未锚定的条目（如 <code>allowed_tools=["*"]</code> 或 <code>allowed_tools=["mcp__*"]</code>）会被忽略，不会自动批准任何内容。</p>
+<p><code>Read</code> 和 <code>Edit</code> 的限定规则采用路径模式。<code>Edit(path)</code> 规则管理所有写入文件的内置工具，包括 <code>Write</code> 和 <code>NotebookEdit</code>；<code>Write(path)</code> 规则永远不会被文件权限检查匹配。</p>
+<p>使用 <code>//path</code> 表示绝对文件系统路径：<code>Edit(//secrets/**)</code> 的拒绝规则会阻止在磁盘上 <code>/secrets</code> 下任何位置的写入。使用单个前导斜杠时，<code>Edit(/secrets/**)</code> 在规则的源处锚定。对于通过 <code>allowed_tools</code> 或 <code>disallowed_tools</code> 传递的规则，这意味着会话的工作目录，因此规则不会阻止磁盘上的 <code>/secrets</code>。请参阅 <a href="permissions.html#read-and-edit">Read 和 Edit 规则</a> 了解四种锚定形式以及来自设置文件的规则如何解析。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p><strong>自动批准的工具永远不会到达 <code>canUseTool</code>。</strong> 在任何早期步骤中被批准的工具调用，通过 <code>acceptEdits</code> 或 <code>bypassPermissions</code>，或通过允许规则，会跳过你的 <code>canUseTool</code> 回调，因此你在那里放置的权限检查会被该工具无声地绕过。</p>
+<p>如果对 <code>allowed_tools</code> 中某个工具的调用仍然到达您的 <code>canUseTool</code> 回调，或在 <code>dontAsk</code> 模式中被拒绝，请检查它们是否属于<a href="permissions.html#network-paths">从网络路径读取</a>或以下调用之一。任何允许规则都不会批准这些调用。在从不提示的 <code>dontAsk</code> 模式中，Claude Code 会拒绝它们而不调用 <code>canUseTool</code>；在其他权限模式中，请按照各项说明处理它们：</p>
+<ul>
+<li>
+<p><code>AskUserQuestion</code>、标记为 <a href="mcp.html#require-approval-for-a-specific-tool"><code>_meta["anthropic/requiresUserInteraction"]</code></a> 的 MCP 工具，以及<a href="mcp.html#organization-controls-on-connector-tools">您的组织设置为 <code>ask</code></a> 的连接器工具：在回调中应答它们。<a href="agent-sdk-user-input.html#handle-clarifying-questions">处理澄清问题</a>展示了如何应答 <code>AskUserQuestion</code>，而连接器调用到达时附带的原因为 <code>Your organization requires approval for this tool</code></p>
+</li>
+<li>
+<p>您的应用程序标记为 <a href="agent-sdk-custom-tools.html#require-approval-for-specific-tools"><code>always_ask</code></a> 的自定义工具：在回调中对该调用作出决定。要阻止这些调用到达，请<a href="agent-sdk-typescript.html#mcpsdkserverconfigwithinstance">在会话中途更改策略</a>。在 <code>auto</code>、<code>plan</code> 和 <code>bypassPermissions</code> 模式中，该调用也可能在回调之前被批准，具体情况列于<a href="agent-sdk-typescript.html#permission-modes-that-can-approve-an-always_ask-call">可以批准 <code>always_ask</code> 调用的权限模式</a></p>
+</li>
+<li>
+<p>被识别出的 <code>rm</code> 和 <code>rmdir</code> <a href="permission-modes.html#critical-paths">关键路径移除</a>：在 <code>default</code>、<code>acceptEdits</code> 和 <code>bypassPermissions</code> 模式中，在回调中允许或拒绝该移除操作，此时 <a href="agent-sdk-typescript.html#canusetool"><code>decisionReason</code></a> 以 <code>Dangerous rm</code> 开头。对于 <code>auto</code> 和 <code>plan</code> 模式，请参阅<a href="permission-modes.html#critical-path-removals-in-each-permission-mode">各权限模式中的关键路径移除</a>。识别这些移除操作的检查<a href="permission-modes.html#critical-paths">可能会遗漏某些命令</a></p>
+</li>
+<li>
+<p><strong>裸名称</strong>：像 <code>Read</code> 或 <code>mcp__github__get_issue</code> 这样的条目会自动批准对该工具的每个调用，<a href="permission-modes.html#actions-no-mode-auto-approves">任何模式都不自动批准的操作</a>和<a href="permissions.html#network-paths">从网络路径读取</a>除外。</p>
+</li>
+<li>
+<p><strong>限定规则</strong>：像 <code>Bash(npm test *)</code> 这样的条目仅自动批准匹配的调用，其他需要批准的 <code>Bash</code> 调用仍然会进入回调。</p>
+</li>
+</ul>
+<p>对于必须在每个工具调用上运行的检查，请使用 <a href="agent-sdk-hooks.html"><code>PreToolUse</code> hook</a>：hook 在每个其他步骤之前运行，hook 拒绝即使在 <code>bypassPermissions</code> 模式中也适用。</p></div></div>
+<p>对于锁定的代理，将 <code>allowedTools</code> 与 <code>permissionMode: "dontAsk"</code> 配对：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">allowedTools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">],</span>
+<span class="w">  </span><span class="nx">permissionMode</span><span class="o">:</span><span class="w"> </span><span class="s2">"dontAsk"</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>列出的 <code>Read</code>、<code>Glob</code> 和 <code>Grep</code> 调用被批准，<a href="permission-modes.html#actions-no-mode-auto-approves">任何模式都不自动批准的操作</a>和<a href="permissions.html#network-paths">从网络路径读取</a>除外。每个其他会提示的调用则会被拒绝，不过您安装的 <a href="plugins-mods-overview.html">mod</a> 仍然可以批准<a href="permissions.html#precedence-among-rules-hooks-and-mods">其中的部分调用</a>。</p>
+<p>在 <code>default</code> 模式中不需要批准的调用会运行，无论您是否列出它们。其中包括<a href="permissions.html#read-only-commands">只读 Bash 命令</a>、不在运行前询问的 <code>Agent</code> 等工具，以及工作目录内的文件读取。要对 Claude 完全隐藏某个内置工具而不是拒绝其调用，请将其裸名称添加到 <code>disallowedTools</code>。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p><strong><code>allowed_tools</code> 不限制 <code>bypassPermissions</code>。</strong> <code>allowed_tools</code> 预批准你列出的工具。其他未列出的工具不匹配任何允许规则，会进入权限模式，其中 <code>bypassPermissions</code> 批准它们。将 <code>allowed_tools=["Read"]</code> 与 <code>permission_mode="bypassPermissions"</code> 一起设置仍然会批准每个工具，包括 <code>Bash</code>、<code>Write</code> 和 <code>Edit</code>。如果你需要 <code>bypassPermissions</code> 但想要阻止特定工具，请使用 <code>disallowed_tools</code>。</p></div></div>
+<p>你也可以在 <code>.claude/settings.json</code> 中声明式地配置允许、拒绝和询问规则。当启用 <code>project</code> 设置源时会读取这些规则，默认 <code>query()</code> 选项就是这样。如果你显式设置 <code>setting_sources</code>（TypeScript：<code>settingSources</code>），请包含 <code>"project"</code> 以使其应用。请参阅<a href="settings-reference.html#permission-settings">权限设置</a>了解规则语法。</p>
+<h2 id="permission-modes">权限模式</h2>
+<p>权限模式为 Claude 使用工具的方式提供全局控制。您可以在调用 <code>query()</code> 时设置权限模式，也可以在流式会话期间动态更改。</p>
+<p>在 Claude Code v2.1.302 或更高版本中，除非您设置了权限模式，或应用从其设置文件中的 <a href="settings-reference.html#permissions-defaultmode"><code>permissions.defaultMode</code></a> 获取了权限模式，否则应用会以 <code>default</code> 模式启动。在 <code>default</code> 模式下，对于任何需要批准的工具调用，除非您通过允许规则、hook、<code>canUseTool</code> 回调或权限提示工具批准它，否则 Claude Code 都会拒绝。如果工具调用被拒绝，请参阅 <a href="permission-modes.html#which-mode-a-non-interactive-run-starts-in"><code>claude -p</code> 和 Agent SDK 运行中的工具调用被拒绝</a>。</p>
+<h3 id="available-modes">可用模式</h3>
+<p>SDK 支持以下权限模式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">模式</th>
+<th style="text-align: left;">描述</th>
+<th style="text-align: left;">工具行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>default</code></td>
+<td style="text-align: left;">标准权限行为</td>
+<td style="text-align: left;">没有基于模式的自动批准；需要批准且不匹配任何允许规则的调用会触发您的 <code>canUseTool</code> 回调</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dontAsk</code></td>
+<td style="text-align: left;">拒绝而不是提示</td>
+<td style="text-align: left;">任何原本会提示的调用都会被拒绝，且不调用 <code>canUseTool</code>，不过您安装的 <a href="plugins-mods-overview.html">mod</a> 仍可批准<a href="permissions.html#precedence-among-rules-hooks-and-mods">其中部分调用</a>。由 <code>allowed_tools</code> 或 <code>settings.json</code> 允许规则批准的调用会运行，在 <code>default</code> 模式下无需批准的调用也会运行。某些调用，例如<a href="permissions.html#network-paths">从网络路径读取</a>，即使 <code>allowed_tools</code> 或允许规则与其匹配也会被拒绝。完整列表请参阅<a href="#don’t-ask-mode-dontask">不询问模式</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>acceptEdits</code></td>
+<td style="text-align: left;">自动接受文件编辑</td>
+<td style="text-align: left;">文件编辑和<a href="#accept-edits-mode-acceptedits">文件系统操作</a>（<code>mkdir</code>、<code>rm</code>、<code>mv</code> 等）会被自动批准</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>bypassPermissions</code></td>
+<td style="text-align: left;">绕过权限检查</td>
+<td style="text-align: left;">工具无需权限提示即可运行，但<a href="permission-modes.html#actions-no-mode-auto-approves">任何模式都不会自动批准的操作</a>，以及在<a href="claude-code-on-the-web.html">云端会话</a>之外您的应用程序<a href="agent-sdk-custom-tools.html#require-approval-for-specific-tools">标记为 <code>always_ask</code></a> 的自定义工具除外。请谨慎使用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>plan</code></td>
+<td style="text-align: left;">计划模式</td>
+<td style="text-align: left;">Claude 进行探索和规划，但不编辑您的源文件；文件编辑永远不会被自动批准，而是通过您的 <code>canUseTool</code> 回调进行提示</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>auto</code></td>
+<td style="text-align: left;">由模型分类的批准</td>
+<td style="text-align: left;">模型分类器会审查 shell 命令和网络请求等操作，对其审查的每个操作予以允许或阻止。有关可用性和决策顺序，请参阅<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p><strong>子代理继承：</strong> 如果您的主会话处于<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a>，那么即使某个子代理的 <a href="agent-sdk-typescript.html#agentdefinition"><code>AgentDefinition</code></a> 设置了 <code>permissionMode: "acceptEdits"</code>，它仍会在计划模式下运行。该子代理对您源文件的 <code>Edit</code> 和 <code>Write</code> 调用仍会交给您的 <code>canUseTool</code> 回调。计划模式同样适用于您定义的子代理，这样将工作交给子代理就无法绕过先审查计划这一步。</p>
+<p>子代理会从主会话继承 <code>plan</code>、<code>acceptEdits</code>、<code>auto</code> 或 <code>bypassPermissions</code>；当主会话处于 <code>default</code> 或 <code>dontAsk</code> 模式时，子代理会以您设置的模式运行。即便如此，Claude Code 也永远不会应用 <code>"bypassPermissions"</code> 值，并且仅当该子代理<a href="permission-modes.html#eliminate-prompts-with-auto-mode">可以使用自动模式</a>时才会应用 <code>"auto"</code> 值。<code>bypassPermissions</code> 这一例外需要 Claude Code v2.1.267 或更高版本。</p>
+<p>子代理可能具有与主 Agent 不同的系统提示词和更少约束的行为，因此继承 <code>bypassPermissions</code> 会授予它们完全、自主的系统访问权限。<a href="permission-modes.html#actions-no-mode-auto-approves">任何模式都不会自动批准的操作</a>仍然适用。</p></div></div>
+<h3 id="set-permission-mode">设置权限模式</h3>
+<p>您可以在启动查询时一次性设置权限模式，也可以在会话活动期间动态更改。</p>
+<blockquote>
+<p>[tab] 查询时</p>
+<p>在创建查询时传入 <code>permission_mode</code>（Python）或 <code>permissionMode</code>（TypeScript）。</p>
+<p>```python Python theme={null}<br />
+import asyncio<br />
+from claude_agent_sdk import query, ClaudeAgentOptions</p>
+<p>async def main():<br />
+    async for message in query(<br />
+        prompt="Help me refactor this code",<br />
+        options=ClaudeAgentOptions(<br />
+            permission_mode="default",  # Set the mode here<br />
+        ),<br />
+    ):<br />
+        if hasattr(message, "result"):<br />
+            print(message.result)</p>
+<p>asyncio.run(main())<br />
+```</p>
+<p>```typescript TypeScript theme={null}<br />
+import { query } from "@anthropic-ai/claude-agent-sdk";</p>
+<p>async function main() {<br />
+  for await (const message of query({<br />
+    prompt: "Help me refactor this code",<br />
+    options: {<br />
+      permissionMode: "default" // Set the mode here<br />
+    }<br />
+  })) {<br />
+    if ("result" in message) {<br />
+      console.log(message.result);<br />
+    }<br />
+  }<br />
+}</p>
+<p>main();<br />
+```</p>
+<p>[tab] 流式传输期间</p>
+<p>调用 <code>set_permission_mode()</code>（Python）或 <code>setPermissionMode()</code>（TypeScript）可在会话中途更改模式。新模式会立即对所有后续工具请求生效。这样您可以先采用严格限制，随着信任建立再放宽权限，例如在审查 Claude 的初始方案后切换到 <code>acceptEdits</code>。</p>
+<p>```python Python theme={null}<br />
+import asyncio<br />
+from claude_agent_sdk import ClaudeSDKClient, ClaudeAgentOptions</p>
+<p>async def main():<br />
+    async with ClaudeSDKClient(<br />
+        options=ClaudeAgentOptions(<br />
+            permission_mode="default",  # Start in default mode<br />
+        )<br />
+    ) as client:<br />
+        await client.query("Help me refactor this code")</p>
+<pre><code>    # Change mode dynamically mid-session
+    await client.set_permission_mode("acceptEdits")
+
+    # Process messages with the new permission mode
+    async for message in client.receive_response():
+        if hasattr(message, "result"):
+            print(message.result)
+</code></pre>
+<p>asyncio.run(main())<br />
+```</p>
+<p>```typescript TypeScript theme={null}<br />
+import { query } from "@anthropic-ai/claude-agent-sdk";</p>
+<p>async function main() {<br />
+  const q = query({<br />
+    prompt: "Help me refactor this code",<br />
+    options: {<br />
+      permissionMode: "default" // Start in default mode<br />
+    }<br />
+  });</p>
+<p>// Change mode dynamically mid-session<br />
+  await q.setPermissionMode("acceptEdits");</p>
+<p>// Process messages with the new permission mode<br />
+  for await (const message of q) {<br />
+    if ("result" in message) {<br />
+      console.log(message.result);<br />
+    }<br />
+  }<br />
+}</p>
+<p>main();<br />
+```</p>
+</blockquote>
+<h3 id="mode-details">模式详情</h3>
+<h4 id="accept-edits-mode-acceptedits">接受编辑模式（<code>acceptEdits</code>）</h4>
+<p>自动批准文件操作，使 Claude 无需提示即可编辑代码。其他工具（例如不属于文件系统操作的 Bash 命令）仍需要常规权限。</p>
+<p><strong>自动批准的操作：</strong></p>
+<ul>
+<li>文件编辑（Edit、Write 工具）</li>
+<li>文件系统命令：<code>mkdir</code>、<code>touch</code>、<code>rm</code>、<code>rmdir</code>、<code>mv</code>、<code>cp</code>、<code>sed</code></li>
+</ul>
+<p>两者都仅适用于工作目录或 <code>additionalDirectories</code> 内的路径。在 <code>acceptEdits</code> 模式下，当 Claude 执行以下操作时，Claude Code 不会自动批准该请求：</p>
+<ul>
+<li>处理该范围之外的路径</li>
+<li>写入受保护的路径</li>
+<li>使用 <code>rm</code> 或 <code>rmdir</code> 删除 Claude Code 识别为<a href="permission-modes.html#critical-paths">关键路径</a>的路径</li>
+<li>运行带有例如选项、glob 或 <code>timeout 5</code>、<code>LANG=C</code> 前缀的 <a href="permission-modes.html#auto-approve-file-edits-with-acceptedits-mode"><code>touch</code></a></li>
+</ul>
+<p><strong>适用场景：</strong> 您信任 Claude 的编辑并希望加快迭代速度，例如在原型开发期间或在隔离目录中工作时。</p>
+<h4 id="don’t-ask-mode-dontask">不询问模式（<code>dontAsk</code>）</h4>
+<p>将任何权限提示转换为拒绝，且不调用 <code>canUseTool</code>，不过您安装的 <a href="plugins-mods-overview.html">mod</a> 仍可批准<a href="permissions.html#precedence-among-rules-hooks-and-mods">其中部分调用</a>。由 <code>allowed_tools</code>、<code>settings.json</code> 允许规则或 hook 预先批准的工具会正常运行。在 <code>default</code> 模式下无需批准的调用也会运行，例如在工作目录内读取文件以及调用 <code>Agent</code>。</p>
+<p>以下调用即使匹配允许规则也会被拒绝：</p>
+<ul>
+<li><a href="mcp.html#organization-controls-on-connector-tools">您的组织设置为 <code>ask</code></a> 的连接器工具</li>
+<li>需要用户交互的工具，例如 <code>AskUserQuestion</code>，以及其服务器设置了 <a href="mcp.html#require-approval-for-a-specific-tool"><code>_meta["anthropic/requiresUserInteraction"]</code></a> 的 MCP 工具</li>
+<li>您的应用程序将其 <code>permission_policy</code> 设置为 <a href="agent-sdk-custom-tools.html#require-approval-for-specific-tools"><code>always_ask</code></a> 的自定义工具</li>
+<li><a href="permissions.html#network-paths">从网络路径读取</a></li>
+<li>被识别出的<a href="permission-modes.html#critical-paths">关键路径删除</a></li>
+</ul>
+<p>如果您的 <code>PreToolUse</code> hook 对被识别出的关键路径删除、从网络路径读取或对标记为 <code>always_ask</code> 的工具的调用返回 <code>allow</code>，该调用仍会被拒绝。识别这些删除操作的检查<a href="permission-modes.html#critical-paths">可能会漏掉某些命令</a>。</p>
+<p><strong>适用场景：</strong> 您希望为无头 Agent 提供一组固定、明确的工具，并且更倾向于硬性拒绝，而不是默默依赖 <code>canUseTool</code> 的缺失。</p>
+<h4 id="bypass-permissions-mode-bypasspermissions">绕过权限模式（<code>bypassPermissions</code>）</h4>
+<p>无需提示即可自动批准工具使用，但<a href="permission-modes.html#actions-no-mode-auto-approves">任何模式都不会自动批准的操作</a>除外。hook 仍会执行，并可在需要时阻止操作。在 Linux 和 macOS 上，如果不在<a href="permission-modes.html#skip-all-checks-with-bypasspermissions-mode">可识别的沙箱</a>中，无论是以 root 身份还是在 <code>sudo</code> 下，Claude Code 都会拒绝以此模式启动，查询会在第一轮之前失败。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>请极其谨慎地使用。在此模式下，Claude 拥有完全的系统访问权限。仅在您信任所有可能操作的受控环境中使用。</p>
+<p><code>allowed_tools</code> 不会约束此模式。每个工具都会被批准，而不仅仅是您列出的工具。以下控制措施仍然适用：</p>
+<ul>
+<li>拒绝规则、显式 <code>ask</code> 规则和 hook 会在模式检查之前进行评估，仍然可以阻止工具。</li>
+<li><a href="mcp.html#organization-controls-on-connector-tools">您的组织设置为 <code>ask</code></a> 的连接器工具、需要用户交互的工具以及被识别出的<a href="permission-modes.html#critical-paths">关键路径删除</a>仍会交给您的 <code>canUseTool</code> 回调处理。识别这些删除操作的检查<a href="permission-modes.html#critical-paths">可能会漏掉某些命令</a>，您也可以<a href="permission-modes.html#turn-off-the-critical-path-removal-prompt-in-bypasspermissions-mode">关闭关键路径删除提示</a>。在<a href="claude-code-on-the-web.html">云端会话</a>之外，对您的应用程序<a href="agent-sdk-custom-tools.html#require-approval-for-specific-tools">标记为 <code>always_ask</code></a> 的自定义工具的调用也会交给该回调处理。</li>
+<li><a href="permission-modes.html#skip-all-checks-with-bypasspermissions-mode">跨会话消息传递保护措施</a>仍然适用。</li>
+</ul></div></div>
+<h4 id="plan-mode-plan">计划模式（<code>plan</code>）</h4>
+<p>Claude 会探索代码库并制定计划，而不编辑您的源文件。在计划模式下，文件编辑永远不会被自动批准，即使某条允许规则与之匹配或 <code>PreToolUse</code> hook 返回 <code>allow</code> 也是如此。它们会改为通过您的 <code>canUseTool</code> 回调进行提示。</p>
+<p>当会话可以使用自动模式时，Claude 在规划期间运行的命令默认不会交给您的回调，因为<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>使用的分类器模型会<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">改为审查这些命令</a>。启用该审查后，分类器还可以批准原本会交给您回调的只读调用，例如没有允许规则的 <code>WebFetch</code> 调用。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>在 TypeScript SDK 中，如果您在设置 <code>permissionMode: 'plan'</code> 的同时设置了 <code>allowDangerouslySkipPermissions: true</code>，文件编辑仍会交给您的 <code>canUseTool</code> 回调。要在之后通过 <code>setPermissionMode()</code> 将以计划模式启动的会话切换到 <code>bypassPermissions</code>，您需要从一开始就设置 <code>allowDangerouslySkipPermissions</code>。</p></div></div>
+<p>Claude 可能会在最终确定计划之前使用 <code>AskUserQuestion</code> 来澄清需求。有关如何处理这些提示，请参阅<a href="agent-sdk-user-input.html#handle-clarifying-questions">处理批准和用户输入</a>。</p>
+<p><strong>适用场景：</strong> 您希望 Claude 提出更改但不执行，例如在代码审查期间，或者您需要在更改生效前先批准时。</p>
+<h4 id="auto-mode-auto">自动模式（<code>auto</code>）</h4>
+<p>分类器模型会在 shell 命令和网络请求等操作运行之前对其进行审查，并对其审查的每个操作予以允许或阻止。有关自动模式所需的模型和提供商，以及它评估操作的顺序，请参阅<a href="permission-modes.html#eliminate-prompts-with-auto-mode">使用自动模式消除权限提示</a>。</p>
+<p>如果您使用 <a href="agent-sdk-python.html#claudesdkclient"><code>set_model()</code></a>、<a href="agent-sdk-typescript.html#query-object"><code>setModel()</code></a> 或 <a href="agent-sdk-typescript.html#applyflagsettings"><code>applyFlagSettings()</code></a> 将处于自动模式的会话切换到自动模式不支持的模型，该会话会变为 <code>default</code> 模式：</p>
+<ul>
+<li><strong>您会看到</strong>：一条子类型为 <code>status</code>、<code>permissionMode</code> 设置为 <code>"default"</code> 的 <code>system</code> 消息，TypeScript SDK 将其类型定义为 <a href="agent-sdk-typescript.html#sdkstatusmessage"><code>SDKStatusMessage</code></a>。此后，需要批准且不匹配任何允许规则的调用会交给您的 <code>canUseTool</code> 回调。</li>
+<li><strong>要返回自动模式</strong>：切换到受支持的模型，然后调用 <code>set_permission_mode("auto")</code> 或 <code>setPermissionMode("auto")</code>。如果您将模型切换回来但没有进行该调用，会话将保持在 <code>default</code> 模式。当不受支持的模型处于活动状态时，该调用会失败并显示 <code>Cannot set permission mode to auto: auto mode unavailable for this model</code>。</li>
+</ul>
+<p>在调用 <code>set_model()</code>、<code>setModel()</code> 或 <code>applyFlagSettings()</code> 后变为 <code>default</code> 模式的行为需要 Claude Code v2.1.299 或更高版本。</p>
+<h2 id="related-resources">相关资源</h2>
+<p>有关权限评估流程中的其他步骤：</p>
+<ul>
+<li><a href="agent-sdk-user-input.html">处理批准和用户输入</a>：交互式批准提示和澄清问题</li>
+<li><a href="agent-sdk-hooks.html">Hooks 指南</a>：在代理生命周期中的关键点运行自定义代码</li>
+<li><a href="settings-reference.html#permission-settings">权限规则</a>：<code>settings.json</code> 中的声明式允许/拒绝规则</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="agent-sdk-plugins.html"><span class="pager-dir">← 上一页</span><span class="pager-name">SDK 中的 Plugins</span></a><a class="pager-link next" href="agent-sdk-hooks.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用 hooks 拦截和控制代理行为</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#how-permissions-are-evaluated">权限如何被评估</a><a class="toc-l2" href="#allow-and-deny-rules">允许和拒绝规则</a><a class="toc-l2" href="#permission-modes">权限模式</a><a class="toc-l3" href="#available-modes">可用模式</a><a class="toc-l3" href="#set-permission-mode">设置权限模式</a><a class="toc-l3" href="#mode-details">模式详情</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>按计划运行提示词 · Claude Code 中文文档</title>
+<meta name="description" content="使用 /loop 和 cron 调度工具在 Claude Code 会话中重复运行提示词、轮询状态或设置一次性提醒。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="scheduled-tasks">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/scheduled-tasks" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link active" href="scheduled-tasks.html" aria-current="page">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>使用 Claude Code 构建</span> <span class="sep">/</span> <span>自动化</span></div>
+    <article class="prose" id="article"><h1 id="_1">按计划运行提示词</h1>
+<blockquote>
+<p>使用 /loop 和 cron 调度工具在 Claude Code 会话中重复运行提示词、轮询状态或设置一次性提醒。</p>
+</blockquote>
+<p>会话范围的定时任务让 Claude 在 Claude Code 会话中按间隔自动重新运行提示词。使用它们来轮询部署、监督 PR、检查长时间运行的构建，或在会话中稍后提醒自己做某事。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>以下情况在其他页面中介绍：</p>
+<ul>
+<li><strong>对事件进行实时反应而不是轮询</strong>：请参阅 <a href="channels.html">Channels</a>。您的 CI 可以直接将失败推送到会话中。</li>
+<li><strong>让会话逐轮次持续工作直到满足某个条件，而不是按间隔运行</strong>：请参阅 <a href="goal.html"><code>/goal</code></a>。</li>
+</ul></div></div>
+<p>任务是会话范围的。当您使用 <code>--resume</code> 或 <code>--continue</code> 恢复时，Claude Code 会恢复尚未<a href="#seven-day-expiry">过期</a>的任务，除了<a href="#limitations">限制</a>下列出的任务。对于独立于任何会话而存在的调度，请创建<a href="routines.html">云端定时任务</a>、设置 <a href="desktop-scheduled-tasks.html">Desktop 定时任务</a>，或使用 <a href="github-actions.html">GitHub Actions</a>。</p>
+<h2 id="compare-scheduling-options">比较调度选项</h2>
+<p>Claude Code 提供三种方式来安排定期或一次性工作：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><a href="routines.html">Cloud</a></th>
+<th style="text-align: left;"><a href="desktop-scheduled-tasks.html">Desktop</a></th>
+<th style="text-align: left;"><a href="scheduled-tasks.html"><code>/loop</code></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">运行位置</td>
+<td style="text-align: left;">Cloud，默认由 Anthropic 管理</td>
+<td style="text-align: left;">您的机器</td>
+<td style="text-align: left;">您的机器</td>
+</tr>
+<tr>
+<td style="text-align: left;">需要机器开启</td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">是</td>
+</tr>
+<tr>
+<td style="text-align: left;">需要打开会话</td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">否</td>
+<td style="text-align: left;">是</td>
+</tr>
+<tr>
+<td style="text-align: left;">重启后持久化</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">在 <code>--resume</code> 上恢复，有<a href="scheduled-tasks.html#limitations">例外</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">访问本地文件</td>
+<td style="text-align: left;">否（新克隆）</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">是</td>
+</tr>
+<tr>
+<td style="text-align: left;">MCP servers</td>
+<td style="text-align: left;">每个任务配置的连接器</td>
+<td style="text-align: left;"><a href="mcp.html">配置文件</a>和连接器</td>
+<td style="text-align: left;">从会话继承</td>
+</tr>
+<tr>
+<td style="text-align: left;">权限提示</td>
+<td style="text-align: left;">默认为<a href="routines.html#permission-prompts-during-a-run">自动模式</a></td>
+<td style="text-align: left;">每个任务可配置</td>
+<td style="text-align: left;">从会话继承</td>
+</tr>
+<tr>
+<td style="text-align: left;">可自定义的计划</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">是</td>
+</tr>
+<tr>
+<td style="text-align: left;">最小间隔</td>
+<td style="text-align: left;">1 小时</td>
+<td style="text-align: left;">由 Claude 设置时为 1 分钟，<a href="desktop-scheduled-tasks.html#schedule-options">在表单中为 1 小时</a></td>
+<td style="text-align: left;">1 分钟</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>对于应该在没有您的机器的情况下可靠运行的工作，使用<strong>云任务</strong>。当您需要访问本地文件和工具时，使用<strong>桌面任务</strong>。对于会话期间的快速轮询，使用 <strong><code>/loop</code></strong>。</p></div></div>
+<h2 id="run-a-prompt-repeatedly-with-/loop">使用 /loop 重复运行提示词</h2>
+<p><code>/loop</code> <a href="commands.html">随附 skill</a> 是在会话保持打开期间重复运行提示词的最快方式。间隔和提示词都是可选的，您提供的内容决定了循环的行为方式。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">您提供的内容</th>
+<th style="text-align: left;">示例</th>
+<th style="text-align: left;">会发生什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">间隔和提示词</td>
+<td style="text-align: left;"><code>/loop 5m check the deploy</code></td>
+<td style="text-align: left;">您的提示词按<a href="#run-on-a-fixed-interval">固定计划</a>运行</td>
+</tr>
+<tr>
+<td style="text-align: left;">仅提示词</td>
+<td style="text-align: left;"><code>/loop check the deploy</code></td>
+<td style="text-align: left;">您的提示词在每次迭代时按 <a href="#let-claude-choose-the-interval">Claude 选择的间隔</a>运行</td>
+</tr>
+<tr>
+<td style="text-align: left;">仅间隔，或什么都不提供</td>
+<td style="text-align: left;"><code>/loop</code></td>
+<td style="text-align: left;">运行<a href="#run-the-built-in-maintenance-prompt">内置维护提示词</a>，如果存在 <code>loop.md</code>，则运行该文件</td>
+</tr>
+</tbody>
+</table>
+<p>您也可以将 skill 作为提示词传入，例如 <code>/loop 20m /review-pr 1234</code>，以便在每次迭代时重新运行该 skill。定时触发只会运行 Claude <a href="skills.html#control-who-invokes-a-skill">可以自行调用</a>的 skill。以下内容会以纯文本形式传给 Claude，而不会被执行：</p>
+<ul>
+<li>内置命令，例如 <code>/permissions</code>、<code>/model</code> 或 <code>/clear</code></li>
+<li>标记为 <a href="skills.html#frontmatter-reference"><code>disable-model-invocation: true</code></a> 的 skill，包括随附的 <code>/verify</code> skill</li>
+<li>通过 <a href="skills.html#override-skill-visibility-from-settings"><code>skillOverrides</code></a> 设置或 <code>Skill</code> <a href="skills.html#restrict-claude’s-skill-access">拒绝规则</a>对 Claude 隐藏的 skill</li>
+<li><a href="mcp.html#use-mcp-prompts-as-commands">MCP 提示词</a>，例如 <code>/mcp__github__list_prs</code></li>
+</ul>
+<h3 id="run-on-a-fixed-interval">按固定间隔运行</h3>
+<p>当您提供间隔时，Claude 会将其转换为 cron 表达式，安排该任务，并确认执行频率和任务 ID。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/loop 5m check if the deployment finished and tell me what happened
+</code></pre></div>
+<p>间隔可以作为单独的标记（如 <code>30m</code>）放在提示词之前，也可以作为从句（如 <code>every 2 hours</code>）放在提示词之后。支持的单位有：<code>s</code> 表示秒，<code>m</code> 表示分钟，<code>h</code> 表示小时，<code>d</code> 表示天。</p>
+<p>由于 cron 的粒度为一分钟，秒数会向上取整到最接近的分钟。无法映射为整齐 cron 步长的间隔（例如 <code>7m</code> 或 <code>90m</code>）会被舍入到最接近的可映射间隔，Claude 会告诉您它选择了哪个间隔。</p>
+<h3 id="let-claude-choose-the-interval">让 Claude 选择间隔</h3>
+<p>当您省略间隔时，Claude 会动态选择间隔，而不是按固定的 cron 计划运行。每次迭代后，它会根据观察到的情况选择一分钟到一小时之间的延迟：在构建即将完成或 PR 处于活跃状态时等待较短时间，在没有待处理事项时等待较长时间。所选的延迟及其原因会在每次迭代结束时输出。</p>
+<p>以下示例会检查 CI 和评审意见，一旦 PR 安静下来，Claude 会在迭代之间等待更长时间：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/loop check whether CI passed and address any review comments
+</code></pre></div>
+<p>在 <a href="tools-reference.html#monitor-tool">Monitor 工具可用</a>的会话中，当您请求动态 <code>/loop</code> 计划时，Claude 可能会直接使用该工具。Monitor 会运行后台脚本并将每一行输出流式传回，从而完全避免轮询，并且通常比按间隔重新运行提示词更节省 token、响应更及时。</p>
+<p>动态安排的循环会像其他任务一样出现在您的<a href="#manage-scheduled-tasks">定时任务列表</a>中，因此您可以用相同的方式列出或取消它。列表将其待处理的唤醒显示为一次性任务，因此安排在 <code>:00</code> 或 <code>:30</code> 的唤醒可能会<a href="#when-a-one-shot-task-runs-early">稍早运行</a>。<a href="#seven-day-expiry">七天过期</a>规则同样适用于该循环。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>动态选择的间隔和<a href="#run-the-built-in-maintenance-prompt">内置维护提示词</a>适用于所有提供商，并且在关闭<a href="env-vars.html#features-that-need-feature-flag-fetching">功能标志获取</a>时同样可用。在 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上，或在关闭获取的情况下，这两项功能都需要 Claude Code v2.1.248 或更高版本。</p></div></div>
+<h3 id="run-the-built-in-maintenance-prompt">运行内置维护提示词</h3>
+<p>当您省略提示词时，Claude 会使用内置维护提示词，而不是您提供的提示词。在每次迭代中，它会按顺序处理以下事项：</p>
+<ul>
+<li>继续对话中任何未完成的工作</li>
+<li>处理当前分支的 Pull Request：评审意见、失败的 CI 运行、合并冲突</li>
+<li>在没有其他待处理事项时，执行清理工作，例如查找 bug 或简化代码</li>
+</ul>
+<p>Claude 不会在该范围之外发起新的工作，并且推送或删除等不可逆操作只有在延续会话记录中已授权的内容时才会执行。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/loop
+</code></pre></div>
+<p>单独的 <code>/loop</code> 会以<a href="#let-claude-choose-the-interval">动态选择的间隔</a>运行此提示词。添加间隔（例如 <code>/loop 15m</code>）即可改为按固定计划运行。要用您自己的默认提示词替换内置提示词，请参阅<a href="#customize-the-default-prompt-with-loop-md">使用 loop.md 自定义默认提示词</a>。</p>
+<h3 id="customize-the-default-prompt-with-loop-md">使用 loop.md 自定义默认提示词</h3>
+<p>创建 <code>loop.md</code> 文件，即可用您自己的指令替换<a href="#run-the-built-in-maintenance-prompt">内置维护提示词</a>。它为单独的 <code>/loop</code> 定义单个默认提示词，而不是一组独立的定时任务，并且每当您在命令行中提供提示词时，Claude Code 都会忽略该文件。要在其之外安排其他提示词，请使用 <code>/loop &lt;prompt&gt;</code> 或<a href="#manage-scheduled-tasks">直接询问 Claude</a>。</p>
+<p>Claude 会在两个位置查找该文件，并使用找到的第一个文件。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">路径</th>
+<th style="text-align: left;">作用域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>.claude/loop.md</code></td>
+<td style="text-align: left;">项目级。两个文件都存在时优先使用。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>~/.claude/loop.md</code></td>
+<td style="text-align: left;">用户级。适用于任何未定义自己的文件的项目。</td>
+</tr>
+</tbody>
+</table>
+<p>该文件是纯 Markdown，没有必需的结构。像直接输入 <code>/loop</code> 提示词一样编写即可。以下示例用于保持发布分支的健康状态：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">markdown</span><span class="cb-title">.claude/loop.md</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-markdown">Check the <span class="sb">`release/next`</span> PR. If CI is red, pull the failing job log,
+diagnose, and push a minimal fix. If new review comments have arrived,
+address each one and resolve the thread. If everything is green and
+quiet, say so in one line.
+</code></pre></div>
+<p>对 <code>loop.md</code> 的编辑会在下一次迭代时生效，因此您可以在循环运行期间完善指令。当两个位置都不存在 <code>loop.md</code> 时，循环会回退到内置维护提示词。请保持文件简洁：超过 25,000 字节的内容会被截断。</p>
+<h3 id="stop-a-loop">停止循环</h3>
+<ul>
+<li><strong><a href="#let-claude-choose-the-interval">自定节奏的循环</a></strong>：在循环等待下一次迭代时，按 <code>Esc</code> 即可停止它。在 Claude 空闲时，您也可以按 <code>Ctrl+C</code> 停止它，但在<a href="#detach-without-stopping-a-loop">您已附加到的后台会话</a>中除外。<code>Pending wakeup cancelled</code> 通知会确认该循环不会再次触发。</li>
+<li><strong><a href="#run-on-a-fixed-interval">固定间隔的循环</a></strong>：要停止 <code>/loop 5m</code> 之类的循环，请让 Claude 取消它，例如 <code>cancel the deploy check loop</code>。<code>Esc</code> 和 <code>Ctrl+C</code> 无法停止它，也无法停止任何您<a href="#manage-scheduled-tasks">通过直接询问 Claude 安排的任务</a>。未取消的循环会在<a href="#seven-day-expiry">七天后</a>结束。</li>
+</ul>
+<p>在<a href="#let-claude-choose-the-interval">自定节奏模式</a>下，Claude 也可以在任务完成后自行结束循环。Claude 会使用 <code>stop: true</code> 调用 <a href="tools-reference.html"><code>ScheduleWakeup</code> 工具</a>，从而立即取消待处理的唤醒。如果某次迭代结束时既没有重新安排也没有停止，Claude Code 会在大约 20 分钟后安排一次备用唤醒，如果该次迭代也没有重新安排，则结束循环。</p>
+<h4 id="detach-without-stopping-a-loop">分离而不停止循环</h4>
+<p>当您<a href="agent-view.html#attach-to-a-session">附加到后台会话</a>且 Claude 处于空闲状态时，在空输入框中按两次 <code>Ctrl+C</code> 即可分离。在那里等待下一次迭代的自定节奏循环会继续运行，且该次迭代会按计划开始。如果要停止循环，请在分离之前按 <code>Esc</code>。使用 <code>Ctrl+C</code> 分离而不停止循环需要 Claude Code v2.1.295 或更高版本。</p>
+<h2 id="set-a-one-time-reminder">设置一次性提醒</h2>
+<p>对于一次性提醒，用自然语言描述您想要的内容，而不是使用 <code>/loop</code>。Claude 计划一个单次触发的任务，该任务在运行后删除自己。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">remind me at 3pm to push the release branch
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">in 45 minutes, check whether the integration tests passed
+</code></pre></div>
+<p>Claude 使用 cron 表达式将触发时间固定到特定的分钟和小时，并确认何时触发。</p>
+<h2 id="manage-session-scoped-scheduled-tasks">管理会话范围的定时任务</h2>
+<p>用自然语言要求 Claude 列出或取消任务，或直接引用底层工具。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">what scheduled tasks do I have?
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">cancel the deploy check job
+</code></pre></div>
+<p>这些是 Claude 使用的底层工具：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">工具</th>
+<th style="text-align: left;">目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>CronCreate</code></td>
+<td style="text-align: left;">计划新任务。接受 5 字段 cron 表达式、要运行的提示词以及是否重复或仅触发一次。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CronList</code></td>
+<td style="text-align: left;">列出定时任务及其 ID、计划、<a href="#jitter">下次运行时间</a>和提示词。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CronDelete</code></td>
+<td style="text-align: left;">按 ID 取消任务。</td>
+</tr>
+</tbody>
+</table>
+<p>每个计划任务都有一个 8 字符的 ID，您可以将其传递给 <code>CronDelete</code>。一个会话最多可以同时保存 50 个计划任务。</p>
+<h2 id="how-session-scoped-scheduled-tasks-run">会话范围的定时任务如何运行</h2>
+<p>调度程序每秒检查一次到期的任务，并以低优先级将其加入队列。计划的提示词在您的回合之间触发，而不是在 Claude 正在响应时。如果 Claude 在任务到期时忙碌，提示词会等到当前回合结束。</p>
+<p>所有时间都在您的本地时区中解释。像 <code>0 9 * * *</code> 这样的 cron 表达式意味着 9am 在您运行 Claude Code 的任何地方，而不是 UTC。</p>
+<h3 id="jitter">抖动</h3>
+<p>定时任务的实际运行时间可能与其计划时间不同。如果每个会话的任务都严格按计划运行，许多任务会在同一时刻调用 API，因此 Claude Code 会调整每个任务的运行时间。重复任务会延后运行，但每五分钟运行一次的任务（写作 <code>*/5 * * * *</code>）除外。安排在整点或半点的一次性任务会稍微提前运行。</p>
+<p>要查看任务下次到期的时间，请查看终端中 Claude 的 <code>CronCreate</code> 调用下方的行。该行会在计划之后显示该时间，例如 <code>next run 10:21 AM</code>。之后如需再次查看，请<a href="#manage-scheduled-tasks">让 Claude 列出您的任务</a>，并在 <code>CronList</code> 调用下方的行中查找 <code>next run</code>。这些行中的下次运行时间需要 Claude Code v2.1.299 或更高版本。</p>
+<h4 id="how-late-a-recurring-task-runs">重复任务会延后多久运行</h4>
+<p>除非每五分钟运行一次，否则重复任务的每次运行都会延后开始，延后时长最多为距下一次运行间隔的一半，且最多不超过 30 分钟。您的任务属于以下三种情况之一：</p>
+<ul>
+<li><strong>运行间隔均匀</strong>：间隔相等的任务（例如每小时、每天或每 10 分钟运行一次）每次都会延后相同的分钟数运行，包括在会话空闲时。</li>
+<li><strong>运行间隔不均匀</strong>：间隔不等的任务（例如安排在每小时 <code>:00</code> 和 <code>:15</code> 运行的任务）每次运行延后的分钟数可能不同。</li>
+<li><strong>每五分钟</strong>：写作 <code>*/5 * * * *</code> 的任务不会被延迟。恰好在上一次运行五分钟后开始的运行，会在五分钟的<a href="prompt-caching.html#which-ttl-each-request-gets">提示缓存</a>过期后才开始，因此每次运行都会提前 15 秒开始。</li>
+</ul>
+<p>在此表的第一列中找到您的计划，即可查看其每次运行的开始时间。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">计划</th>
+<th style="text-align: left;">每次运行的开始时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">每 5 分钟，写作 <code>*/5 * * * *</code>，即 <code>/loop 5m</code> 所创建的计划</td>
+<td style="text-align: left;">上一次运行后 4 分 45 秒</td>
+</tr>
+<tr>
+<td style="text-align: left;">每 10 分钟</td>
+<td style="text-align: left;">延后 0 到 5 分钟</td>
+</tr>
+<tr>
+<td style="text-align: left;">每 30 分钟</td>
+<td style="text-align: left;">延后 0 到 15 分钟</td>
+</tr>
+<tr>
+<td style="text-align: left;">每小时，或频率更低（例如每天）</td>
+<td style="text-align: left;">延后 0 到 30 分钟</td>
+</tr>
+</tbody>
+</table>
+<p>例如，<code>7,37 * * * *</code> 将任务安排在 <code>:07</code> 和 <code>:37</code> 运行，两者相隔 30 分钟，因此其延迟介于 0 到 15 分钟之间。如果该任务的延迟为 14 分钟，它会在每小时的 <code>:21</code> 和 <code>:51</code> 运行。将计划更改为其他分钟会改变运行时间，但仍会在其基础上添加延迟。</p>
+<h4 id="when-a-one-shot-task-runs-early">一次性任务何时提前运行</h4>
+<p>安排在 <code>:00</code> 或 <code>:30</code> 的一次性任务最多会提前 90 秒运行。Claude Code 不会调整安排在其他任何分钟的一次性任务，因此当时间很重要时，请避开整点和半点进行安排：使用 <code>3 9 * * *</code> 而不是 <code>0 9 * * *</code>。</p>
+<h3 id="seven-day-expiry">七天过期</h3>
+<p>重复任务在创建后 7 天自动过期。任务最后触发一次，然后删除自己。这限制了被遗忘的循环可以运行多长时间。如果您需要重复任务持续更长时间，请在过期前取消并重新创建它，或使用<a href="routines.html">云端定时任务</a>或 <a href="desktop-scheduled-tasks.html">Desktop 定时任务</a>进行持久调度。</p>
+<h2 id="cron-expression-reference">Cron 表达式参考</h2>
+<p><code>CronCreate</code> 接受标准 5 字段 cron 表达式：<code>minute hour day-of-month month day-of-week</code>。所有字段都支持通配符 (<code>*</code>)、单个值 (<code>5</code>)、步长 (<code>*/15</code>)、范围 (<code>1-5</code>) 和逗号分隔的列表 (<code>1,15,30</code>)。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">示例</th>
+<th style="text-align: left;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>*/5 * * * *</code></td>
+<td style="text-align: left;">每 5 分钟</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0 * * * *</code></td>
+<td style="text-align: left;">每小时整点</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>7 * * * *</code></td>
+<td style="text-align: left;">每小时的第 7 分钟</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0 9 * * *</code></td>
+<td style="text-align: left;">每天本地时间 9am</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0 9 * * 1-5</code></td>
+<td style="text-align: left;">工作日本地时间 9am</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>30 14 15 3 *</code></td>
+<td style="text-align: left;">3 月 15 日本地时间下午 2:30</td>
+</tr>
+</tbody>
+</table>
+<p>星期几使用 <code>0</code> 或 <code>7</code> 表示星期日，<code>6</code> 表示星期六。不支持扩展语法如 <code>L</code>、<code>W</code>、<code>?</code> 和名称别名如 <code>MON</code> 或 <code>JAN</code>。</p>
+<p>当月份日期和星期几都受到限制时，如果任一字段匹配，日期就匹配。这遵循标准的 vixie-cron 语义。</p>
+<h2 id="disable-session-scoped-scheduled-tasks">禁用会话范围的定时任务</h2>
+<p>在您的环境中设置 <code>CLAUDE_CODE_DISABLE_CRON=1</code> 以完全禁用调度程序。cron 工具和 <code>/loop</code> 变得不可用，任何已计划的任务都停止触发。有关禁用标志的完整列表，请参阅<a href="env-vars.html">环境变量</a>。</p>
+<h2 id="limitations">限制</h2>
+<p>会话范围的调度有固有的限制：</p>
+<ul>
+<li>任务仅在 Claude Code 运行且空闲时触发。关闭终端或让会话退出会停止它们触发。<a href="agent-view.html#from-inside-a-session">将会话放在后台</a>会将 <code>/loop</code> 任务转移到后台会话，该会话继续运行而无需终端。</li>
+<li>没有错过触发的追赶。如果任务的计划时间在 Claude 忙于长时间运行的请求时经过，它会在 Claude 变为空闲时触发一次，而不是每个错过的间隔触发一次。</li>
+<li>在<a href="agent-view.html#from-inside-a-session">后台会话</a>中，如果<a href="#let-claude-choose-the-interval">自定步调的循环</a>的下一次唤醒到期时会话进程未在运行（例如发生崩溃之后），该循环会停止。当进程再次启动时，会话记录会显示一条<a href="errors.html#restarted-after-its-next-loop-wakeup-was-due">说明该唤醒不会触发的通知</a>。要继续该循环，请<a href="agent-view.html#peek-and-reply">回复该会话</a>并要求 Claude 保持其运行。</li>
+<li>当您使用 <code>claude --resume</code> 或 <code>claude --continue</code> 恢复会话时，Claude Code 会恢复使用 <code>CronCreate</code> 调度的任务，除了已<a href="#seven-day-expiry">过期</a>的重复任务和计划时间已经过去的一次性任务。<a href="#let-claude-choose-the-interval">自定步调的 <code>/loop</code></a>不会被恢复，因此请再次运行 <code>/loop</code> 以重新启动它。</li>
+<li>恢复的重复任务不会为会话未运行期间错过的运行而触发。其下一次运行是您恢复后第一个到期的运行，并且<a href="#jitter">抖动</a>适用于该次运行。</li>
+<li>当您使用 <code>claude --resume</code> 或 <code>claude --continue</code> 恢复时，Claude Code 不会重新启动会话结束时正在运行的后台 Bash 命令和监视器。如果您仍然需要其中某一个，请让 Claude 重新启动它。</li>
+<li>当<a href="env-vars.html#features-that-need-feature-flag-fetching">功能标志获取关闭</a>时，Claude Code 会将您要求在会话间保留的任务存储在项目的 <code>.claude/scheduled_tasks.json</code> 文件中。当 <code>.claude</code> 目录或该文件是符号链接时，Claude Code 会返回错误而不是调度任务。保存的任务仅在您创建它的项目文件夹中运行。如果您将文件复制到另一个文件夹（例如新的 worktree），那里的会话会列出复制的任务但不会运行它们，因此请在该文件夹中再次创建任务。</li>
+</ul>
+<p>对于需要无人值守运行的 cron 驱动自动化：</p>
+<ul>
+<li><a href="routines.html">云端定时任务</a>：在云上按计划运行、通过 API 调用或在 GitHub 事件上运行</li>
+<li><a href="github-actions.html">GitHub Actions</a>：在 CI 中使用 <code>schedule</code> 触发器</li>
+<li><a href="desktop-scheduled-tasks.html">Desktop 计划任务</a>：在您的机器上本地运行</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="channels.html"><span class="pager-dir">← 上一页</span><span class="pager-name">使用 channels 将事件推送到运行中的会话</span></a><a class="pager-link next" href="goal.html"><span class="pager-dir">下一页 →</span><span class="pager-name">让 Claude 朝着目标工作</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#compare-scheduling-options">比较调度选项</a><a class="toc-l2" href="#run-a-prompt-repeatedly-with-/loop">使用 /loop 重复运行提示词</a><a class="toc-l3" href="#run-on-a-fixed-interval">按固定间隔运行</a><a class="toc-l3" href="#let-claude-choose-the-interval">让 Claude 选择间隔</a><a class="toc-l3" href="#run-the-built-in-maintenance-prompt">运行内置维护提示词</a><a class="toc-l3" href="#customize-the-default-prompt-with-loop-md">使用 loop.md 自定义默认提示词</a><a class="toc-l3" href="#stop-a-loop">停止循环</a><a class="toc-l2" href="#set-a-one-time-reminder">设置一次性提醒</a><a class="toc-l2" href="#manage-session-scoped-scheduled-tasks">管理会话范围的定时任务</a><a class="toc-l2" href="#how-session-scoped-scheduled-tasks-run">会话范围的定时任务如何运行</a><a class="toc-l3" href="#jitter">抖动</a><a class="toc-l3" href="#seven-day-expiry">七天过期</a><a class="toc-l2" href="#cron-expression-reference">Cron 表达式参考</a><a class="toc-l2" href="#disable-session-scoped-scheduled-tasks">禁用会话范围的定时任务</a><a class="toc-l2" href="#limitations">限制</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自定义域名 · Workers 文档（中文版）</title>
+<meta name="description" content="把 Worker 接到域名或子域上，DNS 与证书都由 Cloudflare 代办。">
+<link rel="stylesheet" href="../../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>自定义域名</h1>
+      <p class="lead">把 Worker 接到域名或子域上，DNS 与证书都由 Cloudflare 代办。</p>
+      <div class="page-meta">
+        <span class="tag">配置</span>
+        <span>原文更新于 2026-09-29</span>
+        <span>对应页面：configuration/routing/custom-domains</span>
+      </div>
+
+<h2>背景</h2>
+      <p>自定义域名（Custom Domains）让你把 Worker 接到域名或子域上，而不必改 DNS 设置、也不用自己管证书。为 Worker 设置好自定义域名后，Cloudflare 会代你创建 DNS 记录并签发所需证书，且这些记录直接指向该 Worker。与<a href="routes.html">路由</a>不同，自定义域名会把<strong>某个域名或子域的所有路径</strong>都指向 Worker。</p>
+      <p>自定义域名是 Cloudflare 区域内的路由：指向某个域名或子域（例如 <code>example.com</code> 或 <code>shop.example.com</code>），此时 Worker 就是源站。</p>
+      <p>如果你要把 Worker 接到互联网、并且没有需要始终与之通信的应用服务器，推荐用自定义域名。万一对接到外部依赖，可以构造一个带目标 URI 的 <code>Request</code> 对象，用 <code>fetch()</code> 去访问。</p>
+      <p>自定义域名可以层层叠加。比如 Worker A 挂在 <code>app.example.com</code>、Worker B 挂在 <code>api.example.com</code>，那么 Worker A 可以对 <code>api.example.com</code> 发起 <code>fetch()</code> 来调用 Worker B。</p>
+      <div class="note-box">
+        <span class="box-title">原站示意图</span>
+        <p>原文此处配有一张图：自定义域名可以像任何外部依赖一样层层叠加（Worker A → <code>api.example.com</code> → Worker B）。</p>
+      </div>
+      <p>另外，与路由不同，自定义域名可以在同一区域内通过 <code>fetch()</code> 被调用。</p>
+
+      <h2>添加自定义域名</h2>
+      <p>要添加自定义域名，你需要：</p>
+      <ol>
+        <li>一个<a href="https://developers.cloudflare.com/dns/zone-setups/" target="_blank" rel="noopener">处于活跃状态的 Cloudflare 区域 ↗</a>；</li>
+        <li>一个可被调用的 Worker。</li>
+      </ol>
+      <p>可以通过 Cloudflare 控制台、<a href="#wrangler">Wrangler</a> 或 <a href="https://developers.cloudflare.com/api/resources/workers/subresources/domains/methods/list/" target="_blank" rel="noopener">API ↗</a> 把自定义域名挂到 Worker 上。</p>
+      <div class="warn-box">
+        <span class="box-title">谨慎</span>
+        <p>不能在已有 CNAME DNS 记录的主机名上创建自定义域名，也不能在你并不拥有的区域上创建。</p>
+      </div>
+
+      <h3>在控制台设置自定义域名</h3>
+      <ol>
+        <li>在 Cloudflare 控制台进入 <strong>Workers &amp; Pages</strong>。<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">前往 Workers &amp; Pages ↗</a></li>
+        <li>在 <strong>Overview</strong> 中选择你的 Worker。</li>
+        <li>进入 <strong>Settings</strong> &gt; <strong>Domains &amp; Routes</strong> &gt; <strong>Add</strong> &gt; <strong>Custom Domain</strong>。</li>
+        <li>填入要为该 Worker 配置的域名。</li>
+        <li>选择 <strong>Add Custom Domain</strong>。</li>
+      </ol>
+      <p>添加完成后，Cloudflare 会为你创建新的 DNS 记录。自定义域名可以添加多个。</p>
+
+      <h3>为自定义域名要求登录</h3>
+      <p>要让访问者在打开自定义域名前先登录，请使用 <a href="../cloudflare-access.html">Cloudflare Access</a>。</p>
+      <p>你可以用基于主机名的 Access 保护某个自定义域名，也可以保护 Worker 本身——覆盖它的路由、自定义域名、<code>workers.dev</code> 主机名与预览。详见 <a href="../cloudflare-access.html">Cloudflare Access</a>。</p>
+
+      <h3 id="wrangler">在 Wrangler 配置文件中设置自定义域名</h3>
+      <p>在 <a href="../../../sections/wrangler.html">Wrangler 配置文件</a>的 <code>routes</code> 里，给每个 pattern 加上 <code>custom_domain=true</code>：</p>
+<pre data-lang="jsonc"><code>{
+	"routes": [
+		{
+			"pattern": "shop.example.com",
+			"custom_domain": true
+		}
+	]
+}</code></pre>
+<pre data-lang="toml"><code>[[routes]]
+pattern = "shop.example.com"
+custom_domain = true</code></pre>
+      <p>要配置多个自定义域名：</p>
+<pre data-lang="jsonc"><code>{
+	"routes": [
+		{
+			"pattern": "shop.example.com",
+			"custom_domain": true
+		},
+		{
+			"pattern": "shop-two.example.com",
+			"custom_domain": true
+		}
+	]
+}</code></pre>
+<pre data-lang="toml"><code>[[routes]]
+pattern = "shop.example.com"
+custom_domain = true
+
+[[routes]]
+pattern = "shop-two.example.com"
+custom_domain = true</code></pre>
+
+      <h2>Worker 之间的通信</h2>
+      <p>在同一区域内，如果目标 Worker 跑在<a href="routes.html">路由</a>上或 <a href="routes.html"><code>workers.dev</code></a> 子域上，那么另一个 Worker 想跟它通信，唯一的方式是<a href="../../../sections/runtime-apis.html">服务绑定</a>。</p>
+      <p>而在同一区域内，如果目标 Worker 跑在<strong>自定义域名</strong>上而不是路由上，这个限制就解除了：同区内的 Worker 之间，向挂在自定义域名上的 Worker 发 fetch 请求可以直接成功，无需服务绑定。</p>
+      <p>举例：两个 Worker 都跑在 <code>example.com</code> 这一 Cloudflare 区域上。</p>
+      <ul>
+        <li><code>worker-a</code> 跑在<a href="routes.html">路由</a> <code>auth.example.com/*</code> 上；</li>
+        <li><code>worker-b</code> 跑在<a href="routes.html">路由</a> <code>shop.example.com/*</code> 上。</li>
+      </ul>
+      <p>此时 <code>worker-a</code> 向 <code>worker-b</code> 发 fetch 请求会失败，因为同区 fetch 请求有上述限制；<code>worker-a</code> 必须为 <code>worker-b</code> 配置服务绑定才能成功。</p>
+<pre data-lang="js"><code>export default {
+	fetch(request) {
+		// This will fail
+		return fetch("https://shop.example.com");
+	},
+};</code></pre>
+      <p>但如果 <code>worker-b</code> 改成跑在自定义域名 <code>shop.example.com</code> 上，这个 fetch 请求就会成功。</p>
+
+      <h2>请求匹配行为</h2>
+      <p>自定义域名<strong>不支持</strong><a href="https://developers.cloudflare.com/dns/manage-dns-records/reference/wildcard-dns-records/" target="_blank" rel="noopener">通配符 DNS 记录 ↗</a>。入站请求必须与自定义域名所注册的域名或子域<strong>完全一致</strong>；URL 的其他部分（路径、查询参数）不参与这套匹配逻辑。例如给 <code>api-gateway</code> 这个 Worker 在 <code>api.example.com</code> 上建了自定义域名，那么 <code>api.example.com/login</code> 与 <code>api.example.com/user</code> 的请求都会调用同一个 <code>api-gateway</code>。</p>
+      <div class="note-box">
+        <span class="box-title">原站示意图</span>
+        <p>原文此处配有一张图，说明自定义域名遵循标准 DNS 的顺序与匹配逻辑。</p>
+      </div>
+
+      <h2>与路由的相互配合</h2>
+      <p>跑在自定义域名上的 Worker 被视作一个源站。位于该自定义域名之前的、跑在路由上的任何 Worker，都可以选择用入站的 <code>Request</code> 对象发起 <code>fetch(request)</code> 来调用它。这意味着你可以安排多个 Worker 在请求到达自定义域名 Worker 之前先运行——换句话说，可以在同一个请求里串起两个 Worker。</p>
+      <p>例如下面这个流程：</p>
+      <ol>
+        <li><code>api.example.com</code> 的自定义域名指向 <code>api-worker</code>。</li>
+        <li>为 <code>api.example.com/auth</code> 添加的路由指向 <code>auth-worker</code>。</li>
+        <li>发往 <code>api.example.com/auth</code> 的请求会触发 <code>auth-worker</code>。</li>
+        <li>在 <code>auth-worker</code> 里用 <code>fetch(request)</code> 就会调用 <code>api-worker</code>，就像它是一台普通的应用服务器。</li>
+      </ol>
+<pre data-lang="js"><code>export default {
+	fetch(request) {
+		const url = new URL(request.url);
+		if (url.searchParams.get("auth") !== "SECRET_TOKEN") {
+			return new Response(null, { status: 401 });
+		} else {
+			// This will invoke `api-worker`
+			return fetch(request);
+		}
+	},
+};</code></pre>
+
+      <h2>证书</h2>
+      <p>创建自定义域名还会在目标区域上为目标主机名签发一张 <a href="https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/" target="_blank" rel="noopener">高级证书（Advanced Certificate）↗</a>。</p>
+      <p>这包括 <code>realms.app.example.com</code> 这种多级子域。<a href="https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/" target="_blank" rel="noopener">Universal SSL ↗</a> 只覆盖根域与一级子域，所以二级及更深的子域不在 Universal SSL 覆盖范围内——由自定义域名生成的证书来覆盖，而且不需要单独订阅 Advanced Certificate Manager。</p>
+      <p>这些证书以默认设置生成。要覆盖这些设置，可以删除生成的证书，在 Cloudflare 控制台里创建你自己的证书。操作步骤见<a href="https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/manage-certificates/" target="_blank" rel="noopener">管理高级证书 ↗</a>。</p>
+      <div class="warn-box">
+        <span class="box-title">谨慎</span>
+        <p>删除自定义域名时，关联的高级证书<strong>不会</strong>被自动删除。你需要在 Cloudflare 控制台的 <strong>SSL/TLS</strong> &gt; <strong>Edge Certificates</strong> 下手动移除，或通过 <a href="https://developers.cloudflare.com/api/resources/ssl/subresources/certificate_packs/methods/delete/" target="_blank" rel="noopener">API ↗</a> 删除。留着不用的证书不影响功能，但在审计证书清单时容易造成困惑。</p>
+      </div>
+
+      <h2>在 www 与根域之间重定向</h2>
+      <p>由于自定义域名要求主机名精确匹配，挂在 <code>example.com</code> 上的 Worker 收不到发往 <code>www.example.com</code> 的请求，反之亦然。要让两个版本都能用，请设置重定向规则：</p>
+      <ul>
+        <li><a href="https://developers.cloudflare.com/rules/url-forwarding/examples/redirect-www-to-root/" target="_blank" rel="noopener">从 www 重定向到根域 ↗</a></li>
+        <li><a href="https://developers.cloudflare.com/rules/url-forwarding/examples/redirect-root-to-www/" target="_blank" rel="noopener">从根域重定向到 www ↗</a></li>
+      </ul>
+      <p>同时还需要为<em>被重定向的</em>那个主机名配置一条<a href="https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/" target="_blank" rel="noopener">经代理的 DNS 记录 ↗</a>，Cloudflare 才能施加重定向规则。</p>
+      <ul>
+        <li>www → 根域：为 <code>www</code> 添加指向 <code>192.0.2.0</code> 的代理 <code>A</code> 记录，或指向 <code>100::</code> 的代理 <code>AAAA</code> 记录。</li>
+        <li>根域 → www：为根域添加指向 <code>192.0.2.0</code> 的代理 <code>A</code> 记录，或指向 <code>100::</code> 的代理 <code>AAAA</code> 记录。</li>
+      </ul>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p><code>192.0.2.0</code>（A 记录）与 <code>100::</code>（AAAA 记录）是无源站架构用的<a href="https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/#originless-setups" target="_blank" rel="noopener">保留占位地址 ↗</a>。由于该 DNS 记录经过代理，请求永远不会到达这个地址——Cloudflare 会拦截并施加你的重定向规则。</p>
+      </div>
+
+      <h2>从路由迁移到自定义域名</h2>
+      <p>如果你现在用带 <code>/*</code> 的<a href="routes.html">路由</a>调用 Worker，并且有一条指向 <code>100::</code> 之类的 CNAME 记录，那么改用自定义域名是推荐做法。</p>
+
+      <h3>通过控制台迁移</h3>
+      <p>以迁移路由 <code>example.com/*</code> 为例：</p>
+      <ol>
+        <li>在 Cloudflare 控制台打开你域名的 <strong>DNS Records</strong> 页面。<a href="https://dash.cloudflare.com/?to=/:account/:zone/dns/records" target="_blank" rel="noopener">前往 Records ↗</a></li>
+        <li>删除 <code>example.com</code> 的 CNAME 记录。</li>
+        <li>进入 <strong>Account Home</strong> &gt; <strong>Workers &amp; Pages</strong>。</li>
+        <li>在 <strong>Overview</strong> 中选择你的 Worker &gt; <strong>Settings</strong> &gt; <strong>Domains &amp; Routes</strong>。</li>
+        <li>选择 <strong>Add</strong> &gt; <strong>Custom domain</strong>，添加 <code>example.com</code>。</li>
+        <li>在 Worker 的 <strong>Settings</strong> &gt; <strong>Domains &amp; Routes</strong> 中删除路由 <code>example.com/*</code>。</li>
+      </ol>
+
+      <h3>通过 Wrangler 迁移</h3>
+      <p>在 <a href="../../../sections/wrangler.html">Wrangler 配置文件</a>中迁移路由 <code>example.com/*</code>：</p>
+      <ol>
+        <li>在 Cloudflare 控制台打开你域名的 <strong>DNS Records</strong> 页面。<a href="https://dash.cloudflare.com/?to=/:account/:zone/dns/records" target="_blank" rel="noopener">前往 Records ↗</a></li>
+        <li>删除 <code>example.com</code> 的 CNAME 记录。</li>
+        <li>在 Wrangler 文件中加入：
+<pre data-lang="jsonc"><code>{
+  "routes": [
+    {
+      "pattern": "example.com",
+      "custom_domain": true
+    }
+  ]
+}</code></pre>
+<pre data-lang="toml"><code>[[routes]]
+pattern = "example.com"
+custom_domain = true</code></pre>
+        </li>
+        <li>运行 <code>npx wrangler deploy</code>，创建 Worker 将要运行的自定义域名。</li>
+      </ol>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/configuration/routing/custom-domains/" target="_blank" rel="noopener">configuration/routing/custom-domains</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../../assets/nav-data-1.js"></script>
+<script src="../../../assets/nav-data-2.js"></script>
+<script src="../../../assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用顾问工具升级困难决策 · Claude Code 中文文档</title>
+<meta name="description" content="将您的主模型与更强大的顾问模型配对，Claude 在任务期间的关键时刻咨询该模型。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="advisor">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/advisor" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link active" href="advisor.html" aria-current="page">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>配置</span> <span class="sep">/</span> <span>模型与回复</span></div>
+    <article class="prose" id="article"><h1 id="_1">使用顾问工具升级困难决策</h1>
+<blockquote>
+<p>将您的主模型与更强大的顾问模型配对，Claude 在任务期间的关键时刻咨询该模型。</p>
+</blockquote>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>顾问工具是实验性的，需要 Anthropic API。它在 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 或 Microsoft Foundry 上不可用。行为、定价和可用性可能会改变。</p></div></div>
+<p>顾问工具让 Claude 在任务期间的关键时刻咨询第二个通常更强大的模型，例如在提交方法之前、陷入重复错误时或在声明任务完成之前。顾问接收完整的对话，包括每个工具调用和结果，并返回 Claude 在继续之前应用的指导。</p>
+<p>顾问在 Anthropic 基础设施上作为<a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool" target="_blank" rel="noopener">服务器工具</a>运行，可供订阅和 API 计费账户使用。您选择哪个模型充当顾问，Claude 决定何时调用它。</p>
+<p>本页介绍如何启用顾问、接受哪些模型配对、Claude 在咨询期间显示什么，以及顾问使用如何计费。</p>
+<h2 id="when-to-use-the-advisor">何时使用顾问</h2>
+<p>顾问适合长期、多步骤的任务，其中大多数轮次是常规的，但计划质量决定了结果。示例包括大型重构、错误不断重复的调试会话，以及您希望在 Claude 声明完成之前独立检查的任务。</p>
+<p>在短任务上（几乎没有计划的地方）或需要每一轮都使用最强模型的工作上，它的价值较少。对于这些情况，<a href="model-config.html#setting-your-model">切换主模型</a>，或查看<a href="#compare-with-related-features">顾问与 opusplan 和子代理的比较</a>以获取其他获取第二意见的方式。</p>
+<h2 id="enable-the-advisor">启用顾问</h2>
+<p>您可以通过三种方式设置顾问模型：</p>
+<ul>
+<li><strong><code>/advisor</code> 命令</strong>：在会话中途设置或更改顾问，并将其保存为默认值</li>
+<li><strong><code>advisorModel</code> 设置</strong>：在您的<a href="settings.html">设置文件</a>中配置持久默认值</li>
+<li><strong><code>--advisor</code> 标志</strong>：在启动时为单个会话设置顾问</li>
+</ul>
+<p>这些方法中的每一种都会为主模型<a href="#choose-an-advisor-model">支持它</a>的会话启用顾问。会话启动后，Claude Code 会显示一条 <code>Advisor Tool (experimental) is on and may use more tokens · /advisor</code> 通知。要停止使用顾问，请参阅<a href="#turn-the-advisor-off">关闭顾问</a>。</p>
+<p>在某些计划中，使用 Fable 作为顾问还需要您一次性<a href="model-config.html#fable-and-usage-credits">同意将 Fable 使用费用计入使用额度</a>。有关您给予该同意之前会发生什么，请参阅 <a href="#fable-advisor-and-usage-credits">Fable 顾问和使用额度</a>。</p>
+<h3 id="use-the-/advisor-command">使用 <code>/advisor</code> 命令</h3>
+<p>运行不带参数的 <code>/advisor</code> 以打开列出可用顾问模型的选择器，或直接传递模型：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/advisor opus
+</code></pre></div>
+<p>该命令会确认 <code>Advisor set to</code> 后跟顾问模型名称。您的选择被保存到用户设置中的 <code>advisorModel</code>，并在会话之间持久化，除了 <a href="settings-reference.html#advisormodel"><code>advisorModel</code> 条目</a>列出的仅适用于当前会话的情况。</p>
+<p>该命令也适用于没有终端选择器的地方：在<a href="headless.html">非交互模式</a>中使用 <code>-p</code>、在 Agent SDK 中、在桌面应用中以及通过 <a href="remote-control.html">Remote Control</a>。这需要 Claude Code v2.1.260 或更高版本。在这些使用入口上：</p>
+<ul>
+<li>运行不带参数的 <code>/advisor</code> 以打印当前顾问模型及其接受的别名。</li>
+<li>运行带有模型的 <code>/advisor</code>，例如 <code>/advisor opus</code>，以设置它。</li>
+<li>运行 <code>/advisor off</code> 以关闭它。</li>
+</ul>
+<p>Claude Code 不会调用您的组织的 <a href="model-config.html#restrict-model-selection"><code>availableModels</code></a> 允许列表排除的已保存顾问。要使用顾问，请使用 <code>/advisor</code> 选择允许的模型。</p>
+<p>Claude Code 仍然会保存您当前主模型不支持的顾问。该顾问在您使用 <a href="model-config.html#setting-your-model"><code>/model</code></a> 切换到<a href="#choose-an-advisor-model">兼容的主模型</a>后激活。如果 API 已在当前对话中拒绝了已保存的顾问，它将保持关闭状态，直到 <code>/clear</code> 或 <code>/compact</code>，即使在您切换模型之后。</p>
+<p>在某些计划中，使用 Fable 作为顾问还需要您一次性<a href="model-config.html#fable-and-usage-credits">同意将 Fable 使用费用计入使用额度</a>。有关您给予该同意之前 <code>/advisor fable</code> 会做什么，请参阅 <a href="#fable-advisor-and-usage-credits">Fable 顾问和使用额度</a>。</p>
+<h3 id="set-advisormodel-in-settings">在设置中设置 <code>advisorModel</code></h3>
+<p>要在不打开会话的情况下将顾问配置为默认值，请在设置文件中设置它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"advisorModel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"opus"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="use-the-advisor-flag">使用 <code>--advisor</code> 标志</h3>
+<p>要为单个会话设置顾问而不更改保存的设置，请使用该标志启动：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--advisor<span class="w"> </span>opus
+</code></pre></div>
+<p>Claude Code 在该会话中使用该标志而不是 <code>advisorModel</code> 设置。它不会在 <code>claude --help</code> 中列出 <code>--advisor</code>。如果以下任何情况成立，Claude Code 在启动时会以错误退出：</p>
+<ul>
+<li>会话的主模型不支持顾问</li>
+<li>请求的模型（例如 Haiku 4.5）无法充当顾问</li>
+<li>您的组织的 <a href="model-config.html#restrict-model-selection"><code>availableModels</code></a> 允许列表排除了请求的模型</li>
+<li>您请求了 Fable，而您的账户仍然需要<a href="#fable-advisor-and-usage-credits">使用额度同意</a></li>
+</ul>
+<p>如果您使用 <code>--advisor</code> 启动<a href="agent-view.html">后台会话</a>，并且上述任何情况成立，Claude Code 会在没有顾问的情况下启动会话，而不是退出。</p>
+<p>如果您传递的模型可以充当顾问，但<a href="#choose-an-advisor-model">排名低于您的主模型</a>，则无论是否为后台会话，会话都会启动。随后您的主模型将在没有顾问的情况下运行。</p>
+<h2 id="choose-an-advisor-model">选择顾问模型</h2>
+<p>Claude Code 按照担任顾问角色的能力对模型进行排名，顾问的排名必须等于或高于会话的主模型。各行按主模型从排名最低到最高排列：</p>
+<table>
+<thead>
+<tr>
+<th>主模型</th>
+<th>接受的顾问</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Haiku 4.5</td>
+<td>Fable、Opus、Sonnet、Haiku 5.5</td>
+</tr>
+<tr>
+<td>Sonnet 4.6</td>
+<td>Fable、Opus、Sonnet、Haiku 5.5</td>
+</tr>
+<tr>
+<td>Opus 4.6</td>
+<td>Fable、Opus、Sonnet 5 或更高版本、Haiku 5.5</td>
+</tr>
+<tr>
+<td>Sonnet 5 或 Haiku 5.5</td>
+<td>Fable、Opus 4.7 或更高版本、Sonnet 5 或更高版本、Haiku 5.5</td>
+</tr>
+<tr>
+<td>Opus 4.7 或 Opus 4.8</td>
+<td>Fable、Opus 4.7 或更高版本、Sonnet 5.5</td>
+</tr>
+<tr>
+<td>Sonnet 5.5</td>
+<td>Fable、Opus 5 或更高版本、Sonnet 5.5</td>
+</tr>
+<tr>
+<td>Opus 5 或 Opus 5.5</td>
+<td>Fable、Opus 5 或更高版本</td>
+</tr>
+<tr>
+<td>Fable 5</td>
+<td>Fable 5.1 或 Fable 5</td>
+</tr>
+<tr>
+<td>Fable 5.1</td>
+<td>Fable 5.1</td>
+</tr>
+</tbody>
+</table>
+<p>Fable 5.1 需要 Claude Code v2.1.257 或更高版本。Fable 模型需要 <a href="model-config.html#work-with-fable">Fable 访问权限</a>。将 Sonnet 5.5 作为 Opus 4.7 或 Opus 4.8 主模型的顾问需要 Claude Code v2.1.287 或更高版本。将 Haiku 5.5 作为主模型或顾问需要 Claude Code v2.1.293 或更高版本。</p>
+<p>将顾问设置为 <code>fable</code>、<code>opus</code> 或 <code>sonnet</code>。这些别名解析为 Claude Code 为每个模型系列<a href="model-config.html#model-aliases">内置的默认版本</a>，该版本随新的 Claude Code 版本而推进。您也可以传递完整的模型 ID，例如 <code>claude-opus-5-5</code> 或 <code>claude-haiku-5-5</code>。Haiku 4.5 可以调用顾问，但不能充当顾问。</p>
+<p>子代理继承配置的顾问，并对其自己的模型应用相同的配对检查。</p>
+<p>Claude Code 在发送请求之前验证配对，API 也会再次验证：</p>
+<ul>
+<li>对于排名低于主模型的顾问，Claude Code 不会将其附加到主模型的请求中。<code>/advisor</code> 命令输出和通知会显示这一点；请参阅<a href="errors.html#advisor-is-less-capable-than-the-current-main-model">顾问的能力低于当前主模型</a>。其自己的模型满足配对的子代理仍然可以使用顾问。</li>
+<li>如果 API 拒绝了 Claude Code 所附加顾问的配对，Claude Code 会在没有顾问的情况下重新发送该请求。对话会在没有顾问的情况下继续，因此您看不到错误，也不会获得顾问调用。如果您随后使用 <code>/advisor</code> 选择其他顾问，更改将在 <code>/clear</code> 或 <code>/compact</code> 之后以及新会话中生效。</li>
+<li>如果主模型或顾问是 Claude Code 无法识别的模型，顾问不会附加。</li>
+</ul>
+<h3 id="fable-advisor-and-usage-credits">Fable 顾问和使用额度</h3>
+<p>在某些计划中，Fable 使用费用计入使用额度，Fable 作为顾问也以相同方式计费。如果您的账户需要 <a href="model-config.html#fable-and-usage-credits">一次性同意将 Fable 使用费用计入使用额度</a>，当您使用 <code>/model</code> 选择 Fable 模型时，Claude Code 会要求您同意，在您接受该同意之前不会将 Fable 应用为顾问。</p>
+<p>在您接受之前，当您输入 <code>/advisor fable</code> 或在 <code>/advisor</code> 选择器中选择 Fable 时，Claude Code 不会将 Fable 保存为顾问。它会改为指向您 <code>/model fable</code>。使用 <code>claude --advisor fable</code>，Claude Code 在启动时会退出并显示指向 <code>/model fable</code> 的消息。在 <a href="#use-the-advisor-flag">后台会话</a> 中，它会在没有顾问的情况下启动会话，而不是退出。如果 Fable 已保存为您的 <code>advisorModel</code>，Claude Code 会在没有顾问的情况下发送请求。在支持顾问的交互式会话中，它还会显示指向 <code>/model fable</code> 的通知。</p>
+<p>要接受同意，请运行 <code>/model fable</code> 并选择继续使用 Fable。Claude Code 会记录同意并 <a href="model-config.html#default-model-setting">将 Fable 保存为您选择的模型</a>。然后选择 Fable 作为顾问。</p>
+<h3 id="common-model-pairings">常见模型配对</h3>
+<p>任何接受的配对都有效。这些组合以不同的方式平衡成本和能力：</p>
+<table>
+<thead>
+<tr>
+<th>配对</th>
+<th>何时使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sonnet 主模型 + Opus 顾问</td>
+<td>Sonnet 处理常规工作，并将规划、模糊失败和完成检查升级到 Opus</td>
+</tr>
+<tr>
+<td>Sonnet 主模型 + Fable 顾问</td>
+<td>在决策点进行 Fable 指导，无需全程运行 Fable。需要 Fable 访问权限</td>
+</tr>
+<tr>
+<td>Haiku 主模型 + Opus 顾问</td>
+<td>最低成本的主模型具有强大的规划能力。预期成本高于仅 Haiku，但低于将主模型切换到 Sonnet 或 Opus</td>
+</tr>
+<tr>
+<td>Opus 主模型 + Opus 顾问</td>
+<td>第二个 Opus 审查第一个。对于高风险任务很有用，其中独立检查比成本更重要</td>
+</tr>
+<tr>
+<td>Fable 主模型 + Fable 顾问</td>
+<td>当 Fable 可用时的最高能力配对。Claude Code 不会将 Opus 或 Sonnet 顾问应用于 Fable 主模型</td>
+</tr>
+<tr>
+<td>Sonnet 主模型 + Sonnet 顾问</td>
+<td>用于捕捉常规疏忽的低成本第二意见</td>
+</tr>
+</tbody>
+</table>
+<h2 id="when-claude-consults-the-advisor">Claude 何时咨询顾问</h2>
+<p>Claude 决定何时调用顾问。它倾向于在提交方法之前、错误不断重复时以及在声明任务完成之前咨询，但时间是由模型驱动的，而不是基于规则的。</p>
+<p>您可以在提示中要求咨询，就像您会请求任何工具一样，例如 <code>consult the advisor before you continue</code>。没有设置来限制或强制顾问调用；如果您希望 Claude 在任务期间更频繁或更少地咨询顾问，请在您的说明中说明。</p>
+<h2 id="what-you-see-during-a-session">会话期间您看到的内容</h2>
+<p>当 Claude 调用顾问时，成绩单显示一条 <code>Advising</code> 行，其中包含顾问模型名称，同时调用正在进行中。当结果返回时，该行报告顾问是否提供了指导：</p>
+<ul>
+<li><strong>Reviewed</strong>：该行确认顾问已审查对话。当顾问返回可读的指导时，按 <code>Ctrl+O</code> 阅读。</li>
+<li><strong>Declined</strong>：该行显示 <code>Advisor declined to advise on this request</code>。如果顾问给出了原因，按 <code>Ctrl+O</code> 阅读。</li>
+<li><strong>Unavailable</strong>：顾问调用失败，该行读取 <code>Advisor unavailable (&lt;error_code&gt;)</code>，其中 <code>&lt;error_code&gt;</code> 是调用返回的代码。</li>
+</ul>
+<p>Claude 通常遵循顾问的指导，但在其自己的证据与特定声明相矛盾时进行调整：如果推荐的步骤在尝试时失败，或文件内容与建议相矛盾，Claude 会显示冲突而不是无条件地遵循指导。</p>
+<p>顾问始终接收完整的对话，Claude 控制时间。为了获得更多控制或不同的配置，请参阅<a href="#compare-with-related-features">顾问与子代理和 opusplan 的比较</a>。</p>
+<h2 id="cost">成本</h2>
+<p>当 Claude 调用顾问时，顾问模型会读取对话，因此除了主模型的使用外，每次调用都会以顾问模型的费率消耗令牌。这些顾问令牌如何计费取决于您的付款方式：</p>
+<ul>
+<li><strong>API 计费</strong>：您需要按顾问模型的输入和输出费率为顾问令牌付费</li>
+<li><strong>订阅计划</strong>：顾问使用计入您的计划使用限制，但 Fable 顾问在支持 Fable 使用的计划上计入<a href="model-config.html#fable-and-usage-credits">使用额度</a></li>
+</ul>
+<p>如果您的账户需要使用额度同意，Fable 顾问在您给予同意之前不会产生任何费用，因为 Claude Code <a href="#fable-advisor-and-usage-credits">在那之前不会应用该选择</a>。</p>
+<p>Claude 在决策点而不是每一轮都调用顾问，因此将更快的主模型与更强的顾问配对通常比全程运行更强的模型成本更低。顾问使用计入由 <a href="costs.html#track-your-costs"><code>/usage</code></a> 显示的会话总计。</p>
+<p>有关顾问令牌如何在 API 响应中报告的信息，请参阅 Claude API 文档中的<a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool#usage-and-billing" target="_blank" rel="noopener">使用和计费</a>。</p>
+<h2 id="impact-on-prompt-caching">对提示缓存的影响</h2>
+<p>在会话中途启用或禁用顾问不会使主模型的<a href="prompt-caching.html">提示缓存</a>失效。与<a href="prompt-caching.html#switching-models">切换模型</a>不同，切换 <code>/advisor</code> 会保持缓存的前缀完整，顾问返回的指导在后续轮次中作为成绩单的一部分被缓存。</p>
+<p>顾问模型自己对对话的读取不被缓存。每个顾问调用都会重新处理完整的成绩单，调用之间没有重用。</p>
+<h2 id="requirements">要求</h2>
+<p>顾问工具需要以下所有条件：</p>
+<ul>
+<li><strong>仅 Anthropic API</strong>：顾问是服务器执行的工具。它在 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 或 Microsoft Foundry 上不可用。通过配置了 <code>ANTHROPIC_BASE_URL</code> 的 <a href="llm-gateway.html">LLM 网关</a>，可用性取决于网关是否将请求完整转发到 Anthropic API。如果网关或其上游不识别顾问工具，请参阅<a href="llm-gateway-protocol.html#automatic-retry-and-error-forwarding">自动重试和错误转发</a>了解 Claude Code 如何响应。</li>
+<li><strong>支持的主模型</strong>：Fable、Opus 4.6 或更高版本、Sonnet 4.6 或更高版本、Haiku 4.5 或 Haiku 5.5。请参阅<a href="#choose-an-advisor-model">选择顾问模型</a>了解每个主模型接受哪些顾问。</li>
+<li><strong>功能标志获取</strong>：Claude Code 通过从 Anthropic 获取的功能标志来启用顾问。在设置了关闭标志获取的变量（例如 <code>DISABLE_TELEMETRY</code>）的会话中，顾问保持关闭状态。请参阅<a href="env-vars.html#features-that-need-feature-flag-fetching">需要功能标志获取的功能</a>。</li>
+</ul>
+<h2 id="turn-the-advisor-off">关闭顾问</h2>
+<p>要停止使用顾问，运行 <code>/advisor off</code> 或在 <code>/advisor</code> 选择器中选择 <strong>No advisor</strong>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/advisor off
+</code></pre></div>
+<p>要完全禁用顾问工具，设置 <code>CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1</code>。<code>/advisor</code> 命令变为不可用，任何配置的 <code>advisorModel</code> 都会被忽略。<code>--advisor</code> 标志被接受但没有效果。请参阅<a href="env-vars.html">环境变量</a>。</p>
+<h2 id="compare-with-related-features">与相关功能比较</h2>
+<p>顾问是结合模型优势的几种方式之一。根据您希望何时涉及第二个模型来选择。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>更强的模型何时运行</th>
+<th>如何启动</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>顾问工具</td>
+<td>在任务中途的决策点</td>
+<td>Claude 在需要指导时调用它</td>
+</tr>
+<tr>
+<td><a href="model-config.html#opusplan-model-setting"><code>opusplan</code></a></td>
+<td>在计划模式期间当<a href="model-config.html#restrict-model-selection">由 <code>availableModels</code> 允许</a>时，然后切换到 Sonnet 执行</td>
+<td>您进入计划模式</td>
+</tr>
+<tr>
+<td><a href="sub-agents.html#choose-a-model">子代理</a>，设置了 <code>model</code></td>
+<td>对于整个委派的子任务</td>
+<td>Claude 委派，或您调用子代理</td>
+</tr>
+<tr>
+<td><a href="model-config.html#setting-your-model"><code>/model</code></a></td>
+<td>从下一个请求开始</td>
+<td>您切换模型</td>
+</tr>
+</tbody>
+</table>
+<h2 id="see-also">另请参阅</h2>
+<ul>
+<li><a href="model-config.html">模型配置</a>：切换模型、设置努力级别并使用 <code>opusplan</code></li>
+<li><a href="costs.html">有效管理成本</a>：跨模型跟踪令牌使用情况</li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool" target="_blank" rel="noopener">Claude API 中的顾问工具</a>：了解底层服务器工具，或直接从 Messages API 使用它</li>
+<li><a href="https://claude.com/blog/the-advisor-strategy" target="_blank" rel="noopener">顾问策略</a>：为什么将快速主模型与更强的顾问配对有效</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="fast-mode.html"><span class="pager-dir">← 上一页</span><span class="pager-name">使用快速模式加快响应速度</span></a><a class="pager-link next" href="output-styles.html"><span class="pager-dir">下一页 →</span><span class="pager-name">输出样式</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#when-to-use-the-advisor">何时使用顾问</a><a class="toc-l2" href="#enable-the-advisor">启用顾问</a><a class="toc-l3" href="#use-the-/advisor-command">使用 /advisor 命令</a><a class="toc-l3" href="#set-advisormodel-in-settings">在设置中设置 advisorModel</a><a class="toc-l3" href="#use-the-advisor-flag">使用 --advisor 标志</a><a class="toc-l2" href="#choose-an-advisor-model">选择顾问模型</a><a class="toc-l3" href="#fable-advisor-and-usage-credits">Fable 顾问和使用额度</a><a class="toc-l3" href="#common-model-pairings">常见模型配对</a><a class="toc-l2" href="#when-claude-consults-the-advisor">Claude 何时咨询顾问</a><a class="toc-l2" href="#what-you-see-during-a-session">会话期间您看到的内容</a><a class="toc-l2" href="#cost">成本</a><a class="toc-l2" href="#impact-on-prompt-caching">对提示缓存的影响</a><a class="toc-l2" href="#requirements">要求</a><a class="toc-l2" href="#turn-the-advisor-off">关闭顾问</a><a class="toc-l2" href="#compare-with-related-features">与相关功能比较</a><a class="toc-l2" href="#see-also">另请参阅</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

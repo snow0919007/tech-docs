@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>消息传递到您的其他 Claude Code 会话 · Claude Code 中文文档</title>
+<meta name="description" content="让 Claude 列出并消息传递到您在此机器上的其他 Claude Code 会话，并到达您在其他机器或网络上的会话。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="cross-session-messaging">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/cross-session-messaging" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link active" href="cross-session-messaging.html" aria-current="page">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>使用 Claude Code 构建</span> <span class="sep">/</span> <span>Agent 与并行工作</span></div>
+    <article class="prose" id="article"><h1 id="claude-code">消息传递到您的其他 Claude Code 会话</h1>
+<blockquote>
+<p>让 Claude 列出并消息传递到您在此机器上的其他 Claude Code 会话，并到达您在其他机器或网络上的会话。</p>
+</blockquote>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>跨会话消息传递需要 macOS 和 Linux 上的 Claude Code v2.1.224 或更高版本，包括 WSL 2 内的 Linux。在原生 Windows 上，它需要 Claude Code v2.1.234 或更高版本。当会话满足要求时，消息传递功能默认启用，无需任何配置。请参阅<a href="#availability">可用性</a>了解提供商要求以及如何确认会话具有此功能。</p></div></div>
+<p>跨会话消息传递让 Claude 能够将消息从您的一个 Claude Code 会话传递到另一个。当一个会话中的更改破坏了另一个会话正在构建的内容时，Claude 可以在您注意到之前警告该会话。当一个会话解决了另一个会话被阻止的问题时，Claude 可以跨会话发送答案。</p>
+<p>消息是一个 Claude 写给另一个 Claude 的文本片段，永远不包括发送者的对话历史或文件。要移动整个对话或其上下文，请<a href="sessions.html#resume-a-session">恢复会话</a>。</p>
+<h2 id="when-to-use-cross-session-messaging">何时使用跨会话消息传递</h2>
+<p>当您的一个会话有另一个会话在任务中期需要的内容时，使用消息传递。Claude 可以在看到需要时自动发送消息，例如在进行影响另一个会话正在进行的工作的更改后，或者您可以要求它发送一条。常见情况包括：</p>
+<ul>
+<li><strong>移交发现</strong>：当一个会话发现破坏性更改或做出决定时，Claude 为处理受影响区域的会话总结它，而不是您在那里重新解释。</li>
+<li><strong>协调并行 worktrees</strong>：当会话在单独的 <a href="worktrees.html">worktrees</a> 中处理同一存储库时，Claude 可以告诉其他会话已合并的内容。</li>
+<li><strong>获取长期运行工作的状态</strong>：让迁移或测试运行报告回您正在观看的会话，或从那里自己询问。如果该会话在此机器上，Claude 还可以<a href="#get-a-notice-when-another-session-goes-idle">在它下次空闲或退出时要求一条通知</a>。</li>
+<li><strong>跨机器发送消息</strong>：到达您在另一台机器或网络上的一个会话。</li>
+</ul>
+<h2 id="message-another-session">向另一个会话发送消息</h2>
+<p>当你的一个会话学到另一个会话需要的东西时，比如一个发现、一个状态或一个决定，Claude 会将其传递过去，而不是让你在终端之间复制粘贴。Claude 使用 <code>ListAgents</code> 发现目标，并使用 <code>SendMessage</code> 发送，所以你永远不需要自己调用这两个工具。Claude 可以在没有被要求的情况下决定发送消息，你也可以提示它发送一条消息。</p>
+<p>要自己提示一条消息，告诉 Claude 你想让另一个会话知道或做什么。这个例子是你输入的提示，而不是 Claude 发送的消息：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Ask the session running in my other terminal whether the migration finished
+</code></pre></div>
+<p>Claude 会自己编写实际的消息，所以你的提示可以将内容留给 Claude。这个提示要求一个摘要而不指定其措辞，Claude 发送的内容会有所不同：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Explain what we just did to the session working on the payments API
+</code></pre></div>
+<p>要自己命名目标，在你的提示中提及会话：输入 <code>@</code> 后跟会话名称的首字母，然后从类型提示中选择会话，方式与 <a href="sub-agents.html#invoke-subagents-explicitly">@-提及子代理</a> 相同。需要 Claude Code v2.1.232 或更高版本。Claude Code 会插入提及，例如 <code>@api-worker</code>，并告诉 Claude 它命名的是哪个会话，这样 Claude 可以向该会话发送消息而无需先列出你的会话。这个提示用提及命名目标：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Let @api-worker know the schema migration finished
+</code></pre></div>
+<p>类型提示列出你在这台机器上的其他活跃会话。两种情况需要超过名称的首字母：</p>
+<ul>
+<li><strong>这台机器之外的会话</strong>：云会话或远程控制会话仅在 Claude 列出或向你这台机器之外的会话发送消息后才会出现在类型提示中，所以请先要求 Claude 列出它们。</li>
+<li><strong>包含空格或字母、数字、连字符和下划线以外字符的名称</strong>：用双引号输入，例如 <code>@"release notes"</code>。当你从类型提示中选择会话时，Claude Code 会为你插入引号。</li>
+</ul>
+<p>你也可以不使用选择器直接输入提及。当多个活跃会话响应提及的名称时，Claude 会在发送前询问你指的是哪一个。</p>
+<p>关于 Claude 编写的消息到达时的样子，包括一个例子，请参见 <a href="#what-a-message-looks-like">消息看起来像什么</a>。</p>
+<h3 id="message-delivery">消息传递</h3>
+<p>接收 Claude 在活跃轮次中的工具调用之间读取消息，所以运行中的工具永远不会被中断。当接收会话处于空闲状态时，Claude Code 会用消息启动新的轮次。</p>
+<p>来自另一个会话的消息以纯文本形式到达。如果它用 <code>@</code> 提及文件或 <a href="mcp.html#use-mcp-resources">MCP 资源</a>，Claude 会看到按原样写的提及，Claude Code 不会附加任何内容，无论消息是启动新轮次还是在现有轮次中到达。Claude 仍然可以用自己的工具在接收机器上打开提及的路径，受该会话的权限限制。</p>
+<p>Claude Code 在以下情况下拒绝消息：</p>
+<ul>
+<li>消息 <a href="#limitations">超过大小限制</a>。Claude Code 在发送会话中拒绝它，在它离开之前。</li>
+<li>对这台机器上的会话的快速突发已达到 <a href="#limitations">该会话的收件箱接受的内容</a>。Claude Code 拒绝向该会话发送进一步的消息。</li>
+<li>这台机器之外的某个会话被<a href="#message-sessions-on-other-machines">列为无法接收跨会话消息</a>。Claude Code 会在发送会话中、消息离开这台机器之前拒绝它。</li>
+<li>这台机器上的回复目标未通过安全检查，例如符号链接目标。<a href="errors.html#refusing-to-send-a-cross-session-message">拒绝发送跨会话消息</a> 列出了这些检查。</li>
+</ul>
+<p>接收会话根据其自己的 <a href="#control-inbound-messages">入站控制</a> 检查每条到达的消息，检查以三种结果之一结束：</p>
+<ul>
+<li><strong>已传递</strong>：Claude Code 将消息传递给接收 Claude。</li>
+<li><strong>已保留</strong>：Claude Code 将消息搁置未传递。保留的消息仅在你批准它或稍后的模式或设置更改允许它时才到达 Claude。</li>
+<li><strong>已拒绝</strong>：Claude Code 丢弃消息而不传递它。</li>
+</ul>
+<p>消息传递后，会像您输入的提示词一样计入<a href="costs.html">使用量</a>。接收方 Claude 可以使用 <code>SendMessage</code> 回复发送者，但<a href="#replies-from-other-machines-and-cloud-sessions">来自其他机器和云端会话的回复</a>和<a href="#turn-off-cross-session-messaging">关闭跨会话消息</a>中所述的情况除外。</p>
+<p>权限边界保持按会话。Claude 被指示永远不要要求另一个会话执行在其自己的会话中被拒绝或阻止的操作，或其自己的权限设置会阻止的操作，而是将该工作路由回你。在接收端，<a href="#how-a-session-treats-an-incoming-message">接收会话自己的权限提示和规则仍然适用</a> 于消息要求的任何内容。</p>
+<h3 id="get-a-notice-when-another-session-goes-idle">当另一个会话变为空闲时获得通知</h3>
+<p>Claude 可以要求你在这台机器上的一个会话在该会话下一次变为空闲或退出时发回一条通知。这里的空闲意味着会话完成了一个轮次，没有任何排队的内容。当你在另一个会话中等待长任务并想听到它完成时而不是检查时使用它。需要两个会话中都有 Claude Code v2.1.236 或更高版本。</p>
+<h4 id="ask-for-a-notice">请求通知</h4>
+<p>告诉 Claude 你在等什么。这个提示要求来自迁移会话的通知：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Tell me when the migration session finishes what it's working on
+</code></pre></div>
+<p>Claude 使用 <code>SendMessage</code> 工具的 <code>notify_when_idle</code> 输入订阅，要么附加到它正在发送的消息，要么单独订阅。单独订阅时，Claude Code 订阅而不在被监视的会话中启动轮次或花费令牌，如果该会话已经空闲，会立即发送通知。附加到消息时，Claude Code 先传递消息，然后稍后发送通知。</p>
+<h4 id="what-each-session-shows">每个会话显示什么</h4>
+<p>被监视的会话显示一行说另一个进程要求在会话下一次空闲时被告知。要求会话显示通知为一行命名被监视的会话。该行可以包括该会话轮次完成的时间和该轮次的单行状态。如果要求会话处于空闲状态，Claude Code 会用通知启动新的轮次。</p>
+<h4 id="limits">限制</h4>
+<p>如果在 12 小时内没有通知到达，Claude Code 会删除订阅并告诉 Claude，所以它不会继续等待。</p>
+<p>每一方的 <a href="#control-inbound-messages">入站控制</a> 适用于像消息一样的通知：</p>
+<ul>
+<li><strong>任一方的 <code>refuse</code></strong>：什么都不会到达。被监视的会话删除请求而不记录或回答它，所以订阅在 12 小时后无答复过期，具有 <code>refuse</code> 的要求会话永远不会订阅。</li>
+<li><strong>任一方的 <code>hold</code></strong>：通知到达时内容较少。被监视的会话省略单行状态，要求会话在你的记录中显示通知而不将其传递给 Claude。</li>
+</ul>
+<p>只有你主要对话中的 Claude 可以订阅，并且仅订阅你在这台机器上的会话。当 Claude 要求来自任何其他目标的通知时，例如队友、子代理或这台机器之外的会话，Claude Code 拒绝整个调用，包括附加到它的任何消息。</p>
+<h3 id="see-which-sessions-claude-can-reach">查看 Claude 可以到达的会话</h3>
+<p>Claude 自己找到消息的目标，所以你不需要在要求它发送之前运行任何东西。要自己查看 Claude 可以到达的会话，运行 <code>/list-agents</code> 命令。第一行（如果存在）是这个会话自己的名称，你的其他会话用来向它发送消息的名称。下面的行是 Claude 可以到达的会话：</p>
+<ul>
+<li><strong>子代理</strong>：在当前会话内运行的代理。</li>
+<li><strong>队友</strong>：这个会话自己的 <a href="agent-teams.html">代理团队</a> 队友。</li>
+<li><strong>你的其他本地会话</strong>：在同一台机器上运行的 Claude Code 会话，包括 <a href="agent-view.html">后台会话</a>。会话仅在绑定 <a href="#the-sessions-inbox-socket">收件箱套接字</a> 时出现。</li>
+<li><strong>你的 <a href="claude-code-on-the-web.html">云会话</a></strong>：在此会话连接到 <a href="remote-control.html">远程控制</a> 时显示。</li>
+<li><strong>你在其他机器上的远程控制会话</strong>：在此会话连接到 <a href="remote-control.html">远程控制</a> 时显示，并标记为 <code>Remote Control</code>。Claude Code 显示 <code>offline</code> 作为远程控制连接已断开的会话的状态。</li>
+</ul>
+<p>当此会话连接到 <a href="remote-control.html">远程控制</a> 时，Claude Code 从 <code>/list-agents</code> 输出中隐瞒你的本地会话的一些详细信息，而不改变 Claude 本身在寻找要向其发送消息的会话时看到的内容：</p>
+<ul>
+<li><strong>工作目录</strong>：它省略每个本地会话的工作目录。</li>
+<li><strong>会话名称</strong>：它省略任何它不能归属于某个人的会话名称，所以没有名称的行读作 <code>(unnamed session)</code>。</li>
+<li><strong>第一行</strong>：它省略包含此会话自己名称的行，除非你在此终端用 <code>--name</code> 或 <code>/rename</code> 和名称输入了该名称，自从你启动或最后恢复会话以来。</li>
+</ul>
+<p>当输出列出任何内容时，它以一条说明详细信息被隐瞒的注释结束。在会话自己的键盘上运行 <code>/rename</code> 后跟未使用的名称会给该会话一个出现在输出中的名称。</p>
+<p>会话响应你用 <a href="commands.html"><code>/rename</code></a> 命令或 <a href="cli-reference.html#cli-flags"><code>--name</code></a> 标志设置的名称。当你不设置一个时，Claude Code 自己命名会话。对于交互式会话，这是在 <a href="sessions.html#name-your-sessions">运行会话的列表</a> 中显示的名称。</p>
+<p>除非此会话连接到 Remote Control，否则 Claude Code 会在 <code>/list-agents</code> 输出中显示每个本地会话的工作目录，以便您在同名会话运行于不同目录时区分它们。Claude 会根据有多少活跃会话对应该名称，以以下两种方式之一指定消息地址：</p>
+<ul>
+<li><strong>一个会话响应该名称</strong>：Claude Code 仅在名称上传递消息。</li>
+<li><strong>多个会话共享该名称，或 Claude Code 无法检查你的会话运行的所有地方</strong>：Claude 为其列表的每一行添加一个短标识符，并在地址中使用该标识符。</li>
+</ul>
+<h3 id="message-sessions-on-other-machines">向其他机器上的会话发送消息</h3>
+<p>消息如何传播，以及它是否通过 Anthropic 服务器，取决于目标会话运行的位置：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">其他会话运行的位置</th>
+<th style="text-align: left;">消息如何传播</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">在这台机器上</td>
+<td style="text-align: left;">在 macOS 和 Linux 上通过每个会话的套接字，或在本机 Windows 上通过每个会话的命名管道，永远不通过 Anthropic 服务器</td>
+</tr>
+<tr>
+<td style="text-align: left;">在你的另一台机器上</td>
+<td style="text-align: left;">通过 Anthropic 服务器，通过该机器的 <a href="remote-control.html">远程控制</a> 连接到达</td>
+</tr>
+<tr>
+<td style="text-align: left;">在 <a href="claude-code-on-the-web.html">云中</a></td>
+<td style="text-align: left;">通过 Anthropic 服务器，直接到云会话</td>
+</tr>
+</tbody>
+</table>
+<p>启动与你另一台机器上的会话的对话需要 Claude Code v2.1.225 或更高版本和一个 <a href="#see-which-sessions-claude-can-reach">出现在列表中</a> 的目标。</p>
+<p>会话在<a href="#see-which-sessions-claude-can-reach">列表</a>中的行可能显示某种状况，这会影响 Claude 向该会话发送消息时的结果：</p>
+<ul>
+<li><strong><code>offline</code></strong>：该会话的 Remote Control 连接已断开。消息可以发出，但仅在该会话的机器重新连接后才会到达。</li>
+<li><strong><code>can't receive cross-session messages (off in that session)</code></strong>：该会话中的消息功能<a href="#availability">不可用</a>，或其 <a href="settings-reference.html#crosssessioninbound"><code>crossSessionInbound</code></a> 值为 <code>refuse</code>。Claude Code 会在消息离开这台机器之前拒绝发往该会话的消息。Claude 的 <code>SendMessage</code> 调用返回的结果以 <code>Not sent</code> 开头并说明原因。在该会话中解决问题后，之后的列表将不再显示此状况，Claude 即可向该会话发送消息。</li>
+</ul>
+<p>容器内的会话和主机上的会话无法相互到达。同一容器内的两个会话仍然可以相互发送消息，包括在 <a href="self-hosted-environments.html">自托管运行器</a> 上。WSL 2 内的会话和同一计算机上的本机 Windows 会话也无法相互到达。</p>
+<p>要在任何消息超出这台机器之前要求你的批准，设置 <a href="#require-approval-for-cross-machine-messages"><code>isolatePeerMachines</code></a>。</p>
+<h4 id="replies-from-other-machines-and-cloud-sessions">来自其他机器和云端会话的回复</h4>
+<p><a href="claude-code-on-the-web.html">云端会话</a>（包括在<a href="self-hosted-environments.html">自托管运行器</a>上运行的云端会话）无法使用 <code>SendMessage</code> 回复来自另一台机器的消息，即使该消息带有<a href="#what-a-message-looks-like">回复地址</a>也不行。消息仍然会到达。您可以在 <a href="https://claude.ai/code" target="_blank" rel="noopener">claude.ai/code</a> 上该云端会话的会话记录中查看其回复。</p>
+<p>如果 Claude 向这台机器之外的会话发送消息时，此会话未连接到 Remote Control，消息仍然会发出，但不带<a href="#what-a-message-looks-like">回复地址</a>。接收方 Claude 无法回复该消息。</p>
+<h2 id="how-a-session-treats-an-incoming-message">会话如何处理传入消息</h2>
+<p>当会话 A 向会话 B 发送消息时，Claude Code 会告诉 B 的 Claude 该消息来自另一个会话，而不是来自您，并限制该消息可以做什么：</p>
+<ul>
+<li><strong>它不能批准任何内容</strong>：来自另一个会话的消息永远不会被视为您的同意，因此它不能代表您回答待处理的权限提示。</li>
+<li><strong>它不能更改配置</strong>：Claude Code 指示接收方 Claude 永远不要因为另一个会话的要求而更改权限设置、<code>CLAUDE.md</code> 或其他配置。</li>
+<li><strong>命令不会运行</strong>：消息文本中的命令（如 <code>/compact</code>）以纯文本形式到达。Claude Code 永远不会执行它。</li>
+<li><strong>权限提示仍会触发</strong>：如果处理该消息需要接收会话不具备的权限，您会看到与任何其他工作相同的提示。</li>
+</ul>
+<h3 id="what-a-message-looks-like">消息的样子</h3>
+<p>当消息到达时，Claude Code 会在对话中将其显示为暗淡的单行预览，该预览行之后会保留在对话中。预览包含发送者的名称和消息的第一行，消息较长时会用 <code>…</code> 截断，例如 <code>› Message from @api-worker: Schema migration finished (ctrl+o to expand)</code>。</p>
+<p>以下任一方式都会向您显示完整文本：</p>
+<ul>
+<li>按 <code>Ctrl+O</code> 打开<a href="interactive-mode.html#transcript-viewer">会话记录查看器</a>，并在发送者的会话名称下阅读完整文本。</li>
+</ul>
+<p>如果 Claude 正忙且尚未收到该消息，请滚动到会话记录的末尾，该消息会列在 <code>Waiting to be delivered</code> 下。需要 Claude Code v2.1.309 或更高版本。</p>
+<ul>
+<li>
+<p>在<a href="fullscreen.html#use-the-mouse">全屏渲染</a>中，点击未完整显示消息的预览行，即可将其就地展开。</p>
+</li>
+<li>
+<p>在使用 <a href="cli-reference.html#cli-flags"><code>--verbose</code></a> 启动的会话中，Claude Code 会显示完整文本而不是预览。</p>
+</li>
+</ul>
+<p>预览仅缩短您看到的内容。无论您是否展开它，Claude 都会读取完整消息。</p>
+<p>Claude 接收消息时会附带发送者的名称和回复地址，但<a href="#message-sessions-on-other-machines">单向跨机器消息</a>除外，它不携带回复地址。</p>
+<p>以下示例是一个 Claude 写给另一个 Claude 的消息，展示了展开后的完整文本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Schema migration finished
+The new column is tenant_id, and rebasing on main is safe now.
+</code></pre></div>
+<h3 id="control-inbound-messages">控制入站消息</h3>
+<p>设置 <a href="settings-reference.html#crosssessioninbound"><code>crossSessionInbound</code></a> 以选择会话如何处理来自您其他会话的消息：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">值</th>
+<th style="text-align: left;">行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>accept</code></td>
+<td style="text-align: left;">Claude Code 将每条消息传递给 Claude</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hold</code></td>
+<td style="text-align: left;">Claude Code 为每条消息显示通知，但不传递它。如果之后根据<a href="settings-reference.html#crosssessioninbound">优先级规则</a>适用 <code>accept</code>，Claude Code 会释放被保留的消息</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>refuse</code></td>
+<td style="text-align: left;">Claude Code 丢弃每条消息而不传递它</td>
+</tr>
+</tbody>
+</table>
+<p>除了编辑设置文件，您还可以在 <code>/config</code> 的 <strong>Messages from your other sessions</strong> 行中选择该值。Claude Code 会将您选择的值写入您的用户设置。该行需要 Claude Code v2.1.232 或更高版本，并且当托管设置或 <code>--settings</code> 标志设置了该设置项时不会出现，因为此时用户设置中的值不会生效。对于此设置项，Claude Code 会拒绝 <code>/config crossSessionInbound=value</code> 简写形式。</p>
+<p>要查看哪个值适用，请遵循<a href="settings-reference.html#crosssessioninbound">设置参考</a>中的 <code>crossSessionInbound</code> 优先级规则。</p>
+<p>当没有值适用时，Claude Code 会根据两个会话的权限模式逐条消息做出决定。它将<a href="permission-modes.html#skip-all-checks-with-bypasspermissions-mode">绕过权限提示</a>的会话归为一类，将其他所有会话归为另一类。在可使用绕过权限的交互式终端会话中，计划模式被视为绕过，而 <a href="permission-modes.html#eliminate-prompts-with-auto-mode">auto</a>、<code>acceptEdits</code> 和 <code>dontAsk</code> 被视为提示：</p>
+<ul>
+<li><strong>接收会话会提示权限</strong>：Claude Code 传递每条消息。仅当发送会话将自身标识为绕过权限提示时，它才会保留该消息以等待您的批准。</li>
+<li><strong>接收会话绕过权限提示</strong>：Claude Code 保留每条消息以等待您的批准。仅当发送会话也将自身标识为绕过时，它才会传递该消息。</li>
+</ul>
+<p>当默认行为在交互式终端会话中保留消息时，Claude Code 会在该会话中打开批准对话框。对话框显示发送者和预览：</p>
+<ul>
+<li><strong>Approve</strong> 将该条消息传递给 Claude。</li>
+<li><strong>Deny</strong> 或关闭对话框会丢弃该消息。</li>
+<li>当对话框在 <a href="settings-reference.html#dialogexpiry"><code>dialogExpiry</code></a> 截止时间后仍未得到回应时，Claude Code 会关闭它并丢弃消息。截止时间默认为五分钟。</li>
+<li>当没有终端连接到<a href="agent-view.html">后台会话</a>时，Claude Code 会让对话框在截止时间之后保持打开。在您连接后，如果对话框在一个完整的截止时间段内仍未得到回应，Claude Code 会关闭它并丢弃消息。</li>
+<li>如果在消息被保留期间此会话的权限模式类别发生变化，Claude Code 会重新应用入站规则，传递现在被接受的消息，并显示通知。</li>
+</ul>
+<p>VS Code 扩展或 Desktop 应用中的会话无法显示该对话框。在这些会话中，Claude Code 会将被保留的消息保留到相同的截止时间，如<a href="#non-interactive-sessions">非交互式会话</a>中所述。</p>
+<p>Claude Code 最多保留 100 条消息，超出后会丢弃最旧的消息。</p>
+<h3 id="non-interactive-sessions">非交互式会话</h3>
+<p>Claude Code 会像交互式会话一样为 <a href="headless.html"><code>claude -p</code></a> 会话绑定收件箱套接字，因此长期运行的 <code>-p</code> 工作进程可以接收消息并出现在列表中。当您在 <a href="headless.html#start-faster-with-bare-mode">bare 模式</a>下启动会话时，Claude Code 不会绑定套接字，因此该会话无法接收消息，也不会出现在 Agent 列表中。</p>
+<p><code>-p</code> 会话无法显示批准对话框。当<a href="#control-inbound-messages">入站默认行为</a>在此类会话中保留消息时，Claude Code 会将其保留到对话框所使用的相同 <a href="settings-reference.html#dialogexpiry"><code>dialogExpiry</code></a> 截止时间，默认为五分钟：</p>
+<ul>
+<li><strong>截止时间之前</strong>：如果模式或设置的更改允许该消息，Claude Code 会传递它。</li>
+<li><strong>截止时间之后</strong>：Claude Code 会丢弃该消息，并向其能够联系到的发送者报告该消息已过期。</li>
+</ul>
+<p>将 <code>dialogExpiry</code> 设置为 <code>"never"</code>，可将默认暂挂的消息保留到会话结束。由显式 <code>hold</code> 设置暂挂的消息不会过期；当之后有 <code>accept</code> 生效时，Claude Code 会投递该消息。</p>
+<p>要让 <code>-p</code> 工作进程在无人值守的情况下接收消息，请在其 <code>--settings</code> 值中将 <code>crossSessionInbound</code> 设置为 <code>accept</code> 来启动它。在您的用户设置中设置 <code>accept</code> 也有效，但会应用于您运行的每个会话。</p>
+<h3 id="the-sessions-inbox-socket">会话的收件箱套接字</h3>
+<p>当您预期的会话不在 Agent 列表中、当您希望脚本或 hook 向会话发布消息，或者当沙箱中的命令无法访问套接字时，请阅读本节。</p>
+<p>Claude Code 会为每个启用了跨会话消息传递的会话绑定一个收件箱套接字，同一机器上的其他会话通过它传递消息。在 macOS 和 Linux（包括 WSL 2 内的 Linux）上，该套接字是 Unix 域套接字；在原生 Windows 上则是命名管道。关于哪些类型的会话会绑定套接字，请参阅<a href="#non-interactive-sessions">非交互式会话</a>。</p>
+<p>您可以在两个地方找到套接字的路径：</p>
+<ul>
+<li><code>/status</code> 在 <code>Peer address</code> 行中显示它。路径以 <code>uds:</code> 为前缀。</li>
+<li>Claude Code 会将其作为 <a href="env-vars.html#variables"><code>CLAUDE_CODE_MESSAGING_SOCKET</code></a> 环境变量导出给 <a href="hooks.html">hook</a> 和 Bash 命令：</li>
+<li>在启动时即开启消息传递的会话中，Claude Code 会在任何 hook 运行之前导出该变量，包括 <code>SessionStart</code>。</li>
+</ul>
+<p>在 macOS 和 Linux 上，Claude Code 将套接字限制为仅供您的操作系统用户使用。在原生 Windows 上，它改为要求每个连接首先使用只有您的操作系统用户才能读取的密钥进行身份验证。无论哪种方式，在共享机器上，其他用户的会话都无法向其传递消息。</p>
+<p>在 macOS 和 Linux 上，Claude Code 还会拒绝在它无法接受的目录（例如由其他用户拥有的目录）中创建套接字，而是改用私有的每用户目录 <code>/tmp/cc-socks-&lt;uid&gt;</code>。当它无法接受任何目录时，会话将在没有收件箱的情况下运行：Claude Code 显示通知，<code>/status</code> 在其 <code>Peer address</code> 行中显示 <code>unavailable</code> 及原因，<a href="cli-reference.html#cli-flags"><code>--debug</code></a> 日志会记录完整的拒绝信息。</p>
+<p>除了套接字的路径，Claude Code 还会将每个会话的令牌导出为 <a href="env-vars.html#variables"><code>CLAUDE_CODE_MESSAGING_TOKEN</code></a>。向其自身会话的套接字发布消息的脚本可以将 <code>{"type":"auth","token":"&lt;token&gt;"}</code> 作为其连接的第一行发送，其中 <code>&lt;token&gt;</code> 是 <code>CLAUDE_CODE_MESSAGING_TOKEN</code> 的值。Claude Code 是否要求该行取决于平台：</p>
+<ul>
+<li><strong>macOS 和 Linux，包括 WSL 2</strong>：该行是可选的。无论是否包含该行，Claude Code 都会接受连接。</li>
+<li><strong>原生 Windows</strong>：该行是必需的。Claude Code 会关闭第一行不是有效身份验证行的任何连接，并且不会传递来自该连接的任何内容。</li>
+</ul>
+<p>仅在您要发布的消息准备就绪时才打开连接。Claude Code 会关闭在 30 秒内未发送完整一行的连接，因此请先捕获慢速命令的输出，然后再打开连接发送它。</p>
+<p>对于通过套接字到达的消息，Claude Code 会应用与任何其他对等消息相同的<a href="#control-inbound-messages">入站控制</a>，但有一个例外和一个前提条件：</p>
+<ul>
+<li><strong>自身子进程的消息</strong>：当没有 <code>crossSessionInbound</code> 值适用时，Claude Code 会传递经其验证来自会话自身子进程的消息，例如 hook 或 Bash 命令向其自身会话的套接字回发的消息。</li>
+<li>在 Linux 上（包括 WSL 2 内），即使子进程已经退出，Claude Code 也可以通过进程证据进行验证。在 macOS 上，它只能在发布进程仍在运行时以这种方式验证；而在 Claude Code 以进程 ID 1 运行的容器中，它完全没有进程证据。在原生 Windows 上它也没有进程证据。</li>
+<li>在 macOS 上发布进程退出之后，以及在 Claude Code 以进程 ID 1 运行的容器中，该进程证据缺失，Claude Code 改为验证在打开其连接的身份验证行中发送了会话所导出的 <a href="env-vars.html#variables"><code>CLAUDE_CODE_MESSAGING_TOKEN</code></a> 的子进程。在原生 Windows 上，该令牌是 Claude Code 验证自身子进程消息的唯一方式。</li>
+<li>当 Claude Code 无法通过任何一种方式验证时，它会像对待任何其他未声明权限类别的消息一样对待该消息，因此绕过权限提示的会话会保留它以等待您的批准。</li>
+<li><strong>沙箱中的会话</strong>：使用沙箱的 Unix 套接字设置 <a href="settings-reference.html#sandbox-settings"><code>sandbox.network.allowAllUnixSockets</code> 和 <code>sandbox.network.allowUnixSockets</code></a> 控制 Bash 命令能否从<a href="sandboxing.html">沙箱</a>内部访问套接字。</li>
+</ul>
+<h2 id="restrict-cross-session-messaging">限制跨会话消息传递</h2>
+<p>除了每条消息的默认值，您可以通过两种方式缩小消息传递。在任何消息离开机器之前要求您的批准，或为会话或组织关闭消息传递。</p>
+<h3 id="require-approval-for-cross-machine-messages">要求批准跨机器消息</h3>
+<p>设置 <a href="settings-reference.html#isolatepeermachines"><code>isolatePeerMachines</code></a> 为 <code>true</code> 以要求您的明确批准，在任何 <code>SendMessage</code> 到达超出此机器的会话之前：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"isolatePeerMachines"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>设置此项后，Claude Code 在 Claude 的消息到达超出此机器的会话之前要求您的批准，即使在 <code>bypassPermissions</code> 模式中，它跳过普通权限提示。任何设置范围中的 <code>true</code> 适用，因此检查的项目文件可以打开要求但不关闭。Claude Code 不提示同一机器上的会话之间的消息。</p>
+<h3 id="turn-off-cross-session-messaging">关闭跨会话消息传递</h3>
+<p>接收和发送是单独的控制，因此关闭您需要的任何方向，或两者。对到达的消息使用 <code>crossSessionInbound</code>，对 Claude 可以发送或列出的内容使用权限规则：</p>
+<ul>
+<li><strong>停止接收</strong>：设置 <code>crossSessionInbound</code> 为 <code>refuse</code>，Claude Code 删除入站对等消息而不传递它们。从项目或本地设置，<code>refuse</code> 适用于每个其他来源，从您的用户设置它适用，除非托管设置或 <code>--settings</code> 标志设置值。</li>
+<li><strong>停止发送和列出</strong>：添加<a href="permissions.html#tool-specific-permission-rules">权限拒绝规则</a>命名 <code>SendMessage</code> 和 <code>ListAgents</code>。两者都采用没有说明符的裸工具名称。</li>
+</ul>
+<p>管理员可以在<a href="managed-settings.html">托管设置</a>中为组织关闭两个方向，结合拒绝规则与 <code>refuse</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"deny"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"SendMessage"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ListAgents"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"crossSessionInbound"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refuse"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>设置此项后，Claude Code 仍然为每个会话绑定收件箱套接字，但删除到达它的每条消息而不向 Claude 传递任何内容。拒绝 <code>SendMessage</code> 也删除向子代理和代理团队队友的消息传递，因为相同的工具服务两者。拒绝的会话在其自己的 <code>/status</code> 或同一机器上其他会话的列表中显示无可见更改，因此要确认它，检查适用于该会话的设置文件而不是其状态。</p>
+<h2 id="availability">可用性</h2>
+<p>跨会话消息传递需要 macOS、Linux 和 WSL 2 上的 Claude Code v2.1.224 或更高版本，以及原生 Windows 上的 v2.1.234 或更高版本。可用性以及 Claude 可以向其发送消息的会话也取决于您的操作系统、提供商和配置：</p>
+<ul>
+<li>
+<p><strong>操作系统</strong>：在 macOS、Windows 和 Linux 上可用，包括 WSL 2 内的 Linux。</p>
+</li>
+<li>
+<p><strong>此机器上的会话</strong>：在每个提供商上可用，包括 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 和 Microsoft Foundry，以及在<a href="env-vars.html#features-that-need-feature-flag-fetching">功能标志获取</a>关闭的会话中运行。在这些提供商上，以及标志获取关闭时，同机器消息传递需要 Claude Code v2.1.248 或更高版本。Claude Code 通过您机器上的<a href="#the-sessions-inbox-socket">每个会话套接字</a>传递这些消息，永远不通过 Anthropic 服务器。</p>
+</li>
+</ul>
+<p>要停止会话接收它们，设置 <a href="#turn-off-cross-session-messaging"><code>crossSessionInbound</code></a> 为 <code>refuse</code>。</p>
+<ul>
+<li><strong>超出此机器的会话</strong>：Claude 从连接到远程控制的会话找到您的<a href="claude-code-on-the-web.html">网络上的 Claude Code</a> 会话和您在其他机器上的会话，这需要 claude.ai 登录作为此会话的活跃身份验证和其他<a href="remote-control.html#requirements">远程控制要求</a>。Claude 无法在 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上使用 API 密钥或找到这些会话。</li>
+</ul>
+<p>要检查会话，输入 <code>/list-agents</code>，也可用作 <code>/peers</code>。结果将没有该功能的会话与更窄的东西阻止消息的会话分开，如缺少 <code>SendMessage</code> 工具或拒绝的发送：</p>
+<ul>
+<li><strong><code>/list-agents</code> 无法识别</strong>：会话没有跨会话消息传递。通过上面的要求工作，从 <code>claude --version</code> 开始获取版本要求。</li>
+<li><strong><code>/list-agents</code> 有效但发送未到达</strong>：消息传递已启用，适用的是范围更窄的原因：</li>
+<li><strong>拒绝规则</strong>：<a href="#turn-off-cross-session-messaging">权限拒绝规则</a>删除 <code>SendMessage</code> 和 <code>ListAgents</code> 工具。</li>
+<li><strong>入站控制</strong>：<a href="#control-inbound-messages">接收会话的入站控制</a>可以保留或删除您发送给它的内容。</li>
+<li><strong>云端会话缺失</strong>：云端会话仅在此会话连接到 <a href="remote-control.html">Remote Control</a> 时出现。</li>
+<li><strong>其他机器会话缺失</strong>：您另一台机器上的会话仅在它使用 <a href="remote-control.html">Remote Control</a> 运行且此会话也已连接时出现。</li>
+<li><strong>其他机器会话 <code>offline</code></strong>：向列为 <code>offline</code> 的会话发送的消息会通过，但<a href="#message-sessions-on-other-machines">仅在该会话的机器重新连接后到达</a>。</li>
+<li><strong>云端或其他机器会话 <code>can't receive cross-session messages</code></strong>：向列有此状态的会话发送的消息<a href="#message-sessions-on-other-machines">不会离开此机器</a>，并且 <code>SendMessage</code> 下的结果以 <code>Not sent</code> 开头。</li>
+<li><strong>较旧的云端或其他机器会话缺失</strong>：Claude Code 按从新到旧的顺序读取这些会话列表，并在有限数量的页面后停止，因此 Claude 无法按名称向超出这些页面的会话发送消息。</li>
+</ul>
+<p>在具有消息传递的会话中，<code>/status</code> 也显示 <code>Peer address</code> 行，带有会话自己的收件箱地址，或 <code>unavailable</code> 和原因，当 Claude Code <a href="#the-sessions-inbox-socket">无法设置收件箱</a>时。</p>
+<h2 id="limitations">限制</h2>
+<p>这里的限制是消息传递通道本身的属性，在该功能运行的任何地方适用。对于平台和提供商差距，请改为参阅<a href="#availability">可用性</a>。</p>
+<ul>
+<li><strong>仅纯文本</strong>：Claude 仅在会话之间发送纯文本。结构化<a href="agent-teams.html">代理团队</a>协议消息保留在团队内。</li>
+<li><strong>同机器消息大小有上限</strong>：Claude Code 拒绝到此机器上的会话的消息，一旦其序列化形式超过约一百万个字符。拒绝<a href="errors.html#message-too-large-for-cross-session-delivery">命名确切大小</a>。什么都不到达接收会话。</li>
+<li><strong>对一个会话的快速突发在发送者处被拒绝</strong>：一旦对此机器上的会话的快速突发消息达到该会话的收件箱接受的内容，Claude Code 拒绝发送会话中的进一步发送。<a href="errors.html#too-many-messages-to-this-session-just-now">拒绝命名突发</a>并告诉 Claude 将其余的批处理为一条消息或等待。</li>
+<li><strong>消息循环被限制</strong>：在接收会话中，Claude Code 对每个发送者的重复消息进行速率限制，删除在短窗口内到达的相同重复，并最多为 Claude 读取排队 50 条接受的消息。因此两个会话之间的消息循环自己停止。</li>
+</ul>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li><a href="sub-agents.html#resume-subagents">子代理</a>和<a href="agent-teams.html#messages-between-agents">代理团队</a>：单个会话或团队内的消息传递</li>
+<li><a href="agent-view.html">后台代理</a>：分派和监控您可能向其发送消息的并行会话</li>
+<li><a href="remote-control.html">远程控制</a>：连接此会话以到达您在其他机器上的会话</li>
+<li><a href="channels.html">频道</a>：将外部事件（如 CI 结果或聊天消息）推送到会话中</li>
+<li><a href="settings-reference.html#all-settings">设置</a>：<code>crossSessionInbound</code>、<code>isolatePeerMachines</code> 和 <code>dialogExpiry</code></li>
+<li><a href="permission-modes.html">权限模式</a>：入站默认的两个类背后的模式</li>
+<li><a href="tools-reference.html">工具参考</a>：工具表中的 <code>ListAgents</code> 和 <code>SendMessage</code> 行</li>
+<li><a href="agents.html">并行运行代理</a>：比较 Claude Code 运行多个代理的方式</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="agent-teams.html"><span class="pager-dir">← 上一页</span><span class="pager-name">协调 Claude Code 会话团队</span></a><a class="pager-link next" href="workflows.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用动态工作流大规模编排子代理</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#when-to-use-cross-session-messaging">何时使用跨会话消息传递</a><a class="toc-l2" href="#message-another-session">向另一个会话发送消息</a><a class="toc-l3" href="#message-delivery">消息传递</a><a class="toc-l3" href="#get-a-notice-when-another-session-goes-idle">当另一个会话变为空闲时获得通知</a><a class="toc-l3" href="#see-which-sessions-claude-can-reach">查看 Claude 可以到达的会话</a><a class="toc-l3" href="#message-sessions-on-other-machines">向其他机器上的会话发送消息</a><a class="toc-l2" href="#how-a-session-treats-an-incoming-message">会话如何处理传入消息</a><a class="toc-l3" href="#what-a-message-looks-like">消息的样子</a><a class="toc-l3" href="#control-inbound-messages">控制入站消息</a><a class="toc-l3" href="#non-interactive-sessions">非交互式会话</a><a class="toc-l3" href="#the-sessions-inbox-socket">会话的收件箱套接字</a><a class="toc-l2" href="#restrict-cross-session-messaging">限制跨会话消息传递</a><a class="toc-l3" href="#require-approval-for-cross-machine-messages">要求批准跨机器消息</a><a class="toc-l3" href="#turn-off-cross-session-messaging">关闭跨会话消息传递</a><a class="toc-l2" href="#availability">可用性</a><a class="toc-l2" href="#limitations">限制</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

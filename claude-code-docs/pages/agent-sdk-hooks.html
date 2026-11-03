@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用 hooks 拦截和控制代理行为 · Claude Code 中文文档</title>
+<meta name="description" content="在代理执行的关键点使用 hooks 拦截和自定义代理行为">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="agent-sdk/hooks">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/agent-sdk/hooks" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link active" href="agent-sdk-hooks.html" aria-current="page">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>Agent SDK</span> <span class="sep">/</span> <span>控制与可观测性</span></div>
+    <article class="prose" id="article"><h1 id="hooks">使用 hooks 拦截和控制代理行为</h1>
+<blockquote>
+<p>在代理执行的关键点使用 hooks 拦截和自定义代理行为</p>
+</blockquote>
+<p>Hooks 是回调函数，用于响应代理事件（如工具被调用、会话启动或执行停止）运行您的代码。使用 hooks，您可以：</p>
+<ul>
+<li><strong>阻止危险操作</strong>在执行前进行，如破坏性 shell 命令或未授权的文件访问</li>
+<li><strong>记录和审计</strong>工具调用，用于合规性、调试或分析</li>
+<li><strong>转换输入和输出</strong>以清理数据、注入凭证或重定向文件路径</li>
+<li><strong>要求人工批准</strong>敏感操作，如数据库写入或 API 调用</li>
+<li><strong>跟踪会话生命周期</strong>以管理状态、清理资源或发送通知</li>
+</ul>
+<h2 id="how-hooks-work">hook 如何工作</h2>
+<p><strong>1. 事件触发</strong></p>
+<p>Agent 执行期间发生某事，SDK 触发事件：工具即将被调用（<code>PreToolUse</code>）、工具返回结果（<code>PostToolUse</code>）、子代理启动或停止、Agent 空闲或执行完成。请参阅<a href="#available-hooks">完整事件列表</a>。</p>
+<p><strong>2. SDK 收集已注册的 hook</strong></p>
+<p>SDK 检查为该事件类型注册的 hook。这包括您在 <code>options.hooks</code> 中传递的回调 hook 和来自设置文件的 shell 命令 hook，当相应的 <a href="agent-sdk-typescript.html#settingsource"><code>settingSources</code></a> 或 <a href="agent-sdk-python.html#settingsource"><code>setting_sources</code></a> 条目启用时（默认 <code>query()</code> 选项就是这样）。</p>
+<p><strong>3. 匹配器过滤哪些 hook 运行</strong></p>
+<p>如果 hook 有 <a href="#matchers"><code>matcher</code></a> 模式（如 <code>"Write|Edit"</code>），SDK 会针对事件的目标（例如工具名称）测试它。没有匹配器的 hook 对该类型的每个事件都运行。</p>
+<p><strong>4. 回调函数执行</strong></p>
+<p>每个匹配的 hook 的<a href="#callback-functions">回调函数</a>接收有关正在发生的事情的输入：工具名称、其参数、会话 ID 和其他事件特定的详细信息。</p>
+<p><strong>5. 您的回调返回决定</strong></p>
+<p>执行任何操作（日志记录、API 调用、验证）后，您的回调返回一个<a href="#outputs">输出对象</a>，告诉 Agent 该做什么：允许操作、阻止它、修改输入或将上下文注入到对话中。</p>
+<p>此示例注册一个 <code>PreToolUse</code> hook（步骤 1），带有 <code>"Write|Edit"</code> 匹配器（步骤 3），因此回调会针对 Write 和 Edit 工具触发。触发时，回调接收工具的输入（步骤 4），检查文件路径是否针对 <code>.env</code> 文件，并返回 <code>permissionDecision: "deny"</code> 以阻止操作（步骤 5）：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AssistantMessage</span><span class="p">,</span>
+    <span class="n">ClaudeSDKClient</span><span class="p">,</span>
+    <span class="n">ClaudeAgentOptions</span><span class="p">,</span>
+    <span class="n">HookMatcher</span><span class="p">,</span>
+    <span class="n">ResultMessage</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># 定义一个接收工具调用详细信息的 hook 回调</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">protect_env_files</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="c1"># 从工具的输入参数中提取文件路径</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"tool_input"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"file_path"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># 如果针对 .env 文件，阻止操作</span>
+    <span class="k">if</span> <span class="n">file_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">".env"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"hookSpecificOutput"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"hookEventName"</span><span class="p">:</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"hook_event_name"</span><span class="p">],</span>
+                <span class="s2">"permissionDecision"</span><span class="p">:</span> <span class="s2">"deny"</span><span class="p">,</span>
+                <span class="s2">"permissionDecisionReason"</span><span class="p">:</span> <span class="s2">"Cannot modify .env files"</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+    <span class="c1"># 返回空对象以允许操作</span>
+    <span class="k">return</span> <span class="p">{}</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">hooks</span><span class="o">=</span><span class="p">{</span>
+            <span class="c1"># 为 PreToolUse 事件注册 hook</span>
+            <span class="c1"># 匹配器仅过滤 Write 和 Edit 工具调用</span>
+            <span class="s2">"PreToolUse"</span><span class="p">:</span> <span class="p">[</span><span class="n">HookMatcher</span><span class="p">(</span><span class="n">matcher</span><span class="o">=</span><span class="s2">"Write|Edit"</span><span class="p">,</span> <span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">protect_env_files</span><span class="p">])]</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">with</span> <span class="n">ClaudeSDKClient</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"使用标准本地开发数据库配置创建 .env 文件"</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">receive_response</span><span class="p">():</span>
+            <span class="c1"># 过滤助手和结果消息</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="p">(</span><span class="n">AssistantMessage</span><span class="p">,</span> <span class="n">ResultMessage</span><span class="p">)):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="p">,</span><span class="w"> </span><span class="nx">HookCallback</span><span class="p">,</span><span class="w"> </span><span class="nx">PreToolUseHookInput</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="c1">// 使用 HookCallback 类型定义 hook 回调</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">protectEnvFiles</span><span class="o">:</span><span class="w"> </span><span class="kt">HookCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="nx">toolUseID</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 将输入转换为特定 hook 类型以获得类型安全</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">preInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">PreToolUseHookInput</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// 转换 tool_input 以访问其属性（在 SDK 中类型为 unknown）</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">toolInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">preInput</span><span class="p">.</span><span class="nx">tool_input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">filePath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">toolInput</span><span class="o">?</span><span class="p">.</span><span class="nx">file_path</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">fileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">filePath</span><span class="o">?</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">).</span><span class="nx">pop</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// 如果针对 .env 文件，阻止操作</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">fileName</span><span class="o">?</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">".env"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">hookSpecificOutput</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">hookEventName</span><span class="o">:</span><span class="w"> </span><span class="kt">preInput.hook_event_name</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">permissionDecision</span><span class="o">:</span><span class="w"> </span><span class="s2">"deny"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">permissionDecisionReason</span><span class="o">:</span><span class="w"> </span><span class="s2">"Cannot modify .env files"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 返回空对象以允许操作</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="p">};</span>
+
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"使用标准本地开发数据库配置创建 .env 文件"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 为 PreToolUse 事件注册 hook</span>
+<span class="w">      </span><span class="c1">// 匹配器仅过滤 Write 和 Edit 工具调用</span>
+<span class="w">      </span><span class="nx">PreToolUse</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">matcher</span><span class="o">:</span><span class="w"> </span><span class="s2">"Write|Edit"</span><span class="p">,</span><span class="w"> </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">protectEnvFiles</span><span class="p">]</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 过滤助手和结果消息</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"assistant"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"result"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>该 hook 会拒绝 <code>file_path</code> 以 <code>/.env</code> 结尾的 Write 或 Edit 调用，不区分字母大小写。在 Windows 上，<code>file_path</code> 使用反斜杠，例如 <code>C:\project\.env</code>，此时该 hook 会允许对 <code>C:\project\.env</code> 的 Write 或 Edit 调用。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p><code>Write|Edit</code> 匹配器将此 hook 限制为仅作用于 Write 和 Edit 工具。如果 Claude 通过 Bash 命令写入 <code>.env</code>，该 hook 不会运行。要在<a href="sandboxing.html">沙箱运行</a>的情况下阻止 Bash 写入某个文件，请参阅 <a href="agent-sdk-python.html#sandbox-configuration">Python</a> 或 <a href="agent-sdk-typescript.html#sandbox-configuration">TypeScript</a> 的沙箱配置。</p></div></div>
+<h2 id="available-hooks">可用的 hooks</h2>
+<p>SDK 为代理执行的不同阶段提供 hooks。某些 hooks 在两个 SDK 中都可用，而其他 hooks 仅在 TypeScript 中可用。</p>
+<table>
+<thead>
+<tr>
+<th>Hook 事件</th>
+<th>Python SDK</th>
+<th>TypeScript SDK</th>
+<th>触发条件</th>
+<th>示例用例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PreToolUse</code></td>
+<td>是</td>
+<td>是</td>
+<td>工具调用请求（可以阻止或修改）</td>
+<td>阻止危险的 shell 命令</td>
+</tr>
+<tr>
+<td><code>PostToolUse</code></td>
+<td>是</td>
+<td>是</td>
+<td>工具执行结果</td>
+<td>将文件更改记录到审计跟踪</td>
+</tr>
+<tr>
+<td><code>PostToolUseFailure</code></td>
+<td>是</td>
+<td>是</td>
+<td>工具执行失败</td>
+<td>处理或记录工具错误</td>
+</tr>
+<tr>
+<td><code>PostToolBatch</code></td>
+<td>否</td>
+<td>是</td>
+<td>一整批工具调用解决，每批一次，在下一个模型调用之前</td>
+<td>为整个批次注入约定</td>
+</tr>
+<tr>
+<td><a href="hooks.html#userpromptsubmit"><code>UserPromptSubmit</code></a></td>
+<td>是</td>
+<td>是</td>
+<td>提交提示词，包括 Claude Code 自行发起的轮次</td>
+<td>将额外上下文注入到提示词中</td>
+</tr>
+<tr>
+<td><a href="hooks.html#userpromptexpansion"><code>UserPromptExpansion</code></a></td>
+<td>否</td>
+<td>是</td>
+<td>用户输入的命令或 MCP 提示在到达 Claude 之前扩展为提示。当 Claude 自己调用 skill 时不会触发</td>
+<td>阻止命令直接调用或在输入 skill 时添加上下文</td>
+</tr>
+<tr>
+<td><code>MessageDisplay</code></td>
+<td>否</td>
+<td>是</td>
+<td>助手消息包含文本完成，每条消息一次，包含完整消息文本</td>
+<td>编辑或重新格式化显示的文本而不改变记录</td>
+</tr>
+<tr>
+<td><code>Stop</code></td>
+<td>是</td>
+<td>是</td>
+<td>代理执行停止</td>
+<td>在退出前保存会话状态</td>
+</tr>
+<tr>
+<td><code>StopFailure</code></td>
+<td>否</td>
+<td>是</td>
+<td>转换以 API 错误结束而不是正常停止</td>
+<td>记录失败或发送警报</td>
+</tr>
+<tr>
+<td><code>SubagentStart</code></td>
+<td>是</td>
+<td>是</td>
+<td>子代理初始化</td>
+<td>跟踪并行任务生成</td>
+</tr>
+<tr>
+<td><code>SubagentStop</code></td>
+<td>是</td>
+<td>是</td>
+<td>子代理完成</td>
+<td>聚合来自并行任务的结果</td>
+</tr>
+<tr>
+<td><code>PreCompact</code></td>
+<td>是</td>
+<td>是</td>
+<td>对话压缩请求</td>
+<td>在总结前存档完整记录</td>
+</tr>
+<tr>
+<td><code>PostCompact</code></td>
+<td>否</td>
+<td>是</td>
+<td>对话压缩完成</td>
+<td>记录生成的摘要</td>
+</tr>
+<tr>
+<td><a href="hooks.html#premodelswitch"><code>PreModelSwitch</code></a></td>
+<td>否</td>
+<td>是</td>
+<td>请求的模型切换，在发生之前（可以阻止）</td>
+<td>阻止切换到特定模型</td>
+</tr>
+<tr>
+<td><a href="hooks.html#postmodelswitch"><code>PostModelSwitch</code></a></td>
+<td>否</td>
+<td>是</td>
+<td>会话的模型更改，包括自动回退</td>
+<td>为新模型提供 Claude 特定的指导</td>
+</tr>
+<tr>
+<td><code>PermissionRequest</code></td>
+<td>是</td>
+<td>是</td>
+<td>工具调用需要权限决定</td>
+<td>自定义权限处理</td>
+</tr>
+<tr>
+<td><code>PermissionDenied</code></td>
+<td>否</td>
+<td>是</td>
+<td>自动模式拒绝工具调用，包括没有分类器判决的拒绝</td>
+<td>记录拒绝，或告诉模型它可能重试；Claude Code 对无判决拒绝忽略 <code>retry: true</code>。参见 <a href="hooks.html#permissiondenied">PermissionDenied</a></td>
+</tr>
+<tr>
+<td><code>SessionStart</code></td>
+<td>否</td>
+<td>是</td>
+<td>会话初始化</td>
+<td>初始化日志记录和遥测</td>
+</tr>
+<tr>
+<td><code>SessionEnd</code></td>
+<td>否</td>
+<td>是</td>
+<td>会话终止</td>
+<td>清理临时资源</td>
+</tr>
+<tr>
+<td><code>Notification</code></td>
+<td>是</td>
+<td>是</td>
+<td>代理状态消息</td>
+<td>将代理状态更新发送到 Slack 或 PagerDuty</td>
+</tr>
+<tr>
+<td><code>Setup</code></td>
+<td>否</td>
+<td>是</td>
+<td>会话设置/维护</td>
+<td>运行初始化任务</td>
+</tr>
+<tr>
+<td><code>TeammateIdle</code></td>
+<td>否</td>
+<td>是</td>
+<td>队友变为空闲</td>
+<td>重新分配工作或通知</td>
+</tr>
+<tr>
+<td><code>TaskCreated</code></td>
+<td>否</td>
+<td>是</td>
+<td>通过 <code>TaskCreate</code> 工具创建任务</td>
+<td>强制执行任务命名约定</td>
+</tr>
+<tr>
+<td><a href="hooks.html#taskcompleted"><code>TaskCompleted</code></a></td>
+<td>否</td>
+<td>是</td>
+<td>任务标记为已完成</td>
+<td>在任务关闭前要求通过测试</td>
+</tr>
+<tr>
+<td><code>Elicitation</code></td>
+<td>否</td>
+<td>是</td>
+<td>MCP 服务器在任务中期请求用户输入</td>
+<td>以编程方式响应 MCP 输入请求</td>
+</tr>
+<tr>
+<td><code>ElicitationResult</code></td>
+<td>否</td>
+<td>是</td>
+<td>用户响应 MCP 引出</td>
+<td>在返回到服务器之前修改或阻止响应</td>
+</tr>
+<tr>
+<td><code>ConfigChange</code></td>
+<td>否</td>
+<td>是</td>
+<td>配置文件更改</td>
+<td>动态重新加载设置</td>
+</tr>
+<tr>
+<td><code>InstructionsLoaded</code></td>
+<td>否</td>
+<td>是</td>
+<td><code>CLAUDE.md</code> 或规则文件加载到上下文中</td>
+<td>审计加载哪些指令文件</td>
+</tr>
+<tr>
+<td><code>WorktreeCreate</code></td>
+<td>否</td>
+<td>是</td>
+<td>Git worktree 创建</td>
+<td>跟踪隔离的工作区</td>
+</tr>
+<tr>
+<td><code>WorktreeRemove</code></td>
+<td>否</td>
+<td>是</td>
+<td>由 <code>WorktreeCreate</code> hook 创建的 worktree 正在被移除</td>
+<td>清理工作区资源</td>
+</tr>
+<tr>
+<td><code>CwdChanged</code></td>
+<td>否</td>
+<td>是</td>
+<td>会话期间工作目录更改</td>
+<td>按目录重新加载环境变量</td>
+</tr>
+<tr>
+<td><code>FileChanged</code></td>
+<td>否</td>
+<td>是</td>
+<td>监视的文件被修改、创建或删除</td>
+<td>项目文件更改时重新加载配置</td>
+</tr>
+<tr>
+<td><code>DirectoryAdded</code></td>
+<td>否</td>
+<td>是</td>
+<td>会话期间添加工作目录</td>
+<td>为中途添加的存储库安装依赖项</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configure-hooks">配置 hook</h2>
+<p>要配置 hook，请在您的 Agent 选项的 <code>hooks</code> 字段中传递它（Python 中的 <code>ClaudeAgentOptions</code>，TypeScript 中的 <code>options</code> 对象）。此代码段假设您已经定义了一个 hook 回调，例如上面示例中 Python 中的 <code>protect_env_files</code> 或 TypeScript 中的 <code>protectEnvFiles</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+    <span class="n">hooks</span><span class="o">=</span><span class="p">{</span><span class="s2">"PreToolUse"</span><span class="p">:</span> <span class="p">[</span><span class="n">HookMatcher</span><span class="p">(</span><span class="n">matcher</span><span class="o">=</span><span class="s2">"Bash"</span><span class="p">,</span> <span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">my_callback</span><span class="p">])]}</span>
+<span class="p">)</span>
+
+<span class="k">async</span> <span class="k">with</span> <span class="n">ClaudeSDKClient</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"Your prompt"</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">receive_response</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Your prompt"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">PreToolUse</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">matcher</span><span class="o">:</span><span class="w"> </span><span class="s2">"Bash"</span><span class="p">,</span><span class="w"> </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">myCallback</span><span class="p">]</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>hooks</code> 选项是一个字典（Python）或对象（TypeScript），其中：</p>
+<ul>
+<li><strong>键</strong>是 <a href="#available-hooks">hook 事件名称</a>（例如 <code>'PreToolUse'</code>、<code>'PostToolUse'</code>、<code>'Stop'</code>）</li>
+<li><strong>值</strong>是<a href="#matchers">匹配器</a>数组，每个包含可选的过滤模式和您的<a href="#callback-functions">回调函数</a></li>
+</ul>
+<h3 id="matchers">匹配器</h3>
+<p>使用匹配器来过滤您的回调何时触发。<code>matcher</code> 字段根据 hook 事件类型匹配不同的值。例如，基于工具的 hook 匹配工具名称，而 <code>Notification</code> hook 匹配通知类型。</p>
+<p>SDK 匹配器遵循与<a href="hooks.html#matcher-patterns">设置文件中的匹配器</a>相同的规则。该部分记录了精确字符串和正则表达式评估路径、它们的版本要求以及每个事件类型的匹配器值。</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>类型</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>matcher</code></td>
+<td><code>string</code></td>
+<td><code>undefined</code></td>
+<td>针对事件的过滤字段匹配的模式，遵循<a href="hooks.html#matcher-patterns">设置文件中匹配器的规则</a>。对于工具 hook，该字段是工具名称。内置工具包括 <code>Bash</code>、<code>Read</code>、<code>Write</code>、<code>Edit</code>、<code>Glob</code>、<code>Grep</code>、<code>WebFetch</code>、<code>Agent</code> 等。请参阅<a href="agent-sdk-typescript.html#tool-input-types">工具输入类型</a>以获取完整列表。MCP 工具使用模式 <code>mcp__&lt;server&gt;__&lt;action&gt;</code>，其中 <code>&lt;server&gt;</code> 是您在 <code>mcpServers</code> 配置中使用的键，其拼写方式遵循<a href="agent-sdk-mcp.html#tool-naming-convention">工具命名约定</a>中的说明。</td>
+</tr>
+<tr>
+<td><code>hooks</code></td>
+<td><code>HookCallback[]</code></td>
+<td>-</td>
+<td>必需。当模式匹配时执行的回调函数数组</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>number</code></td>
+<td><code>undefined</code></td>
+<td>超时时间（秒）。省略时，Claude Code 应用<a href="#hook-timeout">事件的默认超时</a>。您的 SDK 回调遵循 <code>command</code> hook 默认值</td>
+</tr>
+</tbody>
+</table>
+<p>尽可能使用 <code>matcher</code> 模式来针对特定工具。带有 <code>'Bash'</code> 的匹配器仅对 Bash 命令运行，而省略模式会为事件的每次出现运行您的回调。</p>
+<h3 id="callback-functions">回调函数</h3>
+<h4 id="inputs">输入</h4>
+<p>每个 hook 回调接收三个参数：</p>
+<ul>
+<li><strong>输入数据：</strong> 一个包含事件详细信息的类型化对象。每个 hook 类型都有自己的输入形状。例如，<code>PreToolUseHookInput</code> 包括 <code>tool_name</code> 和 <code>tool_input</code>，而 <code>NotificationHookInput</code> 包括 <code>message</code>。请参阅 <a href="agent-sdk-typescript.html#hookinput">TypeScript</a> 和 <a href="agent-sdk-python.html#hookinput">Python</a> SDK 参考中的完整类型定义。</li>
+<li>所有 hook 输入共享 <code>session_id</code>、<code>cwd</code> 和 <code>hook_event_name</code>。</li>
+<li>当 hook 在子代理内触发时，<code>agent_id</code> 和 <code>agent_type</code> 被填充。在 TypeScript 中，这些在基础 hook 输入上，对所有 hook 类型都可用。在 Python 中，它们是 <code>PreToolUse</code>、<code>PostToolUse</code>、<code>PostToolUseFailure</code> 和 <code>PermissionRequest</code> 上的可选字段，以及 <code>SubagentStart</code> 和 <code>SubagentStop</code> 上的必需字段。</li>
+<li><strong>工具使用 ID</strong>（<code>str | None</code> / <code>string | undefined</code>）：关联同一工具调用的 <code>PreToolUse</code> 和 <code>PostToolUse</code> 事件。</li>
+<li><strong>上下文：</strong> 在 TypeScript 中，包含用于取消的 <code>signal</code> 属性（<code>AbortSignal</code>）。在 Python 中，此参数保留供将来使用。</li>
+</ul>
+<h4 id="outputs">输出</h4>
+<p>您的回调返回一个具有两类字段的对象：</p>
+<ul>
+<li><strong>顶级字段</strong>在每个事件上被接受：<code>systemMessage</code> 向用户显示消息，<code>continue</code>（Python 中的 <code>continue_</code>）确定 Agent 在此 hook 后是否继续运行。某些事件会丢弃它们或将它们传递到其他地方。hooks 页面上每个<a href="hooks.html#hook-events">事件的部分</a>说明了它们的去向。</li>
+<li><strong><code>hookSpecificOutput</code></strong> 控制当前操作。内部的字段取决于 hook 事件类型：</li>
+<li>对于 <code>PreToolUse</code> hook，这是您设置 <code>permissionDecision</code>（<code>"allow"</code>、<code>"deny"</code>、<code>"ask"</code> 或 <code>"defer"</code>）、<code>permissionDecisionReason</code> 和 <code>updatedInput</code> 的地方。如果您返回 <code>"defer"</code>，该轮次将以一条 <code>stop_reason</code> 为 <code>"tool_deferred"</code> 的结果消息结束，以便您可以<a href="hooks.html#defer-a-tool-call-for-later">稍后恢复该调用</a>。</li>
+<li>对于 <code>PostToolUse</code> hook，您可以设置 <code>additionalContext</code> 以将信息附加到工具结果。要在 Claude 看到之前替换工具的输出，请设置 <code>updatedToolOutput</code>，这适用于两个 SDK 中的任何工具。较旧的 <code>updatedMCPToolOutput</code> 字段仅替换 MCP 工具输出。</li>
+<li>在 TypeScript SDK 中，<code>PostToolUse</code> 回调也可以返回 <code>classifierContext</code>，这是关于工具调用结果的简短说明，用于<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>权限分类器。因为您的回调在您的应用程序自己的进程中运行，分类器可能会将您在说明中转达的用户声明视为用户意图。该字段需要 TypeScript Agent SDK v0.3.236 或更高版本。<a href="hooks.html#annotate-a-result-for-the-auto-mode-classifier">为自动模式分类器注释结果</a>涵盖了长度上限、仅同步规则以及不要在说明中放入的内容。</li>
+</ul>
+<p>返回 <code>{}</code> 以允许操作而不进行更改。SDK 回调 hook 使用与 <a href="hooks.html#json-output">Claude Code shell 命令 hook</a> 相同的 JSON 输出格式，其中记录了每个字段和事件特定的选项。对于 SDK 类型定义，请参阅 <a href="agent-sdk-typescript.html#synchookjsonoutput">TypeScript</a> 和 <a href="agent-sdk-python.html#synchookjsonoutput">Python</a> SDK 参考。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>当多个 <code>PreToolUse</code> hook 返回不同的<a href="hooks.html#pretooluse-decision-control">决策</a>时，<code>deny</code> 优先于 <code>defer</code>，<code>defer</code> 优先于 <code>ask</code>，<code>ask</code> 优先于 <code>allow</code>。</p></div></div>
+<h4 id="asynchronous-output">异步输出</h4>
+<p>默认情况下，Agent 在您的 hook 返回前等待。如果您的 hook 执行副作用，例如日志记录或发送 webhook，并且不需要影响 Agent 的行为，您可以改为返回异步输出。这告诉 Agent 立即继续，而不等待 hook 完成。在此代码段中，Python 中的 <code>send_to_logging_service</code> 和 TypeScript 中的 <code>sendToLoggingService</code> 代表您定义的任何日志记录函数：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_hook</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="c1"># 启动后台任务，然后立即返回</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">send_to_logging_service</span><span class="p">(</span><span class="n">input_data</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"async_"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"asyncTimeout"</span><span class="p">:</span> <span class="mi">30000</span><span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">asyncHook</span><span class="o">:</span><span class="w"> </span><span class="kt">HookCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="nx">toolUseID</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 启动后台任务，然后立即返回</span>
+<span class="w">  </span><span class="nx">sendToLoggingService</span><span class="p">(</span><span class="nx">input</span><span class="p">).</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">async</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">asyncTimeout</span><span class="o">:</span><span class="w"> </span><span class="kt">30000</span><span class="w"> </span><span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>async</code></td>
+<td><code>true</code></td>
+<td>表示异步模式。Agent 继续而不等待。在 Python 中，使用 <code>async_</code> 以避免保留关键字。</td>
+</tr>
+<tr>
+<td><code>asyncTimeout</code></td>
+<td><code>number</code></td>
+<td>后台操作的可选超时时间（毫秒）</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>异步输出无法阻止、修改或将上下文注入到操作中，因为 Agent 已经继续。仅将它们用于日志记录、指标或通知等副作用。</p></div></div>
+<h2 id="examples">示例</h2>
+<p>本节中的几个示例仅显示回调函数。要运行一个示例，请在选项的 <code>hooks</code> 字段中的匹配事件下注册回调，如 <a href="#configure-hooks">配置 hooks</a> 中所示。</p>
+<h3 id="modify-tool-input">修改工具输入</h3>
+<p>此示例拦截 Write 工具调用并重写 <code>file_path</code> 参数以添加 <code>/sandbox</code> 前缀。回调返回带有修改路径的 <code>updatedInput</code> 和 <code>permissionDecision: 'allow'</code> 以自动批准重写的操作：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">redirect_to_sandbox</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"hook_event_name"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"PreToolUse"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"tool_name"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Write"</span><span class="p">:</span>
+        <span class="n">original_path</span> <span class="o">=</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"tool_input"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"file_path"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"hookSpecificOutput"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"hookEventName"</span><span class="p">:</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"hook_event_name"</span><span class="p">],</span>
+                <span class="s2">"permissionDecision"</span><span class="p">:</span> <span class="s2">"allow"</span><span class="p">,</span>
+                <span class="s2">"updatedInput"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="o">**</span><span class="n">input_data</span><span class="p">[</span><span class="s2">"tool_input"</span><span class="p">],</span>
+                    <span class="s2">"file_path"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"/sandbox</span><span class="si">{</span><span class="n">original_path</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">redirectToSandbox</span><span class="o">:</span><span class="w"> </span><span class="kt">HookCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="nx">toolUseID</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">hook_event_name</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">"PreToolUse"</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">preInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">PreToolUseHookInput</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">toolInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">preInput</span><span class="p">.</span><span class="nx">tool_input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">preInput</span><span class="p">.</span><span class="nx">tool_name</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"Write"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">originalPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">toolInput</span><span class="p">.</span><span class="nx">file_path</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">hookSpecificOutput</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">hookEventName</span><span class="o">:</span><span class="w"> </span><span class="kt">preInput.hook_event_name</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">permissionDecision</span><span class="o">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">updatedInput</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="p">...</span><span class="nx">toolInput</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">file_path</span><span class="o">:</span><span class="w"> </span><span class="sb">`/sandbox</span><span class="si">${</span><span class="nx">originalPath</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>将 <code>updatedInput</code> 与 <code>permissionDecision: 'allow'</code> 配对以自动批准修改的输入，或使用 <code>permissionDecision: 'ask'</code> 将其显示给用户。如果省略 <code>permissionDecision</code>，修改的输入仍然适用并流经正常的权限评估。使用 <code>'defer'</code> 时，<code>updatedInput</code> 会被忽略。始终返回新对象而不是改变原始 <code>tool_input</code>。</p></div></div>
+<p>要确认重定向，请将前缀设置为您可以写入的路径，例如 <code>./sandbox</code> 或 <code>/tmp/sandbox</code>（macOS 不允许创建根级 <code>/sandbox</code> 目录），然后要求代理写入文件：Write 工具在消息流中的结果会显示带有您的沙箱前缀的路径，而不是 Claude 请求的路径。</p>
+<h3 id="add-context-and-block-a-tool">添加上下文并阻止工具</h3>
+<p>此示例拒绝 <code>file_path</code> 以 <code>/etc</code> 开头的工具调用，并向模型和用户解释原因：</p>
+<ul>
+<li><code>permissionDecision: 'deny'</code> 停止工具调用。</li>
+<li><code>permissionDecisionReason</code> 告诉模型原因。</li>
+<li><code>systemMessage</code> 向用户显示发生了什么。</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">block_etc_writes</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"tool_input"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"file_path"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">file_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"/etc"</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="c1"># 顶级字段：显示给用户的消息</span>
+            <span class="s2">"systemMessage"</span><span class="p">:</span> <span class="s2">"Remember: system directories like /etc are protected."</span><span class="p">,</span>
+            <span class="c1"># hookSpecificOutput：阻止操作</span>
+            <span class="s2">"hookSpecificOutput"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"hookEventName"</span><span class="p">:</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"hook_event_name"</span><span class="p">],</span>
+                <span class="s2">"permissionDecision"</span><span class="p">:</span> <span class="s2">"deny"</span><span class="p">,</span>
+                <span class="s2">"permissionDecisionReason"</span><span class="p">:</span> <span class="s2">"Writing to /etc is not allowed"</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">blockEtcWrites</span><span class="o">:</span><span class="w"> </span><span class="kt">HookCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="nx">toolUseID</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">preInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">PreToolUseHookInput</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">toolInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">preInput</span><span class="p">.</span><span class="nx">tool_input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">filePath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">toolInput</span><span class="o">?</span><span class="p">.</span><span class="nx">file_path</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">filePath</span><span class="o">?</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s2">"/etc"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 顶级字段：显示给用户的消息</span>
+<span class="w">      </span><span class="nx">systemMessage</span><span class="o">:</span><span class="w"> </span><span class="s2">"Remember: system directories like /etc are protected."</span><span class="p">,</span>
+<span class="w">      </span><span class="c1">// hookSpecificOutput：阻止操作</span>
+<span class="w">      </span><span class="nx">hookSpecificOutput</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">hookEventName</span><span class="o">:</span><span class="w"> </span><span class="kt">preInput.hook_event_name</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">permissionDecision</span><span class="o">:</span><span class="w"> </span><span class="s2">"deny"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">permissionDecisionReason</span><span class="o">:</span><span class="w"> </span><span class="s2">"Writing to /etc is not allowed"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>要确认阻止，请在 <code>PreToolUse</code> 下注册回调，使用 <code>Write|Edit</code> 匹配器，并要求代理在 <code>/etc</code> 下创建文件：Write 工具在消息流中的结果包含 <code>Writing to /etc is not allowed</code>，并且不会创建任何文件。</p>
+<h3 id="auto-approve-specific-tools">自动批准特定工具</h3>
+<p>默认情况下，Agent 可能在使用某些工具前请求权限。此示例通过返回 <code>permissionDecision: 'allow'</code> 自动批准只读文件系统工具（Read、Glob、Grep），让它们无需用户确认即可运行（从<a href="permissions.html#network-paths">网络路径</a>读取的操作除外），同时让所有其他工具受到正常权限检查：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">auto_approve_read_only</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"hook_event_name"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"PreToolUse"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="n">read_only_tools</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span> <span class="s2">"Glob"</span><span class="p">,</span> <span class="s2">"Grep"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"tool_name"</span><span class="p">]</span> <span class="ow">in</span> <span class="n">read_only_tools</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"hookSpecificOutput"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"hookEventName"</span><span class="p">:</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"hook_event_name"</span><span class="p">],</span>
+                <span class="s2">"permissionDecision"</span><span class="p">:</span> <span class="s2">"allow"</span><span class="p">,</span>
+                <span class="s2">"permissionDecisionReason"</span><span class="p">:</span> <span class="s2">"Read-only tool auto-approved"</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">autoApproveReadOnly</span><span class="o">:</span><span class="w"> </span><span class="kt">HookCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="nx">toolUseID</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">hook_event_name</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">"PreToolUse"</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">preInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">PreToolUseHookInput</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">readOnlyTools</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"Read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Glob"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Grep"</span><span class="p">];</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">readOnlyTools</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">preInput</span><span class="p">.</span><span class="nx">tool_name</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">hookSpecificOutput</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">hookEventName</span><span class="o">:</span><span class="w"> </span><span class="kt">preInput.hook_event_name</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">permissionDecision</span><span class="o">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">permissionDecisionReason</span><span class="o">:</span><span class="w"> </span><span class="s2">"Read-only tool auto-approved"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="p">};</span>
+</code></pre></div>
+<h3 id="register-multiple-hooks">注册多个 hooks</h3>
+<p>当事件触发时，匹配的 hook 并行运行。对于权限决策，以最严格的结果为准。任一 hook 返回的 <code>deny</code> 都会阻止工具调用。由于完成顺序是不确定的，请编写每个 hook 以独立行动，而不是依赖另一个 hook 已先运行。</p>
+<p>下面的示例注册三个独立检查，每个检查都<a href="hooks.html#matcher-patterns">省略了匹配器</a>。其中的 hook 名称，例如 Python 中的 <code>audit_logger</code> 或 TypeScript 中的 <code>auditLogger</code>，代表您定义的回调：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+    <span class="n">hooks</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"PreToolUse"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">HookMatcher</span><span class="p">(</span><span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">authorization_check</span><span class="p">]),</span>
+            <span class="n">HookMatcher</span><span class="p">(</span><span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">input_validator</span><span class="p">]),</span>
+            <span class="n">HookMatcher</span><span class="p">(</span><span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">audit_logger</span><span class="p">]),</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">PreToolUse</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">authorizationCheck</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">inputValidator</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">auditLogger</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<h3 id="filter-with-multi-tool-matchers">使用多工具匹配器过滤</h3>
+<p>使用多工具匹配器在相关工具间共享一个回调。此示例注册三个具有不同范围的匹配器，其中每个 hook 名称代表您定义的回调：</p>
+<ul>
+<li>管道分隔的精确列表（<code>Write|Edit|NotebookEdit</code>）对 Write、Edit 和 NotebookEdit 工具触发 <code>file_security_hook</code>。</li>
+<li>正则表达式（<code>^mcp__</code>）对任何名称以 <code>mcp__</code> 开头的 MCP 工具触发 <code>mcp_audit_hook</code>。</li>
+<li>省略的匹配器触发 <code>global_logger</code>，不按工具名称过滤。</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+    <span class="n">hooks</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"PreToolUse"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="c1"># 匹配文件修改工具</span>
+            <span class="n">HookMatcher</span><span class="p">(</span><span class="n">matcher</span><span class="o">=</span><span class="s2">"Write|Edit|NotebookEdit"</span><span class="p">,</span> <span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">file_security_hook</span><span class="p">]),</span>
+            <span class="c1"># 匹配所有 MCP 工具</span>
+            <span class="n">HookMatcher</span><span class="p">(</span><span class="n">matcher</span><span class="o">=</span><span class="s2">"^mcp__"</span><span class="p">,</span> <span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">mcp_audit_hook</span><span class="p">]),</span>
+            <span class="c1"># 匹配所有内容（无匹配器）</span>
+            <span class="n">HookMatcher</span><span class="p">(</span><span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">global_logger</span><span class="p">]),</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">PreToolUse</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="c1">// 匹配文件修改工具</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">matcher</span><span class="o">:</span><span class="w"> </span><span class="s2">"Write|Edit|NotebookEdit"</span><span class="p">,</span><span class="w"> </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">fileSecurityHook</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+
+<span class="w">      </span><span class="c1">// 匹配所有 MCP 工具</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">matcher</span><span class="o">:</span><span class="w"> </span><span class="s2">"^mcp__"</span><span class="p">,</span><span class="w"> </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">mcpAuditHook</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+
+<span class="w">      </span><span class="c1">// 匹配所有内容（无匹配器）</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">globalLogger</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<h3 id="track-subagent-activity">跟踪子代理活动</h3>
+<p>使用 <code>SubagentStop</code> hooks 监控子代理何时完成其工作。请参阅 <a href="agent-sdk-typescript.html#hookinput">TypeScript</a> 和 <a href="agent-sdk-python.html#hookinput">Python</a> SDK 参考中的完整输入类型。此示例在每次子代理完成时记录摘要：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">subagent_tracker</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="c1"># 子代理完成时记录子代理详细信息</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[SUBAGENT] Completed: </span><span class="si">{</span><span class="n">input_data</span><span class="p">[</span><span class="s1">'agent_id'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Transcript: </span><span class="si">{</span><span class="n">input_data</span><span class="p">[</span><span class="s1">'agent_transcript_path'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Tool use ID: </span><span class="si">{</span><span class="n">tool_use_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Stop hook active: </span><span class="si">{</span><span class="n">input_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'stop_hook_active'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{}</span>
+
+
+<span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+    <span class="n">hooks</span><span class="o">=</span><span class="p">{</span><span class="s2">"SubagentStop"</span><span class="p">:</span> <span class="p">[</span><span class="n">HookMatcher</span><span class="p">(</span><span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">subagent_tracker</span><span class="p">])]}</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">HookCallback</span><span class="p">,</span><span class="w"> </span><span class="nx">SubagentStopHookInput</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">subagentTracker</span><span class="o">:</span><span class="w"> </span><span class="kt">HookCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="nx">toolUseID</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 转换为 SubagentStopHookInput 以访问子代理特定字段</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">subInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">SubagentStopHookInput</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// 子代理完成时记录子代理详细信息</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[SUBAGENT] Completed: </span><span class="si">${</span><span class="nx">subInput</span><span class="p">.</span><span class="nx">agent_id</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`  Transcript: </span><span class="si">${</span><span class="nx">subInput</span><span class="p">.</span><span class="nx">agent_transcript_path</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`  Tool use ID: </span><span class="si">${</span><span class="nx">toolUseID</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`  Stop hook active: </span><span class="si">${</span><span class="nx">subInput</span><span class="p">.</span><span class="nx">stop_hook_active</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="p">};</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">SubagentStop</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">subagentTracker</span><span class="p">]</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>要确认 hook 触发，请注册回调并要求代理将小任务委派给子代理，例如列出当前目录中的文件：当子代理完成时，回调会打印 <code>[SUBAGENT] Completed:</code> 行，其中包含子代理的 ID 和脚本路径。</p>
+<h3 id="make-http-requests-from-hooks">从 hooks 发出 HTTP 请求</h3>
+<p>Hooks 可以执行异步操作，如 HTTP 请求。在您的 hook 内捕获错误，而不是让它们传播。</p>
+<p>此示例在每个工具完成后发送 webhook，记录哪个工具运行以及何时运行。hook 捕获来自失败 webhook 的错误：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_send_webhook</span><span class="p">(</span><span class="n">tool_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""同步辅助函数，将工具使用数据 POST 到外部 webhook。"""</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"tool"</span><span class="p">:</span> <span class="n">tool_name</span><span class="p">,</span>
+            <span class="s2">"timestamp"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+        <span class="p">}</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+        <span class="s2">"https://api.example.com/webhook"</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Content-Type"</span><span class="p">:</span> <span class="s2">"application/json"</span><span class="p">},</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">"POST"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">webhook_notifier</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="c1"># 仅在工具完成后触发（PostToolUse），而不是之前</span>
+    <span class="k">if</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"hook_event_name"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"PostToolUse"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># 在线程中运行阻塞 HTTP 调用以避免阻塞事件循环</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">_send_webhook</span><span class="p">,</span> <span class="n">input_data</span><span class="p">[</span><span class="s2">"tool_name"</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># 记录错误但不抛出</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Webhook request failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="p">,</span><span class="w"> </span><span class="nx">HookCallback</span><span class="p">,</span><span class="w"> </span><span class="nx">PostToolUseHookInput</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">webhookNotifier</span><span class="o">:</span><span class="w"> </span><span class="kt">HookCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="nx">toolUseID</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 仅在工具完成后触发（PostToolUse），而不是之前</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">hook_event_name</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">"PostToolUse"</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s2">"https://api.example.com/webhook"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"Content-Type"</span><span class="o">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">JSON.stringify</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">PostToolUseHookInput</span><span class="p">).</span><span class="nx">tool_name</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()</span>
+<span class="w">      </span><span class="p">}),</span>
+<span class="w">      </span><span class="c1">// 传递 signal 以便在 hook 超时时请求取消</span>
+<span class="w">      </span><span class="nx">signal</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 分别处理取消和其他错误</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="w"> </span><span class="ow">instanceof</span><span class="w"> </span><span class="ne">Error</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">error</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"AbortError"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Webhook request cancelled"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// 不重新抛出</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="p">};</span>
+
+<span class="c1">// 注册为 PostToolUse hook</span>
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Refactor the auth module"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">PostToolUse</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">webhookNotifier</span><span class="p">]</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>要确认 hook 触发，请将 webhook URL 指向您可以监视的端点并发送使用工具的提示：hook 在每个工具完成后发送带有工具名称和时间戳的 POST。</p>
+<h3 id="forward-notifications-to-slack">将通知转发到 Slack</h3>
+<p>使用 <code>Notification</code> hooks 从代理接收系统通知并将其转发到外部服务。在 SDK 会话中，Claude Code 为以下通知类型运行此 hook：</p>
+<ul>
+<li><a href="hooks.html#notification"><code>permission_prompt</code></a> 一旦权限请求在您的 <a href="agent-sdk-user-input.html"><code>canUseTool</code> 回调</a> 上等待约六秒。需要 TypeScript Agent SDK v0.3.233 或更高版本，或 Python Agent SDK v0.2.139 或更高版本</li>
+<li><code>elicitation_complete</code> 和 <code>elicitation_response</code> 用于用户提示引导流程</li>
+<li><code>plugin_notification</code>，当 <a href="plugins-mods-api.html#show-something-without-starting-a-turn">mod</a> 调用 <code>$.ui.notify</code> 时</li>
+</ul>
+<p>Claude Code 从 SDK 会话不运行的交互式 UI 发出其他类型，例如 <code>idle_prompt</code>、<code>auth_success</code> 和 <code>elicitation_dialog</code>。</p>
+<p>每个通知包括一个带有人类可读描述的 <code>message</code> 字段，以及可选的 <code>title</code>。</p>
+<p>此示例将每个通知转发到 Slack 频道。它需要一个 <a href="https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/" target="_blank" rel="noopener">Slack 传入 webhook URL</a>，您可以通过将应用添加到您的 Slack 工作区并启用传入 webhooks 来创建：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">claude_agent_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClaudeSDKClient</span><span class="p">,</span> <span class="n">ClaudeAgentOptions</span><span class="p">,</span> <span class="n">HookMatcher</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_send_slack_notification</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""同步辅助函数，通过传入 webhook 向 Slack 发送消息。"""</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">"text"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Agent status: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">"</span><span class="p">})</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+        <span class="s2">"https://hooks.slack.com/services/YOUR/WEBHOOK/URL"</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Content-Type"</span><span class="p">:</span> <span class="s2">"application/json"</span><span class="p">},</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">"POST"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">notification_handler</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># 在线程中运行阻塞 HTTP 调用以避免阻塞事件循环</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">_send_slack_notification</span><span class="p">,</span> <span class="n">input_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"message"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to send notification: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># 返回空对象。通知 hooks 不修改代理行为</span>
+    <span class="k">return</span> <span class="p">{}</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+        <span class="n">hooks</span><span class="o">=</span><span class="p">{</span>
+            <span class="c1"># 为通知事件注册 hook（不需要匹配器）</span>
+            <span class="s2">"Notification"</span><span class="p">:</span> <span class="p">[</span><span class="n">HookMatcher</span><span class="p">(</span><span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">notification_handler</span><span class="p">])],</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">with</span> <span class="n">ClaudeSDKClient</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"Analyze this codebase"</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">receive_response</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="p">,</span><span class="w"> </span><span class="nx">HookCallback</span><span class="p">,</span><span class="w"> </span><span class="nx">NotificationHookInput</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@anthropic-ai/claude-agent-sdk"</span><span class="p">;</span>
+
+<span class="c1">// 定义一个将通知发送到 Slack 的 hook 回调</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">notificationHandler</span><span class="o">:</span><span class="w"> </span><span class="kt">HookCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="nx">toolUseID</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 转换为 NotificationHookInput 以访问消息字段</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">notification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">NotificationHookInput</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 将通知消息 POST 到 Slack 传入 webhook</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s2">"https://hooks.slack.com/services/YOUR/WEBHOOK/URL"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"Content-Type"</span><span class="o">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">JSON.stringify</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="sb">`Agent status: </span><span class="si">${</span><span class="nx">notification</span><span class="p">.</span><span class="nx">message</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">      </span><span class="p">}),</span>
+<span class="w">      </span><span class="c1">// 传递 signal 以便在 hook 超时时请求取消</span>
+<span class="w">      </span><span class="nx">signal</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="w"> </span><span class="ow">instanceof</span><span class="w"> </span><span class="ne">Error</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">error</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"AbortError"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Notification cancelled"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">"Failed to send notification:"</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 返回空对象。通知 hooks 不修改代理行为</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="p">};</span>
+
+<span class="c1">// 为通知事件注册 hook（不需要匹配器）</span>
+<span class="k">for</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">query</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="s2">"Analyze this codebase"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">Notification</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">hooks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">notificationHandler</span><span class="p">]</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>当 <code>Notification</code> 事件触发时，hook 将通知的 <code>message</code> 发送到您的 webhook 目标的频道，前缀为 <code>Agent status:</code>。</p>
+<h2 id="fix-common-issues">修复常见问题</h2>
+<h3 id="hook-not-firing">Hook 未触发</h3>
+<ul>
+<li>验证 hook 事件名称正确且区分大小写（<code>PreToolUse</code>，而不是 <code>preToolUse</code>）</li>
+<li>检查您的匹配器模式是否与工具名称完全匹配</li>
+<li>确保 hook 在 <code>options.hooks</code> 中的正确事件类型下</li>
+<li>对于支持匹配器的非工具 hook，如 <code>Notification</code> 和 <code>SubagentStop</code>，匹配器匹配不同的字段，而 <code>Stop</code> 完全忽略匹配器（请参阅<a href="hooks.html#matcher-patterns">匹配器模式</a>）</li>
+<li>当 Agent 达到 <a href="agent-sdk-python.html#claudeagentoptions"><code>max_turns</code></a> 限制时，hook 可能不会触发，因为会话在 hook 可以执行前结束</li>
+</ul>
+<h3 id="matcher-not-filtering-as-expected">匹配器未按预期过滤</h3>
+<p>匹配器仅匹配工具名称，而不是文件路径或其他参数。要按文件路径过滤，请在您的 hook 内检查 <code>tool_input.file_path</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">myHook</span><span class="o">:</span><span class="w"> </span><span class="kt">HookCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="nx">toolUseID</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">preInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">PreToolUseHookInput</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">toolInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">preInput</span><span class="p">.</span><span class="nx">tool_input</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">filePath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">toolInput</span><span class="o">?</span><span class="p">.</span><span class="nx">file_path</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">filePath</span><span class="o">?</span><span class="p">.</span><span class="nx">endsWith</span><span class="p">(</span><span class="s2">".md"</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span><span class="w"> </span><span class="c1">// 跳过非 markdown 文件</span>
+<span class="w">  </span><span class="c1">// 处理 markdown 文件...</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="p">};</span>
+</code></pre></div>
+<h3 id="hook-timeout">Hook 超时</h3>
+<p>Claude Code 运行每个回调时都有超时限制，您可以在其 <code>HookMatcher</code> 上使用 <code>timeout</code> 字段（以秒为单位）设置。当您未设置时，Claude Code 使用事件的默认值：大多数事件为 600 秒，<code>UserPromptSubmit</code>、<code>PreModelSwitch</code> 和 <code>PostModelSwitch</code> 为 30 秒，<code>MessageDisplay</code> 为 10 秒。Claude Code 在关闭期间运行 <code>SessionEnd</code> 回调时使用较短的 <a href="hooks.html#sessionend-input">SessionEnd 超时预算</a>，默认为 1.5 秒。</p>
+<p>当回调超过其超时时间时，Claude Code 会取消它并丢弃其输出，会话继续而不是挂起。接下来发生的情况取决于事件：</p>
+<ul>
+<li><code>PreToolUse</code>: Claude Code 阻止该工具调用。如果其他所有 hook 均未返回任何内容或仅返回 <code>allow</code> 决定，工具结果会告知 Claude 该 hook 未在超时前响应，轮次继续。如果您的另一个 hook 已拒绝该调用，其拒绝仍会传达给 Claude：工具结果包含该 hook 的原因，超时文本可能跟在其后。</li>
+</ul>
+<p>在 v2.1.210 之前，Claude Code 将超时报告给 Claude 作为用户拒绝，这使得无人值守会话停止并等待输入。<br />
+* <code>PostToolUse</code> 和 <code>PostToolUseFailure</code>：Claude Code 保留工具结果，轮次继续。<br />
+* <code>UserPromptSubmit</code> 和 <a href="hooks.html#userpromptexpansion"><code>UserPromptExpansion</code></a>：Claude Code 使用指明 hook 和超时的消息阻止该提示词，会话继续。在 v2.1.208 之前，当这些事件上的回调超时时，Claude Code 以 <code>error_during_execution</code> 结束查询。<br />
+* <code>Stop</code> 和 <code>SubagentStop</code>：超时的回调计为不返回任何决定。Agent 或子代理停止，就像该回调已允许它一样，您在该事件上的其他 hook 的决定仍然适用。在 Claude Code v2.1.273 之前，超时的 <code>Stop</code> 或 <code>SubagentStop</code> 回调计为失败的 hook 运行，Claude Code 丢弃了您在该事件上的其他 hook 的决定。<br />
+* <code>SessionStart</code>：超时的回调计为不返回任何输出，会话继续使用您的其他 <code>SessionStart</code> hook 的输出。<br />
+* <code>PreModelSwitch</code>：Claude Code 阻止模型切换。未回答的 hook 尚未批准切换。<br />
+* 其他事件，如 <code>Notification</code>、<code>PreCompact</code> 和 <code>PostModelSwitch</code>：Claude Code 记录失败并继续。</p>
+<p>主会话中 <code>Stop</code> 或 <code>SessionStart</code> 回调第一次超时时，Claude Code 还会向消息流添加一个 <a href="agent-sdk-typescript.html#sdkinformationalmessage"><code>SDKInformationalMessage</code></a>，说明驱动会话的应用未响应。当您的应用保持无响应时，后续超时不会重复该消息。</p>
+<p>如果您在回调待处理时中断查询，Claude Code 会取消待处理的工具调用。在 v2.1.208 之前，如果您在待处理的 <code>PreToolUse</code> 回调期间中断，工具调用仍可能继续。</p>
+<p>如果您的回调需要更多时间，请在其 <code>HookMatcher</code> 上设置更高的 <code>timeout</code>。在 TypeScript 中，使用第三个回调参数中的 <code>AbortSignal</code> 来在超时触发时优雅地处理取消。</p>
+<h3 id="tool-blocked-unexpectedly">工具意外被阻止</h3>
+<ul>
+<li>检查所有 <code>PreToolUse</code> hook 是否返回 <code>permissionDecision: 'deny'</code></li>
+<li>向您的 hook 添加日志记录以查看它们返回的 <code>permissionDecisionReason</code></li>
+<li>验证匹配器模式不会太宽泛：空匹配器匹配所有工具</li>
+</ul>
+<h3 id="modified-input-not-applied">修改的输入未应用</h3>
+<ul>
+<li>确保 <code>updatedInput</code> 在 <code>hookSpecificOutput</code> 内，而不是在顶级：</li>
+</ul>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">hookSpecificOutput</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">hookEventName</span><span class="o">:</span><span class="w"> </span><span class="s2">"PreToolUse"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">permissionDecision</span><span class="o">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">updatedInput</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s2">"new command"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">};</span>
+</code></pre></div>
+<ul>
+<li>
+<p>不要将 <code>updatedInput</code> 与 <code>permissionDecision: 'defer'</code> 配对，这会丢弃修改的输入。省略 <code>permissionDecision</code> 是可以的：修改的输入仍然通过正常权限评估应用。您也可以返回 <code>'allow'</code> 来自动批准修改的输入或 <code>'ask'</code> 来向用户显示以供批准</p>
+</li>
+<li>
+<p>在 <code>hookSpecificOutput</code> 中包括 <code>hookEventName</code> 以识别输出针对的 hook 类型</p>
+</li>
+</ul>
+<h3 id="session-hooks-not-available-in-python">Python 中不可用会话 hook</h3>
+<p><code>SessionStart</code> 和 <code>SessionEnd</code> 可以在 TypeScript 中注册为 SDK 回调 hook，但在 Python SDK 中不可用，因为其 <code>HookEvent</code> 类型省略了它们。在 Python 中，它们仅作为在设置文件（例如 <code>.claude/settings.json</code>）中定义的 <a href="hooks.html#hook-events">shell 命令 hook</a> 可用。您的 SDK 应用程序加载哪些设置文件取决于 <a href="agent-sdk-python.html#settingsource"><code>setting_sources</code></a> 或 <a href="agent-sdk-typescript.html#settingsource"><code>settingSources</code></a>。如果您设置了该选项，请包括包含这些 hook 的设置源：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">python</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-python"><span class="n">options</span> <span class="o">=</span> <span class="n">ClaudeAgentOptions</span><span class="p">(</span>
+    <span class="n">setting_sources</span><span class="o">=</span><span class="p">[</span><span class="s2">"project"</span><span class="p">],</span>  <span class="c1"># 加载 .claude/settings.json 包括 hooks</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">typescript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-ts"><span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">settingSources</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"project"</span><span class="p">]</span><span class="w"> </span><span class="c1">// 加载 .claude/settings.json 包括 hooks</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>要改为运行初始化逻辑作为 Python SDK 回调，请使用 <code>client.receive_response()</code> 的第一条消息作为您的触发器。</p>
+<h3 id="subagent-permission-prompts-multiplying">子代理权限提示倍增</h3>
+<p>生成多个子代理时，每个子代理可能会单独请求其自身工具调用的权限。要避免重复提示，请使用 <code>PreToolUse</code> hook 自动批准特定工具，或配置权限规则，子代理<a href="sub-agents.html#permission-modes">从父对话继承</a>这些规则。</p>
+<h3 id="recursive-hook-loops-with-subagents">子代理的递归 hook 循环</h3>
+<p>生成子代理的 <code>UserPromptSubmit</code> hook 如果这些子代理触发相同的 hook，可能会创建无限循环。要防止这种情况：</p>
+<ul>
+<li>使用共享变量或会话状态来跟踪您是否已在子代理内</li>
+<li>将 hook 限定为仅对顶级 Agent 会话运行</li>
+</ul>
+<h3 id="systemmessage-not-appearing-in-output">systemMessage 未出现在输出中</h3>
+<p><code>systemMessage</code> 字段向用户显示消息，而不是模型。在 Claude Code v2.1.227 或更高版本上，hook 的 <code>systemMessage</code> 可以在消息流中显示为 <a href="agent-sdk-typescript.html#sdkinformationalmessage"><code>SDKInformationalMessage</code></a>。它是否显示取决于事件。hooks 页面上每个<a href="hooks.html#hook-events">事件的部分</a>说明输出如何显示。要改为将上下文传递给模型，请返回 <a href="hooks.html#add-context-for-claude"><code>additionalContext</code></a>。</p>
+<p>在 v2.1.227 之前，SDK 仅在消息流中为 <code>SessionStart</code> 和 <code>Setup</code> hook 显示 hook 输出。对于任何其他事件，输出仅出现在 <a href="agent-sdk-typescript.html#options"><code>includeHookEvents</code></a>（Python 中为 <code>include_hook_events</code>）添加的生命周期事件中。该选项的条目涵盖每个 hook 事件产生的生命周期事件。</p>
+<p>如果您需要可靠地将 hook 决定呈现给您的应用程序，请单独记录它们或使用专用输出通道。</p>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li><a href="hooks.html">Claude Code hooks 参考</a>：完整的 JSON 输入/输出架构、事件文档和匹配器模式</li>
+<li><a href="hooks-guide.html">Claude Code hooks 指南</a>：shell 命令 hook 示例和演练</li>
+<li><a href="agent-sdk-typescript.html">TypeScript SDK 参考</a>：hook 类型、输入/输出定义和配置选项</li>
+<li><a href="agent-sdk-python.html">Python SDK 参考</a>：hook 类型、输入/输出定义和配置选项</li>
+<li><a href="agent-sdk-permissions.html">权限</a>：控制您的代理可以做什么</li>
+<li><a href="agent-sdk-custom-tools.html">自定义工具</a>：构建工具以扩展代理功能</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="agent-sdk-permissions.html"><span class="pager-dir">← 上一页</span><span class="pager-name">配置权限</span></a><a class="pager-link next" href="agent-sdk-file-checkpointing.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用checkpointing回滚文件更改</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#how-hooks-work">hook 如何工作</a><a class="toc-l2" href="#available-hooks">可用的 hooks</a><a class="toc-l2" href="#configure-hooks">配置 hook</a><a class="toc-l3" href="#matchers">匹配器</a><a class="toc-l3" href="#callback-functions">回调函数</a><a class="toc-l2" href="#examples">示例</a><a class="toc-l3" href="#modify-tool-input">修改工具输入</a><a class="toc-l3" href="#add-context-and-block-a-tool">添加上下文并阻止工具</a><a class="toc-l3" href="#auto-approve-specific-tools">自动批准特定工具</a><a class="toc-l3" href="#register-multiple-hooks">注册多个 hooks</a><a class="toc-l3" href="#filter-with-multi-tool-matchers">使用多工具匹配器过滤</a><a class="toc-l3" href="#track-subagent-activity">跟踪子代理活动</a><a class="toc-l3" href="#make-http-requests-from-hooks">从 hooks 发出 HTTP 请求</a><a class="toc-l3" href="#forward-notifications-to-slack">将通知转发到 Slack</a><a class="toc-l2" href="#fix-common-issues">修复常见问题</a><a class="toc-l3" href="#hook-not-firing">Hook 未触发</a><a class="toc-l3" href="#matcher-not-filtering-as-expected">匹配器未按预期过滤</a><a class="toc-l3" href="#hook-timeout">Hook 超时</a><a class="toc-l3" href="#tool-blocked-unexpectedly">工具意外被阻止</a><a class="toc-l3" href="#modified-input-not-applied">修改的输入未应用</a><a class="toc-l3" href="#session-hooks-not-available-in-python">Python 中不可用会话 hook</a><a class="toc-l3" href="#subagent-permission-prompts-multiplying">子代理权限提示倍增</a><a class="toc-l3" href="#recursive-hook-loops-with-subagents">子代理的递归 hook 循环</a><a class="toc-l3" href="#systemmessage-not-appearing-in-output">systemMessage 未出现在输出中</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

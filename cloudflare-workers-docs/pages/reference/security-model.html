@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安全模型 · Workers 文档（中文版）</title>
+<meta name="description" content="Workers 的安全架构：V8 isolate 沙箱、进程级隔离，以及针对 Spectre 的一系列设计取舍。">
+<link rel="stylesheet" href="../../assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle">目录</button>
+  <a class="brand" href="../../index.html"><span class="brand-mark">CF</span>Workers 文档</a>
+  <span class="brand-sub">简体中文版</span>
+  <span class="spacer"></span>
+  <div class="topbar-search">
+    <input id="site-search" type="search" placeholder="搜索页面标题（Ctrl / ⌘ + K）" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+</header>
+
+<nav class="sidebar"></nav>
+
+<div class="main">
+  <div class="crumbs"></div>
+  <div class="wrap">
+    <article class="doc">
+      <h1>安全模型</h1>
+      <p class="lead">Workers 的安全架构：V8 isolate 沙箱、进程级隔离，以及针对 Spectre 的一系列设计取舍。</p>
+      <div class="page-meta">
+        <span class="tag">参考</span>
+        <span>原文更新于 2026-10-18</span>
+        <span>对应页面：reference/security-model</span>
+      </div>
+
+<div class="info-box">
+        <span class="box-title">本文讲的是托管版 Workers</span>
+        <p>本页描述的是部署在 Cloudflare 上的 Workers。本地 <code>workerd</code> 进程并不包含这里提到的每一层纵深防御。本地执行的注意事项见<a href="../../pages/local-development/index.html">本地开发的安全考量</a>。</p>
+      </div>
+
+      <p>本文先概述 Cloudflare 的安全架构，然后讨论两个常被问到的问题：V8 的 bug 与 Spectre。</p>
+
+      <p>从 Workers 项目一开始，安全就是高优先级事项——早期就有一个担忧：在共享基础设施上托管大量租户时，各种侧信道都会构成威胁。Cloudflare Workers 运行时经过精心设计，用来防御侧信道攻击。</p>
+
+      <p>为此，Workers 让代码在设计上<strong>无法测量自己的本地执行时间</strong>。例如，代码执行期间 <code>Date.now()</code> 返回的值是锁定的；此外不提供任何其他计时器。更进一步，Cloudflare 不提供任何并发能力（例如多线程），因为那会让攻击者能自行拼凑出计时器。这些设计选择无法事后加到其他平台（例如浏览器）上，因为它们移除了既有应用所依赖的 API；Workers 之所以能做到，靠的是从第一天起的运行时设计选择。</p>
+
+      <p>这些早期设计决策已被证明有效，但 Cloudflare 仍在持续叠加纵深防御，包括通过重新调度 Worker 来打乱攻击节奏，从而在可疑 Worker 与高价值 Worker 之间增加隔离层。</p>
+
+      <p>Workers 的做法与业界大多数做法非常不同。它能抵御<a href="https://www.cloudflare.com/learning/security/threats/meltdown-spectre/" target="_blank" rel="noopener">整类 Spectre 式攻击 ↗</a>，既不需要针对每一种逐个处理，也不需要整体禁用推测执行。但正因为做法不同，它需要被仔细研究。Cloudflare 目前正与格拉茨技术大学（TU Graz）的研究者合作研究这些工作，其中包括最早发现 Spectre 的几位研究者。研究结果会陆续公布。</p>
+
+      <p>更多细节可参考 Cloudflare Workers 架构师 Kenton Varda 的<a href="https://www.infoq.com/presentations/cloudflare-v8/" target="_blank" rel="noopener">这场演讲 ↗</a>，Spectre 部分在接近结尾处。</p>
+
+      <h2>架构概览</h2>
+      <p>先快速看一下 Workers 运行时的架构：</p>
+
+      <div class="note-box">
+        <span class="box-title">原站架构图</span>
+        <p>原文此处是一张多层架构图，自上而下大致是：<strong>主运行时进程</strong>（内含调度与路由、HTTP 客户端、HTTP 服务端）→ 若干 <strong>V8 isolate</strong>；进程外由 <strong>外层沙箱</strong>（受进程沙箱约束）包裹，通过 <strong>入站 HTTP 代理</strong>、<strong>出站 HTTP 代理</strong>与外界通信；沙箱之外还有 <strong>supervisor（监管进程）</strong>与 <strong>磁盘</strong>；这些组件之间以 HTTP、Cap'n Proto RPC 及进程内调用相连。图中还标注了「调度与路由 / 进程沙箱 / V8 isolate」在多台机器上的重复结构。</p>
+        <p>下图并非原文图片，而是按原文叙述整理的层次说明，供对照阅读。</p>
+      </div>
+
+      <p>设计一个代码沙箱有两件根本性的事：<strong>安全隔离</strong>与 <strong>API 设计</strong>。</p>
+
+      <h3>隔离</h3>
+      <p>首先，必须造出一个安全的执行环境，让代码无法访问任何它不该访问的东西。</p>
+
+      <p>这里的主力工具是 V8——Google 为 Chrome 开发的 JavaScript 引擎。V8 在 isolate 内部执行代码，isolate 会阻止代码访问该 isolate 之外的任何内存，即便在同一进程内也是如此。这一点非常关键：它意味着 Cloudflare 可以在单个进程里运行许多 isolate。对 Workers 这样的边缘计算平台而言，这是必不可少的——Cloudflare 必须在每台机器上托管成千上万个访客应用，并且每秒以最小开销在它们之间快速切换数千次。如果必须为每个访客跑一个独立进程，可支持的租户数量会大幅缩水，边缘计算就只能服务少数大型企业客户。有了 isolate 技术，Cloudflare 才能把边缘计算开放给所有人。</p>
+
+      <p>不过有时候，Cloudflare 确实会决定把某个 Worker 调度到它自己独占的进程中。当 Worker 使用了需要额外隔离层的特性时就会这样处理。例如开发者用 devtools 调试器检查自己的 Worker 时，Cloudflare 会把那个 Worker 放到单独进程里运行——因为在浏览器里，inspector 协议历来只对浏览器可信的操作者开放，因此它受到的安全审视不如 V8 其他部分。为了对冲 inspector 协议缺陷带来的风险，Cloudflare 会把被调试的 Worker 移入带进程级沙箱的独立进程。进程隔离也被 Cloudflare 用作对抗 Spectre 的额外防线。</p>
+
+      <p>此外，即使是对与其他 isolate 共享进程的 isolate，Cloudflare 也会在每台机器上运行多份完整的运行时实例，这被称为 <strong>cordons（隔离带）</strong>。Worker 按信任级别分配到不同的 cordon，把低信任 Worker 与高信任 Worker 分开。一个实际例子：注册免费套餐的客户，不会与企业客户被调度到同一个进程中。这样即便 V8 出现零日漏洞，也多一层纵深防御。</p>
+
+      <p>在整个进程这一层，Cloudflare 又套了一层沙箱作为纵深防御。第 2 层沙箱使用 Linux namespace 与 <code>seccomp</code>，禁止一切对文件系统与网络的访问。namespace 与 <code>seccomp</code> 常被用于实现容器，但 Cloudflare 对它们的使用比容器引擎通常能做到的严格得多：因为 Cloudflare 是在进程启动之后、任何 isolate 加载之前配置 namespace 与 <code>seccomp</code> 的。这意味着，Cloudflare 可以（也确实）使用一个完全空的文件系统（mount namespace），并用 <code>seccomp</code> 拦截所有与文件系统相关的系统调用。容器引擎通常做不到这一点，因为一旦禁止所有文件系统访问，就无法用 <code>exec()</code> 从磁盘启动访客程序。而在 Workers 的场景里，访客程序不是原生二进制，且 Workers 运行时本身在封锁文件系统访问之前就已完成加载。</p>
+
+      <p>第 2 层沙箱还完全禁止网络访问。进程只能通过本地 UNIX domain socket 与同一系统上的其他进程通信；任何对外通信都必须经由沙箱之外的某个本地进程中转。</p>
+
+      <p>其中一个关键进程叫 <strong>supervisor（监管进程）</strong>，负责从磁盘或其他内部服务获取 Worker 代码与配置。supervisor 保证沙箱进程只能读到自己应当运行的那些 Worker 相关的配置，读不到别的。</p>
+
+      <p>举例来说：当沙箱进程收到一个它从未见过的 Worker 的请求时，该请求里会带上那个 Worker 代码（含附加的密钥）的加密密钥。沙箱再拿这个密钥向 supervisor 请求代码。没有拿到对应密钥，沙箱就无法请求任何 Worker；它也无法枚举已知 Worker。它同样无法索取自己不需要的配置——例如它不能索取该 Worker 的 HTTPS 流量所用的 TLS 密钥。</p>
+
+      <p>除了读取配置，沙箱还要与其他本地进程通信的另一个原因，是实现暴露给 Worker 的那些 API。</p>
+
+      <h3>API 设计</h3>
+      <p>有句老话：森林里一棵树倒了，没人听见，它发出声音了吗？套用 Cloudflare 的说法：如果一个 Worker 在一个彻底隔离、完全无法与外界通信的环境里执行，它算真的运行了吗？</p>
+
+      <p>事实上，彻底的代码隔离是没有用的。Workers 要做任何有用的事，就必须被允许与用户通信——至少得能接收请求并作出响应。要让 Worker 安全地向外界发请求，就需要 API。</p>
+
+      <p>在沙箱语境下，API 设计承担了更高一层的责任。Cloudflare 的 API 精确界定了一个 Worker 能做与不能做什么。每一个 API 都必须谨慎设计，使它能表达的<strong>只有</strong>被允许的操作，绝不多余。例如，Cloudflare 希望允许 Worker 收发 HTTP 请求，同时不允许它访问本地文件系统或内网服务。</p>
+
+      <p>目前 Workers 不允许任何形式的本地文件系统访问，因此 Cloudflare 干脆不暴露文件系统 API。<strong>没有 API，就没有访问。</strong></p>
+
+      <p>但设想一下：如果将来 Workers 真的想支持本地文件系统访问，该怎么做？Worker 不应该看到整个文件系统。可以想象，让每个 Worker 在文件系统上有自己的私有目录，它想存什么都行。</p>
+
+      <p>要做到这一点，就得采用基于<a href="https://en.wikipedia.org/wiki/Capability-based_security" target="_blank" rel="noopener">能力（capability）的安全模型 ↗</a>。能力是个大话题，但在这个场景里，意思就是 Cloudflare 给 Worker 一个 <code>Directory</code> 类型的对象，代表文件系统上的某个目录。这个对象提供的 API 允许创建和打开文件、子目录，但不允许向上遍历父目录。效果上，每个 Worker 看到的私有 <code>Directory</code> 就像它自己文件系统的根。</p>
+
+      <p>这样的 API 怎么实现？如上所述，沙箱进程无法访问真实文件系统，文件访问要由 supervisor 进程中转。沙箱通过 <a href="https://capnproto.org/rpc.html" target="_blank" rel="noopener">Cap'n Proto RPC ↗</a>——一种基于能力的 RPC 协议——与 supervisor 通信。（Cap'n Proto 是一个开源项目，目前由 Cloudflare Workers 团队维护。）该协议让实现基于能力的 API 变得很容易，Cloudflare 因此可以严格限制沙箱只能访问它正在运行的那些 Worker 所拥有的文件。</p>
+
+      <p>那么网络访问呢？今天，Worker 只能通过 HTTP 与外界通信——入站与出站都是。其他形式的网络访问没有对应 API，因此被禁止；不过 Cloudflare 计划将来支持更多协议。</p>
+
+      <p>如前所述，沙箱进程无法直接连接网络。所有出站 HTTP 请求都通过 UNIX domain socket 发给本地的一个代理服务，由该服务对请求施加限制。例如，它会校验请求指向的是公共互联网服务、还是该 Worker 所属区域自己的源站，而不是本机或本网络中可能可见的内部服务。它还会给每个请求加上标识来源 Worker 的头部，以便追踪并封禁滥用请求。一切检查通过后，请求会被送到 Cloudflare 网络的 HTTP 缓存层，再发往互联网。</p>
+
+      <p>同理，入站 HTTP 请求也不会直接进入 Workers 运行时。它们先由入站代理服务接收，该服务负责 TLS 终止（Workers 运行时永远看不到 TLS 密钥），并确定某个请求 URL 应当运行哪个 Worker 脚本。一切就绪后，请求通过 UNIX domain socket 传给沙箱进程。</p>
+
+      <h2>V8 的 bug 与补丁空窗期</h2>
+      <p>任何有分量的软件都有 bug，沙箱技术也不例外。虚拟机、容器、以及 Workers 使用的 isolate 都有 bug。</p>
+
+      <p>Workers 高度依赖 V8 提供的隔离——V8 是 Google 为 Chrome 构建的 JavaScript 引擎。这有利也有弊。一方面，V8 是极其复杂的技术，攻击面比虚拟机更宽；复杂度越高，出错的机会越多。另一方面，由于 V8 可以说是世界上最流行的沙箱技术，投入在找 bug、修 bug 上的精力也极大。Google 会为任何找到 V8 沙箱逃逸的人定期支付五位数的赏金，还运营着自动发现 bug 的模糊测试基础设施，速度比大多数人都快。Google 的这些投入极大降低了 V8 零日漏洞（被恶意方发现、Google 尚不知情）的危险。</p>
+
+      <p>但 bug 被发现并上报之后呢？V8 是开源的，所以安全修复是公开开发、并向所有人同时发布的。关键在于：补丁必须尽快推到生产环境，赶在恶意方写出利用程序之前。</p>
+
+      <p>从发布修复到完成部署之间的这段时间，叫<strong>补丁空窗期（patch gap）</strong>。Google 此前<a href="https://www.zdnet.com/article/google-cuts-chrome-patch-gap-in-half-from-33-to-15-days/" target="_blank" rel="noopener">宣布把 Chrome 的补丁空窗期从 33 天缩短到 15 天 ↗</a>。</p>
+
+      <p>幸运的是，Cloudflare 直接掌控着运行 Workers 运行时的机器。几乎整个构建与发布流程都已自动化：V8 补丁一发布，Cloudflare 的系统就会自动构建新的 Workers 运行时版本，在必要的（人工）评审者一键签核后，自动推送到生产环境。</p>
+
+      <p>结果就是，Workers 的补丁空窗期现在不足 24 小时。慕尼黑的 V8 团队在工作时间发布的补丁，通常会在美国工作日结束前就进入生产环境。</p>
+
+      <h2>Spectre：引言</h2>
+      <p>Google 的 V8 团队已明确表示，<a href="https://arxiv.org/abs/1902.05178" target="_blank" rel="noopener">V8 自身无法防御 Spectre ↗</a>。Workers 不必在这件事上依赖 V8——Workers 环境提供了许多替代途径来缓解 Spectre。</p>
+
+      <h3>它是什么</h3>
+      <p>Spectre 是一类攻击：恶意程序诱使 CPU 推测性地使用它本不该访问的数据进行计算。CPU 最终会发现这个问题，不让程序看到推测计算的结果；但程序仍可能通过观察计算的细微副作用（例如对缓存的影响）推断出秘密数据的某些比特。</p>
+      <p>关于 Spectre 的更多信息，见<a href="https://www.cloudflare.com/learning/security/threats/meltdown-spectre/" target="_blank" rel="noopener">学习中心的专题页 ↗</a>。</p>
+
+      <h3>为什么它对 Workers 重要</h3>
+      <p>Spectre 涵盖现代 CPU 中形形色色的漏洞。具体漏洞因架构与型号而异，而且很可能还有大量漏洞尚未被发现。</p>
+      <p>这些漏洞对每一个云计算平台都是问题：只要同一台机器上跑着不止一个租户的代码，Spectre 攻击就有可能。而且租户之间贴得越近，缓解具体漏洞就越困难。许多已知问题可以在内核层（让进程之间互不影响）或 hypervisor 层（保护虚拟机）缓解，往往还要借助 CPU 微码更新和各类防护措施（其中不少会带来严重的性能影响）。</p>
+      <p>而在 Cloudflare Workers 中，租户之间是用 V8 isolate 隔离的——不是进程，也不是虚拟机。这意味着 Workers 不能依赖操作系统或 hypervisor 的补丁来防 Spectre，它需要自己的策略。</p>
+
+      <h3>为什么不用进程隔离</h3>
+      <p>Cloudflare Workers 的设计目标是：让你的代码运行在<strong>每一个</strong> Cloudflare 节点上。</p>
+      <p>Workers 的设计目标是让所有人都能用得起。它必须承载海量租户，而其中许多租户的流量很小。</p>
+      <p>把这两点放在一起，规划就变得困难。</p>
+      <p>典型的非边缘无服务器服务商可以这样处理低流量租户：把该租户全部流量都送到同一台机器上，这样只需加载一份应用副本。如果一台机器能承载十几家租户，那就绰绰有余；这台机器可以放在拥有数百万台机器的大型数据中心里，实现规模经济。但这种集中化在用户不在附近时会带来延迟和全球带宽成本。</p>
+      <p>Workers 则不同：每个租户无论流量多少，目前都要在每一个 Cloudflare 节点上运行。而为了尽可能贴近终端用户，Cloudflare 有时会选在只能容纳有限机器数量的地点。净结果是：Cloudflare 需要每台机器托管数千个活跃租户，并具备按需快速拉起闲置租户的能力。这意味着每个访客占用的内存不能超过几兆——这点空间勉强够放一个调用栈，更不用说进程所需的其他一切。</p>
+      <p>此外，Cloudflare 还需要上下文切换在计算上是高效的。许多驻留内存的 Worker 只是偶尔处理一个事件，很多 Worker 处理单个事件的时间不足一毫秒的零头。在这种环境下，一个核每秒轻松就能在数千个租户之间切换。处理一个事件，访客应用与宿主之间要做大量通信，这又带来更多切换与通信开销。如果每个租户各占一个进程，这些开销会比多个租户共处一个进程大上几个数量级。在 Workers 里采用严格的进程隔离，CPU 成本很容易达到共享进程方案的 10 倍。</p>
+      <p>为了让 Workers 保持便宜、快速、人人可用，Cloudflare 必须找到在单个进程中托管多个租户的办法。</p>
+
+      <h3>Spectre 没有终极解法</h3>
+      <p>Spectre 没有官方解决方案，即便使用重量级虚拟机也一样。所有人依然受其影响。</p>
+      <p>业界不断遇到新的 Spectre 攻击：每隔几个月，研究者发现新的 Spectre 漏洞，CPU 厂商发布新的微码，操作系统厂商发布内核补丁。所有人都必须持续更新。</p>
+      <p>但仅仅部署最新补丁就够了吗？</p>
+      <p>还有更多漏洞存在，只是尚未公开。要防御 Spectre，Cloudflare 必须换一种思路：逐个封堵已知漏洞是不够的，必须一次性应对<strong>整类</strong>漏洞。</p>
+
+      <h3>构建防御</h3>
+      <p>找到一劳永逸的 Spectre 修复方案，可能性很低。不过下面这个思想实验提出了几个值得考虑的要点：</p>
+      <p>从根本上说，所有 Spectre 漏洞都利用侧信道来探测隐藏的处理器状态。而侧信道，按定义就是观察系统的某种非确定性行为。所幸，大多数软件执行环境都在努力消除非确定性，因为非确定性执行会让应用不可靠。</p>
+      <p>然而，仍有几类非确定性普遍存在，其中最明显的是<strong>时间</strong>。业界早就放弃了「程序每次运行耗时应当相同」的执念，因为确定性计时与启发式性能优化根本冲突。大多数 Spectre 攻击正是把时间作为探测 CPU 隐藏微架构状态的手段。</p>
+      <p>有人提出，可以把计时器做不准、或加入随机噪声来解决。但事实证明这并不能阻止攻击，只会让它变慢。只要计时器还在跟踪真实时间，任何让它不准的做法，都可以通过多次运行攻击、用统计方法过滤不一致来绕过。</p>
+      <p>许多安全研究者认为故事到此为止：如果攻击仍然可行，把它拖慢又有什么用？</p>
+
+      <h3>层层叠加的减速</h3>
+      <p>然而，能拖慢攻击的措施可以很有力。</p>
+      <p>关键洞察是：攻击变慢之后，就有新的手段让它变得更慢。于是目标就变成了——把足够多的手段串起来，让攻击慢到毫无意义。</p>
+      <p>毕竟，密码学中有大量内容在技术上是可以被暴力破解的——只要有足够时间，理论上就能破。但当所需时间是几千年（甚至几十亿年）时，这已经是足够的防御。</p>
+      <p>那么，怎样把 Spectre 攻击拖慢到毫无意义的地步？</p>
+
+      <h2>冻结 Spectre 攻击</h2>
+
+      <h3>第 0 步：不允许原生代码</h3>
+      <p>Workers 不允许客户上传原生代码二进制到 Cloudflare 网络上运行——只允许 JavaScript 与 WebAssembly。许多其他语言（如 Python、Rust，甚至 Cobol）都可以编译或转译成这两种格式之一。两者都会经过 V8，被转换成真正的原生代码。</p>
+      <p>这一点本身未必让 Spectre 攻击更难，但之所以列为第 0 步，是因为它是后续几步的基础。</p>
+      <p>接受原生代码程序，意味着要受制于既有的 CPU 架构（通常是 x86）。要以合理性能执行代码，通常必须直接跑在真实硬件上，这会严重限制宿主对执行过程的控制。例如，内核或 hypervisor 无法禁止应用调用 <code>CLFLUSH</code> 指令——这条指令<a href="https://gruss.cc/files/flushflush.pdf" target="_blank" rel="noopener">在侧信道攻击中很有用 ↗</a>，除此之外几乎没别的用途。</p>
+      <p>更重要的是，支持原生代码通常意味着要支持整套既有操作系统与软件栈，而这些带着几十年来对底层架构行为的预期。例如，x86 CPU 允许内核或 hypervisor 禁用 RDTSC 指令（读取高精度计时器）。但在现实中禁用它会破坏许多程序，因为它们只要想知道当前时间就会用 RDTSC。</p>
+      <p>支持原生代码会限制未来缓解手段的选择空间；使用抽象的中间格式则有更大的自由度。</p>
+
+      <h3>第 1 步：禁用计时器与多线程</h3>
+      <p>在 Workers 里，你可以用 JavaScript 的 Date API 调用 <code>Date.now()</code> 获取"当前时间"，但返回的时间值并不是当前时间。<code>Date.now()</code> 返回的是<strong>最后一次 I/O 的时间</strong>，代码执行期间它不会前进。例如攻击者写下：</p>
+<pre data-lang="js"><code>let start = Date.now();
+for (let i = 0; i &lt; 1e6; i++) {
+  doSpectreAttack();
+}
+let end = Date.now();</code></pre>
+      <p><code>start</code> 与 <code>end</code> 的值永远完全相同。攻击者无法用 <code>Date</code> 测量自己代码的执行时间，而这正是发动攻击所必需的。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>这项措施在 2017 年中就已实施，早于 Spectre 被公开。实施的原因是 Cloudflare 早已在担心侧信道计时攻击——Workers 团队从设计之初就把侧信道纳入考量。</p>
+      </div>
+      <p>同样，Workers 不允许多线程与共享内存。一个事件相关的处理全部发生在同一线程上，否则就可以用线程竞争来猜测并验证底层计时器。多个 Worker 也不允许并发处理同一个请求。例如，你在自己的区域上装了一个用 Workers 实现的 Cloudflare App，而你的区域本身也用 Workers，那么发往你区域的请求可能会被两个 Worker 依次处理——它们运行在同一线程上。</p>
+      <p>到这里，本地测量代码执行时间已被杜绝。但它仍然可以被<strong>远程</strong>测量：发起请求以触发 Worker 执行的 HTTP 客户端，可以测量 Worker 响应花了多久。这种测量噪声很大，因为要穿过互联网并承担一般网络开销。理论上，多次执行攻击取平均可以克服这种噪声。</p>
+      <div class="note-box">
+        <span class="box-title">注意</span>
+        <p>有人建议，如果 Workers 在每个请求后重置执行环境，面对计时攻击会安全得多。遗憾的是没那么简单：执行状态可以存放在客户端（而非 Worker 自身），让 Worker 在每个新请求上恢复之前的状态。</p>
+      </div>
+      <p>在与顶尖 Spectre 专家合作的对抗性测试中，Cloudflare 未能构造出在生产环境可行的远程计时攻击。但没有成功的攻击，并不意味着可以停止建设防御——Workers 团队目前正在测试一些更进阶的措施。</p>
+
+      <h3>第 2 步：动态进程隔离</h3>
+      <p>如果攻击真的可行，它需要跑很久——至少数小时，甚至数周。但攻击只要运行了一秒，就会产生大量可用于触发后续措施的新数据。</p>
+      <p>Spectre 攻击会表现出正常程序通常不会有的异常行为。这类攻击有意制造病态的性能场景，以放大微架构效应——尤其是在攻击已经被迫在循环里跑了几十亿次、以突破前述缓解措施之后。这类特征往往会体现在 CPU 性能计数器之类的指标上。</p>
+      <p>用性能指标检测 Spectre 攻击的常见问题是会出现误报：合法的程序有时表现也很差，而运行时不能把每个性能不佳的应用都关掉。</p>
+      <p>于是运行时的做法是：把性能指标可疑的 Worker 重新调度到它自己的进程中。如前所述，运行时不能对每个 Worker 都这么做，开销太高；但隔离少数 Worker 进程作为防御机制是可以接受的。如果这个 Worker 是合法的，它会继续运行，只是多一点开销。所幸，Cloudflare 基本上随时都能把 Worker 迁到独立进程。</p>
+      <p>事实上，这里甚至不一定需要精细的性能计数器触发逻辑：如果一个 Worker 每个事件消耗大量 CPU 时间，把它隔离到独立进程的开销相对来说更小，因为它切换上下文的频率更低。所以运行时不妨对所有吃 CPU 的 Worker 都采用进程隔离。</p>
+      <p>一旦 Worker 被隔离，Cloudflare 就可以依赖操作系统的 Spectre 防护——就像多数桌面浏览器那样。</p>
+      <p>Cloudflare 一直在与格拉茨技术大学的专家合作开发这套方案。TU Graz 的团队共同发现了 Spectre 本身，此后也贡献了大量后续发现。Cloudflare 已经具备动态隔离 Worker 的能力，并找到了能可靠检测攻击的指标。</p>
+      <p>如前所述，进程隔离不是完整的防御。随着时间推移，Spectre 攻击倾向于越来越慢，这意味着 Cloudflare 有能力合理推测并识别恶意行为者；隔离进程则进一步拖慢潜在攻击。</p>
+
+      <h3>第 3 步：定期整内存洗牌</h3>
+      <p>到这里，所有<strong>已知</strong>攻击都已被防住。剩下的就是未来未知的攻击——这与所有基于 CPU 的系统一样。不过，所有新攻击通常都会很慢，需要数天甚至更久，这就给 Cloudflare 留出了准备防御的时间。</p>
+      <p>例如，每天重启一次整个 Workers 运行时是合理的做法：这会重置内存中所有对象的位置，迫使攻击重新开始寻找秘密数据的位置。Cloudflare 还可以把 Worker 在物理机器或 cordon 之间重新调度，从而限制攻击任何特定邻居的时间窗口。</p>
+      <p>总的来说，由于 Workers 从根本上就是可抢占的（不像容器或虚拟机），Cloudflare 有很大自由度去破坏攻击。</p>
+      <p>Cloudflare 把这视为一项持续投入——而不是某天可以宣告完成的事。</p>
+
+
+      <div class="pager"></div>
+
+      <div class="foot">
+        译文基于 Cloudflare 官方文档 <a href="https://developers.cloudflare.com/workers/reference/security-model/" target="_blank" rel="noopener">reference/security-model</a> 整理，仅供学习参考；产品行为以英文原文为准。
+      </div>
+    </article>
+    <aside class="toc"></aside>
+  </div>
+</div>
+
+<script src="../../assets/nav-data-1.js"></script>
+<script src="../../assets/nav-data-2.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>在自托管环境中自定义会话 · Claude Code 中文文档</title>
+<meta name="description" content="使用包装脚本在自托管环境会话中自定义每个会话的凭据、生命周期 hook 和按需运行程序生成。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="self-hosted-environments-configuration">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/self-hosted-environments-configuration" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link active" href="self-hosted-environments-configuration.html" aria-current="page">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>配置</span> <span class="sep">/</span> <span>环境</span> <span class="sep">/</span> <span>自托管环境</span></div>
+    <article class="prose" id="article"><h1 id="_1">在自托管环境中自定义会话</h1>
+<blockquote>
+<p>使用包装脚本在自托管环境会话中自定义每个会话的凭据、生命周期 hook 和按需运行程序生成。</p>
+</blockquote>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>自托管环境在 Team 和 Enterprise 计划中处于公开测试阶段；<a href="cloud-environments.html#organization-shared-environments">Owner</a> 通过在 <a href="https://claude.ai/admin-settings/cloud-environments" target="_blank" rel="noopener"><strong>Cloud environments</strong> 管理页面</a> 上打开 <strong>Allow self-hosted environments</strong> 来启用它们。本页面假设您已有一个正常运行的运行程序；有关设置，请参阅<a href="self-hosted-environments-quickstart.html">快速入门</a>，有关集群部署方案，请参阅<a href="self-hosted-environments-deploy.html">部署到生产环境</a>。</p></div></div>
+<p><a href="self-hosted-environments.html">自托管环境</a>在您自己的基础设施上运行 Claude Code <a href="claude-code-on-the-web.html">云端会话</a>，由您部署的运行程序进程执行。在没有配置的情况下，该运行程序克隆会话的仓库，生成 Claude Code，然后进行清理。本页面适用于操作运行程序的平台工程师：它涵盖了当这些默认值不适用时的扩展点，从每个会话的凭据配置到完全替换检出。包装脚本和 hook 作为运行程序主机上的可执行文件运行，该主机是 Linux 或 macOS，本页面上的示例假设使用 POSIX shell。</p>
+<p>本页面上的一些 hook 环境变量仍然使用 <code>pool</code>，例如 <code>CLAUDE_RUNNER_POOL_ID</code>；CLI 标志和环境变量名称使用 <code>environment</code>，例如 <code>--environment-secret-file</code>。</p>
+<h2 id="wrapper-scripts">包装脚本</h2>
+<p>当每个会话需要运行器无法自行完成的设置时，使用包装脚本：为会话创建者配置作用域的短期凭据、导出特定于环境的密钥、准备语言工具链或围绕子进程应用资源限制。运行器每个会话启动一次您的包装脚本，而不是 Claude Code 二进制文件。通过 <code>exec</code> 进入 <code>$CLAUDE_RUNNER_CLAUDE_BIN</code>（运行器自己的二进制文件）来结束包装脚本，以便信号和退出码正确传播。</p>
+<p>启动运行器时，使用 <code>--exec-path</code> 或 <code>SELF_HOSTED_RUNNER_EXEC_PATH</code> 指向包装脚本，并按照<a href="self-hosted-environments-quickstart.html#set-up-manually">快速入门</a>中的说明替换 <code>&lt;writable-dir&gt;</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>self-hosted-runner<span class="w"> </span>--environment-secret-file<span class="w"> </span>/etc/claude/environment-secret<span class="w"> </span>--base-dir<span class="w"> </span><span class="s1">'&lt;writable-dir&gt;'</span><span class="w"> </span>--exec-path<span class="w"> </span>/etc/claude/session-wrapper.sh
+</code></pre></div>
+<p>运行器在包装脚本的环境中设置以下内容：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">变量</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SESSION_ACCESS_TOKEN</code></td>
+<td style="text-align: left;">会话 JWT，前缀为 <code>sk-ant-cc-</code>。其 <code>act</code> 声明标识会话创建者，并在创建会话的使用入口记录了创建者电子邮件时包含该电子邮件。该值是生成时的令牌；刷新通过子进程的 stdin 到达，因此包装脚本只看到初始值。请参阅 <a href="self-hosted-environments-identity.html">Verify session identity</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CCR_SESSION_ACCOUNT_EMAIL</code></td>
+<td style="text-align: left;">会话创建者的电子邮件，由运行器从令牌的 <code>act.email</code> 声明中预先提取，无需签名验证。适合用于标记，例如提交 trailer。当电子邮件控制凭据发放时，请改为验证令牌并从中读取声明。请参阅 <a href="#provision-credentials-scoped-to-the-session-creator">Provision credentials scoped to the session creator</a>。当令牌不包含创建者电子邮件时未设置，例如在由您组织的服务身份创建的会话中。视为个人可识别信息。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_CLIENT_PLATFORM</code></td>
+<td style="text-align: left;">创建会话的客户端使用入口，例如 <code>web_claude_ai</code>、<code>desktop_app</code>、<code>ios</code>、<code>claude_code_cli</code> 或 <code>scheduled_trigger</code>。Anthropic 在会话创建时记录该值一次，因此包装脚本和每个生命周期 hook 都看到相同的值。仅将其用于采用分析和标记，不用作授权信号。当会话没有记录或识别的使用入口时未设置。需要 Claude Code v2.1.229 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_CLAUDE_BIN</code></td>
+<td style="text-align: left;">运行器自己的 Claude Code 二进制文件的绝对路径。使用 <code>exec "$CLAUDE_RUNNER_CLAUDE_BIN" "$@"</code> 结束您的包装脚本，以移交到固定的二进制文件，而无需硬编码安装路径。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_REMOTE_SESSION_ID</code></td>
+<td style="text-align: left;">会话 ID，采用标记的 <code>cse_...</code> 形式。这与<a href="#lifecycle-hooks">生命周期 hook</a>以 <code>session_...</code> 形式在 <code>CLAUDE_RUNNER_SESSION_ID</code> 中看到的是同一个会话；UUID 变量在两者之间匹配，将 <code>cse_</code> 前缀替换为 <code>session_</code> 会产生会话 URL 中显示的 ID。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_REMOTE_SESSION_UUID</code></td>
+<td style="text-align: left;">相同的会话 ID，采用规范 UUID 形式，供以 UUID 作为键的系统使用。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_REMOTE_SLACK_THREAD_URL</code></td>
+<td style="text-align: left;">对于属于某个 Slack 线程的 <a href="https://claude.com/docs/claude-tag/overview" target="_blank" rel="noopener">Claude Tag</a> 会话，为该线程的链接。其他会话未设置此变量，线程会话也可能未设置。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_REMOTE_SLACK_THREAD_TS</code></td>
+<td style="text-align: left;">对于属于某个 Slack 线程的 Claude Tag 会话，为该线程的 Slack 时间戳，例如 <code>1700000000.000100</code>。可能未设置，也可能在 <code>CLAUDE_CODE_REMOTE_SLACK_THREAD_URL</code> 未设置时被设置，因此请分别检查每个变量。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_REMOTE_SLACK_CHANNEL_ID</code></td>
+<td style="text-align: left;">对于 Claude Tag 会话，为该会话所服务的、或其线程所在的 Slack 频道或私信的 ID，例如 <code>C0123ABCDE</code>。Slack 时间戳只在单个频道内标识一条消息，因此请将此 ID 与 <code>CLAUDE_CODE_REMOTE_SLACK_THREAD_TS</code> 一起记录。其他会话未设置此变量，Claude Tag 会话也可能未设置。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_SESSION_INGRESS_TOKEN_FILE</code></td>
+<td style="text-align: left;">绝对路径，指向保存当前会话 JWT 的按会话文件，在令牌刷新时保持最新。Shell 子进程在下载用户添加到会话的附件时从中读取其 <code>Authorization</code> 标头。<code>exec</code> 自动保留该变量；重建子进程环境的包装脚本必须携带该变量，否则附件下载会无声地停止工作。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CONFIG_DIR</code></td>
+<td style="text-align: left;">按会话 Claude 配置目录，在会话启动时从运行器在启动时捕获的运行器主机配置快照中写入；请参阅 <a href="#permissions-and-tool-approval">Permissions and tool approval</a>。此处的写入仅限于此会话。除非您使用 <a href="self-hosted-environments-reference.html#runner-cli-flags"><code>--remove-session-state</code></a> 启动运行器，否则会话结束后该目录仍会保留在 <code>&lt;base-dir&gt;/_sessions/</code> 下；请参阅 <a href="self-hosted-environments-deploy.html#reuse-a-pre-warmed-checkout">Reuse a pre-warmed checkout</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_REMOTE_MCP_CONFIG</code></td>
+<td style="text-align: left;">指向 <code>CLAUDE_CONFIG_DIR</code> 中某个文件的路径，该文件保存 Anthropic 控制平面为此会话交付的 MCP 服务器定义。如果您的包装脚本重建子进程的环境，请携带此变量。如果缺少此变量，当控制平面更新交付的服务器时，子进程会关闭您的包装脚本通过 <a href="cli-reference.html#cli-flags"><code>--mcp-config</code></a> 添加但不在更新中的任何 stdio、HTTP 或 SSE 服务器。需要 Claude Code v2.1.299 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_BASE_URL</code></td>
+<td style="text-align: left;">子进程将使用的 API 基础 URL，由控制平面按会话交付，通常为 <code>https://api.anthropic.com</code>。不要覆盖它：会话的推理凭据是 Anthropic 颁发的 OAuth 令牌，其他提供者不接受。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OAUTH_TOKEN</code></td>
+<td style="text-align: left;">子进程用于模型推理的短期 OAuth 访问令牌，生命周期约为 30 分钟。运行器在过期前重新生成它，并通过子进程的 stdin 交付轮换，因此不 <a href="#keep-stdin-and-file-descriptor-3-attached">keep stdin attached</a> 的包装脚本只看到初始值。不要依赖您的组织 IP 允许列表来限制此令牌的使用：将其视为持有者凭据，如果泄露，大约 30 分钟内仍可使用，不要记录它、写入磁盘或在会话容器外转发它。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_ALIVE_EVERY_MS</code></td>
+<td style="text-align: left;">当<a href="self-hosted-environments-reference.html#session-startup-timeout">轮次在子进程初始化之前开始</a>时，运行器通过此变量设置子进程报告自身存活的频率（以毫秒为单位）。如果您的包装脚本重建子进程的环境，请携带此变量，否则运行器可能会在该轮次期间释放会话并记录 <code>no child output for &lt;n&gt; — releasing</code>。需要运行器和子进程均为 v2.1.309 或更高版本。</td>
+</tr>
+</tbody>
+</table>
+<p>包装脚本还继承子进程的其余托管环境，包括任何服务器提供的环境变量。<code>exec</code> 自动传播所有内容；如果您的包装脚本以其他方式生成子进程，请转发完整环境。</p>
+<p>您可以在包装脚本或 <a href="#command"><code>command</code> hook</a> 中读取 <code>CLAUDE_CODE_REMOTE_SLACK_*</code> 变量，也可以在会话运行的内容中读取它们，例如 shell 命令、git 钩子和 Claude Code hook。<code>checkout</code>、<code>post-session</code> 和 <code>spawn-runner</code> hook 不会接收它们。</p>
+<h3 id="give-a-default-to-variables-that-can-be-unset">为可能未设置的变量提供默认值</h3>
+<p>如果您的脚本使用 <code>set -u</code>，请使用默认值展开 <code>CCR_SESSION_ACCOUNT_EMAIL</code>、<code>CLAUDE_RUNNER_CLIENT_PLATFORM</code>、<code>CLAUDE_CODE_REMOTE_SLACK_THREAD_URL</code>、<code>CLAUDE_CODE_REMOTE_SLACK_THREAD_TS</code> 和 <code>CLAUDE_CODE_REMOTE_SLACK_CHANNEL_ID</code>，例如 <code>"${CCR_SESSION_ACCOUNT_EMAIL:-}"</code>。它们都可能未设置，而在 <code>set -u</code> 下，Bash 在展开未设置的变量时会以 <code>unbound variable</code> 停止。</p>
+<h3 id="quote-the-arguments-and-variables-your-script-expands">为脚本展开的参数和变量加引号</h3>
+<p>为运行器传递给您的包装脚本或 <a href="#command"><code>command</code> hook</a> 的每个参数和变量加引号。某些值包含 shell 会处理的字符，因为它们包含 JSON、完整的句子或<a href="permissions.html#permission-rule-syntax">权限规则</a>，例如 <code>Bash(npm run test *)</code>。</p>
+<ul>
+<li><strong>参数</strong>：以 <code>"$@"</code> 的形式传递它们</li>
+<li><strong>变量</strong>：为每个变量加引号，如 <code>"${CLAUDE_CODE_REMOTE_SLACK_THREAD_URL:-}"</code>。例如，Slack 线程链接可能包含 <code>?</code> 和 <code>&amp;</code>。</li>
+<li><strong><code>eval</code> 和 <code>sh -c</code> 字符串</strong>：不要将值替换到 <code>eval</code> 或 <code>sh -c</code> 运行的字符串中，即使在引号内也不行。应让该字符串引用该变量。</li>
+</ul>
+<h3 id="keep-stdin-and-file-descriptor-3-attached">保持 stdin 和文件描述符 3 的连接</h3>
+<p>子进程的 stdin 是运行器的控制通道。令牌轮换和会话结束信号在其上到达。运行器还在文件描述符 3 上打开一个管道，并从中读取子进程的活动信号以驱动空闲和启动超时。普通的 <code>exec "$CLAUDE_RUNNER_CLAUDE_BIN" "$@"</code> 自动保留两者。</p>
+<p>如果您的包装脚本使用裸 <code>&amp;</code> 在后台运行子进程，它会切断子进程的 stdin。会话看起来健康，直到初始 OAuth 令牌的大约 30 分钟生命周期过期，然后每个使用该令牌的 API 调用都失败，出现 <code>401 authentication_error</code>。如果您的包装脚本必须在后台运行子进程，例如保持拆卸陷阱活跃，请在文件描述符 9 上保存 stdin 并显式重新连接它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">exec</span><span class="w"> </span><span class="m">9</span>&lt;<span class="p">&amp;</span><span class="m">0</span><span class="w">   </span><span class="c1"># the runner uses 3, and from v2.1.309 reserves 4 and 5</span>
+<span class="s2">"</span><span class="nv">$CLAUDE_RUNNER_CLAUDE_BIN</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span><span class="w"> </span>&lt;<span class="p">&amp;</span><span class="m">9</span><span class="w"> </span><span class="m">9</span>&lt;<span class="p">&amp;</span>-<span class="w"> </span><span class="p">&amp;</span>
+<span class="nv">CHILD</span><span class="o">=</span><span class="nv">$!</span>
+<span class="nb">trap</span><span class="w"> </span><span class="s1">'teardown'</span><span class="w"> </span>EXIT
+<span class="nb">wait</span><span class="w"> </span><span class="s2">"</span><span class="nv">$CHILD</span><span class="s2">"</span>
+</code></pre></div>
+<p>您可以重定向子进程的 stdout。请保持文件描述符 3 和 stderr 连接到运行器：</p>
+<ul>
+<li><strong>文件描述符 3</strong>：将子进程的活动信号传送给运行器。不要在包装脚本中关闭或重用它。</li>
+<li><strong>文件描述符 4 和 5</strong>：Claude Code v2.1.309 或更高版本上的运行器会为子进程保留它们。不要在包装脚本中关闭或重用它们。如果您的包装脚本使用了其中任何一个（例如用于保存 stdin），请将该用途改为 6 到 9 之间的描述符，早期版本同样不会占用这些描述符。</li>
+<li><strong>stderr</strong>：当包装脚本或子进程以非零状态退出时，运行器会将 stderr 的最后几行发布到会话中，并在其自身日志中打印这些行。会话的用户会看到这些行，因此不要将密钥打印到 stderr，并在部署包装脚本之前移除 <code>set -x</code>。如果您重定向 stderr，会话仍会运行，但运行器仅以退出码报告失败。</li>
+</ul>
+<h3 id="pass-the-system-prompt-flags-through">透传系统提示词标志</h3>
+<p>Anthropic 控制平面为会话发送的系统提示词和追加系统提示词以文件路径的形式（而不是内联文本）到达您的包装脚本。运行器将每个提示词写入会话配置目录 <code>CLAUDE_CONFIG_DIR</code> 中的文件，并在您的包装脚本接收的参数中传递其路径，形式为 <a href="cli-reference.html#system-prompt-flags"><code>--system-prompt-file &lt;path&gt;</code> 或 <code>--append-system-prompt-file &lt;path&gt;</code></a>。</p>
+<p>Claude Code v2.1.281 或更高版本上的运行器以文件形式传递提示词。在 v2.1.281 之前，运行器以 <code>--system-prompt &lt;text&gt;</code> 和 <code>--append-system-prompt &lt;text&gt;</code> 的形式传递它们。</p>
+<p>在您的包装脚本或 <a href="#command"><code>command</code> hook</a> 中，按如下方式处理这些标志：</p>
+<ul>
+<li><strong>透传它们</strong>：使用 <code>exec "$CLAUDE_RUNNER_CLAUDE_BIN" "$@"</code> 结束包装脚本，这会将文件标志与其他所有参数一起转发。不要丢弃或改写它们。如果会话丢失了某个提示词文件标志，它将在没有控制平面为其发送的指令的情况下运行。</li>
+<li><strong>在 v2.1.281 或更高版本的运行器上，您追加的文件标志会替换服务器的标志，而不会叠加</strong>：每个提示词文件标志只接受单个值，Claude Code 保留最后一次出现的值，因此如果您在 <code>"$@"</code> 之后追加 <code>--append-system-prompt-file &lt;path&gt;</code>，您文件的内容将替换服务器追加的指令。要在服务器指令之上添加指令，请将其放入运行器镜像的 <code>CLAUDE.md</code> 中，运行器会将其<a href="#how-each-session’s-config-is-assembled">植入每个会话的用户级配置</a>。</li>
+</ul>
+<h4 id="fix-argument-list-too-long-at-session-start">修复会话启动时的 <code>Argument list too long</code></h4>
+<p>在 Linux 上，如果您将控制平面的提示词和您自己的文本合并为一个 <code>--append-system-prompt</code> 参数，一旦该参数达到 128 KB，运行器就会记录如下一行日志：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Session &lt;id&gt; finished: failed — reason: child exited 126: /opt/wrapper.sh: line 9: /usr/local/bin/claude: Argument list too long
+</code></pre></div>
+<p>Linux 将每个单独的参数限制为 32 个内存页，在通常的 4 KB 页大小下即 128 KB。<code>getconf ARG_MAX</code> 给出的数值（通常为 2 MB）是另一项限制，针对的是所有参数和环境的总和。</p>
+<p>在 Claude Code v2.1.283 或更高版本上，请将文件标志保留在 <code>"$@"</code> 中，并仅将您自己的文本作为 <code>--append-system-prompt</code> 传递。Claude Code 会<a href="cli-reference.html#system-prompt-flags">同时使用两者</a>，先是控制平面的提示词，然后是您自己的文本：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">exec</span><span class="w"> </span><span class="s2">"</span><span class="nv">$CLAUDE_RUNNER_CLAUDE_BIN</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span><span class="w"> </span>--append-system-prompt<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>cat<span class="w"> </span>/opt/team-instructions.md<span class="k">)</span><span class="s2">"</span>
+</code></pre></div>
+<p>在 Linux 上，如果您自己的文本达到 128 KB，请将其移到运行器镜像的 <code>CLAUDE.md</code> 中，因为它仍然是一个参数。</p>
+<p>在 v2.1.281 或 v2.1.282 上，该命令会以 <code>Cannot use both --append-system-prompt and --append-system-prompt-file</code> 退出。在更早的版本上，您的文本会替换控制平面的提示词，且不报错。无论哪种版本，请先更新，或将您自己的文本移到 <code>CLAUDE.md</code> 中。</p>
+<h3 id="provision-credentials-scoped-to-the-session-creator">配置作用域限定为会话创建者的凭据</h3>
+<p>使用 <code>decode-token</code> 子命令从会话 JWT 读取声明。它从参数、<code>CLAUDE_CODE_SESSION_ACCESS_TOKEN</code> 或 stdin 读取令牌，按该顺序；请参阅 <a href="self-hosted-environments-identity.html#verify-the-token-inside-the-session">Verify the token inside the session</a> 了解它检查的内容。下面的示例解码创建者身份，将其交换为短期 AWS 凭据，并 exec 进入 Claude Code：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="ch">#!/bin/bash</span>
+<span class="c1"># Key on the stable Anthropic user ID and require a human creator.</span>
+<span class="nv">CREATOR_SUB</span><span class="o">=</span><span class="k">$(</span><span class="s2">"</span><span class="nv">$CLAUDE_RUNNER_CLAUDE_BIN</span><span class="s2">"</span><span class="w"> </span>self-hosted-runner<span class="w"> </span>decode-token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-re<span class="w"> </span><span class="s1">'.act.sub // "" | select(startswith("user:"))'</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"decode-token: verification failed or no human creator"</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+
+<span class="nv">creds</span><span class="o">=</span><span class="k">$(</span>your-sts-helper<span class="w"> </span>assume-role<span class="w"> </span>--subject<span class="w"> </span><span class="s2">"</span><span class="nv">$CREATOR_SUB</span><span class="s2">"</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"credential exchange failed"</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<span class="nb">eval</span><span class="w"> </span><span class="s2">"</span><span class="nv">$creds</span><span class="s2">"</span>
+
+<span class="nb">exec</span><span class="w"> </span><span class="s2">"</span><span class="nv">$CLAUDE_RUNNER_CLAUDE_BIN</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span>
+</code></pre></div>
+<p>在提取的声明控制身份验证决策时，使用 <code>jq -re</code> 而不是 <code>jq -r</code>，以便缺失的声明以非零状态退出，而不是将字面字符串 <code>null</code> 传递给下游。由组织服务身份（例如机器人和 Agent 会话）创建的会话携带 <code>agent:</code> 主题而不是 <code>user:</code>，因此此示例拒绝它们；如果您的环境为这些会话提供服务，请明确决定包装脚本是否为它们回退到默认凭据，而不是退出。当您的凭据交换改为需要电子邮件时，读取 <code>.act.email</code> 并处理其缺失：令牌仅在创建会话的使用入口记录了电子邮件时才携带它，<a href="self-hosted-environments-testing.html#run-the-test-loop">CLI 分派的会话</a> 可能缺少它。有关完整的声明参考和来自运行器外部服务的验证，请参阅 <a href="self-hosted-environments-identity.html">Verify session identity</a>。</p>
+<h2 id="lifecycle-hooks">生命周期钩子</h2>
+<p>生命周期钩子用您自己的脚本替换运行器按会话管道的阶段。使用 <code>--hooks-dir &lt;path&gt;</code> 或 <code>SELF_HOSTED_RUNNER_HOOKS_DIR</code> 将运行器指向钩子目录。运行器查找具有众所周知名称的可执行文件；任何不存在的钩子都会回退到内置行为，因此您只需编写需要的钩子。钩子以运行器自己的权限运行，会话子进程共享该 UID，因此请以只读方式挂载钩子目录，或将其烘焙到镜像中，以便会话代码无法修改它；请参阅 <a href="self-hosted-environments-deploy.html#harden-your-deployment">hardening section</a>。</p>
+<p>这些钩子不同于 <a href="hooks.html">Claude Code hooks</a>，后者在会话内运行；生命周期钩子在运行器上运行，围绕会话。</p>
+<h3 id="checkout">checkout</h3>
+<p>每个仓库运行一次，代替运行器的内置克隆和获取。使用此 hook 从您通过 HTTPS 或 SSH 访问的读通镜像克隆、从存档为工作树设置种子，或应用按会话的 git 身份验证。运行器设置以下变量，并且可能设置表中未列出的其他 <code>CLAUDE_RUNNER_</code> 变量：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">变量</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_REPO_URL</code></td>
+<td style="text-align: left;">要克隆的存储库 URL，在应用任何 <code>--git-host-rewrite</code> 和 <code>--git-ssh-rewrite</code> 之后</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_REPO_REF</code></td>
+<td style="text-align: left;">要检出的修订版本，即会话所请求的形式：分支、标签、提交 SHA，或完整引用名称（例如 <code>refs/heads/&lt;branch&gt;</code> 或 <code>refs/pull/&lt;number&gt;/head</code>）。为空表示仓库的默认分支。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_CHECKOUT_PATH</code></td>
+<td style="text-align: left;">必须留下工作树的绝对路径</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_SESSION_ID</code></td>
+<td style="text-align: left;">会话 ID，采用标记的 <code>session_...</code> 形式，用于日志记录和关联</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_SESSION_UUID</code></td>
+<td style="text-align: left;">相同的会话 ID，采用规范 UUID 形式</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_API_BASE_URL</code></td>
+<td style="text-align: left;">Anthropic API 基础 URL，用于会话范围的调用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_CLIENT_PLATFORM</code></td>
+<td style="text-align: left;">创建会话的客户端使用入口，例如 <code>web_claude_ai</code>、<code>desktop_app</code> 或 <code>ios</code>。当会话没有记录或可识别的使用入口时未设置，因此在 <code>set -u</code> 下请以 <code>"${CLAUDE_RUNNER_CLIENT_PLATFORM:-}"</code> 的形式引用它。需要 Claude Code v2.1.229 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SESSION_ACCESS_TOKEN</code></td>
+<td style="text-align: left;">会话访问令牌，用于会话范围的 API 调用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>GIT_CONFIG_COUNT</code>、<code>GIT_CONFIG_KEY_n</code>、<code>GIT_CONFIG_VALUE_n</code></td>
+<td style="text-align: left;">运行器为您的 hook 所运行的 git 固定的 Git 设置。<a href="#git-configuration-inside-lifecycle-hooks">生命周期 hook 中的 Git 配置</a>对其进行了说明。需要 Claude Code v2.1.280 或更高版本。</td>
+</tr>
+</tbody>
+</table>
+<p>脚本必须在 <code>CLAUDE_RUNNER_CHECKOUT_PATH</code> 处留下一个检出到所请求修订版本的工作树。分离的 HEAD 也可以，因为运行器会在其上创建会话的工作分支。</p>
+<p>在您的 hook 返回后，运行器会验证 <code>CLAUDE_RUNNER_CHECKOUT_PATH</code> 包含 <code>.git</code>。如果您的 hook 具体化的是非 git 源（例如 Perforce 或解包的 tarball），请在运行器的环境中设置 <code>CLAUDE_RUNNER_SKIP_GIT_VERIFY=1</code> 以跳过该检查。基于 Git 的流程（例如工作分支创建和推送结果）需要 git 检出，因此请使用 <a href="#post-session"><code>post-session</code> hook</a> 从非 git 树导出结果。</p>
+<h4 id="get-git-credentials-in-the-hook">在 hook 中获取 git 凭据</h4>
+<p>运行器不会将 git 凭据传递给 hook。<code>decode-token</code> 子命令在此处同样不可用，因为 <code>CLAUDE_RUNNER_CLAUDE_BIN</code> 未在 checkout-hook 环境中设置。请改为从会话的身份生成按会话的克隆凭据，或回退到主机自身的 git 身份验证：</p>
+<ul>
+<li><strong>按会话的克隆凭据</strong>：使用标准 JWT 库，针对 <code>CLAUDE_RUNNER_API_BASE_URL</code> 下的 JWKS 端点验证 <code>CLAUDE_CODE_SESSION_ACCESS_TOKEN</code>，如<a href="self-hosted-environments-identity.html#verify-the-token-from-your-service">从您的服务验证令牌</a>中所述。然后让您的凭据服务为令牌 <code>act</code> 声明中的身份发放短期克隆凭据。请以 <code>act.sub</code> 作为该凭据的键，不要依赖 <code>act.email</code>。</li>
+<li><strong>主机 git 身份验证</strong>：使用主机已有的任何 git 身份验证，例如 SSH agent、凭据助手或 <code>.netrc</code>。</li>
+</ul>
+<h4 id="when-the-hook-fails">hook 失败时</h4>
+<p>当 hook 以非零状态退出，或以 0 退出但没有留下可用的检出时，hook 即为失败：</p>
+<ul>
+<li><strong>会话向其推送结果的仓库</strong>：运行器会使会话失败，并在非零退出时将脚本 stderr 的末尾部分呈现给用户。请将原因以简短的一行写入 stderr，将其放在最后写入，然后以非零状态退出。请勿将机密信息打印到 stderr，并在部署 hook 之前移除 <code>set -x</code>。</li>
+</ul>
+<p>如果 git 的 <code>couldn't find remote ref</code> 出现在 hook stderr 的大约最后 4 KB 中，运行器会改为报告分支已被删除。此时会话的错误消息会说明该分支在远程上已不存在，并请用户恢复它。如果该分支确实存在，请参阅<a href="self-hosted-environments-deploy.html#no-longer-exists-on-the-remote">会话失败并显示 <code>no longer exists on the remote</code> 或 <code>couldn't find remote ref</code></a>。<br />
+* <strong>会话仅从中读取的仓库</strong>，例如添加到正在运行的会话中的仓库：运行器会跳过该仓库并继续处理其余仓库。运行器会向会话发布一个 <code>Skipped</code> 步骤，并删除 hook 在检出路径处留下的任何内容。</p>
+<p>当 <code>Skipped</code> 步骤提到 checkout hook 时，请在运行器日志中的 <code>[runner:warn] checkout hook failed</code> 行中查找失败详情。当该步骤表示某个源引用 <code>no longer exists on remote</code> 时，请参阅<a href="self-hosted-environments-deploy.html#no-longer-exists-on-the-remote">会话失败并显示 <code>no longer exists on the remote</code> 或 <code>couldn't find remote ref</code></a>。如果跳过后会话完全没有仓库，运行器仍然会使会话失败。</p>
+<p>当 hook 成功时，运行器会在会话结束后删除检出路径。</p>
+<h3 id="post-session">post-session</h3>
+<p>每个会话运行一次，在 Claude Code 子进程退出后和运行器拆卸工作区之前。此钩子是保存未提交工作的唯一机会：在 <code>--capacity</code> 高于 1 时，运行器在钩子返回后立即删除按会话工作树，在 <code>--capacity 1</code> 时重用的 <a href="self-hosted-environments-deploy.html#reuse-a-pre-warmed-checkout">canonical clone</a> 在下一个会话启动时硬重置，因此未提交的跟踪更改在两条路径上都不会存活。典型用途是推送未提交更改的快照分支、存档日志或向您自己的系统发出会话结束事件。</p>
+<p>钩子在每个会话结束时触发，其中生成了子进程，无论原因如何；下面的 <code>CLAUDE_RUNNER_EXIT_REASON</code> 值枚举了这些情况。当运行器突然终止时（例如 VM 抢占或断电）它无法触发；如果您需要针对突然终止的保证，请改为使用 Claude Code <code>PostToolUse</code> 钩子从会话内定期快照。运行器设置：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">变量</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_SESSION_ID</code></td>
+<td style="text-align: left;">会话 ID，采用标记的 <code>session_...</code> 形式</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_SESSION_UUID</code></td>
+<td style="text-align: left;">相同的会话 ID，采用规范 UUID 形式</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_EXIT_REASON</code></td>
+<td style="text-align: left;">会话如何结束；请参阅表下方的值</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_WORKSPACE_PATHS</code></td>
+<td style="text-align: left;">会话工作树的冒号分隔绝对路径。对于零存储库会话为空。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_DEBUG_LOG_PATH</code></td>
+<td style="text-align: left;">会话的调试日志的路径，在钩子运行时仍在磁盘上</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_API_BASE_URL</code></td>
+<td style="text-align: left;">Anthropic API 基础 URL，用于会话范围的调用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_CLIENT_PLATFORM</code></td>
+<td style="text-align: left;">创建会话的客户端使用入口，例如 <code>web_claude_ai</code>、<code>desktop_app</code> 或 <code>ios</code>。当会话没有记录或可识别的使用入口时未设置，因此在 <code>set -u</code> 下请以 <code>"${CLAUDE_RUNNER_CLIENT_PLATFORM:-}"</code> 的形式引用它。需要 Claude Code v2.1.229 或更高版本。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SESSION_ACCESS_TOKEN</code></td>
+<td style="text-align: left;">会话访问令牌，用于会话范围的 API 调用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>GIT_CONFIG_COUNT</code>、<code>GIT_CONFIG_KEY_n</code>、<code>GIT_CONFIG_VALUE_n</code></td>
+<td style="text-align: left;">运行器为您的 hook 所运行的 git 固定的 Git 设置。<a href="#git-configuration-inside-lifecycle-hooks">生命周期 hook 中的 Git 配置</a>对其进行了说明。需要 Claude Code v2.1.280 或更高版本。</td>
+</tr>
+</tbody>
+</table>
+<p><code>CLAUDE_RUNNER_EXIT_REASON</code> 采用四个值之一：</p>
+<ul>
+<li><code>completed</code>：会话正常结束。Claude Code 进程正常退出，或在会话被存档或删除后自行退出。</li>
+<li><code>failed</code>：Claude Code 进程崩溃，或在启动后设置失败。</li>
+<li><code>interrupted</code>：运行器停止了会话，属于以下情况之一：</li>
+<li>运行器释放了会话以腾出插槽。</li>
+<li>会话在启动时超时。</li>
+<li>服务器将会话移出了此运行器。</li>
+<li>运行器的轮询在进程退出之前发现了存档或删除操作。</li>
+<li>运行器正在排空。</li>
+<li>会话超过了其 <a href="self-hosted-environments-reference.html#runner-cli-flags"><code>--kill-session-after-min</code></a> 限制。</li>
+<li><code>abandoned</code>：为另一个运行器声称的会话保留。钩子目前在这种情况下不触发。</li>
+</ul>
+<p>如果您将 hook 收据与<a href="self-hosted-environments-reference.html#session-lifecycle-counter-semantics">会话生命周期计数器</a>进行比较，请预期某些 <code>interrupted</code> 收据在计数器中会计为 <code>completed</code>。计数器会将释放、启动超时、服务器移动，以及运行器轮询先发现的存档或删除计为 <code>completed</code>，因为运行器干净地交还了插槽。</p>
+<p>钩子的退出状态永远不会影响会话结果；失败被记录并忽略。运行器在每个会话结束（包括运行器关闭）时等待最多 <code>--post-session-hook-timeout-sec</code>（默认 60 秒）。此示例将未提交的工作保存到救援分支：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-u
+<span class="nb">export</span><span class="w"> </span><span class="nv">GIT_ALLOW_PROTOCOL</span><span class="o">=</span><span class="si">${</span><span class="nv">GIT_ALLOW_PROTOCOL</span><span class="k">:-</span><span class="nv">https</span><span class="p">:</span><span class="nv">http</span><span class="p">:</span><span class="nv">ssh</span><span class="si">}</span>
+<span class="nv">IFS</span><span class="o">=</span><span class="s1">':'</span>
+<span class="c1"># -c overrides beat repo-local settings, blocking session-written fsmonitor,</span>
+<span class="c1"># hook-path, and gpg-program config from executing code with the hook's</span>
+<span class="c1"># privileges. -c commit.gpgsign=false also leaves these rescue commits</span>
+<span class="c1"># unsigned under --configure-git.</span>
+<span class="c1"># Repo-local credential.helper and pushurl still apply, and on a runner</span>
+<span class="c1"># before v2.1.280 so does core.sshCommand; see the note below the script</span>
+<span class="c1"># before you give this push a credential.</span>
+g<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span>git<span class="w"> </span>-c<span class="w"> </span>core.fsmonitor<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-c<span class="w"> </span>core.hooksPath<span class="o">=</span>/dev/null<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>-c<span class="w"> </span>commit.gpgsign<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<span class="k">for</span><span class="w"> </span>ws<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$CLAUDE_RUNNER_WORKSPACE_PATHS</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$ws</span><span class="s2">"</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">continue</span>
+<span class="w">  </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>g<span class="w"> </span>status<span class="w"> </span>--porcelain<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">continue</span>
+<span class="w">  </span>g<span class="w"> </span>add<span class="w"> </span>-A
+<span class="w">  </span>g<span class="w"> </span>commit<span class="w"> </span>-q<span class="w"> </span>-m<span class="w"> </span><span class="s2">"runner snapshot: </span><span class="nv">$CLAUDE_RUNNER_SESSION_ID</span><span class="s2"> (</span><span class="nv">$CLAUDE_RUNNER_EXIT_REASON</span><span class="s2">)"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">continue</span>
+<span class="w">  </span>g<span class="w"> </span>push<span class="w"> </span>-q<span class="w"> </span>origin<span class="w"> </span><span class="s2">"HEAD:refs/heads/rescue/</span><span class="nv">$CLAUDE_RUNNER_SESSION_ID</span><span class="s2">"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="k">done</span>
+</code></pre></div>
+<p>脚本中的 <code>GIT_ALLOW_PROTOCOL</code> 行将 git 限制为 HTTPS、HTTP 和 SSH 远程。如果运行器的环境已经设置了自己的非空 <code>GIT_ALLOW_PROTOCOL</code> 列表，脚本会保留该列表。</p>
+<p>hook 使用运行器主机上其自身环境中可用的任何 git 凭据进行推送。在<a href="self-hosted-environments-deploy.html#configure-git">镜像中不含凭据的部署方式</a>下，包括内置克隆通过 Anthropic git 代理进行时，都没有可用凭据，因此请在推送前于 hook 内生成短期推送凭据：将 hook 在 <code>CLAUDE_CODE_SESSION_ACCESS_TOKEN</code> 中收到的会话令牌与您自己的令牌服务进行交换，并按照<a href="self-hosted-environments-identity.html">验证会话身份</a>中的说明对其进行验证。</p>
+<p>请将您的 hook 提供给 git 的任何凭据都视为会话可以获取的凭据，并在生成时使其只能完成此次推送。hook 中的 git 会读取会话可以写入的配置文件，而其中某个文件指定的凭据助手或过滤器驱动程序会以您的 hook 的权限运行。无论您指定哪个远程，这些文件中的设置还可能改变推送的目标位置。有关运行器在您的 hook 中固定的 git 设置以及留给这些文件决定的设置，请参阅<a href="#git-configuration-inside-lifecycle-hooks">生命周期 hook 中的 Git 配置</a>。</p>
+<h4 id="hook-timing-when-the-runner-releases-a-session">运行器释放会话时的钩子时序</h4>
+<p>已释放的会话可以在另一个运行器上恢复。在 v2.1.236 或更高版本的运行器上，会话在释放时所做的事情决定了它是否可以在此钩子完成前在另一个运行器上恢复：</p>
+<ul>
+<li><strong>在轮次后空闲，或在启动时超时</strong>：运行器停止子进程并运行此钩子至完成。只有这样它才会释放会话。在钩子运行时发送的用户消息无法在钩子完成前在另一个运行器上恢复会话。</li>
+<li><strong>等待用户回答提示，例如权限提示</strong>：运行器首先释放会话，然后运行此钩子。在钩子运行时发送的用户消息可以在钩子完成前在另一个运行器上恢复会话。</li>
+</ul>
+<p>这适用于运行器释放会话的任何时候：在空闲超时、在 <a href="self-hosted-environments-reference.html#runner-cli-flags"><code>--retire-at</code></a> 时间，以及 在 v2.1.260 或更高版本的运行器上，在会话的 <a href="self-hosted-environments-reference.html#runner-cli-flags"><code>--kill-session-after-min</code></a> 限制。其轮次已结束且仅持有后台任务的会话在此处计为空闲。在 v2.1.236 之前，运行器在两种情况下都首先释放会话，然后运行此钩子。</p>
+<p>在 <code>SIGTERM</code> 排空期间，运行器持有会话租约直到钩子完成；请参阅 <a href="self-hosted-environments-deploy.html#shutdown-timing">Shutdown timing</a>。</p>
+<h3 id="git-configuration-inside-lifecycle-hooks">生命周期 hook 中的 Git 配置</h3>
+<p><code>checkout</code> 和 <code>post-session</code> hook 运行时，其环境中包含会话的访问令牌，而它们运行的 git 会读取会话可以写入的配置文件，例如 <code>~/.gitconfig</code> 和检出目录中的 <code>.git/config</code>。在任一 hook 运行之前，运行器会在 hook 的环境中以 <code>GIT_CONFIG_COUNT</code>/<code>GIT_CONFIG_KEY_n</code>/<code>GIT_CONFIG_VALUE_n</code> 对和 git 环境变量的形式设置 git 设置，包括以下各项。Git 将这些设置的优先级排在所有配置文件之上，并且它们仅适用于您的 hook 运行的 git，而不适用于会话自己的 git。启动时，运行器会打印一行 <code>[runner:git] lifecycle hooks:</code>，显示当前生效的钩子路径、允许的协议、gpg 程序和签名模式。需要 Claude Code v2.1.280 或更高版本。</p>
+<ul>
+<li><strong>Git 钩子</strong>：除非您提供值，否则 <code>core.hooksPath</code> 为 <code>/dev/null</code>，因此 git 会跳过仓库 <code>.git/hooks</code> 中的钩子以及 <code>~/.gitconfig</code> 指定的任何钩子目录。要提供一个值，请在运行器的环境中将 <code>core.hooksPath</code> 导出为 <code>GIT_CONFIG_KEY_n</code>/<code>GIT_CONFIG_VALUE_n</code> 对。运行器还会从系统 git 配置中读取 <code>core.hooksPath</code>，并且仅当运行器的用户无法写入该文件、其指定的目录或其中的钩子文件时才使用它。当运行器忽略某个值时，启动时会有一行 <code>[runner:warn]</code> 指明该值及原因。</li>
+<li><strong>文件系统监视器</strong>：<code>core.fsmonitor</code> 为空，因此 hook 中的 git 不会运行配置文件中指定的监视程序。</li>
+<li><strong>远程协议</strong>：<code>GIT_ALLOW_PROTOCOL</code> 为 <code>https:http:ssh</code>。使用本地路径、<code>file://</code> URL 或 <code>git://</code> URL 的克隆、获取或推送会失败，并报错 <code>fatal: transport 'file' not allowed</code> 或 <code>fatal: transport 'git' not allowed</code>。</li>
+<li><strong>SSH 命令和凭据提示</strong>：hook 中的 git 会忽略配置文件中的 <code>core.sshCommand</code> 和 <code>core.askPass</code>。要使用您自己的 SSH 命令，请在运行器的环境中设置 <code>GIT_SSH_COMMAND</code>。要使用凭据提示程序，请在其中设置 <code>GIT_ASKPASS</code>。会话会继承运行器的环境，因此这两个变量也会影响会话自己的 git。请勿在其中任何一个中放入凭据。</li>
+<li><strong>gpg 程序</strong>：<code>gpg.program</code>、<code>gpg.openpgp.program</code>、<code>gpg.x509.program</code> 和 <code>gpg.ssh.program</code> 是运行器设置的路径，绝不会取自配置文件中的值。</li>
+<li><strong>提交签名</strong>：使用 <a href="self-hosted-environments-deploy.html#let-the-runner-configure-git"><code>--configure-git</code></a> 时，您从 hook 中进行的提交会以会话身份签名。不使用该标志时，<code>commit.gpgsign</code> 和 <code>tag.gpgsign</code> 为 <code>false</code>。</li>
+</ul>
+<p>要更改其中某项设置，请使用运行器的环境或在 hook 内使用 <code>git -c</code> 选项：</p>
+<ul>
+<li><strong>配置对</strong>：您在运行器环境中导出的 <code>GIT_CONFIG_KEY_n</code>/<code>GIT_CONFIG_VALUE_n</code> 对会替换运行器为同一键设置的值。请从 <code>0</code> 开始为您的配置对编号，并将 <code>GIT_CONFIG_COUNT</code> 设置为配置对的数量。当计数所声明的最后一个配置对缺失时，运行器会忽略您的所有配置对，并在启动时记录一行 <code>[runner:warn]</code>。</li>
+<li><strong>Git 环境变量</strong>：运行器会保留您在其环境中设置的 <code>GIT_ALLOW_PROTOCOL</code>、<code>GIT_SSH_COMMAND</code> 和 <code>GIT_ASKPASS</code>。</li>
+<li><strong><code>git -c</code> 选项</strong>：hook 内的 <code>git -c</code> 选项会覆盖 <code>GIT_CONFIG_KEY_n</code> 对，无论是运行器的还是您的。它不会更改 <code>GIT_ALLOW_PROTOCOL</code>、<code>GIT_SSH_COMMAND</code> 或 <code>GIT_ASKPASS</code>，git 会先于任何配置读取这些变量。</li>
+</ul>
+<p>hook 中的 git 仍会从每个配置文件（包括会话可以写入的配置文件）中读取运行器未设置的所有设置，例如凭据助手、<code>url.*.insteadOf</code> 重写和过滤器驱动程序。这些文件之一中指定的凭据助手或过滤器驱动程序会以您的 hook 的权限作为程序运行，并且这些文件中的配置仍可能改变您的 hook 推送的目标位置，包括推送到您在命令行上传递的 URL。</p>
+<p>在 v2.1.280 之前，运行器不设置这些设置中的任何一项，并且在 <code>--configure-git</code> 下，从 hook 中进行的提交会失败，除非 hook 传递了 <code>-c commit.gpgsign=false</code>。</p>
+<h3 id="command">command</h3>
+<p>每个会话在检出后运行一次，代替内置子进程生成。钩子接收与 <a href="#wrapper-scripts">wrapper script</a> 相同的环境，应该以相同的方式 <code>exec</code> 进入 <code>"$CLAUDE_RUNNER_CLAUDE_BIN"</code>。使用 <code>command</code> 钩子将所有自定义保留在一个钩子目录中；当包装脚本在其他地方时使用 <code>--exec-path</code>。如果也设置了 <code>--exec-path</code>，标志优先，<code>command</code> 钩子被忽略。</p>
+<p>始终 <code>exec</code> 运行器自己的二进制文件，而不是 PATH 解析的 <code>claude</code>；否则您会破坏 <a href="self-hosted-environments-deploy.html#pin-the-version">version pinning</a>。</p>
+<h2 id="on-demand-runners">按需运行器</h2>
+<p>您可以为每个会话启动一个运行器，而不是运行固定的队列。编排器是一个单独的、无状态的子命令，它轮询 Anthropic 以获取生成请求（每个没有可用运行器的排队会话一个），并为每个请求运行您的 <code>spawn-runner</code> hook。您的 hook 向您的平台提交工作负载：Kubernetes Job、EC2 实例、Nomad dispatch。</p>
+<p>按需运行器改进了凭据卫生。在固定队列上，环境密钥存在于每个运行器主机上，这是运行用户会话的同一主机。使用编排器，环境密钥仅保留在编排器主机上，该主机从不运行用户代码；每个生成的运行器接收一个单次使用的工作单，恰好注册一个运行器，然后过期。</p>
+<p>要启动编排器，请传递环境密钥和包含可执行 <code>spawn-runner</code> 脚本的 hook 目录：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>self-hosted-runner<span class="w"> </span>orchestrator<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--environment-secret-file<span class="w"> </span>/etc/claude/environment-secret<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--hooks-dir<span class="w"> </span>/etc/claude/hooks
+</code></pre></div>
+<p>编排器在轮询之间保持无状态，因此您可以针对同一环境运行两个或多个副本以实现可用性。每个生成请求由服务器端的恰好一个副本声称。所有副本必须使用相同的 <code>--expected-spawn-seconds</code> 值；请参阅 <a href="#the-spawn-runner-hook">hook 约定</a>。</p>
+<h3 id="the-spawn-runner-hook">spawn-runner hook</h3>
+<p>编排器为每个生成请求运行一次 <code>${hooks-dir}/spawn-runner</code>。hook 必须异步提交工作，不等待运行器启动，并在 <code>--hook-timeout</code>（默认 60 秒）内返回。hook 接收：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">变量</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_WORK_ORDER_FILE</code></td>
+<td style="text-align: left;">包含新运行器注册所用的已签名工作单 JWT 的临时文件的路径。hook 退出后删除。不要记录文件的内容。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_ORDER_ID</code></td>
+<td style="text-align: left;">不透明的幂等性密钥，每个生成请求唯一，对 Kubernetes 资源名称安全。仅将订单 ID 用作您的配置器的去重密钥。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_SESSION_ID</code></td>
+<td style="text-align: left;">此请求所针对的会话，采用会话 URL 中的 <code>session_...</code> ID 形式。该会话的每次重新请求都会重复此值，因此请将其用于日志记录和路由，而不要用作去重密钥。对于预热请求为空，预热请求在设置 <a href="self-hosted-environments-reference.html#orchestrator-cli-flags"><code>--min-idle</code></a> 时于任何特定会话之前启动待命运行器，因此不要假设变量已设置。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_SESSION_UUID</code></td>
+<td style="text-align: left;">相同的会话 ID，采用规范 UUID 形式。对于预热请求为空。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_ATTEMPT</code></td>
+<td style="text-align: left;">用于日志记录的按会话计数器。它不是重试次数，也不是请求次数。对于预热请求为 <code>0</code>，但针对某个会话的请求也可能携带 <code>0</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_ORDER_SERVER_TIME</code></td>
+<td style="text-align: left;">来自轮询响应的 HTTP <code>Date</code> 标头的服务器时间。当 hook 验证工作单 JWT 的 <code>exp</code> 时，与此值进行比较而不是本地时钟，以容忍时钟偏差。当网关省略标头时为空。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_POOL_ID</code></td>
+<td style="text-align: left;">新运行器应加入的环境的 ID，采用 <code>ccpool_...</code> 形式</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_ACCOUNT_ID</code></td>
+<td style="text-align: left;">排队会话的帐户的标记 ID。请将其用于按帐户路由、配额或费用分摊，而不要用作去重密钥。当不可用时为空。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_ACCOUNT_EMAIL</code></td>
+<td style="text-align: left;">排队会话的帐户的电子邮件。当不可用时为空。将电子邮件视为个人可识别信息，不要记录它。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_PRIMARY_REPO_URL</code></td>
+<td style="text-align: left;">会话的第一个 git 源的 URL，用于路由到已预热该仓库的运行器。当会话没有 git 源时为空。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_PRIMARY_REPO_REVISION</code></td>
+<td style="text-align: left;">会话的第一个 git 源的修订版本：分支、SHA、标签或完整引用名称。当未指定时为空。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_REPO_SOURCES</code></td>
+<td style="text-align: left;">所有会话的 git 源的 <code>{url, revision}</code> 的 JSON 数组，用于根据辅助仓库进行路由的 hook。当没有源时为空。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_CORRELATION_ID</code></td>
+<td style="text-align: left;">在会话创建时提供的关联 ID，回显以便 hook 可以将此工作单映射到创建会话的请求。当会话没有时为空。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_RUNNER_CLIENT_PLATFORM</code></td>
+<td style="text-align: left;">创建会话的客户端使用入口，例如 <code>web_claude_ai</code>、<code>desktop_app</code>、<code>ios</code> 或 <code>scheduled_trigger</code>，用于采用分析。当会话没有记录或识别的使用入口时未设置，对于预热请求也未设置；使用 <code>[ -n "${CLAUDE_RUNNER_CLIENT_PLATFORM:-}" ]</code> 检查它，这在 <code>set -u</code> 下保持安全。</td>
+</tr>
+</tbody>
+</table>
+<p>生成的运行器使用工作单代替环境密钥进行注册：</p>
+<ul>
+<li><strong>使用工作单启动它</strong>：将 <a href="self-hosted-environments-reference.html#runner-cli-flags"><code>--environment-secret-file</code></a> 指向包含工作单 JWT 的文件，或将 <code>SELF_HOSTED_RUNNER_ENVIRONMENT_SECRET</code> 设置为 JWT 值。</li>
+<li><strong>在 hook 退出前复制 JWT</strong>：编排器在 hook 退出后删除工作单文件，因此将 JWT 复制到您提交的工作负载中，例如生成的 Job 上的 Kubernetes Secret，而不是传递文件路径。</li>
+<li><strong>在生成的运行器上使用 <code>--capacity 1</code></strong>：会话绑定的工作单恰好注册一个绑定到该会话的运行器，因此更高的容量添加永远不会接收工作的插槽，运行器在启动时记录警告。</li>
+<li><strong>预热工作单注册未绑定</strong>：待命运行器未绑定到会话，并像固定队列运行器一样声称排队的工作。</li>
+</ul>
+<p>无论您的 hook 在哪个平台上配置资源，约定都有四条规则：</p>
+<ol>
+<li><strong>在 <code>CLAUDE_RUNNER_ORDER_ID</code> 上保持幂等。</strong> 相同请求的重新交付必须最多生成一个运行器。从订单 ID 派生确定性资源名称，让您的平台拒绝重复。不要改为以 <code>CLAUDE_RUNNER_SESSION_ID</code> 作为键。会话的每次重新请求都携带相同的会话 ID 和新的订单 ID。按会话 ID 命名或去重的工作负载，在第一个工作负载仍存在期间不会再次创建。</li>
+<li><strong>不要重试工作负载。</strong> 一个订单 ID 意味着最多创建一个工作负载。如果运行器从不注册，Anthropic 在 <code>--expected-spawn-seconds</code> 后使用新订单 ID 重新请求。</li>
+<li><strong>使用退出码约定。</strong> 以与结果相匹配的状态退出：</li>
+</ol>
+<ul>
+<li><strong>退出 0</strong>：已提交。</li>
+<li><strong>退出 1，或在 <code>--hook-timeout</code> 结束时仍在运行</strong>：可重试失败。会话退避并被重新提供。连续 10 次请求失败后，会话会像退出 2 或更高时一样被阻止。</li>
+<li><strong>退出 2 或更高</strong>：不可重试失败。会话被阻止再次生成，直到用户向其发送新消息，或 <a href="cloud-environments.html#organization-shared-environments">Owner</a> 在环境的 <strong>Activity</strong> 标签中对其选择 <strong>Retry</strong>。</li>
+</ul>
+<p>会话退避期间，它在 <strong>Activity</strong> 标签中显示为 <strong>Queued</strong>，且没有生成错误，因此请在编排器的日志中查看 hook 的输出。会话被阻止后，会显示为 <strong>Failed</strong>。展开该会话即可查看生成错误，该错误取自 hook 的 stderr 的最后 512 个字符。请将可操作的错误写入 stderr，并且不要写入任何密钥。在 shell hook 中，请<a href="#keep-transient-failures-retryable-in-a-shell-hook">保持暂时性失败可重试</a>。</p>
+<p>预热请求没有可失败的会话：编排器仅在本地记录非零退出，服务器在 <code>--expected-spawn-seconds</code> 租约到期后重新请求生成。<br />
+4. <strong>将 <code>--expected-spawn-seconds</code> 设置为至少您从生成请求到运行器注册的 p99 时间。</strong> 从编排器收到生成请求时开始计算，并包括在您的平台上等待容量的时间以及启动时间。此值是服务器端租约，工作单也随之过期，因此工作负载耗时更长的运行器无法注册。所有编排器副本必须使用相同的值。</p>
+<p>hook 写入 stdout 或 stderr 的所有内容都出现在编排器的日志中，凭据会自动脱敏。如果会话保持排队，检查编排器的 <code>/healthz</code> 正文以获取队列计数，然后在 <a href="https://claude.ai/admin-settings/cloud-environments" target="_blank" rel="noopener"><strong>Cloud environments</strong> 管理页面</a> 上打开您的环境的 <strong>Activity</strong> 标签：在那里展开失败的会话以获取其生成错误，并选择 <strong>Retry</strong> 以重新请求它。</p>
+<h4 id="recognize-a-hook-keyed-on-the-session-id">修复保持 Queued 或显示 Failed 的重新打开的会话</h4>
+<p>如果重新打开的会话保持 <strong>Queued</strong> 或显示 <strong>Failed</strong>，或者您的 hook 在处理这些会话时超时，原因之一可能是 hook 按会话 ID 命名或去重工作负载。当会话的运行器退出后，其用户又向该会话发送消息时，该会话即被重新打开。例如，假设某个 hook 按如下方式构建每个工作负载的名称：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nv">name</span><span class="o">=</span><span class="s2">"runner-</span><span class="si">${</span><span class="nv">CLAUDE_RUNNER_SESSION_ID</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div>
+<ol>
+<li>在会话的第一次生成请求时，hook 以该名称创建工作负载，并启动一个运行器</li>
+<li>运行器退出（例如在 <a href="#make-on-demand-runners-exit-when-idle"><code>--release-idle-session-min</code></a> 之后），用户之后重新打开该会话</li>
+<li>会话的下一次生成请求携带相同的会话 ID 和新的订单 ID，因此 hook 构建出相同的名称</li>
+<li>如果您的平台仍保留着第一次请求的工作负载（因为在其运行器退出时没有任何机制<a href="#make-on-demand-runners-exit-when-idle">移除</a>它），hook 不会创建新的工作负载，也不会启动运行器</li>
+<li>该会话之后的每次生成请求都以同样的方式结束</li>
+</ol>
+<p>打开您自己的 hook，查看它在工作负载已存在时（例如您的平台拒绝重复名称时）的行为。在第一列中找到该行为，即可了解重新打开的会话在 <strong>Activity</strong> 标签中显示什么：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">当工作负载已存在时，您的 hook</th>
+<th style="text-align: left;"><strong>Queued</strong> 变为 <strong>Failed</strong></th>
+<th style="text-align: left;">生成错误</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">以 0 退出且未创建任何内容</td>
+<td style="text-align: left;">连续 10 次此类请求之后</td>
+<td style="text-align: left;"><code>runner did not register within ETA after max attempts</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">以 1 退出</td>
+<td style="text-align: left;">连续 10 次此类请求之后</td>
+<td style="text-align: left;">您的 hook 的 stderr 末尾内容；如果它未向 stderr 写入任何内容，则为 <code>exit 1</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">以 2 或更高退出</td>
+<td style="text-align: left;">立即</td>
+<td style="text-align: left;">您的 hook 的 stderr 末尾内容；如果它未向 stderr 写入任何内容，则为 <code>exit</code> 加上退出码，例如 <code>exit 2</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">一直等待到 <code>--hook-timeout</code> 结束</td>
+<td style="text-align: left;">连续 10 次此类请求之后</td>
+<td style="text-align: left;">您的 hook 的 stderr 末尾内容；如果它未向 stderr 写入任何内容，则为 <code>spawn-runner hook timed out after 60000ms</code></td>
+</tr>
+</tbody>
+</table>
+<p>在最后一行的生成错误中，<code>60000</code> 是以毫秒为单位的 <code>--hook-timeout</code>。当 hook 一直等待到 <code>--hook-timeout</code> 结束时，编排器的日志中还会出现一行 <code>timed out after</code>。</p>
+<p>要修复 hook，请按照 <a href="#the-spawn-runner-hook">hook 约定的第 1 条规则</a>的要求，以 <code>CLAUDE_RUNNER_ORDER_ID</code> 构建每个名称或键。在该示例中，名称变为：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nv">name</span><span class="o">=</span><span class="s2">"runner-</span><span class="si">${</span><span class="nv">CLAUDE_RUNNER_ORDER_ID</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div>
+<p>如果您的 hook 会等待，还请让它在提交工作负载后立即退出，因为等待中的 hook 会<a href="self-hosted-environments-reference.html#orchestrator-cli-flags">延迟其编排器的后续 hook</a>。修改 hook 后，请在 <strong>Activity</strong> 标签中检查每个卡住会话的状态：</p>
+<ul>
+<li><strong>Queued</strong>：会话会自动获得下一次生成请求</li>
+<li><strong>Failed</strong>：以 Owner 身份对其选择 <strong>Retry</strong>，或让其用户向其发送新消息</li>
+</ul>
+<h4 id="make-on-demand-runners-exit-when-idle">让按需运行器在空闲时退出</h4>
+<p>默认情况下，您的 hook 启动的运行器不会在其会话的轮次结束时退出，因此您提交的工作负载会持续运行。要让运行器退出，请让您的 hook 传递以下<a href="self-hosted-environments-reference.html#runner-cli-flags">运行器标志</a>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">标志及示例值</th>
+<th style="text-align: left;">传递给</th>
+<th style="text-align: left;">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>--release-idle-session-min 30</code></td>
+<td style="text-align: left;">您的 hook 启动的每个运行器</td>
+<td style="text-align: left;">运行器在空闲达到该分钟数后释放其会话，然后以 0 退出。当会话的用户发送下一条消息时，会话会恢复，但<a href="self-hosted-environments-deploy.html#resumed-sessions-lose-unpushed-work">其尚未推送的工作将会丢失</a>。对于会话遗留的仍在运行的进程，请<a href="self-hosted-environments-deploy.html#keep-an-idle-session-while-its-processes-run">保留会话</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--kill-session-after-min 480</code></td>
+<td style="text-align: left;">您的 hook 启动的每个运行器</td>
+<td style="text-align: left;">将每个会话限制为该分钟数，作为<a href="self-hosted-environments-deploy.html#some-sessions-don’t-count-as-idle">不计为空闲的会话</a>的兜底措施，因此请将其设置为高于您预期的最长会话时长</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--exit-if-unused-min 60</code></td>
+<td style="text-align: left;">待命运行器，即您的 hook 为预热请求启动的运行器</td>
+<td style="text-align: left;">从未接收会话的待命运行器会在该分钟数后退出。如果您设置了 <a href="self-hosted-environments-reference.html#orchestrator-cli-flags"><code>--min-idle</code></a>，除非该待命运行器是多余的，否则您会获得替代运行器，因此请使用远高于启动时间的值。</td>
+</tr>
+</tbody>
+</table>
+<p>在运行器退出时移除工作负载，例如在 Kubernetes Job 上设置 <code>ttlSecondsAfterFinished</code>，或让 VM 的启动脚本在之后删除该 VM。</p>
+<h4 id="send-a-background-process’s-output-to-a-file">将后台进程的输出发送到文件</h4>
+<p>如果您的 <code>spawn-runner</code> hook 让某个进程在后台持续运行，请将该进程的输出发送到 hook 的用户可以创建的文件。例如，在启动该进程的命令末尾、任何 <code>&amp;</code> 之前追加 <code>&gt;&gt; "$HOME/claude-runner.log" 2&gt;&amp;1</code>。以下 hook 行展示了重定向的位置，其中 <code>your-background-command</code> 代表您的 hook 放到后台运行的命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">your-background-command<span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/claude-runner.log"</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">&amp;</span>
+</code></pre></div>
+<p>如果没有重定向，该进程会写入 hook 的 stdout 和 stderr：</p>
+<ul>
+<li>hook 退出约一秒后，编排器会记录 <code>exited, but a process it started still has the hook's stdout or stderr open</code>。从该行起，它会在 <code>[runner:hook:spawn-runner:after-exit jti=&lt;order id&gt;]</code> 下再记录最多 64 KB 的该输出，然后丢弃其余部分。</li>
+<li>编排器退出后，该进程对这些位置的写入会失败。</li>
+</ul>
+<p>由您的 hook 自行启动的运行器会在编排器主机上运行会话，而该主机持有<a href="self-hosted-environments-deploy.html#harden-your-deployment">环境密钥</a>。</p>
+<p>在 v2.1.305 之前，当 hook 已退出但其启动的进程仍打开着 hook 的 stdout 或 stderr 时，hook 仍会达到 <a href="self-hosted-environments-reference.html#orchestrator-cli-flags"><code>--hook-timeout</code></a>，显示如下：</p>
+<ul>
+<li><strong>Activity 标签</strong>，在失败会话的生成错误中：<code>spawn-runner hook timed out after 60000ms</code>，或 hook 的 stderr 上的最后几行。</li>
+<li><strong>编排器日志</strong>：<code>timed out after 60000ms, sending SIGTERM to process tree</code>。</li>
+</ul>
+<h4 id="exit-the-hook-without-waiting-for-the-runner">退出 hook 而不等待运行器</h4>
+<p>如果每个按需运行器都在其 hook 启动约 60 秒后停止，并且您的 hook 针对同一会话再次运行，请检查 hook 是否在等待运行器。这 60 秒是默认的 <a href="self-hosted-environments-reference.html#orchestrator-cli-flags"><code>--hook-timeout</code></a>，因此如果您设置了自己的值，运行器会在 hook 启动后经过该时长停止。</p>
+<p>在编排器主机上启动 <code>claude self-hosted-runner</code> 并等待它（无论是在前台运行还是使用 <code>wait</code>）的 hook，在 <code>--hook-timeout</code> 结束时仍在运行。编排器随后会停止该 hook 及其下运行的进程，包括该运行器和会话的 Claude 进程，因此仍在运行的轮次会被中断。</p>
+<ul>
+<li><strong>确认是超时导致运行器停止</strong>：在编排器的日志中查找每个生成请求是否都出现 <code>timed out after 60000ms, sending SIGTERM to process tree</code>。其中 <code>60000</code> 是以毫秒为单位的 <code>--hook-timeout</code>。</li>
+<li><strong>修复方法</strong>：让 hook 将运行器提交到您的平台并以 0 退出。如果改为调高 <code>--hook-timeout</code>，运行器只会更晚停止。</li>
+</ul>
+<h4 id="keep-transient-failures-retryable-in-a-shell-hook">在 shell hook 中保持暂时性失败可重试</h4>
+<p>在使用 <code>set -e</code> 的 shell hook 中，本可通过重试解决的失败可能会导致会话被阻止。hook 会在失败的命令处停止，并以该命令自身的状态退出，而编排器会对该状态应用退出码约定。许多失败返回 2 或更高的状态，例如命令未安装时返回的 <code>127</code>，以及 <code>curl --fail</code> 遇到 HTTP 错误时返回的 <code>22</code>，因此它们会在第一次失败时就阻止会话。</p>
+<p>已被 hook 阻止的会话会保持阻止状态，直到用户向其发送新消息，或 <a href="cloud-environments.html#organization-shared-environments">Owner</a> 在环境的 <strong>Activity</strong> 标签中对其选择 <strong>Retry</strong>。</p>
+<p>要将此类失败改为退出 1，请将以下几行直接放在 hook 的 <code>#!</code> 行下方、任何可能失败的内容之上：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="nb">set</span><span class="w"> </span>-e
+<span class="nv">PERMANENT</span><span class="o">=</span><span class="p">;</span><span class="w"> </span>permanent<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$*</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nv">PERMANENT</span><span class="o">=</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<span class="nb">trap</span><span class="w"> </span><span class="s1">'rc=$?; [ "$rc" -eq 0 ] || [ -n "${PERMANENT:-}" ] || exit 1'</span><span class="w"> </span>EXIT
+</code></pre></div>
+<p>这几行会改变 hook 其余部分的行为方式，因此添加后请检查 hook 中是否存在以下每种模式：</p>
+<ul>
+<li><strong>单独的 <code>exit 2</code> 或更高</strong>：设置 trap 后，它会变为退出 1。对于任何重试都无法修复的错误，请改为调用 <code>permanent</code> 并附上原因，例如 <code>permanent "namespace claude-runners does not exist"</code>。请在主 shell 中调用它，而不要在 <code>$( )</code>、<code>( )</code> 或管道内调用。</li>
+<li><strong><code>exec</code></strong>：不要以 <code>exec</code> 开始 hook 的最后一条命令，因为 <code>exec</code> 会替换 shell，trap 将不会运行。</li>
+<li><strong>第二个 <code>EXIT</code> trap</strong>：第二个 <code>trap ... EXIT</code> 会替换第一个，因此请将两者合并为一个 trap。将您的清理命令直接放在 <code>rc=$?;</code> 之后，并在每条命令末尾加上 <code>|| true;</code>。这样清理在失败和成功时都会运行，而且失败的清理命令不会设置 hook 的退出状态。以下合并后的 trap 展示了其结构，其中 <code>your-cleanup-command</code> 代表您自己的命令：</li>
+</ul>
+<p><div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="w">  </span><span class="nb">trap</span><span class="w"> </span><span class="s1">'rc=$?; your-cleanup-command || true; [ "$rc" -eq 0 ] || [ -n "${PERMANENT:-}" ] || exit 1'</span><span class="w"> </span>EXIT
+</code></pre></div><br />
+* <strong>允许失败的命令</strong>：如果 hook 之前未使用 <code>set -e</code>，它现在会在第一条返回非零值的命令处停止，例如未找到任何结果的查找。如果 hook 会根据结果执行操作，请将该命令作为 <code>if</code> 的条件。如果 hook 忽略结果，请在该命令后加上 <code>|| true</code>。<br />
+* <strong>提交工作负载的命令</strong>：不要在其后加上 <code>|| true</code>。加上 <code>|| true</code> 后，即使您的平台拒绝了提交（例如超出配额），hook 也会以 0 退出，而会话会一直等待一个从未启动的运行器。</p>
+<p>请按照 <a href="#the-spawn-runner-hook">hook 的第一条规则</a>所述，以 <code>CLAUDE_RUNNER_ORDER_ID</code> 命名工作负载。这样，“已存在”的应答就是同一请求的重新交付，因此仅将该应答视为成功。对于其他任何应答，请将应答打印到 stderr 并以 1 退出；如果任何重试都无法修复，则调用 <code>permanent</code>。以下示例针对 <code>kubectl create</code> 执行此操作，其中 <code>job.yaml</code> 仅包含该工作负载：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="w">  </span><span class="k">if</span><span class="w"> </span>!<span class="w"> </span><span class="nv">out</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>job.yaml<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s2">"</span><span class="nv">$out</span><span class="s2">"</span><span class="w"> </span><span class="k">in</span>
+<span class="w">      </span>*AlreadyExists*<span class="o">)</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">      </span>*<span class="o">)</span><span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">out</span><span class="k">:-</span><span class="nv">kubectl</span><span class="p"> create failed</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">    </span><span class="k">esac</span>
+<span class="w">  </span><span class="k">fi</span>
+</code></pre></div>
+<p>随后编排器的日志中会显示该消息。如果 hook 还会创建其他对象，请以订单 ID 命名每个对象，为每个对象使用单独的命令，并以同样方式将其“已存在”应答视为成功。对于包含密钥的对象，请打印固定消息来代替命令的输出。</p>
+<p>要确认 trap 是否生效，请在 <code>trap</code> 行正下方添加一行，调用一个不存在的命令，例如 <code>no-such-command</code>。从您的 shell 运行 hook 文件，检查 <code>echo $?</code> 是否输出 <code>1</code>，然后删除该行。</p>
+<h3 id="stop-or-restart-the-orchestrator">停止或重启编排器</h3>
+<p>要在不中断正在运行的 <code>spawn-runner</code> hook 的情况下停止或重启编排器，请使用 <a href="self-hosted-environments-reference.html#orchestrator-cli-flags"><code>--shutdown-drain-sec</code></a> 启动它。这样，收到 <code>SIGTERM</code> 时，编排器会给正在运行的 hook 最多您所设置的秒数来完成。要选择该值并相应地设置您的进程管理器，请参阅<a href="#size-shutdown-drain-sec-and-the-supervisors-stop-timeout-for-the-orchestrator">确定 <code>--shutdown-drain-sec</code> 和编排器的停止超时时间</a>。</p>
+<p>以下启动命令允许 70 秒：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>self-hosted-runner<span class="w"> </span>orchestrator<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--environment-secret-file<span class="w"> </span>/etc/claude/environment-secret<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--hooks-dir<span class="w"> </span>/etc/claude/hooks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--shutdown-drain-sec<span class="w"> </span><span class="m">70</span>
+</code></pre></div>
+<p>当已发送的轮询和每个 hook 都完成后，编排器即退出。当 <code>--shutdown-drain-sec</code> 的秒数用尽时，仍在运行的 hook 会收到 <code>SIGTERM</code>，编排器随即退出。第二个 <code>SIGTERM</code> 或任何 <code>SIGINT</code> 会产生相同效果，且不再等待。包含 <code>[runner:orchestrator] stop summary:</code> 的日志行会按每个 hook 和生成请求的结束方式进行计数。</p>
+<p>如果不使用 <code>--shutdown-drain-sec</code>，编排器会在收到 <code>SIGTERM</code> 或 <code>SIGINT</code> 时立即停止。每个正在运行的 hook 都会收到 <code>SIGTERM</code>，且不会通知 Anthropic。这样，运行器从未启动的会话可能会一直停留在队列中，直到 Anthropic <a href="#the-spawn-runner-hook">重新请求它</a>，这会在 <code>--expected-spawn-seconds</code>（默认 120 秒）过后发生。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p><code>--shutdown-drain-sec</code> 需要 Claude Code v2.1.299 或更高版本。较旧的版本会在启动时以 <code>error: unknown flag --shutdown-drain-sec</code> 退出。</p></div></div>
+<h4 id="size-shutdown-drain-sec-and-the-supervisors-stop-timeout-for-the-orchestrator">确定 <code>--shutdown-drain-sec</code> 和编排器的停止超时时间</h4>
+<p>在默认设置下，请使用 <a href="self-hosted-environments-reference.html#orchestrator-cli-flags"><code>--shutdown-drain-sec 70</code></a> 并将停止超时时间设为 85 秒，即在 Kubernetes 上使用 <code>terminationGracePeriodSeconds: 85</code>，或在 systemd 下使用 <code>TimeoutStopSec=85</code>。如果您更改了 <code>--hook-timeout</code>，请按比例调整这两个值：</p>
+<ul>
+<li><strong><code>--shutdown-drain-sec</code></strong>：至少为 <code>--hook-timeout</code> 加 10 秒，以便在 <code>SIGTERM</code> 之前刚启动的 hook 仍能完成</li>
+<li><strong>停止超时时间</strong>：至少为 <code>--shutdown-drain-sec</code> 加 15 秒。编排器会在启动时记录此数值：请查找包含 <code>shutdown drain:</code> 的行。</li>
+</ul>
+<p>请让您的进程管理器只发送一个 <code>SIGTERM</code>，且仅发送给编排器进程，因为第二个 <code>SIGTERM</code> 会缩短 <code>--shutdown-drain-sec</code> 的等待时间。如果您保留 systemd 的默认设置 <a href="self-hosted-environments-deploy.html#what-reaches-a-running-post-session-hook"><code>KillMode=control-group</code></a>，hook 也会收到 <code>SIGTERM</code>，hook 可能会在提交其工作负载之前终止。在更改 <code>KillMode</code> 之前，请检查您的 <code>spawn-runner</code> hook 是如何启动运行器的：</p>
+<ul>
+<li><strong>如果您的 hook 将其工作负载提交到平台后即退出</strong>：将编排器作为该单元的主进程运行，并设置 <code>KillMode=mixed</code>，这样只会向该进程发送 <code>SIGTERM</code>。</li>
+<li><strong>如果您的 hook 在编排器自身的单元中以进程形式启动运行器</strong>：<code>KillMode=mixed</code> 不会向这些运行器发送 <code>SIGTERM</code>。相反，systemd 稍后会向它们发送 <code>SIGKILL</code>，因此它们会在未排空其会话、也未运行其 <code>post-session</code> hook 的情况下退出。</li>
+</ul>
+<h2 id="send-model-requests-to-bedrock-or-agent-platform">将模型请求发送到 Bedrock 或 Agent Platform</h2>
+<p>如果您的组织需要模型请求通过其自己的 AWS 或 Google Cloud 账户，请为 runner 配置 <a href="amazon-bedrock.html">Amazon Bedrock</a> 或 <a href="google-vertex-ai.html">Google Cloud 的 Agent Platform（前身为 Vertex AI）</a>。之后，该 runner 启动的每个会话都会使用您的云凭据在您的云账户中调用模型。如果没有此配置，会话会将模型请求发送到 Anthropic API。</p>
+<p>runner 仍会向 Anthropic 轮询会话，且每个会话仍会将其事件流发送到 <code>api.anthropic.com</code>。事件流包含提示词、响应和工具结果。<a href="self-hosted-environments.html#availability-and-limitations">可用性和限制</a>中的套餐要求和零数据保留（Zero Data Retention）排除规定仍然适用。</p>
+<p>会话是路由到环境而非 runner 的，重新排队或恢复的会话可能会在不同的 runner 上运行。请以相同方式配置环境中的每个 runner。开始之前，请阅读<a href="#what-differs-from-sessions-on-the-anthropic-api">这些提供商的不同之处</a>。</p>
+<p><strong>1. 准备云账户和出站规则</strong></p>
+<p>设置模型访问权限、范围严格受限的策略或角色以及网络访问：</p>
+<ul>
+<li><strong>Amazon Bedrock</strong>：<a href="amazon-bedrock.html#1-submit-use-case-details">提交用例详情</a>，然后按照 <a href="amazon-bedrock.html#iam-configuration">IAM 配置</a>创建策略，将 <code>bedrock:InvokeModel</code> 和 <code>bedrock:InvokeModelWithResponseStream</code> 限制为您的会话所使用的推理配置文件及其背后的基础模型</li>
+<li><strong>Agent Platform</strong>：<a href="google-vertex-ai.html#1-enable-agent-platform-api">启用 API</a> 并<a href="google-vertex-ai.html#2-request-model-access">申请模型访问权限</a>，然后创建 <a href="google-vertex-ai.html#iam-configuration">IAM 配置</a>中所述的自定义角色，仅包含 <code>aiplatform.endpoints.predict</code></li>
+<li><strong>出站流量</strong>：在出站规则中放行您的提供商的端点。请参阅<a href="self-hosted-environments-deploy.html#network-requirements">网络要求</a>。如果会话无法访问这些端点，Claude Code 可能会持续重试数小时，之后会话才会显示错误。</li>
+</ul>
+<p><strong>2. 为会话提供范围严格受限的凭据</strong></p>
+<p>将步骤 1 中的策略或角色附加到一个不能执行任何其他操作的身份。有关 Claude Code 接受的方法，请参阅<a href="amazon-bedrock.html#2-configure-aws-credentials">配置 AWS 凭据</a>和<a href="google-vertex-ai.html#3-configure-gcp-credentials">配置 GCP 凭据</a>。</p>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>任何能够让代码在会话中运行的人（包括通过提示词注入）都可以在这些凭据有效期间使用它们，费用由您承担。Claude Code 在会话内部运行，因此它调用模型所用的凭据必须在会话中可读。</p>
+<p>Claude 运行的 shell 命令、您的 <a href="hooks.html">Claude Code hook</a> 以及 stdio MCP 服务器都会继承会话的环境，并以与 Claude Code 相同的用户身份运行。因此，它们可以读取凭据变量和凭据文件。</p>
+<p>当您<a href="self-hosted-environments-deploy.html#harden-your-deployment">加固部署</a>时，可以让主机凭据远离会话，但无法将此凭据排除在外。请确保其背后的身份除步骤 1 中的策略或角色外不具备任何其他权限。</p></div></div>
+<p>请对照以下 runner 行为检查您选择的方法：</p>
+<ul>
+<li><strong>元数据端点</strong>：如果您完全禁止会话访问<a href="self-hosted-environments-deploy.html#harden-your-deployment">云元数据端点</a>，则由该端点提供的凭据（例如实例配置文件）也无法到达 Claude Code。基于文件的 Web 身份（例如 Amazon EKS 上的 IAM Roles for Service Accounts (IRSA) 或 Workload Identity Federation 凭据文件）不依赖于该端点。</li>
+<li><strong>续期</strong>：会话的持续时间可能超过凭据的有效期，因此请使用能够自动续期的方法，例如基于文件的 Web 身份</li>
+<li><strong>包装脚本</strong>：runner 每个会话只启动一次您的<a href="#provision-credentials-scoped-to-the-session-creator">包装脚本</a>，因此它导出的凭据不会续期。Claude Code 会从其环境中读取 AWS 凭据，因此如果您的包装脚本已为其他工作导出了 AWS 凭据，Claude Code 可能会使用这些凭据对模型请求进行签名。</li>
+</ul>
+<p><strong>3. 在 runner 的环境中设置一个提供商的变量</strong></p>
+<p>在设置 runner 其他环境变量的位置（例如容器规范或服务单元）中，只设置一个提供商的变量，然后重启 runner。示例中以 shell export 的形式展示这些变量。使用<a href="#on-demand-runners">按需 runner</a> 时，请在您的 <code>spawn-runner</code> hook 启动的工作负载上设置它们。</p>
+<p>使用 <a href="self-hosted-environments-deploy.html#harden-your-deployment"><code>--confine-repo-settings enforce</code></a> 启动这些 runner。它会拒绝那些已提交设置被其标记的仓库上的会话，因此请先在默认的 <code>warn</code> 模式下运行，并清理其记录的问题。</p>
+<blockquote>
+<p>[tab] Amazon Bedrock</p>
+<p>将区域替换为您自己的区域：</p>
+<p><code>bash theme={null}
+export CLAUDE_CODE_USE_BEDROCK=1
+export AWS_REGION=us-east-1</code></p>
+<p>有关 Claude Code 如何解析区域，请参阅<a href="amazon-bedrock.html#3-configure-claude-code">配置 Claude Code</a>。有关 Claude Code 针对您的区域使用哪个推理配置文件前缀，请参阅<a href="amazon-bedrock.html#cross-region-inference-profile-prefixes">跨区域推理配置文件前缀</a>。</p>
+<p>[tab] Google Cloud's Agent Platform</p>
+<p>将区域和项目 ID 替换为您自己的值：</p>
+<p><code>bash theme={null}
+export CLAUDE_CODE_USE_VERTEX=1
+export CLOUD_ML_REGION=global
+export ANTHROPIC_VERTEX_PROJECT_ID=YOUR-PROJECT-ID</code></p>
+<p>要选择区域，请参阅<a href="google-vertex-ai.html#region-configuration">区域配置</a>。</p>
+</blockquote>
+<p><strong>4. 检查变量是否已传递到会话</strong></p>
+<p>您在主机上自己的 shell 是另一个进程，因此请从会话内部进行检查。在该环境中启动一个会话，并让 Claude 运行以下命令：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'CLAUDE_CODE_USE_(BEDROCK|VERTEX)'</span>
+</code></pre></div>
+<p>如果有一行将 <code>CLAUDE_CODE_USE_BEDROCK</code> 或 <code>CLAUDE_CODE_USE_VERTEX</code> 设置为 <code>1</code>，则表示该变量已传递到会话。如果两者都出现，Claude Code 将使用 Amazon Bedrock。如果没有输出，则表示两者都未传递到会话。</p>
+<p>该命令显示的是配置，而非流量。要确认请求本身，请在您云账户自身的指标或请求日志中查找这些请求。如果第一条消息失败，请参阅 <a href="amazon-bedrock.html#troubleshooting">Amazon Bedrock</a> 或 <a href="google-vertex-ai.html#troubleshooting">Agent Platform</a> 的故障排除。</p>
+<h3 id="what-differs-from-sessions-on-the-anthropic-api">与 Anthropic API 上的会话的不同之处</h3>
+<p>将模型请求发送到 Amazon Bedrock 或 Google Cloud 的 Agent Platform 的会话与 Anthropic API 上的会话存在以下不同：</p>
+<ul>
+<li><strong>来自 claude.ai 的策略</strong>：<a href="server-managed-settings.html">服务器托管设置</a>不会传递到这些会话。Owner 在 Claude Code 管理设置中设定的组织策略也不会传递到这些会话，因此 Claude Code 不会在会话中强制执行这些策略。请将您依赖的规则放入 runner 镜像的<a href="managed-settings.html#delivery-mechanisms">托管设置文件</a>中。</li>
+<li><strong>账户 skill</strong>：这些会话不会下载用户的 claude.ai 账户中已启用的 skill。请参阅<a href="#how-each-session’s-config-is-assembled">每个会话的配置是如何组装的</a>。</li>
+<li><strong>文件</strong>：用户在 claude.ai 或移动端、桌面端应用中附加到会话的文件不会传递到会话，Claude 也无法通过 <a href="tools-reference.html"><code>SendUserFile</code> 工具</a>回传文件。请改为将输入文件放在仓库中或 runner 上。</li>
+<li><strong>模型选择</strong>：Anthropic 的控制平面会发送每个会话的模型；当会话启动时未指定模型，Claude Code 会使用该提供商的默认模型。您无法通过 runner 环境中的 <code>ANTHROPIC_MODEL</code> 或 <code>ANTHROPIC_DEFAULT_MODEL</code> 选择模型，但可以固定别名解析到的模型：</li>
+<li><strong><code>ANTHROPIC_MODEL</code> 和 <code>ANTHROPIC_DEFAULT_MODEL</code></strong>：runner 会从其传递给会话的环境中移除这两个变量，尽管提供商页面的示例设置了 <code>ANTHROPIC_MODEL</code>。</li>
+<li><strong>各模型系列的固定变量</strong>：<a href="amazon-bedrock.html#4-pin-model-versions">Amazon Bedrock</a> 和 <a href="google-vertex-ai.html#5-pin-model-versions">Agent Platform</a> 的"固定模型版本"中的变量确实会传递到会话。它们决定的是 <code>opus</code> 等别名解析为哪个模型，而不是完整模型 ID 解析为哪个模型。</li>
+<li><strong>您的账户不提供的模型</strong>：会话可能在某条消息上失败，并显示指明该模型的错误。请启用您的开发人员可以选择的模型、"固定模型版本"中所述的后台模型，以及<a href="permission-modes.html#enable-auto-mode-on-bedrock-agent-platform-or-foundry">自动模式</a>使用的分类器模型。在 Amazon Bedrock 上，请在策略中允许其中的每一个模型。</li>
+<li><strong>Web 搜索和快速模式</strong>：<a href="tools-reference.html#websearch-tool-behavior">Web 搜索</a>在 Amazon Bedrock 上不可用，<a href="fast-mode.html">快速模式</a>在这两个提供商上均不可用。有关因提供商而异的其他功能，请参阅<a href="feature-availability.html#cli-capabilities-that-vary-by-provider">因提供商而异的 CLI 功能</a>。</li>
+</ul>
+<h2 id="mcp-servers">MCP 服务器</h2>
+<p>要让 <a href="mcp.html">MCP 服务器</a>在每个会话中都可用，请在镜像构建时使用与桌面安装相同的 <code>claude mcp add</code> 命令添加它们。如果您的运行器是裸进程而非容器，请在主机上以运行器的用户身份运行相同的命令，然后重启运行器：运行器仅在启动时读取一次主机配置。必须使用 <code>--scope user</code> 标志；默认的 local 作用域会写入按目录区分的键下，而运行器不会将该键注入会话。例如，在您的 Dockerfile 中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">dockerfile</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-dockerfile"><span class="k">RUN</span><span class="w"> </span>claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--scope<span class="w"> </span>user<span class="w"> </span>sidecar<span class="w"> </span>--<span class="w"> </span>/usr/local/bin/mcp-sidecar
+<span class="k">RUN</span><span class="w"> </span>claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--scope<span class="w"> </span>user<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>internal<span class="w"> </span>http://mcp-gateway.svc.cluster.local:8080
+</code></pre></div>
+<p>运行器在启动时对主机配置做一次快照。该快照会捕获主机 <code>.claude.json</code> 中的 <code>mcpServers</code> 键（该文件位于 <code>~/.claude/</code> 旁边，而非其内部），运行器只会将这一个键注入每个会话的隔离配置中；账户状态和项目历史会被丢弃。要确认服务器已到达会话，请在该环境上启动一个会话，并让 Claude 列出其 MCP 工具；对于捕获到的任何 <code>type</code> 无法识别的条目，运行器还会在启动时记录一条警告并丢弃该条目，因此您可以看到该服务器为何没有出现在会话中。设置 <code>SELF_HOSTED_RUNNER_HOST_CONFIG_DIR</code> 后，运行器会改为从该目录读取 <code>.claude.json</code>，因此将该变量指向一个空目录也会禁用 MCP 注入。</p>
+<p>Claude Code 还会从其他来源加载 MCP 服务器：</p>
+<ul>
+<li>位于标准系统路径的企业作用域<a href="managed-mcp.html">托管 MCP 文件</a>：Linux 运行器主机上为 <code>/etc/claude-code/managed-mcp.json</code>，macOS 主机上为 <code>/Library/Application Support/ClaudeCode/managed-mcp.json</code>。适用于只允许加载管理员列出的服务器的锁定机群。有关优先级规则，请参阅<a href="managed-mcp.html#exclusive-control-with-managed-mcp-json">使用 managed-mcp.json 进行独占控制</a>。当运行器主机上存在此文件时，Claude Code 会跳过 Anthropic 控制平面下发给会话的 MCP 服务器（包括 claude.ai 连接器），并在会话子进程的 stderr 上以警告形式列出它们的名称，运行器会以 <code>debug</code> 日志级别记录这些警告。在 v2.1.229 之前，这些会话会在启动时退出并显示 <code>You cannot dynamically configure MCP servers when an enterprise MCP config is present</code>。</li>
+<li>运行器主机上<a href="managed-settings.html">托管设置</a>中的 <a href="settings-reference.html#managedmcpservers"><code>managedMcpServers</code></a> 键：提供 HTTP 和 SSE 服务器，但不进行独占控制，因此来自其他来源的服务器仍会加载。需要 Claude Code v2.1.259 或更高版本。</li>
+<li><code>&lt;repo&gt;/.mcp.json</code>：项目作用域。在<a href="claude-projects.html#what-threads-pick-up-from-your-repositories">项目</a>线程之外，将该文件提交到仓库，其中的服务器在云端会话中会被自动批准。在包含多个仓库的会话中，<a href="#repository-settings-in-sessions-with-several-repositories">最多只会加载一个仓库的该文件</a>。</li>
+<li>来自您的包装脚本的 <a href="cli-reference.html#cli-flags"><code>--mcp-config</code></a> 文件：将该标志追加在 <code>"$@"</code> 之后，例如 <code>exec "$CLAUDE_RUNNER_CLAUDE_BIN" "$@" --mcp-config /etc/claude/mcp.json</code>。为了在会话中途更新会话所下发的服务器时让该文件中的服务器保持运行，请让您的包装脚本将<a href="#wrapper-scripts">完整环境</a>传递给子进程，就像 <code>exec</code> 所做的那样。在 v2.1.299 之前，该文件中的 stdio、HTTP 和 SSE 服务器会在第一次未指明它们的此类更新时关闭。</li>
+</ul>
+<p>当您的组织启用了连接器下发时，Anthropic 的控制平面会通过服务器提供的 MCP 配置，将您在 claude.ai 上配置的连接器下发到以交互方式创建的会话，请求经由 <code>api.anthropic.com</code> 路由。以编程方式创建的会话（例如 <a href="self-hosted-environments-testing.html#run-the-test-loop">CLI 调度</a>）不会接收连接器下发；请改为通过本节列出的任何其他来源为它们提供 MCP 服务器。子进程的 OAuth 令牌不带有直接获取连接器的作用域，因此子进程本身不会尝试获取；下发由服务器驱动。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>在已接收连接器的会话中，来自主机 <code>.claude.json</code> 或仓库 <code>.mcp.json</code> 的同名服务器不会被连接。要同时使用两者，请为您的服务器指定不同的名称。</p></div></div>
+<p><code>settings.json</code> 不包含 MCP 服务器定义，设置 schema 中也没有顶层 <code>mcpServers</code> 字段。在托管设置中，请改用 <a href="settings-reference.html#managedmcpservers"><code>managedMcpServers</code></a> 键提供服务器。</p>
+<p>会话会继承运行器的环境，因此请在运行器环境中设置 <a href="mcp.html#scale-with-mcp-tool-search"><code>ENABLE_TOOL_SEARCH</code></a>，以控制该运行器生成的每个会话的 MCP 工具搜索；MCP 页面介绍了可用的值。</p>
+<h3 id="wait-for-mcp-servers-before-the-first-turn">在第一轮之前等待 MCP 服务器</h3>
+<p>自托管会话会在两个不同的时间点短暂等待仍在连接中的 MCP 服务器。错过等待的服务器，其工具在第一轮开始时不可用，之后会自动变为可用，无需您进行任何操作。这两次等待分别是：</p>
+<ul>
+<li><strong>会话启动</strong>：在首次获取工具列表之前，会话默认最多等待 5 秒，等待条目中设置了 <a href="mcp.html#exempt-a-server-from-deferral"><code>alwaysLoad: true</code></a> 的 HTTP 或 SSE 服务器；如果您在运行器的环境中设置了 <a href="env-vars.html"><code>MCP_CONNECTION_NONBLOCKING=0</code></a>，则会等待所有服务器。否则，HTTP 和 SSE 服务器会在后台连接。会话在此处等待期间，初始化会变慢。<a href="env-vars.html"><code>MCP_CONNECT_TIMEOUT_MS</code></a> 可更改 5 秒的默认值。</li>
+<li><strong>第一轮</strong>：消息到达后，第一轮最多等待 2 秒，等待仍在连接中的 stdio 服务器。会话在此处等待期间，第一条回复会变慢。要更改此等待的时长，请在运行器的环境中设置 <a href="env-vars.html"><code>CLAUDE_CODE_MCP_STARTUP_WAIT_MS</code></a>。它不会改变此等待涵盖哪些服务器。需要 Claude Code v2.1.274 或更高版本。</li>
+</ul>
+<p><code>claude mcp add</code> 没有 <code>alwaysLoad</code> 标志。要设置该键，请改用 <code>claude mcp add-json</code> 添加服务器，该命令从服务器的 JSON 中接收该键并将其写入 <code>.claude.json</code>。在您的 Dockerfile 中：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">dockerfile</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-dockerfile"><span class="k">RUN</span><span class="w"> </span>claude<span class="w"> </span>mcp<span class="w"> </span>add-json<span class="w"> </span>core<span class="w"> </span><span class="s1">'{"type":"http","url":"https://mcp.example.com/mcp","alwaysLoad":true}'</span><span class="w"> </span>--scope<span class="w"> </span>user
+</code></pre></div>
+<p>如果某个服务器的工具在后续轮次中也没有出现，请按照 <a href="#mcp-servers">MCP 服务器</a>中的说明，检查该服务器是否到达了会话。</p>
+<h3 id="turn-off-built-in-session-tools">关闭内置会话工具</h3>
+<p>Anthropic 的控制平面会将其自己的 MCP 服务器（名为 Claude Code Remote）附加到云端会话。Claude 使用该服务器的工具来创建<a href="routines.html">云端定时任务</a>、启动和引导其他云端会话、附加更多仓库，以及跟踪 Pull Request 活动。</p>
+<p>要关闭整个服务器，请在您的设置中添加一条<a href="permissions.html#mcp">服务器级拒绝规则</a>。根据会话的创建方式，控制平面会以三个名称之一注册该服务器。Claude Code 会精确匹配规则中的名称（包括大小写），因此请按如下所示为每个名称各写一条规则：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"deny"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"mcp__Claude_Code_Remote"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"mcp__claude-code-remote"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"mcp__bf7c680d-5fdc-5ef4-b4a0-abadb619bf0a"</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>指定整个服务器的规则也会覆盖该服务器以后新增的工具。要关闭某一个工具并保留其余工具，请在每条规则后追加两个下划线和工具名称，例如 <code>mcp__Claude_Code_Remote__add_repo</code>。如果要完全阻止该服务器连接，而不仅是移除其工具，请改为将这三个名称（不带 <code>mcp__</code> 前缀）作为 <code>serverName</code> 条目添加到 <a href="managed-mcp.html#policy-based-control-with-allowlists-and-denylists"><code>deniedMcpServers</code></a> 下。</p>
+<p>将这些规则放在<a href="server-managed-settings.html">服务器托管设置</a>中，无需更改运行器即可作用于会话；也可以放在运行器上的 <code>~/.claude/settings.json</code> 中。在<a href="#send-model-requests-to-bedrock-or-agent-platform">将模型请求发送到 Bedrock 或 Agent Platform</a> 的运行器上，请使用该文件，因为服务器托管设置不会作用于这些会话。<a href="#permissions-and-tool-approval">权限和工具批准</a>说明了运行器上的设置如何作用于会话。</p>
+<p>要确认规则已生效，请在该环境上启动一个会话，并让 Claude 列出其 MCP 工具。Claude Code 会从 Claude 的上下文中移除被拒绝的工具，因此被拒绝的工具不会出现在其回答中。</p>
+<h2 id="prompt-sessions-to-push-their-work">提示会话推送其工作</h2>
+<p>Anthropic 托管的会话运行 <a href="hooks.html#stop"><code>Stop</code> hook</a>，Claude Code 钩子在 Claude 完成响应时运行，提示 Claude 提交并推送其工作。运行器不安装一个。没有它，以未提交更改结束的会话仅在运行器的磁盘上留下该工作，claude.ai/code 中的 <strong>Create PR</strong> 按钮保持不活跃，直到分支存在于远程。</p>
+<p>下面的参考实现有两部分。将设置块合并到运行器主机上的 <code>~/.claude/settings.json</code> 中，运行器将其播种到每个会话中，并将脚本保存为运行器主机上的 <code>~/.claude/hooks/stop-hook-nudge.sh</code> 并使其可执行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"Stop"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"\"$CLAUDE_CONFIG_DIR/hooks/stop-hook-nudge.sh\""</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">sh</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="ch">#!/bin/sh</span>
+<span class="c1"># Stop-hook reference implementation for self-hosted runners.</span>
+<span class="c1">#</span>
+<span class="c1"># Nudges Claude once per turn if the project directory has uncommitted</span>
+<span class="c1"># changes OR unpushed commits, so work isn't lost when an idle session</span>
+<span class="c1"># is released and so the "Create PR" button on claude.ai/code lights up.</span>
+<span class="c1">#</span>
+<span class="c1"># Runner-level (no repo changes): drop this file at ~/.claude/hooks/ on</span>
+<span class="c1"># the runner host and merge the accompanying Stop-hook settings block</span>
+<span class="c1"># into ~/.claude/settings.json — the runner seeds both into every session.</span>
+<span class="c1"># Repo-level alternative: commit to &lt;repo&gt;/.claude/hooks/ and change the</span>
+<span class="c1"># settings.json command path to $CLAUDE_PROJECT_DIR/.claude/hooks/.</span>
+<span class="c1">#</span>
+<span class="c1"># stdin: hook JSON payload (see https://code.claude.com/docs/en/hooks)</span>
+<span class="c1"># stdout: {"decision":"block","reason":"..."} to nudge, or nothing to allow stop.</span>
+
+<span class="c1"># Re-entry guard: the harness sets stop_hook_active=true when re-invoking</span>
+<span class="c1"># the Stop hook after a block. Bail so we only nudge once per turn. The</span>
+<span class="c1"># harness emits compact JSON (no space after the colon), which this</span>
+<span class="c1"># pattern relies on; use jq if you need a whitespace-tolerant check.</span>
+<span class="k">in</span><span class="o">=</span><span class="k">$(</span>cat<span class="k">)</span>
+<span class="k">case</span><span class="w"> </span><span class="s2">"</span><span class="nv">$in</span><span class="s2">"</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>*<span class="s1">'"stop_hook_active":true'</span>*<span class="o">)</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">;;</span><span class="w"> </span><span class="k">esac</span>
+
+<span class="nv">d</span><span class="o">=</span><span class="s2">"</span><span class="nv">$CLAUDE_PROJECT_DIR</span><span class="s2">"</span>
+
+<span class="c1"># Hardening: this script runs outside Claude Code's Bash sandbox, so its git</span>
+<span class="c1"># calls skip some features that can start a program named in the checkout's</span>
+<span class="c1"># git settings. They don't skip them all, so don't count on the sandbox alone.</span>
+<span class="nv">GIT_OPTIONAL_LOCKS</span><span class="o">=</span><span class="m">0</span>
+<span class="nb">export</span><span class="w"> </span>GIT_OPTIONAL_LOCKS
+git<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>git<span class="w"> </span>-c<span class="w"> </span>core.fsmonitor<span class="o">=</span><span class="w"> </span>-c<span class="w"> </span>core.hooksPath<span class="o">=</span>/dev/null<span class="w"> </span><span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+
+<span class="c1"># Not a git repo → nothing to nudge.</span>
+git<span class="w"> </span>-C<span class="w"> </span><span class="s2">"</span><span class="nv">$d</span><span class="s2">"</span><span class="w"> </span>rev-parse<span class="w"> </span>--git-dir<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+
+<span class="c1"># No remote → "push to the remote" is unsatisfiable; bail.</span>
+<span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">"</span><span class="nv">$d</span><span class="s2">"</span><span class="w"> </span>remote<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+
+<span class="c1"># Uncommitted changes (staged, unstaged, or untracked). Exclude .claude/</span>
+<span class="c1"># entirely — operator-seeded settings and CLI-written runtime state</span>
+<span class="c1"># (scheduler lock, worktrees, routine state) live there and neither is</span>
+<span class="c1"># "uncommitted work" the model needs to push.</span>
+<span class="nv">s</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">"</span><span class="nv">$d</span><span class="s2">"</span><span class="w"> </span>status<span class="w"> </span>--porcelain<span class="w"> </span>--ignore-submodules<span class="o">=</span>dirty<span class="w"> </span>--<span class="w"> </span>.<span class="w"> </span><span class="s1">':(exclude).claude/'</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">printf</span><span class="w"> </span><span class="s1">'{"decision":"block","reason":"There are uncommitted changes in the repository. Please commit and push these changes to the remote branch."}'</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<span class="k">fi</span>
+
+<span class="c1"># Unpushed commits. Count commits on HEAD not reachable from any</span>
+<span class="c1"># remote-tracking ref or FETCH_HEAD. This works uniformly for:</span>
+<span class="c1">#   - init+fetch checkouts (runner default: only FETCH_HEAD exists)</span>
+<span class="c1">#   - clone-based checkouts (origin/* exist)</span>
+<span class="c1">#   - the runner default: the child starts on the session's outcome</span>
+<span class="c1">#     branch, which the runner creates after checkout</span>
+<span class="c1">#   - detached HEAD, when a custom setup skips that branch creation</span>
+<span class="c1"># With no reference point at all (never fetched), stay silent rather</span>
+<span class="c1"># than false-positive on a read-only turn.</span>
+<span class="nv">base</span><span class="o">=</span><span class="s2">""</span>
+git<span class="w"> </span>-C<span class="w"> </span><span class="s2">"</span><span class="nv">$d</span><span class="s2">"</span><span class="w"> </span>rev-parse<span class="w"> </span>--verify<span class="w"> </span>-q<span class="w"> </span>FETCH_HEAD<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">base</span><span class="o">=</span><span class="s2">"FETCH_HEAD"</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="nv">$base</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">"</span><span class="nv">$d</span><span class="s2">"</span><span class="w"> </span>for-each-ref<span class="w"> </span>--count<span class="o">=</span><span class="m">1</span><span class="w"> </span>refs/remotes/origin<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<span class="k">fi</span>
+<span class="c1"># shellcheck disable=SC2086  # $base is either "" or "FETCH_HEAD", intentional word-split</span>
+<span class="nv">unpushed</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">"</span><span class="nv">$d</span><span class="s2">"</span><span class="w"> </span>rev-list<span class="w"> </span>HEAD<span class="w"> </span>--not<span class="w"> </span><span class="nv">$base</span><span class="w"> </span>--remotes<span class="o">=</span>origin<span class="w"> </span>--count<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">unpushed</span><span class="o">=</span><span class="m">0</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$unpushed</span><span class="s2">"</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nv">branch</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">"</span><span class="nv">$d</span><span class="s2">"</span><span class="w"> </span>symbolic-ref<span class="w"> </span>--short<span class="w"> </span>-q<span class="w"> </span>HEAD<span class="k">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$branch</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="c1"># $branch is attacker-influenced — git-check-ref-format(1) allows `"`</span>
+<span class="w">    </span><span class="c1"># in ref names. `\` is forbidden (rule 10) but escaped anyway as cheap</span>
+<span class="w">    </span><span class="c1"># defense-in-depth.</span>
+<span class="w">    </span><span class="c1"># Escape JSON metacharacters before interpolating into the hand-built</span>
+<span class="w">    </span><span class="c1"># payload so a branch like x","continue":false can't inject keys into</span>
+<span class="w">    </span><span class="c1"># the hook-output JSON the harness parses. $unpushed is safe — the</span>
+<span class="w">    </span><span class="c1"># -gt guard above rejects anything that isn't a plain integer.</span>
+<span class="w">    </span><span class="nv">branch_esc</span><span class="o">=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$branch</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">'s/\\/\\\\/g; s/"/\\"/g'</span><span class="k">)</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">'{"decision":"block","reason":"There are %s unpushed commit(s) on branch '</span><span class="se">\'</span><span class="s1">'%s'</span><span class="se">\'</span><span class="s1">'. Please push these changes to the remote repository."}'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$unpushed</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$branch_esc</span><span class="s2">"</span>
+<span class="w">  </span><span class="k">else</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">'{"decision":"block","reason":"There are %s unpushed commit(s) on a detached HEAD. Please create a branch and push it to the remote repository."}'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$unpushed</span><span class="s2">"</span>
+<span class="w">  </span><span class="k">fi</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<span class="k">fi</span>
+
+<span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<p>该 hook 在会话结束前提示 Claude 提交并推送，当目录不是 git 仓库或没有远程时保持沉默。对于包含多个仓库的会话，请参阅 <a href="#repository-settings-in-sessions-with-several-repositories"><code>$CLAUDE_PROJECT_DIR</code> 指向的内容</a>。</p>
+<p>Stop hook 只负责提示 Claude。要使提交和推送能够成功，请完成以下设置：</p>
+<ul>
+<li><strong>git 身份</strong>：在运行器镜像中设置 <code>user.name</code> 和 <code>user.email</code>，或使用 <a href="self-hosted-environments-deploy.html#let-the-runner-configure-git"><code>--configure-git</code></a> 启动运行器</li>
+<li><strong>推送凭据</strong>：使用 <a href="self-hosted-environments-deploy.html#use-the-anthropic-git-proxy">Anthropic 托管的 git</a>，或按照<a href="self-hosted-environments-deploy.html#ship-git-config-in-your-image">在镜像中提供 git 配置</a>中的说明提供凭据</li>
+<li><strong>对于恢复的会话</strong>：在环境中的每个运行器上设置 <a href="self-hosted-environments-reference.html#runner-cli-flags"><code>--push-outcome-on-release</code></a>。这样，恢复的会话将从 Claude 推送到该会话分支的提交开始。有关该标志的限制，请参阅<a href="self-hosted-environments-deploy.html#resumed-sessions-lose-unpushed-work">恢复的会话会丢失未推送的工作</a>。</li>
+</ul>
+<p>Stop hook 每个轮次最多提示一次。如果提交或推送失败，该轮次仍会结束。请在会话中查找 git 的错误信息，并修复其中指出的问题。</p>
+<p>对于大型检出，请调高 Stop hook 设置中的 <code>timeout</code>，然后重启运行器。脚本中的 <code>git status</code> 会跳过 <code>core.fsmonitor</code>，因此耗时可能超过其中设置的 10 秒。超时的 hook 会直接结束该轮次，不会发出提示。</p>
+<h3 id="submodules-and-the-stop-hook">子模块与 Stop hook</h3>
+<p>Stop hook 检查的是每个子模块所处的提交，而不是其中的文件：</p>
+<ul>
+<li><strong>子模块中有新提交</strong>：Claude 会一直收到提示，直到父仓库记录该提交为止，即使 <code>.gitmodules</code> 为该子模块设置了 <code>ignore = all</code></li>
+<li><strong>子模块中有未提交的文件</strong>：Claude 不会收到提示，因此这些工作只会留在运行器的磁盘上</li>
+<li><strong>子模块中有未推送的提交</strong>：Stop hook 不会检查它们是否已推送，因此父仓库可能指向一个其他人都无法获取的提交</li>
+</ul>
+<h3 id="replace-an-earlier-copy-of-the-stop-hook-script">替换旧版 Stop hook 脚本</h3>
+<p>在您的 <code>stop-hook-nudge.sh</code> 副本中搜索 <code>GIT_OPTIONAL_LOCKS</code>。如果找不到，说明您使用的是旧版副本。请在所有安装位置将其替换为<a href="#prompt-sessions-to-push-their-work">当前脚本</a>，然后重启运行器。保留您的 Stop hook 设置，但在大型检出上可调高 <code>timeout</code>。</p>
+<ul>
+<li><strong>时机</strong>：如果您的会话在启用 <a href="sandboxing.html">Bash 沙箱</a>的情况下运行，请立即替换。否则，请在下次构建镜像或重启运行器时替换。</li>
+<li><strong>变化</strong>：子模块中未提交的文件不再提示 Claude。而 <code>.gitmodules</code> 标记为 <code>ignore = all</code> 的子模块中的新提交现在会提示 Claude。</li>
+</ul>
+<div class="callout callout-warning"><div class="callout-head"><span class="callout-ico"></span>注意</div><div class="callout-body"><p>hook 在 Bash 沙箱之外运行，因此当前脚本的 git 调用会跳过某些可能启动检出的 git 设置中所指定程序的 git 功能，但并不会跳过全部此类功能。不要仅依赖沙箱，并请按照<a href="self-hosted-environments-deploy.html#harden-your-deployment">加固您的部署</a>中的说明隔离会话。</p></div></div>
+<h2 id="permissions-and-tool-approval">权限和工具批准</h2>
+<p>自托管会话没有连接的终端，因此未回答的权限提示会使当前轮次停滞，直到用户在 UI 中响应。Anthropic 的控制平面随工作负载一起发送每个会话的工具列表和权限规则；默认配置预批准常规工具调用（包括 <code>Bash</code>），并且云端会话<a href="permission-modes.html#switch-permission-modes">无论处于何种模式都会预批准文件编辑</a>。任何未被预批准的调用都会通过会话 UI 进行提示。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>仅在会话容器运行时启用了<a href="self-hosted-environments-deploy.html#default-deny-egress">默认拒绝网络出口</a>并落实了<a href="self-hosted-environments-deploy.html#harden-your-deployment">加固部分</a>中其余措施的环境上固定自动模式。在默认预批准工具集和自动模式下，常规工具调用（包括 <code>Bash</code> 网络请求）都会在无人参与的情况下运行，因此网络边界才是限制这些调用可访问范围的关键。</p></div></div>
+<p>要无论控制平面发送什么都将提示保持在最低限度，请从您的包装脚本或 <a href="#command"><code>command</code> hook</a> 固定<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>。自动模式让会话无需常规权限提示即可运行：单独的分类器模型在操作运行前对其进行审查，并阻止它拒绝的操作，而显式的询问规则仍会强制提示；权限模式页面介绍了分类器检查的内容。运行器在调用包装脚本前追加服务器计算的标志，对于单值标志（如 <code>--permission-mode</code>），解析器以最后一次出现的值为准，因此您在 <code>"$@"</code> 之后追加的标志会覆盖服务器发送的值：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash"><span class="ch">#!/bin/bash</span>
+<span class="nb">exec</span><span class="w"> </span><span class="s2">"</span><span class="nv">$CLAUDE_RUNNER_CLAUDE_BIN</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span><span class="w"> </span>--permission-mode<span class="w"> </span>auto
+</code></pre></div>
+<p>要改为预批准特定工具，请追加 <code>--allowed-tools</code> 和您的规则，例如 <code>--allowed-tools "Bash(bazel *) Bash(yarn *) mcp__internal__*"</code>。列表标志（如 <code>--allowed-tools</code> 和 <code>--disallowed-tools</code>）会在多次出现时累积而不是覆盖，因此您的规则会叠加在控制平面发送的任何规则之上。要缩小范围，请追加 <code>--disallowed-tools</code>，即使其他规则允许某些工具，它也会拒绝这些工具。</p>
+<h3 id="how-each-session’s-config-is-assembled">每个会话的配置如何组装</h3>
+<p>运行器为每个会话提供自己的配置目录，该目录以运行器在启动时一次性捕获的主机 <code>~/.claude/</code> 快照为初始内容：您的运行器镜像中的 <code>settings.json</code>、<code>CLAUDE.md</code>、hook、Agent、命令和 skill 会作为用户级基线应用于每个会话。如果您更改正在运行的主机上的配置，更改仅在您重启运行器后生效。</p>
+<p>设置 <code>SELF_HOSTED_RUNNER_HOST_CONFIG_DIR</code> 可从其他路径获取初始内容，或将其指向空目录以禁用初始内容填充。</p>
+<p>会话还会读取以下设置文件：</p>
+<ul>
+<li><strong>项目设置</strong>：在<a href="claude-projects.html#what-threads-pick-up-from-your-repositories">项目</a>线程之外，仓库中提交的 <code>.claude/settings.json</code> 会叠加在用户级基线之上。在包含多个仓库的会话中，<a href="#repository-settings-in-sessions-with-several-repositories">最多只有一个仓库的文件生效</a>。</li>
+<li><strong>托管设置</strong>：会话会从运行器镜像中的标准系统路径读取 <a href="settings.html#where-settings-live"><code>managed-settings.json</code></a>。关于其中的键是否与<a href="server-managed-settings.html">服务器托管设置</a>一起应用，请参阅 <a href="managed-settings.html#how-claude-code-combines-managed-sources">Claude Code 如何合并托管来源</a>。</li>
+</ul>
+<p>有关这些来源的应用顺序，请参阅<a href="settings.html#settings-precedence">设置优先级</a>。</p>
+<p>当 Anthropic 的控制平面为会话提供 <a href="hooks.html">Claude Code hook</a> 时，运行器会将它们与您自己的配置并行安装，而不是覆盖您的配置。需要 Claude Code v2.1.229 或更高版本；较旧的运行器会忽略所提供的 hook。所提供的 hook 会运行 <code>python3</code>，因此请在您的<a href="self-hosted-environments-deploy.html#build-the-runner-image">运行器镜像</a>中安装 <code>python3</code>。</p>
+<ul>
+<li><strong>安装位置</strong>：运行器将提供的每个 hook 脚本写入会话配置目录中保留的 <code>hooks/.ccr-launcher/</code> 子目录，并在一个单独的设置文件中注册这些脚本，该文件通过 <code>--settings</code> 传递给会话，从而使初始填充的 <code>settings.json</code> 以及您位于 <code>hooks/&lt;name&gt;</code> 的脚本保持不变。运行器会为每个会话重新创建该保留子目录，并且不会将主机上 <code>~/.claude/hooks/.ccr-launcher/</code> 中的内容填充到会话中。</li>
+<li><strong>编写者</strong>：控制平面使用其自身部署中的固定常量填充这些脚本，绝不使用按会话或第三方的输入。</li>
+<li><strong>仍然适用的管控</strong>：通过 <code>--settings</code> 下发的 hook 会进入普通的合并 hook 配置，而不是托管层，因此您的托管设置仍然适用。<code>disableAllHooks</code> 会禁用它们，并且它们不属于 <a href="settings-reference.html#allowmanagedhooksonly"><code>allowManagedHooksOnly</code></a> 保持加载的类别。</li>
+</ul>
+<p>当某人启动自己的会话时，Claude Code 会将<a href="skills.html#skills-in-cowork-and-cloud-sessions">其 claude.ai 账户中启用的 skill</a> 下载到该会话的配置目录中。<a href="routines.html">云端定时任务</a>运行不会获得其所有者的 skill，而<a href="#send-model-requests-to-bedrock-or-agent-platform">将模型请求发送到 Bedrock 或 Agent Platform</a> 的会话不会下载任何 skill。对于这些会话需要的 skill，请将其添加到您的运行器镜像中，或者在<a href="claude-projects.html#what-threads-pick-up-from-your-repositories">项目</a>线程之外，将其提交到仓库的 <code>.claude/skills/</code> 中。</p>
+<p>除 <a href="https://claude.com/docs/claude-tag/overview" target="_blank" rel="noopener">Claude Tag</a> 会话外，自托管环境中的会话默认关闭<a href="memory.html#auto-memory">自动记忆</a>。对于需要跨会话保留的指令，请使用运行器镜像或仓库中的 <code>CLAUDE.md</code>。</p>
+<p>运行器对主机 <code>~/.claude/</code> 的快照不包含 <code>projects/</code> 目录。自动记忆的默认存储位置就在该目录下。如果您将记忆文件放在那里，运行器不会将它们填充到会话中，它们也不会启用自动记忆。</p>
+<h3 id="stop-sessions-that-fail-to-fetch-server-managed-settings">在获取服务器托管设置失败时阻止会话启动</h3>
+<p>要在获取<a href="server-managed-settings.html">服务器托管设置</a>失败时阻止执行该获取的会话启动，请在运行器镜像中的 <a href="settings.html#where-settings-live"><code>managed-settings.json</code></a> 里将 <a href="settings-reference.html#forceremotesettingsrefresh"><code>forceRemoteSettingsRefresh</code></a> 设置为 <code>true</code>。如果 Anthropic 的 API 回复您的组织没有服务器托管设置，这也算作获取成功。</p>
+<p>在添加该键之前，请检查该环境是否运行 Claude Tag 频道会话，或是否将模型请求发送到 Bedrock 或 Agent Platform：</p>
+<ul>
+<li><strong>Claude Tag 频道会话</strong>：对于 Owner <a href="cloud-environments.html#set-the-environment-a-claude-tag-channel-uses">将 Claude Tag 频道路由到</a>的环境中的运行器，请不要设置该键。Anthropic 的 API 会拒绝这些会话获取服务器托管设置的请求，因此设置该键后它们将无法启动。请将它们的规则放在运行器镜像的 <code>managed-settings.json</code> 中，<a href="managed-settings.html#where-and-when-a-policy-applies">它们仍会读取该文件</a>。要为其他会话使用该键，请在单独的环境中运行这些会话。</li>
+<li><strong>Bedrock 或 Agent Platform</strong>：使用这些提供商的会话<a href="#what-differs-from-sessions-on-the-anthropic-api">不会获取服务器托管设置</a>，因此无论是否设置该键，它们都会启动。请改为通过同一个 <code>managed-settings.json</code> 强制执行您的规则。</li>
+</ul>
+<p>以下 <code>managed-settings.json</code> 设置了该键：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"forceRemoteSettingsRefresh"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>即使您也在 claude.ai 管理控制台中设置了该键，也请在该文件中设置它。新会话没有您的服务器托管设置的<a href="server-managed-settings.html#fetch-and-caching-behavior">缓存副本</a>，因此如果您只在控制台中设置该键，会话尚不具备该设置。如果此时获取失败，会话将在没有这些设置的情况下运行，直到后续获取成功为止。</p>
+<p>要确认会话未启动是因为设置获取失败，请查看会话中或运行器日志中 <a href="#keep-stdin-and-file-descriptor-3-attached">Claude Code 的最后输出</a>。其中会包含 <code>Your organization requires remote managed settings to load, but they could not be loaded.</code></p>
+<h3 id="repository-settings-in-sessions-with-several-repositories">包含多个仓库的会话中的仓库设置</h3>
+<p>在<a href="claude-projects.html#what-threads-pick-up-from-your-repositories">项目</a>中的线程里，无论线程在何处启动，都没有任何仓库的 <code>.claude/settings.json</code> 作为项目设置生效，也没有任何仓库的 <code>.mcp.json</code> 或 skill 会被加载。要为这些线程提供 skill，请将其添加到您的运行器镜像中。</p>
+<p>在其他任何包含多个仓库的会话中，Claude Code 从会话启动所在的目录读取项目设置，因此最多只有一个仓库的 <code>.claude/settings.json</code> 作为项目设置生效。在其他仓库的文件中定义的 hook 不会运行，其中的拒绝规则不会生效，其 <code>env</code> 也不会被设置。</p>
+<ul>
+<li><strong><code>--capacity 1</code>（默认值）并使用内置检出</strong>：会话在其仓库列表中的第一个仓库中启动。该仓库的 <code>.claude/settings.json</code> 作为项目设置生效，其 <code>.mcp.json</code> 会被加载，而其他仓库的则不会。</li>
+<li><strong><code>--capacity</code> 大于 1，或使用 <a href="#checkout"><code>checkout</code> hook</a></strong>：会话在包含各检出内容的按会话目录中启动。没有任何仓库的 <code>.claude/settings.json</code> 作为项目设置生效，没有任何仓库的 <code>.mcp.json</code> 会被加载，并且 hook 命令中的 <a href="hooks.html#reference-scripts-by-path"><code>$CLAUDE_PROJECT_DIR</code></a> 是该目录，而不是某个检出目录。</li>
+</ul>
+<p>无论会话在何处启动，每个仓库的 <code>CLAUDE.md</code> 都会被加载。在项目线程之外，其 skill 也会被加载。运行器将每个仓库作为<a href="permissions.html#additional-directories-grant-file-access-not-configuration">附加目录</a>传递给 Claude Code，因此 Claude Code 还会从每个仓库的 <code>.claude/settings.json</code> 中读取 <code>enabledPlugins</code> 和 <code>extraKnownMarketplaces</code> 键。</p>
+<p>要在每个会话中运行某个 hook 或应用某条权限规则，请将其放在运行器主机上的 <code>~/.claude/settings.json</code> 中。无论会话在何处启动，运行器都会<a href="#how-each-session’s-config-is-assembled">将该主机文件填充到每个会话中</a>。在 <code>Read</code> 或 <code>Edit</code> 规则中，请将路径写为以 <code>//</code> 开头的绝对路径或以 <code>~/</code> 开头的相对于主目录的<a href="permissions.html#read-and-edit">模式</a>，因为其他模式会以设置来源或当前目录为锚点。</p>
+<h3 id="repository-committed-permission-rules">仓库中提交的权限规则</h3>
+<p>不要在仓库中提交的 <code>permissions.allow</code> 中放置不带限定的 <code>"Edit"</code>、<code>"Write"</code> 或 <code>"NotebookEdit"</code> 条目。不带限定的文件工具规则会匹配该工具而不论路径如何，从而授予在主机上任意位置写入的权限，而不仅限于工作区，因此运行器的写入范围限制守卫会标记该会话；使用 <a href="self-hosted-environments-reference.html#runner-cli-flags"><code>--confine-repo-settings enforce</code></a> 时，它会拒绝生成该会话，而不是记录日志后继续。请参阅<a href="self-hosted-environments-deploy.html#harden-your-deployment">加固部分</a>。</p>
+<p>仓库根本不需要文件工具规则：云端会话<a href="permission-modes.html#switch-permission-modes">无论处于何种模式都会预批准文件编辑</a>。如果您确实要提交规则，请将其限定到工作区，例如 <code>"Edit(/**)"</code>；单个前导斜杠相对于项目根目录，即会话的工作区。不带限定的文件工具规则可以放在操作员的主机级 <code>settings.json</code> 中，因为该文件不是在仓库中提交的。</p>
+<p><code>defaultMode</code> 为 <code>auto</code> 的设置仅在来自镜像范围或用户级设置文件时才会生效，因此检出的仓库无法为自己授予自动模式。有关云端会话接受哪些模式以及完整的规则语法，请参阅<a href="permission-modes.html">权限模式</a>。</p>
+<h2 id="what’s-next">接下来</h2>
+<ul>
+<li><a href="self-hosted-environments-reference.html">Reference</a>：每个 CLI 标志、环境变量和指标</li>
+<li><a href="self-hosted-environments-identity.html">Verify session identity</a>：从运行器外部的服务验证会话令牌</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="self-hosted-environments-deploy.html"><span class="pager-dir">← 上一页</span><span class="pager-name">将自托管环境部署到生产环境</span></a><a class="pager-link next" href="self-hosted-environments-testing.html"><span class="pager-dir">下一页 →</span><span class="pager-name">端到端测试自托管环境</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#wrapper-scripts">包装脚本</a><a class="toc-l3" href="#give-a-default-to-variables-that-can-be-unset">为可能未设置的变量提供默认值</a><a class="toc-l3" href="#quote-the-arguments-and-variables-your-script-expands">为脚本展开的参数和变量加引号</a><a class="toc-l3" href="#keep-stdin-and-file-descriptor-3-attached">保持 stdin 和文件描述符 3 的连接</a><a class="toc-l3" href="#pass-the-system-prompt-flags-through">透传系统提示词标志</a><a class="toc-l3" href="#provision-credentials-scoped-to-the-session-creator">配置作用域限定为会话创建者的凭据</a><a class="toc-l2" href="#lifecycle-hooks">生命周期钩子</a><a class="toc-l3" href="#checkout">checkout</a><a class="toc-l3" href="#post-session">post-session</a><a class="toc-l3" href="#git-configuration-inside-lifecycle-hooks">生命周期 hook 中的 Git 配置</a><a class="toc-l3" href="#command">command</a><a class="toc-l2" href="#on-demand-runners">按需运行器</a><a class="toc-l3" href="#the-spawn-runner-hook">spawn-runner hook</a><a class="toc-l3" href="#stop-or-restart-the-orchestrator">停止或重启编排器</a><a class="toc-l2" href="#send-model-requests-to-bedrock-or-agent-platform">将模型请求发送到 Bedrock 或 Agent Platform</a><a class="toc-l3" href="#what-differs-from-sessions-on-the-anthropic-api">与 Anthropic API 上的会话的不同之处</a><a class="toc-l2" href="#mcp-servers">MCP 服务器</a><a class="toc-l3" href="#wait-for-mcp-servers-before-the-first-turn">在第一轮之前等待 MCP 服务器</a><a class="toc-l3" href="#turn-off-built-in-session-tools">关闭内置会话工具</a><a class="toc-l2" href="#prompt-sessions-to-push-their-work">提示会话推送其工作</a><a class="toc-l3" href="#submodules-and-the-stop-hook">子模块与 Stop hook</a><a class="toc-l3" href="#replace-an-earlier-copy-of-the-stop-hook-script">替换旧版 Stop hook 脚本</a><a class="toc-l2" href="#permissions-and-tool-approval">权限和工具批准</a><a class="toc-l3" href="#how-each-session’s-config-is-assembled">每个会话的配置如何组装</a><a class="toc-l3" href="#stop-sessions-that-fail-to-fetch-server-managed-settings">在获取服务器托管设置失败时阻止会话启动</a><a class="toc-l3" href="#repository-settings-in-sessions-with-several-repositories">包含多个仓库的会话中的仓库设置</a><a class="toc-l3" href="#repository-committed-permission-rules">仓库中提交的权限规则</a><a class="toc-l2" href="#what’s-next">接下来</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

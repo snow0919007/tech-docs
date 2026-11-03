@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>环境变量 · Claude Code 中文文档</title>
+<meta name="description" content="控制 Claude Code 行为的环境变量参考。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="env-vars">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/env-vars" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link active" href="env-vars.html" aria-current="page">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>参考</span> <span class="sep">/</span> <span>参考</span></div>
+    <article class="prose" id="article"><h1 id="_1">环境变量</h1>
+<blockquote>
+<p>控制 Claude Code 行为的环境变量参考。</p>
+</blockquote>
+<p>环境变量可以控制 Claude Code 的行为，例如模型选择、身份验证、请求路由和功能切换。许多相同的行为也可以通过<a href="settings.html">设置文件</a>字段、<a href="cli-reference.html">CLI 标志</a>或会话内命令（如 <code>/model</code>）进行配置。</p>
+<p>本页面涵盖以下内容：</p>
+<ul>
+<li><a href="#set-environment-variables">在 shell 或设置文件中设置环境变量</a></li>
+<li><a href="#precedence">当行为可以通过多种方式设置时，检查哪个值适用</a></li>
+<li><a href="#variables">查找 Claude Code 读取的变量</a></li>
+<li><a href="#features-that-need-feature-flag-fetching">查看当变量关闭功能标志获取时，哪些功能停止工作</a></li>
+</ul>
+<h2 id="set-environment-variables">设置环境变量</h2>
+<p>在 shell 中设置的变量仅在该终端会话期间有效，而在设置文件中的变量每次运行 <code>claude</code> 时都会应用。</p>
+<h3 id="set-variables-in-your-shell">在 shell 中设置变量</h3>
+<p>在启动 <code>claude</code> 之前设置变量：</p>
+<blockquote>
+<p>[tab] macOS, Linux, WSL</p>
+<p><code>bash theme={null}
+export API_TIMEOUT_MS="1200000"
+claude</code></p>
+<p>要为每个会话设置它，请将 <code>export</code> 行添加到 <code>~/.bashrc</code>、<code>~/.zshrc</code> 或您的 shell 配置文件中。</p>
+<p>[tab] Windows PowerShell</p>
+<p><code>powershell theme={null}
+$env:API_TIMEOUT_MS = "1200000"
+claude</code></p>
+<p>要为每个会话设置它，请运行 <code>[Environment]::SetEnvironmentVariable("API_TIMEOUT_MS", "1200000", "User")</code> 并打开一个新终端。</p>
+<p>[tab] Windows CMD</p>
+<p><code>batch theme={null}
+set API_TIMEOUT_MS=1200000
+claude</code></p>
+<p>要为每个会话设置它，请运行 <code>setx API_TIMEOUT_MS "1200000"</code> 并打开一个新终端。</p>
+</blockquote>
+<p>赋值行在成功时不会打印任何内容。要确认变量已设置，请在同一 shell 中打印它：</p>
+<blockquote>
+<p>[tab] macOS, Linux, WSL</p>
+<p><code>bash theme={null}
+echo $API_TIMEOUT_MS</code></p>
+<p>[tab] Windows PowerShell</p>
+<p><code>powershell theme={null}
+echo $env:API_TIMEOUT_MS</code></p>
+<p>[tab] Windows CMD</p>
+<p><code>batch theme={null}
+echo %API_TIMEOUT_MS%</code></p>
+</blockquote>
+<h3 id="set-variables-in-settings-files">在设置文件中设置变量</h3>
+<p>在 <code>settings.json</code> 文件中的 <code>env</code> 键下添加变量，如果文件不存在则创建它。Claude Code 直接从文件中读取它们，因此无论如何启动 <code>claude</code>，它们都会生效。运行中的会话在您保存文件时会将新值和更改的值应用到其环境中，但在启动时读取其变量一次的功能（例如 <a href="monitoring-usage.html">OpenTelemetry 监控</a>）会保持其启动值，直到您重新启动。从文件中删除变量不会在运行中的会话中取消设置它；删除在您下次启动 <code>claude</code> 时生效。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">json</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"API_TIMEOUT_MS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1200000"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"BASH_DEFAULT_TIMEOUT_MS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"300000"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Claude Code 会按原样将这些值复制到其环境中。这些值不经过任何 shell 处理，因此 <code>~</code> 或 <code>$HOME</code> 等简写会保持输入时的原样。对于接受路径的变量（例如 <code>CLAUDE_CONFIG_DIR</code>），请写入绝对路径：<code>"CLAUDE_CONFIG_DIR": "/home/you/.claude-work"</code>。</p>
+<p>您选择的文件控制变量应用于谁：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">文件</th>
+<th style="text-align: left;">应用于</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>~/.claude/settings.json</code></td>
+<td style="text-align: left;">您，在每个项目中</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.claude/settings.json</code></td>
+<td style="text-align: left;">在项目中工作的每个人，检入源代码控制</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>.claude/settings.local.json</code></td>
+<td style="text-align: left;">您，仅在此项目中，当 Claude Code 将设置保存到它时被 gitignore；如果您手动创建它，请将其添加到您的 gitignore</td>
+</tr>
+<tr>
+<td style="text-align: left;">托管设置</td>
+<td style="text-align: left;">您组织中的每个人，由管理员部署</td>
+</tr>
+</tbody>
+</table>
+<p>请参阅 <a href="settings.html#where-settings-live">设置文件</a> 了解每个文件的位置，以及 <a href="settings.html#settings-precedence">设置优先级</a> 了解当多个文件设置相同变量时它们如何组合。</p>
+<h2 id="precedence">优先级</h2>
+<p>某些行为同时具有环境变量和专用设置键，Claude Code 读取哪一个的顺序因键而异。对于 <code>ANTHROPIC_MODEL</code> 和 <code>CLAUDE_CODE_AUTO_CONNECT_IDE</code>，Claude Code 首先读取变量，仅当变量未设置时才使用 <code>model</code> 或 <code>autoConnectIde</code> 设置。对于您正在设置的对，请检查下面变量的行和 <a href="settings-reference.html">设置参考</a> 上的键条目。</p>
+<p>当同一变量在您的 shell 和设置文件 <code>env</code> 块中都设置时，在大多数会话中设置文件值适用。Claude Code 将每个 <code>env</code> 条目写入进程环境，替换从 shell 继承的值。<a href="settings-reference.html#how-env-values-interact-with-your-shell"><code>env</code> 值如何与您的 shell 交互</a> 涵盖保留继承值的会话，以及 <a href="settings-reference.html#when-claude-code-applies-env-values"><code>env</code> 设置</a> 说明何时应用它们。少数变量是特殊情况；<a href="settings-reference.html#env"><code>env</code> 设置</a> 列出了例外。</p>
+<p>在设置文件中，您可以设置变量，但不能删除变量。要覆盖无法取消设置的变量，例如由您无法控制的 shell 配置文件导出的过时 <code>CLAUDE_CODE_USE_VERTEX</code>，请在 <code>env</code> 块中将其设置为空字符串：<code>"CLAUDE_CODE_USE_VERTEX": ""</code>。Claude Code 将空值视为未设置以进行提供程序选择。子进程仍然继承空值。</p>
+<p>在设置文件之间，<code>env</code> 值遵循 <a href="settings.html#settings-precedence">设置优先级</a>，因此托管设置条目覆盖用户或项目设置中的相同变量。项目和本地设置无法设置某些变量，例如 <code>CLAUDE_CONFIG_DIR</code> 和 OpenTelemetry 导出程序变量。<a href="settings-reference.html#variables-claude-code-ignores-in-env">Claude Code 在 <code>env</code> 中忽略的变量</a> 列出了它们，以及仍然适用的 OpenTelemetry 关闭值。</p>
+<p>环境变量与 CLI 标志和会话内命令的交互方式因功能而异：<code>--model</code> 和 <code>/model</code> 覆盖 <code>ANTHROPIC_MODEL</code>，而 <code>CLAUDE_CODE_EFFORT_LEVEL</code> 覆盖 <code>--effort</code> 和 <code>/effort</code>。当变量与另一个配置源交互时，<a href="#variables">变量</a> 列表中的其行说明优先级或链接到记录它的页面。</p>
+<p>Claude Code 在启动时读取 shell 环境变量，因此对它们的更改在您下次启动 <code>claude</code> 时生效。在设置文件中 <code>env</code> 键下设置的变量在文件更改时重新应用到运行中的会话，但 <a href="#in-settings-files">在设置文件中设置变量</a> 中描述的仅启动时例外除外。</p>
+<h2 id="variables">变量</h2>
+<p>数值型变量（例如超时时间、token 预算和重试次数）除了接受纯数字外，还接受科学计数法和数字分隔符写法，除非某个变量所在行注明仅接受纯数字。例如，Claude Code 会将 <code>2e3</code> 读取为 2000，将 <code>64_000</code> 读取为 64000。在 v2.1.211 之前，这些写法可能会静默地设置一个小得多的值，例如 <code>1e6</code> 会将超时时间设置为 1。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>对于启用或关闭某项行为的变量，设置为 <code>1</code>、<code>true</code>、<code>yes</code> 或 <code>on</code> 即可启用，设置为 <code>0</code>、<code>false</code>、<code>no</code> 或 <code>off</code> 即可关闭，不区分大小写。</p>
+<p>某些变量只读取您是否设置了它们，因此任何非空值（包括 <code>0</code>）都会启用该行为；要关闭该行为，请取消设置该变量或将其设置为空值。以下变量按这种方式工作：</p>
+<ul>
+<li><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code></li>
+<li><code>DISABLE_TELEMETRY</code></li>
+<li><code>DISABLE_ERROR_REPORTING</code></li>
+<li><code>CLAUDE_CODE_TMUX_TRUECOLOR</code></li>
+<li><code>IS_DEMO</code></li>
+</ul>
+<p>另有一个变量有其自己的规则：<code>FORCE_HYPERLINK</code> 读取一个数字，因此只有 <code>0</code> 会将其关闭。每个变量所在行也会说明其自身的规则。</p></div></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">变量</th>
+<th style="text-align: left;">用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_API_KEY</code></td>
+<td style="text-align: left;">作为 <code>X-Api-Key</code> 标头发送的 API 密钥。设置后，即使您已登录，也会使用此密钥，而不是您的 Claude Pro、Max、Ultra、Team 或 Enterprise 订阅。在非交互模式（<code>-p</code>）下，只要存在该密钥就始终会使用它。在交互模式下，系统会提示您批准一次该密钥，之后它才会覆盖您的订阅。如需改用您的订阅，请运行 <code>unset ANTHROPIC_API_KEY</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_AUTH_TOKEN</code></td>
+<td style="text-align: left;"><code>Authorization</code> 标头的自定义值（您在此设置的值将以 <code>Bearer</code> 为前缀）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_AWS_API_KEY</code></td>
+<td style="text-align: left;">用于 <a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 的工作区 API 密钥，在 AWS Console 中生成。作为 <code>x-api-key</code> 发送，优先于 AWS SigV4</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_AWS_BASE_URL</code></td>
+<td style="text-align: left;">覆盖 <a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 端点 URL。用于自定义区域或通过 <a href="llm-gateway.html">LLM 网关</a>路由时。默认为 <code>https://aws-external-anthropic.{region}.api.aws</code>。Claude Code 按照<a href="amazon-bedrock.html#3-configure-claude-code">与 Amazon Bedrock 相同的优先级</a>解析区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_AWS_WORKSPACE_ID</code></td>
+<td style="text-align: left;"><a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 必需。在每个请求中作为 <code>anthropic-workspace-id</code> 标头发送</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_BASE_URL</code></td>
+<td style="text-align: left;">覆盖 API 端点，以通过代理或网关路由请求。关于该网关拒绝 MCP 工具搜索时会发生什么，请参阅<a href="mcp.html#tool-search-through-a-gateway">通过 LLM 网关进行工具搜索</a>。自 v2.1.196 起，当此变量指向 <code>api.anthropic.com</code> 以外的主机时，<a href="remote-control.html#requirements">Remote Control</a> 会被禁用，与其在 Amazon Bedrock、Google Cloud's Agent Platform 和 Microsoft Foundry 上的行为一致</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_BEDROCK_BASE_URL</code></td>
+<td style="text-align: left;">覆盖 Amazon Bedrock 端点 URL。用于自定义 Amazon Bedrock 端点或通过 <a href="llm-gateway.html">LLM 网关</a>路由时。请参阅 <a href="amazon-bedrock.html">Amazon Bedrock</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_BEDROCK_MANTLE_BASE_URL</code></td>
+<td style="text-align: left;">覆盖 Amazon Bedrock Mantle 端点 URL。请参阅 <a href="amazon-bedrock.html#use-the-mantle-endpoint">Mantle 端点</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_BEDROCK_REGION_PREFIX</code></td>
+<td style="text-align: left;">Claude Code 优先尝试的跨区域推理配置文件前缀（<code>us</code>、<code>eu</code>、<code>apac</code>、<code>jp</code>、<code>au</code> 或 <code>global</code>），而不是根据 AWS 区域推导出的前缀。在 AWS GovCloud 区域中会被忽略。需要 Claude Code v2.1.224 或更高版本。请参阅 <a href="amazon-bedrock.html#cross-region-inference-profile-prefixes">Amazon Bedrock</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_BEDROCK_SERVICE_TIER</code></td>
+<td style="text-align: left;">Amazon Bedrock <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/service-tiers-inference.html" target="_blank" rel="noopener">服务层级</a>（<code>default</code>、<code>flex</code> 或 <code>priority</code>）。作为 <code>X-Amzn-Bedrock-Service-Tier</code> 标头发送。请参阅 <a href="amazon-bedrock.html#service-tiers">Amazon Bedrock</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_BETAS</code></td>
+<td style="text-align: left;">要包含在 API 请求中的额外 <code>anthropic-beta</code> 标头值的逗号分隔列表。Claude Code 已经会发送其所需的 beta 标头；使用此变量可在 Claude Code 添加原生支持之前选择启用某个 <a href="https://platform.claude.com/docs/en/api/beta-headers" target="_blank" rel="noopener">Anthropic API beta</a>。与需要 API 密钥身份验证的 <a href="cli-reference.html#cli-flags"><code>--betas</code> 标志</a>不同，此变量适用于所有身份验证方式，包括 Claude.ai 订阅</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_CUSTOM_HEADERS</code></td>
+<td style="text-align: left;">要添加到请求中的自定义标头（<code>Name: Value</code> 格式，多个标头以换行分隔）。如果名称或值包含 HTTP 标头无法承载的字符（例如弯引号或零宽空格），请求将失败，并返回按位置标识该名称/值对的错误。需要 Claude Code v2.1.227 或更高版本。<a href="errors.html#invalid-request-header-value">Invalid request header value</a> 列出了确切的字符集以及检查的运行位置。当服务器托管设置下发时，设置凭据、组织或租户、路由或 API 行为标头（例如 <code>Authorization</code> 或 <code>Host</code>）的值会被视为<a href="server-managed-settings.html#environment-variables-and-the-approval-dialog">需要批准的设置</a>。来自项目或本地设置时，此类值遵循 <a href="settings-reference.html#when-claude-code-applies-env-values"><code>env</code> 值何时生效的规则</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_CUSTOM_MODEL_OPTION</code></td>
+<td style="text-align: left;">要作为自定义条目添加到 <code>/model</code> 选择器中的模型 ID。使用此变量可使非标准或网关特定的模型可供选择，而无需替换内置别名。请参阅<a href="model-config.html#add-a-custom-model-option">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION</code></td>
+<td style="text-align: left;"><code>/model</code> 选择器中自定义模型条目的显示描述。未设置时默认为 <code>Custom model (&lt;model-id&gt;)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_CUSTOM_MODEL_OPTION_NAME</code></td>
+<td style="text-align: left;"><code>/model</code> 选择器中自定义模型条目的显示名称。未设置时，如果 Claude Code <a href="model-config.html#customize-pinned-model-display-and-capabilities">识别该 ID</a>，条目将显示模型名称，否则显示模型 ID</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES</code></td>
+<td style="text-align: left;">自定义模型支持的<a href="model-config.html#customize-pinned-model-display-and-capabilities">功能</a>的逗号分隔列表，例如 <code>effort,thinking</code>。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_FABLE_MODEL</code></td>
+<td style="text-align: left;"><code>fable</code> 别名解析到的模型 ID，也是 Claude Code 在第三方提供商上为<a href="model-config.html#automatic-model-fallback">自动模型回退</a>识别为 Fable 模型的 ID。请参阅<a href="model-config.html#environment-variables">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_FABLE_MODEL_DESCRIPTION</code></td>
+<td style="text-align: left;"><code>/model</code> 选择器中固定的 Fable 模型的显示描述。未设置时，该行显示以 <code>Custom Fable model</code> 开头的默认描述。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_FABLE_MODEL_NAME</code></td>
+<td style="text-align: left;"><code>/model</code> 选择器中固定的 Fable 模型的显示名称。未设置时，如果 Claude Code 识别固定的 ID，该行显示模型名称，否则显示固定的 ID。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_FABLE_MODEL_SUPPORTED_CAPABILITIES</code></td>
+<td style="text-align: left;">固定的 Fable 模型支持的<a href="model-config.html#customize-pinned-model-display-and-capabilities">功能</a>的逗号分隔列表，例如 <code>effort,thinking</code>。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code></td>
+<td style="text-align: left;"><code>haiku</code> 别名解析到的模型 ID，也用于<a href="costs.html#background-token-usage">后台功能</a>。请参阅<a href="model-config.html#environment-variables">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_HAIKU_MODEL_DESCRIPTION</code></td>
+<td style="text-align: left;"><code>/model</code> 选择器中固定的 Haiku 模型的显示描述。未设置时，该行显示以 <code>Custom Haiku model</code> 开头的默认描述。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_HAIKU_MODEL_NAME</code></td>
+<td style="text-align: left;"><code>/model</code> 选择器中固定的 Haiku 模型的显示名称。未设置时，如果 Claude Code 识别固定的 ID，该行显示模型名称，否则显示固定的 ID。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_HAIKU_MODEL_SUPPORTED_CAPABILITIES</code></td>
+<td style="text-align: left;">固定的 Haiku 模型支持的<a href="model-config.html#customize-pinned-model-display-and-capabilities">功能</a>的逗号分隔列表，例如 <code>effort,thinking</code>。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_MODEL</code></td>
+<td style="text-align: left;">新会话默认使用的模型。需要 Claude Code v2.1.236 或更高版本。请参阅<a href="model-config.html#set-a-default-model-for-new-sessions">为新会话设置默认模型</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_OPUS_MODEL</code></td>
+<td style="text-align: left;"><code>opus</code> 别名解析到的模型 ID，也是 <code>opusplan</code> 在计划模式激活时使用的模型 ID。请参阅<a href="model-config.html#environment-variables">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION</code></td>
+<td style="text-align: left;"><code>/model</code> 选择器中固定的 Opus 模型的显示描述。未设置时，该行显示以 <code>Custom Opus model</code> 开头的默认描述。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_OPUS_MODEL_NAME</code></td>
+<td style="text-align: left;"><code>/model</code> 选择器中固定的 Opus 模型的显示名称。未设置时，如果 Claude Code 识别固定的 ID，该行显示模型名称，否则显示固定的 ID。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES</code></td>
+<td style="text-align: left;">固定的 Opus 模型支持的<a href="model-config.html#customize-pinned-model-display-and-capabilities">功能</a>的逗号分隔列表，例如 <code>effort,thinking</code>。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_SONNET_MODEL</code></td>
+<td style="text-align: left;"><code>sonnet</code> 别名解析到的模型 ID，也是 <code>opusplan</code> 在计划模式未激活时使用的模型 ID。请参阅<a href="model-config.html#environment-variables">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_SONNET_MODEL_DESCRIPTION</code></td>
+<td style="text-align: left;"><code>/model</code> 选择器中固定的 Sonnet 模型的显示描述。未设置时，该行显示以 <code>Custom Sonnet model</code> 开头的默认描述。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_SONNET_MODEL_NAME</code></td>
+<td style="text-align: left;"><code>/model</code> 选择器中固定的 Sonnet 模型的显示名称。未设置时，如果 Claude Code 识别固定的 ID，该行显示模型名称，否则显示固定的 ID。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_DEFAULT_SONNET_MODEL_SUPPORTED_CAPABILITIES</code></td>
+<td style="text-align: left;">固定的 Sonnet 模型支持的<a href="model-config.html#customize-pinned-model-display-and-capabilities">功能</a>的逗号分隔列表，例如 <code>effort,thinking</code>。请参阅<a href="model-config.html#customize-pinned-model-display-and-capabilities">模型配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_FEDERATION_RULE_ID</code></td>
+<td style="text-align: left;"><a href="https://platform.claude.com/docs/en/manage-claude/workload-identity-federation" target="_blank" rel="noopener">Workload Identity Federation</a> 的联合规则 ID。当您将其与 <code>ANTHROPIC_ORGANIZATION_ID</code> 一起设置时，Claude Code 会选择联合凭据，其优先级高于您的 <code>/login</code> 凭据。请参阅<a href="authentication.html#authentication-precedence">身份验证优先级</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_FOUNDRY_API_KEY</code></td>
+<td style="text-align: left;">用于 Microsoft Foundry 身份验证的 API 密钥（请参阅 <a href="microsoft-foundry.html">Microsoft Foundry</a>）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_FOUNDRY_AUTH_TOKEN</code></td>
+<td style="text-align: left;">用于 Microsoft Foundry 身份验证的 Bearer 令牌，例如 Microsoft Entra 访问令牌。Claude Code 将其作为 <code>Authorization: Bearer</code> 标头发送。优先于 <code>ANTHROPIC_FOUNDRY_API_KEY</code> 和 Azure 默认凭据链。请参阅 <a href="microsoft-foundry.html">Microsoft Foundry</a>。需要 Claude Code v2.1.203 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_FOUNDRY_BASE_URL</code></td>
+<td style="text-align: left;">Microsoft Foundry 资源的完整基础 URL（例如 <code>https://my-resource.services.ai.azure.com/anthropic</code>）。可替代 <code>ANTHROPIC_FOUNDRY_RESOURCE</code>（请参阅 <a href="microsoft-foundry.html">Microsoft Foundry</a>）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_FOUNDRY_RESOURCE</code></td>
+<td style="text-align: left;">Microsoft Foundry 资源名称（例如 <code>my-resource</code>）。Claude Code <a href="errors.html#anthropic-foundry-resource-must-be-a-foundry-resource-name">会拒绝 URL 或主机名</a>。如果未设置 <code>ANTHROPIC_FOUNDRY_BASE_URL</code>，则为必需（请参阅 <a href="microsoft-foundry.html">Microsoft Foundry</a>）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_MODEL</code></td>
+<td style="text-align: left;">要使用的模型设置的名称（请参阅<a href="model-config.html#environment-variables">模型配置</a>）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_ORGANIZATION_ID</code></td>
+<td style="text-align: left;"><a href="https://platform.claude.com/docs/en/manage-claude/workload-identity-federation" target="_blank" rel="noopener">Workload Identity Federation</a> 的组织 ID。请将其与 <code>ANTHROPIC_FEDERATION_RULE_ID</code> 一起设置。请参阅<a href="authentication.html#authentication-precedence">身份验证优先级</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_PROFILE</code></td>
+<td style="text-align: left;">用于身份验证的 Anthropic 配置文件名称，例如由 <a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/authentication" target="_blank" rel="noopener"><code>ant auth login</code></a> 创建的配置文件，或通过<a href="authentication.html#sign-in-without-an-api-key">在没有 API 密钥的情况下登录 Console 账户</a>创建的配置文件。请参阅<a href="authentication.html#authentication-precedence">身份验证优先级</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_SMALL_FAST_MODEL</code></td>
+<td style="text-align: left;">[已弃用] <a href="costs.html">用于后台任务的 Haiku 级模型</a>的名称</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION</code></td>
+<td style="text-align: left;">使用 Amazon Bedrock 或 Amazon Bedrock Mantle 时，覆盖 Haiku 级模型的 AWS 区域。在 Amazon Bedrock 上，仅当同时设置了 <code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code> 或已弃用的 <code>ANTHROPIC_SMALL_FAST_MODEL</code> 时才会生效，因为否则 Amazon Bedrock 会在会话区域中使用<a href="amazon-bedrock.html#4-pin-model-versions">默认 Sonnet 模型或主模型</a>运行后台任务</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_VERTEX_BASE_URL</code></td>
+<td style="text-align: left;">覆盖 Google Cloud's Agent Platform 端点 URL。用于自定义 Google Cloud's Agent Platform 端点或通过 <a href="llm-gateway.html">LLM 网关</a>路由时。请参阅 <a href="google-vertex-ai.html">Google Cloud's Agent Platform</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_VERTEX_PROJECT_ID</code></td>
+<td style="text-align: left;">Google Cloud's Agent Platform 请求所指向的 GCP 项目 ID。请参阅<a href="google-vertex-ai.html#3-configure-gcp-credentials">配置 GCP 凭据</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_WORKSPACE_ID</code></td>
+<td style="text-align: left;"><a href="https://platform.claude.com/docs/en/manage-claude/workload-identity-federation" target="_blank" rel="noopener">工作负载身份联合</a>的工作区 ID。当您的联合规则的范围涵盖多个工作区时设置此变量，以便令牌交换知道要定位哪个工作区</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>API_FORCE_IDLE_TIMEOUT</code></td>
+<td style="text-align: left;">覆盖 5 分钟的响应体空闲超时，该超时会在没有字节到达时中止流式模型响应。设置为 <code>0</code> 可关闭该超时，例如当缓慢的<a href="llm-gateway.html">网关</a>或本地模型在数据块之间暂停超过 5 分钟时；设置为 <code>1</code> 可对所有提供商保持启用。未设置时，该超时在直接 Anthropic API、<a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 以及设置了 <code>CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK=1</code> 的 Amazon Bedrock 以外的提供商上处于启用状态。<a href="network-config.html#streaming-idle-watchdogs">流式看门狗</a>独立于它运行，即使您在此处设置 <code>0</code>，也会中止长时间的静默暂停</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>API_TIMEOUT_MS</code></td>
+<td style="text-align: left;">每次 API 请求尝试接收响应标头的时间，以毫秒为单位。它不限制流式响应在此之后运行的时长。默认值为 600000（即 10 分钟），最大值为 2147483647。当您设置正值时，每次<a href="errors.html#streaming-response-ended-before-any-complete-data-was-received">非流式请求</a>尝试都必须在此时间内完成。当请求在慢速网络上或通过代理路由时超时，请增大此值。设置为 <code>0</code> 可移除此限制，这需要 Claude Code v2.1.305 或更高版本。设置为 <code>0</code> 时，在本地会话中非流式尝试仍会在 300 秒后超时</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>AWS_BEARER_TOKEN_BEDROCK</code></td>
+<td style="text-align: left;">用于身份验证的 Amazon Bedrock API 密钥（请参阅 <a href="https://aws.amazon.com/blogs/machine-learning/accelerate-ai-development-with-amazon-bedrock-api-keys/" target="_blank" rel="noopener">Amazon Bedrock API 密钥</a>）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BASH_DEFAULT_TIMEOUT_MS</code></td>
+<td style="text-align: left;">前台 Bash 或 PowerShell 工具命令的默认超时时间，以毫秒为单位（默认值：120000，即 2 分钟）。高于<a href="tools-reference.html#time-limit-for-background-commands">后台命令默认时间限制</a>的值会在无人值守会话中替换该默认值。后台时间限制需要 Claude Code v2.1.285 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BASH_MAX_OUTPUT_LENGTH</code></td>
+<td style="text-align: left;">Claude Code 读回到命令结果中的 bash 输出的最大字符数（默认值：30000；最大值：150000）。如果您设置了 <a href="settings-reference.html#bashoutputmaxchars"><code>bashOutputMaxChars</code></a> 设置，Claude Code 会忽略此变量。请参阅<a href="tools-reference.html#output-limits">输出限制</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BASH_MAX_TIMEOUT_MS</code></td>
+<td style="text-align: left;">模型可为前台 Bash 或 PowerShell 工具命令设置的最大超时时间，以毫秒为单位（默认值：600000，即 10 分钟）。有效上限取此值与 <code>BASH_DEFAULT_TIMEOUT_MS</code> 中的较大者。超过 2 小时的有效上限也会成为无人值守会话中<a href="tools-reference.html#time-limit-for-background-commands">后台命令时间限制</a>的最大值。后台时间限制需要 Claude Code v2.1.285 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BETA_TRACING_ENDPOINT</code></td>
+<td style="text-align: left;">用于<a href="monitoring-usage.html#traces-beta">详细 beta 追踪</a>的 OTLP/HTTP 端点：设置 <code>ENABLE_BETA_TRACING_DETAILED=1</code> 时，日志和追踪会发送到该端点，而不是已配置的导出器。请在 shell、用户设置或托管设置中设置它。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中会被忽略</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CCR_FORCE_BUNDLE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可强制 <a href="claude-code-on-the-web.html#send-local-repositories-without-github"><code>claude --cloud</code></a> 打包并上传您的本地仓库，而不是从其远程克隆</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDECODE</code></td>
+<td style="text-align: left;">在 Claude Code 生成的子进程（Bash 和 PowerShell 工具、tmux 会话、<a href="hooks.html">hook</a> 命令、<a href="statusline.html">状态栏</a>命令、stdio <a href="mcp.html">MCP 服务器</a>子进程）中设置为 <code>1</code>。IDE 扩展也会在其集成终端中设置此变量。用于检测脚本是否在 Claude Code 生成的子进程中运行。若要检查当前进程是否由工具调用或 hook 直接生成，而不是在 Claude Code 启动的 stdio MCP 服务器内部，请改用 <code>CLAUDE_CODE_CHILD_SESSION</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用所有内置<a href="sub-agents.html">子代理</a>类型，例如 Explore 和 Plan。仅适用于非交互模式（<code>-p</code> 标志）。适用于希望从空白状态开始的 SDK 用户。这也会移除 <code>general-purpose</code>，即当 Agent 工具调用省略 <code>subagent_type</code> 时 Claude Code 运行的子代理。此类调用随后会失败并显示 <a href="errors.html#subagent-type-is-required"><code>subagent_type is required</code></a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_AGENT_SDK_MCP_NO_PREFIX</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可跳过 SDK 创建的 MCP 服务器中工具名称的 <code>mcp__&lt;server&gt;__</code> 前缀。工具使用其原始名称。仅限 SDK 使用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS</code></td>
+<td style="text-align: left;">子代理的停滞超时时间，以毫秒为单位。在 Claude Code v2.1.286 或更高版本上也涵盖<a href="workflows.html#when-an-agent-stalls-and-restarts">工作流 Agent</a>。默认 <code>600000</code>（10 分钟）；如果您在流式看门狗开启时提高 <code>CLAUDE_STREAM_IDLE_TIMEOUT_MS</code>，默认值会随之提高，如<a href="agent-sdk-typescript.html#handle-slow-or-stalled-api-responses">处理缓慢或停滞的 API 响应</a>所述</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_AUTOCOMPACT_PCT_OVERRIDE</code></td>
+<td style="text-align: left;">设置触发自动压缩时自动压缩窗口的百分比（1-100）。使用较低的值（如 <code>50</code>）可更早压缩；该变量无法提高阈值，因此高于默认百分比的值会被忽略。它仅适用于<a href="model-config.html#context-window-and-auto-compaction">在达到模型上下文限制之前进行压缩</a>的会话。同时适用于主对话和子代理</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_AUTO_BACKGROUND_TASKS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可强制启用长时间运行的 Agent 任务的自动后台化。启用后，<a href="sub-agents.html#run-subagents-in-foreground-or-background">子代理</a>在运行约两分钟后会转入后台。如果 Claude 在该子代理之后排队了文件编辑等工具调用，该子代理会先在前台完成，然后该调用才开始。在 Claude Code v2.1.212 或更高版本上，还会在非交互模式下启用<a href="mcp.html#automatic-backgrounding-of-long-tool-calls">长时间 MCP 工具调用的自动后台化</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_AX_PREPARK_MS</code></td>
+<td style="text-align: left;">在<a href="accessibility.html">屏幕阅读器模式</a>下，Claude Code 在写入新行或已更改的行之前等待的毫秒数。默认值为 <code>0</code>，因此 Claude Code 不会等待。在 v2.1.287 之前，默认值为 <code>50</code>。Claude Code 将等待时间上限设为 <code>5000</code>。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目设置和本地设置</a>中会被忽略。需要 Claude Code v2.1.233 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_AX_SCREEN_READER</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可渲染适合屏幕阅读器的输出：不带装饰性边框或动画的纯文本。设置为 <code>0</code> 可强制关闭屏幕阅读器模式，即使 <a href="settings-reference.html#axscreenreader"><code>axScreenReader</code></a> 为 <code>true</code>。<a href="cli-reference.html#cli-flags"><code>--ax-screen-reader</code></a> 标志的优先级更高。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目设置和本地设置</a>中会被忽略。需要 Claude Code v2.1.181 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_AX_STARTUP_QUIET_MS</code></td>
+<td style="text-align: left;">在<a href="accessibility.html">屏幕阅读器模式</a>下，Claude Code 在启动确认行之后推迟首次界面渲染的毫秒数。这样您的屏幕阅读器就可以在新输出打断之前完整朗读该行。默认值为 <code>3000</code>。设置为 <code>0</code> 可立即渲染。Claude Code 将推迟时间上限设为 <code>600000</code>（10 分钟）。您的第一次按键会提前结束推迟。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目设置和本地设置</a>中会被忽略。需要 Claude Code v2.1.217 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR</code></td>
+<td style="text-align: left;">在主会话中每个 Bash 或 PowerShell 命令执行后返回原始工作目录</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_BYTE_STREAM_IDLE_TIMEOUT_MS</code></td>
+<td style="text-align: left;">字节级流式空闲看门狗的超时时间，以毫秒为单位；设置后，它在该看门狗上优先于 <code>CLAUDE_STREAM_IDLE_TIMEOUT_MS</code>，且不改变事件级看门狗。Claude Code 会将此变量限制在 10 秒到 30 分钟之间。需要 Claude Code v2.1.210 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CLIENT_PRESENCE_FILE</code></td>
+<td style="text-align: left;">一个文件的路径，该文件由外部工具（例如锁屏监听器）在您解锁屏幕时创建、在您锁定屏幕时删除。当该文件存在时，Claude Code 会跳过 <a href="remote-control.html#mobile-push-notifications">Remote Control 移动推送通知</a>，这样您在积极使用电脑时就不会收到推送。当该文件不存在或不可读时，通知会照常发送。Claude Code 在每次触发推送的事件发生时检查一次该文件，而不是轮询它。需要 Claude Code v2.1.181 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ACCESSIBILITY</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可保持原生终端光标可见，并禁用反色文本光标指示器。使 macOS 缩放等屏幕放大工具能够跟踪光标位置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可从通过 <code>--add-dir</code> 指定的目录加载记忆文件。加载 <code>CLAUDE.md</code>、<code>.claude/CLAUDE.md</code>、<code>.claude/rules/*.md</code> 和 <code>CLAUDE.local.md</code>。默认情况下，附加目录不会加载记忆文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ALT_SCREEN_FULL_REPAINT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在<a href="fullscreen.html">全屏渲染</a>中每帧重绘整个屏幕，而不是发送增量更新。如果全屏模式显示过时或错位的文本片段，请使用此变量。在 Windows 上，Claude Code 会为后台会话和 <a href="agent-view.html">Agent 视图</a>自动启用此功能</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ALWAYS_ENABLE_EFFORT</code></td>
+<td style="text-align: left;">设为 <code>1</code> 可在每个请求中发送 <a href="model-config.html#adjust-effort-level">effort</a> 参数，即使 Claude Code 未将该模型 ID 识别为支持 effort。通过 <a href="llm-gateway.html">LLM 网关</a>或以自定义标识符提供模型的第三方提供商路由时使用。在 API 层拒绝 effort 参数的模型（包括 Claude Opus 4.1、Claude Sonnet 4.5、Claude Haiku 4.5 及更早的模型）仍会被排除，以免请求失败</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_API_KEY_HELPER_TTL_MS</code></td>
+<td style="text-align: left;">刷新凭据的时间间隔，以毫秒为单位（使用 <a href="settings-reference.html#apikeyhelper"><code>apiKeyHelper</code></a> 时）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ARTIFACT_AUTO_OPEN</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可阻止 Claude Code 在发布新的 <a href="artifacts.html#create-an-artifact">Artifact</a> 时自动打开浏览器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ARTIFACT_COMMENTS</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可阻止 Claude 读取和回复 <a href="artifacts.html#collect-comments-on-an-artifact">Artifact 上的评论</a>。当 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> 已<a href="artifacts.html#availability">关闭 Artifact</a> 时不起作用。需要 Claude Code v2.1.221 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ARTIFACT_COMMENTS_AUTOREACT</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可阻止 Claude <a href="artifacts.html#let-claude-reply-to-comments-on-its-own">自行回复发送给它的评论</a>。需要 Claude Code v2.1.228 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ARTIFACT_PUBLISH_EDITS</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可阻止 Claude 在发布 <a href="artifacts.html#update-an-artifact">Artifact</a> 时对其文件应用小的更改。Claude 随后会使用其文件编辑工具编辑文件，并作为单独的步骤发布。需要 Claude Code v2.1.300 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ATTRIBUTION_HEADER</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可从系统提示词开头省略<a href="llm-gateway-protocol.html#system-prompt-attribution-block">归属块</a>，该块包含客户端版本和提示词指纹。无论哪种方式，直接连接到 Anthropic API 时的缓存都不受影响。在某些直接连接设置中，即使您设置了 <code>0</code>，Claude Code 也会在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>分类器请求中保留该块。请在<a href="llm-gateway-protocol.html#system-prompt-attribution-block">系统提示词归属块</a>中查看此情况涵盖哪些连接和凭据。在 v2.1.181 之前，该块在自定义基础 URL 和 Microsoft Foundry 连接上包含一个按请求变化的 token，因此在这些版本上，当您的 LLM 网关基于请求体进行缓存或将请求转发给第三方提供商时，或者当您直接连接到 Microsoft Foundry 时，请将其设置为 <code>0</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_AUTO_BACKGROUND_WORKER_CHECKIN_SECONDS</code></td>
+<td style="text-align: left;">已在 v2.1.283 中移除。请改用 <code>CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code></td>
+<td style="text-align: left;">设置自动压缩窗口，即上下文填充到多满时进行压缩，范围为 <code>100000</code> 到 <code>1000000</code> 个 token。带后缀的值（如 <code>200k</code>）需要 v2.1.304 或更高版本。关于它与设置该窗口的其他方式之间的优先级，以及它对状态栏 <code>used_percentage</code> 的影响，请参阅<a href="model-config.html#set-the-auto-compact-window">设置自动压缩窗口</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_AUTO_CONNECT_IDE</code></td>
+<td style="text-align: left;">覆盖自动 <a href="vs-code.html">IDE 连接</a>。默认情况下，在受支持 IDE 的集成终端中启动时，Claude Code 会自动连接。设置为 <code>false</code> 可阻止此行为。设置为 <code>true</code> 可在自动检测失败时强制尝试连接，例如当 tmux 遮蔽了父终端时。优先于 <a href="settings-reference.html#autoconnectide"><code>autoConnectIde</code></a> 全局配置设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_AUTO_MODE_MODEL</code></td>
+<td style="text-align: left;">设置 Claude Code 在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>下发送的分类器请求所使用的模型。请使用完整的模型 ID，例如 <code>claude-sonnet-4-6</code>。有关 Claude Code 会忽略它的情况，请参阅<a href="permission-modes.html#choose-the-classifier-model">选择分类器模型</a>。需要 Claude Code v2.1.302 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_AUTO_MODE_SERVER</code></td>
+<td style="text-align: left;">控制 Claude Code 是否请求服务器<a href="permission-modes.html#server-side-classifier-review">审查自动模式操作</a>。设置为 <code>0</code> 可改用 Claude Code 自身的分类器请求。在直接连接到 Anthropic API 时，需要 v2.1.281 或更高版本。链接的章节列出了在未设置该变量时哪些会话会请求服务器，以及从哪个版本开始。需要 Claude Code v2.1.271 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_AWS_CHAIN_RESOLVE_TIMEOUT_MS</code></td>
+<td style="text-align: left;">Claude Code 等待 AWS 默认凭据提供程序链生成凭据的时间（毫秒），超时后请求将失败并显示 <a href="errors.html#aws-default-chain-credential-resolve-timed-out"><code>AWS default-chain credential resolve timed out</code></a>（默认值：<code>60000</code>）。当链中的某个步骤确实需要更长时间时（例如通过 <code>aws-vault</code> 等包装器进行带 MFA 的基于浏览器的 SSO 登录），请提高此值。适用于 Amazon Bedrock、<a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 和 <a href="amazon-bedrock.html#use-the-mantle-endpoint">Mantle 端点</a>。请参阅<a href="amazon-bedrock.html#credential-caching-and-resolution-timeout">凭据缓存和解析超时</a>。需要 Claude Code v2.1.207 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_BASH_EDIT_DIFF</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可关闭 <a href="hooks.html#bash">Bash 命令运行期间更改的文件的 diff</a>，设置为 <code>1</code> 可在每种权限模式下记录该 diff。优先于 <a href="settings-reference.html#basheditdiffenabled"><code>bashEditDiffEnabled</code></a> 设置。需要 Claude Code v2.1.269 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_BG_TASKS_REPORT_RUNNING</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可使非交互会话在每个轮次结束时向其宿主报告空闲状态，即使后台工作仍在运行。默认情况下，当后台工作（例如后台 Agent 或<a href="workflows.html">工作流</a>运行）仍处于活动状态时，会话在轮次结束后会持续报告运行状态。这可以防止监视该状态的宿主（例如远程会话列表）在工作进行中宣布 Claude 正在等待您的输入。后台 shell 命令（例如开发服务器）不会保持运行状态。运行状态默认行为和 <code>0</code> 退出选项需要 Claude Code v2.1.269 或更高版本；在更早的版本上，设置 <code>1</code> 可保持运行状态</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_BRIDGE_SESSION_ID</code></td>
+<td style="text-align: left;">当会话具有活动的 <a href="remote-control.html">Remote Control</a> 连接时，在 Bash 工具和 <a href="hooks.html">hook 命令</a>子进程中自动设置，并在连接结束时移除。该值是 <code>session_</code> 形式的会话 ID，与会话的 <code>claude.ai/code</code> URL 中出现的标识符相同，因此脚本可以链接回运行它的会话。需要 Claude Code v2.1.199 或更高版本。在<a href="claude-code-on-the-web.html">云端会话</a>中，请改为读取 <code>CLAUDE_CODE_REMOTE_SESSION_ID</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_BS_AS_CTRL_BACKSPACE</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可使 Claude Code 将 <code>0x08</code> 字节（也写作 <code>^H</code>）读取为普通 Backspace，设置为 <code>1</code> 则将其读取为 Ctrl+Backspace。任一值都会替换平台默认值。默认情况下，Claude Code 在 Windows 上将其读取为 Ctrl+Backspace（<code>TERM_PROGRAM</code> 为 <code>mintty</code> 或 <code>TERM</code> 为 <code>cygwin</code> 时除外），在 macOS 和 Linux 上将其读取为普通 Backspace。在 <a href="terminal-config.html#fix-backspace-deleting-a-whole-word-on-windows">Backspace 会删除整个单词</a>的 Windows 终端中请设置 <code>0</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_CERT_STORE</code></td>
+<td style="text-align: left;">TLS 连接的 CA 证书来源的逗号分隔列表。<code>bundled</code> 是随 Claude Code 附带的 Mozilla CA 集。<code>system</code> 是操作系统信任存储，仅在具有 <code>tls.getCACertificates</code> 的运行时上读取：原生二进制文件，或 npm 安装方式下的 Node 22.15 或更高版本。请参阅 <a href="network-config.html#ca-certificate-store">CA 证书存储</a>。默认为 <code>bundled,system</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_CHILD_SESSION</code></td>
+<td style="text-align: left;">在 Claude Code 通过 Bash、PowerShell 和 Monitor 工具、<a href="hooks.html">hook</a> 命令以及<a href="statusline.html">状态栏</a>命令生成的子进程中设置为 <code>1</code>。不会为 stdio <a href="mcp.html">MCP 服务器</a>子进程设置，因为这些子进程长期运行，生命周期长于生成它们的会话。与 <code>CLAUDECODE</code> 不同，此变量仅由 Claude Code 本身在启动子进程时设置，而不会由 IDE 扩展设置，因此它能可靠地区分嵌套会话与在 IDE 集成终端中启动的顶层 <code>claude</code>。以这种方式启动的嵌套交互式 <code>claude</code> TUI 会自动从 <code>--resume</code>、<code>--continue</code>、上箭头历史记录和 <code>claude agents</code> 列表中排除。非交互式 <code>claude -p</code> 会话仍会持久化。设置 <code>CLAUDE_CODE_FORCE_SESSION_PERSISTENCE=1</code> 可覆盖此排除。需要 Claude Code v2.1.172 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_CLIENT_CERT</code></td>
+<td style="text-align: left;">用于 mTLS 身份验证的客户端证书文件路径</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_CLIENT_KEY</code></td>
+<td style="text-align: left;">用于 mTLS 身份验证的客户端私钥文件路径</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_CLIENT_KEY_PASSPHRASE</code></td>
+<td style="text-align: left;">加密的 CLAUDE_CODE_CLIENT_KEY 的密码（可选）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_CONNECT_TIMEOUT_MS</code></td>
+<td style="text-align: left;">已在 v2.1.186 中移除，现在不起作用。以前用于为流式 API 请求的连接、TLS 和响应标头阶段设置单独的超时。请改用 <code>API_TIMEOUT_MS</code>。关于流式请求的响应标头阶段，请参阅 <code>CLAUDE_STREAM_FIRST_BYTE_TIMEOUT_MS</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DEBUG_LOGS_DIR</code></td>
+<td style="text-align: left;">覆盖调试日志文件路径。尽管名称如此，这是一个文件路径，而不是目录。需要通过 <code>--debug</code>、<code>/debug</code> 或 <code>DEBUG</code> 环境变量单独启用调试模式：仅设置此变量不会启用日志记录。<a href="cli-reference.html#cli-flags"><code>--debug-file</code></a> 标志可同时完成这两项操作。默认为 <code>~/.claude/debug/&lt;session-id&gt;.txt</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DEBUG_LOG_LEVEL</code></td>
+<td style="text-align: left;">写入调试日志文件的最低日志级别。取值：<code>verbose</code>、<code>debug</code>（默认）、<code>info</code>、<code>warn</code>、<code>error</code>。设置为 <code>verbose</code> 可包含大量诊断信息，例如完整的状态栏命令输出；或提高到 <code>error</code> 以减少干扰信息</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_1M_CONTEXT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可关闭 <a href="model-config.html#extended-context">1M 上下文窗口</a>支持。Claude Code 会从模型选择器中移除 <code>[1m]</code> 模型变体，并将默认使用 1M 窗口运行的模型限制为 200K 窗口。请参阅<a href="model-config.html#turn-off-1m-context">关闭 1M 上下文</a>。适用于有合规要求的企业环境。有关其在纠正无法识别的 <code>[1m]</code> 模型 ID 的窗口方面的作用，请参阅<a href="model-config.html#correct-the-window-for-a-gateway-or-custom-model-id">纠正网关或自定义模型 ID 的窗口</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 Opus 4.6 和 Sonnet 4.6 上禁用<a href="model-config.html#adjust-effort-level">自适应推理</a>，并回退到由 <code>MAX_THINKING_TOKENS</code> 控制的固定思考预算。对 <a href="model-config.html#extended-thinking">Fable 模型</a>、Sonnet 5 及更高版本、Haiku 5.5 或 Opus 4.7 及更高版本不起作用，这些模型始终使用自适应推理</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_ADVISOR_TOOL</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用 <a href="advisor.html">advisor 工具</a>。<code>/advisor</code> 命令将不可用，任何已配置的 <code>advisorModel</code> 都会被忽略，<code>--advisor</code> 标志会被接受但不起作用，因此传递该标志的现有脚本可以继续运行而不会出错</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_AGENT_VIEW</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可关闭<a href="agent-view.html">后台 Agent 和 Agent 视图</a>：<code>claude agents</code>、<code>--bg</code>、<code>/background</code> 以及按需启动的 supervisor。等同于 <a href="settings-reference.html#disableagentview"><code>disableAgentView</code></a> 设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用<a href="fullscreen.html">全屏渲染</a>并使用经典的主屏幕渲染器。对话保留在终端的原生回滚缓冲区中，因此 <code>Cmd+f</code> 和 tmux 复制模式可照常工作。优先于 <code>CLAUDE_CODE_NO_FLICKER</code> 和 <a href="settings-reference.html#tui"><code>tui</code></a> 设置。您也可以使用 <code>/tui default</code> 进行切换。不适用于从 <a href="agent-view.html">Agent 视图</a>打开的后台会话，这些会话始终使用全屏渲染</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_ARTIFACT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可关闭 <a href="artifacts.html">Artifact</a> 工具，该工具会将会话输出作为私有网页发布到 claude.ai。一旦设置，任何设置文件都无法重新启用该工具。若要改为从设置文件关闭该工具，请将 <a href="settings-reference.html#enableartifact"><code>enableArtifact</code></a> 设置为 <code>false</code>；已弃用的 <a href="settings-reference.html#disableartifact"><code>disableArtifact</code></a> 键也可将其关闭</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_ATTACHMENTS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用附件处理。使用 <code>@</code> 语法提及的文件会作为纯文本发送，而不会展开为文件内容。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中会被忽略</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_AUTH_REFRESH_LOCK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可使 Claude Code 进程自行运行其 <a href="settings-reference.html#gcpauthrefresh"><code>gcpAuthRefresh</code></a> 或 <a href="settings-reference.html#awsauthrefresh"><code>awsAuthRefresh</code></a> 命令，而不是在另一个进程运行该命令时等待。需要 Claude Code v2.1.286 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_AUTO_MEMORY</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用<a href="memory.html#auto-memory">自动记忆</a>。设置为 <code>0</code> 可强制启用自动记忆，即使 <code>--bare</code> 模式或 <a href="settings-reference.html#automemoryenabled"><code>autoMemoryEnabled: false</code></a> 原本会禁用它。禁用后，Claude 不会创建或加载自动记忆文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_BACKGROUND_TASKS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可从 Bash、PowerShell 和子代理工具中移除 <code>run_in_background</code> 参数，并关闭 Ctrl+B 快捷键以及<a href="skills.html#run-skills-in-a-subagent">分叉 skill</a> 的后台运行。Claude Code 随后也会停止自动将子代理、长时间 MCP 工具调用和超时的 shell 命令移至后台。<a href="mcp.html#make-claude-wait-for-the-result-of-an-mcp-task">MCP 任务</a>和 <a href="tools-reference.html#monitor-tool">Monitor 工具</a>仍会在后台运行。若要同时关闭<a href="agent-view.html#turn-off-agent-view">后台会话</a>，请将 <code>CLAUDE_CODE_DISABLE_AGENT_VIEW</code> 设置为 <code>1</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_BEDROCK_CONTENT_TYPE_DEFAULT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止 Claude Code 将缺少 <code>Content-Type</code> 标头或该标头为空的 <a href="amazon-bedrock.html">Amazon Bedrock</a> 流式响应视为 Amazon Bedrock 的二进制事件流。默认情况下，Claude Code 假定网关从一个未经其他修改的响应中丢弃了该标头，因此会解码响应体，流式传输得以继续工作。仅当网关还会将流重新作为服务器发送事件输出时才设置此变量；Claude Code 随后会将没有该标头的响应体作为服务器发送事件读取。需要 Claude Code v2.1.239 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_BEDROCK_CONTENT_TYPE_GUARD</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可跳过对 <a href="amazon-bedrock.html">Amazon Bedrock</a> 流式响应是否带有 <code>application/vnd.amazon.eventstream</code> content-type 的检查。未设置此变量时，如果响应带有不同的 content-type，Claude Code 会使请求失败，并显示指明该类型的错误，这表示<a href="amazon-bedrock.html#streaming-errors-behind-a-gateway-or-proxy">网关或代理正在转换响应</a>。请配置网关以原样转发 <code>Content-Type</code> 标头和响应体，而不是设置此变量。需要 Claude Code v2.1.208 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_BG_EXIT_HANDOFF</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在<a href="agent-view.html#the-supervisor-process">监督进程</a>停止、重启或更新某个<a href="agent-view.html">后台会话</a>的进程时，停止该会话正在进行的工作，而不是将其移交给该会话的下一个进程。这些工作是该会话正在运行的后台 shell 命令，自 v2.1.198 起还包括后台子代理。仅影响该移交：使用 <code>←</code> 或 <a href="agent-view.html#from-inside-a-session"><code>/background</code></a> 将会话转入后台时，仍会将正在进行的后台工作延续过去。需要 Claude Code v2.1.196 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_BG_SHELL_PRESSURE_REAP</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止 Claude Code 在内存压力下终止<a href="interactive-mode.html#background-bash-commands">后台 shell 命令</a>。默认情况下，在 macOS 和 Linux 上，当操作系统报告严重内存压力，且会话已空闲 30 分钟、没有轮次或子代理在运行时，Claude Code 会终止后台 shell。Windows 没有内存压力信号，因此此变量在 Windows 上不起作用。需要 Claude Code v2.1.193 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_BUNDLED_SKILLS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用 Claude Code 随附的 <a href="skills.html">skill</a> 和工作流：随附 skill 和工作流会被完全移除，而 <code>/init</code> 等内置命令仍可输入，但会对模型隐藏。<code>/doctor</code> 与内置命令一样仍可输入；请改用 <code>DISABLE_DOCTOR_COMMAND</code> 将其隐藏。来自插件、<code>.claude/skills/</code> 和 <code>.claude/commands/</code> 的 skill 不受影响。等同于 <a href="settings-reference.html#disablebundledskills"><code>disableBundledSkills</code></a> 设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_CFC_PROMPT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可保留 <a href="chrome.html">Claude in Chrome</a> 浏览器工具可用，同时省略系统提示词中的 Chrome 部分以及 <code>/claude-in-chrome</code> <a href="skills.html#bundled-skills">随附 skill</a>。适用于嵌入 Claude Code 并提供自己的浏览器指导的宿主。需要 Claude Code v2.1.257 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_CLAUDE_MDS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止将任何 CLAUDE.md 记忆文件加载到上下文中，包括用户、项目和自动记忆文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_CRON</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用<a href="scheduled-tasks.html">会话范围的定时任务</a>。<code>/loop</code> skill 和 cron 工具将不可用，所有已安排的任务都会停止触发，包括会话中途已在运行的任务</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_DANGEROUS_RM_TIMEOUT</code></td>
+<td style="text-align: left;">设为 <code>1</code> 可关闭 <code>auto</code> 和 <code>bypassPermissions</code> 模式下针对关键路径删除操作的<a href="permission-modes.html#time-limits-and-denials-in-auto-and-bypasspermissions-modes">时间限制和拒绝</a>。这些删除操作随后在 <code>auto</code> 模式下交由分类器处理，在 <code>bypassPermissions</code> 模式下，只要 Claude Code 能够显示提示，就会显示不限时的提示。请在启动 Claude Code 的环境中设置它，因为 Claude Code 会忽略通过设置 <code>env</code> 块传递的副本。需要 Claude Code v2.1.281 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可从 API 请求中移除预发布的 <code>anthropic-beta</code> 请求标头、与其配对的请求体字段，以及 <code>defer_loading</code> 和 <code>eager_input_streaming</code> 等 beta 工具架构字段。当代理网关因 <code>anthropic-beta</code> 标头返回 <code>Unexpected value(s)</code> 错误或返回 <code>Extra inputs are not permitted</code> 错误而拒绝请求时使用。<a href="llm-gateway-protocol.html#disable-pre-release-capabilities">禁用预发布功能</a>列出了该变量移除的内容（包括 <a href="mcp.html#scale-with-mcp-tool-search">MCP 工具搜索</a>）以及 Claude Code 仍会发送的内容</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用内置的 <a href="sub-agents.html#built-in-subagents">Explore 和 Plan 子代理</a>。Claude 会改用其搜索工具或 general-purpose 子代理进行探索，<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a>会直接读取文件，而不是启动 Explore 和 Plan Agent。名为 <code>Explore</code> 或 <code>Plan</code> 的自定义子代理不受影响。若要在 Agent SDK 或非交互模式下移除所有内置子代理类型，请改用 <code>CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS</code>。需要 Claude Code v2.1.198 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_FAST_MODE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用<a href="fast-mode.html">快速模式</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用 "How is Claude doing?" 会话质量调查。当设置了 <code>DISABLE_TELEMETRY</code>、<code>DO_NOT_TRACK</code> 或 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> 时，调查也会被禁用，除非 <code>CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL</code> 重新选择启用。若要设置采样率而不是完全禁用，请使用 <a href="settings-reference.html#feedbacksurveyrate"><code>feedbackSurveyRate</code></a> 设置。请参阅<a href="data-usage.html#session-quality-surveys">会话质量调查</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_FILE_CHECKPOINTING</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用文件<a href="checkpointing.html">检查点功能</a>。<code>/rewind</code> 命令将无法恢复代码更改。覆盖 <a href="settings-reference.html#filecheckpointingenabled"><code>fileCheckpointingEnabled</code></a> 设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_FILE_MENTIONS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止 Claude Code 展开文件和目录的 <a href="common-workflows.html#reference-files-and-directories"><code>@</code> 提及</a>。Claude 会改为获得所提及的路径，并附带一条让其使用文件工具读取这些路径的说明。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中会被忽略。需要 Claude Code v2.1.299 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可从 Claude 的上下文中移除内置的提交和 PR 工作流说明以及 git 状态快照。在使用您自己的 git 工作流 skill 时很有用。设置后优先于 <a href="settings-reference.html#includegitinstructions"><code>includeGitInstructions</code></a> 设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止 Claude Code 读取通过 <code>-c</code> 传递给 shell 的脚本（例如 <code>bash -c 'rm -rf ~'</code>）以检查<a href="permission-modes.html#removals-inside-nested-commands-and-inline-scripts">关键路径</a>删除。Claude Code 仍会检查这些脚本中的 shell 变量和位置参数目标，其他关键路径检查也会继续运行。请在启动 Claude Code 的环境中设置它，因为 Claude Code 会忽略通过设置 <code>env</code> 块传递的副本。需要 Claude Code v2.1.288 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_LEGACY_MODEL_REMAP</code></td>
+<td style="text-align: left;">设为 <code>1</code> 可阻止在 Anthropic API 上将 Opus 4 和 Opus 4.1 自动重新映射到当前 Opus 版本。当您有意固定使用较旧的模型时使用。该重新映射不会在 Amazon Bedrock、Google Cloud's Agent Platform 或 Microsoft Foundry 上运行</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_MCP_TASK_BACKGROUND</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可让 Claude 在交互会话中等待 <a href="mcp.html#make-claude-wait-for-the-result-of-an-mcp-task">MCP 任务</a>的结果。当<a href="mcp.html#automatic-backgrounding-of-long-tool-calls">自动后台化</a>开启时，默认情况下它仍会在两分钟后将该调用移至后台。需要 Claude Code v2.1.304 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_MODEL_ACCESS_FALLBACK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止 <a href="amazon-bedrock.html#when-a-model-is-disabled-mid-session">Amazon Bedrock</a> 和 <a href="google-vertex-ai.html#when-a-model-is-disabled-mid-session">Google Cloud's Agent Platform</a> 上的 Claude Code 在您的账户于会话中途失去对会话模型的访问权限时切换到较旧的模型；被拒绝的请求会立即失败。您配置的<a href="model-config.html#fallback-model-chains">备用模型链</a>仍会在该拒绝发生时切换，<a href="amazon-bedrock.html#startup-model-checks">启动模型检查</a>仍会在启动时回退。需要 Claude Code v2.1.285 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可关闭针对 <code>/Volumes/USB</code> 等路径的<a href="permission-modes.html#the-mounted-drive-prompt">已挂载驱动器提示</a>。<a href="#set-variables-in-your-shell">请在启动 Claude Code 的环境中设置它</a>，因为 Claude Code <a href="settings-reference.html#variables-claude-code-ignores-in-env">会忽略设置 <code>env</code> 块中的该变量</a>。需要 Claude Code v2.1.304 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_MOUSE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在<a href="fullscreen.html">全屏渲染</a>中禁用鼠标跟踪。使用 <code>PgUp</code> 和 <code>PgDn</code> 的键盘滚动仍然有效。使用此变量可保留终端原生的选中即复制行为</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_MOUSE_CLICKS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在<a href="fullscreen.html">全屏渲染</a>中禁用点击、拖动和悬停处理，同时保留鼠标滚轮滚动。当您希望滚轮滚动在 Claude Code 中正常工作，但不希望点击定位光标、展开工具输出或打开链接时使用。同时设置两者时，<code>CLAUDE_CODE_DISABLE_MOUSE</code> 优先。需要 Claude Code v2.1.195 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_MTLS_RELOAD_ON_STALE_CONNECTION</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止 Claude Code 在 API 请求因连接级错误（例如连接重置或 TLS 握手错误）失败时重新读取 <a href="network-config.html#mtls-authentication">mTLS 客户端证书和密钥</a>。禁用重新加载后，Claude Code 仅在下次应用设置时或下次启动时加载轮换后的文件。需要 Claude Code v2.1.232 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code></td>
+<td style="text-align: left;">设置为任何非空值（例如 <code>1</code>）可禁用非必要的网络流量：自动更新、遥测、错误报告、<code>/feedback</code> 命令、<a href="tools-reference.html#sendfeedback-tool-behavior">Claude 起草的反馈</a>、发行说明、<a href="interactive-mode.html#pr-review-status">PR 和 MR 状态徽章</a>检查，以及可用性检查（例如<a href="fast-mode.html#use-fast-mode-behind-proxies-and-llm-gateways">快速模式</a>检查）。它还会停止<a href="plugins-loading.html#when-a-command-source-re-runs">插件 <code>command</code> 来源的后台运行</a>：这些运行属于本地命令而非网络流量，但由于它们可能触发依赖安装，因此也会被停止。<strong>将其设置为 <code>0</code> 或 <code>false</code> 仍会禁用此流量</strong>，这与大多数开关变量不同；取消设置该变量即可重新允许。还会禁用功能标志获取，这会使 <a href="remote-control.html#requirements">Remote Control</a> 以及其他<a href="#features-that-need-feature-flag-fetching">需要功能标志获取的功能</a>不可用。官方插件市场自动安装不在此范围内；请使用 <code>CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL</code> 将其禁用。不影响<a href="llm-gateway-connect.html#add-gateway-models-to-the-model-picker">网关模型发现</a>，后者有其自己的选择启用机制</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在流式请求中途失败时禁用非流式回退。流式错误会改为传播到重试层。当代理或网关导致回退产生重复的工具执行时很有用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_NOTIFICATION_PRESENCE_CHECK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在您正在终端中输入或终端处于焦点状态时仍发送 <code>PushNotification</code> 工具的桌面通知。默认情况下，当该工具检测到最近的键盘活动或终端焦点时，会同时跳过桌面通知和<a href="remote-control.html#mobile-push-notifications">移动推送</a>。此变量仅禁用该本地检查，因此当服务器检测到您处于活跃状态时，仍可能抑制移动推送。需要 Claude Code v2.1.193 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用官方插件市场的自动注册。Claude Code 会在即将注册该市场时读取此变量，通常是在机器首次交互式启动期间。如果此时已设置该变量，Claude Code 会永久跳过注册。之后取消设置该变量不会撤销该跳过。随时运行 <code>claude plugin marketplace add anthropics/claude-plugins-official</code> 即可注册该市场</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_PERMISSION_PROMPT_NOTIFY_HOOKS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止 Claude Code 运行您的<a href="hooks.html#notification">针对未回答权限请求的 <code>Notification</code> hook</a>，适用于 Claude Code 将这些请求发送到 Agent SDK 的 <code>canUseTool</code> 回调的会话，Claude Desktop 和 VS Code 扩展正是以这种方式托管 Claude Code。在终端会话中不起作用。需要 Claude Code v2.1.233 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_POLICY_SKILLS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可跳过从系统范围的托管 skill 目录加载 skill。适用于不应加载运维人员预置 skill 的容器或 CI 会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_POWERSHELL_CMD_RM_DENY</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可关闭 <a href="tools-reference.html#powershell-tool">PowerShell 工具</a>的一项检查，该检查会拒绝在<a href="permission-modes.html#remove-item-in-powershell">系统路径</a>（例如驱动器根目录或您的主目录）上使用 <code>cmd</code> 内置命令 <code>rd</code>、<code>rmdir</code>、<code>del</code> 和 <code>erase</code>。Claude Code 会忽略设置文件 <code>env</code> 块中的此变量。需要 Claude Code v2.1.283 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_REFUSAL_FALLBACK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可关闭<a href="model-config.html#automatic-model-fallback">安全分类器标记请求时的自动模型切换</a>，即由 <a href="settings-reference.html#switchmodelsonflag"><code>switchModelsOnFlag</code></a> 设置控制的行为</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_STRUCTURED_OUTPUTS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止 Claude Code 发送结构化输出 <code>output_config.format</code> 字段及与其配对的 <code>anthropic-beta</code> 值，适用于上游会拒绝它们的 <a href="llm-gateway-protocol.html#feature-pass-through">LLM 网关</a>。这会保留 <a href="llm-gateway-protocol.html#disable-pre-release-capabilities"><code>CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS</code></a> 会关闭的其他预发布功能。需要 Claude Code v2.1.288 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可关闭针对目标完全是命令替换输出的递归 <code>rm</code>（例如 <code>rm -rf "$(pwd)"</code>）的<a href="permission-modes.html#critical-paths">关键路径</a>检查。其他关键路径检查会继续运行。请在启动 Claude Code 的环境中设置它，因为 Claude Code 会忽略通过设置 <code>env</code> 块传递的副本。需要 Claude Code v2.1.281 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_TERMINAL_TITLE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用根据对话上下文自动更新终端标题。这还会跳过用于<a href="sessions.html#name-your-sessions">生成会话标题</a>的后台小型/快速模型请求，并关闭<a href="terminal-config.html#see-session-status-in-your-terminal">向终端报告状态</a>功能</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_THINKING</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可从 API 请求中完全省略 <code>thinking</code> 参数。这是针对会拒绝该参数的代理和网关的兼容性选项。在默认进行思考的模型上，省略该参数意味着模型仍可能进行思考。若要在 Anthropic API 上明确禁用<a href="https://platform.claude.com/docs/en/build-with-claude/extended-thinking" target="_blank" rel="noopener">扩展思考</a>，请改用 <code>MAX_THINKING_TOKENS=0</code>。这两个变量都无法在 Opus 5.5、Sonnet 5.5、Haiku 5.5 或 Fable 模型上关闭思考，这些模型不能关闭思考。在<a href="third-party-integrations.html">第三方提供商</a>上，<code>MAX_THINKING_TOKENS=0</code> 同样会省略该参数，因此这两个变量在那里的行为相同</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_ULTRAREVIEW_TRUST_CHECK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 后，当 <a href="ultrareview.html#trust-the-folder-before-the-review-runs"><code>claude ultrareview</code></a> 在您尚未信任的文件夹中无法询问您是否信任该文件夹时（例如在 CI 中），它不会以 <code>Error: Workspace not trusted</code> 退出。请在启动 Claude Code 的环境中设置它，而不是在设置 <code>env</code> 块中设置，并且仅在每次此类运行都从您信任的文件夹开始的环境中设置。能够询问的运行仍会询问。需要 Claude Code v2.1.309 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 Claude Code 无法识别模型 ID（例如 <a href="llm-gateway.html">LLM 网关</a>别名）时跳过主动<a href="costs.html#reduce-token-usage">自动压缩</a>。未设置此变量时，Claude Code 会在其为该 ID 假定的上下文窗口处进行压缩。<code>CLAUDE_CODE_MAX_CONTEXT_TOKENS</code> 可以改为纠正假定的窗口；有关每个变量的适用情况，请参阅<a href="model-config.html#correct-the-window-for-a-gateway-or-custom-model-id">纠正网关或自定义模型 ID 的窗口</a>。需要 Claude Code v2.1.223 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_VIRTUAL_SCROLL</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在<a href="fullscreen.html">全屏渲染</a>中禁用虚拟滚动，并渲染会话记录中的每条消息。如果在全屏模式下滚动时，本应显示消息的位置出现空白区域，请使用此变量</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_WEB_FETCH</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可关闭 <a href="tools-reference.html#webfetch-tool-behavior">WebFetch</a> 工具。<a href="tools-reference.html#websearch-tool-behavior">WebSearch</a> 工具仍然可用。需要 Claude Code v2.1.285 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_WINDOWS_SHELL_LAUNCHER</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 Windows 上直接启动 <a href="tools-reference.html#powershell-tool">PowerShell 工具</a>命令，而不是通过 <code>cmd.exe</code> 启动器。默认情况下，该启动器允许<a href="tools-reference.html#background-commands">在后台运行</a>的 PowerShell 命令<a href="agent-view.html#the-supervisor-process">延续到会话的下一个进程</a>，例如当您<a href="agent-view.html#from-inside-a-session">将会话转入后台</a>时。如果设置了该变量，转入后台的 PowerShell 命令会在会话进程退出时停止。Bash 命令不受影响。需要 Claude Code v2.1.269 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_DISABLE_WORKFLOWS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用<a href="workflows.html#turn-workflows-off">工作流</a>。等同于 <a href="settings-reference.html#disableworkflows"><code>disableWorkflows</code></a> 设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_EFFORT_LEVEL</code></td>
+<td style="text-align: left;">为支持的模型设置 effort 级别。取值：<code>low</code>、<code>medium</code>、<code>high</code>、<code>xhigh</code> 或 <code>max</code>。可用级别取决于模型。优先于 <code>--effort</code>、<code>/effort</code> 以及 <code>modelSettings</code> 和 <code>effortLevel</code> 设置。<a href="settings-reference.html#maxeffortlevel"><code>maxEffortLevel</code></a> 上限仍然适用。设置为 <code>auto</code> 或 <code>unset</code> 可让 Claude Code <a href="model-config.html#send-no-effort-level">不发送 effort 级别</a>，从而由 API 为该模型应用其自身的默认值。请参阅<a href="model-config.html#adjust-effort-level">调整 effort 级别</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_EMIT_SESSION_STATE_EVENTS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在消息流中添加携带会话状态的 <a href="agent-sdk-typescript.html#sdksessionstatechangedmessage"><code>session_state_changed</code></a> 消息。需要使用 <a href="agent-sdk-overview.html">Agent SDK</a>，或同时使用 <code>--print</code>、<code>--output-format stream-json</code> 和 <code>--verbose</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_AUTO_MODE</code></td>
+<td style="text-align: left;">为兼容旧版本而保留，不产生任何效果。自动模式在所有提供商上默认可用，包括 Amazon Bedrock、Google Cloud's Agent Platform、Microsoft Foundry 以及已登录的 <a href="claude-apps-gateway.html">Claude apps gateway</a> 会话。在 v2.1.158 至 v2.1.206 中，需要将此变量设置为 <code>1</code> 才能在这些提供商上使用<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_AWAY_SUMMARY</code></td>
+<td style="text-align: left;">覆盖<a href="interactive-mode.html#session-recap">会话回顾</a>的可用性。设置为 <code>0</code> 可强制关闭回顾，无论 <code>/config</code> 开关如何。设置为 <code>1</code> 可在 <a href="settings-reference.html#awaysummaryenabled"><code>awaySummaryEnabled</code></a> 为 <code>false</code> 时强制开启回顾。优先于该设置和 <code>/config</code> 开关</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_BACKGROUND_PLUGIN_REFRESH</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在后台安装完成后，于<a href="headless.html">非交互模式</a>下在轮次边界刷新插件状态。默认关闭，因为刷新会在会话中途更改系统提示词，从而使该轮次的<a href="prompt-caching.html">提示缓存</a>失效</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_CFC</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在启动 CLI 会话时开启 <a href="chrome.html">Chrome 集成</a>，设置为 <code>0</code> 则在启动时关闭。优先于 <a href="settings-reference.html#claudeinchromedefaultenabled"><code>claudeInChromeDefaultEnabled</code></a> 设置。<code>--chrome</code> 和 <code>--no-chrome</code> 标志优先于两者。Claude Code <a href="chrome.html#project-settings-can’t-turn-on-chrome">会忽略项目设置和本地设置中的 <code>1</code></a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在发往 Anthropic 的非必要流量被阻止时，将"How is Claude doing?"会话质量调查路由到您自己的 <a href="monitoring-usage.html">OpenTelemetry 收集器</a>。调查评分仅作为 OTEL 事件发送到您配置的收集器。在此模式下，不会向 Anthropic 发送任何调查数据。仅在设置了 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code>、<code>DISABLE_TELEMETRY</code> 或 <code>DO_NOT_TRACK</code> 时适用，否则不产生任何效果。<code>CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY</code> 和组织的产品反馈策略优先</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_FINE_GRAINED_TOOL_STREAMING</code></td>
+<td style="text-align: left;">控制工具调用输入是否在 Claude 生成时从 API 流式传输。关闭此功能时，较大的工具输入（例如较长的文件写入）只有在 Claude 完成生成后才会到达，这看起来可能像是卡住了。在 Anthropic API 上默认启用。在 Amazon Bedrock 和 Google Cloud's Agent Platform 上，会在已部署容器支持时按模型启用。设置为 <code>0</code> 可选择退出。通过 <code>ANTHROPIC_BASE_URL</code>、<code>ANTHROPIC_VERTEX_BASE_URL</code> 或 <code>ANTHROPIC_BEDROCK_BASE_URL</code> 经代理路由时，设置为 <code>1</code> 可强制开启。在 Microsoft Foundry 和<a href="llm-gateway.html">网关</a>连接上默认关闭</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY</code></td>
+<td style="text-align: left;">当 <code>ANTHROPIC_BASE_URL</code> 指向与 Anthropic 兼容的网关（例如 LiteLLM、Kong 或内部代理）时，设置为 <code>1</code> 可从网关的 <code>/v1/models</code> 端点填充 <code>/model</code> 选择器。默认关闭，因为否则由共享 API 密钥支持的网关会向每个用户显示该密钥可访问的所有模型。发现的模型仍会按会话收到的 <a href="settings-reference.html#availablemodels"><code>availableModels</code></a> 允许列表进行过滤；请通过 <a href="managed-settings.html#delivery-mechanisms">MDM 或托管设置文件</a>下发该列表，因为<a href="server-managed-settings.html#platform-availability">服务器托管下发在网关配置上不可用</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_OPUS_4_7_FAST_MODE</code></td>
+<td style="text-align: left;">已在 v2.1.142 中移除，当时<a href="fast-mode.html">快速模式</a>的默认模型从 Opus 4.6 改为 Opus 4.7</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION</code></td>
+<td style="text-align: left;">设置为 <code>false</code> 可关闭提示词建议，即输入框中显示的灰色预测内容。优先于 <a href="settings-reference.html#promptsuggestionenabled"><code>promptSuggestionEnabled</code></a> 设置，<code>/config</code> 中的 <strong>Prompt suggestions</strong> 开关写入的就是该设置。当您的账户接近或达到用量限制时，Claude Code 也会<a href="interactive-mode.html#when-claude-code-skips-suggestions">暂停建议</a>。设置为 <code>true</code> 可使该暂停在您达到限制之前不生效。需要 Claude Code v2.1.238 或更高版本。请参阅<a href="interactive-mode.html#prompt-suggestions">提示词建议</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_SHARE_BUNDLE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可使 <a href="commands.html#all-commands"><code>/share</code></a> 将其报告和整个会话记录保存到 <a href="data-usage.html#telemetry-services"><code>~/.claude/feedback-bundles/</code> 下的本地归档</a>，而不是将报告发送给 Anthropic。如果您组织的策略关闭了 <code>/share</code>，则无法通过此变量重新开启。需要 Claude Code v2.1.299 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_TASKS</code></td>
+<td style="text-align: left;">选择 Claude Code 在<a href="tools-reference.html#task-tool-availability">具备任务跟踪工具的会话</a>中提供哪些任务跟踪工具。默认情况下，Claude Code 提供 Task 工具 <code>TaskCreate</code>、<code>TaskUpdate</code>、<code>TaskGet</code> 和 <code>TaskList</code>。设置为 <code>0</code> 可改为使用旧版 <code>TodoWrite</code> 工具。请参阅<a href="interactive-mode.html#task-list">任务列表</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_TELEMETRY</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可启用用于指标和日志的 OpenTelemetry 数据收集。配置 OTel 导出器之前必须设置此变量。请在 shell、用户设置或托管设置中设置。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目设置和本地设置</a>中会被忽略。请参阅<a href="monitoring-usage.html">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_ENABLE_TODO_TOOLS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在所有模型上获得任务跟踪工具。如果不设置，Claude Code 默认仅在 <a href="tools-reference.html#task-tool-availability">Task 工具可用性</a>中列出的模型上提供这些工具。<code>CLAUDE_CODE_ENABLE_TASKS</code> 仍然决定使用 Task 工具还是 <code>TodoWrite</code>。需要 Claude Code v2.1.233 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 <code>bypassPermissions</code> 模式下<a href="permission-modes.html#turn-off-the-critical-path-removal-prompt-in-bypasspermissions-mode">无提示地运行危险的 <code>rm</code> 命令</a>，这会移除针对破坏性删除的安全提示。链接的章节列出了该变量不生效的情况。<a href="#set-variables-in-your-shell">请在启动 Claude Code 的环境中设置它</a>，因为 Claude Code <a href="settings-reference.html#variables-claude-code-ignores-in-env">会忽略设置 <code>env</code> 块中的该变量</a>。需要 Claude Code v2.1.311 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_EXIT_AFTER_STOP_DELAY</code></td>
+<td style="text-align: left;">查询循环进入空闲状态后、自动退出前等待的时间（毫秒）。适用于使用 SDK 模式的自动化工作流和脚本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可启用 <a href="agent-teams.html">agent team</a>。agent team 为实验性功能，默认禁用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_EXTRA_BODY</code></td>
+<td style="text-align: left;">要合并到每个 API 请求体顶层的 JSON 对象。适用于传递 Claude Code 未直接公开的提供商特定参数。在 shell 中导出的值也会应用于您通过 <code>claude agents</code> 或 <code>--bg</code> 分派的<a href="agent-view.html">后台会话</a>。在 v2.1.206 之前，后台会话会忽略 shell 导出的值，而使用后台监管进程所继承的副本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS</code></td>
+<td style="text-align: left;">覆盖<a href="tools-reference.html#large-files">文件读取</a>的默认 token 限制，默认值为 25,000 个 token。适用于需要完整读取较大文件的情况。当上下文窗口有余量时，Claude 使用 <code>allow_large</code> 参数进行的读取可以超过此限制</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_FORCE_SESSION_PERSISTENCE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可强制持久化会话记录、提示词历史并注册到 <code>claude agents</code>，即使此 <code>claude</code> 是从另一个 Claude Code 会话内部启动的。当继承的 <code>CLAUDE_CODE_CHILD_SESSION</code> 值（例如来自 <code>screen</code> 会话，或最初由 Claude Code 的 Bash 工具启动的后台启动器）导致真正的顶层会话被误判为嵌套会话时使用。从 v2.1.178 起，Claude Code 会自动检测 tmux 的情况并忽略继承的标记，因此 tmux 不再需要此变量。在 v2.1.169 及更早版本中同样有效；在 v2.1.170 和 v2.1.171 中不起作用，因为这两个版本移除了它所覆盖的嵌套会话检测</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_FORCE_STRIKETHROUGH</code></td>
+<td style="text-align: left;">当终端支持删除线但未被自动检测到时（例如通过 SSH 连接且未转发 <code>TERM_PROGRAM</code>），设置为 <code>1</code> 可强制将 Claude 回复中的 <code>~~text~~</code> 渲染为删除线。如果不设置，未被检测到的终端会显示字面的 <code>~~</code> 标记，而不是将文本渲染为删除线。需要 Claude Code v2.1.186 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_FORCE_SYNC_OUTPUT</code></td>
+<td style="text-align: left;">当终端支持但未被自动检测到时，设置为 <code>1</code> 可强制启用 DEC 私有模式 2026 <a href="https://gist.github.com/christianparpart/d8a62cc1ab659194337d73e399004036" target="_blank" rel="noopener">同步输出</a>。适用于实现了 BSU/ESU 但不响应能力探测的模拟器，例如 Emacs <code>eat</code>。在 tmux 下无效。与切换到<a href="fullscreen.html">全屏渲染</a>的 <code>CLAUDE_CODE_NO_FLICKER</code> 不同，此变量不会更改渲染器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_FORCE_TERMINAL_IMAGES</code></td>
+<td style="text-align: left;">当您的终端使用 Unicode 占位符绘制 kitty 图形协议图像，而您仍看到 <code>Image</code> 的灰显 <code>alt</code> 文本时，设置为 <code>1</code> 可将 <a href="plugins-mods-reference.html#elements">mod <code>Image</code> 元素</a>绘制为图片。请参阅<a href="plugins-mods-gallery.html#image-and-client">哪些终端会绘制 <code>Image</code> 以及在哪些情况下不应设置此变量</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_FORK_SUBAGENT</code></td>
+<td style="text-align: left;">控制 fork 模式，该模式默认开启，允许 Claude 自行启动 <a href="sub-agents.html#fork-the-current-conversation">fork</a>。在 fork 模式开启时，Claude 在您机器上的交互式终端、VS Code 或桌面会话中也无法<a href="sub-agents.html#run-subagents-in-foreground-or-background">等待子代理</a>。设置为 <code>0</code> 可关闭 fork 模式。有关版本信息，请参阅<a href="sub-agents.html#turn-fork-mode-on-or-off">关闭 fork 模式</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_FORWARD_SUBAGENT_TEXT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 <code>claude -p --output-format stream-json</code> 输出中发出<a href="sub-agents.html">子代理</a>的文本和思考块，行为与 <a href="cli-reference.html#cli-flags"><code>--forward-subagent-text</code></a> 标志相同。当调用 <code>claude</code> 的外部框架无法自行传递该标志时，请使用此变量。该标志在"使用 stream-json 输出的非交互模式"之外会报错退出，而此变量在这些情况下会被忽略，因此在进程范围内设置时，嵌套调用仍能正常工作。需要 Claude Code v2.1.211 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_GATEWAY_HINT_HEADERS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在自定义代理或第三方提供商（例如 Amazon Bedrock 或 Claude Platform on AWS）上发送<a href="llm-gateway-protocol.html#gateway-hint-headers">网关提示标头</a>，例如 <code>x-claude-code-request-class</code> 和 <code>x-claude-code-compaction</code>。设置为 <code>0</code> 可在所有连接上停止发送这些标头，包括直接连接到 Anthropic API 的情况（Claude Code 默认会在此类连接上发送这些标头）。需要 Claude Code v2.1.273 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS</code></td>
+<td style="text-align: left;">由 <code>CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY</code> 开启的<a href="llm-gateway-protocol.html#model-discovery">网关模型发现</a>请求的超时时间（毫秒，默认：<code>3000</code>）。当您的网关在启动时需要超过三秒才能响应 <code>/v1/models</code> 时，请调高此值。仅接受纯数字；<code>0</code>、负值和其他写法会保留默认值。需要 Claude Code v2.1.269 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_GIT_BASH_PATH</code></td>
+<td style="text-align: left;">仅限 Windows：Git Bash 可执行文件（<code>bash.exe</code>）的路径。当已安装 Git Bash 但它不在 PATH 中时使用。如果该路径不存在，或文件名不是 <code>bash.exe</code>、<code>sh.exe</code>、<code>bash</code> 或 <code>sh</code>，Claude Code 会忽略此变量并像未设置一样自动检测 Git Bash，同时记录一条可通过 <code>--debug</code> 查看的警告。在 v2.1.219 之前，路径不存在时 Claude Code 会在启动时退出，并且会将任何现有文件用作 shell，而不检查它是否为 bash 或 sh。请参阅 <a href="setup.html#set-up-on-windows">Windows 设置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_GLOB_HIDDEN</code></td>
+<td style="text-align: left;">设置为 <code>false</code> 可在 Claude 调用 <a href="tools-reference.html#glob-tool-behavior">Glob 工具</a>时从结果中排除点文件。默认包含。不影响 <code>@</code> 文件自动补全、<code>ls</code>、Grep 或 Read</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_GLOB_NO_IGNORE</code></td>
+<td style="text-align: left;">设置为 <code>false</code> 可使 <a href="tools-reference.html#glob-tool-behavior">Glob 工具</a>遵循 <code>.gitignore</code> 模式。默认情况下，Glob 会返回所有匹配的文件，包括被 gitignore 忽略的文件。不影响 <code>@</code> 文件自动补全，后者有自己的 <a href="settings-reference.html#respectgitignore"><code>respectGitignore</code> 设置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_GLOB_TIMEOUT_SECONDS</code></td>
+<td style="text-align: left;">Glob 工具文件发现的超时时间（秒）。在大多数平台上默认为 20 秒，在 WSL 上为 60 秒</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_GOAL_CHECKIN_MINUTES</code></td>
+<td style="text-align: left;">后台工作可以让活动目标等待多少分钟，超过后 Claude Code 会<a href="goal.html#background-work-defers-evaluation">要求 Claude 检查该目标</a>。默认为 <code>30</code>。设置为 <code>0</code> 可关闭检查。请以纯数字给出整数分钟数，最大为 <code>10080</code>，即一周。Claude Code 会将其他任何值视为未设置并使用默认值。需要 Claude Code v2.1.234 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_GZIP_REQUEST_BODIES</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可关闭对发送到 <code>api.anthropic.com</code> 的 Claude API、遥测和 <a href="artifacts.html">Artifact</a> 发布请求体的 gzip 压缩。默认情况下，Claude Code 会在直接连接时压缩较大的请求体，而在您通过代理发送请求、配置客户端证书或设置 <code>NODE_EXTRA_CA_CERTS</code> 时跳过压缩。如果 Claude Code 无法检测到的 <a href="network-config.html#ca-certificate-store">TLS 检查代理</a>无法正确处理压缩请求，请使用 <code>0</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_HIDE_CWD</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在启动徽标中隐藏工作目录。适用于路径会暴露您操作系统用户名的屏幕共享或录制场景</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_IDE_HOST_OVERRIDE</code></td>
+<td style="text-align: left;">覆盖用于连接 IDE 扩展的主机地址。默认情况下，Claude Code 会自动检测正确的地址，包括 WSL 到 Windows 的路由</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可跳过 IDE 扩展的自动安装。等同于将 <a href="settings-reference.html#autoinstallideextension"><code>autoInstallIdeExtension</code></a> 设置为 <code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_IDE_SKIP_VALID_CHECK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在连接时跳过对 IDE 锁文件条目的验证。当 IDE 正在运行但自动连接仍找不到它时使用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS</code></td>
+<td style="text-align: left;">对对话应用<a href="settings-reference.html#idlecompaction">空闲压缩</a>的上下文大小（以 token 计）（默认值：<code>200000</code>）。接受正整数，其他值会被忽略。低于 <code>100000</code> 的值会被提高到最低阈值 <code>100000</code>。对于满足条件的对话，空闲压缩默认开启。要关闭它，请将 <code>idleCompaction</code> 设置为 <code>false</code>。需要 Claude Code v2.1.290 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS</code></td>
+<td style="text-align: left;">一个会话中最多可同时运行多少个<a href="sub-agents.html#concurrent-subagent-limit">子代理</a>，超过后 Agent 工具将拒绝再生成新的子代理（默认：20）。接受以纯数字表示的正整数；其他值会被忽略，因此此变量可以调整上限，但不能禁用它。需要 Claude Code v2.1.217 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MAX_CONTEXT_TOKENS</code></td>
+<td style="text-align: left;">覆盖 Claude Code 为当前模型假定的上下文窗口大小。从 v2.1.193 起，其应用方式取决于 Claude Code 如何解析模型 ID；请参阅<a href="model-config.html#correct-the-window-for-a-gateway-or-custom-model-id">为网关或自定义模型 ID 更正窗口大小</a>。当通过 <code>ANTHROPIC_BASE_URL</code> 路由到某个模型，而其上下文窗口与其名称对应的内置大小不匹配时使用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH</code></td>
+<td style="text-align: left;">Claude Code 发送给模型的 MCP 工具描述和 MCP 服务器说明的最大长度（字符）。您设置的值会替换两个<a href="mcp.html#for-mcp-server-authors">默认限制</a>：4096，以及 Claude 通过工具搜索加载的工具描述的 16384。接受纯数字形式的正整数。其他任何值都会被忽略并应用默认值。需要 Claude Code v2.1.280 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MAX_OUTPUT_TOKENS</code></td>
+<td style="text-align: left;">设置大多数请求的最大输出 token 数。默认值和上限因模型而异；请参阅<a href="https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison" target="_blank" rel="noopener">最大输出 token</a>。如果设置的值超过模型上限，Claude Code 会将其降至上限。对于 Claude Code 无法解析为已知模型的模型 ID，默认值为 32000，上限为 128000。增大此值会减少触发<a href="costs.html#reduce-token-usage">自动压缩</a>之前可用的有效上下文窗口</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MAX_RETRIES</code></td>
+<td style="text-align: left;">覆盖失败 API 请求的重试次数（默认：10）。遇到 <code>529</code> 过载错误时，重试可能会更早停止。例如，在 Opus 模型上使用 API 密钥时，会在第三次 <code>529</code> 时停止并显示 <a href="errors.html#api-error-repeated-529-overloaded-errors">Repeated 529 Overloaded errors</a>。如果您设置了<a href="settings-reference.html#fallbackmodel">备用模型</a>，Claude Code 会切换到该模型，而不是显示错误。从 v2.1.186 起上限为 15；从 v2.1.199 起，<code>CLAUDE_CODE_RETRY_WATCHDOG</code> 会提高默认值并取消上限。对于需要等待较长中断的无人值守会话，请改为设置 <code>CLAUDE_CODE_RETRY_WATCHDOG</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION</code></td>
+<td style="text-align: left;">已在 v2.1.224 中移除，现在不起作用。此前用于限制 Claude 在一个会话中可通过 Agent 工具生成的<a href="sub-agents.html">子代理</a>总数（默认：200）；超过上限时生成会失败并显示 <code>Subagent spawn limit reached</code>。<a href="sub-agents.html#concurrent-subagent-limit">并发子代理限制</a>和<a href="sub-agents.html#let-subagents-spawn-their-own-subagents">深度限制</a>仍然适用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH</code></td>
+<td style="text-align: left;">主对话之下允许的<a href="sub-agents.html#let-subagents-spawn-their-own-subagents">子代理层数</a>（默认：3）。在默认值下，子代理可以生成自己的子代理，而位于第三层的子代理不能再继续生成；设置为 <code>1</code> 可关闭嵌套。在 v2.1.217 至 v2.1.218 中，默认值为 1，因此除非您提高限制，否则子代理无法生成自己的子代理；v2.1.219 将默认值提高到 3。接受以纯数字表示的正整数；其他值会被忽略，因此该限制可以调整，但不能移除。需要 Claude Code v2.1.217 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MAX_TURNS</code></td>
+<td style="text-align: left;">在未传递显式限制时，限制 agentic 轮次的数量。等同于传递 <a href="cli-reference.html#cli-flags"><code>--max-turns</code></a>，两者都设置时后者优先。非正整数的值会在启动时被拒绝并报错，而不是被视为无上限</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION</code></td>
+<td style="text-align: left;"><a href="tools-reference.html#session-search-limit">WebSearch</a> 调用次数上限（默认值：200）。当 Claude 达到上限时，后续的 WebSearch 调用会返回一条通知，告诉它使用已收集的信息继续，并在回答中说明这一点。接受无上限的正整数。其他任何值都会被忽略并应用默认值，因此上限可以提高但不能关闭。需要 Claude Code v2.1.212 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MCP_ALLOWLIST_ENV</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在启动 stdio MCP 服务器时仅提供安全的基线环境加上服务器配置的 <code>env</code>，而不是继承您的 shell 环境</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS</code></td>
+<td style="text-align: left;">仍在运行的 MCP 工具调用<a href="mcp.html#automatic-backgrounding-of-long-tool-calls">转为后台任务</a>之前经过的时间（毫秒，默认值：120000，即 2 分钟）。设置为 <code>0</code> 可关闭自动转入后台，并在交互式会话中让 Claude 等待 <a href="mcp.html#make-claude-wait-for-the-result-of-an-mcp-task">MCP 任务</a>。需要 Claude Code v2.1.212 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MCP_STARTUP_WAIT_MS</code></td>
+<td style="text-align: left;"><a href="headless.html">非交互</a>会话的第一个轮次等待仍在连接中的 MCP 服务器的时长（毫秒），用以替代默认的<a href="agent-sdk-mcp.html#connection-timing">首轮等待</a>。在<a href="self-hosted-environments-configuration.html#connection-timing">自托管环境</a>中，它只改变等待持续的时长。某些服务器无论该值如何都会保留自己的等待；<a href="agent-sdk-mcp.html#connection-timing">连接时机</a>列出了这些服务器。设置为 <code>0</code> 可跳过对其他所有服务器的等待。需要 Claude Code v2.1.274 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT</code></td>
+<td style="text-align: left;">MCP 工具调用的空闲超时时间（毫秒）。当 stdio、HTTP、SSE、WebSocket 或 <a href="mcp.html#use-mcp-servers-from-claude-ai">claude.ai 连接器</a> MCP 服务器在这段时间内既没有发送响应也没有发送进度通知时，工具调用会报错中止，而不是等待整体的 <code>MCP_TOOL_TIMEOUT</code>。覆盖各传输方式的默认值：网络服务器为 300000（5 分钟），stdio 服务器为 1800000（30 分钟）。设置为 <code>0</code> 可禁用空闲检查。低于 1000 的值会被提高到一秒，且该值的上限为生效的 <code>MCP_TOOL_TIMEOUT</code>。<code>.mcp.json</code> 中至少为 1000 的单服务器 <code>timeout</code> 会将该服务器的空闲窗口提高到至少等于 <code>timeout</code> 值。不适用于 IDE 服务器或 SDK 进程内服务器。需要 Claude Code v2.1.187 或更高版本。在 v2.1.203 之前，stdio 服务器不受空闲超时限制</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MESSAGING_SOCKET</code></td>
+<td style="text-align: left;">由 Claude Code 设置，而非由您设置：在绑定了<a href="cross-session-messaging.html#the-sessions-inbox-socket">收件箱套接字</a>的会话中，Claude Code 在绑定套接字时会将该套接字的路径导出给 hook 和 Bash 命令。在启动时即开启消息功能的会话中，Claude Code 会在任何 hook 运行之前绑定套接字。本机上的其他会话会将消息投递到此路径。每个会话导出自己的套接字，而不是从父会话继承的套接字，到达该套接字的消息会经过该会话的<a href="cross-session-messaging.html#control-inbound-messages">入站控制</a>。设置中的 <code>env</code> 块无法设置此变量。需要 Claude Code v2.1.224 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_MESSAGING_TOKEN</code></td>
+<td style="text-align: left;">由 Claude Code 设置，而非由您设置：在绑定了<a href="cross-session-messaging.html#the-sessions-inbox-socket">收件箱套接字</a>的会话中，Claude Code 会将此会话专属令牌与 <code>CLAUDE_CODE_MESSAGING_SOCKET</code> 一起导出给 hook 和 Bash 命令。向该套接字发送消息的脚本可以将 <code>{"type":"auth","token":"&lt;token&gt;"}</code> 作为第一行发送，以证明它属于该会话。在原生 Windows 上，Claude Code 要求发送此行，并会关闭任何未以有效认证行开头的连接。<a href="cross-session-messaging.html#the-sessions-inbox-socket">自有子进程规则</a>说明了 Claude Code 何时会检查该令牌。每个会话导出自己的令牌，绝不会使用从父会话继承的令牌。设置中的 <code>env</code> 块无法设置此变量。需要 Claude Code v2.1.228 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_NATIVE_CURSOR</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在输入插入点显示终端自身的光标，而不是绘制的方块。该光标会遵循终端的闪烁、形状和焦点设置。设置为 <code>0</code> 与不设置该变量效果相同，因此在终端自身光标已开启的会话中，它不会恢复绘制的方块</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_NEW_INIT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可让 <code>/init</code> 运行交互式设置流程。该流程会在探索代码库并写入文件之前，询问要生成哪些文件，包括 CLAUDE.md、skill 和 hook。如果不设置此变量，<code>/init</code> 会自动生成 CLAUDE.md 而不进行询问</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_NONBLOCKING_STDOUT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可通过第二个非阻塞文件描述符写入终端输出，这样停止读取的终端（例如已暂停的 tmux 控制模式窗格或停滞的 SSH 连接）就不会在会话中途冻结 Claude Code。在 stdout 为终端时适用于 macOS、Linux 和 WSL。需要 Claude Code v2.1.261 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_NONSTREAMING_TIMEOUT_RETRIES</code></td>
+<td style="text-align: left;">限制 Claude Code 重新发送超时的<a href="errors.html#streaming-response-ended-before-any-complete-data-was-received">非流式请求</a>的次数。设置为 <code>0</code> 时，请求在第一次超时时即失败。有关超时时间，请参阅<a href="errors.html#tune-retry-behavior">调整重试行为</a>。需要 Claude Code v2.1.285 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_NO_FLICKER</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可启用<a href="fullscreen.html">全屏渲染</a>，这是一项研究预览功能，可减少闪烁并在长对话中保持内存占用平稳。覆盖 <a href="settings-reference.html#tui"><code>tui</code></a> 设置；您也可以使用 <code>/tui fullscreen</code> 进行切换</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OAUTH_REFRESH_TOKEN</code></td>
+<td style="text-align: left;">用于 Claude.ai 身份验证的 OAuth 刷新令牌。设置后，<code>claude auth login</code> 会直接交换此令牌，而不是打开浏览器。需要同时设置 <code>CLAUDE_CODE_OAUTH_SCOPES</code>。适用于在自动化环境中预配身份验证</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OAUTH_SCOPES</code></td>
+<td style="text-align: left;">颁发刷新令牌时使用的以空格分隔的 OAuth 作用域，例如 <code>"user:profile user:inference user:sessions:claude_code"</code>。设置 <code>CLAUDE_CODE_OAUTH_REFRESH_TOKEN</code> 时必需</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OAUTH_TOKEN</code></td>
+<td style="text-align: left;">用于 claude.ai 身份验证的 OAuth 访问令牌。是 SDK 和自动化环境中 <code>/login</code> 的替代方案。优先于钥匙串中存储的凭据。可使用 <a href="authentication.html#generate-a-long-lived-token"><code>claude setup-token</code></a> 生成。除非您运行 <a href="authentication.html#authentication-precedence"><code>/login</code></a>，否则 Claude Code 会在整个会话中使用您设置的令牌。要替换过期的令牌，请生成新令牌并重新启动</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE</code></td>
+<td style="text-align: left;">已在 v2.1.160 中移除，现在不起作用。此前用于将<a href="fast-mode.html">快速模式</a>固定到 Claude Opus 4.6，而不是当前默认模型。Opus 4.6 不再支持快速模式</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH</code></td>
+<td style="text-align: left;">承载内容的 OpenTelemetry 属性（模型响应、工具内容、系统提示词、原始 API 正文）的最大长度，包含截断标记，以 UTF-16 代码单元计（默认：61440，即 60 KB）。仅当您的遥测后端接受大于 64 KB 的属性值时才调高此值，也可以调低此值以减少遥测数据量。需要 Claude Code v2.1.214 或更高版本。请参阅<a href="monitoring-usage.html">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OTEL_DIAG_STDERR</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可将 OpenTelemetry 导出器的诊断错误写入 stderr。默认情况下，这些错误仅在使用 <code>--debug</code> 时显示，因此配置错误的导出器（例如 Prometheus 端口冲突）否则会静默失败。需要 Claude Code v2.1.179 或更高版本。请参阅<a href="monitoring-usage.html">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OTEL_FLUSH_TIMEOUT_MS</code></td>
+<td style="text-align: left;">刷新待处理 OpenTelemetry span 的超时时间（毫秒，默认：5000）。请参阅<a href="monitoring-usage.html">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OTEL_HEADERS_HELPER_DEBOUNCE_MS</code></td>
+<td style="text-align: left;">刷新动态 OpenTelemetry 标头的间隔（毫秒，默认：1740000 / 29 分钟）。请参阅<a href="monitoring-usage.html#dynamic-headers">动态标头</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OTEL_SHUTDOWN_TIMEOUT_MS</code></td>
+<td style="text-align: left;">OpenTelemetry 导出器在关闭时完成操作的超时时间（毫秒，默认：2000）。如果退出时指标丢失，请调高此值。请参阅<a href="monitoring-usage.html">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS</code></td>
+<td style="text-align: left;">对于被 API 以 <code>529</code> 过载错误拒绝的请求，<a href="errors.html#tune-retry-behavior">自动重试</a>之间指数退避的起始延迟（毫秒），用于替代默认的 500。当 API 达到容量上限时，调高此值可将重试分散到更长的时间窗口内。请以纯数字给出 500 到 32000 之间的整数毫秒数；Claude Code 会将其他任何值视为未设置。当 <code>CLAUDE_CODE_RETRY_WATCHDOG</code> 设置为 <code>1</code> 时，或被拒绝的请求是在<a href="fast-mode.html#handle-rate-limits">快速模式</a>下发送的时，此变量不起作用。需要 Claude Code v2.1.292 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS</code></td>
+<td style="text-align: left;">对于 API 以 <code>529</code> 过载错误拒绝的请求，<a href="errors.html#tune-retry-behavior">自动重试</a>之间指数退避的上限（毫秒），用于替代默认的 32000。提高此值可使后续重试在 API 容量已满时继续拉开间隔。以纯数字给出 32000 到 64000 之间的整数毫秒数；Claude Code 会将任何其他值视为未设置。当 <code>CLAUDE_CODE_RETRY_WATCHDOG</code> 设置为 <code>1</code> 时，或被拒绝的请求是在<a href="fast-mode.html#handle-rate-limits">快速模式</a>下发送时，此变量无效。需要 Claude Code v2.1.296 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可让 Claude Code 在有新版本可用时于后台运行包管理器的升级命令。适用于 Homebrew 和 WinGet 安装。其他包管理器仍会显示升级命令而不运行它。请参阅<a href="setup.html#auto-updates">自动更新</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PERFORCE_MODE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可启用感知 Perforce 的写保护。设置后，如果目标文件缺少所有者写入位，Edit、Write 和 NotebookEdit 会失败并给出 <code>p4 edit &lt;file&gt;</code> 提示；Perforce 会清除已同步文件的该位，直到 <code>p4 edit</code> 将其打开。这可以防止 Claude Code 绕过 Perforce 变更跟踪</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PLUGIN_CACHE_DIR</code></td>
+<td style="text-align: left;">覆盖插件根目录。尽管名称如此，此变量设置的是父目录，而非缓存本身：市场和插件缓存位于此路径下的子目录中。默认为 <code>~/.claude/plugins</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PLUGIN_DIRS</code></td>
+<td style="text-align: left;">要为会话加载的插件目录，每个目录的加载方式与 <a href="plugins-cli-reference.html#flags-that-load-a-plugin-for-one-session"><code>--plugin-dir</code></a> 标志相同。在 Unix 上用 <code>:</code> 分隔多个路径，在 Windows 上用 <code>;</code> 分隔。每个路径都应为绝对路径或以 <code>~</code> 开头，因为 Claude Code 会跳过相对路径。需要 Claude Code v2.1.280 或更高版本。请参阅<a href="plugins-create.html#load-a-directory-or-archive-for-one-session">为单个会话加载插件</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PLUGIN_DIR_WATCH</code></td>
+<td style="text-align: left;">控制 Claude Code 是否在 <a href="plugins-mods-overview.html">mod</a> 的文件发生变化时重新加载该 mod。重新加载适用于您通过 <code>--plugin-dir</code> 从目录加载的 mod，在交互式会话中默认开启。设置为 <code>1</code> 可同时在非交互式会话中开启，设置为 <code>0</code> 则在所有会话中关闭。需要 Claude Code v2.1.287 或更高版本。请参阅 <a href="plugins-mods-reference.html#settings-and-environment-variables">mod 设置和环境变量</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PLUGIN_GIT_TIMEOUT_MS</code></td>
+<td style="text-align: left;">克隆或刷新插件市场的超时时间（毫秒，默认：120000）。对于大型仓库或较慢的网络连接，请调高此值。请参阅 <a href="plugins-troubleshooting.html#git-clone-timed-out-after-120s">Git clone timed out</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在市场刷新无法访问远程仓库或无法通过其身份验证时，跳过重新克隆尝试并继续使用现有的市场检出副本。适用于重新克隆同样会失败的离线或气隙环境。请参阅<a href="plugins-troubleshooting.html#marketplace-updates-keep-failing-offline">市场更新在离线环境中失败</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PLUGIN_PREFER_HTTPS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可通过 HTTPS 而非 SSH 克隆 GitHub <code>owner/repo</code> 简写来源。适用于插件安装和更新，以及 <code>/plugin marketplace add</code> 和 <code>update</code>。适用于 CI 运行器、容器或任何没有为 <code>github.com</code> 配置 SSH 密钥的环境</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PLUGIN_SEED_DIR</code></td>
+<td style="text-align: left;">一个或多个只读插件种子目录的路径，在 Unix 上用 <code>:</code> 分隔，在 Windows 上用 <code>;</code> 分隔。可用于将预填充的插件目录打包到容器镜像中。Claude Code 会在启动时从这些目录注册市场，并直接使用预缓存的插件而无需重新克隆。请参阅<a href="plugins-org.html#seed-containers-and-ci">为容器预填充插件</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止 Claude Code 在为工具调用、hook 和状态栏命令启动 PowerShell 时传递 <code>-ExecutionPolicy Bypass</code>，转而遵循计算机的有效执行策略。默认情况下，Claude Code 会在进程作用域绕过执行策略，以便 <code>.ps1</code> 脚本和模块导入能在默认为 Restricted 的 Windows 安装上正常工作。无论此设置如何，进程作用域的绕过永远不会覆盖组策略 <code>MachinePolicy</code> 或 <code>UserPolicy</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS</code></td>
+<td style="text-align: left;">在使用 <code>-p</code> 标志的<a href="headless.html#background-tasks-at-exit">非交互模式</a>下，最后一轮之后空闲等待后台工作（例如子代理和工作流）的时间上限（毫秒）。每当 Claude 进行一轮以处理后台结果时，空闲等待都会重新计时。默认：<code>600000</code>，即 10 分钟。当空闲等待达到上限时，Claude Code 会停止等待剩余的后台任务。由主对话启动且仍在运行的后台命令会使运行在超过该上限后仍保持开启。设置为 <code>0</code> 可无限期等待。需要 Claude Code v2.1.182 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PROCESS_WRAPPER</code></td>
+<td style="text-align: left;">通过以 argv 前缀形式给出的企业启动器（例如 <code>/opt/corp/launcher</code>）来启动 Claude Code 从自身二进制文件启动的进程，例如托管 <a href="agent-view.html">agent view</a> 会话的后台服务。请在用户设置或<a href="managed-settings.html">托管设置</a>的 <code>env</code> 块中设置，而不是作为 shell 导出，以便分离的后台服务能够继承它；项目设置和本地设置无法设置此变量。等同于 <a href="settings-reference.html#processwrapper"><code>processWrapper</code> 设置</a>，该设置需要 Claude Code v2.1.210 或更高版本；两者都设置时此变量优先。VS Code 扩展通过其 <code>claudeProcessWrapper</code> 设置单独配置自己的启动器。在 Windows 上会被忽略。有关值的格式、启动器涵盖的范围以及启动器必须满足的约定，请参阅<a href="corporate-launcher.html">在企业启动器后运行 Claude Code</a>。需要 Claude Code v2.1.208 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PROJECT_DIR_NAME</code></td>
+<td style="text-align: left;">与 <code>CLAUDE_CONFIG_DIR</code> 一起设置，用于选择 Claude Code 存放该会话的会话记录和自动记忆所用的 <code>projects/</code> 目录名，以代替根据工作目录路径派生的名称。例如，使用 <code>CLAUDE_CONFIG_DIR=/srv/tenant-a CLAUDE_CODE_PROJECT_DIR_NAME=work claude</code> 启动 Claude Code 会将它们存储在 <code>/srv/tenant-a/projects/work/</code> 下。未设置 <code>CLAUDE_CONFIG_DIR</code> 时，Claude Code 会忽略此变量，并且只从您启动 <code>claude</code> 的环境中读取它，绝不会从<a href="#in-settings-files">设置文件的 <code>env</code> 块</a>中读取。请参阅<a href="sessions.html#name-the-project-directory-yourself">自行命名项目目录</a>。需要 Claude Code v2.1.234 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PROMPT_CACHE_TTL</code></td>
+<td style="text-align: left;">设置为 <code>5m</code> 或 <code>1h</code>（Claude Code 仅接受这两个值），以选择主对话的<a href="prompt-caching.html#cache-lifetime">提示缓存 TTL</a>：包括您的交互式、<code>-p</code> 和 SDK 轮次，以及与它们内联运行的辅助程序。优先于 <code>promptCacheTtl</code> 设置和 <code>ENABLE_PROMPT_CACHING_1H</code>，而 <code>FORCE_PROMPT_CACHING_5M</code> 会覆盖它。API 对 1 小时缓存写入按更高费率计费。需要 Claude Code v2.1.242 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PROPAGATE_TRACEPARENT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 <code>ANTHROPIC_BASE_URL</code> 指向自定义代理时传播 W3C 跟踪上下文。传播范围包括模型和 HTTP MCP 请求上的 <code>traceparent</code> 标头，以及 Bash、PowerShell 和 hook 子进程的 <code>TRACEPARENT</code> 环境变量。默认情况下，仅在直接连接到 Anthropic API 时才启用传播。在 v2.1.152 中添加。请参阅<a href="monitoring-usage.html#traces-beta">跟踪（beta）</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST</code></td>
+<td style="text-align: left;">由嵌入 Claude Code 并代为管理模型提供商路由的宿主平台设置。设置后，Claude Code 会忽略设置文件中的提供商选择、端点和身份验证变量，例如 <code>CLAUDE_CODE_USE_BEDROCK</code>、<code>ANTHROPIC_BASE_URL</code> 和 <code>ANTHROPIC_API_KEY</code>，因此用户设置无法覆盖宿主的路由。Claude Code 还会忽略<a href="managed-settings.html">托管设置</a>中的模型选择键，例如 <code>model</code>、<code>fallbackModel</code> 和 <code>modelOverrides</code>，无论它们由哪个托管来源下发，因此宿主的模型配置优先于过时的托管模型固定设置。Claude Code 还会忽略托管 <code>env</code> 块中的模型选择变量，例如 <code>ANTHROPIC_MODEL</code> 和 <code>ANTHROPIC_DEFAULT_*_MODEL</code> 系列；托管设置中的 <a href="model-config.html#restrict-model-selection"><code>availableModels</code></a> 允许列表仍然适用，除非宿主提供了自己的允许列表。Claude Code 还会跳过它在第三方提供商（例如 Amazon Bedrock、Claude Platform on AWS、Google Cloud's Agent Platform 和 Microsoft Foundry）上原本会应用的自动遥测退出，因此遥测遵循标准的 <code>DISABLE_TELEMETRY</code> 退出方式。请参阅<a href="data-usage.html#default-behaviors-by-api-provider">按 API 提供商划分的默认行为</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_PROXY_RESOLVES_HOSTS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可允许由代理而非调用方执行 DNS 解析。适用于应由代理处理主机名解析的环境，需主动启用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_REMOTE</code></td>
+<td style="text-align: left;">当 Claude Code 作为<a href="claude-code-on-the-web.html">云端会话</a>运行时自动设置为 <code>true</code>。可在 hook 或环境设置脚本中读取此变量，以检测是否处于云端会话中</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_REMOTE_SESSION_ID</code></td>
+<td style="text-align: left;">在<a href="claude-code-on-the-web.html">云端会话</a>中自动设置为当前会话的 ID。读取此变量可构造返回会话记录的链接。请参阅<a href="cloud-environments.html#link-output-back-to-the-session">将输出链接回会话</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_RESTRICTED</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在受限模式下启动会话，与传递 <a href="cli-reference.html#cli-flags"><code>--restricted</code></a> 相同。Claude Code 会忽略设置文件 <code>env</code> 块中的此变量。需要 Claude Code v2.1.248 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_RESUME_INTERRUPTED_TURN</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在上一个会话于某轮次中途结束时自动恢复。在 SDK 模式下使用，使模型无需 SDK 重新发送提示词即可继续。要关闭此功能，请取消设置该变量或将其设置为 <code>0</code>。对于 VS Code 聊天面板，请参阅<a href="vs-code.html#continue-conversations-after-a-reload">重新加载后继续对话</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_RESUME_INTERRUPTED_TURN_MAX_AGE_MS</code></td>
+<td style="text-align: left;">对于在轮次中途结束的会话，要在恢复时自动继续，其最后一条会话记录消息允许的最大时长（毫秒）。当最后一条消息早于此界限时，Claude Code 会跳过 <code>CLAUDE_CODE_RESUME_INTERRUPTED_TURN</code> 自动恢复及其 <code>CLAUDE_CODE_RESUME_PROMPT</code> 续接消息，会话以空闲状态启动，以便您显式继续。未设置或为 <code>0</code> 时不设界限，但某些轮次（例如以 API 错误结束的轮次）仅在其最后一条消息后六小时内才会恢复。正值会对所有轮次（包括这些轮次）设置界限；负值或非数字值会应用一小时的界限。长时间运行的 Agent 的启动脚本可以设置此变量，以免针对旧会话记录重启时重新运行过时的提示词。当 Claude Code 重启一个从交互式会话继承对话的崩溃 <a href="agent-view.html">agent view</a> 会话时，它会自行设置一小时的界限。需要 Claude Code v2.1.211 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_RESUME_PROMPT</code></td>
+<td style="text-align: left;">覆盖 Claude Code 发送给 Claude 的继续消息：当 <code>CLAUDE_CODE_RESUME_INTERRUPTED_TURN</code> 继续被中断的轮次而非重新发送其提示词时，或当您使用 <code>-p</code> 恢复<a href="hooks.html#defer-a-tool-call-for-later">延迟的工具调用</a>时，都会发送此消息。默认为 <code>Continue from where you left off.</code>。空字符串将使用默认值</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_RESUME_SHOWS_CUT_OFF_CALLS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 <code>CLAUDE_CODE_RESUME_INTERRUPTED_TURN</code> 继续的轮次中保留<a href="sessions.html#what-a-resumed-session-restores">被中断的工具调用</a>，并将其标记为已截断。未设置时，这些调用会在轮次继续之前被丢弃。某些调用仍会被丢弃，例如对子代理、skill、工作流以及等待人工操作的工具的调用。对于 VS Code 聊天面板，请参阅<a href="vs-code.html#continue-conversations-after-a-reload">重新加载后继续对话</a>。需要 Claude Code v2.1.309 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_RETRY_WATCHDOG</code></td>
+<td style="text-align: left;">对于评估测试框架、CI 作业或远程工作进程等无人值守会话，请设置为 <code>1</code>。会无限期重试 <code>429</code> 和 <code>529</code> 容量错误，而不是在尝试 <code>CLAUDE_CODE_MAX_RETRIES</code> 次后失败。当标准速度请求收到报告支出限额或使用额度耗尽的 <code>429</code> 时，Claude Code 会立即失败，即使该错误来自按计划重置的<a href="errors.html#spend-limit-reached">网关支出上限</a>也是如此。在 v2.1.239 之前，看门狗会无限期重试这些错误。对于快速模式请求，请参阅<a href="fast-mode.html#handle-rate-limits">处理速率限制</a>。看门狗在两次尝试之间最多退避 5 分钟；当响应带有速率限制重置时间时，则会一直等到限制重置，因此达到用量限制的会话会等待剩余的时间窗口结束。在 v2.1.199 或更高版本中，它还会将其他临时性错误（例如服务器错误、超时和连接中断）的默认重试次数提高到 300（大约三小时的退避），并且如果您显式设置了 <code>CLAUDE_CODE_MAX_RETRIES</code>，还会取消该变量 15 次的上限。需要 Claude Code v2.1.186 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS</code></td>
+<td style="text-align: left;">设置 <code>CLAUDE_CODE_RETRY_WATCHDOG</code> 时，每个 API 请求在等待 <code>429</code> 和 <code>529</code> 错误上所花费的最长时间（毫秒）。这段时间用完后，下一个此类错误将结束该请求。请以纯数字给出正整数，例如 <code>1800000</code> 表示 30 分钟。未设置时，等待没有限制。需要 Claude Code v2.1.295 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS</code></td>
+<td style="text-align: left;">在设置了 <code>CLAUDE_CODE_RETRY_WATCHDOG</code> 且请求正在等待<a href="errors.html#youve-hit-your-session-limit">用量限制</a>重置期间，检查该限制是否已提前解除的最小间隔（毫秒）。当检查发现限制已解除时，请求会立即发出。以纯数字给出从 <code>60000</code>（一分钟）到 <code>10800000</code>（三小时）之间的整数。仅在未使用使用额度时针对 claude.ai 订阅的会话限制或每周限制进行检查，并且在设置了 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> 时不进行检查。当此变量未设置或其值超出该范围时，不进行任何检查。需要 Claude Code v2.1.305 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SAFE_MODE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在安全模式下启动：CLAUDE.md、skill、插件、hook、MCP 服务器、自定义命令和 Agent、输出样式、工作流、自定义主题、自定义快捷键、状态栏和文件建议命令、LSP 服务器以及自动记忆都不会加载，用于排查损坏的配置。托管设置策略仍然适用，包括策略配置的 hook、状态栏和文件建议命令；托管插件、托管 skill、托管 CLAUDE.md 和策略配置的 MCP 服务器则不会加载。等同于传递 <a href="cli-reference.html#cli-flags"><code>--safe-mode</code></a>。直接生成的子进程会继承此变量</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SCRIPT_CAPS</code></td>
+<td style="text-align: left;">设置 <code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB</code> 时，用于限制每个会话中特定脚本可被调用次数的 JSON 对象。键是与命令文本进行匹配的子字符串；值是整数调用限制。例如，<code>{"deploy.sh": 2}</code> 允许 <code>deploy.sh</code> 最多被调用两次。匹配基于子字符串，因此像 <code>./scripts/deploy.sh $(evil)</code> 这样的 shell 扩展技巧仍会计入上限。无法检测通过 <code>xargs</code> 或 <code>find -exec</code> 进行的运行时扇出；这是一项纵深防御控制措施</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SCROLL_SPEED</code></td>
+<td style="text-align: left;">设置<a href="fullscreen.html#mouse-wheel-scrolling">全屏渲染</a>中的鼠标滚轮滚动倍数。接受最大为 20 的任意正值，包括小于 1 的小数值（例如 <code>0.5</code>），以便在已经放大滚轮事件的终端中减慢加速的触控板和滚轮滚动。如果您的终端每个刻度发送一个滚轮事件且不放大，设置为 <code>3</code> 可与 <code>vim</code> 保持一致。在 JetBrains IDE 终端中会被忽略，因为 Claude Code 在其中使用自己的滚动处理</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SEND_FEEDBACK</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可为会话关闭 <a href="tools-reference.html#sendfeedback-tool-behavior">Claude 起草的反馈</a>。设置为 <code>1</code> 可在您的账户已具有访问权限的情况下将其开启；此变量本身无法授予访问权限，其他关闭反馈的开关（例如 <code>DISABLE_FEEDBACK_COMMAND</code> 和 <a href="settings-reference.html#feedbackdrafts"><code>feedbackDrafts</code></a> 设置的 <code>off</code> 值）仍然适用</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS</code></td>
+<td style="text-align: left;">覆盖 <a href="hooks.html#sessionend">SessionEnd</a> hook 的时间预算（毫秒）。该值也是每个未设置自身 <code>timeout</code> 的 hook 的超时时间。适用于会话退出、<code>/clear</code> 以及通过交互式 <code>/resume</code> 切换会话。默认预算为 1.5 秒，并会自动提高到设置文件中配置的最高单个 hook <code>timeout</code>，最多 60 秒。插件提供的 hook 上的超时不会提高预算</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SESSION_ID</code></td>
+<td style="text-align: left;">在 Bash 和 PowerShell 工具子进程、<a href="hooks.html">hook 命令</a>子进程以及 stdio <a href="mcp.html">MCP 服务器</a>子进程中自动设置为当前会话 ID。对于 Bash、PowerShell 和 hook，此值与 hook JSON 输入中的 <code>session_id</code> 字段一致，并会在 <code>/clear</code> 时更新。MCP 服务器子进程会保留其启动时的 ID。使用 <code>--resume &lt;session-id&gt;</code> 时，它会收到恢复的 ID，与 hook 和 Bash 一致。使用 <code>--continue</code> 或不带显式 ID 的 <code>--resume</code> 时，它可能会改为收到初始启动时的 ID。可用于将脚本和外部工具与启动它们的 Claude Code 会话关联起来</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SHELL</code></td>
+<td style="text-align: left;">设置 Claude Code 运行 Bash 工具命令所用的 shell。接受 <code>bash</code> 或 <code>zsh</code> 二进制文件的路径，例如 <code>/opt/homebrew/bin/bash</code>。不支持 <code>fish</code> 等其他 shell。如果该值不是可用的 <code>bash</code> 或 <code>zsh</code> 路径，Claude Code 会忽略它并回退到自动检测。自动检测会在您的 <code>$SHELL</code> 指向 <code>bash</code> 或 <code>zsh</code> 时使用它，否则会在 <code>PATH</code> 和标准安装位置中选取找到的第一个可用的 <code>zsh</code>，其次是 <code>bash</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SHELL_PREFIX</code></td>
+<td style="text-align: left;">包装 Claude Code 所启动 shell 命令的命令前缀：Bash 工具调用、<a href="hooks.html">hook</a> 命令、<a href="statusline.html">状态栏</a>命令以及 stdio <a href="mcp.html">MCP 服务器</a>启动命令。PowerShell hook 和 exec 形式的 hook 运行时不带前缀。适用于日志记录或审计。设置像 <code>/path/to/logger.sh</code> 这样的纯可执行文件路径时，每个命令会以 <code>/path/to/logger.sh '&lt;command&gt;'</code> 的形式运行。包装器会在 <code>$1</code> 中以单个经 shell 引用的参数接收命令行，因此包装器必须使用 shell 重新求值 <code>$1</code>，例如 <code>exec bash -c "$1"</code>。将 <code>$1</code> 视为纯可执行文件路径会破坏传递 <code>npx -y &lt;package&gt;</code> 等参数的 stdio MCP 服务器。对于 Bash 工具调用，<code>$1</code> 包含 Claude Code 组装的完整 shell 调用（包括环境设置），而不仅仅是 Claude 运行的命令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SIMPLE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可使用最简系统提示词运行，并且仅提供 Bash、文件读取和文件编辑工具。来自 <code>--mcp-config</code> 的 MCP 工具仍然可用。禁用对 hook、skill、自定义命令、子代理、已安装插件、MCP 服务器、自动记忆和 CLAUDE.md 的自动发现。通过 <code>--add-dir</code> 传入的目录中的 skill 仍会加载。不会读取 OAuth 令牌和钥匙串凭据，因此 Anthropic 身份验证必须来自 <code>ANTHROPIC_API_KEY</code> 或 <code>--settings</code> 中的 <code>apiKeyHelper</code>。等同于传递 <a href="headless.html#start-faster-with-bare-mode"><code>--bare</code></a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT</code></td>
+<td style="text-align: left;">在 Claude Code 的完整系统提示词和带有简略工具描述的较短系统提示词之间进行选择。未设置时，Haiku 4.5、Sonnet 5、Opus 4.7 以及这些系列中更早的模型默认使用完整提示词，更新的模型则使用较短的提示词。设置为 <code>1</code> 可在任何模型上使用较短的提示词。设置为 <code>0</code>、<code>false</code>、<code>no</code> 或 <code>off</code> 可在任何模型上使用完整提示词，即使实验或服务器配置原本会选择较短的提示词。两种提示词都保留完整的工具集、hook、MCP 服务器和 CLAUDE.md 发现</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_ANTHROPIC_AWS_AUTH</code></td>
+<td style="text-align: left;">跳过 <a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 的客户端身份验证，适用于自行对请求进行签名的网关</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_AWS_CRED_CACHE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可关闭对从 AWS 默认凭据提供程序链解析出的凭据的进程内缓存，使 Claude Code 在每个 API 请求时都重新解析该链。关闭缓存后，基于 SSO 的配置文件会在每个请求时向 IAM Identity Center 请求凭据。请参阅<a href="amazon-bedrock.html#credential-caching-and-resolution-timeout">凭据缓存和解析超时</a>。需要 Claude Code v2.1.207 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_BEDROCK_AUTH</code></td>
+<td style="text-align: left;">跳过 Amazon Bedrock 的 AWS 身份验证（例如，使用 LLM 网关时）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可将失败的<a href="fast-mode.html#use-fast-mode-behind-proxies-and-llm-gateways">快速模式</a>可用性检查视为可用，适用于阻止该检查直接请求 <code>api.anthropic.com</code> 的网络。Claude Code 仍会遵循"disabled by your organization"响应</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_FAST_MODE_ORG_CHECK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可跳过客户端的<a href="fast-mode.html#use-fast-mode-behind-proxies-and-llm-gateways">快速模式</a>可用性检查，适用于拦截该检查请求而非拒绝它的代理。当您的组织禁用了快速模式时，API 仍会拒绝快速模式请求</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_FOUNDRY_AUTH</code></td>
+<td style="text-align: left;">跳过 Microsoft Foundry 的 Azure 身份验证，适用于注入自有 <code>Authorization</code> 标头的代理或网关。Claude Code 会在不带 Azure 凭据的情况下发送请求，并保留您提供的 <code>Authorization</code> 标头（例如通过 <code>ANTHROPIC_CUSTOM_HEADERS</code> 提供）。设置了 <code>ANTHROPIC_FOUNDRY_API_KEY</code> 或 <code>ANTHROPIC_FOUNDRY_AUTH_TOKEN</code> 时会被忽略。在 v2.1.203 之前，除非同时设置了 API 密钥，否则此变量会导致 Microsoft Foundry 客户端无法发送请求</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_MANTLE_AUTH</code></td>
+<td style="text-align: left;">跳过 Amazon Bedrock Mantle 的 AWS 身份验证（例如，使用 LLM 网关时）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_MODEL_ACCESS_MEMORY</code></td>
+<td style="text-align: left;"><a href="amazon-bedrock.html">Amazon Bedrock</a> 和 <a href="google-vertex-ai.html">Google Cloud's Agent Platform</a> 上的<a href="amazon-bedrock.html#startup-model-checks">启动模型检查</a>会在本机上记住它们发现您的账户无法调用的模型，最长保留一天。设置为 <code>1</code> 可关闭此记忆功能。需要 Claude Code v2.1.285 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_PROMPT_HISTORY</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可跳过将提示词历史和会话记录写入磁盘。设置此变量后启动的会话不会出现在 <code>--resume</code>、<code>--continue</code> 或上箭头历史中。适用于临时的脚本化会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SKIP_VERTEX_AUTH</code></td>
+<td style="text-align: left;">跳过 Google Cloud's Agent Platform 的 Google 身份验证（例如，使用 LLM 网关时）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_STARTUP_FAILURE_RESULTS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可让使用 <code>--output-format stream-json</code> 启动的会话，在原本仅以 stderr 输出结束的启动失败情况下，写入一条<a href="agent-sdk-typescript.html#startup_failure_reason">说明 Claude Code 拒绝启动原因的结果消息</a>。需要 Claude Code v2.1.274 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_STOP_HOOK_BLOCK_CAP</code></td>
+<td style="text-align: left;"><a href="hooks.html#stop">Stop</a> 或 <a href="hooks.html#subagentstop">SubagentStop</a> hook 可连续阻止轮次结束的最大次数，超过后 Claude Code 会覆盖它并强制结束该轮次（默认：8）。设置为 <code>0</code> 可禁用此上限。如果您的 hook 确实需要更多迭代才能完成，请调高此值</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SUBAGENT_MODEL</code></td>
+<td style="text-align: left;">未通过其他方式指定模型的<a href="sub-agents.html#choose-a-model">子代理</a>、<a href="agent-teams.html#specify-teammates-and-models">agent team</a> 队友以及<a href="workflows.html">工作流</a> Agent 所使用的默认模型。接受 <code>haiku</code> 等别名或完整模型名称。有两个来源优先于它：Claude 生成 Agent 时传递的模型，以及 Agent 定义中的 <code>model</code> 字段（包括 <code>inherit</code>）。要改变这一点，请设置 <a href="sub-agents.html#run-every-subagent-on-one-model"><code>CLAUDE_CODE_SUBAGENT_MODEL_FORCE</code></a>。完整顺序请参阅<a href="sub-agents.html#choose-a-model">选择模型</a>。将其设置为 <code>inherit</code> 与不设置相同。在 v2.1.251 之前，此变量会同时覆盖每次调用的模型和定义中的 <code>model</code> 字段</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SUBAGENT_MODEL_FORCE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可将同一个模型强制应用于子代理、队友和工作流 Agent。<a href="sub-agents.html#run-every-subagent-on-one-model">在同一个模型上运行所有子代理</a>说明了具体是哪个模型。需要 Claude Code v2.1.257 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL</code></td>
+<td style="text-align: left;">设置为 <code>5m</code> 或 <code>1h</code>（Claude Code 仅接受这两个值），以选择主对话之外请求的<a href="prompt-caching.html#cache-lifetime">提示缓存 TTL</a>，例如<a href="sub-agents.html">子代理</a>、工作流和后台工作。优先于 <code>subagentPromptCacheTtl</code> 设置和 <code>ENABLE_PROMPT_CACHING_1H</code>，而 <code>FORCE_PROMPT_CACHING_5M</code> 会覆盖它。API 对 1 小时缓存写入按更高费率计费。需要 Claude Code v2.1.242 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可从 Claude Code 启动的子进程（例如 Bash 命令、hook 和 stdio MCP 服务器）的环境中剥离凭据。清理会根据变量名或变量值识别凭据，并保留 GitHub 令牌和代理设置。请参阅<a href="#what-the-subprocess-environment-scrub-removes">子进程环境清理会移除哪些内容</a>。配置 <code>allowed_non_write_users</code> 时，<code>claude-code-action</code> 会自动设置此变量</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SYNC_PLUGIN_INSTALL</code></td>
+<td style="text-align: left;">在非交互模式（<code>-p</code> 标志）下设置为 <code>1</code>，可在第一次查询之前等待插件安装完成。否则，插件会在后台安装，可能在第一轮中不可用。与 <code>CLAUDE_CODE_SYNC_PLUGIN_INSTALL_TIMEOUT_MS</code> 结合使用可限制等待时间</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SYNC_PLUGIN_INSTALL_TIMEOUT_MS</code></td>
+<td style="text-align: left;">同步插件安装的超时时间（毫秒）。超时后，Claude Code 会在没有插件的情况下继续并记录错误。没有默认值：如果不设置此变量，同步安装会一直等待直到完成</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SYNC_SKILLS</code></td>
+<td style="text-align: left;">在使用 <code>-p</code> 标志的非交互模式下设置为 <code>1</code>，可让 Claude Code 在该次运行中下载为您的 claude.ai 账户启用的 skill，并在运行第一次查询之前等待其列表，最长等待 <code>CLAUDE_CODE_SYNC_SKILLS_WAIT_TIMEOUT_MS</code>。需要 claude.ai 身份验证。使用 claude.ai 账户登录的终端会话无需此变量即可<a href="skills.html#where-synced-skills-load">同步这些 skill</a>，因此仅当某次 <code>-p</code> 运行需要在第一次查询时就使用您当前的 skill 时才设置它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SYNC_SKILLS_INSTALL_TIMEOUT_MS</code></td>
+<td style="text-align: left;">当基于 <a href="agent-sdk-typescript.html#query-object">Agent SDK</a> 构建的应用重新加载 skill 时，会话中途运行的 skill 重新同步的超时时间（毫秒，默认：30000）。超时后，重新加载会使用已到达的 skill 继续，其余下载在后台完成</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SYNC_SKILLS_WAIT_TIMEOUT_MS</code></td>
+<td style="text-align: left;">设置 <code>CLAUDE_CODE_SYNC_SKILLS</code> 时，第一次查询等待初始 skill 列表的超时时间（毫秒，默认：5000）。超时后，第一次查询会使用已到达的 skill 运行。无论哪种情况，下载都会在后台完成，并且 Claude 在调用某个 skill 时会等待该 skill 下载完成</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_SYNTAX_HIGHLIGHT</code></td>
+<td style="text-align: left;">设置为 <code>false</code> 可禁用 diff 输出中的语法高亮。适用于颜色干扰终端设置的情况。要同时禁用代码块和文件预览中的高亮，请使用 <a href="settings-reference.html#syntaxhighlightingdisabled"><code>syntaxHighlightingDisabled</code></a> 设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_TASK_LIST_ID</code></td>
+<td style="text-align: left;">在多个会话之间共享任务列表。在<a href="tools-reference.html#task-tool-availability">具备 Task 工具的会话</a>中，在多个 Claude Code 实例中设置相同的 ID，即可围绕共享任务列表进行协调。请参阅<a href="interactive-mode.html#task-list">任务列表</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_TMPDIR</code></td>
+<td style="text-align: left;">覆盖用于内部临时文件的临时目录。Claude Code 在 Unix 上会向此路径追加 <code>/claude-{uid}/</code>，在 Windows 上追加 <code>/claude/</code>。默认：macOS 上为 <code>/tmp</code>，Linux 和 Windows 上为 <code>os.tmpdir()</code>。在 macOS 和 Linux 上，当您的覆盖值是较长的路径时，<a href="sandboxing.html">沙箱化</a>的 Bash 子进程会收到位于系统默认目录下的较短备用 <code>$TMPDIR</code>，因为某些工具在临时路径过长时会失败。未沙箱化的 Bash 命令会在您的 shell 设置了 <code>$TMPDIR</code> 时继承它。在原生 Windows 上，当您的 shell 未设置 <code>$TMPDIR</code> 时，引用 <code>$TMPDIR</code> 的 Bash 命令会收到您的覆盖值；如果您未设置覆盖值，则收到 <code>%TEMP%</code>。Claude Code 自身的临时文件始终使用您的覆盖值。请在 shell、用户设置或托管设置中设置。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目设置和本地设置</a>中会被忽略</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_TMUX_TRUECOLOR</code></td>
+<td style="text-align: left;">设置为任意非空值（例如 <code>1</code>）可在 tmux 中允许 24 位真彩色输出。<strong>设置为 <code>0</code> 或 <code>false</code> 仍会允许真彩色</strong>，这与大多数开/关变量不同；取消设置该变量可恢复 256 色限制。默认情况下，当设置了 <code>$TMUX</code> 时，Claude Code 会限制为 256 色，因为除非经过配置，否则 tmux 不会透传真彩色转义序列。请在 <code>~/.tmux.conf</code> 中添加 <code>set -ga terminal-overrides ',*:Tc'</code> 之后再设置此变量。有关其他 tmux 设置，请参阅<a href="terminal-config.html">终端配置</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE</code></td>
+<td style="text-align: left;">在 Linux 和 WSL 上，设置为以逗号分隔的进程类型列表，例如 <code>mcp</code> 或 <code>lsp</code>，Claude Code 会将这些类型的进程<a href="tools-reference.html#memory-limit-on-linux-and-wsl">排除在工具内存上限之外</a>。设置为 <code>none</code> 可对所有类型施加上限，设置为 <code>all-new</code> 则仅对 Bash、PowerShell 和 Monitor 工具命令施加上限。无论您列出什么，Claude Code 都会让 Bash、PowerShell 和 Monitor 工具命令受上限约束。需要 Claude Code v2.1.246 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_TOOL_MEMORY_LIMIT</code></td>
+<td style="text-align: left;">在 Linux 和 WSL 上，设置为 <code>4G</code> 等大小可<a href="tools-reference.html#memory-limit-on-linux-and-wsl">限制 Bash 和 PowerShell 工具命令可使用的内存</a>，在 v2.1.246 或更高版本中还包括 Monitor 工具命令。请以纯数字书写大小，单独使用表示字节数，或带上 <code>K</code>、<code>M</code>、<code>G</code> 或 <code>T</code> 后缀。设置为 <code>0</code> 或 <code>off</code> 可关闭上限。一旦 Claude Code 启动的第一个进程开启或关闭了上限，更改后的值将在您下次启动 <code>claude</code> 时生效。需要 Claude Code v2.1.233 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_TRANSCRIPT_LOCAL_GC</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可限制长时间运行的 <code>-p</code> 或 Agent SDK 会话的<a href="sessions.html#where-transcripts-are-stored">会话记录文件</a>的增长大小。每次压缩后，一旦文件大于 5 MB，Claude Code 会删除该次压缩之前的历史记录。在 v2.1.296 或更高版本中，如果删除这些历史记录只能让文件缩小不到 10%，则文件保持不变。无论文件是否被裁剪，恢复会话都会还原相同的对话。请在启动 Claude Code 的环境中设置此变量，因为设置中的 <code>env</code> 块无法启用它。需要 Claude Code v2.1.287 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS</code></td>
+<td style="text-align: left;">Claude Code 取消其转发给远程客户端（例如 <a href="remote-control.html">Remote Control</a> 或 SDK 主机）的对话框，或取消<a href="cross-session-messaging.html#control-inbound-messages">被暂扣的跨会话消息</a>的批准对话框之前的截止时间（毫秒）；权限提示和 <code>AskUserQuestion</code> 问题使用各自的流程，不受此变量控制。在 Claude Code v2.1.236 或更高版本中，它还会限制可能处于无人值守运行状态的会话中途出现的 <a href="model-config.html#fable-and-usage-credits">Fable 使用额度同意提示</a>。<a href="cross-session-messaging.html#control-inbound-messages">控制入站消息</a>和<a href="cross-session-messaging.html#non-interactive-sessions">非交互会话</a>介绍了完整的暂扣消息过期规则，包括截止时间不适用的情况。覆盖 <a href="settings-reference.html#dialogexpiry"><code>dialogExpiry</code></a> 设置。<code>0</code> 或负值会禁用截止时间。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中被忽略</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_USE_ANTHROPIC_AWS</code></td>
+<td style="text-align: left;">使用 <a href="claude-platform-on-aws.html">Claude Platform on AWS</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_USE_BEDROCK</code></td>
+<td style="text-align: left;">使用 <a href="amazon-bedrock.html">Amazon Bedrock</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_USE_FOUNDRY</code></td>
+<td style="text-align: left;">使用 <a href="microsoft-foundry.html">Microsoft Foundry</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_USE_MANTLE</code></td>
+<td style="text-align: left;">使用 Amazon Bedrock <a href="amazon-bedrock.html#use-the-mantle-endpoint">Mantle 端点</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_USE_POWERSHELL_TOOL</code></td>
+<td style="text-align: left;">控制 PowerShell 工具。在未安装 Git Bash 的 Windows 上，该工具会自动启用；设置为 <code>0</code> 可将其禁用。在安装了 Git Bash 的 Windows 上，该工具对 claude.ai 和 Console 账户默认开启；设置为 <code>1</code> 可在 Amazon Bedrock、Google Cloud's Agent Platform 和 Microsoft Foundry 会话中启用它，设置为 <code>0</code> 可将其关闭。在 Linux、macOS 和 WSL 上，设置为 <code>1</code> 可启用它，这要求 <code>PATH</code> 中有 <code>pwsh</code>。在 Windows 上启用后，Claude 可以原生运行 PowerShell 命令，而无需通过 Git Bash 转发。请参阅 <a href="tools-reference.html#powershell-tool">PowerShell 工具</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_USE_VERTEX</code></td>
+<td style="text-align: left;">使用 <a href="google-vertex-ai.html">Google Cloud's Agent Platform</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_WARN_DISK_FREE_GIB</code></td>
+<td style="text-align: left;">设置为 GiB 整数（例如 <code>10</code>），当工作目录所在文件系统的可用空间低于该值时，Claude Code 会警告 Claude。该警告是一条说明剩余可用空间的系统提醒。当变量未设置、为 <code>0</code> 或不是纯数字时，该提醒处于关闭状态。请在启动 Claude Code 的环境中设置它，因为 Claude Code 会忽略通过设置中的 <code>env</code> 块传入的副本。需要 Claude Code v2.1.304 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_WARN_MEMORY_FREE_GIB</code></td>
+<td style="text-align: left;">在 Linux 和 WSL 上，设置为 GiB 整数（例如 <code>4</code>），当可用内存低于该值时，Claude Code 会警告 Claude。该警告是一条说明可用内存量的系统提醒。当变量未设置、为 <code>0</code> 或不是纯数字时，该提醒处于关闭状态。请在启动 Claude Code 的环境中设置它，因为 Claude Code 会忽略通过设置中的 <code>env</code> 块传入的副本。需要 Claude Code v2.1.304 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS</code></td>
+<td style="text-align: left;">设置为 <a href="tools-reference.html#webfetch-tool-behavior">WebFetch</a> 缓存每个已获取 URL 响应的毫秒数。默认值为 <code>900000</code>，即 15 分钟。仅接受纯数字；<code>0</code>、小数或任何其他写法都会保持默认值。Claude Code 每次启动时读取一次该值，因此在设置的 <code>env</code> 块中所做的更改会在您下次启动 <code>claude</code> 时生效。需要 Claude Code v2.1.233 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_WEBFETCH_DEADLINE_MS</code></td>
+<td style="text-align: left;"><a href="tools-reference.html#webfetch-tool-behavior">WebFetch</a> 等待页面下载完成（包括其跟随的任何重定向）的时间上限（毫秒）。到时仍未完成的下载会以截止时间错误失败。默认值为 <code>300000</code>，即五分钟。设置为 <code>0</code> 可取消该限制。仅接受纯数字；小数或任何其他写法都会保持默认值。需要 Claude Code v2.1.268 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR</code></td>
+<td style="text-align: left;">会话的 <a href="tools-reference.html#session-search-limit">WebSearch 限制</a>的补充速率，单位为每小时调用次数。在交互式终端会话中默认值为 <code>100</code>。在<a href="headless.html">非交互</a>会话中默认值为 <code>0</code>，即关闭补充。仅接受纯数字；任何其他写法都视为未设置。需要 Claude Code v2.1.290 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_WORKER_CHECKIN_SCHEDULE</code></td>
+<td style="text-align: left;">当 <code>CLAUDE_AUTO_BACKGROUND_TASKS</code> 设置为 <code>1</code> 时，Claude Code 每次提醒 Claude 检查仍在运行的<a href="sub-agents.html#run-subagents-in-foreground-or-background">后台子代理</a>之前等待的时长。接受一个或多个以逗号分隔的等待时间，单位为整秒，范围为 <code>1</code> 到 <code>86400</code>，例如 <code>600</code> 或 <code>600,1800,3600</code>。每个值是下一次提醒之前的等待时间，最后一个值会重复使用。仅接受纯数字；任何其他值或写法都视为未设置。未设置时不会有提醒。需要 Claude Code v2.1.283 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS</code></td>
+<td style="text-align: left;">单次<a href="workflows.html">工作流</a>运行同时执行的 Agent 数量，范围为 <code>1</code> 到 <code>256</code>。默认情况下，一次运行最多同时执行 16 个 Agent，当 Claude Code 可用的 CPU 较少时数量会更少；排队的 <code>agent()</code> 调用会等待空闲槽位。每个正在运行的 Agent 的会话记录都保存在 Claude Code 的内存中，因此值越高，内存使用量越大。仅接受纯数字；超出范围的值和其他写法都会保持默认值。需要 Claude Code v2.1.269 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_WORKFLOW_PREFIX_STAGGER_MS</code></td>
+<td style="text-align: left;"><a href="workflows.html">工作流</a> Agent 在发送自己的第一个请求之前，等待具有相同前缀的同级 Agent 的第一个响应开始的时间上限（毫秒）。当扇出启动多个共享同一<a href="workflows.html#prompt-caching-in-a-fan-out">提示缓存前缀</a>的 Agent 时，Claude Code 会让除第一个 Agent 之外的所有 Agent 最多等待这么长时间，以便其余 Agent 读取已缓存的前缀，而不是各自在未缓存的情况下处理它。默认值为 <code>5000</code>。设置为 <code>0</code> 可禁用等待。设置了 <code>DISABLE_PROMPT_CACHING</code> 时，Agent 从不等待。需要 Claude Code v2.1.229 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CODE_YOU_SHOULD_KNOW_DEBUG</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在输入框上方为 <a href="interactive-mode.html#you-should-know-suggestions">You should know mod</a> 在本会话中进行的最近三次检查各显示一行。用于在没有出现任何备注时确认该 mod 正在进行检查。需要 Claude Code v2.1.287 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CONFIG_DIR</code></td>
+<td style="text-align: left;">覆盖配置目录（默认：<code>~/.claude</code>）。所有设置、会话历史和插件都存储在此路径下。关于凭据，请参阅 <a href="authentication.html#credential-management">Claude Code 存储凭据的位置</a>。适用于同时运行多个账户：例如 <code>alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'</code>。请在 shell、用户设置或托管设置中设置它。在设置文件中，请写入<a href="#in-settings-files">绝对路径</a>。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中被忽略</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_EFFORT</code></td>
+<td style="text-align: left;">在 Bash 工具子进程和 hook 命令中自动设置为子进程启动时的 <a href="model-config.html#adjust-effort-level">effort 级别</a>设置：<code>low</code>、<code>medium</code>、<code>high</code>、<code>xhigh</code> 或 <code>max</code>。与传递给 <a href="hooks.html">hook</a> 的 <code>effort.level</code> 字段一致。仅在当前模型支持 effort 参数时设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_ENABLE_BYTE_WATCHDOG</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可强制启用字节级流式空闲看门狗，设置为 <code>0</code> 可强制禁用它。<code>0</code> 还会在运行<a href="network-config.html#streaming-idle-watchdogs">首字节截止时间</a>的连接上关闭该截止时间。未设置时，该看门狗默认在直连 Anthropic API 和 <a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 的连接上启用，并对通过 <code>ANTHROPIC_BASE_URL</code> 或 <code>ANTHROPIC_AWS_BASE_URL</code> 访问的<a href="gateways.html">网关</a>连接上的流式响应启用；在 v2.1.222 之前，它不会在这些网关连接上运行，因此即使 keep-alive ping 持续到达，事件级看门狗也可能在那里报告停滞。关于超时时间以及各计时器如何相互作用，请参阅<a href="network-config.html#streaming-idle-watchdogs">流式空闲看门狗</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 Amazon Bedrock <code>vnd.amazon.eventstream</code> 响应上启用字节级流式空闲看门狗，这也会在 Bedrock 流式请求上启用<a href="network-config.html#streaming-idle-watchdogs">首字节截止时间</a>。默认关闭。使用 <code>CLAUDE_STREAM_IDLE_TIMEOUT_MS</code> 配置超时时间</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_ENABLE_STREAM_WATCHDOG</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可强制禁用事件级流式空闲看门狗，设置为 <code>1</code> 可强制启用它。未设置时，该看门狗对所有提供商默认开启。在 v2.1.196 之前，未设置时的默认值在直连 Anthropic API 上由服务器控制，在其他提供商上为关闭。使用 <code>CLAUDE_STREAM_IDLE_TIMEOUT_MS</code> 配置超时时间；关于与其同时运行的其他停滞计时器，请参阅<a href="network-config.html#streaming-idle-watchdogs">流式空闲看门狗</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_ENV_FILE</code></td>
+<td style="text-align: left;">一个 shell 脚本的路径，Claude Code 会在每个 Bash 命令之前于同一 shell 进程中运行其内容，因此文件中的 export 对该命令可见。用于在命令之间保持 virtualenv 或 conda 的激活状态。在 v2.1.296 或更高版本中，PowerShell 命令也会在 <a href="hooks.html#persisted-variables-in-powershell-commands">PowerShell 命令中的持久化变量</a>所述的条件下接收其变量。也会由 <a href="hooks.html#persist-environment-variables">SessionStart</a>、<a href="hooks.html#setup">Setup</a>、<a href="hooks.html#cwdchanged">CwdChanged</a> 和 <a href="hooks.html#filechanged">FileChanged</a> hook 动态填充</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_JOB_DIR</code></td>
+<td style="text-align: left;">由 Claude Code 在每个<a href="agent-view.html">后台会话</a>中设置为该会话的 <code>~/.claude/jobs/&lt;id&gt;</code> 目录。会话运行的 shell 命令会继承它。请将临时文件写入 <a href="agent-view.html#where-state-is-stored"><code>$CLAUDE_JOB_DIR/tmp</code></a>。Claude 在该位置的 <code>Write</code> 和 <code>Edit</code> 调用不会提示请求权限，且该目录会在会话被删除时一并移除</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_PID</code></td>
+<td style="text-align: left;">Claude Code 会在其生成的子进程（Bash 和 PowerShell 工具命令以及 hook 命令）中将此变量设置为自身的进程 ID。在 Linux 上，Bash 工具的 shell 集成会使用它来拒绝会匹配 Claude Code 进程本身的 <code>pkill</code> 模式；请参阅<a href="errors.html#pkill-pattern-matches-the-claude-code-process">错误参考</a>。您可以在自己的脚本中读取它，以有意识地识别父 Claude Code 进程或向其发送信号。需要 Claude Code v2.1.214 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_REMOTE_CONTROL_SESSION_NAME_PREFIX</code></td>
+<td style="text-align: left;">未提供显式名称时，自动生成的 <a href="remote-control.html">Remote Control</a> 会话名称的前缀。默认为您机器的主机名，生成的名称类似 <code>myhost-graceful-unicorn</code>。<code>--remote-control-session-name-prefix</code> CLI 标志可为单次调用设置相同的值</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_STREAM_FIRST_BYTE_TIMEOUT_MS</code></td>
+<td style="text-align: left;">在运行<a href="network-config.html#streaming-idle-watchdogs">首字节截止时间</a>的连接上，流式请求第一个响应字节的截止时间（毫秒）。关于 Claude Code 如何限定该值、为较大请求体额外增加的时间，以及未设置此变量时如何选择截止时间，请参阅 <a href="errors.html#no-response-from-api">No response from API</a>。需要 Claude Code v2.1.242 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_STREAM_IDLE_TIMEOUT_MS</code></td>
+<td style="text-align: left;">事件级和字节级流式空闲看门狗关闭停滞连接之前的超时时间（毫秒）。显式设置此变量时，最小值为 <code>300000</code>（5 分钟）；较低的值会被静默提升至该值，以容纳扩展思考停顿和代理缓冲，且字节级看门狗会将该值上限设为 30 分钟。对于字节级看门狗，<code>CLAUDE_BYTE_STREAM_IDLE_TIMEOUT_MS</code> 优先于此变量。关于各看门狗在未设置时的默认值，请参阅<a href="network-config.html#streaming-idle-watchdogs">流式空闲看门狗</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_SUBAGENT_BG_SHELL_MAX_MS</code></td>
+<td style="text-align: left;">已在 v2.1.260 中移除，现在不起任何作用。此前用于限制<a href="sub-agents.html">子代理</a>启动的<a href="interactive-mode.html#background-bash-commands">后台 shell 命令</a>可运行的时长（毫秒），默认为 60 分钟。请参阅<a href="tools-reference.html#background-commands">后台命令生命周期规则</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DEBUG</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可启用调试模式，等同于使用 <a href="cli-reference.html#cli-flags"><code>--debug</code></a> 启动。调试日志会写入 <code>~/.claude/debug/&lt;session-id&gt;.txt</code>，或写入 <code>CLAUDE_CODE_DEBUG_LOGS_DIR</code> 设置的路径。只有真值 <code>1</code>、<code>true</code>、<code>yes</code> 和 <code>on</code> 才会启用调试模式，因此为其他工具设置的命名空间模式（如 <code>DEBUG=express:*</code>）不会触发它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_AUTOUPDATER</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用自动后台更新。手动 <code>claude update</code> 仍然有效。使用 <code>DISABLE_UPDATES</code> 可同时阻止两者</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_AUTO_COMPACT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用接近上下文限制时的自动压缩，以及<a href="settings-reference.html#idlecompaction">空闲压缩</a>。手动 <code>/compact</code> 命令仍然可用。适用于您希望明确控制何时进行压缩的情况。覆盖 <a href="settings-reference.html#autocompactenabled"><code>autoCompactEnabled</code></a> 设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_COMPACT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用所有压缩：包括自动压缩和手动 <code>/compact</code> 命令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_COST_WARNINGS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用费用警告消息</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_DOCTOR_COMMAND</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可隐藏 <a href="commands.html#all-commands"><code>/doctor</code></a> 设置检查 skill 及其 <code>/checkup</code> 别名。适用于不应让用户在会话中运行设置诊断的托管部署。不影响 <code>claude doctor</code> 终端命令。在 v2.1.205 之前，此变量会隐藏 <code>/doctor</code> 诊断界面命令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_ERROR_REPORTING</code></td>
+<td style="text-align: left;">设置为任意非空值（例如 <code>1</code>）可选择退出错误报告。与大多数开/关变量不同，<strong>将其设置为 <code>0</code> 或 <code>false</code> 仍会选择退出</strong>；取消设置该变量即可重新开启错误报告</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_EXTRA_USAGE_COMMAND</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可隐藏允许用户购买超出速率限制的额外用量的 <code>/usage-credits</code> 命令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_FEEDBACK_COMMAND</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用 <code>/feedback</code> 命令和 <a href="tools-reference.html#sendfeedback-tool-behavior">Claude 起草的反馈</a>。同时还会禁用通过同一路径报告的 <code>/bug</code> 和 <code>/share</code>；在 v2.1.212 之前，它们是 <code>/feedback</code> 的别名，因此该命令在所有名称下都会被禁用。也接受旧名称 <code>DISABLE_BUG_COMMAND</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_GROWTHBOOK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 或 <code>true</code> 可禁用功能标志获取，并对每个标志使用代码中的默认值。这会使 <a href="remote-control.html#requirements">Remote Control</a> 以及其他<a href="#features-that-need-feature-flag-fetching">需要获取功能标志的功能</a>不可用。设置为 <code>0</code> 或 <code>false</code> 会保持获取开启。除非同时设置了 <code>DISABLE_TELEMETRY</code>，否则遥测事件日志记录保持开启</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_INSTALLATION_CHECKS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可禁用安装警告。仅在手动管理安装位置时使用，因为这可能会掩盖标准安装中的问题</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_INSTALL_GITHUB_APP_COMMAND</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可隐藏 <code>/install-github-app</code> 命令。使用第三方提供商（Amazon Bedrock、Google Cloud's Agent Platform 或 Microsoft Foundry）时已默认隐藏</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_INTERLEAVED_THINKING</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止发送 interleaved-thinking beta 标头。适用于您的 LLM 网关或提供商不支持<a href="https://platform.claude.com/docs/en/build-with-claude/extended-thinking#interleaved-thinking" target="_blank" rel="noopener">交错思考</a>的情况</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_LOGIN_COMMAND</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可隐藏 <code>/login</code> 命令。适用于身份验证通过 API 密钥或 <code>apiKeyHelper</code> 在外部处理的情况</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_LOGOUT_COMMAND</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可隐藏 <code>/logout</code> 命令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_PROMPT_CACHING</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可为所有模型禁用<a href="prompt-caching.html#disable-prompt-caching">提示缓存</a>（优先于按模型的设置）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_PROMPT_CACHING_FABLE</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可为 Fable 模型禁用提示缓存</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_PROMPT_CACHING_HAIKU</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可为<a href="prompt-caching.html#disable-prompt-caching">默认 Haiku 模型</a>禁用提示缓存，无论其在何处运行</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_PROMPT_CACHING_OPUS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可为<a href="prompt-caching.html#disable-prompt-caching">默认 Opus 模型</a>禁用提示缓存</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_PROMPT_CACHING_SONNET</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可为<a href="prompt-caching.html#disable-prompt-caching">默认 Sonnet 模型</a>禁用提示缓存</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_TELEMETRY</code></td>
+<td style="text-align: left;">设置为任意非空值（例如 <code>1</code>）可选择退出遥测。与大多数开/关变量不同，<strong>将其设置为 <code>0</code> 或 <code>false</code> 仍会选择退出</strong>；取消设置该变量即可重新开启遥测。遥测事件不包含代码、文件路径或 Bash 命令等用户数据。同时还会禁用<a href="#features-that-need-feature-flag-fetching">功能标志获取</a>。请参阅<a href="managed-settings.html#turn-telemetry-off-for-your-organization">为您的组织关闭遥测</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_UPDATES</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可阻止所有更新，包括手动 <code>claude update</code> 和 <code>claude install</code>。比 <code>DISABLE_AUTOUPDATER</code> 更严格。适用于通过您自己的渠道分发 Claude Code 且用户不应自行更新的情况</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DISABLE_UPGRADE_COMMAND</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可隐藏 <code>/upgrade</code> 命令</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DO_NOT_TRACK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可选择退出遥测，效果与 <code>DISABLE_TELEMETRY</code> 相同，包括对<a href="#features-that-need-feature-flag-fetching">功能标志获取</a>的影响。Claude Code 将此变量作为标准布尔值读取，因此 <code>0</code> 会保持遥测开启；Claude Code 遵循它，是因为它是许多开发者 CLI 认可的跨工具约定</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ENABLE_BETA_TRACING_DETAILED</code></td>
+<td style="text-align: left;">设置为 <code>1</code>，并将 <code>BETA_TRACING_ENDPOINT</code> 设置为您的 OTLP/HTTP 收集器端点，即可开启<a href="monitoring-usage.html#traces-beta">详细 beta 追踪</a>，它会添加包含内容的 span 属性以及 <code>claude_code.hook</code> span。交互式 CLI 会话还要求您的组织已被列入该 beta 的允许名单。这两个变量在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中都会被忽略</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ENABLE_CLAUDEAI_MCP_SERVERS</code></td>
+<td style="text-align: left;">设置为 <code>false</code> 可阻止 Claude Code 获取 <a href="mcp.html#use-mcp-servers-from-claude-ai">claude.ai MCP 服务器</a>。对已登录用户默认启用。如需按项目或按组织禁用，请改为在设置中设置 <a href="settings-reference.html#disableclaudeaiconnectors"><code>disableClaudeAiConnectors</code></a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ENABLE_PROMPT_CACHING_1H</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可请求 1 小时的<a href="prompt-caching.html#cache-lifetime">提示缓存 TTL</a>，而不是默认的 5 分钟。适用于 API 密钥、<a href="amazon-bedrock.html">Amazon Bedrock</a>、<a href="google-vertex-ai.html">Google Cloud's Agent Platform</a>、<a href="microsoft-foundry.html">Microsoft Foundry</a> 和 <a href="claude-platform-on-aws.html">Claude Platform on AWS</a> 用户。对于在所含用量范围内的订阅用户，Claude Code 会在<a href="prompt-caching.html#which-ttl-each-request-gets">主对话</a>上自动请求 1 小时 TTL。正在消耗<a href="https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans" target="_blank" rel="noopener">使用额度</a>的订阅用户可以设置此变量以保持 1 小时 TTL。1 小时缓存写入按更高费率计费。若要分别为主对话和主对话之外的请求选择 TTL，请使用 <code>CLAUDE_CODE_PROMPT_CACHE_TTL</code> 和 <code>CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL</code>，它们优先于此变量</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ENABLE_PROMPT_CACHING_1H_BEDROCK</code></td>
+<td style="text-align: left;">已弃用。请改用 <code>ENABLE_PROMPT_CACHING_1H</code>。对 <a href="claude-apps-gateway.html">Claude apps gateway</a> 会话无效，即使网关路由到 Amazon Bedrock 也是如此</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ENABLE_TOOL_SEARCH</code></td>
+<td style="text-align: left;">控制 <a href="mcp.html#scale-with-mcp-tool-search">MCP 工具搜索</a>。未设置或为 <code>true</code> 时会延迟加载 MCP 工具，但<a href="mcp.html#configure-tool-search">保持工具搜索关闭的情况</a>除外。<code>auto</code> 会在工具定义达到上下文窗口的 10% 时开启工具搜索。<code>auto:N</code> 设置自定义阈值，例如 <code>auto:5</code> 表示 5%。<code>false</code> 会预先加载所有工具。如果网关拒绝工具搜索，请参阅<a href="mcp.html#tool-search-through-a-gateway">通过 LLM 网关使用工具搜索</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>FORCE_AUTOUPDATE_PLUGINS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在主自动更新程序已通过 <code>DISABLE_AUTOUPDATER</code> 禁用时仍强制插件自动更新</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>FORCE_HYPERLINK</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在您的终端支持可点击的 OSC 8 超链接但未被自动检测到时启用它们，设置为 <code>0</code> 可禁用它们。未设置时，Claude Code 仅在检测到终端支持时启用超链接。Claude Code 将此值解析为数字而非布尔值，因此 <code>false</code>、<code>no</code> 或 <code>off</code> 之类的值会启用超链接，而不是禁用它们。即使 Claude Code 无法检测到终端支持（例如通过 SSH 时），页脚的 <a href="interactive-mode.html#pr-review-status">PR 或合并请求徽章</a>也会渲染为超链接。设置为 <code>0</code> 可将该徽章渲染为纯文本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>FORCE_PROMPT_CACHING_5M</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可强制使用 5 分钟的提示缓存 TTL，即使原本会应用 1 小时 TTL。覆盖 <code>CLAUDE_CODE_PROMPT_CACHE_TTL</code>、<code>CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL</code>、<code>ENABLE_PROMPT_CACHING_1H</code> 以及 <code>promptCacheTtl</code> 和 <code>subagentPromptCacheTtl</code> 设置</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>HTTP_PROXY</code></td>
+<td style="text-align: left;">为网络连接指定 HTTP 代理服务器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>HTTPS_PROXY</code></td>
+<td style="text-align: left;">为网络连接指定 HTTPS 代理服务器</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>IS_DEMO</code></td>
+<td style="text-align: left;">设置为任意非空值（例如 <code>1</code>）可启用演示模式：在标题栏和 <code>/status</code> 输出中隐藏您的电子邮件和组织名称，并跳过新手引导。与大多数开/关变量不同，<strong>将其设置为 <code>0</code> 或 <code>false</code> 仍会启用演示模式</strong>；取消设置该变量即可将其关闭。适用于直播或录制会话</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MAX_MCP_OUTPUT_TOKENS</code></td>
+<td style="text-align: left;">MCP 工具响应中允许的最大 token 数（默认：25000）。当输出超过 10,000 个 token 时，Claude Code 会显示警告。声明了 <a href="mcp.html#raise-the-limit-for-a-specific-tool"><code>anthropic/maxResultSizeChars</code></a> 的工具会改为对文本内容使用该字符限制，但这些工具返回的图像内容仍受此变量约束。对于没有该注解的工具，超过 50,000 个字符的成功文本结果无论此变量如何设置都会被<a href="mcp.html#mcp-output-limits-and-warnings">保存到文件</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MAX_STRUCTURED_OUTPUT_RETRIES</code></td>
+<td style="text-align: left;">在使用 <code>-p</code> 标志的非交互模式下，模型响应未能通过 <a href="cli-reference.html#cli-flags"><code>--json-schema</code></a> 验证时，Claude Code 允许的尝试次数；达到该次数仍未得到有效输出时，运行失败。当<a href="workflows.html">工作流</a>子代理的结构化输出验证失败时，同样适用此上限。默认为 5，即一次首次尝试加四次重试</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MAX_THINKING_TOKENS</code></td>
+<td style="text-align: left;"><a href="https://platform.claude.com/docs/en/build-with-claude/extended-thinking" target="_blank" rel="noopener">扩展思考</a>的固定 token 预算。Claude Code 将其上限设为比请求的最大输出 token 数少一个 token，且从不低于 1,024。关于该限制如何设置，请参阅 <code>CLAUDE_CODE_MAX_OUTPUT_TOKENS</code>。未设置且思考已启用时，支持<a href="model-config.html#adjust-effort-level">自适应推理</a>的模型会自行选择思考深度，其他模型则使用该上限。在 Anthropic API 上设置为 <code>0</code> 可禁用思考，但 Opus 5.5、Sonnet 5.5、Haiku 5.5 和 Fable 模型除外，这些模型无法关闭思考。在<a href="third-party-integrations.html">第三方提供商</a>上，<code>0</code> 会改为省略 <code>thinking</code> 参数。在 Anthropic API 上关闭思考时，对于 Claude Code 已知<a href="errors.html#effort-isnt-available-with-thinking-turned-off">不接受该组合</a>的模型（例如 Opus 5），Claude Code 会发送 effort <code>high</code> 而不是更高的级别。对于正值，Claude Code 在自适应推理模型上会忽略该数值本身，除非 <code>CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING</code> 关闭了自适应推理</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_CLIENT_SECRET</code></td>
+<td style="text-align: left;">用于需要<a href="mcp.html#use-pre-configured-oauth-credentials">预配置凭据</a>的 MCP 服务器的 OAuth 客户端密钥。可避免在使用 <code>--client-secret</code> 添加服务器时出现交互式提示</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_CONNECTION_NONBLOCKING</code></td>
+<td style="text-align: left;">控制启动时是否在第一个查询之前等待 MCP 服务器连接。MCP 启动默认是非阻塞的：服务器在后台连接，其工具在连接完成后即可使用。设置为 <code>0</code> 可让 Claude Code 在第一个查询之前等待服务器连接。配置了 <a href="mcp.html#exempt-a-server-from-deferral"><code>alwaysLoad: true</code></a> 的服务器无论如何仍会让启动等待（从<a href="mcp.html#server-status-detail">发现缓存</a>提供时除外），因为构建第一个提示词时必须存在其工具。在未使用 <code>--input-format stream-json</code> 的非交互模式（<code>-p</code>）下，无论此变量如何设置，Claude Code 也会在第一轮之前等待仍处于待定状态的服务器。当您显式传入 <a href="cli-reference.html#cli-flags"><code>--mcp-config</code></a> 时，等待的截止时间更长；关于已缓存服务器的例外情况，请参阅该标志的条目</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_CONNECT_TIMEOUT_MS</code></td>
+<td style="text-align: left;">阻塞式 MCP 启动在为工具列表创建快照之前等待连接批次的时长（毫秒，默认：5000）。在 <code>MCP_CONNECTION_NONBLOCKING=0</code> 时或对标记为 <a href="mcp.html#exempt-a-server-from-deferral"><code>alwaysLoad: true</code></a> 的服务器适用。截止时仍处于待定状态的服务器会在后台继续连接。与 <code>MCP_TIMEOUT</code> 不同，后者限制的是单个服务器的连接尝试</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_DISCOVERY_CACHE</code></td>
+<td style="text-align: left;">开启或关闭 <a href="mcp.html#server-status-detail">MCP 发现缓存</a>。缓存开启时，您之前使用过的远程 HTTP 或 SSE 服务器可以显示 <a href="mcp.html#server-status-detail"><code>cached</code> 状态</a>，并且 Claude Code 会在其第一次工具调用时而不是启动时连接它。除非逐步推出已为您的账户启用该缓存，否则缓存默认关闭。设置为 <code>1</code> 可将其开启，设置为 <code>0</code> 可在推出已启用它时仍保持关闭。在 v2.1.238 之前，该缓存默认开启。<code>cached</code> 状态需要 Claude Code v2.1.221 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_DISCOVERY_CACHE_MAX_STALE_S</code></td>
+<td style="text-align: left;"><a href="mcp.html#server-status-detail">发现缓存</a>条目的最长存在时间（秒）（默认：14400，即 4 小时）。在启动时如果条目早于该时间，Claude Code 会丢弃它并在启动时连接服务器，与缓存关闭时的行为相同。Claude Code 将该值上限设为 7 天。在 v2.1.238 之前，默认值为 86400，即 24 小时，且 Claude Code 不对该值设上限</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_DISCOVERY_CACHE_STRIKES</code></td>
+<td style="text-align: left;">在启动时如果某个<a href="mcp.html#server-status-detail">发现缓存</a>条目早于 <code>MCP_DISCOVERY_CACHE_TTL_S</code>，Claude Code 会在后台刷新它。此变量设置在 Claude Code 丢弃该条目并改为在下次启动时连接服务器之前，允许连续失败的刷新次数（默认：1）。如果您的网络连接偶尔中断，请调高此值，以免一次失败的刷新就丢弃该条目。需要 Claude Code v2.1.238 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_DISCOVERY_CACHE_TTL_S</code></td>
+<td style="text-align: left;">Claude Code 在不刷新的情况下使用<a href="mcp.html#server-status-detail">发现缓存</a>条目的秒数（默认：900）。在启动时如果条目早于该时间，Claude Code 仍会使用它，但会在后台刷新它。一旦条目早于 <code>MCP_DISCOVERY_CACHE_MAX_STALE_S</code>，Claude Code 会改为丢弃它。Claude Code 将该值上限设为 <code>MCP_DISCOVERY_CACHE_MAX_STALE_S</code>，默认为 4 小时。在 v2.1.238 之前，Claude Code 不对该值设上限</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_OAUTH_CALLBACK_PORT</code></td>
+<td style="text-align: left;">OAuth 重定向回调的固定端口，在使用<a href="mcp.html#use-pre-configured-oauth-credentials">预配置凭据</a>添加 MCP 服务器时可作为 <code>--callback-port</code> 的替代方案</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_PROTOCOL_NEGOTIATION</code></td>
+<td style="text-align: left;">仅在 <a href="mcp.html#mcp-client-runtimes">v2 MCP 客户端运行时</a>上，控制 Claude Code 是否探测服务器对 MCP 协议修订版 2026-07-28 的支持。设置为 <code>legacy</code> 可跳过探测，使每个服务器都使用该修订版之前的握手方式连接。设置为 <code>auto</code> 可探测支持探测的服务器类型：HTTP 和 stdio 服务器、claude.ai 连接器，以及云端会话和 Remote Control 会话的连接器。变量未设置时，Claude Code 默认探测这些相同的类型；请参阅 <a href="mcp.html#mcp-client-runtimes">MCP 客户端运行时</a>。任何其他值都会被忽略，并在调试日志中记录警告。需要 Claude Code v2.1.221 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_REMOTE_SERVER_CONNECTION_BATCH_SIZE</code></td>
+<td style="text-align: left;">启动期间并行连接的远程 MCP 服务器（HTTP/SSE）的最大数量（默认：20）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_SDK_GENERATION</code></td>
+<td style="text-align: left;">固定此进程连接 MCP 服务器所使用的 <a href="mcp.html#mcp-client-runtimes">MCP 客户端运行时</a>：<code>v1</code> 基于 MCP TypeScript SDK 1.x 构建，<code>v2</code> 基于 <a href="https://ts.sdk.modelcontextprotocol.io/v2/" target="_blank" rel="noopener">MCP TypeScript SDK 2.0</a> 构建。未设置该变量时，Claude Code 从该部分列出的版本开始使用 v2。在 Claude Code v2.1.221 或更高版本中，v2 运行时会检查 MCP OAuth 服务器在其授权响应中返回的颁发者，若不匹配，则登录失败并显示以 <code>Issuer mismatch in authorization response</code> 开头的错误。v1 运行时不执行此检查。如果您设置了无法识别的值，Claude Code 会忽略它并在调试日志中写入警告。Claude Code 每个进程读取一次该值。需要 Claude Code v2.1.218 或更高版本</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_SERVER_CONNECTION_BATCH_SIZE</code></td>
+<td style="text-align: left;">启动期间并行连接的本地 MCP 服务器（stdio）的最大数量（默认：3）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_TIMEOUT</code></td>
+<td style="text-align: left;">MCP 服务器启动的超时时间（毫秒，默认：30000，即 30 秒）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP_TOOL_TIMEOUT</code></td>
+<td style="text-align: left;">MCP 工具执行的超时时间（毫秒，默认：100000000，约 28 小时）。对于 HTTP、SSE 或 claude.ai 连接器服务器，每个请求默认还会在 60 秒后超时；将此变量或按服务器的 <code>timeout</code> 设置为大于 60000 可提高该单请求限制。较低的值仍会缩短整体工具执行超时时间，但单请求限制保持为 60 秒。stdio 和 WebSocket 服务器没有单请求计时器。<code>.mcp.json</code> 中按服务器的 <code>timeout</code> 字段会为该服务器覆盖此值。至少为 1000 的按服务器 <code>timeout</code> 还会为该服务器的工具调用设置最小空闲窗口，因此 <code>CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT</code> 永远不会更早地中止它们；此下限需要 Claude Code v2.1.203 或更高版本。对于环境变量，低于 1000 的值会被提升至一秒；对于按服务器字段，低于 1000 的值会被忽略</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>NO_PROXY</code></td>
+<td style="text-align: left;">请求将绕过代理直接发送到的域名和 IP 列表</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_ATTRIBUTE_VALUE_LENGTH_LIMIT</code></td>
+<td style="text-align: left;">标准 OpenTelemetry SDK 的属性值长度限制。Claude Code 会将包含内容的遥测属性限制在此值与 <code>CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH</code> 中较小者以内，以便截断标记保持在 SDK 限制之内。Claude Code 以相同方式读取 <code>OTEL_LOGRECORD_ATTRIBUTE_VALUE_LENGTH_LIMIT</code> 和 <code>OTEL_SPAN_ATTRIBUTE_VALUE_LENGTH_LIMIT</code> 变体，已设置值中最小的那个适用于所有信号。需要 Claude Code v2.1.214 或更高版本。请参阅<a href="monitoring-usage.html#common-configuration-variables">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_LOG_ASSISTANT_RESPONSES</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 <code>assistant_response</code> OpenTelemetry 日志事件中包含模型的回复文本。未设置时，Claude Code 会改用 <code>OTEL_LOG_USER_PROMPTS</code> 的值。设置为 <code>0</code> 可在设置了 <code>OTEL_LOG_USER_PROMPTS</code> 时仍保持回复被遮盖。请在 shell、用户设置或托管设置中设置它。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中被忽略。需要 Claude Code v2.1.193 或更高版本。请参阅<a href="monitoring-usage.html#assistant-response-event">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_LOG_MANAGED_SETTINGS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可将遮盖后的托管设置以及遮盖前设置的 SHA-256 摘要添加到 <code>managed_settings_resolved</code> OpenTelemetry 日志事件中。默认禁用。请在 shell、用户设置或托管设置中设置它；项目或本地设置中的值不会将其开启。需要 Claude Code v2.1.274 或更高版本。请参阅<a href="monitoring-usage.html#managed-settings-resolved-event">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_LOG_RAW_API_BODIES</code></td>
+<td style="text-align: left;">将 Anthropic Messages API 请求和响应 JSON 作为 <code>api_request_body</code> / <code>api_response_body</code> 日志事件发出。设置为 <code>1</code> 可内联发出在内容限制处截断的正文，设置为 <code>file:&lt;dir&gt;</code> 可将未截断的正文写入磁盘并改为发出 <code>body_ref</code> 路径。<code>CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH</code> 配置内容限制，默认为 60 KB。默认禁用；正文包含完整的对话历史。请在 shell、用户设置或托管设置中设置它。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中被忽略。请参阅<a href="monitoring-usage.html#api-request-body-event">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_LOG_TOOL_CONTENT</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 <code>tool.output</code> OpenTelemetry span 事件中包含工具内容。span 属性在<a href="monitoring-usage.html#new-context-gates">各自的开关</a>下携带工具内容。需要<a href="monitoring-usage.html#traces-beta">追踪</a>。默认禁用以保护敏感数据。请在 shell、用户设置或托管设置中设置它。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中被忽略，但该部分所述的关闭值除外。请参阅<a href="monitoring-usage.html#tool-output-span-event">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_LOG_TOOL_DETAILS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 OpenTelemetry 指标、追踪和日志中包含工具输入参数；MCP 服务器名称；用户编写的工作流名称；工具失败时的原始错误字符串；<code>api_refusal</code> 事件上的拒绝 <code>category</code>；<a href="monitoring-usage.html#cost-counter">费用和 token 指标</a>上真实的 Agent、skill、插件和 MCP 服务器名称；以及其他工具详细信息。默认禁用以保护 PII。请在 shell、用户设置或托管设置中设置它。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中被忽略，但该部分所述的关闭值除外。请参阅<a href="monitoring-usage.html">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_LOG_USER_PROMPTS</code></td>
+<td style="text-align: left;">设置为 <code>1</code> 可在 OpenTelemetry 追踪和日志中包含用户提示词文本。默认禁用（提示词会被遮盖）。请在 shell、用户设置或托管设置中设置它。在<a href="settings-reference.html#variables-claude-code-ignores-in-env">项目和本地设置</a>中被忽略，但该部分所述的关闭值除外。请参阅<a href="monitoring-usage.html">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_METRICS_INCLUDE_ACCOUNT_UUID</code></td>
+<td style="text-align: left;">设置为 <code>false</code> 可从指标属性中排除账户 UUID（默认：包含）。请参阅<a href="monitoring-usage.html">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_METRICS_INCLUDE_ENTRYPOINT</code></td>
+<td style="text-align: left;">设置为 <code>true</code> 可在指标属性中包含会话入口点（默认：排除）。在 v2.1.152 中添加。请参阅<a href="monitoring-usage.html">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_METRICS_INCLUDE_REPOSITORY</code></td>
+<td style="text-align: left;">设置为 <code>true</code> 可为 OpenTelemetry 指标和事件添加标识会话所在仓库的 <code>vcs.*</code> 属性（默认：排除）。需要 Claude Code v2.1.269 或更高版本。请参阅<a href="monitoring-usage.html#repository-attributes">仓库属性</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_METRICS_INCLUDE_RESOURCE_ATTRIBUTES</code></td>
+<td style="text-align: left;">自 v2.1.161 起，Claude Code 会将 <code>OTEL_RESOURCE_ATTRIBUTES</code> 键附加到指标数据点标签上。设置为 <code>false</code> 可排除它们（默认：包含）。请参阅<a href="monitoring-usage.html#multi-team-organization-support">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_METRICS_INCLUDE_SESSION_ID</code></td>
+<td style="text-align: left;">设置为 <code>false</code> 可从指标属性中排除会话 ID（默认：包含）。请参阅<a href="monitoring-usage.html">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OTEL_METRICS_INCLUDE_VERSION</code></td>
+<td style="text-align: left;">设置为 <code>true</code> 可在指标属性中包含 Claude Code 版本（默认：排除）。请参阅<a href="monitoring-usage.html">监控</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SLASH_COMMAND_TOOL_CHAR_BUDGET</code></td>
+<td style="text-align: left;">覆盖向 <a href="skills.html#control-who-invokes-a-skill">Skill 工具</a>显示的 skill 元数据的字符预算。该预算按上下文窗口的 1% 动态调整，回退值为 8,000 个字符。保留旧名称以实现向后兼容</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TASK_MAX_OUTPUT_LENGTH</code></td>
+<td style="text-align: left;">已在 v2.1.277 中与其所限定大小的 <code>TaskOutput</code> 工具一同移除，现在不起任何作用。此前用于设置 <code>TaskOutput</code> 工具保留的<a href="tools-reference.html#background-commands">后台任务</a>输出的最大字符数。Claude 现在改用 <code>Read</code> 读取后台任务的输出文件</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>USE_BUILTIN_RIPGREP</code></td>
+<td style="text-align: left;">设置为 <code>0</code> 可使用系统安装的 <code>rg</code>，而不是 Claude Code 自带的 <code>rg</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_3_5_HAIKU</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude 3.5 Haiku 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_3_5_SONNET</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude 3.5 Sonnet 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_3_7_SONNET</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude 3.7 Sonnet 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_4_0_OPUS</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Opus 4 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_4_0_SONNET</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Sonnet 4 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_4_1_OPUS</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Opus 4.1 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_4_5_OPUS</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Opus 4.5 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_4_5_SONNET</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Sonnet 4.5 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_4_6_OPUS</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Opus 4.6 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_4_6_SONNET</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Sonnet 4.6 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_4_7_OPUS</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Opus 4.7 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_4_8_OPUS</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Opus 4.8 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_5_5_OPUS</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Opus 5.5 的区域。在 v2.1.280 中添加</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_5_5_SONNET</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Sonnet 5.5 的区域。在 v2.1.284 中添加</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_5_OPUS</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Opus 5 的区域。在 v2.1.219 中添加</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_5_SONNET</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Sonnet 5 的区域。在 v2.1.197 中添加</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_FABLE_5</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Fable 5 的区域。在 v2.1.170 中添加</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_FABLE_5_1</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Fable 5.1 的区域。在 v2.1.257 中添加</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_HAIKU_4_5</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Haiku 4.5 的区域</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VERTEX_REGION_CLAUDE_HAIKU_5_5</code></td>
+<td style="text-align: left;">使用 Google Cloud's Agent Platform 时覆盖 Claude Haiku 5.5 的区域。在 v2.1.293 中添加</td>
+</tr>
+</tbody>
+</table>
+<p>同样支持标准 OpenTelemetry 导出器变量（<code>OTEL_METRICS_EXPORTER</code>、<code>OTEL_LOGS_EXPORTER</code>、<code>OTEL_EXPORTER_OTLP_ENDPOINT</code>、<code>OTEL_EXPORTER_OTLP_PROTOCOL</code>、<code>OTEL_EXPORTER_OTLP_HEADERS</code>、<code>OTEL_METRIC_EXPORT_INTERVAL</code>、<code>OTEL_RESOURCE_ATTRIBUTES</code> 以及特定信号的变体）。有关配置详细信息，请参阅<a href="monitoring-usage.html">监控</a>。</p>
+<p>请在 shell、用户设置或托管设置中设置 <code>CLAUDE_CODE_ENABLE_TELEMETRY</code> 以及用于开启导出、选择导出目标或捕获内容的 OpenTelemetry 变量。Claude Code <a href="settings-reference.html#variables-claude-code-ignores-in-env">会在项目和本地设置中忽略它们</a>，但该部分所述的关闭值除外。<code>OTEL_RESOURCE_ATTRIBUTES</code> 以及导出间隔、超时和压缩相关变量（例如 <code>OTEL_METRIC_EXPORT_INTERVAL</code>）在项目和本地设置中仍然适用。</p>
+<h2 id="what-the-subprocess-environment-scrub-removes">子进程环境清理会移除哪些内容</h2>
+<p>当您将 <a href="#variables"><code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB</code></a> 设置为 <code>1</code> 时，Claude Code 会从其启动的子进程（例如 Bash 命令、hook 和 stdio MCP 服务器）的环境中移除凭据。这可以减少提示词注入攻击所能读取的内容。Claude Code 进程本身会保留这些凭据，用于其自身的 API 调用。</p>
+<p>清理功能通过变量名或变量值的形态来识别凭据，因此应将其作为与精细的<a href="permissions.html">权限规则</a>配合使用的一层防护，而不是唯一的控制手段。</p>
+<p>下表展示了清理功能对示例变量的处理方式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">示例变量</th>
+<th style="text-align: left;">清理功能的处理方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>ANTHROPIC_API_KEY</code>、<code>AWS_SECRET_ACCESS_KEY</code></td>
+<td style="text-align: left;">移除</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>NPM_TOKEN</code>、<code>DB_PASSWORD</code></td>
+<td style="text-align: left;">移除，因为其名称看起来像凭据</td>
+</tr>
+<tr>
+<td style="text-align: left;">包含密码的 <code>DATABASE_URL</code></td>
+<td style="text-align: left;">移除，因为其值看起来像凭据</td>
+</tr>
+<tr>
+<td style="text-align: left;">包含密码的 <code>PIP_INDEX_URL</code> 或 <code>NPM_CONFIG_REGISTRY</code></td>
+<td style="text-align: left;">保留 URL，但从中删去用户名和密码</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CLAUDE_CONFIG_DIR</code></td>
+<td style="text-align: left;">移除</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>GITHUB_TOKEN</code>、<code>GH_TOKEN</code>、<code>GH_ENTERPRISE_TOKEN</code>、<code>GITHUB_ENTERPRISE_TOKEN</code></td>
+<td style="text-align: left;">保留，以便 <code>gh</code> 和调用 GitHub API 的脚本能够继续正常工作</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>HTTP_PROXY</code>、<code>HTTPS_PROXY</code></td>
+<td style="text-align: left;">保留，包括 <a href="network-config.html#basic-authentication">URL 中的用户名和密码</a>。<a href="sandboxing.html#network-isolation">沙箱</a>可以自行为沙箱化的命令设置这些变量</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>GIT_CONFIG_COUNT</code>、<code>GIT_CONFIG_KEY_&lt;n&gt;</code>、<code>GIT_CONFIG_VALUE_&lt;n&gt;</code></td>
+<td style="text-align: left;">保留，无论其内容为何</td>
+</tr>
+<tr>
+<td style="text-align: left;">变量名和值都不像凭据的密钥</td>
+<td style="text-align: left;">保留</td>
+</tr>
+</tbody>
+</table>
+<p>由于清理功能会保留 <code>GITHUB_TOKEN</code>，请为 GitHub Actions 作业授予其所需的最小 <code>permissions</code>。要从沙箱化的 Bash 命令中移除 GitHub 令牌，请在 <a href="sandboxing.html#protect-credentials"><code>sandbox.credentials</code></a> 下添加一个 <code>deny</code> 条目。</p>
+<p>如果某个子进程需要用到被移除的变量之一，请不要设置清理功能。</p>
+<p>在 Linux 上，清理功能还会在隔离的 PID 命名空间中运行 Bash 子进程，使其无法通过 <code>/proc</code> 读取主机进程的环境。这带来的一个副作用是，<code>ps</code>、<code>pgrep</code> 和 <code>kill</code> 无法看到主机进程，也无法向其发送信号。</p>
+<p>在 v2.1.251 之前，清理功能会移除 <code>ANTHROPIC_API_KEY</code> 和 <code>AWS_SECRET_ACCESS_KEY</code>，而表中的其他示例变量保持不变。</p>
+<h2 id="features-that-need-feature-flag-fetching">需要获取功能标志的功能</h2>
+<p>Claude Code 通过从 Anthropic 获取的功能标志来启用部分功能。在以下会话中，Claude Code 会跳过该获取操作：</p>
+<ul>
+<li>设置了 <code>DISABLE_GROWTHBOOK</code>、<code>DISABLE_TELEMETRY</code>、<code>DO_NOT_TRACK</code> 或 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> 的会话；<a href="#variables">变量表</a>中每个变量所在的行说明了哪些值会关闭获取</li>
+<li>使用<a href="third-party-integrations.html">第三方提供商</a>（例如 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 或 Microsoft Foundry）的会话，除非嵌入 Claude Code 的宿主平台设置了 <code>CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST</code></li>
+<li><a href="claude-apps-gateway.html">Claude apps 网关</a>会话</li>
+</ul>
+<p>关闭获取后，您将无法：</p>
+<ul>
+<li>在设置了 <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> 或 <code>DISABLE_GROWTHBOOK</code> 的情况下使用 <a href="remote-control.html">Remote Control</a>。关于 <code>DISABLE_TELEMETRY</code> 和 <code>DO_NOT_TRACK</code>，请参阅 <a href="remote-control.html#requirements">Remote Control 要求</a></li>
+<li>在 <a href="remote-control.html#requirements">Remote Control</a> 不可用时<a href="cross-session-messaging.html#message-sessions-on-other-machines">向本机以外的会话发送消息</a>。关闭获取后，本机上会话之间的消息传递仍可正常工作</li>
+<li>运行 <a href="cli-reference.html#cli-commands"><code>claude import</code> 或 <code>/import</code> 命令</a></li>
+<li>运行 <a href="skills.html#find-unused-skills"><code>/skill-doctor</code></a> 或在 <code>/plugin</code> 的 <strong>Stats</strong> 选项卡中打开其报告</li>
+<li>在 Pro、Max 和 Ultra 计划中运行 <a href="commands.html"><code>/restart</code></a></li>
+<li>将您的 claude.ai 账户中启用的 <a href="skills.html#where-synced-skills-load">skill</a> 和<a href="plugins-loading.html#synced-plugins">插件</a>同步到终端会话中</li>
+<li>启用 <a href="interactive-mode.html#you-should-know-suggestions">You should know mod</a></li>
+<li>使用 <a href="advisor.html#requirements">advisor 工具</a></li>
+<li>使用 <a href="mcp.html#mcp-tasks-that-run-on-the-server">MCP 任务</a></li>
+<li>阅读或回复 <a href="artifacts.html#collect-comments-on-an-artifact">Artifact 上的评论</a></li>
+<li>让 Claude 读取<a href="artifacts.html#read-an-artifact-shared-with-you">其他组织的公开 Artifact</a></li>
+<li>在安装了 Git Bash 的 Windows 上，为 claude.ai 和 Console 账户默认获得 <a href="tools-reference.html#powershell-tool">PowerShell 工具</a>；除非您设置了 <code>CLAUDE_CODE_USE_POWERSHELL_TOOL=1</code>，否则 Claude Code 会通过 Git Bash 执行 shell 命令。在未安装 Git Bash 的 Windows 上，该工具保持启用</li>
+<li>获得 <a href="tools-reference.html#sendfeedback-tool-behavior">Claude 起草的反馈</a>，该功能由 Claude Code 通过获取的标志启用</li>
+<li>让 Claude <a href="terminal-config.html#how-claude-treats-pasted-text">将大段粘贴内容视为粘贴而非键入的文本</a>；<code>[Pasted text #N]</code> 占位符背后的内容将以无标记形式传给 Claude</li>
+<li>让 Claude Code <a href="mcp.html#tools-with-invalid-input-schemas">排除其输入 schema 会被 API 拒绝的 MCP 工具</a></li>
+<li>让 Claude Code <a href="settings-reference.html#idlecompaction">在终端会话空闲时压缩较长的对话</a>，时机为一小时的提示词缓存即将过期前不久</li>
+</ul>
+<h3 id="first-session-after-an-install-or-upgrade">安装或升级后的首个会话</h3>
+<p>在您安装 Claude Code 后，或升级到新增某项功能的版本后，首个会话中可能缺少<a href="#features-that-need-feature-flag-fetching">受标志控制的功能</a>。Claude Code 在该会话期间获取功能标志后，会将其保存在本机上，因此您在该机器上的下一个会话将具备该功能。</p>
+<p>在以下这类设置中，首个会话之后的会话同样会在没有新获取标志的情况下启动：</p>
+<ul>
+<li><strong>每次运行都是全新环境</strong>：如果每次运行都在 CI 容器中启动，或在任何没有先前会话所保存标志的其他环境中启动，那么每次运行都是首个会话</li>
+<li><strong>使用网关令牌且没有 API 密钥</strong>：如果您使用 <code>ANTHROPIC_AUTH_TOKEN</code> 进行身份验证且没有 API 密钥，并且 <code>ANTHROPIC_BASE_URL</code> 指向 Anthropic 以外的主机（例如 <a href="llm-gateway.html">LLM 网关</a>），Claude Code 将没有可用于获取标志的凭据</li>
+</ul>
+<h2 id="see-also">另请参阅</h2>
+<ul>
+<li><a href="settings.html">设置</a>：所有 <code>settings.json</code> 配置，包括 <code>env</code> 键</li>
+<li><a href="cli-reference.html">CLI 参考</a>：启动时标志</li>
+<li><a href="network-config.html">网络配置</a>：代理和 TLS 设置</li>
+<li><a href="monitoring-usage.html">监控</a>：OpenTelemetry 配置</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="commands.html"><span class="pager-dir">← 上一页</span><span class="pager-name">Commands</span></a><a class="pager-link next" href="tools-reference.html"><span class="pager-dir">下一页 →</span><span class="pager-name">工具参考</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#set-environment-variables">设置环境变量</a><a class="toc-l3" href="#set-variables-in-your-shell">在 shell 中设置变量</a><a class="toc-l3" href="#set-variables-in-settings-files">在设置文件中设置变量</a><a class="toc-l2" href="#precedence">优先级</a><a class="toc-l2" href="#variables">变量</a><a class="toc-l2" href="#what-the-subprocess-environment-scrub-removes">子进程环境清理会移除哪些内容</a><a class="toc-l2" href="#features-that-need-feature-flag-fetching">需要获取功能标志的功能</a><a class="toc-l3" href="#first-session-after-an-install-or-upgrade">安装或升级后的首个会话</a><a class="toc-l2" href="#see-also">另请参阅</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

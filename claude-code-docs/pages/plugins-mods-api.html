@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用 mods API · Claude Code 中文文档</title>
+<meta name="description" content="从 Claude Code mod 调用 mods API 来添加命令和工具、调用模型、在计时器上运行工作、向其他会话发送消息，以及访问文件和网络。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/mods/api">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/mods/api" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link active" href="plugins-mods-api.html" aria-current="page">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>mod</span> <span class="sep">/</span> <span>构建</span></div>
+    <article class="prose" id="article"><h1 id="mods-api">使用 mods API</h1>
+<blockquote>
+<p>从 Claude Code mod 调用 mods API 来添加命令和工具、调用模型、在计时器上运行工作、向其他会话发送消息，以及访问文件和网络。</p>
+</blockquote>
+<p>mods API 是 mod 调用以执行操作的方法集：添加命令和工具、调用模型、在事件之间运行工作，以及访问文件系统、进程和网络。每个 hook 都将其作为第一个参数 <code>$</code> 接收，方法按命名空间分组，例如 <code>$.ui</code> 和 <code>$.fs</code>。<a href="plugins-mods-events.html">事件</a>决定何时运行 hook，mods API 是 hook 运行后调用的内容。</p>
+<p>在开始之前，请构建您的<a href="plugins-mods-create.html">第一个 mod</a>。对于每个方法，请参阅 <a href="plugins-mods-reference.html#mods-api-methods">mods API 方法</a>或阅读<a href="plugins-mods-create.html#get-the-types-for-your-build">您的构建的类型</a>。</p>
+<h2 id="add-a-command-or-a-tool">添加命令或工具</h2>
+<p>mod 可以添加供用户运行的命令和供 Claude 调用的工具。在 <a href="plugins-mods-reference.html#session"><code>session.start</code></a> hook 中注册两者。Claude Code 在第一个提示之前等待该 hook，因此您注册的内容从第一轮开始就可用。</p>
+<h3 id="add-a-command">添加命令</h3>
+<p>命令是供用户使用的。注册它，然后为其名称处理 <a href="plugins-mods-reference.html#commands-and-configuration"><code>command.run</code></a>。此示例添加了一个 <code>/standup</code> 命令，该命令接受可选的天数：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'session.start'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 将 /standup 添加到命令列表，并附上用户在那里看到的描述</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">command</span><span class="p">.</span><span class="nx">register</span><span class="p">({</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'standup'</span><span class="p">,</span><span class="w"> </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'Summarize what changed today'</span><span class="p">,</span><span class="w"> </span><span class="nx">argumentHint</span><span class="o">:</span><span class="w"> </span><span class="s1">'[days]'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="c1">// 匹配器将 hook 限制为 /standup，因此其他命令不会到达它</span>
+<span class="nx">on</span><span class="p">(</span><span class="s1">'command.run'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'standup'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// e.args 是在命令名称后键入的文本，或空字符串</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'Summary for the last '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">args</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">'1'</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">' day(s): ...'</span><span class="w"> </span><span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>会话启动后，<code>/standup</code> 及其描述会出现在您键入 <code>/</code> 时看到的列表中。<code>argumentHint</code> 在您键入命令和空格后显示在提示中，如 <code>/standup [days]</code>。当您运行 <code>/standup 3</code> 时，第二个 hook 返回 <code>Summary for the last 3 day(s): ...</code>，并且成绩单在插件名称后显示该文本。hook 永远不会调用 <code>next</code>，因为该命令除了您的行为外没有其他行为。</p>
+<p>您返回的 <code>text</code> 会打印在成绩单中，Claude 会读取它。要不打印任何内容，如仅打开<a href="plugins-mods-interface.html#pick-where-to-draw">窗格</a>的命令，请返回 <code>{}</code>。要让命令在 Claude 工作时运行，请在注册中添加 <code>immediate: true</code>。</p>
+<p>选择一个没有内置命令使用的名称。在会话中键入 <code>/</code> 以查看它们。<code>$.command.register</code> 对于已占用的名称会抛出异常，并显示诸如 <code>"/focus" refused: it is the built-in /focus</code> 的消息。抛出异常的 hook 会被跳过，因此您的 <code>session.start</code> hook 的其余部分也不会运行。在该 hook 中最后注册命令，或将调用包装在 <code>try</code> 和 <code>catch</code> 中。</p>
+<h3 id="add-a-tool">添加工具</h3>
+<p>工具是供 Claude 使用的。使用名称、Claude 读取的描述和其输入的 JSON Schema 注册它。Claude 在由 <code>mcp__</code>、您的插件名称、两个下划线和您注册的名称组成的较长名称下看到它。您在 <a href="plugins-mods-events.html#guard-or-change-a-tool-call"><code>tool.call</code></a> hook 中处理其调用，该 hook 被过滤到该完整名称。此示例来自名为 <code>my-mod</code> 的插件，注册 <code>ticket</code>，因此完整名称是 <code>mcp__my-mod__ticket</code>。它为 Claude 提供了一个在问题跟踪器中查找工单的工具：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'session.start'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">tool</span><span class="p">.</span><span class="nx">register</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'ticket'</span><span class="p">,</span>
+<span class="w">    </span><span class="c1">// Claude 根据此描述决定何时调用该工具</span>
+<span class="w">    </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'Look up a ticket by its id and return its title and status'</span><span class="p">,</span>
+<span class="w">    </span><span class="c1">// Claude 必须发送的参数：一个名为 id 的必需字符串</span>
+<span class="w">    </span><span class="nx">inputSchema</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'object'</span><span class="p">,</span><span class="w"> </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'string'</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">'id'</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="c1">// 完整工具名称是 mcp__、插件名称和注册名称</span>
+<span class="nx">on</span><span class="p">(</span><span class="s1">'tool.call'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="s1">'mcp__my-mod__ticket'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 工具的参数是 e 的字段，因此 id 是 e.id</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">http</span><span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'https://tickets.example.com/api/'</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">id</span><span class="p">))</span>
+<span class="w">  </span><span class="c1">// 无论如何都返回结果，以便 Claude 了解查找何时失败</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">result</span><span class="o">:</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">text</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">'Lookup failed with status '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>当您询问工单时，Claude 可以使用其 id 调用 <code>mcp__my-mod__ticket</code>。第二个 hook 获取工单并返回响应体，Claude 将其作为工具的结果读取。当服务器以错误状态回答时，Claude 读取 <code>Lookup failed with status</code> 和数字。</p>
+<div class="callout callout-tip"><div class="callout-head"><span class="callout-ico"></span>提示</div><div class="callout-body"><p>当 <a href="mcp.html#scale-with-mcp-tool-search">MCP 工具搜索</a>延迟加载某个已注册的工具时，Claude 能看到其名称，但在搜索该工具之前看不到其描述。如果 Claude 应在每一轮都考虑该工具，请在注册中添加 <a href="plugins-mods-reference.html#tools"><code>isDeferred: false</code></a>，以<a href="mcp.html#exempt-a-server-from-deferral">预先加载完整工具</a>。该字段需要 Claude Code v2.1.293 或更高版本，早期版本会忽略它。</p></div></div>
+<h2 id="call-a-model">调用模型</h2>
+<p>mod 可以向模型发送自己的请求，用于分类或总结文本等小任务。<code>$.model.complete</code> 单独发送您的提示词，而 <code>$.model.fork({ prompt })</code> 发送当前对话，并将您的提示词附加在末尾。</p>
+<p>下表比较了每种请求包含的内容：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">请求中的内容</th>
+<th style="text-align: left;"><code>$.model.complete</code></th>
+<th style="text-align: left;"><code>$.model.fork</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">模型</td>
+<td style="text-align: left;">您传入的 <code>model</code></td>
+<td style="text-align: left;">会话的模型</td>
+</tr>
+<tr>
+<td style="text-align: left;">系统提示词</td>
+<td style="text-align: left;">一个简短的<a href="llm-gateway-protocol.html#system-prompt-attribution-block">归属块</a>，然后是您传入的 <code>system</code>（如果有）</td>
+<td style="text-align: left;">会话的系统提示词</td>
+</tr>
+<tr>
+<td style="text-align: left;">消息</td>
+<td style="text-align: left;">一条用户消息，即您的 <code>prompt</code></td>
+<td style="text-align: left;">迄今为止的对话，然后是作为用户消息的您的 <code>prompt</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">CLAUDE.md 和其他项目上下文</td>
+<td style="text-align: left;">不包含</td>
+<td style="text-align: left;">包含，与对话的最后一个请求相同</td>
+</tr>
+<tr>
+<td style="text-align: left;">工具</td>
+<td style="text-align: left;">无</td>
+<td style="text-align: left;">Claude 的工具，但模型无法调用它们</td>
+</tr>
+</tbody>
+</table>
+<p>fork 会重复对话的最后一个请求，因此在对话仍处于缓存中时，Claude API 会从<a href="prompt-caching.html">提示缓存</a>中提供其大部分内容。</p>
+<p>这两种调用都使用会话的凭据，因此费用计入用户的套餐、API 密钥或云提供商。<a href="plugins-mods-create.html#get-the-types-for-your-build">您的构建的类型</a>记录了每个 <code>$.model</code> 方法。</p>
+<h3 id="send-one-prompt">发送单个提示词</h3>
+<p>向 <code>$.model.complete</code> 传入 <code>model</code> 和 <code>prompt</code>。<code>prompt</code> 会成为用户消息。要向模型提供指令（例如角色或输出格式），还需传入 <code>system</code>，它会成为系统提示词。</p>
+<p>此 hook 通过要求小型模型标记在其后键入的文本来回答 <code>/triage</code> 命令（<a href="#add-a-command">注册为命令</a>）：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'command.run'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'triage'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">complete</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">'haiku'</span><span class="p">,</span>
+<span class="w">    </span><span class="c1">// 系统提示设置工作，提示携带要标记的文本</span>
+<span class="w">    </span><span class="nx">system</span><span class="o">:</span><span class="w"> </span><span class="s1">'Reply with one word: bug, feature, or question.'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">args</span><span class="p">,</span>
+<span class="w">    </span><span class="c1">// 一个单词需要很少的令牌，调用在 15 秒后放弃</span>
+<span class="w">    </span><span class="nx">maxTokens</span><span class="o">:</span><span class="w"> </span><span class="mf">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">timeoutMs</span><span class="o">:</span><span class="w"> </span><span class="mf">15000</span><span class="p">,</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="w">  </span><span class="c1">// r.text 仅在模型回答时存在，因此首先检查 r.isAnswered</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">isAnswered</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">text</span><span class="p">.</span><span class="nx">trim</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">'unknown'</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'Label: '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">label</span><span class="w"> </span><span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>当您运行 <code>/triage the export button does nothing</code> 时，mod 将该文本发送到模型并打印其答案，例如 <code>Label: bug</code>。当模型不回答时，标签是 <code>unknown</code>。</p>
+<p>Claude API 失败不会拒绝调用，因此请检查 <code>r.isAnswered</code>，并在其为 <code>false</code> 时读取 <code>r.reason</code>。对于 Claude Code 不会发送的请求，例如您的组织阻止的模型，调用会被拒绝。</p>
+<p><a href="plugins-mods-create.html#get-the-types-for-your-build">您的构建的类型</a>列出了其他选项，例如 <code>effort</code>，<a href="plugins-mods-reference.html#limits">限制</a>给出了 <code>maxTokens</code> 的默认值。</p>
+<h3 id="use-prompt-caching">使用提示缓存</h3>
+<p><code>$.model.complete</code> 支持 Claude API 的<a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">提示缓存</a>。API 会缓存请求的开头部分（称为前缀），直到您设置的<a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching#explicit-cache-breakpoints" target="_blank" rel="noopener">缓存断点</a>为止。当每次调用都以相同的长静态内容（例如指令或参考资料）开头时，请在该内容的末尾设置断点。之后的调用就会从缓存中读取这部分内容，而无需为其支付完整的输入价格。</p>
+<p>要设置断点，请将 <code>prompt</code> 作为 <code>{ text }</code> 块的数组而不是字符串传入，并在静态内容的最后一个块上添加 <code>cache: true</code>。Claude Code 会使用 API 的 <code>cache_control</code> 字段发送该块。<code>system</code> 也接受相同的数组形式。要在两者之间做出选择，请参阅<a href="#choose-between-prompt-and-system">在 <code>prompt</code> 和 <code>system</code> 之间选择</a>。</p>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>块数组需要 Claude Code v2.1.292 或更高版本。早期版本会拒绝 <code>prompt</code> 中的数组，并报出以 <code>takes { model, prompt } (host check)</code> 结尾的错误，而 <code>system</code> 中的数组则会被排除在请求之外。</p></div></div>
+<p>此版本的 <a href="#send-one-prompt"><code>/triage</code> hook</a> 在要标记的文本之前发送一组较长的标记规则，并在规则之后设置断点。<code>RULES</code> 是您自己定义的字符串：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'command.run'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'triage'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">complete</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">'haiku'</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="c1">// 每次调用都相同，因此构成缓存的前缀</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="nx">RULES</span><span class="p">,</span><span class="w"> </span><span class="nx">cache</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="c1">// 每次调用都会变化，因此放在断点之后</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">args</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'Label: '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">isAnswered</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">text</span><span class="p">.</span><span class="nx">trim</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">'unknown'</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>TTL 和断点数量有以下限制：</p>
+<ul>
+<li><strong>TTL</strong>：缓存条目在最后一次使用后持续五分钟。TTL 来自用户的 Claude Code 设置，而不是来自调用。如需一小时，请将 <a href="prompt-caching.html#choose-the-ttl-yourself"><code>subagentPromptCacheTtl</code></a> 设置为 <code>1h</code>。</li>
+<li><strong>每个请求的断点数</strong>：API 接受<a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching#when-to-use-multiple-breakpoints" target="_blank" rel="noopener">最多四个</a>，再多一个则会在 <code>r.reason</code> 中返回 <code>api-error</code></li>
+</ul>
+<h4 id="choose-between-prompt-and-system">在 <code>prompt</code> 和 <code>system</code> 之间选择</h4>
+<p>除非您确定请求直接发送到 Claude API，否则请将各调用共享的静态内容放在 <code>prompt</code> 的开头：</p>
+<ul>
+<li><strong>使用 API 密钥或 Claude 订阅直接发送到 Claude API</strong>：两个字段都可以</li>
+<li><strong>通过 <a href="amazon-bedrock.html">Amazon Bedrock</a>、<a href="claude-platform-on-aws.html">Claude Platform on AWS</a>、<a href="google-vertex-ai.html">Google Cloud's Agent Platform</a>、<a href="microsoft-foundry.html">Microsoft Foundry</a> 或 <a href="llm-gateway.html">LLM 网关</a>发送</strong>：使用 <code>prompt</code>。Claude Code 会在系统提示词开头添加一个<a href="llm-gateway-protocol.html#system-prompt-attribution-block">归属块</a>，其指纹来自用户消息的开头。<code>api.anthropic.com</code> 端点会在缓存之前去除该块。其他端点则会将其作为提示词的一部分接收，因此当 <code>prompt</code> 的开头不同时，<code>system</code> 中的断点可能无法命中。</li>
+<li><strong>在其他人运行的 mod 中</strong>：使用 <code>prompt</code>，因为您无法选择他们的提供商</li>
+</ul>
+<p>在前缀中，<code>system</code> 位于 <code>prompt</code> 之前，因此 <code>prompt</code> 中的断点也会覆盖 <code>system</code>，而 <code>system</code> 不同的调用将无法命中缓存。</p>
+<h4 id="check-for-cache-hits">检查缓存命中</h4>
+<p><code>$.model.complete</code> 的结果包含一个 <code>usage</code> 对象，其中带有 API 的<a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching#tracking-cache-performance" target="_blank" rel="noopener">缓存字段</a>。<code>usage.cache_creation_input_tokens</code> 统计调用写入缓存的 token 数，<code>usage.cache_read_input_tokens</code> 统计调用从缓存读取的 token 数。预期第一次调用会产生写入，而在 TTL 内的后续调用会产生读取。</p>
+<p>如果每次调用都在写入而没有任何读取，则说明各调用之间的前缀不同，或者调用间隔超过了 TTL。关于前缀不同的情况，请参阅<a href="#choose-between-prompt-and-system">在 <code>prompt</code> 和 <code>system</code> 之间选择</a>。</p>
+<p>如果在模型已回答的调用中两个字段都保持为零，则说明没有缓存任何内容。请逐一检查以下原因：</p>
+<ul>
+<li><strong>前缀太短</strong>：API 不会缓存短于模型<a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching#cache-limitations" target="_blank" rel="noopener">最小长度</a>的前缀，并且不会返回错误</li>
+<li><strong>提示缓存已禁用</strong>：当某个 <a href="prompt-caching.html#disable-prompt-caching"><code>DISABLE_PROMPT_CACHING</code> 变量</a>适用于该模型时，Claude Code 会移除断点并以不缓存的方式发送文本</li>
+<li><strong>您的网关去除了 <code>cache_control</code></strong>：网关可能会<a href="prompt-caching.html#where-the-cache-lives">移除该字段但仍返回成功</a></li>
+<li><strong>另一个 mod 重写了文本的开头</strong>：此时 Claude Code 会<a href="#what-a-model-complete-hook-receives">不带断点发送文本</a></li>
+</ul>
+<h3 id="what-a-model-complete-hook-receives"><code>model.complete</code> hook 接收的内容</h3>
+<p>如果您通过 hook 监听 <a href="plugins-mods-reference.html#mods-api-calls"><code>model.complete</code></a> 事件来检查或更改其他 mod 的请求，请从以下字段读取文本：</p>
+<ul>
+<li><strong><code>e.prompt</code></strong>：始终是字符串。当调用方传入数组时，它是各块文本按顺序拼接的结果。</li>
+<li><strong><code>e.system</code></strong>：以相同方式构建的字符串，当调用方未传入 <code>system</code> 时则不存在</li>
+<li><strong><code>e.promptBlocks</code> 和 <code>e.systemBlocks</code></strong>：调用方的数组，当调用方为相应字段传入数组时才存在</li>
+</ul>
+<p>Claude Code 会发送您的 hook 传给 <code>next</code> 的字符串，并使用您随之传入的数组来放置<a href="#use-prompt-caching">缓存断点</a>。它会保留仍与字符串开头匹配的前导块及其断点，并以不带断点的方式发送字符串的其余部分。例如，<code>next({ ...e, prompt: e.prompt + NOTE })</code> 会保留调用方的断点，而更改 <code>prompt</code> 开头的 hook 会移除这些断点。</p>
+<h2 id="run-work-in-the-background">在后台运行工作</h2>
+<p>超越一个事件的工作，例如每分钟检查一次，在您从 <code>session.start</code> 启动的计时器上运行。hook 本身为一个事件运行，其自身运行时间有<a href="plugins-mods-reference.html#limits">时间限制</a>。在 <code>next</code> 或 mods API 调用上花费的时间不计算，除了 <code>$.clock.sleep</code>。<code>$.clock.every</code> 和 <code>$.clock.after</code> 代替 <code>setInterval</code> 和 <code>setTimeout</code>，延迟以毫秒为单位：<code>$.clock.after(5000, fn)</code> 在五秒后调用 <code>fn</code> 一次。每个都返回一个带有 <code>cancel()</code> 方法的计时器，<code>await $.clock.now()</code> 给出以毫秒为单位的时间。</p>
+<p>此 hook 每分钟查找一次拉取请求的检查，并在提示下显示结果。<code>summarize</code> 是您自己的函数，将命令的 JSON 输出转换为几个单词：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'session.start'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 每 60,000 毫秒调用一次函数，从现在开始一分钟后</span>
+<span class="w">  </span><span class="nx">$</span><span class="p">.</span><span class="nx">clock</span><span class="p">.</span><span class="nx">every</span><span class="p">(</span><span class="mf">60</span><span class="nx">_000</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">process</span><span class="p">.</span><span class="nx">run</span><span class="p">([</span><span class="s1">'gh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'pr'</span><span class="p">,</span><span class="w"> </span><span class="s1">'checks'</span><span class="p">,</span><span class="w"> </span><span class="s1">'--json'</span><span class="p">,</span><span class="w"> </span><span class="s1">'state'</span><span class="p">])</span>
+<span class="w">    </span><span class="c1">// 用最新摘要替换提示下的行</span>
+<span class="w">    </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="s1">'checks: '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">summarize</span><span class="p">(</span><span class="nx">status</span><span class="p">.</span><span class="nx">stdout</span><span class="p">))</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="w">  </span><span class="c1">// 返回而不等待计时器，以便会话立即启动</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>会话照常启动。一分钟后，提示下会出现一行，带有 <code>⚠</code>、mod 的名称，然后是 <code>checks:</code> 和您的摘要。之后每分钟替换一次。计时器的回调在任何事件之外运行，因此它在轮次之间保持运行，不会启动一个。如果回调抛出异常，错误会进入<a href="plugins-mods-troubleshoot.html#read-the-debug-log">调试日志</a>，计时器在下一个间隔再次运行。</p>
+<h3 id="show-something-without-starting-a-turn">显示内容而不启动轮次</h3>
+<p>后台工作可以显示用户内容而不启动轮次。这些调用中的每一个都将文本放在不同的位置：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">调用</th>
+<th style="text-align: left;">用户看到的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$.ui.status(text)</code></td>
+<td style="text-align: left;">提示下的一行，保持不变直到您更改它。它以 <code>⚠</code> 和 mod 的名称开头，如 <code>⚠ my-mod: checks: 3 passing</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.ui.toast(text)</code></td>
+<td style="text-align: left;">一条带有 mod 名称的 toast 通知，几秒后消失。在<a href="fullscreen.html">全屏渲染</a>中，它是右上角的一个框；在经典渲染器中，它是提示下右侧的一行。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.ui.log(text)</code></td>
+<td style="text-align: left;">成绩单中的一条暗线，Claude 不读取。它以 <code>●</code> 和 mod 的名称开头，如 <code>● my-mod: build finished</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.ui.notify(text)</code></td>
+<td style="text-align: left;">来自用户终端的通知，位于 Claude Code 之外，按照用户的 <a href="settings-reference.html#preferrednotifchannel"><code>preferredNotifChannel</code></a> 设置所指定的方式发送。其标题为 mod 的名称，除非您传入非空的 <code>{ title }</code>，此时标题按您提供的内容显示。</td>
+</tr>
+</tbody>
+</table>
+<p><code>$.ui.notify</code> 是其中唯一会返回应答的调用。当用户的频道将通知写入其终端时，它解析为 <code>{ isSent: true, channel }</code>。<code>channel</code> 是发送该通知的设置值，例如 <code>kitty</code> 或 <code>terminal_bell</code>。<code>terminal_bell</code> 频道只会响铃，既不显示您的文本，也不显示标题。</p>
+<p>否则，调用解析为 <code>{ isSent: false, reason }</code>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><code>reason</code></th>
+<th style="text-align: left;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>disabled</code></td>
+<td style="text-align: left;">用户将 <code>preferredNotifChannel</code> 设置为 <code>notifications_disabled</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>no-channel</code></td>
+<td style="text-align: left;">该设置为 <code>auto</code>，且用户的终端没有 Claude Code 可以发送的通知</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>no-surface</code></td>
+<td style="text-align: left;">会话没有终端，例如 <code>-p</code> 运行、Agent SDK、桌面应用、VS Code 扩展或云端会话。对于在会话启动之前（您的 mod 正在加载时）发起的调用，以及在 Claude Code 退出时发起的调用，也返回此应答</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>refused</code></td>
+<td style="text-align: left;">另一个 mod 在 <code>ui.notify</code> 上的 hook 代替 Claude Code 作出了应答，但没有发送</td>
+</tr>
+</tbody>
+</table>
+<p>当 <code>text</code> 不是字符串、另一个 mod 在 <code>ui.notify</code> 上的 hook 返回 <code>{ deny }</code>，或写入终端失败时，调用会 reject 而不是解析。</p>
+<p>您的 mod 无法选择频道，Claude Code 也不限制 mod 发送通知的频率。用户的设置是唯一的开关。</p>
+<p>当调用到达正在运行的会话时，用户的 <a href="hooks.html#notification"><code>Notification</code> hook</a> 会以类型 <code>plugin_notification</code> 运行。即使应答为 <code>disabled</code>，以及在没有终端、应答为 <code>no-surface</code> 的会话中，它们也会运行。对于在会话启动之前或 Claude Code 退出时发起的调用，不会运行任何 hook。您的 mod 调用 <code>$.ui.notify</code> 所在的那个 hook 不参与这次运行，因此发送通知的 <code>classic.Notification</code> hook 不会因其自身的通知而再次被调用。</p>
+<p>终端不会报告是否显示了通知，因此 <code>isSent: true</code> 表示通知已发送，而不代表用户看到了它。</p>
+<p>此示例在主对话的轮次未被中断而结束时发送通知，并在没有发出带文本的通知时回退到 toast。它在传递事件之前不等待通知，因为用户的 <code>Notification</code> hook 会先运行，可能需要一段时间：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'turn.complete'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">isMainTurn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">agentId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kc">undefined</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">e</span><span class="p">.</span><span class="nx">isAborted</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">fallBack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">toast</span><span class="p">(</span><span class="s1">'Turn finished'</span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isMainTurn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">notify</span><span class="p">(</span><span class="s1">'Turn finished'</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">sent</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">hasText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sent</span><span class="p">.</span><span class="nx">isSent</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">sent</span><span class="p">.</span><span class="nx">channel</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">'terminal_bell'</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">hasText</span><span class="p">)</span><span class="w"> </span><span class="nx">fallBack</span><span class="p">()</span>
+<span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="nx">fallBack</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>在 <a href="plugins-mods-interface.html#draw-in-the-vs-code-extension">VS Code 扩展</a>中，状态栏和 toast 改为显示在输入框上方，日志行则显示在对话中。</p>
+<h3 id="start-a-turn-from-a-background-job">从后台工作启动轮次</h3>
+<p>当后台工作发现需要 Claude 注意的内容时，它可以通过使用 <code>$.prompt.submit({ text })</code> 提交提示来启动轮次。Claude 在命名您的 mod 为发送者的句子后读取文本。要将其作为用户自己的话发送，不带该句子，请添加 <code>asUser: true</code>。调用等待直到会话空闲，然后启动新轮次。它在该轮次启动时解析，因此不要在 Claude 工作时运行的处理程序中 <code>await</code> 它。</p>
+<h3 id="stop-background-work">停止后台工作</h3>
+<p>当模块重新加载时，计时器停止。对于 hook 内的长时间运行工作，<a href="plugins-mods-reference.html#the-hook-function"><code>next.signal</code></a> 是一个 <code>AbortSignal</code>，当您的 hook 处理的事件被放弃时中止，例如当用户中断时，因此将其传递给任何长时间运行的内容。</p>
+<h3 id="calls-and-background-work-after-the-user-interrupts-a-turn">用户中断轮次后的调用和后台工作</h3>
+<p>结果或错误中的原因 <code>the session was stopped and nobody has sent input since</code> 表示用户停止了正在运行的轮次，例如通过 Esc 或 <strong>Stop</strong>。在该中断之后，在会话中启动新工作的调用会被拒绝，直到用户的下一次输入，例如在输入框中输入的一条消息。</p>
+<p>除 <code>$.prompt.submit</code> 和 <code>$.command.run</code> 外，这种中断后对调用和后台工作的处理需要 Claude Code v2.1.304 或更高版本。</p>
+<h4 id="retry-a-refused-or-dropped-call">重试被拒绝或被丢弃的调用</h4>
+<p>从 <a href="plugins-mods-events.html#follow-a-turn"><code>turn.complete</code></a> hook 中再次发起被拒绝或被丢弃的调用。调用会一直被拒绝，直到用户的下一次输入，并且不会有任何机制替您将其排队或重复执行。</p>
+<p>当调用的结果或错误包含以下字符串之一时，保留其参数以便稍后重试：</p>
+<ul>
+<li><strong><code>the session was stopped and nobody has sent input since</code></strong>：调用被拒绝</li>
+<li><strong><code>was removed from the queue before it ran</code></strong>：提示词或命令未运行就离开了队列并被丢弃，例如当用户停止了轮次时</li>
+</ul>
+<p>在此示例中，从您的后台工作中调用 <code>submitPrompt</code> 来代替 <a href="#start-a-turn-from-a-background-job"><code>$.prompt.submit</code></a>。将 <code>pendingText</code> 变量和 <code>submitPrompt</code> 函数放在 <a href="plugins-mods-reference.html#files"><code>register</code></a> 之上，并将 <code>turn.complete</code> hook 放在其内部，因为<a href="plugins-mods-create.html#check-what-claude-code-reads-from-your-mod">验证</a>会拒绝传递给在 <code>register</code> 内部声明的函数的 <code>$</code>。当结果或错误带有上述字符串之一时，<code>submitPrompt</code> 会将文本保存在 <code>pendingText</code> 中，供 <code>turn.complete</code> hook 再次提交：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="c1">// The text of the last refused or dropped prompt, or null</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">pendingText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">submitPrompt</span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">reason</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">prompt</span><span class="p">.</span><span class="nx">submit</span><span class="p">({</span><span class="w"> </span><span class="nx">text</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="nx">reason</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="o">?</span><span class="p">.</span><span class="nx">drop</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">''</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">reason</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">error</span><span class="o">?</span><span class="p">.</span><span class="nx">message</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">error</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">reason</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s1">'the session was stopped and nobody has sent input since'</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
+<span class="w">      </span><span class="nx">reason</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s1">'was removed from the queue before it ran'</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">pendingText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">text</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// Any other result or error isn't retried</span>
+<span class="p">}</span>
+
+<span class="nx">on</span><span class="p">(</span><span class="s1">'turn.complete'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">pendingText</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">pendingText</span>
+<span class="w">    </span><span class="c1">// Empty pendingText before retrying, so that a second run of this hook</span>
+<span class="w">    </span><span class="c1">// doesn't submit the same text.</span>
+<span class="w">    </span><span class="nx">pendingText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="c1">// Not awaited: the hook would stay open until the new turn starts</span>
+<span class="w">    </span><span class="nx">submitPrompt</span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>在用户的下一次输入之前，<code>turn.complete</code> 可能会为被中断的轮次本身以及子代理的轮次触发，此时发起的调用会再次被拒绝。在这种情况下，<code>submitPrompt</code> 会保留文本，留给之后的 <code>turn.complete</code>。</p>
+<p>对于会 reject 的调用，例如 <code>$.command.run</code>，请捕获错误，并以 <code>submitPrompt</code> 测试 <code>reason</code> 的方式测试其消息。</p>
+<h4 id="what-refused-calls-return">被拒绝的调用返回什么</h4>
+<p>在结果中，<code>&lt;reason&gt;</code> 代表调用被拒绝的原因。在中断之后，该原因为 <code>the session was stopped and nobody has sent input since</code>。有关其他原因，请参阅<a href="#calls-refused-in-non-interactive-runs">在 <code>claude -p</code> 运行和 Agent SDK 会话中被拒绝的调用</a>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">部分被拒绝的调用</th>
+<th style="text-align: left;">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$.prompt.submit</code></td>
+<td style="text-align: left;">解析为 <code>{ drop: '&lt;reason&gt;' }</code>，且不会将任何提示词排队</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.command.run</code></td>
+<td style="text-align: left;">以一个消息以 <code>&lt;reason&gt;</code> 结尾的错误 reject</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="plugins-mods-reference.html#mods-api-methods"><code>$.agent.spawn</code></a></td>
+<td style="text-align: left;">解析为 <code>{ deny: '&lt;reason&gt;' }</code>，且不会启动子代理</td>
+</tr>
+<tr>
+<td style="text-align: left;">向已完成的子代理调用 <code>$.session.send</code></td>
+<td style="text-align: left;">解析为 <code>{ isDelivered: false, reason: 'Agent "&lt;id&gt;" was not resumed: &lt;reason&gt;.' }</code>，其中 <code>&lt;id&gt;</code> 是子代理的 id。仍在运行的子代理会收到该消息。</td>
+</tr>
+<tr>
+<td style="text-align: left;">向 <a href="agent-teams.html">agent team</a> 队友调用 <code>$.session.send</code></td>
+<td style="text-align: left;">解析为 <code>{ isDelivered: false, reason: 'Teammate "&lt;name&gt;" was not messaged: &lt;reason&gt;.' }</code>，其中 <code>&lt;name&gt;</code> 是队友的名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">对带有 <code>run_in_background: true</code> 的 Bash、Monitor 或 CronCreate 调用 <a href="plugins-mods-reference.html#mods-api-methods"><code>$.tool.call</code></a></td>
+<td style="text-align: left;">解析为 <code>{ deny: '&lt;tool&gt; was not run: it starts background work, a schedule or a goal, and &lt;reason&gt;' }</code>，其中 <code>&lt;tool&gt;</code> 是工具的名称</td>
+</tr>
+</tbody>
+</table>
+<p>当这些 <code>$.session.send</code> 或 <code>$.tool.call</code> 调用之一在交互式会话中因中断而被拒绝时，用户可能会看到 <a href="plugins-mods-troubleshoot.html#stopped-type-a-message-to-continue"><code>Stopped:</code> toast</a>。</p>
+<h4 id="work-your-mod-started-before-the-interruption">您的 mod 在中断前启动的工作</h4>
+<p>用户停止正在运行的轮次后（例如通过 Esc），您的 mod 已经启动的部分工作会被丢弃，部分工作会等待用户的下一次输入。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">工作</th>
+<th style="text-align: left;">用户下一次输入之前会发生什么</th>
+<th style="text-align: left;">如何处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">来自 <code>$.prompt.submit</code> 且仍在队列中的提示词</td>
+<td style="text-align: left;">被丢弃。调用解析为 <code>{ drop: 'the prompt was removed from the queue before it ran' }</code>。</td>
+<td style="text-align: left;">按照<a href="#retry-a-refused-or-dropped-call">重试被拒绝或被丢弃的调用</a>所示再次提交</td>
+</tr>
+<tr>
+<td style="text-align: left;">来自 <code>$.command.run</code> 且仍在队列中的命令</td>
+<td style="text-align: left;">被丢弃。调用以一个消息包含 <code>the command was removed from the queue before it ran</code> 的错误 reject。</td>
+<td style="text-align: left;">按照<a href="#retry-a-refused-or-dropped-call">重试被拒绝或被丢弃的调用</a>所示再次运行</td>
+</tr>
+<tr>
+<td style="text-align: left;">使用 CronCreate 等工具安排、在用户下一次输入之前到期的一次性作业</td>
+<td style="text-align: left;">此时不启动轮次，并在该输入之后运行</td>
+<td style="text-align: left;">无需处理</td>
+</tr>
+<tr>
+<td style="text-align: left;">使用 CronCreate 等工具安排、在用户下一次输入之前到期的周期性作业</td>
+<td style="text-align: left;">此时不启动轮次。该作业会错过这次运行，并保留其计划。</td>
+<td style="text-align: left;">无需处理</td>
+</tr>
+<tr>
+<td style="text-align: left;">来自您的 mod 启动的监视器的事件</td>
+<td style="text-align: left;">监视器继续运行。监视器在用户下一次输入之前触发的事件会被丢弃，但监视器结束的通知除外，该通知会在该输入之后到达。</td>
+<td style="text-align: left;">无法处理</td>
+</tr>
+<tr>
+<td style="text-align: left;">您的 mod 生成并随后通过 <code>$.session.send</code> 恢复、在用户下一次输入之前完成的子代理</td>
+<td style="text-align: left;">其完成通知会等待，并在该输入之后到达对话</td>
+<td style="text-align: left;">无需处理</td>
+</tr>
+<tr>
+<td style="text-align: left;">来自 <code>$.tool.call</code>、在用户停止轮次时已在运行、并在用户下一次输入之前达到超时的前台 Bash 或 PowerShell 命令</td>
+<td style="text-align: left;">在超时时被停止，而不是<a href="tools-reference.html#foreground-commands-that-move-to-the-background">移至后台</a>。调用解析时会设置 <code>isError</code>，输出中包含以下行：<code>Ended instead of moving to the background: plugins' input is held, by a Stop or by the host's limits.</code></td>
+<td style="text-align: left;">在用户下一次输入之后，按照<a href="#retry-a-refused-or-dropped-call">重试被拒绝或被丢弃的调用</a>所示再次运行</td>
+</tr>
+</tbody>
+</table>
+<p>当计划作业到期或监视器在用户下一次输入之前触发事件时，用户可能会看到 <a href="plugins-mods-troubleshoot.html#stopped-type-a-message-to-continue"><code>Stopped:</code> toast</a>。</p>
+<h3 id="calls-refused-in-non-interactive-runs">在 <code>claude -p</code> 运行和 Agent SDK 会话中被拒绝的调用</h3>
+<p>在 <code>claude -p</code> 运行或 <a href="agent-sdk-overview.html">Agent SDK</a> 会话中，诸如 <code>{ drop: 'the run reached its --max-turns limit' }</code> 这样的结果表示该运行拒绝了您的 mod 的调用。</p>
+<p>被拒绝的 <code>$.prompt.submit</code> 解析为 <code>{ drop: '&lt;reason&gt;' }</code>。其他被拒绝的调用，例如 <code>$.command.run</code> 和 <code>$.agent.spawn</code>，会给出<a href="#what-refused-calls-return">被拒绝的调用返回什么</a>中所示的结果，其中 <code>&lt;reason&gt;</code> 替换为相应的原因。在下方找到您的 <code>&lt;reason&gt;</code>，了解如何处理：</p>
+<ul>
+<li><strong><code>the run reached its --max-turns limit</code></strong>：来自您的 mod 的提示词以及它生成的子代理所产生的轮次都会计入 <a href="cli-reference.html#cli-flags"><code>--max-turns</code></a> 或 Agent SDK 的<a href="agent-sdk-configuration.html#limit-turns-and-spend">轮次限制</a>。如需更多轮次，请使用更高的限制启动运行。如果无法这样做，请让您的 mod 停止发起被拒绝的调用。如果运行从用户或 SDK 应用程序接收到另一个提示词，轮次计数会重置，运行会再次接受调用。</li>
+<li><strong><code>the run is past its --max-budget-usd limit</code></strong>：使用更高的 <code>--max-budget-usd</code> 启动运行，或提高 Agent SDK 的<a href="agent-sdk-configuration.html#limit-turns-and-spend">花费限制</a>。如果无法这样做，请让您的 mod 停止发起被拒绝的调用。该限制适用于运行到目前为止的总花费。当运行接收到另一个提示词时，该总额会继续累加，因此重试会返回相同的原因。</li>
+<li><strong><code>the host has ended its input</code></strong>：例如，SDK 应用程序结束了其<a href="agent-sdk-streaming-vs-single-mode.html">流式输入</a>，或者使用 <a href="cli-reference.html#cli-flags"><code>--input-format stream-json</code></a> 启动的运行的 stdin 已关闭。运行正在结束，不再接受任何输入，因此重试会返回相同的原因。请让您的 mod 停止发起被拒绝的调用。如果运行由您自己启动，下次请保持该输入打开，直到您的 mod 不再需要发起调用。</li>
+<li><strong><code>the session was stopped and nobody has sent input since</code></strong>：运行被<a href="#calls-and-background-work-after-the-user-interrupts-a-turn">中断</a>，例如通过 Agent SDK 的 <a href="agent-sdk-typescript.html#query-object"><code>interrupt()</code></a>。要在用户或 SDK 应用程序的下一条消息之后再次发起调用，请按照<a href="#retry-a-refused-or-dropped-call">重试被拒绝或被丢弃的调用</a>操作。</li>
+</ul>
+<h3 id="a-claude-p-run-with-your-mod-never-exits">加载您的 mod 的 <code>claude -p</code> 运行永不退出</h3>
+<p>如果您的 mod 在每个轮次结束时都提交一个提示词，则每个提示词都会启动另一个轮次。如果没有 <a href="cli-reference.html#cli-flags"><code>--max-turns</code></a> 或 <code>--max-budget-usd</code>，加载该 mod 的 <code>claude -p</code> 运行会一直持续，直到您自己将其停止。</p>
+<p>要让运行自行结束，请在 shell 中为命令添加其中任一标志。如果由其他人启动运行，请让您的 mod 在完成工作后停止提交提示词。以下命令添加了 <code>--max-turns</code>：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>-p<span class="w"> </span><span class="s2">"find the TODOs"</span><span class="w"> </span>--max-turns<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
+<p>一旦运行达到该限制，mod 的下一个提示词会被<a href="#calls-refused-in-non-interactive-runs">拒绝</a>而不是启动轮次，运行随之结束。</p>
+<p>如果运行仍然超出限制，请在 shell 中运行 <code>claude --version</code>，如果您的版本低于 v2.1.304，请<a href="setup.html#update-claude-code">更新 Claude Code</a>。从 v2.1.299 起，mod 的提示词会在达到限制时被拒绝。如果您的 mod 生成子代理，从 v2.1.304 起，它们的轮次会计入 <code>--max-turns</code>。</p>
+<h2 id="send-and-receive-messages-between-sessions">在会话之间发送和接收消息</h2>
+<p>mod 可以向您的另一个会话、此会话的子代理之一或其 <a href="agent-teams.html">agent team</a> 中的队友发送纯文本消息，还可以观察到达和离开的消息。</p>
+<p>要发送消息，请调用 <code>$.session.send({ to, text })</code>，它与 SendMessage 工具进行相同的传递。根据消息的接收者设置 <code>to</code>：</p>
+<ul>
+<li><strong>您的另一个会话</strong>：<code>{ sessionId }</code></li>
+<li><strong>子代理或队友</strong>：<code>{ agentId }</code>，使用来自 <code>$.agent.list()</code> 的 id</li>
+<li><strong>您收到的某条消息的发送者</strong>：该消息来源的字符串地址</li>
+</ul>
+<p>调用在消息排队后解析，带有 <code>{ isDelivered: true }</code>。当没有传递任何内容时，它使用 <code>{ isDelivered: false, reason }</code> 解析，<code>reason</code> 说明原因。</p>
+<p>此 hook 通过要求您在其后键入的 id 的会话获取状态来回答 <code>/ping</code> 命令（<a href="#add-a-command">注册为命令</a>）：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="nx">on</span><span class="p">(</span><span class="s1">'command.run'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s1">'ping'</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">$</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// e.args 是在 /ping 后键入的会话 id</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">sent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">session</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">to</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">sessionId</span><span class="o">:</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">args</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'Status? One line.'</span><span class="w"> </span><span class="p">})</span>
+<span class="w">  </span><span class="c1">// 调用无论如何都解析，因此检查 isDelivered 以了解发生了什么</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">sent</span><span class="p">.</span><span class="nx">isDelivered</span><span class="p">)</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">toast</span><span class="p">(</span><span class="s1">'Not delivered: '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">sent</span><span class="p">.</span><span class="nx">reason</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// 空结果在此会话的成绩单中不打印任何内容</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>当消息排队时，您的会话中不会出现任何内容，其他会话的 Claude 读取 <code>Status? One line.</code>。当没有传递任何内容时，toast 通知会给出原因。</p>
+<p><code>session.receive</code> 和 <code>session.send</code> 让 mod 观察消息。从两者都返回 <code>next(e)</code> 以不变地传递每条消息：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">事件</th>
+<th style="text-align: left;">何时触发</th>
+<th style="text-align: left;">有用的字段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>session.receive</code></td>
+<td style="text-align: left;">消息到达此会话，在 Claude 读取之前</td>
+<td style="text-align: left;"><code>e.text</code> 和 <code>e.origin.kind</code>，例如 <code>peer</code> 或 <code>peer-send-message</code> 用于另一个会话或代理，<code>task-notification</code> 或 <code>scheduled-trigger</code>。返回 <code>{ consumed: reason }</code> 以防止 Claude 读取。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>session.send</code></td>
+<td style="text-align: left;">消息即将离开，来自 SendMessage 工具或 mod</td>
+<td style="text-align: left;"><code>e.to</code>、<code>e.text</code> 和 <code>e.origin.kind</code>，即 <code>model</code> 或 <code>plugin</code></td>
+</tr>
+</tbody>
+</table>
+<p>设置为<a href="cross-session-messaging.html#control-inbound-messages">拒绝入站消息</a>的会话在 <code>session.receive</code> 触发之前拒绝消息，因此 hook 永远看不到它。为您的批准而保留的消息首先到达 hook，因此 mod 可以读取您尚未批准的消息。hook 的 <code>next(e)</code> 在消息未传递时拒绝。</p>
+<p>接收消息上的发送者名称是发送者写的任何内容，因此不要基于它做出决定。</p>
+<h2 id="reach-files-processes-and-the-network">访问文件、进程和网络</h2>
+<p>mod 通过 mods API 访问文件系统、进程和网络，具有与运行 Claude Code 的用户相同的权限。hook 模块本身没有 Node.js API、没有计时器全局变量（如 <code>setTimeout</code>），也没有自己的网络或文件访问。标准 JavaScript 和 Web API（如 <code>URL</code>、<code>TextEncoder</code>、<code>AbortController</code> 和 <code>crypto.subtle</code>）可用。下面的每个命名空间涵盖一种访问：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">命名空间</th>
+<th style="text-align: left;">它做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$.fs</code></td>
+<td style="text-align: left;"><code>read(path)</code>、<code>write(path, text)</code>、<code>exists(path)</code>、<code>stat(path)</code> 和 <code>list(path)</code> 作用于文件和目录</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.process</code></td>
+<td style="text-align: left;"><code>run(['git', 'status'])</code> 启动命令并在其退出时解析。<code>spawn</code> 流式传输长时间运行命令的输出。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.http</code></td>
+<td style="text-align: left;"><code>fetch(url, init)</code> 通过 <code>http</code> 或 <code>https</code>。它在读取体后解析为 <code>{ status, ok, headers, text }</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.store</code></td>
+<td style="text-align: left;">您的插件自己的 JSON 键值存储，在会话之间保留</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.env</code></td>
+<td style="text-align: left;"><code>get</code> 和 <code>set</code> 环境变量。将名称写为文字字符串。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.settings</code></td>
+<td style="text-align: left;"><code>read()</code> 解析为合并成一个对象的全部设置。传入 <code>{ source }</code> 或 <code>{ key }</code> 时，它改为解析为<a href="#read-one-source-or-one-key">单个来源的设置或单个键的值</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.session</code></td>
+<td style="text-align: left;"><code>messages()</code> 将会话记录作为 <code>{ role, text, toolUses }</code> 列表返回。还有工作目录、模型等。<a href="plugins-mods-reference.html#mods-api-methods"><code>usage()</code></a> 返回上下文窗口使用和计划限制。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.mcp</code></td>
+<td style="text-align: left;"><code>call</code> 连接的 MCP 服务器上的工具</td>
+</tr>
+</tbody>
+</table>
+<p>文件、进程和请求有一些自己的规则：</p>
+<ul>
+<li><strong>路径</strong>：相对路径相对于会话的工作目录进行解析，或相对于 hook 正在处理其事件的子代理的工作目录进行解析</li>
+<li><strong><code>$.fs.list</code></strong>：将一个目录的条目作为 <code>{ name, kind, size, isLink }</code> 返回，不进行递归</li>
+<li><strong><code>$.process.run</code></strong>：接受参数列表，不使用 shell。它解析为 <code>{ exitCode, stdout, stderr }</code>，无论退出码如何。如果程序无法启动或在超时时仍在运行，它会拒绝，默认为 30 秒，因此将其包装在 <code>try</code> 和 <code>catch</code> 中。</li>
+<li><strong><code>$.http.fetch</code></strong>：最多跟随五次重定向。当重定向到不同的源时，它只保留您设置的 <code>accept</code>、<code>accept-language</code>、<code>content-type</code> 和 <code>user-agent</code> 请求头，并丢弃其余请求头，因此依赖其他请求头（如 <code>Authorization</code>）的请求在该重定向之后可能会失败。<a href="plugins-mods-reference.html#limits">限制</a>中列出了它的超时时间和体大小。</li>
+</ul>
+<p>这些调用中的每一个本身都是一个事件，以其命名空间和方法命名，不带 <code>$.</code>，例如 <code>fs.read</code> 用于 <code>$.fs.read</code>。<a href="plugins-mods-events.html#the-order-mods-run-in">链中较早的</a> mod 可以观察、重写或拒绝您的调用，这是组织限制 mod 到达的方式。</p>
+<p>mod 可以在命令已产生输出或已退出之后拒绝您的 <code>$.process.spawn</code> 调用，且该命令已执行的任何操作都不会被撤销。此时该调用会拒绝，并返回一条以下列字符串之一加上拒绝方 mod 的原因结尾的消息：</p>
+<ul>
+<li><strong><code>$.process.spawn started, and a plugin withheld its result:</code></strong>：拒绝方 mod 尚未将命令的输出读取到末尾。如果命令仍在运行，Claude Code 会将其停止。</li>
+<li><strong><code>$.process.spawn ran, and a plugin withheld its result:</code></strong>：拒绝方 mod 已将命令的输出读取到末尾，因此命令已经退出</li>
+</ul>
+<h3 id="read-one-source-or-one-key">读取全部设置、单个来源或单个键</h3>
+<p><code>$.settings.read()</code> 解析为一个对象，其中包含所有正在使用的来源的设置，按<a href="settings.html#settings-precedence">优先级</a>合并。传入 <code>{ source }</code> 可改为读取单个来源，传入 <code>{ key }</code> 可读取单个键，也可以同时传入两者：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">调用</th>
+<th style="text-align: left;">解析为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$.settings.read()</code></td>
+<td style="text-align: left;">合并后的设置，作为一个对象。其顶层键与 <code>settings.json</code> 文件的顶层键相同，例如 <code>permissions</code> 和 <code>hooks</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.settings.read({ source: 'policy' })</code></td>
+<td style="text-align: left;">该单个来源的设置，作为一个对象；当该来源不包含任何设置时为 <code>{}</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.settings.read({ key: 'spinnerTipsEnabled' })</code></td>
+<td style="text-align: left;">该键在合并后设置中的值；当该键未设置时为 <code>undefined</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$.settings.read({ key: 'spinnerTipsEnabled', source: 'user' })</code></td>
+<td style="text-align: left;">该键在该单个来源中的值；当该来源未设置它时为 <code>undefined</code></td>
+</tr>
+</tbody>
+</table>
+<p>对于 <code>source</code>，传入要读取的单个设置来源的名称：</p>
+<ul>
+<li><strong><code>user</code></strong>：<code>~/.claude/settings.json</code></li>
+<li><strong><code>project</code></strong>：<code>.claude/settings.json</code></li>
+<li><strong><code>local</code></strong>：<code>.claude/settings.local.json</code></li>
+<li><strong><code>flag</code></strong>：通过 <code>--settings</code> 传入的内容，以及 SDK 的内联设置</li>
+<li><strong><code>policy</code></strong>：<a href="managed-settings.html#how-claude-code-combines-managed-sources">托管设置</a></li>
+</ul>
+<p>对于 <code>key</code>，传入单个顶层键的确切名称，而不是指向嵌套对象内部的点分路径。<code>key</code> 参数需要 Claude Code v2.1.304 或更高版本。</p>
+<h2 id="next-steps">后续步骤</h2>
+<ul>
+<li><a href="plugins-mods-events.html">对事件做出反应</a>：hook 工具调用、提示和轮次</li>
+<li><a href="plugins-mods-interface.html">在界面中绘制</a>：在窗格或提示上方显示您的 mod 收集的内容</li>
+<li><a href="plugins-mods-test.html">测试 mod</a>：在测试中存根这些调用中的任何一个</li>
+<li><a href="plugins-mods-reference.html">Mods 参考</a>：事件、mods API 方法和限制</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-mods-events.html"><span class="pager-dir">← 上一页</span><span class="pager-name">使用 mod 响应事件</span></a><a class="pager-link next" href="plugins-mods-test.html"><span class="pager-dir">下一页 →</span><span class="pager-name">测试 mod</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#add-a-command-or-a-tool">添加命令或工具</a><a class="toc-l3" href="#add-a-command">添加命令</a><a class="toc-l3" href="#add-a-tool">添加工具</a><a class="toc-l2" href="#call-a-model">调用模型</a><a class="toc-l3" href="#send-one-prompt">发送单个提示词</a><a class="toc-l3" href="#use-prompt-caching">使用提示缓存</a><a class="toc-l3" href="#what-a-model-complete-hook-receives">model.complete hook 接收的内容</a><a class="toc-l2" href="#run-work-in-the-background">在后台运行工作</a><a class="toc-l3" href="#show-something-without-starting-a-turn">显示内容而不启动轮次</a><a class="toc-l3" href="#start-a-turn-from-a-background-job">从后台工作启动轮次</a><a class="toc-l3" href="#stop-background-work">停止后台工作</a><a class="toc-l3" href="#calls-and-background-work-after-the-user-interrupts-a-turn">用户中断轮次后的调用和后台工作</a><a class="toc-l3" href="#calls-refused-in-non-interactive-runs">在 claude -p 运行和 Agent SDK 会话中被拒绝的调用</a><a class="toc-l3" href="#a-claude-p-run-with-your-mod-never-exits">加载您的 mod 的 claude -p 运行永不退出</a><a class="toc-l2" href="#send-and-receive-messages-between-sessions">在会话之间发送和接收消息</a><a class="toc-l2" href="#reach-files-processes-and-the-network">访问文件、进程和网络</a><a class="toc-l3" href="#read-one-source-or-one-key">读取全部设置、单个来源或单个键</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

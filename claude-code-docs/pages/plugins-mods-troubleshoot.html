@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>排查 mod 问题 · Claude Code 中文文档</title>
+<meta name="description" content="了解为什么 Claude Code mod 不起作用：将症状或消息与其原因匹配，查找拒绝消息，并阅读调试日志。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="plugins/mods/troubleshoot">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/plugins/mods/troubleshoot" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link" href="workflows.html">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link active" href="plugins-mods-troubleshoot.html" aria-current="page">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>插件</span> <span class="sep">/</span> <span>mod</span> <span class="sep">/</span> <span>测试与故障排除</span></div>
+    <article class="prose" id="article"><h1 id="mod">排查 mod 问题</h1>
+<blockquote>
+<p>了解为什么 Claude Code mod 不起作用：将症状或消息与其原因匹配，查找拒绝消息，并阅读调试日志。</p>
+</blockquote>
+<p>当 mod 的模块或其中一个 hook 失败时，Claude Code 会跳过它，会话继续进行，因此损坏的 mod 看起来像什么都不做的 mod。首先检查 Claude Code 从 mod 读取了什么以及它在哪里报告问题，然后找到您遇到的症状或消息。</p>
+<h2 id="find-out-why-a-mod-does-nothing">找出为什么 mod 不起作用</h2>
+<p>当 mod 不起作用时，请检查 Claude Code 从 mod 文件读取的内容，以及它在跳过某些内容时写入的行。对于第一项，在您的 shell 中运行 <a href="plugins-mods-create.html#check-what-claude-code-reads-from-your-mod"><code>claude plugin validate</code></a>，使用 mod 的目录，如 <code>claude plugin validate ./first-mod</code>。它可以捕获拼写错误的事件、错误的清单和 Claude Code 无法读取的模块，而无需启动会话。</p>
+<p>当模块未加载、hook 被跳过或另一个 mod 拒绝您的 mod 时，Claude Code 会写入一行，其中命名您的 mod。您读取该行的位置取决于会话：</p>
+<ul>
+<li><strong>热重新加载插件目录的会话</strong>：成绩单中的暗行。这是您使用 <code>--plugin-dir</code> 启动的交互式会话，或者是您为 Claude 编写的 mod <a href="plugins-mods-create.html#ask-claude-for-a-mod">启用热重新加载</a> 的会话。</li>
+<li><strong>任何其他交互式会话，例如运行您从市场安装的 mod 的会话</strong>：<a href="#read-the-debug-log">调试日志</a> 仅。要获取一个，请使用 <code>claude --debug</code> 启动会话。</li>
+<li><strong>带有 <code>--plugin-dir</code> 的 <code>claude -p</code> 运行</strong>：stderr，采用默认文本输出格式。另一个 mod 的拒绝仅进入调试日志。</li>
+</ul>
+<h2 id="check-whether-mods-can-load">检查 mod 是否可以加载</h2>
+<p>要检查您的设置是否允许 mod 加载，而无需安装一个，请在您的 shell 中从不包含 mod 的目录运行 <code>claude plugin test</code>。您不需要会话。它打印的消息告诉您状态：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">消息包含</th>
+<th style="text-align: left;">这意味着什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>no hooks module to load</code></td>
+<td style="text-align: left;">Mod 可以加载。该命令在此目录中找不到要测试的 mod。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hooks modules are turned off here</code></td>
+<td style="text-align: left;">一个设置正在阻止您的 mod：您自己的设置中的 <code>disableAllHooks</code>，或您的组织的策略</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hooks modules are turned off in this process: the rollout switch served off</code></td>
+<td style="text-align: left;">Anthropic 已远程关闭已安装的 mod。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hooks modules are turned off in this process: the rollout switch was saved off by an earlier session</code></td>
+<td style="text-align: left;">该命令使用了之前某个会话保存的值，该值可能已过时。请启动一次 <code>claude</code> 以刷新该值，然后再次运行该命令。</td>
+</tr>
+</tbody>
+</table>
+<p>组织还可以设置 <code>allowManagedModsOnly</code> 以仅允许其自己的 mod，此命令不会报告。在这种情况下，Claude Code 会拒绝您安装的 mod，并且<a href="plugins-mods-troubleshoot.html#messages-from-the-built-in-guard">会有消息说明原因</a>。</p>
+<h2 id="the-mod-doesn’t-load">mod 不加载</h2>
+<p>mod 添加的任何内容都不会出现：没有命令、没有绘图，也没有行为改变。</p>
+<h3 id="your-version-is-too-old">您的版本过旧</h3>
+<p>请参阅<a href="plugins-mods-overview.html#turn-mods-on-or-off">应使用哪个版本以及如何检查您的版本</a>。</p>
+<h3 id="the-mods-active-line-doesn’t-name-the-mod"><code>mods active</code> 行不命名 mod</h3>
+<p>mod 添加的任何内容都不会出现，<code>/plugin</code> 中的 <a href="plugins-mods-overview.html#see-which-mods-a-session-loaded"><code>mods active</code> 行</a> 不命名它。hooks 模块未加载。当 Claude Code 拒绝它时，调试日志有一行以 <code>hooks module</code>、mod 的名称和 <code>not loaded:</code> 开头，如 <code>hooks module first-mod@inline not loaded: disableAllHooks in managed settings</code>，用于使用 <code>--plugin-dir</code> 加载的 mod。</p>
+<p>读取冒号后的原因。<a href="#refusal-messages">拒绝消息</a> 部分列出了每一个。如果日志中没有这样的行，请逐一处理此组中的其他条目。</p>
+<p>某些设置会阻止 mod，同时让其插件的其余部分继续工作。<a href="plugins-mods-overview.html#turn-mods-on-or-off">启用或关闭 mod</a> 列出了这些设置。</p>
+<h3 id="a-claude-p-run-prints-hooks-module-not-loaded"><code>claude -p</code> 运行打印 <code>hooks module not loaded</code></h3>
+<p>该行以 mod 的名称开头并进入 stderr。hooks 模块被拒绝。非交互式运行没有成绩单，因此消息进入 stderr。</p>
+<p>读取冒号后的原因。<a href="#refusal-messages">拒绝消息</a> 部分列出了每一个。</p>
+<h3 id="refusal-messages">拒绝消息</h3>
+<p>这些消息中的每一个都遵循调试日志中的 <code>hooks module</code>、mod 的名称和 <code>not loaded:</code>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">消息开头</th>
+<th style="text-align: left;">这意味着什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>hooks modules are turned off for installed plugins in this process: the rollout switch served off</code></td>
+<td style="text-align: left;">Anthropic 已远程关闭已安装的 mod。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hooks modules are turned off for installed plugins in this process: the rollout switch was saved off by an earlier session</code></td>
+<td style="text-align: left;">该会话使用了先前会话保存的值，该值可能已过时。请重新启动 Claude Code 以刷新该值。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disableAllHooks in managed settings</code></td>
+<td style="text-align: left;">您的组织关闭了来自已安装插件的 hooks</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>only managed plugins and built-in plugins run</code></td>
+<td style="text-align: left;">设置了 <code>allowManagedHooksOnly</code>，或在托管设置以外的设置文件中设置了 <code>disableAllHooks</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>installed plugins that are not managed load no hooks module in this mode (--bare)</code></td>
+<td style="text-align: left;">您使用 <code>--bare</code> 启动了 Claude Code</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>another plugin of that name loads first</code></td>
+<td style="text-align: left;">另一个已启用的插件与您的 mod 同名，并且<a href="plugins-loading.html#hooks-when-two-enabled-plugins-share-a-name">占用了该名称</a>，因此您的 hook 模块不会加载</td>
+</tr>
+</tbody>
+</table>
+<h3 id="messages-from-the-built-in-guard">来自内置保护的消息</h3>
+<p>在具有托管设置的机器上，或在凭据为 Team 或 Enterprise <code>/login</code> 的会话中，<a href="plugins-mods-admin.html#know-what-happens-by-default">内置守卫</a> 可以拒绝 mod 或其答案之一。每条消息都会指明您的组织管理员为更改该规则而设置的选项。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">消息包含</th>
+<th style="text-align: left;">这意味着什么</th>
+<th style="text-align: left;">它出现在哪里</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>mods are limited to your organization's by policy (allowManagedModsOnly)</code></td>
+<td style="text-align: left;">您的组织仅允许 <a href="plugins-mods-admin.html#install-your-organizations-mods">其自己的 mod</a>，因此您的 mod 被拒绝</td>
+<td style="text-align: left;">调试日志，以及 <a href="#find-out-why-a-mod-does-nothing">热重新加载插件目录的会话</a> 中的会话记录</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tried to lift a deny rule in your settings</code></td>
+<td style="text-align: left;">您的 mod 的 <a href="plugins-mods-reference.html#tools"><code>tool.check</code></a> hook 批准了 <code>deny</code> 规则拒绝的调用。该调用保持被拒绝。</td>
+<td style="text-align: left;">成绩单和调试日志，会话中每个 mod 一次。在 <code>claude -p</code> 运行中，仅调试日志。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>the deny rules in your settings could not be checked for this call, so it is refused</code></td>
+<td style="text-align: left;">保护在检查 mod 批准的调用时失败，因此它拒绝了该调用</td>
+<td style="text-align: left;">Claude 为被拒绝的调用读取的原因</td>
+</tr>
+</tbody>
+</table>
+<h3 id="validate-passes-and-lists-no-hooks-line"><code>validate</code> 通过且不列出 <code>hooks</code> 行</h3>
+<p><code>hooks/hooks.json</code> 没有 <code>modules</code> 键，或键拼写错误。</p>
+<p>添加 <code>"modules": ["./register.js"]</code>。</p>
+<h3 id="hooks-module-did-not-load"><code>hooks module did not load</code></h3>
+<p>该行以 mod 的名称开头，然后是 <code>hooks module did not load:</code> 和一个原因，当问题在您的代码中时，它给出文件和行。Claude Code 无法加载模块，例如因为其顶级代码抛出了异常。</p>
+<p>修复原因命名的错误。</p>
+<p>如果原因以 <code>; the version loaded before is unloaded</code> 结尾，则该 mod 当前没有任何版本在运行。修复错误后，在会话中运行 <a href="plugins-cli-reference.html#reload-plugins"><code>/reload-plugins</code></a> 以再次加载该 mod。如果该 mod 是您安装的而非您编写的，请让其作者修复该错误。</p>
+<h3 id="options-do-not-fit-plugin-json-userconfig"><code>options do not fit plugin.json userConfig</code></h3>
+<p>该行以 mod 的名称开头，然后是 <code>hooks module did not load: options do not fit plugin.json userConfig:</code> 和一个原因。某个选项未通过其 <a href="plugins-components.html#user-configuration"><code>userConfig</code></a> 字段的验证，例如高于字段 <code>max</code> 的数字，或必需字段没有值。</p>
+<p>设置或更改值。该行的末尾命名其在 <code>settings.json</code> 中的 <code>pluginConfigs</code> 条目。</p>
+<h3 id="code-nested-too-deep-to-scan-more-than-2000-scopes"><code>code nested too deep to scan: more than 2000 scopes</code></h3>
+<p>该行以 mod 的名称开头，然后是 <code>hooks module did not load:</code>、文件，以及 <code>code nested too deep to scan: more than 2000 scopes</code>。hook 模块中的文件不能将作用域（例如函数、块和循环）嵌套超过 <a href="plugins-mods-reference.html#limits">2,000 层</a>。<a href="plugins-mods-create.html#check-what-claude-code-reads-from-your-mod"><code>claude plugin validate</code></a> 会报告相同的原因。</p>
+<p>重写代码，减少其作用域的嵌套深度。</p>
+<h3 id="the-engine-ran-out-of-stack-linking-the-file-and-its-imports"><code>the engine ran out of stack linking the file and its imports</code></h3>
+<p>hook 模块中的代码嵌套过深，或其导入链过长，导致 Claude Code 无法加载它。该行以 mod 的名称和 <code>hooks module did not load:</code> 开头，然后给出某个文件的名称以及此原因。</p>
+<p>请在该文件以及通过其导入所到达的文件中查找嵌套最深的部分，并重写该部分以减少嵌套，或缩短导入链。如果该 mod 不是您编写的，请让其作者进行修复。</p>
+<h3 id="the-parser-stopped-or-the-engine-ran-out-of-stack-loading-the-file"><code>the parser stopped</code> 或 <code>the engine ran out of stack loading the file</code></h3>
+<p>hook 模块某个文件中的代码嵌套过深，导致 Claude Code 在读取时耗尽了栈空间。该行以 mod 的名称和 <code>hooks module did not load:</code> 开头，然后给出该文件的名称以及以下原因之一：</p>
+<ul>
+<li><code>code nested too deep to scan (the parser stopped: &lt;message&gt;)</code></li>
+<li><code>the engine ran out of stack loading the file (code nested too deep): &lt;message&gt;</code></li>
+</ul>
+<p>该原因不提供行号，也不说明嵌套的是哪种代码，因此请自行查看该文件，找出其嵌套最深的部分。重写该部分以减少嵌套。如果该 mod 是您安装的而非您编写的，请让其作者进行修改。</p>
+<h3 id="no-mod-loads-in-a-directory-you-opened-for-the-first-time">没有 mod 在您首次打开的目录中加载</h3>
+<p>您还没有回答该目录的信任提示。</p>
+<p>使用 <code>claude</code> 在该目录中启动交互式会话，并接受它打开的信任提示。</p>
+<h3 id="no-installed-plugin-loads-at-all">没有已安装的插件加载</h3>
+<p>您使用 <code>--safe-mode</code> 启动了 Claude Code。</p>
+<p>启动时不使用该标志。</p>
+<h3 id="claude-code-stops-asking-to-enable-hot-reloading">Claude Code 不再询问是否启用热重载</h3>
+<p>Claude 在交互式会话中编写了 mod，但没有任何内容加载，而且 Claude Code 不再询问<a href="plugins-mods-create.html#ask-claude-for-a-mod">是否启用热重载</a>。如果该问题有三次在未选择任何答案的情况下结束，热重载将保持关闭。例如，当您设置了 <a href="settings-reference.html#askuserquestiontimeout"><code>askUserQuestionTimeout</code></a> 并且在您回答之前时间已到时，问题就会以这种方式结束。该设置在此适用，是因为 Claude Code 使用与 <a href="tools-reference.html#question-auto-continue-timeout"><code>AskUserQuestion</code> 相同的问题对话框</a>进行询问。您自己关闭的问题不计入这三次。</p>
+<p>要运行该 mod，请<a href="plugins-mods-create.html#use-the-mod-in-other-sessions">将其目录从 mods 文件夹中复制出来</a>，然后在 shell 中使用 <code>--plugin-dir</code> 启动新会话，例如 <code>claude --plugin-dir ~/mods/git-branch</code>。</p>
+<h2 id="a-hook-is-skipped-or-a-mod-is-unloaded">hook 被跳过或 mod 被卸载</h2>
+<p>mod 已加载，然后 Claude Code 跳过了其中一个 hooks 或卸载了它。</p>
+<h3 id="hook-skipped"><code>hook skipped</code></h3>
+<p>该行命名 mod 和事件，然后说 <code>hook skipped:</code> 和一个原因，如 <code>first-mod: tool.call hook skipped: threw Error: boom</code>。hook 抛出了异常、运行超过了其<a href="plugins-mods-reference.html#limits">时间限制</a>，或返回了错误形状的结果。该行对每个事件和失败类型出现一次，直到 mod 重新加载。</p>
+<p>修复错误。调试日志对每次出现都有一行。</p>
+<h3 id="no-command-run-hook-answered-it"><code>no command.run hook answered it</code></h3>
+<p>您运行了 mod 添加的命令，回复命名了 mod 和命令，如 <code>first-mod registered /tally but no command.run hook answered it</code>，然后告诉您添加一个 hook。当命令到达链的末尾而没有答案时，Claude Code 会打印该回复，这发生在两种情况下：</p>
+<ul>
+<li><strong>没有 hook 回答命令</strong>：模块没有 <code>command.run</code> hook，hook 的 <a href="plugins-mods-events.html#filter-which-events-a-hook-handles">filter</a> 命名了不同的命令，或 hook 返回了 <code>next(e)</code></li>
+<li><strong>Claude Code 跳过了 hook</strong>：<a href="#hook-skipped"><code>hook skipped</code></a> 列出了原因。将 <code>focus: false</code> 传递给 <a href="plugins-mods-interface.html#open-a-pane-at-the-right-time"><code>$.ui.open</code></a> 是到达那里的一种方式。</li>
+</ul>
+<p>如果模块已经有回复描述的 hook，请查找命名 <code>command.run</code> 的 <code>hook skipped</code> 行，它给出了原因。运行命令的 <a href="plugins-mods-test.html">test</a> 失败，原因相同。</p>
+<h3 id="it-crashed-the-hooks-worker"><code>it crashed the hooks worker</code></h3>
+<p>该行以 mod 的名称开头，如 <code>first-mod was unloaded: it crashed the hooks worker</code>。已安装的 mod 共享一个工作线程。工作线程停止响应或崩溃，Claude Code 将其追踪到此 mod 并卸载了它。阻止线程的 hook（例如永不等待的循环）是一个原因。</p>
+<p>修复 hook。</p>
+<h3 id="its-session-start-ran-again-in-a-fresh-copy"><code>its session.start ran again in a fresh copy</code></h3>
+<p>该行以 mod 的名称开头，并指出一个 <code>$.prompt.submit</code>、<code>$.command.run</code> 或 <code>$.agent.spawn</code> 调用，如 <code>first-mod: its session.start ran again in a fresh copy; the $.prompt.submit call it had already made was not made again</code>。Claude Code 再次加载了该 mod 的模块（例如在 hooks worker 崩溃并被替换之后），新副本的 <a href="plugins-mods-reference.html#session"><code>session.start</code></a> hook 运行了。该行指出的调用以其首次运行的结果完成，而没有再次运行，因此您的 mod 不会重复提交提示词、运行命令或启动子代理。hook 的其余部分照常运行。</p>
+<p>无需修复。</p>
+<p>在 v2.1.292 之前，该调用会再运行一次，因此提示词会被提交两次、命令会被运行两次，或子代理会被启动两次。</p>
+<h3 id="this-mods-change-didnt-load"><code>This mod's change didn't load</code> 或 <code>the earlier version is no longer running</code></h3>
+<p>对<a href="plugins-mods-create.html#ask-claude-for-a-mod">Claude 在本会话中编写的 mod</a> 所做的更改无法加载。会话记录中的该行以 mod 的名称开头，以原因结尾：</p>
+<ul>
+<li><code>This mod's change didn't load, so the earlier version is still running: &lt;reason&gt;.</code></li>
+<li><code>This mod didn't load, and the earlier version is no longer running: &lt;reason&gt;.</code></li>
+</ul>
+<p>Claude 看不到此行，因此在请求 Claude 修复时，请将其粘贴到您的下一条消息中。</p>
+<h3 id="$-agent-register-refused-the-hooks-module-that-made-the-call-is-no-longer-loaded"><code>$.agent.register refused: the hooks module that made the call is no longer loaded</code></h3>
+<p>该行以您的 mod 名称开头，如 <code>first-mod: $.agent.register refused: the hooks module that made the call is no longer loaded (it was reloaded or removed)</code>，且该 Agent 未被注册。您的 mod 在该调用之前被重新加载或卸载。重新加载会加载 hook 模块的新副本，而此调用来自仍在旧副本中运行的代码，例如尚未返回的 hook。</p>
+<p>如果该 hook 未捕获此拒绝，它会失败，Claude Code 会<a href="#hook-skipped">跳过它</a>。要从保持加载的副本注册该 Agent，请在您的 <a href="plugins-mods-reference.html#session"><code>session.start</code></a> hook 中进行该调用，该 hook 会在重新加载后的每个新副本中再次运行。</p>
+<h3 id="mods-that-run-in-the-hooks-worker-are-off-for-this-session"><code>mods that run in the hooks worker are off for this session</code></h3>
+<p>该行读取 <code>hooks: mods that run in the hooks worker are off for this session: it crashed 3 times</code>。工作线程停止了三次，Claude Code 无法将停止追踪到一个 mod，因此它卸载了每个不是内置的 mod，包括您的组织安装的 mod。此行在每个交互式会话中到达成绩单。</p>
+<p>运行 <code>/reload-plugins</code> 以再次加载它们。</p>
+<h2 id="a-tool-call-is-denied">工具调用被拒绝</h2>
+<p>mod 已加载，其 hooks 运行，它接触的工具调用被拒绝。</p>
+<h3 id="a-hook-changed-this-call’s-input-after-the-model-wrote-it"><code>a hook changed this call's input after the model wrote it</code></h3>
+<p>在自动模式下，被拒绝的工具调用给出此原因。hook 在 <a href="permission-modes.html#server-side-classifier-review">服务器端分类器</a> 审查后更改了工具调用的输入，因此该审查不涵盖将运行的内容。hook 可以是 mod 的 <a href="plugins-mods-reference.html#tools"><code>tool.call</code></a> 或 <a href="plugins-mods-reference.html#turns"><code>turn.step</code></a> hook，或 <a href="hooks.html#pretooluse"><code>PreToolUse</code></a> 设置 hook。消息不说明是哪一个。</p>
+<p>消息告诉 Claude 再次发出记录的调用。如果也被拒绝，hook 每次都更改输入，因此关闭 mod 或 hook，或离开自动模式并自己批准调用。</p>
+<h3 id="a-message-about-the-deny-rules-in-your-settings">关于您的设置中的拒绝规则的消息</h3>
+<p><code>tried to lift a deny rule in your settings</code> 和 <code>the deny rules in your settings could not be checked for this call, so it is refused</code> 都来自内置保护。</p>
+<p>在 <a href="#messages-from-the-built-in-guard">来自内置保护的消息</a> 中查找它们。</p>
+<h2 id="a-toast-appears-after-a-turn-is-stopped">停止轮次后出现提示</h2>
+<h3 id="stopped-type-a-message-to-continue"><code>Stopped: type a message to continue; a mod cannot resume work after Stop</code></h3>
+<p>此提示表示，在您停止轮次之后（例如按下 Esc），某个 mod 试图自行开始工作，而 Claude Code 没有允许它这样做。无需进行任何修复。在您发送下一条消息后，mod 可以再次开始工作，并且<a href="plugins-mods-api.html#work-your-mod-started-before-the-interruption">其中部分工作会自行恢复</a>。如果您期望从该 mod 获得的结果没有恢复，请再次提出请求，或再次运行该 mod 的命令。</p>
+<p>如果该 mod 是您编写的，请参阅<a href="plugins-mods-api.html#calls-and-background-work-after-the-user-interrupts-a-turn">用户中断轮次后的调用和后台工作</a>。</p>
+<h2 id="a-drawing-doesn’t-appear-or-respond">绘图不出现或不响应</h2>
+<p>mod 已加载，其窗格、带、toast 或控件的行为不符合您的预期。</p>
+<h3 id="another-mods-band-shows-and-yours-doesnt">显示了另一个 mod 的带，而您的带没有显示</h3>
+<p>输入框上方只有一个带，所有 mod 共用它。在<a href="plugins-mods-events.html#the-order-mods-run-in">您的 mod 之前</a>运行的 mod 如果返回的树中不包含 <code>next(e)</code> 的结果，就会替换您的带。要同时显示两个带，请修改该 mod 的 hook，或请其作者修改：</p>
+<ul>
+<li><strong>保留其后的带</strong>：将 <code>await next(e)</code> 的结果放入其树中某个 <code>Box</code> 的子元素中，如<a href="plugins-mods-interface.html#pick-where-to-draw">选择绘制位置</a>中“输入框上方的带”选项卡所示</li>
+<li><strong>保持树有效</strong>：不要为该 <code>Box</code> 或其外层的任何 <code>Box</code> 设置 <code>width</code>、<code>height</code>、<code>minWidth</code>、<code>minHeight</code>、<code>position</code>、<code>top</code>、<code>left</code>、<code>right</code>、<code>bottom</code>、<code>display</code> 或 <code>overflow</code> prop</li>
+</ul>
+<p>要找到该 mod，请<a href="#read-the-debug-log">写入调试日志</a>并在其中搜索 <code>answered ui.render without next()</code>。诸如 <code>other-mod (user) answered ui.render without next()</code> 的行会指明一个返回了树但未调用 <code>next(e)</code> 的 mod。该行不会指明<a href="plugins-mods-reference.html#render-sites">渲染位置</a>，因此仅绘制窗格的 mod 也可能出现在其中。调用了 <code>next(e)</code> 但丢弃其结果的 mod 不会产生该行，因此也请检查在您的 mod 之前运行的 hook。</p>
+<p>当某个 mod 自身的 hook 返回的树未通过验证时，该 mod 的带也会缺失，而其他 mod 的带仍会保留。要了解是哪个 mod 以及原因，请<a href="#read-the-debug-log">写入调试日志</a>并在其中搜索 <a href="#a-pane-or-band-is-empty"><code>ui.render hook skipped</code></a>。</p>
+<h3 id="a-pane-or-band-is-empty">窗格或带为空或显示 Claude Code 的常规内容</h3>
+<p>您的 hook 返回的<a href="plugins-mods-interface.html#build-a-tree-from-elements">树</a>未通过验证。<a href="#find-out-why-a-mod-does-nothing">会话记录或调试日志中</a>的 <a href="#hook-skipped"><code>hook skipped</code></a> 行会指明您的 mod 及原因，例如以下针对窗格中某个 <code>Box</code> 的行：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">first-mod: ui.render hook skipped: returned the wrong shape (a tree Pane refuses: Box prop "flexDirection" must be one of row, column, row-reverse, column-reverse)
+</code></pre></div>
+<p>请修复原因中指出的问题。如果原因被截断，请<a href="#read-the-debug-log">写入调试日志</a>并在其中搜索 <code>a hook returned a tree that does not validate</code> 以查看其余内容。</p>
+<p>如果该行在位置名称之后紧接着显示 <code>refused:</code>，如 <code>ui.render (Pane) refused:</code>，请参阅<a href="#ui-render-refused"><code>ui.render</code> 行显示 <code>refused</code></a>。</p>
+<h3 id="ui-render-refused"><code>ui.render</code> 行显示 <code>refused</code></h3>
+<p><code>ui.render (&lt;site&gt;) refused:</code>，或<a href="#read-the-debug-log">调试日志</a>中的 <code>ui.render (&lt;site&gt;): the chain settled on a tree that does not validate</code>，表示该位置的<a href="plugins-mods-interface.html#build-a-tree-from-elements">树</a>超出了<a href="plugins-mods-reference.html#limits">大小限制</a>。这两行都会先指明<a href="plugins-mods-reference.html#render-sites">渲染位置</a>，然后给出原因，原因中会指明该限制。</p>
+<p>请修改在该位置绘制的 mod，使其 <a href="plugins-mods-reference.html#interface"><code>ui.render</code></a> hook 返回更小的树，或请其作者修改。如果会话记录行以 <code>hooks</code> 开头，则表示有多个已加载的 mod 为该位置设置了 <code>ui.render</code> hook，因此请检查每个这些 mod 的树。当多个 mod 在输入框上方的带嵌套成深度超过 32 层的树时，该行显示为：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">hooks: ui.render (AbovePrompt) refused: deeper than 32; nothing was drawn
+</code></pre></div>
+<p>在 v2.1.307 之前，任何位置的 <code>refused:</code> 行都会报告任何未通过验证的树，并且对于 <code>Pane</code> 和 <code>AbovePrompt</code>，该行以 <code>; the engine drew its own</code> 结尾。在这些版本中，请修复原因中指出的问题。</p>
+<h3 id="needs-a-key"><code>needs a key</code>、<code>is drawn twice</code> 或 <code>key each once</code></h3>
+<p>您的 <code>ui.render</code> hook 返回的树中，某个元素没有有效的 <a href="plugins-mods-interface.html#which-controls-need-a-key"><code>key</code></a>，或两个元素共用同一个 key。请找到您收到的消息：</p>
+<ul>
+<li><strong><code>&lt;Input&gt; needs a key</code> 或 <code>&lt;Select&gt; needs a key</code></strong>：该元素没有 <code>key</code> prop，或其 <code>key</code> 为空或不是字符串，如 <code>key: 3</code>。请为其提供一个非空字符串作为 <code>key</code>。</li>
+<li><strong><code>&lt;Button&gt; needs a key</code></strong>：为该按钮提供一个非空字符串作为其 <code>key</code></li>
+<li><strong><code>is drawn twice; each takes its own key</code></strong>：消息所指明类型的两个元素具有相同的 <code>key</code>，如 <code>Input "size" is drawn twice; each takes its own key</code>。请为每个元素提供各自的 <code>key</code>。</li>
+<li><strong><a href="plugins-mods-test.html#test-a-drawing">测试</a>中 <code>press</code> 报告的 <code>key each once</code></strong>：绘图中有多个按钮使用您传入的 key。标签相同且没有 <code>key</code> prop 的按钮会共用该标签作为其 key。请为每个按钮提供各自的 <code>key</code>。</li>
+</ul>
+<h3 id="a-ui-render-line-says-threw-while-drawn"><code>ui.render</code> 行显示 <code>threw while drawn</code></h3>
+<p>该行会指明<a href="plugins-mods-reference.html#render-sites">渲染位置</a>，然后显示 <code>threw while drawn:</code> 及错误，如 <code>first-mod: ui.render (ToolUse) threw while drawn: &lt;error&gt;; the engine drew its own</code>。Claude Code 在绘制您的 <a href="plugins-mods-reference.html#interface"><code>ui.render</code></a> hook 返回的树时，或在根据<a href="plugins-mods-interface.html#change-what-claude-code-already-draws">您的 hook 传递给 <code>next</code> 的 <code>props</code></a> 绘制该位置时，遇到了该错误。结尾的 <code>the engine drew its own</code> 表示该位置显示 Claude Code 的常规内容。</p>
+<p>读取该错误，并修复您的 hook 中导致该错误的值。</p>
+<p>在 v2.1.289 之前，会话记录行中出现此错误会导致会话以 <a href="errors.html#exited-after-an-unrecoverable-interface-error"><code>Claude Code exited after an unrecoverable interface error</code></a> 结束。</p>
+<h3 id="the-module-failed-without-a-message"><code>the module failed without a message</code></h3>
+<p>某个 <a href="plugins-mods-interface.html#when-a-client-fails"><code>Client</code></a> 因一个没有消息的错误而失败，例如 <code>throw new Error()</code>。在其位置显示的行类似 <code>my-mod: Client client/spinner.js: the module failed without a message</code>。</p>
+<p>在您的 <code>Client</code> 代码中找到该 throw，并为该错误提供消息。该行随后会显示该消息。</p>
+<p>在 v2.1.289 之前，该行改为显示 <code>Error</code> 作为原因。</p>
+<h3 id="$-ui-open-runs-and-no-pane-appears"><code>$.ui.open</code> 运行且没有窗格出现</h3>
+<p>调用不是来自用户做的事情，且终端宽度小于<a href="plugins-mods-interface.html#when-a-pane-waits-for-a-wider-terminal">该窗格所需的宽度</a>。</p>
+<p>从命令或按钮打开窗格，或检查调用的 <code>isPlaced</code> 结果。请参阅 <a href="plugins-mods-interface.html#open-a-pane-at-the-right-time">在正确的时间打开窗格</a>。</p>
+<h3 id="a-toast-doesn’t-appear">toast 不出现</h3>
+<p>您的 mod 在交互式终端会话中调用了 <a href="plugins-mods-api.html#show-something-without-starting-a-turn"><code>$.ui.toast</code></a>，但您没有看到该 toast。要确认调用已运行，请在<a href="#read-the-debug-log">调试日志</a>中查找包含您的 mod 名称和 toast 文本的行，如 <code>$.ui.toast (first-mod): build finished</code>。然后检查以下原因：</p>
+<ul>
+<li><strong>缺少该调用对应的行</strong>：查找说明 Claude Code 拒绝该调用原因的行，如 <code>first-mod: $.ui.toast dropped: timeoutMs is a whole number of ms, 1 to 60000</code>。</li>
+<li><strong>某个窗格正在暂缓 toast</strong>：您的 mod 或其他 mod 在打开当前显示的窗格时传递了 <a href="plugins-mods-interface.html#hold-toasts-behind-a-dialog"><code>holdToasts</code></a>。关闭该窗格即可结束暂缓。如果该窗格是您的且需要保持打开，请从其 <code>$.ui.open</code> 调用中移除 <code>holdToasts</code>，然后重新打开该窗格。</li>
+<li><strong>toast 位于输入框下方</strong>：在<a href="fullscreen.html#enable-fullscreen-rendering">经典渲染器</a>中，请查看输入框下方的右侧。该处的 toast 是以 mod 名称开头的一行文字，而不是右上角的方框。</li>
+<li><strong>您的 mod 发出了更新的 toast</strong>：在经典渲染器中，来自您的 mod 的更新 toast 可能会取代正在显示或等待显示的 toast。调试日志中会有针对较早 toast 的另一行：如果该 toast 当时正在显示，该行以 <code>gave way, cut short</code> 结尾；如果它从未出现，则以 <code>gave way, unseen</code> 结尾。要同时显示两条消息，请将它们放在一个 toast 中。</li>
+<li><strong>toast 在绘制前超时</strong>：在全屏渲染中，Claude Code 一次最多绘制三个 toast，因此 toast 可能在绘制之前就已超时。调试日志中会有针对该 toast 的另一行，以 <code>left the stack, never drawn</code> 结尾。当您的 mod 同时发出多个 toast 时，请将这些消息放在一个 toast 中。</li>
+</ul>
+<p>在 v2.1.290 之前，如果某个 toast 是在 Claude Code 为您的 mod 显示上一个 toast 后两秒内发出的，Claude Code 会丢弃该 toast，且调试日志中针对被丢弃 toast 的行会显示 <code>within 2000ms of the last; dropped</code>。</p>
+<h3 id="plugin-panel-hidden">带显示 <code>plugin panel hidden</code></h3>
+<p>该带已<a href="plugins-mods-interface.html#when-the-user-collapses-the-band">折叠</a>。当您按 Ctrl+X 然后 Ctrl+A（或您绑定以替代它们的按键）时，以及在<a href="fullscreen.html">全屏渲染</a>中单击其第一行的 <code>[-]</code> 时，该带会折叠。它会保持折叠状态，直到您将其展开或再次启动 Claude Code；在此期间，任何热键或 <code>action</code> 绑定都不会按下其中的按钮。</p>
+<p>要展开该带，请按该行所示的按键（默认为 Ctrl+X 然后 Ctrl+A），或在全屏渲染中单击该行。</p>
+<h3 id="hotkeys-do-nothing">热键不起作用</h3>
+<p>您的窗格或带没有键盘焦点、您的按钮位于已折叠的带中，或者绘图位于 VS Code 扩展中，而该扩展中的按钮没有热键。请按对应的情况操作：</p>
+<ul>
+<li><strong>没有键盘焦点</strong>：按 Ctrl+X 然后 Tab，或在<a href="fullscreen.html">全屏渲染</a>中单击窗格或带。要让窗格在打开时获得焦点，请从命令中使用 <code>focus: true</code> 打开它。</li>
+<li><strong>按钮位于已折叠的带中</strong>：该带显示一个以 <code>▸ plugin panel hidden</code> 开头的暗色行。按该行所示的按键（默认为 Ctrl+X 然后 Ctrl+A）即可<a href="#plugin-panel-hidden">展开它</a>。</li>
+<li><strong>在 VS Code 扩展中</strong>：单击按钮，或在按钮获得焦点后按 Enter</li>
+</ul>
+<h3 id="a-drawing-works-in-the-terminal-and-not-in-the-desktop-app-or-vs-code">绘图在终端中有效，在桌面应用或 VS Code 中无效</h3>
+<p>要么该应用不绘制该位置或元素，要么该会话属于 VS Code 扩展不为 mod 绘制任何内容的会话。该 mod 的其他 hook 仍会运行。请检查以下原因：</p>
+<ul>
+<li><strong>该位置或元素在该应用中不会被绘制</strong>：在<a href="plugins-mods-reference.html#render-sites">渲染位置</a>表中查找您的位置，并在<a href="plugins-mods-reference.html#elements">元素</a>表中查找您的元素。对于该应用不具备的元素，请在 hook 中检查 <code>e.surface</code>，并返回该应用可以绘制的树。</li>
+<li><strong>VS Code 扩展版本低于 2.1.299</strong>：从<a href="vs-code.html#install-the-extension">扩展版本</a> 2.1.299 起，聊天面板才会为 mod 进行绘制。请在 VS Code 的扩展视图中检查版本，并在该处更新扩展。</li>
+<li><strong>扩展版本低于 2.1.304，且该会话不获取功能标志</strong>：请更新扩展，或改为在 VS Code 的集成终端中运行 <code>claude</code>。在 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 上的会话会跳过此获取步骤。对于跳过此步骤的其他会话，例如 <a href="claude-apps-gateway.html">Claude apps 网关</a>会话，请参阅<a href="env-vars.html#features-that-need-feature-flag-fetching">需要获取功能标志的功能</a>。</li>
+</ul>
+<h2 id="an-edit-or-a-value-is-lost">编辑或值丢失</h2>
+<p>mod 运行，您所做的更改或它保留的值不存在。</p>
+<h3 id="your-edits-don’t-take-effect">您的编辑不生效</h3>
+<p>您正在编辑您安装的插件。Claude Code 运行已安装版本的缓存副本。</p>
+<p>使用指向您的工作副本的 <code>--plugin-dir</code> 进行开发，如 <code>claude --plugin-dir ./first-mod</code>，它在您保存时重新加载。</p>
+<h3 id="a-value-resets-when-the-module-reloads">模块重新加载时值重置</h3>
+<p>模块级变量在每次重新加载时重新初始化。</p>
+<p><a href="plugins-mods-interface.html#keep-state">将值保留在 <code>$.state</code> 或 <code>$.store</code> 中</a>。</p>
+<h3 id="a-value-resets-after-/clear-/resume-or-/branch">值在 <code>/clear</code>、<code>/resume</code> 或 <code>/branch</code> 后重置</h3>
+<p>值重置，或保存的值被其默认值替换。这些命令中的每一个都将 <code>$.state</code> 重置为其默认值，<code>session.start</code> 不再触发。</p>
+<p><a href="plugins-mods-interface.html#load-a-saved-value-again-after-clear">在 <code>classic.SessionStart</code> hook 中再次加载保存的值</a>。</p>
+<h3 id="settings-read-key-no-effect"><code>settings.read</code> hook 返回的某个键不生效</h3>
+<p>如果您在 <a href="plugins-mods-events.html#settings-read-hook">Claude Code 自身的读取</a>中返回权限规则或 <code>env</code>，这些规则不会在工具调用时被检查，<code>env</code> 条目也不会成为环境变量。对这两者请使用<a href="settings.html">设置文件</a>，或对 <code>env</code> 使用 <a href="plugins-mods-api.html#reach-files-processes-and-the-network"><code>$.env.set</code></a>。</p>
+<p>对于其他键，请查看<a href="plugins-mods-events.html#settings-read-hook">哪些 mod 会收到 <code>settings.read</code> 以及从哪个版本开始</a>，然后在<a href="#read-the-debug-log">调试日志</a>中搜索 <code>settings.read</code>，并查找以下某一行：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">日志行</th>
+<th style="text-align: left;">含义和步骤</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>settings.read hook skipped</code>，位于您的 mod 名称之后</td>
+<td style="text-align: left;">您的 hook 失败。<a href="#hook-skipped">修复该行报告的错误</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>settings.read bypassed by cc-plugin-sec-default</code>，所在行在其前面列出了您的 mod</td>
+<td style="text-align: left;"><a href="plugins-mods-admin.html#know-what-happens-by-default">内置守卫</a>跳过了您的 hook。请让您组织的管理员<a href="plugins-mods-admin.html#install-your-organizations-mods">将该 mod 安装为组织的 mod 之一</a>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>settings.read: the answer for &lt;key&gt; is no value the key can hold</code></td>
+<td style="text-align: left;">Claude Code 拒绝了某个 hook 为该键返回的值。该 hook 可能是您的，也可能是其他 mod 的。请按照<a href="#settings-read-key-refused">适用于您情况的步骤</a>操作。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>settings.read: the merge never settles for &lt;key&gt;</code></td>
+<td style="text-align: left;">该行列出的键保留设置来源中的值。请在设置文件中设置它们。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>answered settings.read without next()</code>，位于某个 mod 名称之后</td>
+<td style="text-align: left;">如果所列 mod <a href="plugins-mods-events.html#the-order-mods-run-in">在您的 mod 之前运行</a>，则您的 hook 会受到影响。此时您的 hook 在该次读取中未运行。<a href="plugins-mods-overview.html#turn-mods-on-or-off">关闭该 mod</a>，或者如果它是由您的组织部署的，请让其管理员关闭。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>settings.read: refused to the engine</code></td>
+<td style="text-align: left;">您的值未生效，因为 Claude Code 自身的读取被拒绝。<a href="#settings-read-refused">找出拒绝它的原因</a>。</td>
+</tr>
+</tbody>
+</table>
+<p>如果没有任何一行能解释该键，请检查在您的 mod 之前运行的 mod 中是否有<a href="plugins-mods-events.html#settings-read-example">更改该键</a>的 <code>settings.read</code> hook。关闭该 mod，或让您组织的管理员关闭。如果没有 hook 更改该键，请在设置文件中设置该键。</p>
+<h3 id="settings-read-key-refused"><code>the answer for &lt;key&gt; is no value the key can hold</code></h3>
+<p>此<a href="#read-the-debug-log">调试日志</a>行表示 Claude Code 拒绝了某个 <a href="plugins-mods-events.html#settings-read-hook"><code>settings.read</code></a> hook 为所列键返回的值，且仅针对该键：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">settings.read: the answer for &lt;key&gt; is no value the key can hold; the settings' own value stands
+</code></pre></div>
+<p>为所列键返回的值不符合该键的 schema，例如类型或范围不符。</p>
+<ul>
+<li><strong>您的值不符合该键的 schema</strong>：请返回该键的<a href="settings-reference.html">设置参考</a>条目所允许的值。</li>
+<li><strong>您的值符合要求</strong>：不符合要求的值来自其他 mod 的 <code>settings.read</code> hook。要找出该 mod，请按照<a href="#settings-read-refused">逐个关闭 mod 的步骤</a>操作。在每个新日志中搜索此行，而不是 <code>refused to the engine</code>。</li>
+</ul>
+<p>在该值不符合要求期间，该键保留在任何 hook 应答之前从设置来源合并得到的值。该行将其称为设置自身的值。</p>
+<h3 id="settings-read-refused"><code>settings.read: refused to the engine</code></h3>
+<p>当 <a href="plugins-mods-events.html#settings-read-hook">Claude Code 自身的读取</a>被拒绝时，您会在<a href="#read-the-debug-log">调试日志</a>中看到此行，此时 Claude Code 会丢弃所有 hook 的值。当某个 <code>settings.read</code> hook 使用 <a href="plugins-mods-events.html#settings-read-returns"><code>{ deny: reason }</code></a> 拒绝该读取时，该行会带有该 hook 的原因：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">settings.read: refused to the engine (engine: $.settings.read: &lt;reason&gt;); the settings' own values stand
+</code></pre></div>
+<p>在您的代码中搜索括号中的原因：</p>
+<ul>
+<li><strong>您的代码中有该文本</strong>：您的 hook 拒绝了读取。当 <a href="plugins-mods-events.html#settings-read-origin"><code>next.origin</code></a> 显示为 Claude Code 自身的读取时，让它返回 <code>{ value }</code>。</li>
+<li><strong>您的代码中没有该原因</strong>：逐个<a href="plugins-mods-overview.html#turn-mods-on-or-off">关闭</a>您的其他 mod。如果某个 mod 是由您的组织部署的，请让其管理员将其关闭。每关闭一个后：<br />
+  1. 从 shell 使用 <code>claude --debug-file ./settings-read-2.log</code> 启动会话，后接会话启动时所用的标志。每次使用一个新路径。<br />
+  2. 在该文件中搜索 <code>refused to the engine</code>。如果该行存在，则关闭下一个 mod。如果不存在，则说明您最后关闭的 mod 拒绝了读取，请保持其关闭状态。</li>
+</ul>
+<p>如果已没有其他 mod 而该行仍然存在，请在<a href="settings.html">设置文件</a>中设置您的 hook 返回的键。在读取被拒绝期间，其中的值仍然有效。</p>
+<h2 id="read-the-debug-log">阅读调试日志</h2>
+<p>调试日志对 Claude Code 加载或拒绝的每个模块、每个失败的 hook 以及它拒绝的每个结果都有一行，因此当会话记录中没有任何显示时，这是查看的地方。要写入一个，在您的 shell 中使用 <code>--debug</code> 启动 Claude Code，或使用 <code>--debug-file &lt;path&gt;</code> 选择它的位置：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">claude<span class="w"> </span>--debug-file<span class="w"> </span>./mod-debug.log<span class="w"> </span>--plugin-dir<span class="w"> </span>./first-mod
+</code></pre></div>
+<p>在另一个终端中，跟踪文件并按您的 mod 名称过滤：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-bash">tail<span class="w"> </span>-f<span class="w"> </span>./mod-debug.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>first-mod
+</code></pre></div>
+<p>已加载的 mod 有一行命名它并列出它处理的事件。使用 <code>--plugin-dir</code> 加载的 mod 出现在其名称后跟 <code>@inline</code> 下：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">hooks module first-mod@inline loaded (worker, environment 2, tier user); events: session.start,tool.call,command.run,ui.render
+</code></pre></div>
+<p>要在日志中写入您自己的行，请调用 <a href="plugins-mods-api.html#show-something-without-starting-a-turn"><code>$.ui.log</code></a>，带有第二个参数，如 <code>$.ui.log('message', { to: 'debug' })</code>。没有第二个参数，<code>$.ui.log</code> 会在会话记录中添加一条暗行。</p>
+<p>当您编辑使用 <code>--plugin-dir</code> 加载的 mod 时，会话记录为每次重新加载显示一行，命名 mod 并列出其 hook。如果保存破坏了模块，该行会显示 <code>reload failed, the previous version stays loaded:</code> 及原因，最后一个可用版本会继续运行，直到 Claude Code 下次重新加载插件，例如当您运行 <code>/reload-plugins</code> 时。</p>
+<h2 id="next-steps">后续步骤</h2>
+<ul>
+<li><a href="plugins-mods-test.html">测试 mod</a>：在问题到达会话之前捕获它们</li>
+<li><a href="plugins-troubleshooting.html">排查插件问题</a>：与安装和加载不特定于 mod 的插件相关的问题</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="plugins-mods-test.html"><span class="pager-dir">← 上一页</span><span class="pager-name">测试 mod</span></a><a class="pager-link next" href="plugins-create-marketplace.html"><span class="pager-dir">下一页 →</span><span class="pager-name">创建一个 marketplace</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#find-out-why-a-mod-does-nothing">找出为什么 mod 不起作用</a><a class="toc-l2" href="#check-whether-mods-can-load">检查 mod 是否可以加载</a><a class="toc-l2" href="#the-mod-doesn’t-load">mod 不加载</a><a class="toc-l3" href="#your-version-is-too-old">您的版本过旧</a><a class="toc-l3" href="#the-mods-active-line-doesn’t-name-the-mod">mods active 行不命名 mod</a><a class="toc-l3" href="#a-claude-p-run-prints-hooks-module-not-loaded">claude -p 运行打印 hooks module not loaded</a><a class="toc-l3" href="#refusal-messages">拒绝消息</a><a class="toc-l3" href="#messages-from-the-built-in-guard">来自内置保护的消息</a><a class="toc-l3" href="#validate-passes-and-lists-no-hooks-line">validate 通过且不列出 hooks 行</a><a class="toc-l3" href="#hooks-module-did-not-load">hooks module did not load</a><a class="toc-l3" href="#options-do-not-fit-plugin-json-userconfig">options do not fit plugin.json userConfig</a><a class="toc-l3" href="#code-nested-too-deep-to-scan-more-than-2000-scopes">code nested too deep to scan: more than 2000 scopes</a><a class="toc-l3" href="#the-engine-ran-out-of-stack-linking-the-file-and-its-imports">the engine ran out of stack linking the file and its imports</a><a class="toc-l3" href="#the-parser-stopped-or-the-engine-ran-out-of-stack-loading-the-file">the parser stopped 或 the engine ran out of stack loading the file</a><a class="toc-l3" href="#no-mod-loads-in-a-directory-you-opened-for-the-first-time">没有 mod 在您首次打开的目录中加载</a><a class="toc-l3" href="#no-installed-plugin-loads-at-all">没有已安装的插件加载</a><a class="toc-l3" href="#claude-code-stops-asking-to-enable-hot-reloading">Claude Code 不再询问是否启用热重载</a><a class="toc-l2" href="#a-hook-is-skipped-or-a-mod-is-unloaded">hook 被跳过或 mod 被卸载</a><a class="toc-l3" href="#hook-skipped">hook skipped</a><a class="toc-l3" href="#no-command-run-hook-answered-it">no command.run hook answered it</a><a class="toc-l3" href="#it-crashed-the-hooks-worker">it crashed the hooks worker</a><a class="toc-l3" href="#its-session-start-ran-again-in-a-fresh-copy">its session.start ran again in a fresh copy</a><a class="toc-l3" href="#this-mods-change-didnt-load">This mod&#x27;s change didn&#x27;t load 或 the earlier version is no longer running</a><a class="toc-l3" href="#$-agent-register-refused-the-hooks-module-that-made-the-call-is-no-longer-loaded">$.agent.register refused: the hooks module that made the call is no longer loaded</a><a class="toc-l3" href="#mods-that-run-in-the-hooks-worker-are-off-for-this-session">mods that run in the hooks worker are off for this session</a><a class="toc-l2" href="#a-tool-call-is-denied">工具调用被拒绝</a><a class="toc-l3" href="#a-hook-changed-this-call’s-input-after-the-model-wrote-it">a hook changed this call&#x27;s input after the model wrote it</a><a class="toc-l3" href="#a-message-about-the-deny-rules-in-your-settings">关于您的设置中的拒绝规则的消息</a><a class="toc-l2" href="#a-toast-appears-after-a-turn-is-stopped">停止轮次后出现提示</a><a class="toc-l3" href="#stopped-type-a-message-to-continue">Stopped: type a message to continue; a mod cannot resume work after Stop</a><a class="toc-l2" href="#a-drawing-doesn’t-appear-or-respond">绘图不出现或不响应</a><a class="toc-l3" href="#another-mods-band-shows-and-yours-doesnt">显示了另一个 mod 的带，而您的带没有显示</a><a class="toc-l3" href="#a-pane-or-band-is-empty">窗格或带为空或显示 Claude Code 的常规内容</a><a class="toc-l3" href="#ui-render-refused">ui.render 行显示 refused</a><a class="toc-l3" href="#needs-a-key">needs a key、is drawn twice 或 key each once</a><a class="toc-l3" href="#a-ui-render-line-says-threw-while-drawn">ui.render 行显示 threw while drawn</a><a class="toc-l3" href="#the-module-failed-without-a-message">the module failed without a message</a><a class="toc-l3" href="#$-ui-open-runs-and-no-pane-appears">$.ui.open 运行且没有窗格出现</a><a class="toc-l3" href="#a-toast-doesn’t-appear">toast 不出现</a><a class="toc-l3" href="#plugin-panel-hidden">带显示 plugin panel hidden</a><a class="toc-l3" href="#hotkeys-do-nothing">热键不起作用</a><a class="toc-l3" href="#a-drawing-works-in-the-terminal-and-not-in-the-desktop-app-or-vs-code">绘图在终端中有效，在桌面应用或 VS Code 中无效</a><a class="toc-l2" href="#an-edit-or-a-value-is-lost">编辑或值丢失</a><a class="toc-l3" href="#your-edits-don’t-take-effect">您的编辑不生效</a><a class="toc-l3" href="#a-value-resets-when-the-module-reloads">模块重新加载时值重置</a><a class="toc-l3" href="#a-value-resets-after-/clear-/resume-or-/branch">值在 /clear、/resume 或 /branch 后重置</a><a class="toc-l3" href="#settings-read-key-no-effect">settings.read hook 返回的某个键不生效</a><a class="toc-l3" href="#settings-read-key-refused">the answer for &amp;lt;key&amp;gt; is no value the key can hold</a><a class="toc-l3" href="#settings-read-refused">settings.read: refused to the engine</a><a class="toc-l2" href="#read-the-debug-log">阅读调试日志</a><a class="toc-l2" href="#next-steps">后续步骤</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

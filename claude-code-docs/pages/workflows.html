@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用动态工作流大规模编排子代理 · Claude Code 中文文档</title>
+<meta name="description" content="动态工作流从 Claude 编写的脚本中编排许多子代理，您可以重新运行。用于代码库审计、大型迁移和交叉检查研究。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/pygments.css">
+</head>
+<body data-page="workflows">
+<header class="topbar">
+  <button class="nav-toggle" type="button" aria-label="切换导航">☰</button>
+  <a class="brand" href="../index.html"><span class="brand-mark">CC</span><span class="brand-text">Claude Code 中文文档</span></a>
+  <div class="topbar-search">
+    <input id="search-input" type="search" placeholder="搜索文档…  （按 / 聚焦）" autocomplete="off" aria-label="搜索文档">
+    <div id="search-results" class="search-results" hidden></div>
+  </div>
+  <a class="topbar-link" href="https://code.claude.com/docs/zh-CN/workflows" target="_blank" rel="noopener">原文 ↗</a>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">文档目录</div>
+    <nav class="nav"><div class="nav-chapter"><div class="nav-chapter-title">快速入门</div><div class="nav-chapter-body"><div class="nav-sub">入门</div><ul class="nav-list"><li><a class="nav-link" href="overview.html">概述</a></li><li><a class="nav-link" href="quickstart.html">快速入门</a></li><li><a class="nav-link" href="changelog.html">更新日志</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="how-claude-code-works.html">Claude Code 如何工作</a></li><li><a class="nav-link" href="features-overview.html">扩展 Claude Code</a></li><li><a class="nav-link" href="claude-directory.html">探索 .claude 目录</a></li><li><a class="nav-link" href="context-window.html">探索上下文窗口</a></li><li><a class="nav-link" href="prompt-caching.html">Claude Code 如何使用 prompt caching</a></li></ul><div class="nav-sub">使用 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="memory.html">Claude 如何记住您的项目</a></li><li><a class="nav-link" href="sessions.html">管理会话</a></li><li><a class="nav-link" href="common-workflows.html">常见工作流程</a></li><li><a class="nav-link" href="prompt-library.html">提示词库</a></li><li><a class="nav-link" href="best-practices.html">Claude Code 最佳实践</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">平台与集成</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="platforms.html">平台和集成</a></li><li><a class="nav-link" href="remote-control.html">使用 Remote Control 从任何设备继续本地会话</a></li><li><a class="nav-link" href="claude-projects.html">让 Claude 通过 Projects 协调持续进行的工作</a></li><li><a class="nav-link" href="mobile.html">Claude Code 移动版</a></li><li><a class="nav-link" href="chrome.html">在 Chrome 中使用 Claude Code</a></li><li><a class="nav-link" href="computer-use.html">让 Claude 从 CLI 使用您的计算机</a></li><li><a class="nav-link" href="vs-code.html">在 VS Code 中使用 Claude Code</a></li><li><a class="nav-link" href="jetbrains.html">JetBrains IDEs</a></li><li><a class="nav-link" href="slack.html">Slack 中的 Claude Code</a></li><li><a class="nav-link" href="claude-tag.html">Claude Tag</a></li></ul><div class="nav-sub">云端 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="web-quickstart.html">在云中开始使用 Claude Code</a></li><li><a class="nav-link" href="claude-code-on-the-web.html">在云端使用 Claude Code</a></li><li><a class="nav-link" href="routines.html">使用定时任务自动化工作</a></li></ul><div class="nav-sub">桌面版 Claude Code</div><ul class="nav-list"><li><a class="nav-link" href="desktop-quickstart.html">开始使用桌面应用</a></li><li><a class="nav-link" href="desktop.html">Desktop application</a></li><li><a class="nav-link" href="desktop-linux.html">Linux 上的 Claude Desktop（测试版）</a></li><li><a class="nav-link" href="desktop-wsl.html">Claude Code Desktop 在 WSL 中</a></li><li><a class="nav-link" href="desktop-scheduled-tasks.html">在 Claude Code Desktop 中安排定期任务</a></li><li><a class="nav-link" href="desktop-ios-simulator.html">在模拟器中测试 iOS 应用</a></li></ul></div></details><details class="nav-group lv1" open><summary class="nav-group-title">代码审查与 Pull Request</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="code-review-local.html">使用 /code-review 在本地审查</a></li><li><a class="nav-link" href="ultrareview.html">使用 Ultrareview 查找错误</a></li><li><a class="nav-link" href="github-enterprise-server.html">Claude Code 与 GitHub Enterprise Server</a></li></ul><div class="nav-sub">Code Review</div><ul class="nav-list"><li><a class="nav-link" href="code-review.html">Code Review</a></li><li><a class="nav-link" href="code-review-setup.html">设置 Code Review</a></li><li><a class="nav-link" href="code-review-customize.html">自定义 Code Review</a></li><li><a class="nav-link" href="code-review-pull-requests.html">阅读和请求 Pull Request 上的审查</a></li><li><a class="nav-link" href="code-review-costs.html">Code Review 费用和用量</a></li><li><a class="nav-link" href="code-review-troubleshooting.html">Code Review 故障排除</a></li></ul><div class="nav-sub">安全扫描</div><ul class="nav-list"><li><a class="nav-link" href="security-guidance.html">在 Claude 编写代码时捕获安全问题</a></li><li><a class="nav-link" href="claude-security.html">扫描代码库中的漏洞</a></li></ul><div class="nav-sub">在您自己的 CI 中运行 Claude</div><ul class="nav-list"><li><a class="nav-link" href="github-actions.html">Claude Code GitHub Actions</a></li><li><a class="nav-link" href="github-actions-cloud-providers.html">通过云提供商使用 Claude Code GitHub Actions</a></li><li><a class="nav-link" href="gitlab-ci-cd.html">Claude Code GitLab CI/CD</a></li></ul></div></details><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">使用 Claude Code 构建</div><div class="nav-chapter-body"><div class="nav-sub">Agent 与并行工作</div><ul class="nav-list"><li><a class="nav-link" href="agents.html">并行运行代理</a></li><li><a class="nav-link" href="sub-agents.html">创建自定义 subagents</a></li><li><a class="nav-link" href="agent-view.html">使用 agent view 管理多个代理</a></li><li><a class="nav-link" href="agent-teams.html">协调 Claude Code 会话团队</a></li><li><a class="nav-link" href="cross-session-messaging.html">消息传递到您的其他 Claude Code 会话</a></li><li><a class="nav-link active" href="workflows.html" aria-current="page">使用动态工作流大规模编排子代理</a></li><li><a class="nav-link" href="worktrees.html">使用 worktrees 运行并行会话</a></li></ul><div class="nav-sub">MCP</div><ul class="nav-list"><li><a class="nav-link" href="mcp-quickstart.html">连接到 MCP 服务器</a></li><li><a class="nav-link" href="mcp.html">通过 MCP 将 Claude Code 连接到工具</a></li></ul><div class="nav-sub">Skills</div><ul class="nav-list"><li><a class="nav-link" href="skills.html">使用 skills 扩展 Claude</a></li></ul><div class="nav-sub">Artifact</div><ul class="nav-list"><li><a class="nav-link" href="artifacts.html">将会话输出作为 artifacts 共享</a></li></ul><div class="nav-sub">自动化</div><ul class="nav-list"><li><a class="nav-link" href="hooks-guide.html">使用 hooks 自动化操作</a></li><li><a class="nav-link" href="channels.html">使用 channels 将事件推送到运行中的会话</a></li><li><a class="nav-link" href="scheduled-tasks.html">按计划运行提示词</a></li><li><a class="nav-link" href="goal.html">让 Claude 朝着目标工作</a></li><li><a class="nav-link" href="headless.html">以编程方式运行 Claude Code</a></li><li><a class="nav-link" href="deep-links.html">从链接启动会话</a></li></ul><div class="nav-sub">指南</div><ul class="nav-list"><li><a class="nav-link" href="large-codebases.html">在 monorepo 或大型代码库中设置 Claude Code</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="troubleshoot-install.html">排查安装和登录问题</a></li><li><a class="nav-link" href="troubleshooting.html">故障排除</a></li><li><a class="nav-link" href="debug-your-config.html">调试你的配置</a></li><li><a class="nav-link" href="errors.html">错误参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">插件</div><div class="nav-chapter-body"><div class="nav-sub">插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-overview.html">插件概览</a></li></ul><div class="nav-sub">使用插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-install.html">安装和管理插件</a></li><li><a class="nav-link" href="plugins-anthropic-marketplaces.html">Anthropic 的插件市场</a></li><li><a class="nav-link" href="plugins-code-intelligence.html">代码智能插件</a></li><li><a class="nav-link" href="plugins-security.html">插件安全和信任</a></li></ul><div class="nav-sub">创建插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create.html">创建 Claude Code 插件</a></li><li><a class="nav-link" href="plugins-components.html">向插件添加组件</a></li><li><a class="nav-link" href="plugins-dependencies.html">插件依赖</a></li><li><a class="nav-link" href="plugin-evals.html">使用 evals 测试插件</a></li><li><a class="nav-link" href="plugins-publish.html">发布和分发插件</a></li><li><a class="nav-link" href="plugins-measure.html">测量插件成本和使用情况</a></li><li><a class="nav-link" href="plugins-cli-hints.html">从您的 CLI 推荐您的插件</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">mod</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-overview.html">Mods 概览</a></li><li><a class="nav-link" href="plugins-mods-create.html">创建一个 mod</a></li><li><a class="nav-link" href="plugins-mods-reference.html">mod 参考</a></li></ul><div class="nav-sub">构建</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-interface.html">使用 mod 在界面中绘制</a></li><li><a class="nav-link" href="plugins-mods-gallery.html">mod 界面元素图库</a></li><li><a class="nav-link" href="plugins-mods-events.html">使用 mod 响应事件</a></li><li><a class="nav-link" href="plugins-mods-api.html">使用 mods API</a></li></ul><div class="nav-sub">测试与故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-mods-test.html">测试 mod</a></li><li><a class="nav-link" href="plugins-mods-troubleshoot.html">排查 mod 问题</a></li></ul></div></details><div class="nav-sub">运营市场</div><ul class="nav-list"><li><a class="nav-link" href="plugins-create-marketplace.html">创建一个 marketplace</a></li><li><a class="nav-link" href="plugins-host-marketplace.html">托管和维护一个 marketplace</a></li><li><a class="nav-link" href="plugins-relevance.html">为您的组织推荐插件</a></li></ul><div class="nav-sub">管理组织的插件</div><ul class="nav-list"><li><a class="nav-link" href="plugins-org.html">为您的组织管理 Claude Code plugins</a></li><li><a class="nav-link" href="plugins-mods-admin.html">为您的组织管理 mods</a></li></ul><div class="nav-sub">故障排除</div><ul class="nav-list"><li><a class="nav-link" href="plugins-troubleshooting.html">排查插件问题</a></li><li><a class="nav-link" href="plugins-loading.html">插件加载参考</a></li></ul><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="plugins-manifest-reference.html">Plugin manifest 参考</a></li><li><a class="nav-link" href="plugins-marketplace-reference.html">Marketplace 参考</a></li><li><a class="nav-link" href="plugins-cli-reference.html">插件命令参考</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">管理</div><div class="nav-chapter-body"><div class="nav-sub">设置与访问</div><ul class="nav-list"><li><a class="nav-link" href="admin-setup.html">为您的组织设置 Claude Code</a></li><li><a class="nav-link" href="setup.html">高级设置</a></li><li><a class="nav-link" href="authentication.html">身份验证</a></li><li><a class="nav-link" href="managed-settings.html">部署托管设置</a></li><li><a class="nav-link" href="server-managed-settings.html">配置服务器管理的设置</a></li><li><a class="nav-link" href="managed-mcp.html">控制组织的 MCP 服务器访问权限</a></li><li><a class="nav-link" href="auto-mode-config.html">配置自动模式</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="third-party-integrations.html">企业部署概览</a></li><li><a class="nav-link" href="feature-availability.html">功能可用性</a></li><li><a class="nav-link" href="amazon-bedrock.html">Amazon Bedrock 上的 Claude Code</a></li><li><a class="nav-link" href="claude-platform-on-aws.html">AWS 上的 Claude Platform 中的 Claude Code</a></li><li><a class="nav-link" href="google-vertex-ai.html">Google Cloud 的 Agent Platform 上的 Claude Code</a></li><li><a class="nav-link" href="microsoft-foundry.html">Microsoft Foundry 上的 Claude Code</a></li><li><a class="nav-link" href="network-config.html">企业网络配置</a></li><li><a class="nav-link" href="corporate-launcher.html">在企业启动器后面运行 Claude Code</a></li><li><a class="nav-link" href="devcontainer.html">开发容器</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">网关</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="gateways.html">通过网关运行 Claude Code</a></li></ul><div class="nav-sub">Claude 应用网关</div><ul class="nav-list"><li><a class="nav-link" href="claude-apps-gateway.html">Amazon Bedrock、Claude Platform on AWS、Google Cloud 和 Microsoft Foundry 的 Claude 应用网关</a></li><li><a class="nav-link" href="claude-apps-gateway-config.html">Claude 应用网关配置</a></li><li><a class="nav-link" href="claude-apps-gateway-spend-limits.html">Claude 应用网关支出限制</a></li><li><a class="nav-link" href="claude-apps-gateway-deploy.html">Claude 应用网关部署和运维</a></li><li><a class="nav-link" href="claude-apps-gateway-on-aws.html">在 AWS 上部署 Claude apps gateway</a></li><li><a class="nav-link" href="claude-apps-gateway-on-gcp.html">在 Google Cloud 上部署 Claude apps gateway</a></li></ul><div class="nav-sub">其他网关</div><ul class="nav-list"><li><a class="nav-link" href="llm-gateway.html">其他 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-connect.html">将 Claude Code 连接到 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-rollout.html">为您的组织推出 LLM 网关</a></li><li><a class="nav-link" href="llm-gateway-protocol.html">Claude Code 网关兼容性指南</a></li></ul></div></details><div class="nav-sub">用量与费用</div><ul class="nav-list"><li><a class="nav-link" href="monitoring-usage.html">监控</a></li><li><a class="nav-link" href="costs.html">有效管理成本</a></li><li><a class="nav-link" href="analytics.html">使用分析跟踪团队使用情况</a></li></ul><div class="nav-sub">安全与数据</div><ul class="nav-list"><li><a class="nav-link" href="security.html">安全性</a></li><li><a class="nav-link" href="data-usage.html">数据使用</a></li><li><a class="nav-link" href="zero-data-retention.html">零数据保留</a></li><li><a class="nav-link" href="hipaa-setup.html">为符合 HIPAA 要求的组织设置 Claude Code（本地模式）</a></li></ul><div class="nav-sub">采用</div><ul class="nav-list"><li><a class="nav-link" href="communications-kit.html">通信工具包</a></li><li><a class="nav-link" href="champion-kit.html">Champion kit</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">配置</div><div class="nav-chapter-body"><div class="nav-sub">设置</div><ul class="nav-list"><li><a class="nav-link" href="settings.html">设置文件和优先级</a></li><li><a class="nav-link" href="settings-reference.html">所有设置</a></li><li><a class="nav-link" href="settings-example.html">示例设置文件</a></li></ul><div class="nav-sub">权限和沙箱隔离</div><ul class="nav-list"><li><a class="nav-link" href="permissions.html">配置权限</a></li><li><a class="nav-link" href="permission-modes.html">选择权限模式</a></li><li><a class="nav-link" href="auto-mode-classifier-billing.html">自动模式分类器请求费用</a></li><li><a class="nav-link" href="sandboxing.html">配置沙箱化的 Bash 工具</a></li><li><a class="nav-link" href="sandbox-environments.html">选择沙箱环境</a></li></ul><details class="nav-group lv1" open><summary class="nav-group-title">环境</summary><div class="nav-group-body"><ul class="nav-list"><li><a class="nav-link" href="cloud-environments.html">配置云环境</a></li></ul><div class="nav-sub">自托管环境</div><ul class="nav-list"><li><a class="nav-link" href="self-hosted-environments.html">自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-quickstart.html">自托管环境快速入门</a></li><li><a class="nav-link" href="self-hosted-environments-deploy.html">将自托管环境部署到生产环境</a></li><li><a class="nav-link" href="self-hosted-environments-configuration.html">在自托管环境中自定义会话</a></li><li><a class="nav-link" href="self-hosted-environments-testing.html">端到端测试自托管环境</a></li><li><a class="nav-link" href="self-hosted-environments-reference.html">自托管环境参考</a></li><li><a class="nav-link" href="self-hosted-environments-identity.html">在自托管环境中验证会话身份</a></li></ul></div></details><div class="nav-sub">模型与回复</div><ul class="nav-list"><li><a class="nav-link" href="model-config.html">模型配置</a></li><li><a class="nav-link" href="fast-mode.html">使用快速模式加快响应速度</a></li><li><a class="nav-link" href="advisor.html">使用顾问工具升级困难决策</a></li><li><a class="nav-link" href="output-styles.html">输出样式</a></li></ul><div class="nav-sub">界面</div><ul class="nav-list"><li><a class="nav-link" href="terminal-config.html">为 Claude Code 配置您的终端</a></li><li><a class="nav-link" href="fullscreen.html">全屏渲染</a></li><li><a class="nav-link" href="accessibility.html">使用 Claude Code 与屏幕阅读器</a></li><li><a class="nav-link" href="voice-dictation.html">语音听写</a></li><li><a class="nav-link" href="statusline.html">自定义你的状态行</a></li><li><a class="nav-link" href="keybindings.html">自定义快捷键</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">参考</div><div class="nav-chapter-body"><div class="nav-sub">参考</div><ul class="nav-list"><li><a class="nav-link" href="cli-reference.html">CLI 参考</a></li><li><a class="nav-link" href="commands.html">Commands</a></li><li><a class="nav-link" href="env-vars.html">环境变量</a></li><li><a class="nav-link" href="tools-reference.html">工具参考</a></li><li><a class="nav-link" href="interactive-mode.html">交互模式</a></li><li><a class="nav-link" href="checkpointing.html">Checkpointing</a></li><li><a class="nav-link" href="hooks.html">Hooks 参考</a></li><li><a class="nav-link" href="channels-reference.html">Channels 参考</a></li></ul><div class="nav-sub">术语表</div><ul class="nav-list"><li><a class="nav-link" href="glossary.html">术语表</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">Agent SDK</div><div class="nav-chapter-body"><div class="nav-sub">Agent SDK</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-overview.html">Agent SDK 概览</a></li><li><a class="nav-link" href="agent-sdk-quickstart.html">快速开始</a></li><li><a class="nav-link" href="agent-sdk-migration-guide.html">迁移到 Claude Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-troubleshooting.html">Agent SDK 故障排除</a></li></ul><div class="nav-sub">构建 Agent</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-configuration.html">配置你的代理</a></li><li><a class="nav-link" href="agent-sdk-examples.html">示例</a></li></ul><div class="nav-sub">核心概念</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-agent-loop.html">代理循环如何工作</a></li><li><a class="nav-link" href="agent-sdk-claude-code-features.html">在 SDK 中使用 Claude Code 功能</a></li><li><a class="nav-link" href="agent-sdk-sessions.html">使用会话</a></li><li><a class="nav-link" href="agent-sdk-session-storage.html">将会话持久化到外部存储</a></li></ul><div class="nav-sub">输入和输出</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-streaming-vs-single-mode.html">流式输入</a></li><li><a class="nav-link" href="agent-sdk-user-input.html">处理批准和用户输入</a></li><li><a class="nav-link" href="agent-sdk-streaming-output.html">实时流式传输响应</a></li><li><a class="nav-link" href="agent-sdk-structured-outputs.html">从代理获取结构化输出</a></li></ul><div class="nav-sub">使用工具扩展</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-custom-tools.html">为 Claude 提供自定义工具</a></li><li><a class="nav-link" href="agent-sdk-mcp.html">使用 MCP 连接外部工具</a></li><li><a class="nav-link" href="agent-sdk-tool-search.html">使用工具搜索扩展到多个工具</a></li><li><a class="nav-link" href="agent-sdk-subagents.html">SDK 中的子代理</a></li></ul><div class="nav-sub">自定义行为</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-modifying-system-prompts.html">修改系统提示词</a></li><li><a class="nav-link" href="agent-sdk-skills.html">使用 skills 扩展 agents</a></li><li><a class="nav-link" href="agent-sdk-plugins.html">SDK 中的 Plugins</a></li></ul><div class="nav-sub">控制与可观测性</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-permissions.html">配置权限</a></li><li><a class="nav-link" href="agent-sdk-hooks.html">使用 hooks 拦截和控制代理行为</a></li><li><a class="nav-link" href="agent-sdk-file-checkpointing.html">使用checkpointing回滚文件更改</a></li><li><a class="nav-link" href="agent-sdk-cost-tracking.html">追踪成本和使用情况</a></li><li><a class="nav-link" href="agent-sdk-observability.html">使用 OpenTelemetry 进行可观测性</a></li><li><a class="nav-link" href="agent-sdk-todo-tracking.html">跟踪待办事项</a></li></ul><div class="nav-sub">部署</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-hosting.html">托管 Agent SDK</a></li><li><a class="nav-link" href="agent-sdk-secure-deployment.html">安全部署 AI 代理</a></li></ul><div class="nav-sub">SDK 参考</div><ul class="nav-list"><li><a class="nav-link" href="agent-sdk-typescript.html">Agent SDK 参考 - TypeScript</a></li><li><a class="nav-link" href="agent-sdk-typescript-v2-preview.html">TypeScript SDK V2 session API（已移除）</a></li><li><a class="nav-link" href="agent-sdk-python.html">Agent SDK 参考 - Python</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">新功能</div><div class="nav-chapter-body"><div class="nav-sub">最新动态</div><ul class="nav-list"><li><a class="nav-link" href="whats-new-index.html">最新动态</a></li><li><a class="nav-link" href="whats-new-2026-w37.html">第37周 · 2026年9月7日–11日</a></li><li><a class="nav-link" href="whats-new-2026-w36.html">第 36 周 · 8 月 31 日 – 9 月 4 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w35.html">第 35 周 · 2026 年 8 月 24–28 日</a></li><li><a class="nav-link" href="whats-new-2026-w34.html">第 34 周 · 2026 年 8 月 17–21 日</a></li><li><a class="nav-link" href="whats-new-2026-w33.html">第 33 周 · 2026 年 8 月 10–14 日</a></li><li><a class="nav-link" href="whats-new-2026-w32.html">第 32 周 · 2026 年 8 月 3–7 日</a></li><li><a class="nav-link" href="whats-new-2026-w30.html">第 30 周 · 7 月 20–24 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w29.html">第29周 · 2026年7月13–17日</a></li><li><a class="nav-link" href="whats-new-2026-w28.html">第 28 周 · 2026 年 7 月 6–10 日</a></li><li><a class="nav-link" href="whats-new-2026-w27.html">第 27 周 · 6 月 29 日 – 7 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w26.html">第 26 周 · 2026 年 6 月 22–26 日</a></li><li><a class="nav-link" href="whats-new-2026-w25.html">第 25 周 · 2026 年 6 月 15–19 日</a></li><li><a class="nav-link" href="whats-new-2026-w24.html">第24周 · 2026年6月8日–12日</a></li><li><a class="nav-link" href="whats-new-2026-w23.html">第 23 周 · 2026 年 6 月 1–5 日</a></li><li><a class="nav-link" href="whats-new-2026-w22.html">第 22 周 · 2026 年 5 月 25–29 日</a></li><li><a class="nav-link" href="whats-new-2026-w21.html">第 21 周 · 2026 年 5 月 18–22 日</a></li><li><a class="nav-link" href="whats-new-2026-w20.html">第 20 周 · 2026 年 5 月 11–15 日</a></li><li><a class="nav-link" href="whats-new-2026-w19.html">第19周 · 2026年5月4–8日</a></li><li><a class="nav-link" href="whats-new-2026-w18.html">第 18 周 · 2026 年 4 月 27 日 – 5 月 1 日</a></li><li><a class="nav-link" href="whats-new-2026-w17.html">第17周 · 2026年4月20–24日</a></li><li><a class="nav-link" href="whats-new-2026-w16.html">第 16 周 · 2026 年 4 月 13–17 日</a></li><li><a class="nav-link" href="whats-new-2026-w15.html">第15周 · 2026年4月6–10日</a></li><li><a class="nav-link" href="whats-new-2026-w14.html">第 14 周 · 3 月 30 日 – 4 月 3 日，2026 年</a></li><li><a class="nav-link" href="whats-new-2026-w13.html">第13周 · 2026年3月23–27日</a></li></ul><ul class="nav-list"></ul></div></div><div class="nav-chapter"><div class="nav-chapter-title">资源</div><div class="nav-chapter-body"><div class="nav-sub">资源</div><ul class="nav-list"><li><a class="nav-link" href="legal-and-compliance.html">法律和合规</a></li></ul><ul class="nav-list"></ul></div></div></nav>
+  </aside>
+  <main class="content">
+    <div class="crumbs"><span>使用 Claude Code 构建</span> <span class="sep">/</span> <span>Agent 与并行工作</span></div>
+    <article class="prose" id="article"><h1 id="_1">使用动态工作流大规模编排子代理</h1>
+<blockquote>
+<p>动态工作流从 Claude 编写的脚本中编排许多子代理，您可以重新运行。用于代码库审计、大型迁移和交叉检查研究。</p>
+</blockquote>
+<div class="callout callout-note"><div class="callout-head"><span class="callout-ico"></span>说明</div><div class="callout-body"><p>动态工作流在所有付费计划上可用，具有 Anthropic API 访问权限，以及在 Amazon Bedrock、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上可用。在 Pro 上，从 <code>/config</code> 中的 Dynamic workflows 行启用它们。</p></div></div>
+<p>动态工作流是一个 JavaScript 脚本，可大规模编排许多<a href="sub-agents.html">子代理</a>。Claude 为您描述的任务编写脚本，运行时在后台执行它，同时您的会话保持响应。</p>
+<p>当任务需要比一个对话能协调的更多代理时，或当您想将编排编纂为可以读取和重新运行的脚本时，请使用工作流。示例包括代码库范围的错误扫描、500 文件迁移、需要相互交叉检查来源的研究问题，以及在提交一个之前值得从多个独立角度起草的困难计划。</p>
+<h2 id="when-to-use-a-workflow">何时使用工作流</h2>
+<p><a href="sub-agents.html">子代理</a>、<a href="skills.html">skills</a>、<a href="agent-teams.html">agent teams</a> 和工作流都可以运行多步骤任务。区别在于谁掌握计划：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">子代理</th>
+<th style="text-align: left;">Skills</th>
+<th style="text-align: left;">Agent teams</th>
+<th style="text-align: left;">工作流</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">它是什么</td>
+<td style="text-align: left;">Claude 生成的工作者</td>
+<td style="text-align: left;">Claude 遵循的指令</td>
+<td style="text-align: left;">监督对等会话的主导代理</td>
+<td style="text-align: left;">运行时执行的脚本</td>
+</tr>
+<tr>
+<td style="text-align: left;">谁决定接下来运行什么</td>
+<td style="text-align: left;">Claude，逐轮</td>
+<td style="text-align: left;">Claude，遵循提示</td>
+<td style="text-align: left;">主导代理，逐轮</td>
+<td style="text-align: left;">脚本</td>
+</tr>
+<tr>
+<td style="text-align: left;">中间结果在哪里</td>
+<td style="text-align: left;">Claude 的上下文窗口</td>
+<td style="text-align: left;">Claude 的上下文窗口</td>
+<td style="text-align: left;">共享任务列表</td>
+<td style="text-align: left;">脚本变量</td>
+</tr>
+<tr>
+<td style="text-align: left;">什么是可重复的</td>
+<td style="text-align: left;">工作者定义</td>
+<td style="text-align: left;">指令</td>
+<td style="text-align: left;">团队定义</td>
+<td style="text-align: left;">编排本身</td>
+</tr>
+<tr>
+<td style="text-align: left;">规模</td>
+<td style="text-align: left;">每轮几个委派任务</td>
+<td style="text-align: left;">与子代理相同</td>
+<td style="text-align: left;">少数几个长期运行的对等体</td>
+<td style="text-align: left;">每次运行数十到数百个代理</td>
+</tr>
+<tr>
+<td style="text-align: left;">中断</td>
+<td style="text-align: left;">重启轮次</td>
+<td style="text-align: left;">重启轮次</td>
+<td style="text-align: left;">队友继续运行</td>
+<td style="text-align: left;">在同一会话中可恢复</td>
+</tr>
+</tbody>
+</table>
+<p>工作流将计划移入代码。使用子代理、skills 和 agent teams，Claude 是编排者：它逐轮决定接下来生成或分配什么，每个结果都进入上下文窗口。工作流脚本持有循环、分支和中间结果本身，所以 Claude 的上下文只持有最终答案。</p>
+<p>将计划移入代码也让工作流应用可重复的质量模式，而不仅仅是运行更多代理：它可以让独立代理在报告之前对彼此的发现进行对抗性审查，或从多个角度起草计划并相互权衡，所以您获得比单次通过更可信的结果。</p>
+<h2 id="run-a-bundled-workflow">运行捆绑工作流</h2>
+<p>查看工作流运行的最快方式是运行 <code>/deep-research</code>，这是 Claude Code 包含的<a href="#bundled-workflows">内置工作流</a>，用于跨许多来源调查问题。您将看到代理在后台通过一组阶段工作，同时您的会话保持空闲，最后获得一份报告而不是逐轮记录。</p>
+<p><strong>1. 运行工作流</strong></p>
+<p>使用您想要调查的问题运行 <code>/deep-research</code>。它在多个角度上扇出网络搜索，获取并交叉检查它找到的来源，并综合一份引用的报告。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/deep-research What changed in the Node.js permission model between v20 and v22?
+</code></pre></div>
+<p><strong>2. 允许工作流</strong></p>
+<p>Claude Code 询问是否允许工作流。选择<strong>是</strong>继续。确切的提示取决于您的权限模式。有关每种模式的选项，请参阅<a href="#approve-the-plan-before-it-runs">在运行前批准计划</a>。</p>
+<p><strong>3. 观看进度</strong></p>
+<p>运行在后台启动。运行 <code>/workflows</code> 打开其进度视图：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/workflows
+</code></pre></div>
+<p>如果 <code>/workflows</code> 显示的是运行列表，请选择您刚启动的运行并按 Enter。该视图显示每个阶段及其 Agent 计数。深入任何阶段以查看其 Agent 及每个 Agent 发现的内容。有关完整的控制集，请参阅<a href="#watch-the-run">观看运行</a>。</p>
+<p>您也可以从输入框下方的任务面板观看：运行进行时会出现一行进度摘要。按向下箭头聚焦它，然后按 Enter 展开。</p>
+<p><strong>4. 阅读报告</strong></p>
+<p>运行完成后，报告进入您的会话。它引用每个声明来自的来源，未通过交叉检查的声明已被过滤掉。</p>
+<p>当验证代理无法检查声明时，例如在速率限制或 API 错误之后，报告将该声明列为未验证，而不是计为被驳回。</p>
+<p>要为您自己的任务运行工作流，<a href="#have-claude-write-a-workflow">让 Claude 编写一个</a>，一旦运行完成您想要的操作，您可以<a href="#save-the-workflow-for-reuse">保存它</a>作为您自己的命令。</p>
+<h3 id="bundled-workflows">捆绑工作流</h3>
+<p>Claude Code 包含 <code>/deep-research</code> 作为内置工作流：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">命令</th>
+<th style="text-align: left;">它做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/deep-research &lt;question&gt;</code></td>
+<td style="text-align: left;">在多个角度上扇出网络搜索问题，获取并交叉检查它找到的来源，对每个声明投票，并返回一份引用的报告，其中未通过交叉检查的声明已被过滤掉。需要<a href="tools-reference.html#websearch-tool-behavior">WebSearch 工具</a>可用</td>
+</tr>
+</tbody>
+</table>
+<p><code>/deep-research</code> 仅在您调用它时运行。</p>
+<p><a href="#save-the-workflow-for-reuse">您自己保存的工作流</a>以相同方式成为命令，并在 <code>/</code> 自动完成中与捆绑的工作流一起出现。</p>
+<h3 id="watch-the-run">观看运行</h3>
+<p>工作流在后台运行，所以会话在 Agent 工作时保持响应。随时运行 <code>/workflows</code> 列出运行中和已完成的工作流，然后选择一个打开其进度视图。当会话只有一个运行时，<code>/workflows</code> 会跳过列表并直接打开该运行。要从列表中停止运行中的工作流而不打开它，请选择它并按 <code>x</code>。</p>
+<p>进度视图显示每个阶段及其 Agent 计数。页脚列出每个操作的键：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">键</th>
+<th style="text-align: left;">操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>↑</code> / <code>↓</code></td>
+<td style="text-align: left;">选择一个阶段或代理</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Enter</code> 或 <code>→</code></td>
+<td style="text-align: left;">深入选定的阶段，然后进入代理的详情。在详情中，<code>Enter</code> 展开或折叠它</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Esc</code> 或 <code>←</code></td>
+<td style="text-align: left;">返回一个级别</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>j</code> / <code>k</code></td>
+<td style="text-align: left;">当代理详情溢出时在其中滚动</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>f</code></td>
+<td style="text-align: left;">按状态过滤选定阶段中的代理列表。再次按下以循环</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>p</code></td>
+<td style="text-align: left;">暂停或恢复运行</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>x</code></td>
+<td style="text-align: left;">停止选定的代理，或当焦点在运行上时停止整个工作流</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>r</code></td>
+<td style="text-align: left;">重启选定的运行中代理</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>s</code></td>
+<td style="text-align: left;"><a href="#save-the-workflow-for-reuse">保存</a>运行的脚本作为命令</td>
+</tr>
+</tbody>
+</table>
+<p>代理详情列出代理的提示、其最近的工具调用和其结果。每个调用显示其状态，例如仍在运行或失败。当代理保持自己的任务列表时，详情显示它，以及每个任务的状态。</p>
+<p>按 <code>Enter</code> 展开详情。提示和结果然后完整显示，每个列出的调用显示其输入和其结果的开始。</p>
+<h2 id="have-claude-write-a-workflow">让 Claude 编写工作流</h2>
+<p>您可以通过两种方式让 Claude 为您的任务编写工作流：</p>
+<ul>
+<li>在提示词中<a href="#ask-for-a-workflow-in-your-prompt">请求工作流</a>，可以用您自己的话表述，也可以包含关键字 <code>ultracode</code>，Claude 会为该任务编写一个工作流。</li>
+<li><a href="#let-claude-decide-with-ultracode">使用 ultracode 让 Claude 决定</a>：设置 <code>/effort ultracode</code>，Claude 会为会话中的每个实质性任务规划工作流。</li>
+</ul>
+<p>您也可以运行已存在的工作流命令：例如 <code>/deep-research</code> 这样的<a href="#bundled-workflows">内置工作流</a>，或您<a href="#save-the-workflow-for-reuse">已保存</a>的工作流。</p>
+<h3 id="ask-for-a-workflow-in-your-prompt">在提示词中请求工作流</h3>
+<p>要在不更改会话 effort 级别的情况下以工作流方式运行单个任务，请在提示词中包含关键字 <code>ultracode</code>。用您自己的话请求也同样有效，例如"use a workflow"或"run a workflow"：Claude 会将直接请求视为同样的选择加入。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">ultracode: audit every API endpoint under src/routes/ for missing auth checks
+</code></pre></div>
+<p>Claude Code 会在您的输入中高亮显示该关键字，Claude 会为该任务编写工作流脚本，而不是逐轮次地处理任务。该关键字只决定 Claude 如何组织工作：Agent 的工具调用与会话中的任何其他工具调用一样，接受相同的权限检查和<a href="sandboxing.html">沙箱隔离</a>。</p>
+<p>如果运行结果符合您的预期，您可以在之后<a href="#save-the-workflow-for-reuse">将其保存为命令</a>。如果您已经用其他方式构建了编排器，例如一个存放子代理提示词的文件夹，或一个分发工作的 skill，您可以让 Claude 参考它，并请求编写一个实现相同功能的工作流。</p>
+<h4 id="dismiss-or-turn-off-the-keyword">取消或关闭关键字</h4>
+<p>如果您并非有意启动工作流，请在 macOS 上按 <code>Option+W</code>，在 Windows 和 Linux 上按 <code>Alt+W</code>，以取消本次提示词的高亮；或者在光标紧跟高亮关键字时按退格键。要完全阻止该关键字触发，请在 <code>/config</code> 中关闭 Ultracode keyword trigger。</p>
+<h4 id="where-the-keyword-works">关键字的生效范围</h4>
+<p>只有在您亲自输入的提示词中，该关键字才会作为选择加入：包括交互式输入框、IDE 扩展面板、<a href="remote-control.html">Remote Control</a> 客户端，或将您的键盘输入的 <a href="agent-sdk-typescript.html#sdkmessageorigin"><code>origin</code></a> 标记为 <code>{ kind: "human" }</code> 的 Agent SDK 应用程序。当它通过其他方式到达会话时，不会启动工作流：</p>
+<ul>
+<li>通过 <code>-p</code> 传入的提示词</li>
+<li>Agent SDK 应用程序发送但未标记为人工输入的提示词</li>
+<li>定时任务的提示词</li>
+<li>转发到对话中的 webhook 负载或 Pull Request 评论</li>
+</ul>
+<h3 id="let-claude-decide-with-ultracode">使用 ultracode 让 Claude 决定</h3>
+<p>Ultracode 是 Claude Code 的一项设置，可为会话启用自动工作流编排，无论会话运行在哪个 <a href="model-config.html#adjust-effort-level">effort 级别</a>。启用后，Claude 会为每个实质性任务规划工作流，而不是等待您提出请求。在 Claude Code 输入框中启用它：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">/effort ultracode
+</code></pre></div>
+<p>要在启动会话时就启用 ultracode，请使用 <code>claude --effort ultracode</code> 启动，这还会将 effort 级别设置为 <code>xhigh</code>。</p>
+<p>要从 <code>/effort</code> 滑块启用，请按 <code>Tab</code> 切换 <strong>Ultracode</strong> 开关，然后按 <code>Enter</code> 应用。<a href="model-config.html#adjust-effort-level">调整 effort 级别</a>列出了启用 ultracode 的各种途径。</p>
+<p>启用 ultracode 后，Claude 会决定任务何时需要工作流。单个请求可能会变成连续的多个工作流：一个用于理解代码，一个用于进行更改，一个用于验证更改。这适用于会话中的每个任务，因此每个请求都会比不使用工作流的相同请求消耗更多 token、耗时更长。在订阅套餐中，这些 token 会计入您的用量限制，因此启用 ultracode 的会话会比关闭时完成相同工作更早达到会话或每周限制。</p>
+<p>启用 ultracode 本身就意味着您已选择加入大型运行，因此启用期间以下检查不适用：</p>
+<ul>
+<li>工作流运行时不会出现 <a href="#cost"><code>Large workflow</code> 警告</a></li>
+<li>对于 Claude 使用 Agent 工具生成的子代理，不强制执行会话的<a href="sub-agents.html#concurrent-subagent-limit">并发子代理限制</a></li>
+<li>在自动权限模式下，不会要求您<a href="#approve-the-plan-before-it-runs">批准首次工作流启动</a></li>
+</ul>
+<p><code>/effort ultracode</code> 仅在当前会话中有效；要让每个会话启动时都启用它，请设置 <a href="settings-reference.html#ultracode"><code>ultracode</code></a> 设置项。回到日常工作时，使用 <code>/effort ultracode off</code> 将其关闭。只有<a href="model-config.html#when-ultracode-is-available">在 ultracode 可用时</a>，<code>/effort</code> 滑块才会提供该开关。在 v2.1.284 之前，<code>/effort ultracode</code> 会将会话设置为 <code>xhigh</code>，而 <code>/effort ultracode off</code> 会失败并显示 <code>Invalid argument</code>。</p>
+<h3 id="approve-the-plan-before-it-runs">在运行前批准计划</h3>
+<p>在 CLI 中，每次运行的确认提示会显示计划的阶段以及以下选项：</p>
+<ul>
+<li><strong>Yes, run it</strong>：开始运行</li>
+<li><strong>Yes, and don't ask again for <code>&lt;name&gt;</code> in <code>&lt;path&gt;</code></strong>：开始运行，并且此后在此项目中对该工作流跳过此提示。当您按名称运行内置、已保存或插件工作流时，Claude Code 会提供此选项；对于 Claude 为当前任务编写的脚本则不提供。</li>
+<li><strong>View raw script</strong>：在决定之前阅读脚本</li>
+<li><strong>No</strong>：取消</li>
+</ul>
+<p><code>Ctrl+G</code> 会在您的编辑器中打开脚本。选中 <strong>Yes, run it</strong> 或 <strong>No</strong> 时，按 <code>Tab</code> 可为您的回答<a href="permissions.html#add-a-comment-when-you-answer-a-permission-prompt">添加评论</a>。</p>
+<p>是否会看到此提示取决于您的<a href="permission-modes.html">权限模式</a>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">权限模式</th>
+<th style="text-align: left;">何时提示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">自动</td>
+<td style="text-align: left;">仅首次启动。任何 <strong>Yes</strong> 都会在您的用户设置中记录同意，之后的启动不再提示。启用 ultracode 时完全跳过</td>
+</tr>
+<tr>
+<td style="text-align: left;">手动、接受编辑</td>
+<td style="text-align: left;">每次运行，除非您已在此项目中为该工作流选择了 <strong>Yes, and don't ask again</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">绕过权限</td>
+<td style="text-align: left;">Claude Code 不会提示您。运行立即开始</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>claude -p</code>、Agent SDK</td>
+<td style="text-align: left;">Claude Code 不会提示您</td>
+</tr>
+</tbody>
+</table>
+<p>在 <code>claude -p</code> 和 Agent SDK 中，Claude Code 从不显示此提示。它会对 Workflow 工具调用执行与会话其余部分相同的<a href="agent-sdk-permissions.html#how-permissions-are-evaluated">权限评估</a>，因此拒绝规则、询问规则和 <code>dontAsk</code> 模式对启动的作用与对每个工具调用的作用相同。要允许工作流在这些运行中启动，请使用以下方式之一：</p>
+<ul>
+<li><strong>权限规则</strong>：将 <code>Workflow</code> 添加到允许规则中以批准所有工作流，或添加 <code>Workflow(&lt;name&gt;)</code> 以按名称批准某个已保存的工作流。</li>
+<li><strong>自动权限模式</strong>：在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>下运行，分类器会审查该调用并可以批准它。</li>
+<li><strong>绕过权限模式</strong>：在绕过权限模式下运行。</li>
+<li><strong>hook</strong>：从 <a href="hooks.html#pretooluse"><code>PreToolUse</code></a> hook 为该调用返回 <code>"allow"</code>。在<a href="permission-modes.html#analyze-before-you-edit-with-plan-mode">计划模式</a>下，仅凭 hook 的批准工作流不会启动，因此请改用权限规则或您的宿主程序的批准。</li>
+<li><strong>您的宿主程序</strong>：由 <a href="cli-reference.html#cli-flags"><code>--permission-prompt-tool</code></a>，或在 Agent SDK 中由 <a href="agent-sdk-permissions.html"><code>canUseTool</code></a> 回调批准。</li>
+</ul>
+<p>在桌面应用中，批准卡片会显示工作流名称、阶段列表和 token 用量提醒，并提供 <strong>Once</strong>、<strong>Always</strong> 和 <strong>Deny</strong> 操作。进度视图显示在 Background tasks 侧边窗格中。</p>
+<p>工作流生成的子代理使用您的<a href="settings-reference.html#permission-settings">权限规则</a>，Claude Code 会按照<a href="sub-agents.html#permission-modes">子代理在哪种权限模式下运行</a>中的规则为其选择权限模式。为避免长时间运行中出现提示，请在开始前将 Agent 所需的工具添加到允许规则中。</p>
+<h3 id="save-the-workflow-for-reuse">保存工作流以便重用</h3>
+<p>当 Claude 为您会重复执行的任务编写工作流时，您可以将该次运行的脚本保存为命令。这样，像在每个分支上运行的审查这类流程，每次都会执行相同的编排。</p>
+<p>运行 <code>/workflows</code>，选择要保留的运行，然后按 <code>s</code>。在保存对话框中，Tab 可在两个保存位置之间切换：</p>
+<ul>
+<li>项目中的 <code>.claude/workflows/</code>：与所有克隆该仓库的人共享</li>
+<li>主目录中的 <code>~/.claude/workflows/</code>：在每个项目中可用，仅您可见。如果您设置了 <a href="env-vars.html"><code>CLAUDE_CONFIG_DIR</code></a>，此位置为该路径下的 <code>workflows/</code> 目录。</li>
+</ul>
+<p>保存对话框会显示个人位置的解析后路径。按 Enter 保存。无论保存在哪个位置，该工作流在之后的会话中都以 <code>/&lt;name&gt;</code> 运行。</p>
+<p>Claude Code 在写入前会检查保存位置是否存在符号链接，如果存在，会显示错误而不是通过符号链接写入：</p>
+<ul>
+<li>项目位置：如果 <code>.claude</code>、<code>.claude/workflows</code> 或目标文件是符号链接，Claude Code 会拒绝写入。</li>
+<li>个人位置：仅当目标文件本身是符号链接时 Claude Code 才会拒绝，因此由 dotfiles 工具管理的 <code>~/.claude</code> 目录仍然可以正常使用。</li>
+</ul>
+<p>在包含多个 <code>.claude/</code> 目录的 monorepo 中，您可以将工作流放在其所适用的包旁边。保存到项目位置时，会写入工作目录与仓库根目录之间已存在的最近的 <code>.claude/workflows/</code> 目录；如果尚不存在，则写入仓库根目录。项目工作流也会从该路径上的每个 <code>.claude/workflows/</code> 加载，当多个目录定义了同名工作流时，Claude Code 会运行离工作目录最近的那个。</p>
+<p>如果项目工作流和个人工作流同名，则运行项目工作流。</p>
+<h3 id="distribute-a-workflow-in-a-plugin">通过插件分发工作流</h3>
+<p>要在团队或仓库之间共享工作流，请将其包含在<a href="plugins-overview.html">插件</a>中。将脚本放在插件根目录的 <code>workflows/</code> 目录中，或通过 <a href="plugins-manifest-reference.html#fields"><code>workflows</code> 清单字段</a>指向其他位置。</p>
+<p>插件工作流以插件名称作为命名空间。名为 <code>acme-tools</code> 的插件中，如果某个脚本的 <code>meta.name</code> 为 <code>release-audit</code>，它将以 <code>/acme-tools:release-audit</code> 运行。</p>
+<h3 id="pass-input-to-a-saved-workflow">向已保存的工作流传递输入</h3>
+<p>已保存的工作流可以通过 <code>args</code> 参数接收输入。脚本会将其作为名为 <code>args</code> 的全局变量读取。您可以借此在调用时提供研究问题、目标路径列表或配置对象，而无需为每次运行编辑脚本。</p>
+<p>以下提示词使用一组 issue 编号运行已保存的工作流：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">Run /triage-issues on issues 1024, 1025, and 1030
+</code></pre></div>
+<p>Claude 会以结构化数据的形式传递该列表，因此脚本可以直接对 <code>args</code> 调用数组和对象方法，而无需先解析。如果省略 <code>args</code>，该全局变量在脚本中为 <code>undefined</code>。</p>
+<h2 id="example-workflow-prompts">工作流提示示例</h2>
+<p>工作流最适合当任务大于一个代理可以在上下文中容纳的情况，或当相同的步骤需要在许多项目中运行时。下面的提示显示常见的形状。每一个都要求 Claude 为该任务编写并运行工作流；您不自己编写脚本。</p>
+<h3 id="audit-many-files-for-the-same-issue">审计许多文件以查找相同问题</h3>
+<p>扇出每个文件一个代理，然后收集并验证发现。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">use a workflow to audit every route handler under src/routes/ for missing authentication checks, and adversarially verify each finding before reporting it
+</code></pre></div>
+<h3 id="keep-fixing-until-a-check-passes">保持修复直到检查通过</h3>
+<p>运行检查器，修复失败的内容，然后重复直到通过或停止取得进展。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">use a workflow to run npx tsc --noEmit and keep fixing the reported errors until the type check passes or two rounds in a row make no progress
+</code></pre></div>
+<h3 id="migrate-many-files-in-parallel">并行迁移许多文件</h3>
+<p>发现要迁移的文件，在隔离的副本中转换每个文件，以便编辑不会冲突，并验证每个结果。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">use a workflow to migrate every component under src/components/ from JavaScript to TypeScript, working on each file in its own isolated copy
+</code></pre></div>
+<h3 id="review-every-changed-file-and-write-one-summary">审查每个更改的文件并写一份摘要</h3>
+<p>为每个文件运行审查者，然后将所有发现交给一个代理，该代理对它们进行排名和去重。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">use a workflow to review every file changed in this PR for correctness issues, then merge the per-file findings into one ranked summary
+</code></pre></div>
+<h3 id="research-a-topic-across-many-sources">跨许多来源研究一个主题</h3>
+<p>在更改日志、问题和文档中扇出读者，然后综合。捆绑的 <code>/deep-research</code> 工作流执行此操作；您也可以描述一个更狭窄的版本。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">use a workflow to research how our three competitors handle rate limiting: read their public docs and recent changelog entries in parallel, then compare the approaches
+</code></pre></div>
+<h3 id="find-issues-until-the-list-stops-growing">查找问题直到列表停止增长</h3>
+<p>保持分轮搜索并在新轮次找不到任何新内容时停止。</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">text</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-text">use a workflow to find flaky tests in this repo: run the suite repeatedly, record which tests fail intermittently, and stop once two rounds in a row find nothing new
+</code></pre></div>
+<h3 id="what-the-saved-script-looks-like">保存的脚本看起来像什么</h3>
+<p>当您<a href="#save-the-workflow-for-reuse">保存工作流</a>时，<code>.claude/workflows/</code> 中的文件包含一个 <code>meta</code> 块，后跟编排子代理的脚本体。您通常不需要编辑它，但这是一个小的形状，所以您可以识别 Claude 生成的内容：</p>
+<div class="codeblock"><div class="cb-head"><span class="cb-lang">javascript</span><button class="cb-copy" type="button">复制</button></div><pre class="cb-pre"><code class="language-js"><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">meta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'audit-routes'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'Audit every route handler for missing auth checks'</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">agent</span><span class="p">(</span><span class="s1">'List every .ts file under src/routes/.'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'object'</span><span class="p">,</span><span class="w"> </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">'files'</span><span class="p">],</span><span class="w"> </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'array'</span><span class="p">,</span><span class="w"> </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'string'</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="p">})</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">audits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pipeline</span><span class="p">(</span><span class="nx">found</span><span class="p">.</span><span class="nx">files</span><span class="p">,</span><span class="w"> </span><span class="nx">file</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">  </span><span class="nx">agent</span><span class="p">(</span><span class="sb">`Audit </span><span class="si">${</span><span class="nx">file</span><span class="si">}</span><span class="sb"> for missing authentication checks.`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="nx">file</span><span class="w"> </span><span class="p">}),</span>
+<span class="p">)</span>
+
+<span class="k">return</span><span class="w"> </span><span class="nx">audits</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nb">Boolean</span><span class="p">)</span>
+</code></pre></div>
+<p>主体是带有顶级 <code>await</code> 的纯 JavaScript。<code>agent()</code> 生成一个子代理，<code>pipeline()</code> 为列表中的每个项目运行一个，<code>parallel()</code> 同时运行一组代理任务并等待所有任务完成。</p>
+<p>如果您在运行中途停止 <code>agent()</code> 调用或它遇到不可恢复的 API 错误，则 <code>agent()</code> 调用解析为 <code>null</code>。<code>pipeline()</code> 在结果数组中保留每个 <code>null</code>，这就是为什么示例以 <code>.filter(Boolean)</code> 结尾以删除这些条目，其中包括<a href="#when-an-agent-stalls-and-restarts">每次尝试都停滞的 Agent</a> 所占的位置。</p>
+<p>在<a href="permission-modes.html#eliminate-prompts-with-auto-mode">自动模式</a>中，您的脚本传递给 <code>agent()</code> 的提示不会计为您的请求，当分类器审查该子代理的操作时，因为 Claude Code 将其标记为脚本计算的文本。</p>
+<p>如果您在 <code>agent()</code> 调用上传递 <code>schema</code>，该子代理将返回与形状匹配的 JSON 而不是散文。Claude Code 在启动子代理之前检查架构：当它可以证明架构自相矛盾时，调用失败并显示一个错误，命名矛盾，子代理永远不会启动。它可以证明的一个矛盾是 <code>additionalProperties: false</code> 排除的 <code>required</code> 键。</p>
+<p>如果子代理的输出在五次尝试后仍然无法通过验证，调用将失败并显示一个错误，其中包括最后的验证失败。要更改尝试次数，请设置 <a href="env-vars.html"><code>MAX_STRUCTURED_OUTPUT_RETRIES</code></a>。</p>
+<h3 id="edit-a-saved-script">编辑保存的脚本</h3>
+<p>要更改<a href="#save-the-workflow-for-reuse">您保存的工作流</a>，编辑其 <code>.js</code> 文件或要求 Claude 进行更改。在编辑或要求之前，运行 <code>/workflow-authoring</code> <a href="skills.html#bundled-skills">捆绑技能</a>以加载 Claude 工作的脚本编写参考。该技能需要 Claude Code v2.1.248 或更高版本。</p>
+<p>要在当前会话中运行编辑后的版本，运行 <a href="commands.html#all-commands"><code>/reload-skills</code></a> 以重新读取工作流目录，然后再次运行 <code>/&lt;name&gt;</code>。</p>
+<p>Claude Code 在加载和运行脚本时对文件的每个部分应用这些规则：</p>
+<ul>
+<li><strong><code>meta</code> 块</strong>：将 <code>export const meta</code> 保持为第一个语句，并将其保持为带有 <code>name</code> 和 <code>description</code> 的纯对象字面量。如果它包含除字面值之外的任何内容，例如变量、函数调用或展开，Claude Code 会从 <code>/</code> 自动完成中删除 <code>/&lt;name&gt;</code>。</li>
+<li><strong>主体</strong>：除了 <code>agent()</code>、<code>pipeline()</code> 和 <code>parallel()</code> 之外，您可以调用 <code>phase()</code> 在进度视图中对以下代理进行分组并添加标题，调用 <code>log()</code> 在阶段上方显示消息，并读取 <a href="#pass-input-to-a-saved-workflow"><code>args</code></a> 全局变量。如果主体有语法错误，Claude Code 会在您运行工作流时报告它。</li>
+<li><strong><code>phases</code></strong>：如果您在 <code>meta</code> 中列出它们，为每个条目提供您传递给 <code>phase()</code> 的确切标题。没有条目的 <code>phase()</code> 标题会获得自己的进度组。</li>
+<li><strong>时间戳和随机性</strong>：Claude Code 使脚本内的 <code>Date.now()</code>、<code>Math.random()</code> 和无参数 <code>new Date()</code> 抛出异常，以便<a href="#resume-after-a-pause">重新启动的运行</a>重复相同的 <code>agent()</code> 调用。改为通过 <code>args</code> 传入时间戳。</li>
+</ul>
+<p>您也可以编辑<a href="#how-a-workflow-runs">单个运行的脚本</a>而不是保存的副本。<a href="#resume-after-a-pause">在暂停后恢复</a>涵盖当您重新启动编辑的脚本时哪些代理再次运行。有关 Workflow 工具的输入，请参阅其在 <a href="agent-sdk-typescript.html#workflow">Agent SDK 参考</a>中的条目。</p>
+<h2 id="how-a-workflow-runs">工作流如何运行</h2>
+<p>工作流运行时在隔离的环境中执行脚本，与您的对话分离。中间结果保留在脚本变量中，而不是进入 Claude 的上下文。</p>
+<p>除非 Claude 从脚本文件的路径启动运行，否则 Claude Code 会将该次运行的脚本写入您会话目录下 <code>~/.claude/projects/</code> 中的文件。Claude 在运行开始时接收脚本的路径，因此您可以要求它提供该路径。您可以打开该文件来读取 Claude 编写的编排，将其与之前运行的脚本进行对比，或编辑它并要求 Claude 从编辑后的版本重新启动。</p>
+<p>Claude 只能从会话已允许读取的脚本文件启动工作流。要运行保存在工作目录外的脚本，请先使用 <a href="permissions.html#working-directories"><code>/add-dir</code></a> 或 <a href="permissions.html#read-and-edit">Read allow rule</a> 添加其目录。</p>
+<p>运行时在运行进行时跟踪每个代理的结果，这正是使运行在同一会话内 <a href="#resume-after-a-pause">可恢复</a> 的原因。</p>
+<h3 id="prompt-caching-in-a-fan-out">扇出中的 prompt caching</h3>
+<p>同一运行中的代理可以读取彼此的 <a href="prompt-caching.html#subagents-and-the-cache">prompt cache</a>。两个使用相同模型、努力级别、代理类型、工具、输出架构和工作目录运行的代理会构建相同的工具和系统提示前缀，因此在匹配的兄弟代理响应开始后启动的代理会在其第一个请求中读取该兄弟代理的缓存。</p>
+<p>工作流代理的请求落在主对话的 <a href="prompt-caching.html#which-ttl-each-request-gets">cache TTL bucket</a> 之外，因此其缓存默认保持五分钟，包括在 Claude 订阅上。要将其保持一小时，请将 <a href="settings-reference.html#subagentpromptcachettl"><code>subagentPromptCacheTtl</code></a> 设置为 <code>1h</code>。API 以更高的费率计费 1 小时缓存写入。</p>
+<p>当扇出同时启动多个匹配的代理时，Claude Code 会保留除第一个之外的所有代理，直到第一个代理的响应开始，然后一起释放保留的代理，以便它们的第一个请求读取共享前缀，而不是每个都未缓存地处理它。Claude Code 将保留限制在 <a href="env-vars.html"><code>CLAUDE_CODE_WORKFLOW_PREFIX_STAGGER_MS</code></a> 毫秒，默认为 <code>5000</code>。将其设置为 <code>0</code> 以禁用保留。</p>
+<h3 id="behavior-and-limits">行为和限制</h3>
+<p>运行时应用以下约束：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">约束</th>
+<th style="text-align: left;">原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">无中途用户输入</td>
+<td style="text-align: left;">运行仅在代理权限提示和 <a href="#when-a-run-hits-your-usage-limit">使用限制等待</a> 时暂停。对于阶段之间的签署，将每个阶段作为其自己的工作流运行</td>
+</tr>
+<tr>
+<td style="text-align: left;">工作流本身无直接文件系统或 shell 访问</td>
+<td style="text-align: left;">代理读取、写入和运行命令。脚本协调代理</td>
+</tr>
+<tr>
+<td style="text-align: left;">无模块加载：包含 <code>import()</code> 的脚本在运行开始前失败</td>
+<td style="text-align: left;">脚本体是纯 JavaScript。将需要库的工作放在代理的任务中</td>
+</tr>
+<tr>
+<td style="text-align: left;">最多 16 个并发代理，当 Claude Code 可用的 CPU 较少时更少，包括在 CPU 受限的容器内。要更改限制，请将 <a href="env-vars.html#variables"><code>CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS</code></a> 设置为 1 到 256 之间的值，这需要 Claude Code v2.1.269 或更高版本</td>
+<td style="text-align: left;">限制本地资源使用</td>
+</tr>
+<tr>
+<td style="text-align: left;">在扇出中，共享第一个代理的 prompt-cache 前缀的代理最多在其后 5 秒启动，默认情况下</td>
+<td style="text-align: left;">除第一个外的所有代理都读取 <a href="#prompt-caching-in-a-fan-out">第一个代理缓存的前缀</a>，而不是每个都未缓存地处理它</td>
+</tr>
+<tr>
+<td style="text-align: left;">单个 <code>parallel()</code> 或 <code>pipeline()</code> 调用中最多 4,096 个项目：运行时以错误拒绝更长的列表</td>
+<td style="text-align: left;">无声上限会在不告知脚本的情况下丢弃部分工作负载</td>
+</tr>
+<tr>
+<td style="text-align: left;">每次运行总共 1,000 个代理</td>
+<td style="text-align: left;">防止失控循环</td>
+</tr>
+</tbody>
+</table>
+<h2 id="manage-runs">管理运行</h2>
+<p>运行开始后，您可以在 <code>/workflows</code> 视图中管理它，也可以展开输入框下方任务面板中该运行的进度行进行管理。</p>
+<p>停止运行后，只要其任何 Agent 的进程仍在运行，该运行就会一直保留在任务面板中。如果您再次停止它，Claude Code 会重新向这些进程发送信号。</p>
+<h3 id="resume-after-a-pause">暂停后恢复</h3>
+<p>要恢复已暂停的运行，请在 <code>/workflows</code> 中选中它并按 <code>p</code>。对于您已停止的运行，请让 Claude 使用同一脚本重新启动该工作流。如果已停止运行中的 Agent 尚未退出，Claude Code 会拒绝重新启动，直到它们退出为止，以免这些 Agent 的第二个副本与它们同时运行。</p>
+<h4 id="which-agents-run-again">哪些 Agent 会再次运行</h4>
+<p>Claude Code 按 Agent 的启动顺序重放运行，每个 Agent 要么返回其保存的结果，要么再次运行：</p>
+<ul>
+<li><strong>已完成</strong>：返回其保存的结果。第一个提示词与上一次运行不同的 Agent（因为您编辑了脚本，或者前面的某个 Agent 返回了不同的内容）会再次运行，其后的每个 Agent 也会再次运行，即使它们已经完成。</li>
+</ul>
+<p>在 v2.1.305 之前，如果您重新启动一个未经编辑的脚本，而该脚本的 <code>pipeline()</code> 项或 <code>parallel()</code> 任务各自运行了多个 Agent，已完成的 Agent 也可能再次运行。要让新的运行不再出现这类重复运行，请更新 Claude Code。<br />
+* <strong>停止时仍在运行</strong>：从头开始。停止整个运行不会将任何 Agent 计为失败。<br />
+* <strong>失败</strong>：再次运行，脚本在其之后启动的每个 Agent 也会再次运行，即使它们已经完成。单独停止某一个 Agent（在 <a href="#watch-the-run"><code>/workflows</code></a> 中选中它并按 <code>x</code>）会被计为失败。</p>
+<p>最后一种情况意味着，扇出过程中途的失败会导致已完成的工作重新运行。如果一个脚本按顺序启动 A、B、C 和 D，而 B 失败了，重新启动时会从缓存返回 A，并再次运行 B、C 和 D。</p>
+<p>如果您编辑一个原本启动 A、B、C 和 D 的脚本，使其改为启动 A、C、B 和 D，那么第二个启动的 Agent 现在是 C，而上一次运行中是 B。重新启动时会从缓存返回 A，并再次运行 C、B 和 D。</p>
+<h4 id="resume-after-you-leave-the-session">离开会话后恢复</h4>
+<p>如果您在工作流运行进行期间将会话转入后台或退出 Claude Code，该运行不会自行继续。只有当 Claude 通过 <code>Workflow</code> 调用重新启动它时，运行才会继续，这会<a href="#which-agents-run-again">根据保存的结果重放运行</a>。</p>
+<ul>
+<li><strong>您将会话转入了后台，或选择了 <a href="agent-view.html#from-inside-a-session"><code>Move to background and exit</code></a></strong>：如果您查看<a href="agent-view.html#what-carries-over-when-you-background">后台会话</a>时运行尚未继续，请在该会话中让 Claude 重新启动工作流。根据您的<a href="#approve-the-plan-before-it-runs">权限模式</a>，Claude Code 会先请您批准此次重新启动。如果该会话在 agent view 中显示在 <code>Needs input</code> 下，请<a href="agent-view.html#attach-to-a-session">连接到该会话</a>以回应批准提示。</li>
+<li><strong>在后台会话中重新启动失败并显示 <code>nothing to resume</code></strong>：请让 Claude 将工作流作为新运行从头开始。如果 Claude 是从 <code>~/.claude/projects/</code> 之外的脚本文件路径（例如工作目录中的脚本）启动该运行的，Claude 无法在后台会话中重新启动它。</li>
+<li><strong>您选择了 <code>Exit and stop tasks</code>，或者没有出现 <code>Move to background and exit</code> 选项</strong>：运行已随会话一起停止，Claude Code 会将该运行保存的结果保留在 <code>~/.claude/projects/</code> 中该会话的目录下。请在 shell 中使用 <code>claude --resume</code> 恢复该会话，然后让 Claude 重新启动工作流。在全新的会话中，Claude 没有可以重新启动的先前运行，会从头开始工作流。</li>
+</ul>
+<p>在<a href="claude-code-on-the-web.html">云端会话</a>中，Claude Code 还会将运行的结果与会话的对话历史一起保存，即使会话的 VM 被回收，这些结果也会保留。当您<a href="claude-code-on-the-web.html#environment-expired">重新打开此类会话</a>并让 Claude 重新启动工作流时，已完成的 Agent 仍会返回其保存的结果。</p>
+<p>无论是本地会话还是云端会话，当 Claude 重新启动先前的运行而 Claude Code 完全找不到该运行保存的结果时，重新启动会失败并显示 <code>nothing to resume</code> 错误，而不会自行从头开始运行。请让 Claude 将工作流作为新运行从头开始。</p>
+<h3 id="when-a-run-hits-your-usage-limit">运行达到用量限制时</h3>
+<p>当某个 Agent 达到您的 claude.ai <a href="interactive-mode.html#wait-for-a-usage-limit-to-reset">用量限制</a>时，运行会暂停，而不是让该 Agent 失败：达到限制的 Agent 会等待重置，并且不会启动新的 Agent。限制重置后不久，等待中的 Agent 会再次运行，运行会自行继续。需要 Claude Code v2.1.271 或更高版本；在更早的版本中，受影响的 Agent 会失败。</p>
+<p>运行等待期间，任务面板中的进度行和 <a href="#watch-the-run"><code>/workflows</code></a> 标题会显示限制的重置时间。</p>
+<p>只有当以下所有条件都满足时，运行才会暂停；任一条件不满足时，受影响的 Agent 会失败：</p>
+<ul>
+<li>会话是交互式的，并且已使用 claude.ai 订阅登录。在使用 <code>claude -p</code> 的<a href="headless.html">非交互模式</a>或 <a href="agent-sdk-overview.html">Agent SDK</a> 中、在<a href="agent-view.html">后台会话</a>中，或在 <a href="remote-control.html">Remote Control</a> 或 <a href="agent-teams.html">agent team</a> 队友会话中，运行不会暂停。</li>
+<li><a href="settings-reference.html#autocontinueatusagelimit"><code>autoContinueAtUsageLimit</code></a> 已开启，这也是让会话本身能够<a href="interactive-mode.html#wait-for-a-usage-limit-to-reset">等待用量限制重置</a>的同一设置。如果您在等待期间将其关闭，等待会结束，等待中的 Agent 会失败。</li>
+<li>限制在 24 小时内重置。每周限制的重置时间可能更远。</li>
+<li>运行尚未等待过两次。当第三次达到限制时，该 Agent 会失败。</li>
+</ul>
+<h3 id="when-an-agent-stalls-and-restarts">Agent 停滞并重新启动时</h3>
+<p>如果某个 Agent 的输出停止到达的时间足够长，它会使用相同的提示词从头开始。在 <a href="#watch-the-run"><code>/workflows</code></a> 中，其名称会加上 <code>(retry 1)</code> 后缀，详情中显示 <code>attempt 2 (stalled)</code>。重新启动是自动的，您无需进行任何操作。</p>
+<p>新的尝试启动时不带有停滞尝试的会话记录。停滞尝试已经更改的文件会保持更改状态，其消耗的 token 也会计入运行的总量。停滞窗口是 Claude Code 在结束尝试之前等待 Agent 输出的时长。Agent 等待自身工具调用或<a href="#when-a-run-hits-your-usage-limit">用量限制重置</a>所花的时间不计入停滞窗口。</p>
+<p>一个 Agent 最多重新启动五次，包括您通过 <code>r</code> 要求的任何重新启动。如果第六次尝试也停滞，<code>agent()</code> 调用会失败，错误开头会说明原因：</p>
+<ul>
+<li><code>agent stalled on all 6 attempts</code>：每次尝试在整个窗口内都没有输出。如果 Agent 的工作会让它保持沉默这么长时间，请延长窗口</li>
+<li><code>agent lost its reply on all 6 attempts</code>：每次尝试的响应流都变得沉默，Claude Code 放弃了等待。延长停滞窗口没有帮助，因为<a href="network-config.html#streaming-idle-watchdogs">流式空闲看门狗</a>先结束了响应，而 <code>CLAUDE_STREAM_IDLE_TIMEOUT_MS</code> 用于设置该看门狗的超时时间</li>
+<li><code>agent abandoned after 6 attempts</code>：各次尝试以不同方式结束，错误会按顺序列出这些方式</li>
+</ul>
+<p>要在窗口结束前给 Agent 更多时间产生输出：</p>
+<ul>
+<li><strong>单个 Agent</strong>：在其 <code>agent()</code> 调用中以毫秒为单位传入 <code>stallMs</code>，例如 <code>agent(prompt, { stallMs: 1800000 })</code> 表示 30 分钟</li>
+<li><strong>所有 Agent</strong>：设置 <a href="env-vars.html#variables"><code>CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS</code></a>，它也适用于工作流之外的子代理</li>
+</ul>
+<p>失败后运行是否继续，取决于您的脚本如何调用该 Agent：</p>
+<ul>
+<li><strong>在 <a href="#what-the-saved-script-looks-like"><code>parallel()</code> 或 <code>pipeline()</code></a> 内部</strong>：运行会继续，以 <code>null</code> 代替该 Agent 的结果</li>
+<li><strong>直接 await</strong>：运行会随错误结束</li>
+</ul>
+<p>要重试，请让 Claude 重新启动工作流。<a href="#resume-after-a-pause">暂停后恢复</a>介绍了哪些内容会再次运行。</p>
+<h3 id="cost">成本</h3>
+<p>工作流会生成许多 Agent，因此单次运行使用的 token 可能明显多于在对话中完成同一任务。运行会计入您套餐的用量和速率限制。</p>
+<p>要在投入大型任务之前估算开销，请先在一小部分内容上运行工作流：一个目录而不是整个仓库，或者一个具体的问题而不是宽泛的问题。<code>/workflows</code> 视图会在运行过程中显示每个 Agent 的 token 用量，您可以随时在那里停止运行，通常不会丢失已完成的工作。<a href="#resume-after-a-pause">暂停后恢复</a>介绍了已停止的运行会保留哪些内容。运行时的 <a href="#behavior-and-limits">Agent 上限</a>限制了单次运行可以生成的 Agent 数量，从而限定了失控脚本的成本。要让运行使用更少的 Agent，请选择 <code>small</code> <a href="#set-a-size-guideline">规模指导</a>。</p>
+<p>Claude Code 还会标记规模异常大的运行。当工作流安排的 Agent 超过 25 个，或其预计的 token 总量超过 150 万时，输入框下方任务面板中的进度行会显示 <code>Large workflow</code> 警告。该警告会引导您前往 <a href="#watch-the-run"><code>/workflows</code></a>，您可以在那里停止运行。</p>
+<p>该警告仅作提示：它不会暂停或限制运行。有两项设置会改变您看到它的时机：</p>
+<ul>
+<li>如果您自行选择了<a href="#set-a-size-guideline">规模指导</a>，其 Agent 数量会取代 25 个 Agent 的阈值。内置的默认指导会将阈值保持为 25。</li>
+<li>开启了 <a href="#let-claude-decide-with-ultracode">ultracode</a> 的会话不会显示该警告，因为开启 ultracode 就已表示您选择接受大型运行。</li>
+</ul>
+<p>Claude Code 为每个工作流 Agent 选择模型的顺序与<a href="sub-agents.html#choose-a-model">为子代理选择模型的顺序</a>相同。脚本为某个阶段指定的模型在该顺序中算作按调用指定的模型。当没有其他来源指定模型时，Agent 会使用您会话的模型运行。</p>
+<p>要控制模型成本：</p>
+<ul>
+<li>如果您通常会为日常工作切换到较小的模型，请在大型运行之前检查 <code>/model</code></li>
+<li>在描述任务时，让 Claude 为不需要最强模型的阶段使用较小的模型</li>
+</ul>
+<p>当您组织的 <a href="model-config.html#restrict-model-selection"><code>availableModels</code> 允许列表</a>阻止了脚本为某个 Agent 请求的模型时，该 Agent 会改用替代模型运行，遵循与<a href="sub-agents.html#choose-a-model">子代理相同的替代规则</a>。</p>
+<h3 id="set-a-size-guideline">设置规模指导</h3>
+<p>规模指导告诉 Claude 在编写动态工作流时以多少个 Agent 为目标。Claude Code 将该指导作为建议而不是上限发送给 Claude，因此要求不同规模的提示词仍会覆盖它。</p>
+<p>每个值对应一个 Agent 数量：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">值</th>
+<th style="text-align: left;">Claude 的目标 Agent 数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>unrestricted</code></td>
+<td style="text-align: left;">无指导：Claude 根据任务确定工作流规模</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>small</code></td>
+<td style="text-align: left;">少于 5 个 Agent</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>medium</code></td>
+<td style="text-align: left;">少于 10 个 Agent</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>large</code></td>
+<td style="text-align: left;">少于 50 个 Agent</td>
+</tr>
+</tbody>
+</table>
+<p>默认值为 <code>medium</code>，如果您使用 Pro 套餐登录且 Claude Code 为 v2.1.271 或更高版本，则默认值为 <code>small</code>。在您选择某个值之前，<code>/config</code> 中的该行会将该值标记为默认值，工作流的 <code>Running in background</code> 行会显示当前生效的规模。</p>
+<p>要更改指导，请在 <code>/config</code> 中为 Dynamic workflow size 设置选择一个值，或运行 <code>/config workflowSizeGuideline=small</code>。您还可以在任意设置文件中设置 <a href="settings-reference.html#workflowsizeguideline"><code>workflowSizeGuideline</code> 键</a>；该值优先于 <code>/config</code>，并且当设置文件提供了该值时，Claude Code 会隐藏 <code>/config</code> 中的该行。</p>
+<p>更改会在下一个提示词时生效。无论该设置如何，<a href="#behavior-and-limits">运行时 Agent 上限</a>仍然适用。</p>
+<h3 id="turn-workflows-off">关闭工作流</h3>
+<p>工作流可在 CLI、Desktop 应用、IDE 扩展、使用 <code>claude -p</code> 的<a href="headless.html">非交互模式</a>以及 <a href="agent-sdk-overview.html">Agent SDK</a> 中使用。相同的禁用设置适用于每个使用入口。</p>
+<p>要为您自己关闭工作流：</p>
+<ul>
+<li>在 <code>/config</code> 中关闭 Dynamic workflows。在会话之间保持有效。</li>
+<li>在 <code>~/.claude/settings.json</code> 中设置 <code>"disableWorkflows": true</code>。在会话之间保持有效。</li>
+<li>设置 <code>CLAUDE_CODE_DISABLE_WORKFLOWS=1</code>。在启动时读取，因此在您设置它的任何位置都适用。</li>
+</ul>
+<p>要为整个组织关闭工作流，请在<a href="server-managed-settings.html">托管设置</a>中设置 <code>"disableWorkflows": true</code>，或使用 <a href="https://claude.ai/admin-settings/claude-code" target="_blank" rel="noopener">Claude Code 管理设置</a>页面上的开关。</p>
+<p>工作流被禁用时：</p>
+<ul>
+<li><code>/workflows</code>、工作流命令以及 <code>/workflow-authoring</code> skill 不可用</li>
+<li><code>ultracode</code> 关键字不再触发运行，并且 <strong>Ultracode</strong> 开关会从 <code>/effort</code> 中移除</li>
+</ul>
+<p>已在进行中的运行会继续进行。</p>
+<p>关闭工作流也会使 <a href="#let-claude-decide-with-ultracode">ultracode</a> 不可用。没有任何托管设置可以单独禁止 ultracode：在 ultracode <a href="model-config.html#when-ultracode-is-available">可用</a>的任何地方，用户都可以使用 <code>/effort ultracode</code> 开启它。<a href="model-config.html#organization-effort-limits">effort 上限</a>会降低开启了 ultracode 的会话运行时所用的 effort 级别，但不会关闭 ultracode。</p>
+<h2 id="related-resources">相关资源</h2>
+<ul>
+<li><a href="agents.html">并行运行代理</a>：比较子代理、代理视图、代理团队和工作流</li>
+<li><a href="sub-agents.html">创建自定义子代理</a>：工作流编排的工作者原语</li>
+<li><a href="costs.html">管理成本</a>：多代理运行如何计入使用限制</li>
+</ul></article>
+    <div class="pager"><a class="pager-link prev" href="cross-session-messaging.html"><span class="pager-dir">← 上一页</span><span class="pager-name">消息传递到您的其他 Claude Code 会话</span></a><a class="pager-link next" href="worktrees.html"><span class="pager-dir">下一页 →</span><span class="pager-name">使用 worktrees 运行并行会话</span></a></div>
+    <footer class="page-foot">
+      <span>本页译自 code.claude.com 官方简体中文文档</span>
+      <a href="../index.html">返回总目录</a>
+    </footer>
+  </main>
+  <aside class="toc"><div class="toc-title">本页目录</div><a class="toc-l2" href="#when-to-use-a-workflow">何时使用工作流</a><a class="toc-l2" href="#run-a-bundled-workflow">运行捆绑工作流</a><a class="toc-l3" href="#bundled-workflows">捆绑工作流</a><a class="toc-l3" href="#watch-the-run">观看运行</a><a class="toc-l2" href="#have-claude-write-a-workflow">让 Claude 编写工作流</a><a class="toc-l3" href="#ask-for-a-workflow-in-your-prompt">在提示词中请求工作流</a><a class="toc-l3" href="#let-claude-decide-with-ultracode">使用 ultracode 让 Claude 决定</a><a class="toc-l3" href="#approve-the-plan-before-it-runs">在运行前批准计划</a><a class="toc-l3" href="#save-the-workflow-for-reuse">保存工作流以便重用</a><a class="toc-l3" href="#distribute-a-workflow-in-a-plugin">通过插件分发工作流</a><a class="toc-l3" href="#pass-input-to-a-saved-workflow">向已保存的工作流传递输入</a><a class="toc-l2" href="#example-workflow-prompts">工作流提示示例</a><a class="toc-l3" href="#audit-many-files-for-the-same-issue">审计许多文件以查找相同问题</a><a class="toc-l3" href="#keep-fixing-until-a-check-passes">保持修复直到检查通过</a><a class="toc-l3" href="#migrate-many-files-in-parallel">并行迁移许多文件</a><a class="toc-l3" href="#review-every-changed-file-and-write-one-summary">审查每个更改的文件并写一份摘要</a><a class="toc-l3" href="#research-a-topic-across-many-sources">跨许多来源研究一个主题</a><a class="toc-l3" href="#find-issues-until-the-list-stops-growing">查找问题直到列表停止增长</a><a class="toc-l3" href="#what-the-saved-script-looks-like">保存的脚本看起来像什么</a><a class="toc-l3" href="#edit-a-saved-script">编辑保存的脚本</a><a class="toc-l2" href="#how-a-workflow-runs">工作流如何运行</a><a class="toc-l3" href="#prompt-caching-in-a-fan-out">扇出中的 prompt caching</a><a class="toc-l3" href="#behavior-and-limits">行为和限制</a><a class="toc-l2" href="#manage-runs">管理运行</a><a class="toc-l3" href="#resume-after-a-pause">暂停后恢复</a><a class="toc-l3" href="#when-a-run-hits-your-usage-limit">运行达到用量限制时</a><a class="toc-l3" href="#when-an-agent-stalls-and-restarts">Agent 停滞并重新启动时</a><a class="toc-l3" href="#cost">成本</a><a class="toc-l3" href="#set-a-size-guideline">设置规模指导</a><a class="toc-l3" href="#turn-workflows-off">关闭工作流</a><a class="toc-l2" href="#related-resources">相关资源</a></aside>
+</div>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>
